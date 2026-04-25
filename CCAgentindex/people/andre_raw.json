@@ -1,0 +1,41 @@
+{
+  "id": "p_andre_raw",
+  "name": "Andre Raw",
+  "role": "Lead salesperson (rank #1), Comeketo sales team",
+  "relationship_weight": 0.95,
+  "relationship_tier": "core_partnership",
+  "contacts": {
+    "slack_display_name": "Andre Raw"
+  },
+  "handling": {
+    "preferred_channel": "slack",
+    "tone": "Terse and reaction-first. Single-word replies (':fire:', 'yes', 'got it', 'on it') carry most of his Slack weight. When he writes longer, it's structured — client summaries on #special-requests with section-headed asks (Food / Bar / Charcuterie / Timing). Uses acute-accent apostrophes as a signature punctuation quirk ('don´t', 'won´t', 'it´s'). Portuguese code-switching on menu items and brand references — bilingual by default. Emoji chains instead of sentences on wins and team celebrations. On #ai-topics his voice shifts — collaborator-mode, curious, more exploratory ('I would love to be part of this knowledge train'). Respectful tone toward Rodrigo, peer tone with other ECs.",
+    "response_latency_target": null,
+    "off_limits_topics": null,
+    "context": "One of two core partnerships declared in north_star.json ('relationship_maintenance_fidelity' regime — Rodrigo + Andre). Daily-fidelity cadence: morning text / afternoon text / ClickUp touched / Slack touched. Missing one is a real signal.",
+    "voice_adjustments": "When drafting AS Andre: keep it terse on operational pings, use acute-accent apostrophes, let emoji chains do the reaction work, preserve Portuguese menu/brand terms when they appear. For long-form content (client summaries, special-requests posts) use the section-headed EC-style structure. On #ai-topics lean into the collaborator-mode register — more exploratory prose than his typical floor voice. Do NOT draft long-form prose in his name for #a_catering_group — that is not his register there."
+  },
+  "context_anchors": [
+    "Currently #1 on the sales scorecard by performance multiplier (1.80×) and total score (3,679). See knowledge/sales_team_scorecard_oct_2025.json.",
+    "The comeketo-sales-oracle plugin's andre-coaching skill is built around his performance — this file is his local identity record, the scorecard knowledge file is his live numbers.",
+    "Strengths: only salesperson above the 40-hour quota; highest sales velocity on the team; highest this-month tastings-showed.",
+    "Cheap points left on the table: zero reviews from closed events (-67 penalty). Post-event follow-up is his clearest coaching gap today."
+  ],
+  "performance_index": {
+    "current_period": "knowledge/sales_team_scorecard_oct_2025.json",
+    "scorecard_rank": 1,
+    "performance_multiplier": 1.80,
+    "total_score_snapshot": 3679
+  },
+  "notes": [
+    "Phone, email, Slack, and ClickUp handles not present in imported sources as of 2026-04-22 — fill from the Slack/ClickUp/Close connectors once they come online, or from a next-pass ingest file that carries his contact info."
+  ],
+  "sources": [
+    {
+      "from": "rawdata_ingest",
+      "id": "cowork_rawdata_ingest_2026-04-22_sales_scorecard",
+      "t": "2026-04-22T20:30:00Z",
+      "diff": "Initial creation from sales scorecard CSV. Identity + performance pointer only; contact fields left null."
+    }
+  ]
+}

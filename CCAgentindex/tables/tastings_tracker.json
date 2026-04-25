@@ -1,0 +1,80 @@
+{
+  "slug": "tastings_tracker",
+  "name": "Tastings tracker",
+  "schema": [
+    {
+      "key": "client",
+      "label": "Client",
+      "type": "text",
+      "required": true
+    },
+    {
+      "key": "tasting_at",
+      "label": "Tasted on",
+      "type": "date"
+    },
+    {
+      "key": "attendees",
+      "label": "Attendees",
+      "type": "number"
+    },
+    {
+      "key": "outcome",
+      "label": "Outcome",
+      "type": "enum",
+      "enum": [
+        "won",
+        "pending",
+        "lost"
+      ]
+    },
+    {
+      "key": "deposit",
+      "label": "Deposit ($)",
+      "type": "number"
+    },
+    {
+      "key": "notes",
+      "label": "Notes",
+      "type": "text"
+    }
+  ],
+  "rows": [
+    {
+      "client": "Pereira wedding",
+      "tasting_at": "2026-04-12",
+      "attendees": 4,
+      "outcome": "won",
+      "deposit": 2500,
+      "notes": "loved the pão de queijo"
+    },
+    {
+      "client": "Silva corporate",
+      "tasting_at": "2026-04-15",
+      "attendees": 6,
+      "outcome": "pending",
+      "deposit": 0,
+      "notes": "decision by Friday"
+    },
+    {
+      "client": "Rodrigues 40th",
+      "tasting_at": "2026-04-18",
+      "attendees": 3,
+      "outcome": "won",
+      "deposit": 1500,
+      "notes": "add vegan option"
+    }
+  ],
+  "metadata": {
+    "provenance": [
+      {
+        "source": "template",
+        "created_at": "2026-04-25T07:17:28.738Z",
+        "template": "tastings"
+      }
+    ],
+    "created_at": "2026-04-25T07:17:28.740999+00:00",
+    "updated_at": "2026-04-25T07:17:28.740999+00:00",
+    "template": "tastings"
+  }
+}

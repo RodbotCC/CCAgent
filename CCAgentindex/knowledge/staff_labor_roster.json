@@ -1,0 +1,426 @@
+{
+  "id": "k_staff_labor_roster",
+  "kind": "knowledge",
+  "title": "Staff Labor Roster",
+  "purpose": "Master labor pool for Comeketo Catering events — who to call, by tag, affiliation, availability, referral chain, and working-relationship status. This is the operational answer to 'who can I put on the schedule for Saturday?'",
+  "last_updated": "2026-04-22",
+  "source": {
+    "file": "rawdata/Labor available for Comeketo Catering - Staff - Employee list - people to work - Sheet1.csv",
+    "original_columns": [
+      "name",
+      "Phone",
+      "availability",
+      "English",
+      "Drive",
+      "Cook",
+      "Grill BBQ",
+      "level of skills",
+      "Ability to solve problem",
+      "Light person",
+      "Physical capability",
+      "Problemic - how easy it is to work with this person",
+      "Can do bar ?",
+      "Availability (2)"
+    ],
+    "import_note": "Only name, phone, and scattered free-text notes were populated in the source. Skill/capability columns were empty for all rows at import. Unknown fields omitted rather than guessed. Portuguese-language notes preserved verbatim with brief English gloss in parentheses."
+  },
+  "status_vocabulary": {
+    "active": "Has worked events; fine to call.",
+    "untested": "On the list but has not actually worked an event yet, or scheduled once and no-showed.",
+    "unavailable": "Previously active, now reduced availability or retired from the pool.",
+    "do_not_contact": "Relationship broken; owner explicitly marked as 'do not want to return.'"
+  },
+  "tag_vocabulary": {
+    "bar": "Can run the bar station.",
+    "cook": "Kitchen-side cooking.",
+    "grill_bbq": "Churrasco / grill station.",
+    "chef": "Full chef-level; can lead a kitchen.",
+    "catering_help": "General event-help / floor labor.",
+    "captain": "Leader of a job — runs the day-of crew.",
+    "lea_decor": "Affiliated with LEA Decor (decor partner that sub-supplies labor).",
+    "overflow_partner": "Not staff — a decor/logistics partner we call when the core roster is full."
+  },
+  "captains": [
+    {
+      "name": "Chef Chris",
+      "phone": "774-245-9855",
+      "tags": ["captain", "chef"],
+      "status": "active"
+    },
+    {
+      "name": "Bibi",
+      "phone": "978-401-8724",
+      "tags": ["captain"],
+      "status": "active",
+      "notes": [
+        "Weekly prep list in rawdata is tagged BIBI — she runs the prep pipeline."
+      ]
+    },
+    {
+      "name": "Rodrigo",
+      "phone": "508-561-2986",
+      "tags": ["captain"],
+      "status": "active",
+      "notes": [
+        "Principal / owner of Comeketo Catering. Distinct from 'Rodrigo HHS' (labor pool, different phone).",
+        "Core relationship per north_star — not just a captain. Deserves a full people/rodrigo.json once other sources enrich his record."
+      ]
+    },
+    {
+      "name": "Michelle",
+      "phone": "(386) 338-8688",
+      "tags": ["captain"],
+      "status": "active"
+    },
+    {
+      "name": "Eudemar",
+      "phone": "+55 41 9609-6093",
+      "tags": ["captain"],
+      "status": "active",
+      "notes": [
+        "Brazilian number (+55). Ronaldo Gaucho is marked 'mad at Eudemar' — interpersonal context worth carrying forward."
+      ]
+    },
+    {
+      "name": "Ashley Ramirez",
+      "phone": "978-842-9345",
+      "tags": ["captain"],
+      "status": "untested",
+      "status_note": "Listed with '??' in source — flag for confirmation before scheduling as captain."
+    },
+    {
+      "name": "Kendall",
+      "phone": "508-450-8571",
+      "tags": ["captain"],
+      "status": "active"
+    }
+  ],
+  "labor_pool": [
+    { "name": "Dawn", "phone": "617-233-9450", "status": "active" },
+    { "name": "Matheus", "phone": "978-328-8538", "status": "active" },
+    {
+      "name": "Sandra",
+      "phone": "781-809-0110",
+      "status": "active",
+      "also_known_as": "Tia da Thabata (Thabata's aunt)"
+    },
+    { "name": "Tirza", "phone": "954-696-5114", "status": "active" },
+    {
+      "name": "Aline Serakisdes",
+      "phone": "978-896-2696",
+      "secondary_phone": "+55 31 9915-1667",
+      "status": "active"
+    },
+    { "name": "Antonio", "phone": "978-798-2186", "status": "active" },
+    {
+      "name": "Fabio Gaucho",
+      "phone": "978-294-3179",
+      "tags": ["grill_bbq"],
+      "availability_note": "Monday / Tuesday",
+      "status": "active"
+    },
+    { "name": "Gladiston", "phone": "207-437-5348", "status": "active" },
+    { "name": "Victor Duque", "phone": "774-232-5622", "status": "active" },
+    { "name": "Chef Paul", "phone": "774-452-5988", "tags": ["chef"], "status": "active" },
+    {
+      "name": "Leonardo",
+      "phone": "857-312-5370",
+      "tags": ["catering_help"],
+      "status": "active",
+      "notes": ["Listed as 'Leonardo Support' in source."]
+    },
+    {
+      "name": "Carlos Moura",
+      "phone": "978-860-6794",
+      "tags": ["bar"],
+      "status": "active"
+    },
+    {
+      "name": "Angel Colombiano",
+      "phone": "978-601-4568",
+      "availability_note": "Sunday only",
+      "status": "active"
+    },
+    { "name": "Klisman", "phone": "978-696-7685", "status": "active" },
+    {
+      "name": "Leticia de Sao Paulo",
+      "phone": "978-760-5882",
+      "status": "active",
+      "notes": ["'boa de trabalho' (good worker)."]
+    },
+    {
+      "name": "Filipe",
+      "phone": "978-938-8537",
+      "status": "active",
+      "notes": ["Husband of Leticia de Sao Paulo. Distinct from the Filipe at LEA Decor."]
+    },
+    {
+      "name": "Simone",
+      "phone": "(978) 333-6152",
+      "affiliation": "LEA Decor",
+      "tags": ["lea_decor"],
+      "status": "active"
+    },
+    {
+      "name": "Marcelene",
+      "phone": "774-300-2206",
+      "affiliation": "LEA Decor",
+      "tags": ["lea_decor"],
+      "status": "active",
+      "notes": [
+        "Phone matches 'Marcilene' further down the source sheet — likely the same person with a spelling variant. Kept as one entry; see known_data_issues."
+      ]
+    },
+    {
+      "name": "Laís",
+      "phone": "+55 33 99971-2797",
+      "affiliation": "LEA Decor",
+      "tags": ["lea_decor"],
+      "status": "active"
+    },
+    {
+      "name": "Dayane",
+      "phone": "(508) 969-7579",
+      "affiliation": "LEA Decor",
+      "tags": ["lea_decor"],
+      "status": "active"
+    },
+    {
+      "name": "Filipe (LEA)",
+      "phone": "508-816-3606",
+      "affiliation": "LEA Decor",
+      "tags": ["lea_decor"],
+      "status": "active",
+      "notes": ["'muito bom de trabalho' (very good worker)."]
+    },
+    { "name": "Juliana Lemos", "phone": "978-340-8277", "status": "active" },
+    {
+      "name": "Paola",
+      "phone": "(351) 230-4989",
+      "status": "active",
+      "referred_by": "Chef Patrick",
+      "notes": ["Uruguayan. Shares phone number with her daughter Catherine."]
+    },
+    {
+      "name": "Catherine",
+      "phone": "(351) 230-4989",
+      "status": "active",
+      "notes": ["Daughter of Paola. Shares phone with mother — coordinate schedules together."]
+    },
+    {
+      "name": "Adriane",
+      "phone": "774-414-7637",
+      "status": "untested",
+      "status_note": "Listed with '???' in source.",
+      "notes": ["Alias 'Karley'. Based in Hudson."]
+    },
+    { "name": "JB Cook", "phone": "(781) 254-2615", "tags": ["cook"], "status": "active" },
+    {
+      "name": "Geraldo",
+      "phone": "(978) 648-4012",
+      "status": "unavailable",
+      "status_note": "'not so available anymore.'",
+      "referred_by": "Chris",
+      "notes": ["Based in Hudson."]
+    },
+    {
+      "name": "Rodrigo HHS",
+      "phone": "508-826-2849",
+      "status": "active",
+      "notes": ["Labor-pool Rodrigo. DO NOT confuse with Rodrigo the principal (508-561-2986)."]
+    },
+    {
+      "name": "Reinaldo",
+      "phone": "508-933-2966",
+      "status": "active",
+      "referred_by": "Jida",
+      "notes": ["Aka 'Coroa'. Jida's friend."]
+    },
+    {
+      "name": "Ronaldo Gaucho",
+      "phone": "774-502-8881",
+      "tags": ["grill_bbq"],
+      "status": "do_not_contact",
+      "status_note": "Mad at Eudemar; does not want to return."
+    },
+    {
+      "name": "Cristiane Enaile",
+      "phone": "857-312-3629",
+      "status": "active",
+      "referred_by": "Marcilene"
+    },
+    {
+      "name": "Marcilene",
+      "phone": "774-300-2206",
+      "status": "active",
+      "referred_by": "Filipe (LEA)",
+      "notes": [
+        "Phone matches 'Marcelene' above. Kept as separate row because source lists them separately, but treat as likely duplicate."
+      ]
+    },
+    {
+      "name": "Natalie",
+      "phone": "508-654-5760",
+      "status": "active",
+      "notes": [
+        "Americana ('the chubby one from the Flow Wayland Mansion party' per source)."
+      ]
+    },
+    {
+      "name": "Karina",
+      "phone": "508-739-5237",
+      "status": "untested",
+      "status_note": "Scheduled once and couldn't come; has not worked with us.",
+      "referred_by": "Felipe SP",
+      "notes": ["Worked the Katerina party with the referrer."]
+    },
+    {
+      "name": "Israel Churrasqueiro",
+      "phone": "908-395-5499",
+      "tags": ["grill_bbq"],
+      "status": "active",
+      "referred_by": "Ze Acougueiro (Gaucho)"
+    },
+    { "name": "Domenic", "phone": "(978) 235-3791", "status": "active" },
+    {
+      "name": "Israel (Catering Helper)",
+      "phone": "774-327-9501",
+      "tags": ["catering_help"],
+      "status": "active",
+      "referred_by": "Matheus / Aline"
+    },
+    {
+      "name": "Anderton",
+      "phone": "(774) 204-1379",
+      "tags": ["catering_help"],
+      "status": "active",
+      "referred_by": "Filipe (LEA)"
+    },
+    {
+      "name": "Angela (AD JobAD)",
+      "phone": "508-963-9307",
+      "status": "active"
+    },
+    {
+      "name": "Andrezza Reis",
+      "phone": "(774) 451-3351",
+      "tags": ["catering_help"],
+      "status": "untested",
+      "status_note": "Has not worked with us yet."
+    },
+    {
+      "name": "Rose",
+      "phone": "(774) 707-6886",
+      "availability_note": "Friday and Saturday",
+      "status": "active"
+    },
+    {
+      "name": "Max",
+      "phone": "(774) 204-5674",
+      "availability_note": "Friday and Saturday after 5pm",
+      "status": "active"
+    },
+    {
+      "name": "Otavio Vieira",
+      "phone": "774-327-9859",
+      "status": "active",
+      "referred_by": "Anderton"
+    },
+    {
+      "name": "Patty Elworthy",
+      "phone": "978-660-9929",
+      "status": "active",
+      "notes": [
+        "Older lady Rodrigo met in Clinton.",
+        "Source says 'call her last week of July' — treat as a seasonal reminder, not a current commitment."
+      ]
+    },
+    {
+      "name": "Omar do Carvao",
+      "phone": "774-737-3998",
+      "status": "active",
+      "notes": ["'call when there's an event.'"]
+    },
+    {
+      "name": "Ryan Candido",
+      "phone": "978-847-4934",
+      "status": "active",
+      "referred_by": "Romulo"
+    },
+    { "name": "Arnaldo Ortiz", "phone": "978-944-7070", "status": "active" },
+    { "name": "Harry Montalvo", "phone": "978-751-5616", "status": "active" },
+    {
+      "name": "Benicio Miranda",
+      "phone": "978-955-1048",
+      "also_known_as": "Benny",
+      "status": "active"
+    },
+    {
+      "name": "Adriene",
+      "phone": "774-602-6564",
+      "tags": ["catering_help"],
+      "status": "active",
+      "referred_by": "Cris"
+    },
+    { "name": "Shaun", "phone": "978-751-1696", "tags": ["chef"], "status": "active" },
+    {
+      "name": "Fernando Muchucho",
+      "phone": "774-602-6036",
+      "status": "active",
+      "notes": ["Guatemalan. Previously worked for Chris."]
+    },
+    {
+      "name": "Jennifer",
+      "phone": "508-335-5381",
+      "status": "active",
+      "notes": ["Listed below the captains section with no category label."]
+    },
+    {
+      "name": "David",
+      "status": "untested",
+      "status_note": "No phone in source; confirm identity and contact before scheduling."
+    },
+    {
+      "name": "Daniel",
+      "also_known_as": "Consultor",
+      "status": "untested",
+      "status_note": "No phone in source; likely a consultant rather than event labor."
+    },
+    {
+      "name": "Angela",
+      "status": "untested",
+      "status_note": "Second 'Angela' in source with no phone. May be duplicate of 'Angela (AD JobAD)' above — confirm before use."
+    }
+  ],
+  "decor_partners_for_overflow": [
+    {
+      "name": "Gisele Decor",
+      "phone": "508-525-2056",
+      "tags": ["overflow_partner"],
+      "role": "Call when the core roster can't cover a job — she supplies additional bodies."
+    },
+    {
+      "name": "Josias",
+      "phone": "857-971-0040",
+      "tags": ["overflow_partner"],
+      "role": "Divine Decor, Lowell. Overflow labor supplier."
+    },
+    {
+      "name": "Karlos",
+      "phone": "508-816-8947",
+      "tags": ["overflow_partner"],
+      "role": "Ebenezer Decoration. Overflow labor supplier."
+    }
+  ],
+  "known_data_issues": [
+    "Marcelene (774-300-2206, LEA Decor) and Marcilene (774-300-2206, referred by Filipe LEA) share a phone number. Likely the same person; treat both rows as potentially duplicate until confirmed with Rodrigo.",
+    "Ashley Ramirez appears in the Captains section with '??' next to her name in the source — captain status not yet confirmed.",
+    "David, Daniel Consultor, and the second Angela have no phone numbers. Cannot schedule until contact info is filled in.",
+    "Two 'Rodrigo' entries exist: the principal/owner (508-561-2986, captain) and 'Rodrigo HHS' (508-826-2849, labor pool). Must be kept separate in any downstream agent work.",
+    "Patty Elworthy's 'call her last week of July' is a seasonal reminder from a prior import cycle. Year unspecified in source — do not auto-schedule without confirming."
+  ],
+  "downstream_notes": [
+    "When building people/*.json records for captains, pull fuller context from the Sales Playbook, the Comeketo Welcome deck, and the Partnership Program doc before committing a relationship_weight and handling{} block. This roster alone is thin on voice / preferred-channel data.",
+    "Consider deriving a lightweight view: 'who-can-do-bar', 'who-is-available-weekends', 'who-to-call-for-overflow' — these are the three queries Rodbot will face most often when asked about staffing."
+  ]
+}

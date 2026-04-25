@@ -1,0 +1,24 @@
+{
+  "generated_at": "2026-04-22T02:00:00Z",
+  "bedrock_root": "jake_mission_control_index",
+  "owner": "Jake Aaron",
+  "shape": "personal",
+  "notes": [
+    "Pass 6 (this one): Batch 3 — contact layer, sub-agent fleet, AI billing, daily content journal, physical maintenance. Added 4 paired Secretary specs (contact_layer, sub_agent_fleet, ai_billing_ledger, daily_content_journal) + 1 commitment (reverse_hermit_mode). Extended north_star to 14 anchors / 9 regimes (+8 anchors, +6 regimes). Retrofitted Rodrigo + Andre people records with cadence field and anchor cross-refs. Folded 3 new open questions into cluster 10 (community scouting answered → 10.16 still open for scouting; 10.17 red-team venue; 10.18 locate 21 specialist agent specs; 10.19 journal minimum-viable-entry).",
+    "Pass 5: Batch 2 — relationship cadence, public surfaces, framework red-team cert. First north_star anchors declared (6): 4 relationship-fidelity + 1 public-surface + 1 framework-hardening. Three distinct regimes. Added 1 commitment (daily_relationship_cadence), 2 projects (public_surface_build, framework_red_team_certification), 1 paired knowledge file (red_team_certification_initial_shape). Folded 2 new questions (cluster 10).",
+    "Pass 4: Secretary spec batch 1 — TCL + Streak Tracker + Ratio Lattice stub. 3 knowledge files. Updated secretary.json with TCL-first build order. Naming convention: secretary_spec_* prefix.",
+    "Pass 3: Buyer Vector Method paste — 12 knowledge files, 1 project, 5 commitments, 8 open questions.",
+    "Pass 2: mined the_infinity_problem/ for projects (8), people (2), commitments (7), +1 knowledge file.",
+    "Pass 1 (prior agent): 37 knowledge files + 3 base files.",
+    "Sweep 2026-04-22: 1 inbox entry swept (ibx_8a3fb6c579). 5 connector-seeds held open per AGENT.md §1.",
+    "Threads/ still intentionally empty — schema requires channel/waiting_on/last_touched not derivable from current corpus.",
+    "North star ledger live: 14 anchors across 9 regimes. Ratio lattice ledger still pending its stub per secretary_spec_ratio_lattice_ledger_stub."
+  ],
+  "counts": {
+    "projects": 11,
+    "people": 2,
+    "threads": 0,
+    "commitments": 14,
+    "knowledge": 59
+  }
+}

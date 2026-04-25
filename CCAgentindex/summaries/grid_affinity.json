@@ -1,0 +1,27 @@
+{
+  "by_source_type": {
+    "project_blocker": 0.9756747450259071,
+    "sylvia_memory": 2.9766794176599225,
+    "briefing_item": 1.9844851550718356,
+    "chat_reflection": 0.9922574382779328
+  },
+  "by_source_id": {
+    "project/proj_brazilian_church_outreach/blocker": -1.3371543939801793,
+    "sylvia/mem_bcfb0ef941": -1.4463434030046949,
+    "sylvia/mem_46b9a44716": -1.4463579669525641,
+    "sylvia/mem_e6bce47174": -1.4463649978764372,
+    "briefing/line_3": -1.4464048962266332,
+    "briefing/line_4": -1.4465251336309297,
+    "chat_ref/chat_moac7opz_0wdd/2026-04-22T17:56:58.365Z": -1.4465661135094527
+  },
+  "fresh_handled": {
+    "project/proj_brazilian_church_outreach/blocker": 1776896122757,
+    "sylvia/mem_bcfb0ef941": 1776916468612,
+    "sylvia/mem_46b9a44716": 1776916471222,
+    "sylvia/mem_e6bce47174": 1776916472482,
+    "briefing/line_3": 1776916479632,
+    "briefing/line_4": 1776916501178,
+    "chat_ref/chat_moac7opz_0wdd/2026-04-22T17:56:58.365Z": 1776916508521
+  },
+  "computed_at": "2026-04-23T06:31:50.368Z"
+}

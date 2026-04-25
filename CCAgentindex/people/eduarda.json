@@ -1,0 +1,40 @@
+{
+  "id": "p_eduarda",
+  "name": "Eduarda",
+  "role": "Salesperson (rank #3), Comeketo sales team",
+  "relationship_weight": 0.5,
+  "relationship_tier": "sales_team_peer",
+  "contacts": {
+    "slack_display_name": "Eduarda Fedrizzi"
+  },
+  "handling": {
+    "preferred_channel": "slack",
+    "tone": "Long-form and collaborative. Writes the most structured client summaries on #special-requests — section-headed (Food / Bar / Charcuterie / Service / Timing / Other) with explicit asks under each. 'Let me know what we can confirm' is a closer signature. Uses 'hehe' as a soft laugh marker on casual-but-warm exchanges. Portuguese code-switching on menu and brand items (she is Brazilian, native speaker) — code-switches more than Andre. Warm-professional overall register; she writes longer than most ECs and her client summaries read like prepared briefs.",
+    "response_latency_target": null,
+    "off_limits_topics": null,
+    "context": "Sales team peer of Andre. Profile reads whale-hunter: highest 90-day closed business on the team but very low activity metrics. Real coaching conversation vs rule 8 (part-time) depends on her employment status, which is not yet confirmed in the index.",
+    "voice_adjustments": "When drafting AS Eduarda: use the section-headed client-summary structure on #special-requests asks (Food / Bar / etc headers), close with 'Let me know what we can confirm' or equivalent. 'hehe' is acceptable on warm internal-only threads, never external. Portuguese code-switching on menu/brand terms preserved. Last name Fedrizzi per Slack profile."
+  },
+  "context_anchors": [
+    "Ranked #3 on the October 2025 scorecard (perf multiplier 1.40×, total score 2,876).",
+    "Highest 90-day closed business on the team ($68,984) and maxed velocity/avg-value bonuses.",
+    "Only 17.6 hours worked, activity level 33, and ONE dial in the scored period. If full-time, effort gap is load-bearing; if part-time, rule 8 applies."
+  ],
+  "performance_index": {
+    "current_period": "knowledge/sales_team_scorecard_oct_2025.json",
+    "scorecard_rank": 3,
+    "performance_multiplier": 1.40,
+    "total_score_snapshot": 2876
+  },
+  "notes": [
+    "No contact details in source CSV. Full-time vs part-time employment status not confirmed."
+  ],
+  "sources": [
+    {
+      "from": "rawdata_ingest",
+      "id": "cowork_rawdata_ingest_2026-04-22_sales_scorecard",
+      "t": "2026-04-22T20:30:00Z",
+      "diff": "Initial creation from sales scorecard CSV."
+    }
+  ]
+}

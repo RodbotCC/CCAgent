@@ -1,0 +1,39 @@
+{
+  "id": "p_bibi",
+  "name": "Bibi de los Santos",
+  "role": "General Manager — operations, kitchen production, menu-exception triage. Product-authority number two behind Rodrigo on #special-requests; escalates product-decisions up, runs everything operational under them.",
+  "relationship_weight": 0.9,
+  "relationship_tier": "core_partnership",
+  "contacts": {
+    "slack_user_id": null,
+    "slack_display_name": "Bibi de los Santos",
+    "slack_title": "General Manager",
+    "email": null
+  },
+  "handling": {
+    "preferred_channel": "slack",
+    "tone": "Warm-direct. Operator voice. 'Hun' as a friendly second-person address to captains and ECs ('ok hun', 'yes hun'). Self-deprecating 'lol' when flagging her own mistake or a mix-up. Routes product-level decisions up to Rodrigo explicitly rather than guessing ('let me check with Rod', '@Rodrigo Souza can confirm'). Sign-off signature is a warm TY-L-B or a brief 'thanks!' — relational, not transactional. On #special-requests she writes full structured answers when she owns the answer, redirects up-chain when she doesn't. Short acknowledgements (':white_check_mark:', 'yes got it') are common on logistics pings.",
+    "response_latency_target": null,
+    "off_limits_topics": null,
+    "context": "Bibi is Rodrigo's operational partner. On the voice-register matrix she sits between Rodrigo's principal voice and the EC sales voices — she warms the room without giving up authority. Rodbot drafts for her when the content is kitchen/production/menu-execution; drafts for Rodrigo when the content is product-decision or brand-level.",
+    "voice_adjustments": "When drafting AS Bibi (operations replies, kitchen updates, captain-level coordination): warm-direct register, 'hun' acceptable when speaking to Comeketo teammates (not to external prospects), self-deprecating 'lol' on internal-only messages, TY-L-B sign-off. When the decision is product-level (can we add X menu item, can we change Y price, can we swap Z service): DO NOT have Bibi answer unilaterally in a draft — route to Rodrigo first or draft Bibi-saying-'let me check with Rod'."
+  },
+  "context_anchors": [
+    "Primary voice alongside Rodrigo on #special-requests (C07H2P27U7N) — the menu-exception clearinghouse.",
+    "GM-scope suggests she is the bridge between sales (ECs writing client asks) and kitchen (Bibi's own team plus Rodrigo on recipe/plating). Rodbot outputs that span sales-to-kitchen should name Bibi as the hand-off point.",
+    "Cross-reference: knowledge/slack_voice_specimens.json (bibi_de_los_santos signature patterns), knowledge/slack_channel_map.json (#special-requests register notes), knowledge/menu_catalog_bibi_prep_list.json (menu artifacts she co-authors)."
+  ],
+  "notes": [
+    "Last name 'de los Santos' per Slack profile. Canonical first name 'Bibi'.",
+    "Slack user ID not yet captured — fill from next-pass Slack profile fetch.",
+    "Phone/email not present in indexed files. Confirm direct handle with Rhonna or Rodrigo before using Twilio on her behalf."
+  ],
+  "sources": [
+    {
+      "from": "slack_ingest",
+      "id": "cowork_slack_ingest_2026-04-22_bibi_profile",
+      "t": "2026-04-23T03:50:00Z",
+      "diff": "Initial creation. Role (GM) from Slack title; tone + voice_adjustments from voice-specimens archive observations on #special-requests and #a_catering_group."
+    }
+  ]
+}

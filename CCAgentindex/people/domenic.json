@@ -1,0 +1,39 @@
+{
+  "id": "p_domenic",
+  "name": "Domenic",
+  "role": "Management layer — cash-flow and revenue-projection author. Financial-ops / bookkeeping-adjacent. Likely operations or controller-style function.",
+  "relationship_weight": 0.75,
+  "relationship_tier": "management_layer",
+  "contacts": {
+    "slack_display_name": "Domenic Dawson"
+  },
+  "handling": {
+    "preferred_channel": "slack_historical",
+    "tone": "Peer. Operational drift (staffing, equipment, cash-flow surprises) surfaces to Dom without editorial. He self-describes as pragmatic about data quality — the '80% accuracy' caveat on his own sheet says a lot about his register. Match it: direct, realistic, unvarnished. Historical Slack voice (2023 VKH-era on #general) is imperative and short: 'Cmon guys lets go', '9:30', 'be professional'. Meeting-minutes summaries and KPI rollouts were his output style. Current-era footprint in surveyed channels is minimal — his active voice in the business has tapered since the VKH era.",
+    "response_latency_target": null,
+    "off_limits_topics": null,
+    "context": "Domenic (Dom) maintains the master Payments / Cash Collection / Cash Flow / Revenue Projection sheet — ~160 client rows × ~100 weekly buckets spanning 7/6/2025 through 6/5/2027. He's the custodian of the 2-year cash-flow window that mirrors the sales decks' 2-year price lock. His authorial note on the sheet reads: 'Please assume an 80% Accuracy. The old leads were a little messy but i did my best - dom' — a useful tell about how he operates and how data quality should be read.",
+    "voice_adjustments": "When drafting AS Dom: direct, short, unvarnished. 80%-accuracy disclaimer voice — he names what he doesn't know as explicitly as what he does. Do NOT imitate the 2023 VKH-era imperative-short style ('Cmon guys lets go') unless the context is a historical reference. His current-era register is narrower — financial annotations, cash-flow updates, spreadsheet commentary. Last name Dawson per Slack display."
+  },
+  "context_anchors": [
+    "Author / maintainer of the master cash-flow and revenue-projection sheet (164 rows, 100 weekly buckets, $693,837 grand-total tracked revenue).",
+    "Self-stated 80% accuracy disclaimer on his own work — honest about data quality, which is a trait Rodbot should preserve when citing any single number he produced.",
+    "Not listed as a named co-user on other sheets in the inventory registry — his visible surface is primarily the cash-flow / revenue-projection artifact.",
+    "Cross-reference: knowledge/cash_flow_revenue_projection.json (primary artifact), knowledge/infrastructure_inventory.json (absence from most sheets, presence implicit in cash-flow authorship)."
+  ],
+  "notes": [
+    "Last name not present in imported sources as of 2026-04-22.",
+    "Referred to as 'Dom' in his own sheet signature and 'Domenic' in the CLAUDE.md / identity.md team list. Using 'Domenic' as the canonical file name; 'Dom' is an acceptable informal.",
+    "No direct email, phone, or messaging handle in indexed files. Not listed as a GoDaddy M365 seat owner.",
+    "The narrow but deep access pattern — one big financial sheet, no other sheets visible — could mean either (a) he's brought in for specific financial work and works off-sheet in other contexts, or (b) the inventory snapshot missed his other shares. Worth confirming.",
+    "Operations posture per the Rodbot traits table treats him as a peer for logistics/drift routing — validate he actually handles that scope, since the cash-flow evidence alone only anchors him as bookkeeper/forecaster."
+  ],
+  "sources": [
+    {
+      "from": "rawdata_ingest",
+      "id": "cowork_rawdata_ingest_2026-04-22_cashflow",
+      "t": "2026-04-22T22:45:00Z",
+      "diff": "Initial creation from his own signature on the cash-flow sheet. Identity + role inference + data-quality disposition anchor; contacts left blank."
+    }
+  ]
+}

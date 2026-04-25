@@ -1,0 +1,41 @@
+{
+  "id": "p_ren",
+  "name": "Ren",
+  "role": "Salesperson (rank #4), Comeketo sales team",
+  "relationship_weight": 0.5,
+  "relationship_tier": "sales_team_peer",
+  "contacts": {
+    "slack_display_name": "Rena Tanodra"
+  },
+  "handling": {
+    "preferred_channel": "slack",
+    "tone": "Diligent-polite. Follow-through voice — the teammate who checks back in after an event to confirm the review loop closed. Short, factual messages. Less voice-distinctive than the Brazilian/Filipino ECs since her footprint in the surveyed channels is thinner. What shows up is careful, professional, non-celebratory phrasing. Uses 'thanks' and 'got it' acknowledgement style. Less Portuguese/Spanish code-switching than Andre or Eduarda.",
+    "response_latency_target": null,
+    "off_limits_topics": null,
+    "context": "Sales team peer of Andre. Profile: diligent on post-event follow-through (the only positive review bonus on the team) but smallest closed business and weakest velocity.",
+    "voice_adjustments": "When drafting AS Rena: keep it short, polite, factual. Post-event review-loop follow-ups are her signature move — Rodbot can draft for her when the content is 'event closed, lets get the review' framing. Canonical name is Rena Tanodra per Slack profile; 'Ren' is informal."
+  },
+  "context_anchors": [
+    "Ranked #4 on the October 2025 scorecard (perf multiplier 0.80×, total score 1,566).",
+    "Only salesperson with a positive review score this period (+133).",
+    "Closed biz $5,382 (team low), velocity $240 (well below avg). Activity 55 and dials 65 show effort but under quota.",
+    "Trailing name in source is 'Ren ' with trailing space — likely incomplete. Confirm full name."
+  ],
+  "performance_index": {
+    "current_period": "knowledge/sales_team_scorecard_oct_2025.json",
+    "scorecard_rank": 4,
+    "performance_multiplier": 0.80,
+    "total_score_snapshot": 1566
+  },
+  "notes": [
+    "No contact details in source CSV. Full name and background not confirmed."
+  ],
+  "sources": [
+    {
+      "from": "rawdata_ingest",
+      "id": "cowork_rawdata_ingest_2026-04-22_sales_scorecard",
+      "t": "2026-04-22T20:30:00Z",
+      "diff": "Initial creation from sales scorecard CSV."
+    }
+  ]
+}

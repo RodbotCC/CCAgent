@@ -1,0 +1,114 @@
+{
+  "id": "k_leads_source_dec_2025",
+  "kind": "knowledge",
+  "name": "Leads Source Attribution — December 2025",
+  "subject": "Monthly lead-attribution tracker for December 2025. Captures the 18-channel source universe Comeketo tracks leads across (Wedding Wire, The Knot, FB/IG, website, Google, Bark, Fash, Eventective, House Deal, Zola, weddingplanner, Social Organic, Inbound, Referral, Venue Referral, Lead from Rodrigo, Old Lead/Repeat Client, EZ Cater) and 12 named December deals with their attributed source. Header claims 18 total deals closed but tracker body shows 12 — 6 unaccounted, likely incomplete entry.",
+  "source_files": [
+    "Leads Source - FG , IG , Google leads tracker  - Dec 2025.csv"
+  ],
+  "channel_universe": [
+    {"channel": "Wedding Wire", "type": "listing_platform"},
+    {"channel": "The Knot", "type": "listing_platform"},
+    {"channel": "FB/IG/Crisp Chat", "type": "social_plus_webchat", "note": "Bundled — Facebook, Instagram, and Crisp Chat (on-site web chat widget) treated as one channel."},
+    {"channel": "Website", "type": "owned_direct"},
+    {"channel": "Google/TikTok - I do Society", "type": "paid_or_partner", "note": "Bundle with 'I do Society' partner — clarify whether this is paid Google/TikTok ads routed through the I Do Society platform, or three separate channels misbundled."},
+    {"channel": "Bark", "type": "listing_platform"},
+    {"channel": "Fash", "type": "listing_platform", "note": "Likely 'Fash' = Fash.com / Fashr service marketplace. Confirm."},
+    {"channel": "Eventective", "type": "listing_platform"},
+    {"channel": "House Deal", "type": "listing_platform", "note": "Unclear — possibly 'HouseDeal' venue partner or promotional program. Confirm."},
+    {"channel": "Zola", "type": "listing_platform"},
+    {"channel": "weddingplanner/partner", "type": "partner_referral", "note": "Comma between weddingplanner and partner — possibly 'weddingplanner.com partner' or 'wedding planner (partner)'. Ambiguous."},
+    {"channel": "Social Organic", "type": "owned_social"},
+    {"channel": "Inbound lead", "type": "generic_inbound", "note": "Leads that come in but aren't source-tagged — catchall bucket."},
+    {"channel": "Referral", "type": "word_of_mouth"},
+    {"channel": "Venue Referral", "type": "partner_referral", "note": "Distinct from generic Referral — venue partners specifically. Cross-reference with venue_partners.json."},
+    {"channel": "Lead from Rodrigo", "type": "founder_sourced", "note": "Leads Rodrigo personally brings in. Distinct channel — shows the founder is treated as a lead source."},
+    {"channel": "Old Lead/Repeat Client", "type": "retention", "note": "Re-engagement / repeat business."},
+    {"channel": "EZ Cater", "type": "platform_corporate", "note": "Corporate catering marketplace — distinct from wedding-vertical platforms."}
+  ],
+  "total_channels": 18,
+  "december_2025_attributed_deals": [
+    {"lead": "Victor America Pro Constructions", "source": "Venue Referral"},
+    {"lead": "Isadora", "source": "Inbound lead"},
+    {"lead": "Jennifer Eng", "source": "Social Organic"},
+    {"lead": "Joni Hartnett", "source": "Wedding Wire"},
+    {"lead": "Patricio Alan", "source": "Venue Referral"},
+    {"lead": "Julianna Leiva", "source": "Website"},
+    {"lead": "Savik Luy", "source": "Social Organic"},
+    {"lead": "Sydneey", "source": "FB/IG/Crisp Chat", "note": "Name possibly a typo — Sydney?"},
+    {"lead": "Derek Nolan", "source": "Website"},
+    {"lead": "Robert Thornton", "source": "Website"},
+    {"lead": "Dawn Divitto", "source": "FB/IG/Crisp Chat"},
+    {"lead": "Lucy Paynter", "source": "FB/IG/Crisp Chat"}
+  ],
+  "channel_mix_december_2025": {
+    "body_count_total": 12,
+    "header_claim_total": 18,
+    "gap": 6,
+    "gap_interpretation": "Header top-left cell reads 'Total Deals Closed 18' but the named-lead rows only total 12. Either 6 deals weren't entered by name, the total is pulling from a different sheet, or a second attribution category exists. Flag for Ops.",
+    "by_channel_confirmed_in_body": {
+      "FB/IG/Crisp Chat": 3,
+      "Website": 3,
+      "Social Organic": 2,
+      "Venue Referral": 2,
+      "Wedding Wire": 1,
+      "Inbound lead": 1
+    },
+    "zero_for_december": [
+      "The Knot",
+      "Google/TikTok - I do Society",
+      "Bark",
+      "Fash",
+      "Eventective",
+      "House Deal",
+      "Zola",
+      "weddingplanner/partner",
+      "Referral",
+      "Lead from Rodrigo",
+      "Old Lead/Repeat Client",
+      "EZ Cater"
+    ],
+    "reading": "Social + owned digital (FB/IG + Website + Social Organic) account for 8 of 12 = 66.7%. Venue referrals are 2/12 = 16.7%. Paid listing platforms (Wedding Wire, The Knot, Bark, etc.) produced only 1 closed deal in December — worth re-examining spend there."
+  },
+  "signals_for_broader_strategy": {
+    "organic_digital_is_dominant": "The combined FB/IG/Website/Social Organic produced 2/3 of attributed closes. This is the strongest-performing engine in December and warrants protection.",
+    "listing_platform_underperformance": "11 of the 18 channels are listing platforms (Wedding Wire, The Knot, Bark, Fash, Eventective, House Deal, Zola, weddingplanner, Google/TikTok, EZ Cater). Of those, only Wedding Wire hit in December (1 deal). Either the month was quiet for listings or many of these channels aren't pulling weight and should be reviewed for spend/time.",
+    "venue_referral_validates_venue_strategy": "2 venue referrals closed — worth flagging against venue_partners.json to see which venues are sending business. This justifies continued investment in venue partnerships.",
+    "rodrigo_as_channel": "'Lead from Rodrigo' is literally a dedicated column. Zero in December but non-zero through the year (implied by the column's existence). Rodrigo as a named lead source is worth its own category.",
+    "brazilian_church_channel_missing": "The 32-church outreach project has no column here. If Andre's work starts producing closed deals, this tracker needs a new channel — 'Brazilian Church Outreach' or 'Faith Community Referral'. Flag for update."
+  },
+  "cross_references": {
+    "people_refs_in_data": [
+      "Leads listed here (Victor, Isadora, Jennifer, Joni, etc.) could become people/* records once they become active projects or long-term relationships. Single-month closed deals alone don't warrant a record — wait until they recur or have material next-steps."
+    ],
+    "venue_partners_cross_check": "2 Venue Referral closes — look up which venues via Close CRM. Likely Monoosnock, Harding Allen, Versailles, or ASA Waters based on the top-volume venues in venue_partners.json.",
+    "source_vs_owner": "This tracker only captures source — not which salesperson closed it. Cross-referencing with Close CRM owner field (and sales_team_scorecard_oct_2025.json) would give source × owner mix, which is a richer coaching signal."
+  },
+  "operational_hooks": {
+    "feeds_into": [
+      "knowledge/sales_team_scorecard_oct_2025.json — closed-deal source attribution per person is a scorecard KPI that isn't currently captured.",
+      "knowledge/venue_partners.json — venue-referral closes connect venues to real revenue.",
+      "projects/brazilian_church_outreach.json — if/when church outreach starts producing closes, this tracker needs a new channel column.",
+      "A future channel-performance dashboard — this file is the first ingredient."
+    ],
+    "gap_to_close": [
+      "Only 1 month of data. Need a roll-up across 2025-2026 to see channel-mix trends.",
+      "18-vs-12 gap needs reconciliation.",
+      "No spend/cost data — can't compute channel ROI without it. Paid-listing channels should have monthly spend logged to make the 'are they worth it?' decision clean."
+    ]
+  },
+  "notes": [
+    "'Sydneey' is almost certainly a typo for Sydney — flag for source-sheet cleanup.",
+    "'Crisp Chat' is a web-chat widget product; its bundling with FB/IG is operationally reasonable but blurs where the lead actually came from.",
+    "This file is tiny (single month of one tracker) but the channel taxonomy is the reusable asset — 18 channels is what the whole acquisition engine attributes against.",
+    "The first column ('Total Deals Closed 18') functions as both header and KPI — awkward spreadsheet shape. Cleaner would be a separate summary row/tab."
+  ],
+  "sources": [
+    {
+      "from": "rawdata_ingest",
+      "id": "cowork_rawdata_ingest_2026-04-22_leads_source_dec",
+      "t": "2026-04-22T22:30:00Z",
+      "diff": "Indexed Dec 2025 lead-source attribution tracker — 18-channel universe captured, 12 named closes attributed (organic digital 66.7%, venue referral 16.7%, listing platforms 8.3%). Header-vs-body gap flagged (18 claimed, 12 named). Brazilian church channel flagged as missing from taxonomy."
+    }
+  ]
+}

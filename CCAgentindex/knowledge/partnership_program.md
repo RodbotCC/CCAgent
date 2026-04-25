@@ -1,0 +1,3557 @@
+    **—------  Steps ( Do these at least 3 days in a week)**
+
+Ex: 1 day, just liking, 2nd day, just commenting, 3rd day, just story sharing, At least on their 2 posts in a day you like and comment. This is just within a week. Then next week again.
+
+1. Pick 10 IG profiles per week that make sense for us (Eufy)  
+2. Start following people that make sense for us. (IG profiles) make sure they are from Mass, New England,  (Eufy)  
+3. Start liking their posts (Eufy)  
+4. Commenting on their posts (Eufy)  
+5. Sharing their posts through IG Story and re-tag them (Eufy)  
+6. After 2 weeks, start engaging conversation with them. (Generate a template at least) (Cath)  
+7. Send intro message (Rena)  
+   
+
+**When people like/follow us: send this msg**   
+**Rena**  
+Welcome to the family (Name)\!  
+You didn’t just follow a page — you followed flavor, creativity, and unforgettable food experiences.  
+We’re here to turn your events into something guests will talk about long after the plates are empty.  
+Whenever  you’re planning a celebration soon, feel free message us.  
+Let’s make it extraordinary party. ✨🍽️
+
+**Eufy**:  
+1st day liking  
+2nd commenting  
+3rd day sharing post
+
+**Rena**:   
+Intro message  
+Frame work of the intro msg:  
+I have been looking at your IG page now for some time and I am impressed ..    
+“” Complement on something(Job) “”    “”ask them a question about what they do””    
+Message them back after the intro message.  
+Pick IG profiles to follow, put it on the tracker sheet  
+—------------------------------------------------------------------------------------------------------------------
+
+**2nd msg**  
+**Frame work for 2nd msg** 
+
+1. Validate again what we said in the 1st msg   
+2. What type of event you guys do the most ?  
+3. Learn about what they do   
+4. We plant a seed that we are working with few couples or events for 2026 that could really be utilize their services 
+
+**Sample message:**
+
+We’ve been following the wonderful services you provide — from seamless event coordination to creating memorable experiences for your clients — and we truly admire the level of quality you bring to every project.
+
+At **Comeketo Catering**, we specialize in vibrant Brazilian-inspired cuisine for corporate events, HR activations, venue gatherings, and private celebrations. We’d love to explore how our catering could complement the services you already offer, whether through bookings, preferred vendor partnerships, or private tastings.
+
+Before we dive deeper, may we ask — **do you currently service Massachusetts or the New England area?** We’d love to see if our regions align so we can explore a potential partnership.
+
+Looking forward to connecting\!
+
+—---------------------------------------------------------------------------------------------------------------------------  
+**3rd msg**   
+1\. Start to really engage to ask them to get to know us and we get to know them … (that means invite them for a tasting or ask them if we can visit them(specially if it is a venue)   
+2\. Here is when we try to ask for Phone \# / email \- so we take the conversation off of our IG inbox and move onto CLOSE   
+3\. Offer them to put them in our list of vendors in our website 
+
+—----------------------------------------------------------------------------------------------------------------------------
+
+**After they come to a tasting:**  
+Keep on following up with them to see if there is any deals they are working on we could help    \-   Ask them if we can be on their list of vendors(printed & website
+
+- Ask them if we can promote a tasting in their space or for them(to do a tasting together)   
+- We can also offer some perks/ privileges / special deals / advantages to their clients when they refer biz to us 
+
+—-----------------------------------------------------------------------------------------------------------------------  
+**Eufy**  
+Share posts from our partner vendors — one shared post every day.
+
+**Rodrigo, this is a strong instinct. You’re already doing the hardest part right: leading with value, not asks. Now we just need to systemize it so the Vendor Partnership Program becomes predictable, scalable, and culturally aligned with how Comeketo operates.**
+
+**Let’s frame this in a way we can actually run, not just admire.**
+
+---
+
+## **The Real Objective (clarity first)**
+
+We’re not trying to “network.”  
+ We’re trying to **become the caterer they trust their reputation with**.
+
+Event planners and venue owners don’t refer vendors they like.  
+ They refer vendors who:
+
+* Make *them* look good
+
+* Reduce friction in *their* process
+
+* Protect *their* brand
+
+* Help *their* business grow
+
+Everything below ladders into that.
+
+---
+
+## **1\. The Partnership Ladder (how relationships evolve)**
+
+Not everyone deserves the same energy on day one. We move them through stages:
+
+**1️⃣ Awareness → “I see you”**  
+ **2️⃣ Trust → “You’re solid”**  
+ **3️⃣ Preference → “You’re my go-to”**  
+ **4️⃣ Advocacy → “I sell you when you’re not in the room”**
+
+Your Instagram outreach \+ value-first approach is Stage 1 → 2\.  
+ Now we build the rest.
+
+---
+
+## **2\. Value Buckets (what they actually care about)**
+
+Every idea we use should fall into one of these four buckets. If it doesn’t, we don’t do it.
+
+### **A. Revenue Support 💰**
+
+“How does Comeketo help me make more money?”
+
+**Ideas:**
+
+* **Lead Sharing (Curated, Not Dumped)**
+
+  * Only send *qualified* leads that fit their venue or planning style
+
+  * Position it as:  
+     *“We don’t sell these leads. We place them intentionally.”*
+
+* **Preferred Vendor Upsell** 
+
+  * Create exclusive menu enhancements or experiences only available at partner venues 
+
+  * They feel special. Couples feel premium.
+
+    **(Ex. of  special touches: Champagne service for leads coming from a certain partner, chef came and talked to us, etc… FREE added bonuses** 
+
+---
+
+### **B. Brand Elevation ✨**
+
+“How does Comeketo make me look more professional, premium, or in-demand?”
+
+**Ideas:**
+
+* **Co-Branded Content**
+
+  * Reels, carousels, short clips:
+
+    * “Top 3 Wedding Venues We Love Working With”
+
+    * “Why This Venue Makes Events Run Smooth”  
+      In conjunction with Denis/Spyros we can create some content for them to post collaborating   
+            
+* **Styled Shoots**
+
+  * You already do tastings. Turn some into styled shoots with planners \+ venues
+
+  * Everyone gets high-end content without footing the full bill  
+    Take advantage of our tastings to do staging for their decoration material etc … having the ability of people seeing their decorations and hire them and also do a high end photo shoot of their decor presentation 
+
+* **Vendor Spotlights**
+
+  * Monthly IG or email spotlight on a partner
+
+  * They get exposure. You become a connector.
+
+---
+
+### **C. Operational Ease 🧠**
+
+“How does Comeketo make my life easier?”
+
+This is *huge* and very underused.
+
+**Ideas:**
+
+* **Planner-First Communication**
+
+  * Clear timelines, BEO discipline, fast responses
+
+  * Market this explicitly: *“We protect your client relationship.”*
+
+* **Day-Of Reliability**
+
+  * Assign a clear Comeketo point person for planners
+
+  * Less chaos \= more referrals
+
+* **Post-Event Recaps**
+
+  * Short follow-up: what worked, guest feedback, highlights
+
+  * Makes planners feel seen and respected as professionals
+
+---
+
+### **D. Emotional & Relational Equity ❤️**
+
+“Do I enjoy working with these people?”
+
+This is where love happens.
+
+**Ideas:**
+
+* **Unexpected Gifts (Not Swag)**
+
+  * Small, thoughtful, useful
+
+  * Examples:
+
+    * Personalized vendor kits for their office
+
+    * Handwritten notes tied to a successful event
+
+    * Seasonal drops (not random)
+
+* **Invite-Only Experiences**
+
+  * Vendor dinners
+
+  * Behind-the-scenes tastings
+
+  * Education \+ connection, not a sales pitch
+
+---
+
+## **3\. Instagram Outreach: Value-First, Not Pitch-First**
+
+Your IG strategy should follow this rhythm:
+
+**Touch 1:** Engage with their content (genuine, specific)  
+ **Touch 2:** Share something valuable (post, insight, feature)  
+ **Touch 3:** Soft invite (collaboration, not referral ask)
+
+**Example framing (tone matters):**
+
+“We work with a lot of planners and venues, and we’re building a small circle of partners we actively support with content, leads, and exposure. No pressure, just alignment. Would love to explore if it makes sense.”
+
+No ask. Just alignment.
+
+---
+
+## **4\. Make Referring You the Easiest Decision**
+
+People refer when it’s simple and safe.
+
+**We give them:**
+
+* A clear one-liner on *why* Comeketo
+
+* Confidence that you’ll over-deliver
+
+* Zero fear of client complaints or refunds drama
+
+* Consistency
+
+If we ever drop the ball, we fix it fast and *own it*. That’s currency.
+
+---
+
+## **5\. Systemize the Program (so it scales)**
+
+This can’t live only in your head.
+
+**Minimum system to build:**
+
+* Partner tiers (Prospect / Active / Advocate)
+
+* Quarterly partner touchpoint (value-driven)
+
+* CRM or Sheet tracking:
+
+  * Referrals sent
+
+  * Leads shared
+
+  * Content collaborations
+
+* A simple “Why Refer Comeketo” internal doc so the team speaks with one voice
+
+Culture shows up here. How we treat partners is non-negotiable.
+
+---
+
+## **Final Reframe (important)**
+
+We are not asking venues and planners to *help* us.  
+ We are **inviting them into a growth ecosystem.**
+
+When they win, we win.  
+ When they grow, we grow.  
+ That’s the posture.
+
+If you want, next we can:
+
+* Design the **Vendor Partnership tiers**
+
+* Write the **official Vendor Partnership Program positioning**
+
+* Script IG outreach messages by stage
+
+* Build a **partner gift playbook** that stays classy and strategic
+
+We’re building something durable here, not transactional.
+
+—-----------------------------------------------------------------------------------------------------------  
+Perfect. Let’s design this like a **growth system**, not a loyalty program.  
+ The goal of the Vendor Partnership tiers is simple and non-negotiable:
+
+**When our partners grow, Comeketo grows.**  
+ Every tier must clearly answer: *“How does this help the vendor win more, look better, and work easier?”*
+
+Below is a clean, scalable tier structure you can actually run.
+
+---
+
+## **The Comeketo Vendor Partnership Program**
+
+**Built for planners & venues who care about reputation, revenue, and reliability**
+
+We’ll use **4 tiers**, each one intentional, earned, and value-forward. No pay-to-play energy. No awkward asks.
+
+---
+
+## **TIER 1 — CONNECTED PARTNER**
+
+*“We know each other. We respect each other.”*
+
+**Who this is for**
+
+* New planners or venues
+
+* Instagram connections
+
+* Vendors we like but haven’t worked with yet
+
+**Primary Objective**  
+ 👉 Build familiarity and trust without pressure.
+
+**What They Get**
+
+* Included in Comeketo’s **Partner Network**
+
+* Social engagement from Comeketo (intentional, not random)
+
+* Occasional content features (stories, tags, reposts)
+
+* Access to **vendor tastings & open houses**
+
+* Light educational value:
+
+  * Menu trends
+
+  * Guest experience insights
+
+  * Behind-the-scenes operations content
+
+**What We Expect**
+
+* Alignment with our values and professionalism
+
+* Openness to collaboration
+
+* No referral requirement yet
+
+**Why This Works**  
+ This tier removes friction.  
+ They feel included without obligation.  
+ We earn the right to go deeper.
+
+---
+
+## **TIER 2 — PREFERRED PARTNER**
+
+*“We trust each other in front of clients.”*
+
+**Who this is for**
+
+* Vendors who have referred us
+
+* Vendors we’ve successfully executed events with
+
+* Vendors who protect client experience
+
+**Primary Objective**  
+ 👉 Make them look good and make their job easier.
+
+**What They Get**
+
+* **Priority referrals** from Comeketo leads that match their style
+
+* Co-branded content (reels, carousels, blog features)
+
+* Styled shoots & collaborative events
+
+* Planner/Venue-first communication standards
+
+* Fast escalation access if anything ever feels off
+
+* Early access to new menus, concepts, and experiences
+
+**What We Expect**
+
+* Referrals based on fit, not obligation
+
+* Professional execution standards
+
+* Clear communication and mutual respect
+
+**Why This Works**  
+ They’re no longer “one of many.”  
+ They feel chosen.  
+ Referring us becomes natural, not transactional.
+
+---
+
+## **TIER 3 — GROWTH PARTNER**
+
+*“We actively help each other grow.”*
+
+**Who this is for**
+
+* Consistent referrers
+
+* Venues or planners who value long-term relationships
+
+* Vendors invested in brand-building
+
+**Primary Objective**  
+ 👉 Actively propel their business forward.
+
+**What They Get**
+
+* **Qualified lead sharing** from Comeketo’s pipeline (curated, not dumped)
+
+* Joint marketing campaigns
+
+  * Email features
+
+  * IG collabs
+
+  * Website mentions
+
+* Exclusive Comeketo experiences for their clients
+
+* Priority scheduling for tastings & planning sessions
+
+* Quarterly strategy touchpoints
+
+* Surprise & delight gifting (thoughtful, seasonal, relevant)
+
+**What We Expect**
+
+* Consistent referrals
+
+* Brand alignment
+
+* Willingness to co-market and collaborate
+
+* Mutual accountability
+
+**Why This Works**  
+ We stop being a vendor and become a **growth lever**.  
+ They associate Comeketo with momentum.
+
+---
+
+## **TIER 4 — ADVOCACY PARTNER**
+
+*“You sell us when we’re not in the room.”*
+
+**Who this is for**
+
+* Top referrers
+
+* Flagship venues
+
+* Planners who trust us with their reputation
+
+**Primary Objective**  
+ 👉 Deep integration and long-term dominance.
+
+**What They Get**
+
+* First access to high-value leads
+
+* Custom co-branded experiences
+
+* Invite-only partner dinners & events
+
+* VIP tastings & previews
+
+* Annual planning collaboration
+
+* Public recognition as a Comeketo Signature Partner
+
+* Direct leadership access for fast decisions
+
+**What We Expect**
+
+* Active advocacy
+
+* Consistent referrals
+
+* Shared standards
+
+* Honest feedback to help us improve
+
+**Why This Works**  
+ This tier is emotional, relational, and strategic.  
+ They don’t “refer Comeketo.”  
+ They **believe in Comeketo**.
+
+---
+
+## **Important Guardrails (Culture Matters)**
+
+* No tier is bought. All tiers are **earned**.
+
+* We remove partners who hurt client experience.
+
+* We protect our partners’ reputations like our own.
+
+* Referrals are never demanded, only deserved.
+
+---
+
+## **The Hidden Power Move**
+
+We never lead with tiers publicly.
+
+We say:
+
+“We build relationships in stages. As alignment deepens, so does the support.”
+
+That keeps it human. Not corporate. Not cheesy.
+
+---
+
+### **Next steps (when you’re ready)**
+
+We can now:
+
+1. Write the **official Vendor Partnership Program positioning**
+
+2. Create **IG outreach scripts by tier**
+
+3. Build a **Partner Gift Playbook**
+
+4. Design a **Quarterly Partner Touchpoint cadence**
+
+This program will quietly become one of Comeketo’s strongest growth engines.  
+ Calm. Intentional. Built to last.
+
+—---------------------------------------------------------------------------------
+
+Rodrigo, we’ll treat this like a **launch-ready system**, not ideas on paper.  
+ Everything below is written so it can be shared externally *and* operationalized internally without friction.
+
+We’ll move in order, clean and intentional.
+
+---
+
+# **1️⃣ Official Vendor Partnership Program Positioning**
+
+**Comeketo Catering | Vendor Partnership Program**
+
+### **Our Positioning Statement**
+
+At Comeketo Catering, we don’t collect vendor lists.  
+ We build **long-term partnerships** with planners and venues who value excellence, reliability, and guest experience as much as we do.
+
+Our Vendor Partnership Program exists to:
+
+* Elevate our partners’ brands
+
+* Support their business growth
+
+* Protect their reputation with clients
+
+* Deliver consistently exceptional event experiences
+
+This is not a referral program.  
+ **This is a shared growth ecosystem.**
+
+### **What Makes This Different**
+
+* No pay-to-play
+
+* No pressure to refer
+
+* No transactional incentives
+
+Partnership is **earned through alignment**, strengthened through execution, and sustained through mutual trust.
+
+### **Our Commitment to Partners**
+
+We commit to:
+
+* Clear communication and operational discipline
+
+* Professional, calm execution on every event
+
+* Brand protection in front of shared clients
+
+* Intentional collaboration, not empty promises
+
+* Long-term thinking over short-term wins
+
+### **Who This Is For**
+
+* Event planners who value calm, control, and consistency
+
+* Venues that protect their reputation fiercely
+
+* Vendors who want partners, not vendors competing for attention
+
+### **How Partnerships Grow**
+
+Relationships evolve through four stages:  
+ Connected → Preferred → Growth → Advocacy  
+ As alignment deepens, so does our level of support.
+
+---
+
+# **2️⃣ Instagram Outreach Scripts by Tier**
+
+Tone: calm, respectful, value-forward. No pitching.
+
+---
+
+## **🟢 Connected Partner (First Touch)**
+
+**Goal:** Awareness \+ goodwill
+
+**DM Script**
+
+Hey \[Name\], I came across your work and really respect how you approach \[specific detail\].  
+ We work closely with planners and venues and always enjoy connecting with people who clearly care about guest experience.  
+ Just wanted to say hello and follow along.
+
+No ask. Full stop.
+
+---
+
+## **🔵 Preferred Partner (Warm Relationship)**
+
+**Goal:** Open the door to collaboration
+
+**DM Script**
+
+Hey \[Name\], we’ve really enjoyed watching how you run your events.  
+ We’re building a small circle of planners and venues we actively support through collaboration, content, and lead alignment.  
+ No pressure at all, but if you’re ever open to exploring that kind of partnership, I’d love to connect.
+
+---
+
+## **🟣 Growth Partner (Active Collaborators)**
+
+**Goal:** Formalize growth alignment
+
+**DM Script**
+
+Hey \[Name\], I appreciate how consistently aligned our teams have been.  
+ We’ve been intentional about sharing leads, collaborating on content, and supporting partners who are growing in similar ways.  
+ I’d love to explore how we can be more proactive in helping each other grow this year.
+
+---
+
+## **🟡 Advocacy Partner (Top Tier)**
+
+**Goal:** Reinforce exclusivity and trust
+
+**DM Script**
+
+Hey \[Name\], I just wanted to say we genuinely value the trust you place in us.  
+ We consider you a core partner and want to continue building something long-term that supports your business, your clients, and your brand.  
+ Always open if there’s anything we can do better or differently.
+
+---
+
+# **3️⃣ Partner Gift Playbook**
+
+**Purpose:** Stay top of mind without feeling transactional.
+
+### **Guiding Rules**
+
+* No cheap swag
+
+* No logo overload
+
+* Thoughtful \> expensive
+
+* Timing matters more than cost
+
+---
+
+## **🎁 Tier-Based Gift Strategy**
+
+### **Connected Partner**
+
+**Frequency:** 1–2x per year  
+ **Examples:**
+
+* Handwritten note after first collaboration
+
+* Small seasonal treat
+
+* Invite to tasting or open house
+
+---
+
+### **Preferred Partner**
+
+**Frequency:** Quarterly or milestone-based  
+ **Examples:**
+
+* Curated office snack box
+
+* Event-day coffee delivery
+
+* Personalized thank-you after a referral
+
+* Seasonal “thinking of you” gift
+
+---
+
+### **Growth Partner**
+
+**Frequency:** Strategic \+ surprise  
+ **Examples:**
+
+* Customized vendor kits
+
+* Branded but tasteful tools (not merch)
+
+* Holiday drop with personal note
+
+* Invite-only tastings or dinners
+
+---
+
+### **Advocacy Partner**
+
+**Frequency:** Intentional \+ exclusive  
+ **Examples:**
+
+* Private dinner experience
+
+* High-end experience gift
+
+* Anniversary or milestone recognition
+
+* Public recognition \+ private appreciation
+
+---
+
+# **4️⃣ Quarterly Partner Touchpoint Cadence**
+
+**This is where consistency turns into loyalty.**
+
+---
+
+## **Q1 — Alignment & Momentum**
+
+**Focus:** Relationship \+ goals
+
+* Personal check-in
+
+* Share what we’re focused on this year
+
+* Ask how we can better support them
+
+* Invite to a tasting or experience
+
+---
+
+## **Q2 — Visibility & Collaboration**
+
+**Focus:** Brand elevation
+
+* Co-branded content
+
+* Styled shoot or joint post
+
+* Social or email feature
+
+* Lead alignment discussion
+
+---
+
+## **Q3 — Appreciation & Feedback**
+
+**Focus:** Trust \+ improvement
+
+* Thank-you gift or experience
+
+* Ask for honest feedback
+
+* Highlight wins from collaborations
+
+* Reinforce partnership direction
+
+---
+
+## **Q4 — Reflection & Planning**
+
+**Focus:** Long-term thinking
+
+* Year-in-review touchpoint
+
+* Celebrate shared successes
+
+* Discuss next year opportunities
+
+* Exclusive invite or gift
+
+---
+
+## **Final Framing (Important)**
+
+This program should feel:
+
+* Calm
+
+* Professional
+
+* Intentional
+
+* Relationship-first
+
+* Long-term
+
+No hype. No pressure. No chasing.
+
+If you want, next we can:
+
+* Turn this into a **one-page PDF**
+
+* Build an **internal SOP** for your team to manage partners
+
+* Create a **ClickUp or CRM tracking structure**
+
+* Design a **partner-facing landing page**
+
+This is how Comeketo quietly becomes the caterer everyone *trusts* to refer.
+
+—-----------------------------------------------------------------
+
+Rodrigo, this is where the strategy turns into infrastructure.  
+ Below is **everything built so you can deploy immediately**, plus the one-page PDF already created for you.  
+---
+
+## **1️⃣ One-Page Vendor Partnership PDF (DONE)**
+
+Your one-page positioning document is ready.
+
+👉 **Download the Vendor Partnership Program One-Pager**
+
+Use this:
+
+* As a follow-up after warm conversations
+
+* As a credibility piece for planners & venues
+
+* Internally, to keep messaging consistent
+
+Clean. Professional. No fluff.
+
+---
+
+## **2️⃣ Internal SOP: Managing Vendor Partners**
+
+**Purpose:** Make partnerships repeatable, accountable, and culture-aligned.
+
+### **Owner**
+
+**Primary:** Sales & Marketing Director  
+ **Support:** Assigned Account Manager
+
+---
+
+### **A. Partner Classification (Required)**
+
+Every partner must be tagged as one of the following:
+
+* Connected Partner
+
+* Preferred Partner
+
+* Growth Partner
+
+* Advocacy Partner
+
+No partner exists without a tier.
+
+---
+
+### **B. Partner Onboarding SOP**
+
+1. Add partner to CRM / ClickUp
+
+2. Assign Partner Tier
+
+3. Assign Account Manager
+
+4. Log:
+
+   * Contact info
+
+   * IG handle
+
+   * Business type (Planner / Venue)
+
+   * Market
+
+5. Schedule first touchpoint (within 30 days)
+
+---
+
+### **C. Ongoing Management Standards**
+
+* Every partner receives **at least one touchpoint per MONTH**
+
+* All referrals must be logged
+
+* All gifts must be documented
+
+* Any service issue involving a partner is escalated immediately
+
+---
+
+### **D. Tier Advancement Rules**
+
+Partners move up based on:
+
+* Referral consistency
+
+* Brand alignment
+
+* Execution quality
+
+* Communication standards
+
+No automatic promotions.  
+ Movement is intentional.
+
+---
+
+### **E. Removal Criteria**
+
+Partners are removed if they:
+
+* Damage client experience
+
+* Disrespect staff
+
+* Repeatedly ignore communication
+
+* Misalign with Comeketo values
+
+Culture is the filter.
+
+---
+
+## **3️⃣ ClickUp / CRM Tracking Structure**
+
+This keeps partnerships from living only in your head.
+
+**We should have in close in a way we can track in reports their tier** 
+
+---
+
+### **OPTION A: ClickUp (Recommended)**
+
+**Space:** Vendor Partnerships  
+ **Folder:** Active Partners
+
+#### **Lists**
+
+* Connected Partners
+
+* Preferred Partners
+
+* Growth Partners
+
+* Advocacy Partners
+
+---
+
+### **Custom Fields (Mandatory)**
+
+* Partner Type (Planner / Venue / Other)
+
+* Tier (Dropdown)
+
+* Market
+
+* IG Handle
+
+* Referral Count (Rolling 12 months)
+
+* Last Touchpoint Date
+
+* Next Touchpoint Due
+
+* Assigned Account Manager
+
+* Notes / Relationship Intel
+
+---
+
+### **Automations**
+
+* If “Last Touchpoint” \> 90 days → Flag
+
+* If Referral Count increases → Notify Account Manager
+
+* If Tier changes → Create review task
+
+---
+
+### **OPTION B: CRM (Close / GHL)**
+
+Create a **Custom Object or Tag Set**:
+
+* `Partner_Tier`
+
+* `Partner_Type`
+
+* `Partner_Status: Active / Inactive`
+
+* `Referral_Source: Partner Name`
+
+Attach all referred leads to the partner record.
+
+---
+
+## **4️⃣ Partner-Facing Landing Page (Content \+ Structure)** 
+
+This is **not** a sales page.  
+ It’s a trust page.
+
+---
+
+### **Page Title**
+
+**The Comeketo Vendor Partnership Program**
+
+### **Hero Section**
+
+**Built on Trust. Designed for Growth.**
+
+We partner with planners and venues who care deeply about guest experience, operational excellence, and long-term relationships.
+
+---
+
+### **Section: Our Philosophy**
+
+We don’t believe in transactional referrals.  
+ We believe in partnerships built on alignment, reliability, and shared standards.
+
+When our partners win, we win.
+
+---
+
+### **Section: Who This Is For**
+
+* Event planners seeking calm, dependable execution
+
+* Venues protecting their reputation with every referral
+
+* Professionals who value collaboration over competition
+
+---
+
+### **Section: How Partnerships Grow**
+
+* Connected Partner
+
+* Preferred Partner
+
+* Growth Partner
+
+* Advocacy Partner
+
+As alignment deepens, so does support.
+
+---
+
+### **Section: What Partners Can Expect**
+
+* Brand protection
+
+* Clear communication
+
+* Consistent execution
+
+* Thoughtful collaboration
+
+* Long-term thinking
+
+---
+
+### **CTA (Soft, Not Salesy)**
+
+**Interested in exploring alignment?**  
+ Let’s start with a conversation.
+
+\[Button: Start the Conversation\]
+
+---
+
+## **Final Note (Important)**
+
+This entire system does one thing extremely well:
+
+It makes **referring Comeketo feel safe, smart, and aligned**.
+
+No chasing.  
+ No begging.  
+ No awkward asks.
+
+Next, if you want, we can:
+
+* Turn this into a **live ClickUp template**
+
+* Design the **actual landing page layout**
+
+* Write **email follow-ups tied to the PDF**
+
+* Train your team on **how to speak this program naturally**
+
+This is leadership-level brand building. Calm. Durable. Intentional. 
+
+—-------------------------------------------------------------------------------------------------------
+
+Rodrigo, we’ll lock this in like an operating system, not a brainstorm.  
+ Below are **all four steps**, built so your team can run this without you pushing it every week.
+
+I’ll move in execution order.
+
+---
+
+## **1️⃣ Live ClickUp Template (Ready to Build in 20 Minutes)**
+
+### **ClickUp Space**
+
+**Name:** Vendor Partnerships
+
+### **Folders**
+
+* Active Partners
+
+* Prospecting / Connected
+
+* Inactive / Archived
+
+---
+
+### **Lists (by Tier)**
+
+Each list uses the *same structure* so partners can move without friction.
+
+* Connected Partners
+
+* Preferred Partners
+
+* Growth Partners
+
+* Advocacy Partners
+
+---
+
+### **Required Custom Fields**
+
+Create these once and reuse across all lists:
+
+* **Partner Type** (Dropdown): Planner / Venue / Other
+
+* **Tier** (Dropdown): Connected / Preferred / Growth / Advocacy
+
+* **Market** (Text)
+
+* **Instagram Handle** (Text)
+
+* **Primary Contact Name** (Text)
+
+* **Email** (Email field)
+
+* **Phone** (Phone field)
+
+* **Referral Count (Rolling 12 Months)** (Number)
+
+* **Last Touchpoint Date** (Date)
+
+* **Next Touchpoint Due** (Date)
+
+* **Assigned Account Manager** (User)
+
+* **Relationship Notes** (Long text)
+
+---
+
+### **Statuses**
+
+* Active
+
+* Warming
+
+* Strong
+
+* At Risk
+
+* Archived
+
+---
+
+### **Automations (Critical)**
+
+* If **Next Touchpoint Due \= Today** → notify Assigned Account Manager
+
+* If **Last Touchpoint \> 90 days** → status changes to *At Risk*
+
+* If **Tier changes** → auto-move to correct list
+
+---
+
+### **Partner Task Template**
+
+Auto-create these subtasks when a partner is added:
+
+* Initial Relationship Touch
+
+* Quarterly Check-In
+
+* Content / Collaboration Opportunity
+
+* Gift / Appreciation Logged
+
+This is how partnerships stop slipping through the cracks.
+
+---
+
+## **2️⃣ Partner-Facing Landing Page (Actual Layout)**
+
+This is positioning, not selling.
+
+---
+
+### **Hero Section**
+
+**Headline:**  
+ A Partnership Built on Trust, Not Transactions
+
+**Subtext:**  
+ Comeketo Catering partners with planners and venues who value calm execution, guest experience, and long-term relationships.
+
+**CTA:**  
+ Explore the Partnership
+
+---
+
+### **Section 1: Our Philosophy**
+
+Short, confident block of text.
+
+We don’t collect vendor lists.  
+ We build partnerships.
+
+Our Vendor Partnership Program exists to elevate our partners’ brands, support their growth, and protect their reputation with clients.
+
+---
+
+### **Section 2: Who This Is For**
+
+Three columns or cards:
+
+* Event Planners who value reliability and flow
+
+* Venues that protect their reputation fiercely
+
+* Professionals who care how events *feel*, not just how they look
+
+---
+
+### **Section 3: How Partnerships Grow**
+
+Visual tier ladder:
+
+Connected → Preferred → Growth → Advocacy
+
+Text below:  
+ As alignment deepens, so does collaboration and support.
+
+---
+
+### **Section 4: What Partners Can Expect**
+
+Bulleted, calm, grounded:
+
+* Clear communication
+
+* Consistent execution
+
+* Brand protection
+
+* Thoughtful collaboration
+
+* Long-term thinking
+
+---
+
+### **Final CTA**
+
+**Interested in exploring alignment?**  
+ Let’s start with a conversation.
+
+\[Start the Conversation\]
+
+No forms with 20 questions. Keep it human.
+
+---
+
+## **3️⃣ Email Follow-Ups Tied to the PDF**
+
+Below are **three core emails** you’ll reuse constantly.
+
+---
+
+### **Email 1 — Post-Conversation Follow-Up**
+
+Purpose: reinforce positioning without pressure.
+
+Email  
+---
+
+Subject  
+Great connecting — sharing contextGreat connecting — sharing context  
+---
+
+Hi {{Name}},
+
+It was great connecting with you.
+
+As promised, I’m sharing a short overview of how we approach partnerships at Comeketo. This isn’t a referral program — it’s simply how we build long-term alignment with planners and venues we respect.
+
+No action needed on your end. Just wanted to give you clarity into how we think and operate.
+
+Looking forward to staying connected.
+
+Best,  
+Rodrigo  
+Comeketo Catering
+
+---
+
+### **Email 2 — Warm Re-Engagement**
+
+Purpose: reopen conversation naturally.
+
+Email  
+---
+
+Subject  
+Checking back inChecking back in  
+---
+
+Hi {{Name}},
+
+Hope things have been going well on your end.
+
+I wanted to circle back and see if it makes sense to explore alignment between our teams this year. We’ve been intentional about who we collaborate with and how we support those relationships.
+
+If timing isn’t right, no worries at all. Just wanted to reconnect.
+
+Best,  
+Rodrigo
+
+---
+
+### **Email 3 — Advancement / Deeper Alignment**
+
+Purpose: acknowledge trust and signal progression.
+
+Email  
+---
+
+Subject  
+Let’s be more intentionalLet’s be more intentional  
+---
+
+Hi {{Name}},
+
+We’ve really enjoyed working alongside you and appreciate the trust you’ve placed in our team.
+
+As we continue building our partner ecosystem, I’d love to be more intentional about how we support your business and clients moving forward.
+
+Let’s connect and see what that could look like.
+
+Best,  
+Rodrigo
+
+---
+
+## **4️⃣ Team Training: How to Speak This Program Naturally**
+
+This is critical. The program only works if the team speaks it **without selling it**.
+
+---
+
+### **The Core Rule**
+
+We never say:
+
+* “Referral program”
+
+* “Kickbacks”
+
+* “Incentives”
+
+* “Commission”
+
+We always say:
+
+* Alignment
+
+* Partnership
+
+* Support
+
+* Trust
+
+* Long-term
+
+---
+
+### **Internal Talking Points (Scriptable, Not Robotic)**
+
+**What we’re building**
+
+“We’re building long-term partnerships with planners and venues who care about guest experience and execution.”
+
+**What it is**
+
+“It’s not a referral program. It’s about how we support partners we’re aligned with.”
+
+**What partners get**
+
+“As alignment grows, we collaborate more — content, exposure, lead alignment, and support.”
+
+**What we expect**
+
+“Nothing transactional. Just professionalism, communication, and shared standards.”
+
+---
+
+### **When a Partner Asks: “What do you need from me?”**
+
+“Honestly, nothing formal. If we’re a good fit and it makes sense to refer us, great. If not, we still value the relationship.”
+
+That line builds trust immediately.
+
+---
+
+### **Red Line for the Team**
+
+If someone pressures a partner for referrals, they’re out of alignment.  
+ This is cultural, not tactical.
+
+---
+
+## **Final Lock-In**
+
+You now have:
+
+* Infrastructure (ClickUp)
+
+* Positioning (PDF \+ landing page)
+
+* Communication (emails)
+
+* Behavioral training (team language)
+
+This is how Comeketo becomes the **default caterer people feel safe referring**.
+
+If you want next:
+
+* I can convert the landing page into **actual web copy**
+
+* Build **ClickUp automations step-by-step**
+
+* Create a **team Loom training outline**
+
+* Draft **partner onboarding messages**
+
+This system is ready to run.
+
+—--------------------------------------------------------------------------------------------------------
+
+Absolutely, Rodrigo. We’ll keep this **clear, calm, and deployable**.  
+ Below are the two deliverables, designed so your team can execute without improvising tone or intent.
+
+---
+
+# **1️⃣ Team Loom Training Outline**
+
+**Goal:** Align the team on *how* we speak about the Vendor Partnership Program, not just *what* it is.
+
+**Total Length:** 12–15 minutes  
+ **Audience:** Sales, marketing, leadership, anyone touching vendors
+
+---
+
+## **🎥 Loom Title**
+
+**How We Speak About the Comeketo Vendor Partnership Program**
+
+---
+
+## **Section 1 — Why This Program Exists (2–3 min)**
+
+**Key message:** This is about reputation, not referrals.
+
+Talking points:
+
+* We are not chasing referrals
+
+* Our partners put their name on us when they refer
+
+* Our job is to make that decision feel safe, smart, and aligned
+
+* This program protects Comeketo *and* our partners
+
+Anchor line to use:
+
+“We don’t want to be the most recommended caterer. We want to be the safest one to recommend.”
+
+---
+
+## **Section 2 — What This Program Is (and Is Not) (3 min)**
+
+**This IS:**
+
+* A long-term partnership model
+
+* Built on trust, execution, and shared standards
+
+* Earned, not bought
+
+**This is NOT:**
+
+* A referral program
+
+* Pay-to-play
+
+* Commission-based
+
+* Quid-pro-quo
+
+Anchor line:
+
+“As alignment deepens, support deepens. Nothing is forced.”
+
+---
+
+## **Section 3 — The Four Partnership Tiers (3–4 min)**
+
+High level only. No over-explaining.
+
+* Connected: awareness and relationship
+
+* Preferred: trust and collaboration
+
+* Growth: shared momentum
+
+* Advocacy: deep alignment
+
+Important framing:
+
+“We don’t sell tiers. We observe alignment and respond accordingly.”
+
+---
+
+## **Section 4 — How to Talk to Partners (The Language Rules) (3–4 min)**
+
+### **Words We Use**
+
+* Alignment
+
+* Partnership
+
+* Support
+
+* Long-term
+
+* Trust
+
+* Collaboration
+
+### **Words We Do Not Use**
+
+* Referral program
+
+* Incentives
+
+* Kickbacks
+
+* Commission
+
+* Quid-pro-quo
+
+### **If a Partner Asks: *“What do you expect from me?”***
+
+Approved response:
+
+“Nothing formal. If we’re aligned and it makes sense to refer us, great. If not, we still value the relationship.”
+
+---
+
+## **Section 5 — The Red Line (1–2 min)**
+
+Non-negotiables:
+
+* We never pressure for referrals
+
+* We never promise anything transactional
+
+* We never talk differently depending on who’s listening
+
+Anchor:
+
+“How we perform matters just as much as what we achieve.”
+
+Close the Loom with:
+
+“This program only works if it feels human, calm, and intentional. If it ever feels salesy, we’re doing it wrong.”
+
+---
+
+# **2️⃣ Partner Onboarding Messages**
+
+These are **send-ready**, tier-aware, and calm.  
+ No hype. No pressure.
+
+---
+
+## **🟢 Connected Partner — Welcome Message**
+
+**Use after first real conversation or collaboration**
+
+Email  
+---
+
+Subject  
+Great connectingGreat connecting  
+---
+
+Hi {{Name}},
+
+It was great connecting with you.
+
+We’re intentional about building relationships with planners and venues we respect, and I appreciated the chance to learn more about how you approach your work.
+
+No expectations here — just looking forward to staying connected and seeing where alignment may naturally develop over time.
+
+Best,  
+Rodrigo  
+Comeketo Catering
+
+---
+
+## **🔵 Preferred Partner — Onboarding Message**
+
+**Use after first referral or successful event together**
+
+Email  
+---
+
+Subject  
+Looking forward to working more closelyLooking forward to working more closely  
+---
+
+Hi {{Name}},
+
+I wanted to personally say thank you and also share a bit of context around how we approach partnerships.
+
+We don’t operate a traditional referral program. Instead, we build long-term alignment with planners and venues we trust and enjoy working alongside. As that alignment grows, we naturally find more ways to support each other.
+
+I appreciate the trust you’ve placed in us and look forward to continuing to work together.
+
+Best,  
+Rodrigo
+
+---
+
+## **🟣 Growth Partner — Formal Alignment Message**
+
+**Use when you begin sharing leads, content, or joint efforts**
+
+Email  
+---
+
+Subject  
+Being more intentionalBeing more intentional  
+---
+
+Hi {{Name}},
+
+We’ve really enjoyed working alongside you and value the way our teams align.
+
+As we continue to build our partner ecosystem, we’re being more intentional about supporting partners we trust — through collaboration, visibility, and lead alignment where it makes sense.
+
+There’s nothing you need to do differently. I simply wanted to acknowledge the relationship and let you know we see this as a long-term partnership.
+
+Looking forward to continuing to grow together.
+
+Best,  
+Rodrigo
+
+---
+
+## **🟡 Advocacy Partner — Trust & Appreciation Message**
+
+**Use sparingly. This signals depth.**
+
+Email  
+---
+
+Subject  
+Appreciation & alignmentAppreciation & alignment  
+---
+
+Hi {{Name}},
+
+I just wanted to take a moment to say how much we appreciate the trust you place in our team.
+
+We consider you a core partner and genuinely value the way you show up — for your clients, your events, and the people you work with.
+
+Our focus moving forward is continuing to support you in ways that feel meaningful, thoughtful, and aligned. If there’s ever feedback or opportunities you’d like to explore together, I’m always open.
+
+Thank you for the partnership.
+
+Best,  
+Rodrigo
+
+---
+
+## **Final Note**
+
+At this point, you’ve built:
+
+* The **system**
+
+* The **language**
+
+* The **training**
+
+* The **external messaging**
+
+What makes this powerful is not complexity.  
+ It’s consistency.
+
+If you want next, I can:
+
+* Turn the Loom outline into a **verbatim script**
+
+* Create **Slack/ClickUp internal reminders**
+
+* Draft **partner offboarding language** (important and often missed)
+
+* Help you assign **ownership inside the org**
+
+This program now lives beyond you — which is exactly where it should be.
+
+—-------------------------------------------------------------------------------------------------------------
+
+Absolutely, Rodrigo.  
+ We’ll do this cleanly and decisively so it’s **ready to record** and **ready to run**.
+
+---
+
+# **1️⃣ Loom Training — Verbatim Script**
+
+**Title:** How We Speak About the Comeketo Vendor Partnership Program  
+ **Length:** \~12–15 minutes  
+ **Tone:** Calm, confident, culture-forward, no hype
+
+You can read this word-for-word on Loom.
+
+---
+
+## **INTRO (30–45 seconds)**
+
+“Hey team.  
+ I want to take a few minutes to align us on how we talk about the Comeketo Vendor Partnership Program.
+
+This is important, not because it’s a marketing initiative, but because it directly impacts our reputation, our growth, and how people experience working with us.
+
+This program only works if we all speak about it the same way — calmly, clearly, and without pressure.”
+
+---
+
+## **SECTION 1 — WHY THIS PROGRAM EXISTS (2–3 minutes)**
+
+“Let’s start with the why.
+
+Event planners and venue owners don’t refer caterers because they like them.  
+ They refer caterers because they trust them with their reputation.
+
+When someone refers Comeketo, they’re putting their name on us.  
+ Our responsibility is to make that decision feel safe, smart, and aligned.
+
+So this program exists to protect our partners, protect our brand, and create long-term relationships — not quick wins.”
+
+**Pause**
+
+“The goal here is not to be the most recommended caterer.  
+ The goal is to be the *safest* caterer to recommend.”
+
+---
+
+## **SECTION 2 — WHAT THIS PROGRAM IS (AND IS NOT) (3 minutes)**
+
+“Here’s where alignment really matters.
+
+This is **not** a referral program.  
+ It’s not pay-to-play.  
+ There are no commissions, kickbacks, or transactional expectations.
+
+What it *is*, is a partnership model built on alignment, execution, and shared standards.
+
+As alignment deepens, support deepens.  
+ Nothing is forced. Nothing is owed.”
+
+**Important emphasis**
+
+“If it ever starts to sound salesy, we’re doing it wrong.”
+
+---
+
+## **SECTION 3 — THE FOUR PARTNERSHIP TIERS (3–4 minutes)**
+
+“We organize partnerships into four tiers.  
+ Not because we sell tiers — but because relationships naturally evolve.”
+
+* “Connected partners are people we know, respect, and are building rapport with.”
+
+* “Preferred partners are people we’ve worked with and trust in front of clients.”
+
+* “Growth partners are people we actively collaborate with to help each other grow.”
+
+* “Advocacy partners are deeply aligned and confidently speak about us when we’re not in the room.”
+
+**Key line**  
+ “We don’t pitch tiers. We observe alignment and respond accordingly.”
+
+---
+
+## **SECTION 4 — HOW TO TALK ABOUT IT (LANGUAGE RULES) (3–4 minutes)**
+
+“There are specific words we use — and words we don’t.”
+
+**Words we use**
+
+* Alignment
+
+* Partnership
+
+* Support
+
+* Long-term
+
+* Trust
+
+* Collaboration
+
+**Words we never use**
+
+* Referral program
+
+* Incentives
+
+* Kickbacks
+
+* Commission
+
+“If a partner asks, ‘What do you expect from me?’  
+ This is the approved response.”
+
+**Say this slowly:**
+
+‘Nothing formal. If we’re aligned and it makes sense to refer us, great. If not, we still value the relationship.’
+
+“That sentence alone builds more trust than any pitch ever will.”
+
+---
+
+## **SECTION 5 — THE RED LINE (1–2 minutes)**
+
+“This is non-negotiable.
+
+We do not pressure partners for referrals.  
+ We do not promise anything transactional.  
+ We do not change our tone based on who we’re talking to.
+
+How we perform matters just as much as what we achieve.
+
+If something about this program ever feels uncomfortable, unclear, or off-brand — raise it immediately.”
+
+---
+
+## **CLOSE (30 seconds)**
+
+“This program works because it feels human, intentional, and calm.
+
+If we protect the relationship, the results will follow.
+
+Thanks for being aligned.”
+
+---
+
+# **2️⃣ Assigning Ownership Inside the Organization**
+
+This is how it runs **without bottlenecks** or confusion.
+
+---
+
+## **🎯 Ownership Model (Simple & Scalable)**
+
+### **Executive Owner**
+
+**You, Rodrigo**
+
+**Responsibility**
+
+* Sets the standard
+
+* Final authority on tier advancement or removal
+
+* Cultural gatekeeper
+
+You are not managing day-to-day.  
+ You are protecting the *integrity* of the program.
+
+---
+
+### **Program Owner**
+
+**Sales & Marketing Director**
+
+**Responsibility**
+
+* Oversees the Vendor Partnership Program as a whole
+
+* Reviews partner health quarterly
+
+* Ensures alignment with brand and growth goals
+
+* Escalation point for issues
+
+This person owns the *system*.
+
+---
+
+### **Account Managers (Execution Layer)**
+
+**Assigned per partner**
+
+**Responsibility**
+
+* Day-to-day relationship management
+
+* Monthly touchpoints
+
+* Logging referrals, gifts, and notes
+
+* Flagging risks or opportunities
+
+Rule:
+
+Every partner must have one owner. No shared ownership.
+
+---
+
+### **Support Roles**
+
+* **Marketing:** content, features, co-branded efforts
+
+* **Sales:** lead attribution and partner feedback
+
+* **Operations:** execution feedback from events
+
+They contribute — they don’t own.
+
+---
+
+## **🔁 Quarterly Review Rhythm**
+
+Once per quarter, Program Owner reviews:
+
+* Partner tier distribution
+
+* Referral activity
+
+* At-risk relationships
+
+* Advancement or removal candidates
+
+Short. Intentional. Documented.
+
+---
+
+## **Final Lock**
+
+At this point:
+
+* Your team knows **what to say**
+
+* They know **what not to say**
+
+* Ownership is clear
+
+* Culture is protected
+
+This is how programs stop depending on personality and start running on principle.
+
+If you want next, we can:
+
+* Turn the Loom script into a **teleprompter doc**
+
+* Build a **ClickUp dashboard view for leadership**
+
+* Draft **partner offboarding language**
+
+* Create a **90-day rollout plan**
+
+You’ve built something very few catering companies ever do — and it shows.
+
+—----------------------------------------------------------------------------------------------  
+Rodrigo, this is the final layer where everything becomes **operationally inevitable**.  
+ I’ll give you four clean deliverables, each built so your team can execute without interpretation.
+
+I’ll move in order.
+
+---
+
+# **1️⃣ Loom Script → Teleprompter Document**
+
+**Use this exactly as-is. Short lines. Natural pauses. Easy to read on camera.**
+
+---
+
+## **TELEPROMPTER SCRIPT**
+
+**Title:** How We Speak About the Comeketo Vendor Partnership Program
+
+---
+
+**\[START\]**
+
+Hey team.
+
+I want to take a few minutes to align us on how we talk about  
+ the Comeketo Vendor Partnership Program.
+
+This matters because it directly impacts  
+ our reputation, our growth,  
+ and how people experience working with us.
+
+This program only works  
+ if we all speak about it the same way.  
+ Calm. Clear. No pressure.
+
+---
+
+**WHY THIS PROGRAM EXISTS**
+
+Planners and venue owners  
+ don’t refer caterers because they like them.
+
+They refer caterers  
+ because they trust them  
+ with their reputation.
+
+When someone refers Comeketo,  
+ they’re putting their name on us.
+
+Our responsibility  
+ is to make that decision feel safe,  
+ smart,  
+ and aligned.
+
+This program exists to protect our partners,  
+ protect our brand,  
+ and build long-term relationships.
+
+Not quick wins.
+
+The goal is not to be  
+ the most recommended caterer.
+
+The goal is to be  
+ the safest caterer to recommend.
+
+---
+
+**WHAT THIS PROGRAM IS — AND IS NOT**
+
+This is not a referral program.
+
+There are no commissions.  
+ No kickbacks.  
+ No pay-to-play.
+
+This is a partnership model  
+ built on alignment, execution,  
+ and shared standards.
+
+As alignment deepens,  
+ support deepens.
+
+Nothing is forced.  
+ Nothing is owed.
+
+If it ever starts to sound salesy,  
+ we’re doing it wrong.
+
+---
+
+**THE FOUR PARTNERSHIP TIERS**
+
+We organize partnerships into four stages.
+
+Not because we sell tiers,  
+ but because relationships naturally evolve.
+
+Connected partners  
+ are people we’re getting to know  
+ and building rapport with.
+
+Preferred partners  
+ are people we’ve worked with  
+ and trust in front of clients.
+
+Growth partners  
+ are people we actively collaborate with  
+ to help each other grow.
+
+Advocacy partners  
+ are deeply aligned  
+ and speak about us when we’re not in the room.
+
+We don’t pitch tiers.
+
+We observe alignment  
+ and respond accordingly.
+
+---
+
+**HOW TO TALK ABOUT IT**
+
+Words we use:
+
+Alignment.  
+ Partnership.  
+ Support.  
+ Long-term.  
+ Trust.  
+ Collaboration.
+
+Words we do not use:
+
+Referral program.  
+ Incentives.  
+ Kickbacks.  
+ Commission.
+
+If a partner asks,  
+ “What do you expect from me?”
+
+This is the answer:
+
+“Nothing formal.  
+ If we’re aligned and it makes sense to refer us, great.  
+ If not, we still value the relationship.”
+
+That sentence builds trust immediately.
+
+---
+
+**THE RED LINE**
+
+We never pressure for referrals.  
+ We never promise anything transactional.  
+ We never change our tone based on who we’re talking to.
+
+How we perform  
+ matters just as much  
+ as what we achieve.
+
+If something feels off,  
+ raise it immediately.
+
+---
+
+**CLOSE**
+
+This program works  
+ because it feels human,  
+ intentional,  
+ and calm.
+
+Protect the relationship.  
+ The results will follow.
+
+Thanks for staying aligned.
+
+**\[END\]**
+
+---
+
+# **2️⃣ ClickUp Dashboard View for Leadership**
+
+**Purpose:** One glance. No digging. No stories.
+
+---
+
+## **📊 Dashboard Name**
+
+**Vendor Partnerships – Leadership View**
+
+---
+
+## **Widgets to Add**
+
+### **1️⃣ Partner Tier Breakdown (Pie Chart)**
+
+* Connected
+
+* Preferred
+
+* Growth
+
+* Advocacy
+
+➡️ Shows health and maturity of ecosystem.
+
+---
+
+### **2️⃣ At-Risk Partners (List Widget)**
+
+Filter:
+
+* Status \= At Risk
+
+* Last Touchpoint \> 90 days  
+
+➡️ Early warning system.
+
+---
+
+### **3️⃣ Referrals by Partner (Table)**
+
+Fields:
+
+* Partner Name
+
+* Tier
+
+* Referral Count (Last 90 Days)
+
+* Market
+
+➡️ Highlights momentum without pressure.
+
+---
+
+### **4️⃣ Touchpoint Compliance (Progress Bar)**
+
+* % of partners touched this quarter
+
+➡️ Accountability without micromanagement.
+
+---
+
+### **5️⃣ Tier Movement (Last 90 Days)**
+
+* Promoted
+
+* Maintained
+
+* Archived
+
+➡️ Shows discipline and standards.  
+**After 90 days of reaching out to a partner with no success they will be in a monthly nurturing list)**
+
+---
+
+**Leadership Rule:**  
+ If it’s not visible here, it doesn’t exist.
+
+---
+
+# **3️⃣ Partner Offboarding Language**
+
+This is quiet, respectful, and reputation-safe.
+
+---
+
+### **OFFBOARDING EMAIL (Send 1:1 Only)**
+
+Email  
+---
+
+Subject  
+A quick noteA quick note  
+---
+
+Hi {{Name}},
+
+I wanted to reach out personally and share a quick update.
+
+As we continue refining how we manage our partner ecosystem, we’re being more intentional about where we focus our energy and resources. At this time, it makes sense for us to step back from an active partnership so we can stay aligned on standards and expectations.
+
+This isn’t a reflection of your work, and there’s no negative sentiment here. We simply want to be respectful and transparent as we focus on where alignment is strongest.
+
+I genuinely appreciate the connection and wish you continued success. Our door remains open should alignment make sense again in the future.
+
+Best,  
+Rodrigo  
+Comeketo Catering
+
+**Key principle:**  
+ No blame. No explanation spiral. No burned bridges.
+
+---
+
+# **4️⃣ 90-Day Rollout Plan**
+
+**Designed to roll out without chaos or overwhelm.**  
+**After 90 days of reaching out to a partner with no success they will be in a monthly nurturing list)**
+
+---
+
+## **DAYS 1–30: FOUNDATION**
+
+**Focus:** Internal alignment
+
+* Record Loom training
+
+* Share teleprompter \+ language rules
+
+* Build ClickUp Space, Lists, Dashboard
+
+* Assign Program Owner \+ Account Managers
+
+* Tier existing partners quietly
+
+* No external announcements yet
+
+✅ Outcome: Team aligned, system live.
+
+---
+
+## **DAYS 31–60: ACTIVATION**
+
+**Focus:** Soft external rollout
+
+* Begin using onboarding emails
+
+* Share PDF selectively after conversations
+
+* Start logging touchpoints \+ referrals
+
+* First round of partner appreciation gifts
+
+* Leadership reviews dashboard bi-weekly
+
+✅ Outcome: Program is in motion, low noise.
+
+---
+
+## **DAYS 61–90: OPTIMIZATION**
+
+**Focus:** Consistency and clarity
+
+* Identify Growth \+ Advocacy candidates
+
+* Prune misaligned or inactive partners
+
+* Run first quarterly partner review
+
+* Tighten language based on real conversations
+
+* Celebrate internal wins with the team
+
+✅ Outcome: Ecosystem feels intentional and clean.
+
+---
+
+## **Final Lock-In**
+
+At this point, you have:
+
+* Language
+
+* Infrastructure
+
+* Governance
+
+* Leadership visibility
+
+* Exit strategy
+
+* Rollout discipline
+
+This is how a program survives growth  
+ without losing culture.
+
+If you want next, I can:
+
+* Build a **partner scoring model**
+
+* Create a **ClickUp SOP doc**
+
+* Draft a **partner invitation page**
+
+* Help you **delegate this fully out of sales**
+
+You’ve done this the right way.
+
+—-----------------------------------------------------------------------------------------------------------
+
+Rodrigo, this is the moment where the program stops being *sales-adjacent* and becomes a **standalone growth engine**.  
+ I’ll give you four tightly integrated pieces that work together.
+
+No fluff. No overlap. Clear ownership.
+
+---
+
+# **1️⃣ Partner Scoring Model**
+
+**Purpose:** Remove emotion, favoritism, and guesswork from partner decisions.
+
+This model answers one question objectively:  
+ **“Is this a partner we should invest more energy into?”**
+
+---
+
+## **🔢 The Comeketo Partner Score (0–100)**
+
+Each partner is scored quarterly across **five dimensions**.
+
+---
+
+### **1\. Alignment with Brand & Values (0–25 points)**
+
+How closely they align with how we operate.
+
+* Professional communication
+
+* Respect for staff
+
+* Client-first mindset
+
+* Calm, organized execution
+
+**Scoring**
+
+* 0–10: Misaligned or inconsistent
+
+* 11–18: Generally aligned
+
+* 19–25: Strong cultural fit
+
+---
+
+### **2\. Execution Experience (0–25 points)**
+
+What it’s actually like to work together.
+
+* Timeline coordination
+
+* Day-of flow
+
+* Problem-solving
+
+* Post-event professionalism
+
+**Scoring**
+
+* 0–10: Friction-heavy
+
+* 11–18: Solid but improv-heavy
+
+* 19–25: Smooth, dependable, trusted
+
+---
+
+### **3\. Referral Quality (0–20 points)**
+
+Not volume. Fit.
+
+* Leads match our ICP
+
+* Proper expectations set
+
+* Respect for pricing and scope
+
+**Scoring**
+
+* 0–7: Poor fit leads
+
+* 8–14: Mixed quality
+
+* 15–20: High-quality, aligned leads
+
+---
+
+### **4\. Engagement & Reciprocity (0–15 points)**
+
+Do they engage back?
+
+* Responds
+
+* Participates in collaborations
+
+* Shows interest in mutual growth
+
+**Scoring**
+
+* 0–5: Passive
+
+* 6–10: Responsive
+
+* 11–15: Actively engaged
+
+---
+
+### **5\. Reputation & Market Influence (0–15 points)**
+
+How much weight their voice carries.
+
+* Market presence
+
+* Client trust
+
+* Peer respect
+
+**Scoring**
+
+* 0–5: Limited influence
+
+* 6–10: Solid presence
+
+* 11–15: Strong market voice
+
+---
+
+## **🧮 Tier Thresholds**
+
+* **0–39:** Connected (observe only)
+
+* **40–59:** Preferred
+
+* **60–79:** Growth
+
+* **80–100:** Advocacy
+
+Rule: **Tier follows score. Not feelings.**
+
+---
+
+# **2️⃣ ClickUp SOP Document (Internal, Living Doc)**
+
+**Doc Title:** Vendor Partnership Program – SOP  
+ **Location:** ClickUp Docs → Vendor Partnerships Space
+
+---
+
+## **SOP SECTION 1 — Purpose**
+
+To manage vendor partnerships in a consistent, scalable, and culture-aligned way that protects Comeketo’s brand and supports long-term growth.
+
+---
+
+## **SOP SECTION 2 — Ownership**
+
+* **Executive Owner:** Rodrigo
+
+* **Program Owner:** Marketing Director
+
+* **Account Owner:** Assigned Partner Manager
+
+No shared ownership. One throat to choke, one hand to support.
+
+---
+
+## **SOP SECTION 3 — Partner Lifecycle**
+
+1. Prospect Identified
+
+2. Added as Connected Partner
+
+3. Quarterly Scoring Applied
+
+4. Tier Adjusted (if applicable)
+
+5. Ongoing Touchpoints Logged
+
+6. Advancement or Offboarding
+
+---
+
+## **SOP SECTION 4 — Required Actions**
+
+* Every partner must have:
+
+  * Tier
+
+  * Owner
+
+  * Last & next touchpoint
+
+  * Quarterly score
+
+* Every referral must be logged
+
+* Every gift must be documented
+
+If it’s not in ClickUp, it didn’t happen.
+
+---
+
+## **SOP SECTION 5 — Reviews**
+
+* Quarterly partner score review
+
+* Tier changes documented
+
+* At-risk partners flagged
+
+* Advocacy partners prioritized
+
+---
+
+## **SOP SECTION 6 — Removal**
+
+Partners may be offboarded for:
+
+* Repeated misalignment
+
+* Brand risk
+
+* Poor execution behavior
+
+* Cultural violations
+
+Offboarding language must be used. No ghosting.
+
+---
+
+# **3️⃣ Partner Invitation Page (Draft Copy)**
+
+This is **not public-facing marketing**.  
+ It’s a *selective invitation* page.
+
+---
+
+## **PAGE HEADLINE**
+
+A Partnership Built on Trust, Not Transactions
+
+---
+
+## **INTRO COPY**
+
+At Comeketo Catering, we work closely with planners and venues who value calm execution, thoughtful collaboration, and exceptional guest experience.
+
+We don’t operate a referral program.  
+ We build long-term partnerships rooted in alignment and trust.
+
+---
+
+## **WHO THIS IS FOR**
+
+This partnership is designed for:
+
+* Event planners who protect their reputation
+
+* Venues that value reliable execution
+
+* Professionals who care about how events feel, not just how they look
+
+---
+
+## **HOW IT WORKS**
+
+Partnerships grow naturally through stages:  
+ Connected → Preferred → Growth → Advocacy
+
+As alignment deepens, collaboration and support expand.
+
+Nothing is forced. Nothing is owed.
+
+---
+
+## **WHAT PARTNERS CAN EXPECT**
+
+* Clear communication
+
+* Brand protection
+
+* Consistent execution
+
+* Thoughtful collaboration
+
+* Long-term thinking
+
+---
+
+## **CTA**
+
+If this philosophy resonates, we’d love to start a conversation.
+
+\[Explore Alignment\]
+
+---
+
+# **4️⃣ Delegating This Fully Out of Sales**
+
+This is critical.
+
+Sales **touches** partners.  
+ Sales does **not own** partnerships.
+
+---
+
+## **New Ownership Structure**
+
+### **❌ Sales Role (What They Stop Doing)**
+
+* No managing partner relationships
+
+* No asking for referrals
+
+* No tier decisions
+
+* No gifting decisions
+
+Sales focuses on closing clients. Period.
+
+---
+
+### **✅ Partner Program Team**
+
+**Program Owner (Marketing)**
+
+* Owns system, tiers, reviews
+
+* Oversees scoring
+
+* Reports to you quarterly
+
+**Partner Managers (1–2 people max)**
+
+* Relationship caretakers
+
+* Monthly touchpoints
+
+* Logging, gifting, follow-ups
+
+**Your Role**
+
+* Executive visibility
+
+* Advocacy-level touchpoints only
+
+* Cultural enforcement
+
+* Final call on removals
+
+---
+
+## **The Delegation Rule**
+
+If Sales is asking:
+
+“Should I follow up with this planner?”
+
+The answer becomes:
+
+“Add them to Vendor Partnerships. Program team will handle it.”
+
+That’s how this scales cleanly.
+
+---
+
+## **Final Lock-In**
+
+You now have:
+
+* A scoring model that removes bias
+
+* A documented operating system
+
+* A selective invitation experience
+
+* Clear separation between sales and partnerships
+
+This is how Comeketo builds **quiet leverage** in the market.
+
+If you want next, I can:
+
+* Turn the scoring model into a ClickUp automation
+
+* Create a partner health score dashboard
+
+* Draft internal job descriptions for Partner Managers
+
+* Design a quarterly partner report you can review in 10 minutes
+
+You’ve built something rare. Now it runs without you pushing it.
+
+—-------------------------------------------------------------------------------------------------------
+
+Rodrigo, these two pieces are what **lock delegation in place**.  
+ Once this exists, the program no longer needs your daily attention. You step in only where leadership belongs.
+
+I’ll give you both in a **ready-to-use, internal format**.
+
+---
+
+# **1️⃣ Internal Job Description**
+
+## **Partner Manager (Vendor Partnerships)**
+
+**Role Purpose**  
+ The Partner Manager is responsible for nurturing, protecting, and growing Comeketo’s ecosystem of planners and venues. This role exists to ensure partnerships are consistent, aligned with company values, and actively contributing to long-term brand growth.
+
+This is **not a sales role**.  
+ This is a relationship stewardship role.
+
+---
+
+### **Core Responsibilities**
+
+**Relationship Ownership**
+
+* Serve as the primary point of contact for assigned vendor partners
+
+* Maintain consistent, professional, and calm communication
+
+* Ensure partners feel supported, respected, and clear on expectations
+
+**Partner Lifecycle Management**
+
+* Onboard new partners into ClickUp
+
+* Maintain accurate partner records
+
+* Track partner tier, touchpoints, and engagement
+
+* Identify advancement or offboarding candidates
+
+**Quarterly Touchpoints**
+
+* Execute quarterly partner check-ins
+
+* Log all interactions in ClickUp
+
+* Surface insights, feedback, and opportunities
+
+**Scoring & Health Monitoring**
+
+* Apply the Partner Scoring Model quarterly
+
+* Flag at-risk partners early
+
+* Recommend tier changes based on objective data
+
+**Collaboration Coordination**
+
+* Coordinate with Marketing on content and features
+
+* Coordinate with Operations on execution feedback
+
+* Coordinate with Sales only for attribution clarity, not relationship management
+
+---
+
+### **What This Role Does NOT Do**
+
+* Does not ask for referrals
+
+* Does not negotiate pricing
+
+* Does not promise incentives
+
+* Does not manage client sales conversations
+
+---
+
+### **Success Metrics (KPIs)**
+
+* % of partners with quarterly touchpoints completed
+
+* Partner retention rate
+
+* Growth of Preferred → Growth → Advocacy tiers
+
+* Reduction in at-risk partners
+
+* Quality and consistency of partner notes and documentation
+
+---
+
+### **Ideal Traits**
+
+* Calm, emotionally intelligent communicator
+
+* Organized and systems-driven
+
+* Strong follow-through
+
+* Comfortable holding standards
+
+* Values long-term relationships over quick wins
+
+---
+
+### **Reporting Structure**
+
+* Reports to: **Vendor Partnership Program Owner**
+
+* Works cross-functionally with Marketing and Operations
+
+* Escalates issues directly when brand risk appears
+
+---
+
+# **2️⃣ Quarterly Partner Report**
+
+## **(10-Minute Leadership Review)**
+
+This report is designed so you can:
+
+* Scan it
+
+* Ask 2–3 smart questions
+
+* Make decisions
+
+* Move on
+
+No storytelling. No fluff.
+
+---
+
+## **📊 Report Title**
+
+**Vendor Partnership Quarterly Review – Q\[ \]**
+
+---
+
+## **SECTION 1 — Ecosystem Snapshot (2 minutes)**
+
+**Metrics**
+
+* Total Active Partners
+
+* Partners by Tier:
+
+  * Connected
+
+  * Preferred
+
+  * Growth
+
+  * Advocacy
+
+* Net change from last quarter (+ / –)
+
+**What you’re looking for**
+
+* Is the ecosystem maturing?
+
+* Are we stuck at Connected?
+
+* Are Advocacy partners growing slowly and intentionally?
+
+---
+
+## **SECTION 2 — Partner Health Overview (2 minutes)**
+
+**At-a-Glance**
+
+* % Healthy
+
+* % At Risk
+
+* % Archived this quarter
+
+**Top 3 At-Risk Reasons**
+
+* Low engagement
+
+* Execution friction
+
+* Misalignment with standards
+
+**Leadership Question**
+
+“Are we tolerating misalignment longer than we should?”
+
+---
+
+## **SECTION 3 — Momentum & Impact (2 minutes)**
+
+**Highlights**
+
+* Top 5 partners by referral quality (not volume)
+
+* Markets with strongest partner momentum
+
+* Notable collaborations or wins
+
+**Leadership Question**
+
+“Where is alignment turning into leverage?”
+
+---
+
+## **SECTION 4 — Tier Movement (2 minutes)**
+
+**This Quarter**
+
+* Partners promoted (and why)
+
+* Partners maintained
+
+* Partners offboarded (count only, no names unless requested)
+
+**Leadership Question**
+
+“Are standards being enforced calmly and consistently?”
+
+---
+
+## **SECTION 5 — Decisions & Focus (2 minutes)**
+
+**Next Quarter Priorities**
+
+* Which partners deserve deeper investment
+
+* Which markets need more cultivation
+
+* Any partners needing executive touchpoints (you)
+
+**Executive Actions Requested**
+
+* ✔ Approve promotions
+
+* ✔ Acknowledge offboardings
+
+* ✔ Flag any cultural concerns
+
+---
+
+## **Final Page — One Sentence Summary**
+
+**“This quarter, our partner ecosystem is \_\_\_\_\_\_\_\_\_\_.”**
+
+If that sentence isn’t clear, the report isn’t done.
+
+---
+
+## **How This All Fits Together (Important)**
+
+* Partner Managers run the relationships
+
+* The Program Owner runs the system
+
+* Sales runs revenue
+
+* You protect culture, standards, and direction
+
+No overlap. No confusion. No burnout.
+
+---
+
+If you want next, we can:
+
+* Turn this into a **ClickUp report template**
+
+* Create a **Partner Manager onboarding checklist**
+
+* Design a **scorecard view tied to the report**
+
+* Build a **quarterly executive email summary** you can skim in 60 seconds
+
+This is executive-level leverage, and you’ve built it the right way.
+
+# **6-Month Growth Strategy**
+
+## **Turning the Vendor Partnership Program into a Predictable Growth Engine**
+
+This strategy focuses on one outcome: making Comeketo the safest caterer to recommend in every market we operate.
+
+Growth here is not driven by volume, noise, or pressure. It is driven by trust, consistency, and operational proof. Each phase builds leverage so momentum compounds rather than resets.
+
+---
+
+## **North Star Objective**
+
+Over six months, establish a mature, self-sustaining vendor partnership ecosystem that reliably generates high-quality inbound opportunities while strengthening Comeketo’s reputation with planners and venues.
+
+Success is measured by preference, not exposure.
+
+---
+
+## **Core Growth Levers**
+
+We focus on four levers only. Anything outside these does not get prioritized.
+
+1. Partner Trust Density  
+   Depth of trust with a smaller number of aligned planners and venues.  
+2. Operational Proof  
+   Demonstrated reliability through execution, communication, and follow-through.  
+3. Value Visibility  
+   Consistent demonstration of how Comeketo makes partners look good and work easier.  
+4. System Discipline  
+   Partnerships managed through structure, not memory or personality.
+
+---
+
+## **Month 1: Foundation and Internal Alignment**
+
+**Primary Objective:** Build the infrastructure, language, and behavioral consistency required for the program to scale without confusion or personality-driven execution.
+
+This month is intentionally inward-facing. Visibility without structure creates noise and risk.
+
+**Detailed Actions**
+
+* Finalize and lock all external-facing language for partnerships, including how referrals, collaboration, and expectations are described  
+* Run the Partner Scoring Model on every existing planner and venue, even long-standing relationships, to establish a clean baseline  
+* Assign a single Partner Manager to every active relationship and confirm ownership publicly inside the team  
+* Build ClickUp views for Partner Tier, At-Risk Status, and Upcoming Touchpoints  
+* Train sales, marketing, and operations using the Loom so execution and language are aligned  
+* Audit recent events for execution gaps that could undermine partner trust
+
+**Weekly Cadence**
+
+* Weekly 30-minute internal check-in on partner health and risks  
+* Partner Managers schedule at least one listening-focused touchpoint per week
+
+**Success Indicators**
+
+* 100 percent of partners assigned a tier, owner, and next touchpoint  
+* Team can explain the program consistently without selling language  
+* Leadership can identify partner risk or opportunity in under five minutes
+
+**Risks to Avoid**
+
+* External rollout before internal clarity  
+* Allowing legacy relationships to bypass structure  
+* Treating this as a marketing initiative instead of an operating system
+
+**Why This Matters**  
+Growth amplifies behavior. This month ensures we amplify discipline, not inconsistency.
+
+---
+
+**Primary Objective:** Build the infrastructure and language so the program runs cleanly before it is visible externally.
+
+**Key Actions**
+
+* Finalize and lock partnership language across sales, marketing, and operations  
+* Tier all existing planners and venues quietly using the Partner Scoring Model  
+* Assign Partner Managers and confirm ownership for every active relationship  
+* Launch ClickUp dashboards and reporting views  
+* Train the team using the Loom and teleprompter script
+
+**Success Indicators**
+
+* 100 percent of partners assigned a tier and owner  
+* Zero ambiguity in how the team explains the program  
+* Leadership visibility into partner health at a glance
+
+**Why This Matters**  
+If the system leaks internally, growth will amplify the problems instead of the results.
+
+---
+
+## **Month 2: Soft Activation and Relationship Warming**
+
+**Primary Objective:** Increase familiarity, goodwill, and psychological safety with planners and venues without triggering pressure or expectation.
+
+This month builds emotional equity.
+
+**Detailed Actions**
+
+* Partner Managers initiate value-first conversations with Connected and Preferred partners focused on understanding their priorities and pain points  
+* Engage with partner content intentionally, referencing specific events, posts, or operational details  
+* Share the Vendor Partnership One-Pager only after conversation, never as a cold introduction  
+* Begin logging qualitative insights from partners inside ClickUp  
+* Send handwritten notes or thoughtful follow-ups tied to real interactions
+
+**Content and Touchpoint Focus**
+
+* Guest experience insights planners can use immediately  
+* Behind-the-scenes process clarity that reduces uncertainty  
+* Recognition of partner work without reciprocity implied
+
+**Weekly Cadence**
+
+* Minimum of two meaningful partner touchpoints per Partner Manager per week  
+* Leadership reviews engagement quality, not volume
+
+**Success Indicators**
+
+* Increased response depth, not just replies  
+* Partners asking exploratory questions about collaboration  
+* More inbound dialogue initiated by partners
+
+**Risks to Avoid**
+
+* Over-communicating  
+* Turning engagement into subtle pitching  
+* Measuring success by likes instead of conversation quality
+
+**Why This Matters**  
+Trust begins forming when partners feel seen, not pursued.
+
+---
+
+**Primary Objective:** Increase familiarity and goodwill without asking for anything.
+
+**Key Actions**
+
+* Begin value-first outreach to Connected and Preferred partners  
+* Engage consistently with partner content using specific, thoughtful feedback  
+* Share the Vendor Partnership One-Pager selectively after warm conversations  
+* Schedule initial partner check-ins focused on listening, not pitching
+
+**Content Focus**
+
+* Education around guest experience  
+* Behind-the-scenes execution insights  
+* Recognition of partner work without expectation
+
+**Success Indicators**
+
+* Increased response rates from planners and venues  
+* More inbound curiosity about collaboration  
+* Improved engagement with shared content
+
+**Why This Matters**  
+Trust is built before opportunity appears. This phase creates psychological safety.
+
+---
+
+## **Month 3: Collaboration and Proof of Value**
+
+**Primary Objective:** Translate goodwill into confidence through visible, low-friction collaboration.
+
+This is where intent becomes tangible.
+
+**Detailed Actions**
+
+* Identify 5–7 partners with strong alignment signals and invite them into light collaboration  
+* Convert existing tastings into styled shoots with shared distribution plans  
+* Launch partner spotlights that center the partner’s expertise and professionalism  
+* Implement post-event recaps that highlight what worked and capture partner feedback  
+* Track referral quality signals even if volume remains low
+
+**Content Focus**
+
+* How collaboration improves client experience  
+* Operational clarity that planners can rely on  
+* Shared wins framed from the partner’s perspective
+
+**Weekly Cadence**
+
+* One collaboration or content activation in motion at all times  
+* Weekly review of execution feedback from shared events
+
+**Success Indicators**
+
+* Partners sharing content without being asked  
+* Increased preference language from planners  
+* Early unsolicited referrals or soft recommendations
+
+**Risks to Avoid**
+
+* Over-producing content  
+* Making collaboration feel promotional  
+* Ignoring feedback that reveals friction
+
+**Why This Matters**  
+Confidence is built when partners see consistency, not promises.
+
+---
+
+**Primary Objective:** Demonstrate partnership value through action, not promises.
+
+**Key Actions**
+
+* Launch 2–3 co-branded content collaborations with aligned partners  
+* Turn select tastings into styled shoots with planners and venues  
+* Introduce post-event recap touchpoints for shared events  
+* Begin tracking referral quality, not volume
+
+**Content Focus**
+
+* Partner spotlights  
+* Process clarity and calm execution  
+* Shared wins framed around the partner, not Comeketo
+
+**Success Indicators**
+
+* Partners sharing Comeketo content organically  
+* Increased preference signals from planners  
+* First signs of unsolicited referrals
+
+**Why This Matters**  
+This phase converts goodwill into confidence.
+
+---
+
+## **Month 4: Preference and Lead Alignment**
+
+**Primary Objective:** Establish Comeketo as the default caterer for partners who value control and reliability.
+
+This month formalizes preference.
+
+**Detailed Actions**
+
+* Begin intentional lead alignment with Growth-tier partners based on fit  
+* Introduce subtle partner-exclusive enhancements tied to shared events  
+* Conduct formal quarterly partner reviews using scoring data  
+* Proactively address small execution issues before they become memory  
+* Offboard misaligned partners respectfully to protect brand integrity
+
+**Operational Focus**
+
+* Partner-referred leads receive priority response windows  
+* Clear escalation paths communicated to planners  
+* Proactive pre-event communication to reduce anxiety
+
+**Weekly Cadence**
+
+* Partner Managers review lead quality and feedback weekly  
+* Leadership spot-checks two partner experiences per week
+
+**Success Indicators**
+
+* Higher close rates on partner-sourced leads  
+* Reduced price sensitivity  
+* Planners proactively checking availability before shopping
+
+**Risks to Avoid**
+
+* Over-sharing leads  
+* Creating entitlement dynamics  
+* Letting speed replace thoughtfulness
+
+**Why This Matters**  
+Preference removes competition before it starts.
+
+---
+
+**Primary Objective:** Make Comeketo the default choice for aligned partners.
+
+**Key Actions**
+
+* Begin intentional lead alignment with Growth-tier partners  
+* Offer exclusive experiences or enhancements tied to partner referrals  
+* Conduct quarterly partner reviews using scoring data  
+* Prune misaligned or inactive relationships respectfully
+
+**Operational Focus**
+
+* Faster response times for partner-referred leads  
+* Clear escalation paths for planners  
+* Proactive communication during event execution
+
+**Success Indicators**
+
+* Higher close rates on partner-referred leads  
+* Fewer competitive bids requested  
+* Partners referencing Comeketo unprompted
+
+**Why This Matters**  
+Preference reduces friction and increases deal quality.
+
+---
+
+## **Month 5: Advocacy and Market Signal Strengthening**
+
+**Primary Objective:** Reinforce advocacy through recognition, consistency, and shared standards.
+
+Advocacy is emotional, not contractual.
+
+**Detailed Actions**
+
+* Identify Advocacy-tier candidates based on behavior, not volume  
+* Host an invite-only partner experience focused on connection and learning  
+* Feature Advocacy partners in thoughtful, understated content  
+* Create private feedback loops to improve execution together
+
+**Content Focus**
+
+* Partnership philosophy  
+* Execution lessons learned  
+* Stories that highlight shared values
+
+**Weekly Cadence**
+
+* One advocacy-level touchpoint per week across the ecosystem  
+* Leadership participates selectively to reinforce importance
+
+**Success Indicators**
+
+* Partners proactively introducing Comeketo  
+* Inbound referrals with clear expectation-setting  
+* Stronger word-of-mouth market positioning
+
+**Risks to Avoid**
+
+* Public tier labeling  
+* Over-rewarding volume  
+* Confusing advocacy with obligation
+
+**Why This Matters**  
+Advocacy compounds faster than advertising.
+
+---
+
+**Primary Objective:** Encourage advocacy through consistency and recognition.
+
+**Key Actions**
+
+* Identify Advocacy-tier candidates based on behavior and trust  
+* Host an invite-only partner dinner or tasting experience  
+* Publicly recognize select partners through content and email features  
+* Provide private feedback loops for top partners
+
+**Content Focus**
+
+* Thought leadership around partnerships and execution  
+* Quiet authority rather than promotion  
+* Stories that highlight shared standards
+
+**Success Indicators**
+
+* Partners actively selling Comeketo when not present  
+* Increased inbound from planner and venue referrals  
+* Stronger market perception of Comeketo as a premium, safe choice
+
+**Why This Matters**  
+Advocacy is earned through consistency, not incentives.
+
+---
+
+## **Month 6: Optimization and Scale Readiness**
+
+**Primary Objective:** Ensure the program produces results without increasing leadership load.
+
+This month hardens the system.
+
+**Detailed Actions**
+
+* Review partner tier distribution and health trends  
+* Refine outreach cadence based on response quality  
+* Update SOPs based on real-world friction  
+* Delegate day-to-day ownership fully to the Partner Program team  
+* Identify next markets or segments for expansion
+
+**Leadership Role**
+
+* Focus only on Advocacy-tier relationships  
+* Approve promotions, removals, and strategic shifts  
+* Reinforce standards through example
+
+**Weekly Cadence**
+
+* Partner Program Owner runs the system  
+* Leadership reviews dashboard monthly
+
+**Success Indicators**
+
+* Consistent inbound from trusted partners  
+* Reduced dependency on leadership involvement  
+* Clear roadmap for next six months
+
+**Risks to Avoid**
+
+* Over-expansion  
+* Relaxing standards due to momentum  
+* Letting success dilute discipline
+
+**Why This Matters**  
+Durability is what separates growth from spikes.
+
+---
+
+**Primary Objective:** Make the system durable without increasing leadership load.
+
+**Key Actions**
+
+* Review partner performance and tier distribution  
+* Optimize outreach, gifting, and content cadence based on results  
+* Document lessons learned and update SOPs  
+* Delegate fully to the Partner Program team
+
+**Leadership Role**
+
+* Executive touchpoints with top Advocacy partners only  
+* Approval of promotions and offboarding  
+* Protection of cultural standards
+
+**Success Indicators**
+
+* Partner ecosystem operates without daily leadership involvement  
+* Consistent monthly inbound from trusted partners  
+* Clear signal of where to invest next
+
+**Why This Matters**  
+Scale only works when culture and systems are already aligned.
+
+---
+
+## **Measurement Framework**
+
+We track what matters, nothing more.
+
+* Partner tier movement  
+* Referral quality and close rate  
+* Partner retention and engagement  
+* Execution feedback from shared events
+
+If a metric does not improve decision-making, it is removed.
+
+---
+
+## **Final Framing**
+
+This six-month strategy does not chase growth.
+
+It creates conditions where growth feels safe, natural, and repeatable.
+
+When planners trust Comeketo with their reputation, momentum follows.
+
+That is the goal.
+

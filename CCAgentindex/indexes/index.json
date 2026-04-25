@@ -1,0 +1,71 @@
+{
+  "projects": [
+    "projects/brazilian_church_outreach.json",
+    "projects/comeketo_owned_venue.json",
+    "projects/lead_rotation.json",
+    "projects/partnership_program.json",
+    "projects/tasting_conversion.json"
+  ],
+  "people": [
+    "people/andre_raw.json",
+    "people/anne.json",
+    "people/bibi.json",
+    "people/camila.json",
+    "people/cathlyn.json",
+    "people/domenic.json",
+    "people/eduarda.json",
+    "people/eufelyn.json",
+    "people/ren.json",
+    "people/rhonna.json",
+    "people/rodrigo.json",
+    "people/spyros.json",
+    "people/toni.json"
+  ],
+  "threads": [],
+  "commitments": [],
+  "knowledge": [
+    "knowledge/brand_wedding_experience.json",
+    "knowledge/brand_welcome_rodrigo.json",
+    "knowledge/business_topology_from_founder_conversation.json",
+    "knowledge/cash_flow_revenue_projection.json",
+    "knowledge/churches_ma_brazilian_outreach.json",
+    "knowledge/design_system_v1.json",
+    "knowledge/design_system_v1.md",
+    "knowledge/event_labor_projection_weekly.json",
+    "knowledge/infrastructure_inventory.json",
+    "knowledge/kitchen_schedule_feb16_2026.json",
+    "knowledge/leads_source_dec_2025.json",
+    "knowledge/ma_food_truck_event_index.json",
+    "knowledge/menu_catalog_bibi_prep_list.json",
+    "knowledge/partnership_program.json",
+    "knowledge/partnership_program.md",
+    "knowledge/product_requirements_v1.md",
+    "knowledge/sales_playbook.md",
+    "knowledge/sales_playbook_v2.json",
+    "knowledge/sales_team_scorecard_oct_2025.json",
+    "knowledge/slack_channel_map.json",
+    "knowledge/slack_voice_specimens.json",
+    "knowledge/staff_labor_roster.json",
+    "knowledge/tasting_conversion_tracking.json",
+    "knowledge/tasting_experience_rodrigo_voiceover.json",
+    "knowledge/venue_partners.json",
+    "knowledge/wedding_experience_deck.md",
+    "knowledge/welcome_deck.md"
+  ],
+  "base": [],
+  "tables": [
+    "tables/events_calendar.json",
+    "tables/expenses.json",
+    "tables/leads_pipeline.json",
+    "tables/payments_log.json",
+    "tables/staff_roster.json",
+    "tables/tastings_tracker.json",
+    "tables/venue_partners.json",
+    "tables/venue_partners_2.json"
+  ],
+  "charts": [],
+  "catalog_edges": [
+    "catalog/edges/fire.json",
+    "catalog/edges/trigger.json"
+  ]
+}

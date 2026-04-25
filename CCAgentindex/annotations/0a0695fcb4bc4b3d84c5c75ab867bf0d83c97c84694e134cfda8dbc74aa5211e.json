@@ -1,0 +1,22 @@
+{
+  "schema": "comeketo.annotation.screenshot.v1",
+  "hash": "0a0695fcb4bc4b3d84c5c75ab867bf0d83c97c84694e134cfda8dbc74aa5211e",
+  "mime": "image/png",
+  "bytes": 279769,
+  "ext": "png",
+  "regions": [
+    {
+      "kind": "rect",
+      "x": 0.1019498643470137,
+      "y": 0.696872808709381,
+      "w": 0.23528321574392924,
+      "h": 0.11942895354834326
+    },
+    {
+      "kind": "point",
+      "x": 0.7382503849123568,
+      "y": 0.8711216097881113
+    }
+  ],
+  "uploaded_at": "2026-04-23T06:22:22.824181+00:00"
+}

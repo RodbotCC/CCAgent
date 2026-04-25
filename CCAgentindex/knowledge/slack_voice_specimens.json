@@ -1,0 +1,384 @@
+{
+  "id": "k_slack_voice_specimens",
+  "kind": "knowledge",
+  "name": "Comeketo Slack — per-person voice specimens (verbatim archive)",
+  "purpose": "Raw verbatim quote archive captured from Slack. Each specimen is a real message Rodbot can study for cadence, punctuation, emoji habit, lexicon, and register. This is the source-of-truth when the handling.tone / handling.voice_adjustments fields on a people record refer to 'the voice from the Slack specimens'.",
+  "collection_method": "First-pass Slack survey 2026-04-22 / 2026-04-23. Channels sampled: #a_catering_group (C062579HJH5, ~200 messages), #special-requests (C07H2P27U7N, ~200 messages), #general (C0279GNRPMZ, ~100 messages), #ai-topics (C0APZK6RFNC, all ~40 messages). Not exhaustive — a full archive pass is a separate job.",
+  "sources": [
+    {
+      "from": "slack_ingest",
+      "id": "cowork_slack_ingest_2026-04-22_voice_survey",
+      "t": "2026-04-23T03:45:00Z",
+      "diff": "Initial verbatim voice-specimen archive. Seven existing people records (andre_raw, anne, camila, domenic, eduarda, ren, toni) + six new people records (rodrigo, bibi, rhonna, eufelyn, cathlyn, spyros) all reference this file for their handling.tone / handling.voice_adjustments fields."
+    }
+  ],
+  "specimens_by_person": {
+    "rodrigo_souza": {
+      "slack_user_id": "U0276A0K03X",
+      "slack_handle": "comeketo",
+      "slack_display_name": "Rodrigo Souza",
+      "title_per_slack": "President - CEO  Comeketo & Virtual Kitchen Hall",
+      "email_per_slack": "comeketo@comeketo.com",
+      "voice_summary": "High-energy captain. Ellipsis-heavy. Emoji-forward. Tags for visibility. Types fast, typos are fine. Uses ALL CAPS for announcements. Reacts more than composes — the compressed reaction (':fire::fire::fire:', ':muscle::skin-tone-5::muscle::skin-tone-5:', ':confetti_ball::fire::eagle:') is more common than full sentences. When he does compose, sentences often end with ' ... ' as a thought-pause. Uses 'Thx' frequently. His skin-tone emoji modifier is always skin-tone-5.",
+      "signature_patterns": [
+        "Trailing ellipsis as thought-pause: 'Food show', 'Missed call …', 'Ok …', 'what the heck ?'",
+        "Double-ellipsis or space-ellipsis: '... ...' for a longer pause or transition",
+        "Tag for visibility pattern: '<@person> for visibility ...' / '<@person> :eyes:'",
+        "Emoji-only reactions to wins: ':confetti_ball::fire::eagle:', ':fire::fire::fire:', ':muscle::skin-tone-5::muscle::skin-tone-5::muscle::skin-tone-5:', ':clap::skin-tone-5::clap::skin-tone-5::clap::skin-tone-5::clap::skin-tone-5:', ':right-facing_fist::skin-tone-5::left-facing_fist::skin-tone-5: :muscle::skin-tone-5: :muscle::skin-tone-5:'",
+        "Skin-tone-5 is invariant — every hand/muscle emoji carries this modifier",
+        "ALL CAPS for channel-purpose announcements (not for yelling): 'SO BASICALLY IS A PLACE WHERE WE WILL SHARE QUICK COMMUNICACTIONS AND REQUETS ASKS ... FOR OUR AI PROJECTS WITHIN THE COMAPNY'",
+        "Asks questions with two question marks and emoji: '?? :weary:' or 'no ??' or '..?'",
+        "Fast typer — typos stay: 'brining' (bringing), 'ca you' (can you), 'Shoudnt' (shouldn't), 'COMAPNY' (company), 'COMMUNICACTIONS' (communications), 'REQUETS' (requests)",
+        "Brazilian Portuguese accent on English: 'Thx for brining this up to our attention'",
+        "Frustration register uses :weary: :tired_face: :triumph: in chains: 'ughhh :weary:', ':tired_face::tired_face::tired_face::tired_face::triumph::triumph::triumph:'",
+        "Warmth markers — 'U DA BEST !!!', 'Jake I really like the approach that this guy takes …'",
+        "Uses 'guys' as generic plural addressee",
+        "Portuguese interjections when appropriate: 'Thx' as abbreviation, 'pls'"
+      ],
+      "verbatim_specimens": [
+        {"t": "2026-04-22 17:37:35 EDT", "channel": "#a_catering_group", "text": ":fire::fire::fire:"},
+        {"t": "2026-04-22 15:21:38 EDT", "channel": "#a_catering_group", "text": "Food show"},
+        {"t": "2026-04-22 08:54:32 EDT", "channel": "#a_catering_group", "text": "Whose lead ? Venue partner "},
+        {"t": "2026-04-21 19:41:10 EDT", "channel": "#a_catering_group", "text": "Missed call …"},
+        {"t": "2026-04-20 20:52:57 EDT", "channel": "#a_catering_group", "text": ":confetti_ball::fire::eagle:"},
+        {"t": "2026-04-19 19:14:47 EDT", "channel": "#a_catering_group", "text": "New item guaca tostone"},
+        {"t": "2026-04-18 17:10:41 EDT", "channel": "#a_catering_group", "text": "Thx Bibi … \nThx <@Anne Silva>"},
+        {"t": "2026-04-17 12:44:35 EDT", "channel": "#a_catering_group", "text": "<@Bibi de los Santos> - we need <@Anne Silva> asap .. to help sit ppl down ... that is a pretty big task for when ppl are arriving ... I dont want to be involved in that if I dont have too ... Anne the sooner the better …."},
+        {"t": "2026-04-16 16:11:49 EDT", "channel": "#a_catering_group", "text": "what the heck ? what potentially could have cause this ? <@Spyros> - how vulnerable is our system right now .. time to think about creating layers of protection ... to armor the companies assets no ?? ughhh :weary:"},
+        {"t": "2026-04-15 21:06:10 EDT", "channel": "#a_catering_group", "text": ":confetti_ball::fire::boom::muscle::skin-tone-5::+1::skin-tone-5:"},
+        {"t": "2026-04-13 18:22:29 EDT", "channel": "#a_catering_group", "text": "What does this freaking person need ? @rhonna & @eduarda ? :tired_face::tired_face::tired_face::tired_face::triumph::triumph::triumph:"},
+        {"t": "2026-04-13 18:51:35 EDT", "channel": "#a_catering_group", "text": "Ok … just want to make\nSure Latrina is not running her mouth .. "},
+        {"t": "2026-04-11 09:21:42 EDT", "channel": "#a_catering_group", "text": "This is one set information on tasting… anything else guys .. "},
+        {"t": "2026-04-10 21:14:54 EDT", "channel": "#a_catering_group", "text": "<!channel> guys   Do we have a breakdown anywhere that explains everything about the tastings?\n\nOr few pieces of communications that explains what is the tasting is about …. Can you guys help me here dropping it down … and single piece of information/ communication we have and that you have written that shows / explains How out tasting goes …\n<@Jake Hallett>  for visibility"},
+        {"t": "2026-01-26 20:20:01 EST", "channel": "#special-requests", "text": "<@Rhonna> are you planning to extract more special requests from here and place in or date base knowledge base / FAQ questions tab on that excel spread sheet we were adding stuff to ... the last time we did this .. seems like it was June 11th ... can you check on that ... let see if we can get more stuff there .... remember ..we are building a brain for the business ... all these info are important to make this as robust as possible ..."},
+        {"t": "2026-01-26 20:17:47 EST", "channel": "#special-requests", "text": "U DA BEST !! ! <@Eduarda>"},
+        {"t": "2026-03-26 16:31:23 EDT", "channel": "#ai-topics", "text": "SO BASICALLY IS A PLACE WHERE WE WILL SHARE QUICK COMMUNICACTIONS AND REQUETS ASKS ... FOR OUR AI PROJECTS WITHIN THE COMAPNY ...\n\nI AM ALSO CREATING CLICK UP CARD FOR ONGOING PROJECTING SO WE CAN START THIS BEING ORGANIZED AND STAYING  ORGANIZED ...\n\nSHARE IG VIDEOS HERE WEBSITES & ETC ...\n\nLETS GET IT ..."},
+        {"t": "2026-03-31 09:47:13 EDT", "channel": "#ai-topics", "text": "Command center whaaaaaaat @jake :nerd_face:"},
+        {"t": "2026-03-27 10:09:05 EDT", "channel": "#ai-topics", "text": "Dang Jake I thought I had already added you here ..,"},
+        {"t": "2026-03-25 20:36:43 EDT", "channel": "#special-requests", "text": "Churrasquinho ok :white_check_mark: \nPasta station ok :white_check_mark: \nAçaí station ok :white_check_mark: \nCrepe station prob not … (requires special equipment) - let's talk her into something else .. How about a pizza :pizza: station… build your own pizza kinda deal …\nHow about cachorro quente station (hot dog) ? \n\nWe need to talk to them and work a deal with them … \n\nIs there a theme for this party ? Is it a bday ? What kind of event is it ?"},
+        {"t": "2023-08-03 09:33:22 EDT", "channel": "#general", "text": "Good morning :sun_with_face: :smiley: :sunny:  \nLet's get it guys … \n<@Andre> … be sure to get to the meeting asap … guys we need to plan our lives/schedule around these set commitments we have …"}
+      ]
+    },
+    "bibi_de_los_santos": {
+      "slack_user_id": "U06QA96FCQG",
+      "slack_handle": "bibi",
+      "slack_display_name": "Bibi de los  Santos",
+      "title_per_slack": "General Manager",
+      "email_per_slack": "bibi@comeketo.com",
+      "voice_summary": "Professional but warm. Direct. Short sentences. Uses 'hun' as affectionate colleague address. Laughs with 'lol'. Tags @Anne Silva when something crosses into event-execution territory. Routes up to Rodrigo when a decision is above her product layer. Her warmth is not performative — it's quiet and practical. She'll say 'just saw this, sorry. I'll soon' as a genuine apology-for-latency.",
+      "signature_patterns": [
+        "'hun' as teammate address: 'please be sure to understand what she's looking for hun'",
+        "'lol' for self-deprecating: 'confused me here lol'",
+        "Short acknowledgements: 'Correct', 'Yes, it's possible', 'yes'",
+        "Routes-up register: 'I'm not the right person to help here, Rodrigo probably is <@Toni>'",
+        "Latency-apology: 'just saw this, sorry. I'll soon'",
+        "Explicit 'don't forget to add to calendar' operational reminders",
+        "'TY - L - B' sign-off on longer notes (Love, Bibi)",
+        "Tag pattern: 'tagging <@Anne Silva> just in case'",
+        "'<!channel> hi team!!' warm channel-wide address with double exclamation",
+        "Uses double-exclamation !! as emphasis rather than caps",
+        "Operational framing: 'Menu won't be a problem, but timing (after 6:30pm) won't work. Instructed Eduarda to engage with them for a more suitable day/time.'",
+        "Offers coverage / backstop: 'feel free to use or reach out to me'"
+      ],
+      "verbatim_specimens": [
+        {"t": "2026-04-21 15:03:03 EDT", "channel": "#a_catering_group", "text": "confused me here lol"},
+        {"t": "2026-04-21 14:50:27 EDT", "channel": "#a_catering_group", "text": "<!channel> anyone working on a \"possible\" event for next week?"},
+        {"t": "2026-04-21 10:04:19 EDT", "channel": "#a_catering_group", "text": "<!channel> is this safe to open? That never happened before. Please advise"},
+        {"t": "2026-04-19 17:13:14 EDT", "channel": "#a_catering_group", "text": "José Quefau closed <@Andre Raw>"},
+        {"t": "2026-04-19 17:13:57 EDT", "channel": "#a_catering_group", "text": "Both of them need picts of disposables <@Toni> <@Andre Raw>"},
+        {"t": "2026-04-17 14:23:00 EDT", "channel": "#a_catering_group", "text": "Anne will arrive 1:30pm the latest but all depends on Oliver's"},
+        {"t": "2026-04-16 15:48:36 EDT", "channel": "#a_catering_group", "text": "tagging <@Anne Silva> just in case"},
+        {"t": "2026-04-21 09:47:20 EDT", "channel": "#special-requests", "text": "I'm not the right person to help here, Rodrigo probably is <@Toni>"},
+        {"t": "2026-04-21 11:17:53 EDT", "channel": "#special-requests", "text": "Correct"},
+        {"t": "2026-04-16 14:10:22 EDT", "channel": "#special-requests", "text": "Discussed with both <@Rodrigo> and <@Eduarda> separately over the phone. Menu won't be a problem, but timing (after 6:30pm) won't work. Instructed Eduarda to engage with them for a more suitable day/time."},
+        {"t": "2026-04-15 13:54:15 EDT", "channel": "#special-requests", "text": "for future ref of the channel, this is what we are talking with Andre, a nice \"mexican style station\". This is very popular for quinceaneros and also for more \"relaxed & fun\" type of events guys, feel free to use or reach out to me <@Andre Raw>"},
+        {"t": "2026-04-10 09:42:17 EDT", "channel": "#a_catering_group", "text": "<!channel> hi team!! Please if you are working in any potential \"last minute\" event, even if still it's not closed, let me know, so we are aware at our end and can prepare accordingly"},
+        {"t": "2026-04-08 11:02:50 EDT", "channel": "#special-requests", "text": "Yes, it's possible. Just be sure it's on BEO and let me know ahead of time when confirmed as we don't have those in stock"},
+        {"t": "2026-03-26 15:52:02 EDT", "channel": "#special-requests", "text": "please be sure to understand what she's looking for hun"},
+        {"t": "2026-02-03 16:20:54 EST", "channel": "#special-requests", "text": "just saw this, sorry. I'll soon"},
+        {"t": "2026-01-13 11:57:13 EST", "channel": "#special-requests", "text": "<@Eduarda> <@Rhonna> just spoke with <@Rodrigo> and we will do the tasting for your client on Saturday 24th at 12pm. Please confirm that time is good for her and don't forget to add to calendar. <@Rhonna> if someone else from the team has a client wanting to use that day and time also, should be great to have a couple more of attendees. TY - L - B"}
+      ]
+    },
+    "rhonna_ricafort": {
+      "slack_user_id": "U077CT6QHV5",
+      "slack_handle": "admin511",
+      "slack_display_name": "Rhonna C.  Ricafort",
+      "title_per_slack": "👸🏼Disney Princess",
+      "email_per_slack": "admin@comeketocatering.com",
+      "voice_summary": "The structured team-announcement voice. Writes detailed instructional messages with @-tag rosters at the top, then the body, then 'pls confirm understanding'. Warm but firm. Uses 'pls', 'thnx', 'thak you', 'teh' (the typos are fast-typing signature, not carelessness). Heavy use of emoji in playful register: ':rolling_on_the_floor_laughing::party-blob:', ':smiling_face_with_3_hearts:', ':eyes::send-it: BIG EYES HERE :send-it::eyes:'. Caps-lock for urgent alerts. Runs the team cadence — KPI tracking, call-back monitoring, lead-distribution announcements.",
+      "signature_patterns": [
+        "Structured team-announcement format: @-tag roster at top → body → 'pls confirm understanding' or 'pls ck vi comment thread NOT AN EMOTICONS!'",
+        "'pls' / 'thnx' / 'thak you' / 'teh' (the) — fast-typing typo signature",
+        "ALL CAPS urgency markers: 'TEAM!!!!!!! ALERT!!', 'BIG EYES HERE'",
+        "Warm closers: 'thank you <@Eufelyn> you're the best !'",
+        "Emoji-sandwich framing: ':eyes::send-it: BIG EYES HERE :send-it::eyes:'",
+        "Bulletized directives with • for clear team instructions",
+        "'pls make sure we are on top of this thank s' — the closer 'thank s' with space is recurring",
+        "Coaching-register when correcting behavior: 'Let's remember that a supportive and understanding environment is built on accountability...not an excuse to be less disciplined in our work.'",
+        "Celebration-register for wins: 'Great work team for being on time today and for staying engaged—appreciate it :raised_hands:'",
+        "Uses '...' for pause before a redirect: 'Moving forward every calls made Must have an outcome.\\nand pls make a little note , thank you'",
+        "Sometimes uses 'Hey team' / 'Alright team' as opener",
+        "Uses bold via asterisks for line-item highlighting in KPI announcements"
+      ],
+      "verbatim_specimens": [
+        {"t": "2026-04-22 12:54:08 EDT", "channel": "#a_catering_group", "text": "<@Eduarda> <@Toni> <@Andre Raw> <@Rena Tanodra>  <!channel>\n:eyes::send-it:BIG EYES HERE:send-it::eyes:\n\nAlright team, moving forward, this email must be sent for all confirmed tasting bookings. This is now mandatory for everyone.\nI'd like <@Cathlyn Lopez> to monitor this process. If you see a tasting  booked normally you will see that under Tasting Event Channel  please make sure this email has been sent. I thas the information of nonrefundable ticket\n\nLet's stay consistent on this for every confirmed booking going forward.\n\nPls I need your confirmation that this is clear VIA THREAD COMMENT"},
+        {"t": "2026-04-21 15:09:07 EDT", "channel": "#a_catering_group", "text": "<@Andre Raw> won Sunday .. but I am not seeing this on the calendar.. pls make sure to prioritize adding this when you're back"},
+        {"t": "2026-04-16 15:11:12 EDT", "channel": "#a_catering_group", "text": "<!channel> TEAM!!!!!!! ALERT!!\nIf you receive something like this..a PDF document being sent to you unexpectedly please treat it as a scam or hacking attempt. Do not click 'View Document.' Inform us immediately .If you accidentally click  we need to  change password as soon as possible.\nPls confirm you see this"},
+        {"t": "2026-04-16 12:37:38 EDT", "channel": "#a_catering_group", "text": "*<@Andre Raw>* *<@Eduarda>* *<@Rena Tanodra>* *<@Toni>* \n*May Tasting schedule is now open for booking:*\n• *May 3 (Sunday)* – 5:30 PM only\n• *May 17 (Sunday)* – 2:00 PM (only)\n• *May 31 (Sunday)* – 2:00 PM (only)\nI've already updated the JOTFORM for registration, so you can start booking leads for these dates.\n\n thank you"},
+        {"t": "2026-04-14 17:26:27 EDT", "channel": "#a_catering_group", "text": "REMINDER: <@Andre Raw> <@Eduarda> <@Toni> <@Rena Tanodra>\nUnder the *Latest Pricing* sheet, you'll find the *packages, menu, and service descriptions*.\nI've noticed that some of you are having a hard time explaining *bussing, Rodizio (family-style), and Churrasco-style* without creating confusion for the leads.\nPlease use this tab as your reference—it's designed to help you explain each service clearly and confidently on your end."},
+        {"t": "2026-04-14 10:22:19 EDT", "channel": "#a_catering_group", "text": "Got it, thanks for the update.\n Moving forward, if you run into something like this, please send a quick message ahead of time to let us know you might be running late...just so we have visibility. That kind of communication really helps with accountability and transparency.\nthis goes to everyone  here\n<@Andre Raw> <@Toni> <@Eufelyn> and even teh admin staff\n<@Eufelyn> <@Cathlyn Lopez> <@Camila Cides>\n\n lets be on top of it moving forward"},
+        {"t": "2026-04-13 18:51:35 EDT", "channel": "#a_catering_group", "text": "I don't get what's happening with these people—they've already caused a lot of trouble, and now they're still sending wrong messages.\n\nhmmm weird"},
+        {"t": "2026-04-10 12:54:03 EDT", "channel": "#a_catering_group", "text": "<@Eduarda> <@Toni> <@Rena Tanodra> <@Andre Raw>\nHey team,\nQuick update ... we've increased pricing and updated the PDF menus (entrees, sides, salads, and appetizers). The new version is already uploaded to the email templates under packages/menu.\nFor any leads who haven't moved forward yet and no Quotes made please resend the updated PDF. The old menu/pricing should no longer be used.\n\nWe'll give current leads with Quote sent  until next week to move forward using the previous pricing. After that, all new quotes must follow the updated PDF.\n\nAgain it has been uploaded already to the Package and Menu PDF template.\nThank you pls confirm understanding"},
+        {"t": "2026-04-10 10:04:46 EDT", "channel": "#a_catering_group", "text": "<!channel> Let's remember that a supportive and understanding environment is built on accountability...not an excuse to be less disciplined in our work."},
+        {"t": "2026-04-09 18:18:26 EDT", "channel": "#a_catering_group", "text": "Hey team  <@Eduarda> <@Rena Tanodra> <@Toni> <@Andre Raw>\nSharing a ready-to-use template with a PDF of our *travel-friendly appetizer options*—perfect for drop-off service clients.\nThese are the items we can confidently recommend since they hold their quality well even with travel time, ensuring clients still get the best experience.\nFeel free to send this to your drop-off leads as a guide when presenting appetizer options  :smiling_face_with_3_hearts:"},
+        {"t": "2026-04-17 12:10:05 EDT", "channel": "#a_catering_group", "text": "Great work, everyone! <@Andre Raw> <@Eduarda> <@Toni> <@Rena Tanodra>\nI'll be closing the April 19 tasting...we already have enough attendees. Our focus now is to make sure all guests are well accommodated and converted.\nLet's start redirecting new leads to our other available tasting dates.\nThanks, team!\n\nthank you <@Eufelyn> you're the best !"}
+      ]
+    },
+    "andre_raw": {
+      "slack_user_id": "U095VBX3PV4",
+      "slack_user_id_historical": "U032PLTQWDN",
+      "slack_display_name": "Andre Raw",
+      "voice_summary": "Terse, reactive, action-oriented. Most messages are one to four words or a single emoji chain. When he writes at length, it's because he needs help and is in request mode — in which case he writes menu bullets in Portuguese, tags @Rodrigo and @Bibi, and ends with 'thks' or 'please'. His emoji vocabulary is tight: :fire:, :eyes:, :eye::eye:, :rotating_light: (chained when serious). Very mobile-keyboard-fluent — apostrophes often come out as ´ (acute accent), suggesting Brazilian Portuguese keyboard or mobile-set keyboard with that autocorrect. Uses 'btw' and 'kindda'. 'U' for 'you' sometimes. Fluent in both English and Portuguese; switches based on lead's language.",
+      "signature_patterns": [
+        "Single-word or short responses: 'will do', 'Ok', 'on a call now', 'on the phone with', 'I will thanks'",
+        "Emoji-only reactions: ':fire:', ':eyes:', ':eye::eye:'",
+        "Emoji chains for urgency: ':rotating_light::rotating_light::rotating_light::rotating_light::rotating_light::rotating_light::rotating_light::rotating_light::rotating_light:'",
+        "Acute-accent apostrophe (´ instead of '): 'don´t', 'Toni´s lead', 'I´ll soin' — mobile-keyboard tell",
+        "'thks' abbreviation for thanks",
+        "Request format when long: menu items as bullet list + tag Rodrigo + tag Bibi + 'please help'",
+        "Code-switches to Portuguese for Portuguese-speaking clients: 'Gostaria de pedir orçamento para 50 pessoas...'",
+        "Colloquial register: 'you are awesome <@Eduarda>', 'That looks good man'",
+        "Concise urgency: 'This is time sensitive please...'",
+        "Praise peers directly: 'Smooth operator by <@Spyros> lol'",
+        "Self-explains delays: 'My internet failed me when I was trying to jump on the meeting', 'My hub was off for whatever reason that I don´t know'"
+      ],
+      "verbatim_specimens": [
+        {"t": "2026-04-22 12:53:50 EDT", "channel": "#a_catering_group", "text": ":eyes:"},
+        {"t": "2026-04-21 15:09:38 EDT", "channel": "#a_catering_group", "text": "will do"},
+        {"t": "2026-04-19 19:18:40 EDT", "channel": "#a_catering_group", "text": "That looks good man"},
+        {"t": "2026-04-19 17:28:12 EDT", "channel": "#a_catering_group", "text": "ok I will send them pics soon"},
+        {"t": "2026-04-18 17:11:30 EDT", "channel": "#a_catering_group", "text": "2 more added just now <@Rodrigo Souza>"},
+        {"t": "2026-04-17 19:17:33 EDT", "channel": "#a_catering_group", "text": "Toni´s lead"},
+        {"t": "2026-04-15 14:16:21 EDT", "channel": "#a_catering_group", "text": "Smooth operator by <@Spyros Marinos> lol"},
+        {"t": "2026-04-14 12:58:58 EDT", "channel": "#a_catering_group", "text": "on a call now"},
+        {"t": "2026-04-14 10:22:12 EDT", "channel": "#a_catering_group", "text": "My hub was off for whatever reason that I don´t know"},
+        {"t": "2026-04-13 16:41:18 EDT", "channel": "#a_catering_group", "text": "can we have the template Bullets for clients updated with the new pdf prices?"},
+        {"t": "2026-04-10 11:10:45 EDT", "channel": "#a_catering_group", "text": "you are awesome <@Eduarda>"},
+        {"t": "2026-04-09 09:51:04 EDT", "channel": "#a_catering_group", "text": "My internet failed me when I was trying to jump on the meeting"},
+        {"t": "2026-04-15 12:21:43 EDT", "channel": "#special-requests", "text": "This is time sensitive please..."},
+        {"t": "2026-04-15 12:21:21 EDT", "channel": "#special-requests", "text": "I need to add an hour to the service ( they want 5 hours)\nI need price for Queijo Coalho w/ Honey\n<@Bibi> <@Rodrigo>"},
+        {"t": "2026-02-23 08:18:32 EST", "channel": "#special-requests", "text": "Need Help <@Rodrigo> <@Bibi>\nGostaria de pedir orçamento para 50 pessoas e para 70 pessoas, para um casamento no dia 22 de Agosto deste ano na cidade de Boylston, MA.\n\nDe entrada:\nTaboa de frios selecionados\nSalgadinhos\nMini croissant recheado\nMini sanduíche natural\nMini hambúrguer\nBrusqueta tradicional com tomate queijo e manjericão\nE teria como fazer de prato principal:\nMacarrão (penne e linguine)\nE dois molhos: molho branco com bacon ou linguiça\nMolho a bolonhesa ??"},
+        {"t": "2026-04-02 18:40:50 EDT", "channel": "#ai-topics", "text": "I would love to be part of this knowledge train"},
+        {"t": "2026-03-31 09:52:07 EDT", "channel": "#ai-topics", "text": "I think I showed you yesterday I have my own command center for weeks now"},
+        {"t": "2026-03-27 12:21:21 EDT", "channel": "#ai-topics", "text": "There is always Codex <@Rodrigo> Anthropic plays a big role right now yes. We have a few different ways to have a fallback kindda deal <@Jake Hallett> will be able to talk with more confidence about this."}
+      ]
+    },
+    "toni_llagas": {
+      "slack_user_id": "U05H4LXC2JD",
+      "slack_display_name": "Toni Llagas",
+      "voice_summary": "Clean, polite, structured. Professional register — 'Good morning guys!' / 'Got it Domenic.' Uses bulleted lists when sharing templates or reference material. Tags the right people (Rodrigo + Bibi + Rhonna) when escalating a client question. Explicitly frames things: 'Question:' / 'Sharing this pricing I got from Rodrigo for future reference:'. Remote worker register — starts day with morning greeting. Can drop occasional edge when frustrated ('I don't get it, Andre, who in their right mind would laugh about a canceled partnership that would benefit our company?'). Filipino-based on profile signals and register.",
+      "signature_patterns": [
+        "Structured question-framing: 'Question:' as explicit header, then the question, then tags",
+        "Template-sharing: 'Sharing this pricing I got from Rodrigo for future reference:\\n• *Real Fork, Knife & Spoon:* $2.50 per person\\n• *Bread & Butter:* $1.99 per person'",
+        "Morning greeting: 'Good morning guys!', 'see you at 9:30'",
+        "Acknowledgement: 'Got it Domenic.', 'Done', 'Ok'",
+        "Tags escalation chain: <@Rodrigo> <@Bibi> <@Rhonna>",
+        "When flagging mid-client-request: 'Yes bibi, click open link'",
+        "Occasional sharpness when a teammate misbehaves — direct confrontation register",
+        "Bulleted lists with bold-via-asterisks formatting"
+      ],
+      "verbatim_specimens": [
+        {"t": "2026-04-21 10:10:28 EDT", "channel": "#special-requests", "text": "<@Rodrigo> Question from Mai- Hong Nguyen:\n\nIs it possible to switch Sangria to Mai Tais?\n\nBar Package is: *1 Hour Open Bar: Beer & Wine, and 3 hours Cash Bar*"},
+        {"t": "2026-04-21 09:41:58 EDT", "channel": "#special-requests", "text": "<@Bibi> <@Rodrigo>, a client (Philippa Logan) is asking how we prepare Cous Cous?"},
+        {"t": "2026-04-17 15:39:49 EDT", "channel": "#special-requests", "text": "Hi <@Bibi> one of my lead attended the tasting, they're asking what is the yellow color in the Chicken wrapped in bacon? Stained yellow, they're not sure if it's turmeric.\n\nQuestion is: Is it possible to remove without compromising the menu?"},
+        {"t": "2026-04-21 10:05:06 EDT", "channel": "#a_catering_group", "text": "Yes bibi, click open link"},
+        {"t": "2026-04-08 18:47:42 EDT", "channel": "#a_catering_group", "text": "I don't get it, Andre, who in their right mind would laugh about a canceled partnership that would benefit our company?"},
+        {"t": "2026-04-08 10:58:53 EDT", "channel": "#special-requests", "text": "Question:\n\nIs it possible to have disposable *gold* plastic silverware (spoon fork)? <@Bibi>, one of my clients is asking if it's possible coz their wedding color includes gold."},
+        {"t": "2026-03-23 19:00:51 EDT", "channel": "#special-requests", "text": "Sharing this pricing I got from Rodrigo for future reference:\n• *Real Fork, Knife & Spoon:* $2.50 per person\n• *Bread & Butter:* $1.99 per person"},
+        {"t": "2026-02-18 19:01:25 EST", "channel": "#special-requests", "text": "I need help with a list of menus:\nThe idea is a backyard BBQ reception concept with grilled burgers, hot dogs, veggie burgers, and classic BBQ sides for 200 guests.\n<@Rodrigo> if you remember the setup in the Boston Airport event, the same idea is in this one.\nI need the price per person for every menu:\n\nGrilled burgers\nHot dogs\netc..."},
+        {"t": "2023-07-28 09:16:46 EDT", "channel": "#general", "text": "Good morning guys!"},
+        {"t": "2023-07-27 09:42:50 EDT", "channel": "#general", "text": "Got it Domenic."}
+      ]
+    },
+    "eduarda_fedrizzi": {
+      "slack_user_id": "U08F48VSY9J",
+      "slack_display_name": "Eduarda Fedrizzi",
+      "voice_summary": "Long, detailed, thorough client-summary voice. Opens with 'Hey' or 'Hi' + tag, then 'I have a question/request for...' or 'I have a client who...'. Breaks asks down by section (Food / Bar / Charcuterie / Bar / Stations / etc.). Uses emoji sparingly but warmly: :pray::skin-tone-3:, :point_down:. Brazilian-Portuguese native — 'hehe' laugh, casual closers. Collaborative — always frames her asks as 'so I can finalize her quote' or 'so I can get back to her'. Portuguese-speaker — handles Portuguese callbacks in the team.",
+      "signature_patterns": [
+        "Openers: 'Hey <@Bibi> & <@Rodrigo>', 'Hi <@Bibi> and <@Rodrigo>!'",
+        "Client-summary structure: name + date + venue + guest count, then section-headed asks",
+        "Section headers with bold-via-asterisks: '*Charcuterie / Frios Table:*', '*Feijao Tropeiro:*', '*Bar:*'",
+        "Warm closers: 'Thanks!', 'Let me know what we can confirm so I can finalize her quote and send it over this week and hopefully book it hehe. Thanks!'",
+        "'hehe' Portuguese-pattern laugh in English text",
+        "Emoji accents: :pray::skin-tone-3:, :point_down:",
+        "Transparency about her thought process: 'I wanted to run this by you both to see if we can do her requests'",
+        "Problem-solver mindset: 'I think this could turn into a really nice and unique event for us'",
+        "Self-explains: 'I'm here, I ran into a small issue with my HDMI cable and had to look for a backup'",
+        "Collaborative: 'Not sure if I should even reply to this or just leave it as is…'",
+        "Uses ~$8K shorthand for dollar values"
+      ],
+      "verbatim_specimens": [
+        {"t": "2026-04-22 08:54:58 EDT", "channel": "#a_catering_group", "text": "mine, trying to get her on a zoom with us"},
+        {"t": "2026-04-14 10:19:04 EDT", "channel": "#a_catering_group", "text": "I'm here, I ran into a small issue with my HDMI cable and had to look for a backup so I could get my monitor connected again."},
+        {"t": "2026-04-10 11:10:17 EDT", "channel": "#a_catering_group", "text": "you're welcome! it was quite a long call, she had a lot of questions. I sent her our menus so she can choose what she wants, so she requested to be called back later today once she has a better idea"},
+        {"t": "2026-04-13 18:24:48 EDT", "channel": "#a_catering_group", "text": "Not sure if I should even reply to this or just leave it as is…"},
+        {"t": "2026-04-15 18:48:10 EDT", "channel": "#special-requests", "text": "<@Rodrigo> <@Bibi> Hi guys!\nI have a lead who's interested in joining us on the 19th, but they'd only be available after 6:30. Would there be any chance we could still serve them a few options, at least the ones they're most interested in (pork loin, stuffed eggplant, mac & cheese...)?\nPlease let me know so I can get back to her on that :pray::skin-tone-3:\nThis is an ~$8K wedding for October 2nd, they're pretty much ready to move forward, they'd just like to try the food first."},
+        {"t": "2026-04-10 14:37:48 EDT", "channel": "#special-requests", "text": "Question:\n\nDo we do any of these champagne brands at our champagne service? <@Rodrigo> <@Bibi>"},
+        {"t": "2026-04-01 18:11:09 EDT", "channel": "#special-requests", "text": "Hi <@Bibi> and <@Rodrigo>! I had a call with Sara today (she came to our last  tasting). I'd like to share summary of a few things I need your input on before I finalize her quote.\n\n*Charcuterie / Frios Table:* She wants a \"boteco style\" spread: salami, ham, cheese, olives, quail eggs, some fruit (grapes, etc.) and pork rinds (torresmo). Can we do it? What would a custom boteco-style board look like from our end? And what would we charge per person for this setup?\n\n*Feijao Tropeiro:* She mentioned our version felt more Americanized and specifically asked for a traditional Brazilian-style feijao tropeiro. Can we accommodate it? (apparently she would like to taste more cassava flour)\n\n*Bar:* Her crowd drinks mostly beer (Heineken and Corona), caipirinha, and her husband loves whisky. She also needs soft drinks for kids. No wine needed. Since neither beed & wine or full bar fully matches it, can we put together a custom package around this? What would the per person cost look like for this specific setup?\n\nLet me know what we can confirm so I can finalize her quote and send it over this week and hopefully book it hehe. Thanks!"},
+        {"t": "2026-03-25 17:38:24 EDT", "channel": "#special-requests", "text": "Hey <@Bibi> <@Rodrigo>\nI have this client and I wanted to run this by you both to see if we can do her requests\nShe's planning a graduation party for her daughter, around *40–45 guests*, at her backyard, June 7th\nHer idea is more of a *station-style / \"barraquinhas\" concept*, and she's currently getting quotes from multiple vendors, but mentioned it would be much easier if she could have everything coordinated with one company."},
+        {"t": "2026-01-23 15:15:01 EST", "channel": "#special-requests", "text": "Awesome!!! Thank you sooo much"}
+      ]
+    },
+    "eufelyn": {
+      "slack_user_id": "U079Z5S902H",
+      "slack_handle": "support400",
+      "slack_display_name": "Eufelyn",
+      "email_per_slack": "support@comeketocatering.com",
+      "voice_summary": "Support-ops voice. Drops tasting tallies and highlights-in-red enforcement. Short structured updates followed by explicit asks. Uses :clap::clap: for momentum. Mix of polite escalation and deadline urgency: 'Sales notes for the leads highlighted in red are needed today,PLEASE.' — the terminal 'PLEASE' in caps after a comma is distinctive. Tasks the sales team directly without softening. Bold-via-asterisks for update sections.",
+      "signature_patterns": [
+        "Tally-announcement format: 'We have X tastings booked, with a total of Y attendees..:clap::clap:'",
+        "Bold-via-asterisks for updates: '*This is our current tasting update:*'",
+        "Emoji for arrow-down reference: ':point_down:'",
+        "'PLEASE' in caps at sentence-end for emphasis: 'Sales notes for the leads highlighted in red are needed today,PLEASE.'",
+        "Don't-forget directive: 'Don't forget to complete your sales notes before EOD TODAY!!'",
+        "Direct team-member attention flags",
+        "Tracks no-shows and absences operationally: 'Andre is not on the meeting- 2 skip from the lead rotation today.'"
+      ],
+      "verbatim_specimens": [
+        {"t": "2026-04-17 12:00:24 EDT", "channel": "#a_catering_group", "text": "<@Bibi> <@Rodrigo> Here is our tasting list. We have 17 tastings booked, with a total of 39 attendees..:clap::clap:\n<@Toni> <@Andre Raw> <@Eduarda> Don't forget to complete your sales notes before EOD TODAY!!"},
+        {"t": "2026-04-17 15:49:30 EDT", "channel": "#a_catering_group", "text": "Sales notes for the leads highlighted in red are needed today,PLEASE. <@Andre Raw> <@Eduarda>"},
+        {"t": "2026-04-13 14:20:43 EDT", "channel": "#a_catering_group", "text": "This is our current tasting update :point_down:"},
+        {"t": "2026-04-10 09:45:39 EDT", "channel": "#a_catering_group", "text": "*This is our current tasting update: we have 5 tastings booked with a total of 12 attendees. For those who have confirmed they won't be able to attend on Sunday, please update the calendar accordingly!*"},
+        {"t": "2026-04-09 15:53:31 EDT", "channel": "#a_catering_group", "text": "This is our current tasting booked for April 12 and April 19:point_down:\nNote: Philipa is not confirmed yet, as she hasn't confirmed if she's coming."},
+        {"t": "2026-04-09 10:56:57 EDT", "channel": "#a_catering_group", "text": "Andre is not on the meeting- 2 skip from the lead rotation today."}
+      ]
+    },
+    "cathlyn_lopez": {
+      "slack_user_id": "U094VTCN4LA",
+      "slack_handle": "staff453",
+      "slack_display_name": "Cathlyn Lopez",
+      "title_per_slack": "Admin Staff / Queen of Sleep",
+      "email_per_slack": "Staff@comeketocatering.com",
+      "voice_summary": "Admin staff — sparse first-person Slack footprint but heavy ClickUp-comment presence. Shows up in the team's @-tag rosters for admin-staff workstreams (tasting coordination, pricing-sheet monitoring, email-template enforcement). Self-title 'Queen of Sleep' is a warm hint at her informal register. Voice-specimen sample is limited — needs a deeper Slack pass to establish her verbatim patterns.",
+      "signature_patterns": [
+        "Primarily appears via ClickUp comments on the #special-requests channel (multiple comment/attachment events in a row), signaling detailed task-comment work",
+        "Gets tagged BY Rhonna as part of the 'admin staff' roster: '<@Eufelyn> <@Cathlyn Lopez> <@Camila Cides>'",
+        "Task title 'Queen of Sleep' suggests playful self-presentation when not formal"
+      ],
+      "verbatim_specimens": [
+        {"t": "2026-04-22 12:54:08 EDT referenced", "channel": "#a_catering_group", "text": "(No direct messages in the sampled window — Cathlyn was assigned by Rhonna to 'monitor this process' for tasting-email enforcement, Apr 22)"},
+        {"t": "2026-01-16 11:47:48 EST", "channel": "#special-requests", "text": "(ClickUp comment added by Cathlyn Lopez — comment text not in Slack payload; see ClickUp for content)"}
+      ]
+    },
+    "spyros_marinos": {
+      "slack_user_id": "U0AGS39KAQ1",
+      "slack_handle": "events",
+      "slack_display_name": "Spyros Marinos",
+      "title_per_slack": "Growth & Revenue",
+      "email_per_slack": "events@comeketocatering.com",
+      "voice_summary": "Precise technical voice. Version-stamps Quote Maker releases ('New! In Quote Maker 14.3'). Writes short structured patch notes with backtick-quoted warnings. When responding to a security question, calm and measured: 'theres not much defense to this type of attack, just making sure not to click unknown links in pdfs. Im just happy I was able to catch it...' — no caps, no panic. Dropped 'Ooo nice one' in #ai-topics, suggesting a playful side in tech-talk contexts. Joined in early 2024, rejoined March 2026.",
+      "signature_patterns": [
+        "Version-stamp format: ':timer_clock: *New! In Quote Maker 14.3*' as update header",
+        "Backtick-fenced explanation blocks for context: '```This combines with other adjustments we have done lately, so please make sure you are using the link from Resources & SOPS when you are creating a quote, as we are constantly modifying how this works```'",
+        "Precise bug-scope statements: 'There was a bug in the old quote maker, anything prior to march 28th. If you have a customer who has additional sides (or mains) that go over the package amounts, please use the new quote maker'",
+        "Calm-analytical on incidents (no caps-lock urgency)",
+        "'Im' / 'theres' / 'just' — casual contractions in otherwise precise technical prose",
+        "Posts new-tool links as single-line references: 'https://getviktor.com/'"
+      ],
+      "verbatim_specimens": [
+        {"t": "2026-04-16 17:01:59 EDT", "channel": "#a_catering_group", "text": "<@Rodrigo> theres not much defense to this type of attack, just making sure not to click unknown links in pdfs. Im just happy I was able to catch it and with rhonnas help, prevent it from spreading throughout the entire email system"},
+        {"t": "2026-04-15 14:07:13 EDT", "channel": "#a_catering_group", "text": ":timer_clock: *New! In Quote Maker 14.3*\nYou can now add extra food service time (its at the very bottom)\n```This combines with other adjustments we have done lately, so please make sure you are using the link from Resources & SOPS when you are creating a quote, as we are constantly modifying how this works```"},
+        {"t": "2026-04-15 13:12:34 EDT", "channel": "#a_catering_group", "text": "<!channel>\nThere was a bug in the old quote maker, anything prior to march 28th.\nIf you have a customer who has additional sides (or mains) that go over the package amounts, please use the new quote maker"},
+        {"t": "2026-03-27 09:26:42 EDT", "channel": "#ai-topics", "text": "Ooo nice one"},
+        {"t": "2026-03-26 16:22:17 EDT", "channel": "#ai-topics", "text": "https://getviktor.com/"}
+      ]
+    },
+    "camila_cides": {
+      "slack_user_id": "U03N4LFR0TH",
+      "slack_display_name": "Camila Cides",
+      "voice_summary": "Sparse Slack footprint in the sampled window — mostly inbound-call alerts ('<phone number> is calling', '*Nick Noshirwani is calling*'). When she does write substantively, short and clean: 'ok:+1:', 'Good morning everybody!\\nGood evening Toni!'. Historical 2023 shows her as a team-peer checking in on VKH meetings ('What about me? Should I come too?'). Limited voice-specimen data — needs more pulls.",
+      "signature_patterns": [
+        "Inbound-call alert format: '<phone or name> is calling' — her as phone-concierge for inbound leads",
+        "Short acknowledgements: 'ok:+1:' (emoji inline with text, no spacing)",
+        "'Good morning everybody!' — warm time-of-day greeting in meeting channels",
+        "Cross-time-zone awareness: 'Good evening Toni!' when Toni is in Philippines time"
+      ],
+      "verbatim_specimens": [
+        {"t": "2026-04-20 12:07:35 EDT", "channel": "#a_catering_group", "text": "*Nick Noshirwani is calling*"},
+        {"t": "2026-04-16 15:05:55 EDT", "channel": "#a_catering_group", "text": "<tel:+16175439377|+1 617-543-9377>  is calling"},
+        {"t": "2026-04-13 17:31:06 EDT", "channel": "#a_catering_group", "text": "(URL) this is the other one"},
+        {"t": "2026-04-13 17:28:34 EDT", "channel": "#a_catering_group", "text": "there are 2 lead"},
+        {"t": "2026-02-19 16:34:55 EST", "channel": "#special-requests", "text": "<@Rodrigo> <@Bibi>, one question, can we serve non-alcoholic beverages outside of MA?"},
+        {"t": "2023-08-02 09:28:10 EDT", "channel": "#general", "text": "Good morning everybody!\nGood evening Toni!"},
+        {"t": "2023-08-01 13:45:54 EDT", "channel": "#general", "text": "ok:+1:"},
+        {"t": "2023-08-01 13:42:55 EDT", "channel": "#general", "text": "What about me? Should I come too?"}
+      ]
+    },
+    "anne_silva": {
+      "slack_user_id": "U05VC9HPHTK",
+      "slack_display_name": "Anne Silva",
+      "voice_summary": "Longer, more formal-warm messages when she writes. Structured team-announcement style but with more emotional warmth than Rhonna. Opens with 'Good morning, everyone!' and closes with 'Thank you all!'. Uses structured bullets but speaks in complete sentences. Appreciation-first framing — she acknowledges people doing well BEFORE calling out gaps. Heavy ClickUp comment presence in #special-requests from Jan 2026 — she's deeply embedded in event-detail execution.",
+      "signature_patterns": [
+        "Warm opener: 'Good morning, everyone!'",
+        "Appreciation-first framing: 'Some of you have been doing an excellent job by sending them ahead of time, even before my reminder... and I really appreciate that. Thank you!'",
+        "Gentle pivot: 'But still... a few invoices are still being missed.'",
+        "Instruction with reasoning: 'To avoid delays, please don't leave reminder messages unanswered.'",
+        "Warm closers: 'Thank you all!'",
+        "Bulleted clarifications without being curt: '• if invoice has been created and it's ready to be sent\\n• if something has changed (for example, the quote was updated and payment is not due yet).'",
+        "Event-detail register in ClickUp comments (multiple comments in a row on tasks — deep execution engagement)"
+      ],
+      "verbatim_specimens": [
+        {"t": "2026-04-13 10:05:47 EDT", "channel": "#a_catering_group", "text": "Good morning, everyone!\nI'd like to highlight once again the importance of staying on top of our invoices. This is essential to keeping our operations running smoothly.\nPlease make sure to send invoices as soon as I send a reminder. Some of you have been doing an excellent job by sending them ahead of time, even before my reminder... and I really appreciate that. Thank you!\nBut still... a few invoices are still being missed. To avoid delays, please don't leave reminder messages unanswered. When you receive one, let me know right away:\n• if invoice has been created and it's ready to be sent\n• if something has changed (for example, the quote was updated and payment is not due yet).\nKeeping communication clear helps us stay organized and ensures the business keeps moving forward.\nThank you all!"}
+      ]
+    },
+    "rena_tanodra": {
+      "slack_user_id": "U093QD472GK",
+      "slack_display_name": "Rena Tanodra",
+      "voice_summary": "Polite sales-EC voice. When asking, frames the client quote + structural follow-up: 'Would it be possible to have X prepared half medium and half medium-rare, please?' then quotes the client's ask in a code block. Uses 'please' at start and end of requests. Filipino based on name pattern + Rhonna's roster positioning. Sparse specimens in the sample — needs a deeper pull.",
+      "signature_patterns": [
+        "Polite-request framing: 'Would it be possible to have the Top Sirloin prepared half medium and half medium-rare, please?'",
+        "Quotes client verbatim in a code block: '```The boneless chicken- can that be blackened?\\nLike the seasoning on the chicken :)```'",
+        "Tags Bibi when asking product questions",
+        "'please' at both start and end as politeness frame"
+      ],
+      "verbatim_specimens": [
+        {"t": "2026-03-26 13:55:19 EDT", "channel": "#special-requests", "text": "<@Bibi>, Question please, Would it be possible to have the Top Sirloin prepared half medium and half medium-rare, please?\n```The boneless chicken- can that be blackened?\nLike the seasoning on the chicken :)```"}
+      ]
+    },
+    "domenic_dawson": {
+      "slack_user_id": "(not captured — joined early era)",
+      "slack_display_name": "Domenic Dawson",
+      "voice_summary": "Historical 2023 VKH-era operations-director voice. Directive imperatives, short sharp lines. 'Cmon guys lets go', '9:30', 'be professional'. Writes meeting summaries with structured markdown (attendees / agenda / action items / key decisions / blockers). Builds org-process — 'lack of templates' as a blocker he names. When giving instructions, uses short labeled commands: '^Clickup Task', 'Note: VKH and Rodrigo'. Thinks in systems. Much less present in recent traffic — may have stepped back operationally, but his voice on the cash-flow sheet ('Please assume an 80% Accuracy... - dom') carries the same register: honest, pragmatic, unpolished.",
+      "signature_patterns": [
+        "Imperative short lines: 'Cmon guys lets go', '9:30', 'be professional'",
+        "Structured meeting-minutes format (headers: Agenda / Action Items / Key Decisions / Blockers)",
+        "'^' for back-reference annotations: '^Clickup Task'",
+        "'Note:' prefix for sidebar annotations",
+        "Short chat-stream thinking: 'Camila you're good, this is sales and marketing only' → 'Actually' → 'why not' → 'join up'",
+        "Sign-off 'dom' on his own documents",
+        "Self-deprecating accuracy caveats: 'Please assume an 80% Accuracy. The old leads were a little messy but i did my best'"
+      ],
+      "verbatim_specimens": [
+        {"t": "2023-07-28 09:29:41 EDT", "channel": "#general", "text": "Cmon guys lets go"},
+        {"t": "2023-07-28 09:29:43 EDT", "channel": "#general", "text": "9:30"},
+        {"t": "2023-07-28 09:29:47 EDT", "channel": "#general", "text": "be professional"},
+        {"t": "2023-07-27 09:42:08 EDT", "channel": "#general", "text": "^Clickup Task"},
+        {"t": "2023-08-01 13:45:29 EDT", "channel": "#general", "text": "Camila you're good, this is sales and marketing only"},
+        {"t": "2023-08-01 13:45:40 EDT", "channel": "#general", "text": "Actually"},
+        {"t": "2023-08-01 13:45:42 EDT", "channel": "#general", "text": "why not"},
+        {"t": "2023-08-01 13:45:44 EDT", "channel": "#general", "text": "join up"},
+        {"t": "2023-08-03 14:00:09 EDT", "channel": "#general", "text": "Alright team, tomorrow at 9:30 it's uberEats Process & Procedure\n<@Camila> <@Andre> <@Toni> bookmark this link:\n(ClickUp link)"},
+        {"t": "2023-08-04 08:06:14 EDT", "channel": "#general", "text": "We are clearing that up asap, its a new card issue i think"}
+      ]
+    }
+  },
+  "rodbot_application_notes": [
+    "Rodbot should NEVER try to 'be' someone else on Slack — never impersonate Rodrigo or any teammate directly in a channel. Rodbot's job when drafting for a specific person is to produce a DRAFT the person will review and send in their own voice.",
+    "When drafting a message that a specific person will send, reach for their signature patterns first, then verbatim specimens second. If no specimen matches the situation, default to their register-tier and let the person edit.",
+    "The register-tier for the CHANNEL matters more than the register-tier for the person. Rhonna's structured-rollcall format is for #a_catering_group team-announcements; she writes differently in #special-requests (shorter, more questioning).",
+    "Preserve the typos. Rodrigo's 'Thx for brining' and Rhonna's 'thak you' and 'teh' are identity markers, not errors. Rodbot should NOT sanitize them when drafting in their voice.",
+    "When composing a celebratory reaction for Rodrigo on a win, pull from his real reaction emoji vocabulary: :fire::fire::fire: / :confetti_ball::fire::eagle: / :muscle::skin-tone-5::muscle::skin-tone-5::muscle::skin-tone-5:. Invented emoji chains will land wrong.",
+    "Portuguese code-switching is identity-preserving for Andre, Eduarda, and Rodrigo. If the context warrants Portuguese (a Brazilian client, menu items, warm exclamations), use it as they do — Andre's full-Portuguese client-menu asks, Eduarda's 'hehe', Rodrigo's 'Açaí station ok :white_check_mark:'.",
+    "Gaps: Cathlyn, Rena, Camila, and Anne have limited specimens in this first pass. A second pass should pull deeper (search by author, sample multiple months) to fill their profiles out."
+  ]
+}

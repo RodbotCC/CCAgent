@@ -1,0 +1,41 @@
+{
+  "id": "p_rhonna",
+  "name": "Rhonna Ricafort",
+  "role": "Admin / team operations lead — structured announcements, schedule posts, @-tag roster coordination, sales-team directive broadcasts. Day-to-day operational glue on the sales floor.",
+  "relationship_weight": 0.85,
+  "relationship_tier": "management_layer",
+  "contacts": {
+    "slack_user_id": null,
+    "slack_display_name": "Rhonna Ricafort",
+    "slack_title": null,
+    "email": null
+  },
+  "handling": {
+    "preferred_channel": "slack",
+    "tone": "Structured-authoritative. Team announcements open with @-tag rosters listing every named recipient, followed by a directive or informational block, and close with 'pls confirm understanding' or 'pls acknowledge'. Polite Filipino-English register — 'pls' over 'please', 'thak you' (signature typo), 'teh' (signature typo for 'the'). Emoji register is deliberate rather than celebratory — :BIG_EYES_HERE:-style sandwich emoji framing around critical notices, hearts on team wins, :pray: for asks. Directive framing: headers, bolded key phrases, numbered-list directives, explicit deadlines. On the voice register she is the most formatted person on the sales floor — Rodbot should match that structure when drafting team-wide announcements in her name.",
+    "response_latency_target": null,
+    "off_limits_topics": null,
+    "context": "Rhonna owns the @-tag roster convention on #a_catering_group. When Rodbot drafts team directives that need the full sales floor to see them, her format is the default template: roster-first, directive-second, acknowledgement-ask-third. She is where Rodrigo's operational intent becomes structured team output.",
+    "voice_adjustments": "When drafting AS Rhonna (team-wide announcements, schedule posts, directive broadcasts): lead with @-tag roster of the exact named recipients, not @channel; follow with the directive in bolded or headered structure; close with 'pls confirm understanding' or equivalent acknowledgement ask. Preserve her signature typos ('thak you', 'teh', 'pls') as identity markers — do NOT silently correct to 'thank you' / 'the' / 'please'. Use :BIG_EYES_HERE: or similar framing emoji for critical notices; hearts for team wins. Never draft casual or one-liner content in her name — that is not her register. For casual content route to whoever the casual voice is."
+  },
+  "context_anchors": [
+    "Primary voice on #a_catering_group (C062579HJH5) for structured team-wide directives and announcements.",
+    "Co-user on Comeketo Total Number of Events & Headcount sheet alongside Rod and Camila.",
+    "Co-user on Venue Partners sheet — participates in venue-partner operational coordination.",
+    "Cross-reference: knowledge/slack_voice_specimens.json (rhonna_ricafort signature patterns including @-tag roster convention and signature typos), knowledge/slack_channel_map.json (#a_catering_group register notes)."
+  ],
+  "notes": [
+    "Last name 'Ricafort' per Slack display.",
+    "Slack user ID not yet captured — fill from next-pass Slack profile fetch.",
+    "Phone/email not present in indexed files.",
+    "Identity emoji in Slack frequently includes a 'Disney Princess' self-descriptor — light-brand, not operational. Rodbot should not echo that unless explicitly directed by Rhonna herself."
+  ],
+  "sources": [
+    {
+      "from": "slack_ingest",
+      "id": "cowork_slack_ingest_2026-04-22_rhonna_profile",
+      "t": "2026-04-23T03:52:00Z",
+      "diff": "Initial creation. Tone + voice_adjustments from voice-specimens archive observations — @-tag roster convention and signature typos captured as identity markers."
+    }
+  ]
+}

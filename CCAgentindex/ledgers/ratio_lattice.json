@@ -1,0 +1,11 @@
+{
+  "owner": "Jake Aaron",
+  "updated_at": "2026-04-21T00:00:00Z",
+  "entries": [],
+  "notes": [
+    "Ratio-lattice entries for scoring candidate moves. Schema still evolving \u2014 loosely:",
+    "{ id, a, b, ratio, context, observed_at, weight }",
+    "where 'a' and 'b' are named dimensions and 'ratio' is the observed trade-off.",
+    "Scoring logic lives outside this file; the ledger just holds the raw ratios."
+  ]
+}

@@ -1,0 +1,128 @@
+{
+  "owner": "Comeketo team",
+  "updated_at": "2026-04-22T00:00:00Z",
+  "anchors": [
+    {
+      "id": "speed_to_lead_under_5min",
+      "label": "Respond to every new inbound lead within 5 minutes",
+      "why": "The Sales Playbook V2.0's single most-cited rule. 5-minute speed-to-lead is the largest conversion multiplier in the funnel \u2014 a response inside 5 minutes outperforms one at 30 minutes by a factor that dwarfs every other lever. Every minute past five is a slip.",
+      "weight": 0.95,
+      "comparator_hint": "speed_to_lead_fidelity",
+      "streak_worthy": true,
+      "cadence": "every-inbound",
+      "source": "knowledge/sales_playbook.md \u2014 'Speed-to-lead' section"
+    },
+    {
+      "id": "five_day_cadence_fidelity",
+      "label": "Complete the 5-day follow-up cadence before any lead is abandoned",
+      "why": "The playbook's 'Avoid This' explicitly forbids abandoning a lead before 5 days of follow-up. The cadence is the discipline that separates Comeketo from caterers who ghost after touch one. Every premature abandon is a trust withdrawal from the lead AND a training-data corruption for the whole sales engine.",
+      "weight": 0.9,
+      "comparator_hint": "cadence_fidelity",
+      "streak_worthy": true,
+      "cadence": "per-lead",
+      "source": "knowledge/sales_playbook.md \u2014 'Avoid This' section"
+    },
+    {
+      "id": "tasting_conversion_rate",
+      "label": "Tasting \u2192 contract conversion rate, tracked per rep and per source",
+      "why": "The fourfold exit (tasting \u2192 proposal \u2192 deposit \u2192 contract) is where the playbook's whole machinery lands or slips. Tasting conversion is the rollup KPI \u2014 everything upstream is judged by whether it produces tastings that convert. Per-rep and per-source breakdowns are where real operational learning happens; aggregated alone it's a vanity number.",
+      "weight": 0.92,
+      "comparator_hint": "conversion_rate_per_segment",
+      "streak_worthy": false,
+      "cadence": "monthly-rollup",
+      "source": "MONITORING SHEET \u2014 2026 Monthly Tasting Conversion Rate Summary"
+    },
+    {
+      "id": "partnership_touches_per_week",
+      "label": "Admiration-first partner touches per week (no asks)",
+      "why": "The partnership program's health is measured by admiration cadence, not referral volume. A week without a no-ask partner touch is a week where the ecosystem atrophies. The program's architecture assumes consistent low-pressure presence; silence reads as disinterest.",
+      "weight": 0.7,
+      "comparator_hint": "partnership_cadence_fidelity",
+      "streak_worthy": true,
+      "cadence": "weekly",
+      "source": "knowledge/partnership_program.md"
+    },
+    {
+      "id": "unsolicited_partner_referrals",
+      "label": "Partners referring Comeketo without being asked",
+      "why": "The prime-directive outcome of the partnership program: 'We don't want to be the most recommended caterer. We want to be the safest caterer to recommend.' When a partner refers without being asked, the program is working as designed. This is the one metric where Rodbot is allowed mild animation \u2014 it compounds the trust arc.",
+      "weight": 0.88,
+      "comparator_hint": "unsolicited_referral_count",
+      "streak_worthy": false,
+      "cadence": "as-it-happens",
+      "source": "knowledge/partnership_program.md"
+    },
+    {
+      "id": "deposit_collection_cadence",
+      "label": "Deposits cleared within contract-specified window",
+      "why": "Cathlyn's surface. A deposit delayed past the contract window is a trust signal in both directions \u2014 the client may be hesitating, and the kitchen may be committing labor/ingredient inventory against a deal that hasn't yet anchored. Cadence fidelity here protects downstream operations.",
+      "weight": 0.75,
+      "comparator_hint": "deposit_cadence_fidelity",
+      "streak_worthy": true,
+      "cadence": "per-contract",
+      "source": "Payments / Cash Collection / Cash Flow spreadsheet"
+    },
+    {
+      "id": "kitchen_schedule_respect",
+      "label": "No double-booking or over-commit against Bibi's kitchen capacity",
+      "why": "Bibi owns kitchen bandwidth. Every commitment Rodbot helps draft (tasting date, event slot, menu scope) must respect the kitchen schedule as hard constraint \u2014 not aspiration. An overbooked kitchen is the one failure that Comeketo's 15-year reputation cannot absorb without visible cost.",
+      "weight": 0.93,
+      "comparator_hint": "kitchen_capacity_respect",
+      "streak_worthy": true,
+      "cadence": "per-booking",
+      "source": "Schedule of Catering Jobs Weekend + Weekly Prep List"
+    }
+  ],
+  "regimes": [
+    {
+      "id": "relationship_maintenance_fidelity",
+      "description": "Daily-fidelity streak regime for core partnerships (Rodrigo + Andre + ClickUp + Slack). Cheap to honor, load-bearing. Missing one is a real signal, not noise. Streak break rationale captured in TCL.",
+      "scoring_mode": "daily-honored-or-broken"
+    },
+    {
+      "id": "relationship_network_fidelity",
+      "description": "Network-tier regime for people outside the core partnerships. Daily anchor (one outreach) + weekly rollup (network breadth). Distinct from maintenance_fidelity because failure mode differs: partnership drops collapse specific deals; network drops collapse generalized not-alone-ness.",
+      "scoring_mode": "daily-plus-weekly-rollup"
+    },
+    {
+      "id": "public_surface_development",
+      "description": "Medium-weight build regime for Twitter / community / LinkedIn / YouTube. Not daily-fidelity \u2014 weekly build progress is the unit. Anchor advances on surfaces being built, not on daily touches.",
+      "scoring_mode": "weekly-build-progress"
+    },
+    {
+      "id": "framework_hardening_progress",
+      "description": "Direction regime for the red-team / certification work. High weight on 'is the work being hardened' dimension, low relevance to daily scoring. Scored on red-team passes completed, claims certified, open challenges surfaced.",
+      "scoring_mode": "direction-dimension"
+    },
+    {
+      "id": "system_capability_depth",
+      "description": "Direction regime for Secretary's own capability growth (sub-agent fleet, orchestrator stages, voice model). Scored on shipped jurisdiction contracts, verified delegation round-trips, capabilities moved from spec to running code.",
+      "scoring_mode": "direction-dimension"
+    },
+    {
+      "id": "operational_substrate_health",
+      "description": "Low-weight maintenance regime for the stuff that silently breaks everything when it drops. AI billing today; eventually hosting, domains, backup integrity, local model weights \u2014 the substrate beneath the visible work. Daily glance is the honored action; missed is registered only when an alert eventually fires.",
+      "scoring_mode": "daily-glance-or-alert-fired"
+    },
+    {
+      "id": "reservoir_building",
+      "description": "Capture-tier regime. Daily entries into the content journal that later feed public-surface work. Compounding is the mechanic: one entry a day is low-cost; ~365 entries a year is a reservoir. This regime accumulates more anchors over time (voice-memo capture, bookmark capture, etc.).",
+      "scoring_mode": "daily-captured-or-not"
+    },
+    {
+      "id": "daily_physical_maintenance",
+      "description": "The maintenance tier for physical substrate: room (daily), laundry (weekly), and eventually whatever else belongs here (meals, sleep hygiene, exercise if declared). Low-weight individually, visible-as-pattern when multiple break in the same week.",
+      "scoring_mode": "daily-or-weekly-honored"
+    },
+    {
+      "id": "daily_family_fidelity",
+      "description": "Relational family tier, separated from physical maintenance and from partnership tier. Dad anchor today; extensible to other family relationships if declared. Daily touch is the unit.",
+      "scoring_mode": "daily-honored-or-broken"
+    }
+  ],
+  "notes": [
+    "Anchors declared 2026-04-22 across two batches. Schema: { id, label, why, weight (0.0-1.0), comparator_hint, streak_worthy, cadence }.",
+    "Nine regimes across three functional tiers: relationship (maintenance + network + family), building (public-surface + framework-hardening + system-capability), and substrate (physical-maintenance + operational-substrate + reservoir-building).",
+    "Streak tracker reads streak_worthy flag. Ratio lattice will pairwise-rank when multiple anchors apply to one candidate move \u2014 most of the pairwise work lives across regimes, not within (cross-tier tradeoffs are where the real dominance questions show up: is one more Rodrigo text worth skipping room-cleaning tonight?)."
+  ]
+}

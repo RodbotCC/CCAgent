@@ -1,0 +1,75 @@
+{
+  "id": "k_event_labor_projection_weekly",
+  "kind": "knowledge",
+  "name": "Event Labor Projection — Weekly Summary (pivot dump)",
+  "subject": "Weekly count of events on the Comeketo calendar, Week 12 (mid-March 2026) through Week 31 (late July 2026). Source is a sparse pivot-table export — it shows event counts per week and a partial list of events named by host/couple, plus a parallel staff-assignment count pivot that appears misaligned. Best read as a demand-side calendar snapshot rather than a full labor requirement projection.",
+  "source_files": [
+    "Event Labor Projection -  Weekly SUMMARY .csv"
+  ],
+  "file_shape_note": "The CSV has two side-by-side pivots that don't perfectly align. Left pivot: week → event count, with some weeks showing named events. Right pivot: another week index against staff-name counts, but the week numbers don't line up with the left pivot and a value of 52 under 'COUNTA of CATERING STAFF NAMES' for Week 17 is implausible for one week (matches the ~55 total roster). Right pivot is probably a separate totals breakdown, not week-matched. Treat event counts as authoritative; treat staff counts as advisory and confirm with Ops.",
+  "event_counts_by_week": [
+    {"week": "Week 12 (03/17 - 03/23)", "events": 1},
+    {"week": "Week 13 (03/24 - 03/30)", "events": 1},
+    {"week": "Week 14 (03/24 - 03/30)", "events": 1, "named_events": ["Jessy"], "note": "Date range repeats Week 13 — likely a source-sheet error."},
+    {"week": "Week 15 (04/07 - 04/13)", "events": 1},
+    {"week": "Week 17 (04/14 - 04/20)", "events": 1, "note": "No Week 16 shown."},
+    {"week": "Week 18 (04/21 - 04/27)", "events": 1, "note": "This is the current week (2026-04-22 falls inside)."},
+    {"week": "Week 19 (05/05 - 05/11)", "events": 2, "note": "Wedding season ramp begins."},
+    {"week": "Week 20 (05/12 - 05/18)", "events": 3},
+    {"week": "Week 21 (05/12 - 05/18)", "events": 1, "note": "Date range duplicates Week 20 — source-sheet error."},
+    {"week": "Week 21 (05/19 - 05/25)", "events": 3},
+    {"week": "Week 22 (05/26 - 06/01)", "events": 3},
+    {"week": "Week 23 (05/26 - 06/01)", "events": 1, "note": "Date range duplicates Week 22 — source-sheet error."},
+    {"week": "Week 23 (06/02 - 06/08)", "events": 3},
+    {"week": "Week 24 (06/09 - 06/15)", "events": 2},
+    {"week": "Week 25 (06/09 - 06/15)", "events": 1, "note": "Date range duplicates Week 24 — source-sheet error."},
+    {"week": "Week 25 (06/16 - 06/22)", "events": 7, "named_events": ["Alexandra Bebko", "Donna Winnery", "Kiersten Cosgrove", "Lucas Barry & dukhmani", "Molly Towlson", "Pamela Souza & Bryan", "Rose Dugue"], "note": "Peak week of visible calendar — 7 events."},
+    {"week": "Week 26 (06/23 - 06/29)", "events": 3},
+    {"week": "Week 28 (07/07 - 07/13)", "events": 1, "note": "Week 27 not shown — either no events or data not entered yet."},
+    {"week": "Week 30 (07/21 - 07/27)", "events": 1},
+    {"week": "Week 31 (07/21 - 07/27)", "events": 1, "note": "Date range duplicates Week 30 — source-sheet error."}
+  ],
+  "totals": {
+    "grand_total_events_visible": 38,
+    "time_horizon": "~Week 12 (mid-March 2026) through Week 31 (late July 2026) — roughly 4.5 months forward from ingestion date.",
+    "peak_week": "Week 25 (06/16 - 06/22) with 7 events.",
+    "wedding_season_ramp": "Week 19 (early May) → Week 26 (late June) is the dense band. 23 of 38 events (60%) fall in that 8-week window."
+  },
+  "data_quality_issues": [
+    "Several weeks have duplicate date ranges (Weeks 13/14, 20/21, 22/23, 24/25, 30/31) suggesting the source pivot was built from event dates that straddle week boundaries or the week-number column was entered inconsistently.",
+    "Week 16 missing between Week 15 and Week 17.",
+    "Week 27 missing between Week 26 and Week 28.",
+    "Right-pivot staff counts (3 bartenders, 0 extra staff grand total) are implausibly low — likely staff assignments aren't being entered into the source sheet for most events, or the pivot is missing a dimension. This sheet is NOT a usable labor-projection tool at current data quality.",
+    "Named events (Jessy, Alexandra Bebko, Donna Winnery, etc.) only appear for Weeks 14 and 25 — other weeks have counts but no lead/couple names. Whether the source sheet contains the names elsewhere or they're genuinely missing needs confirmation."
+  ],
+  "identified_upcoming_events_for_cross_reference": [
+    {"week": "Week 14", "lead_or_couple": "Jessy"},
+    {"week": "Week 25 (06/16 - 06/22)", "lead_or_couple": "Alexandra Bebko"},
+    {"week": "Week 25 (06/16 - 06/22)", "lead_or_couple": "Donna Winnery"},
+    {"week": "Week 25 (06/16 - 06/22)", "lead_or_couple": "Kiersten Cosgrove"},
+    {"week": "Week 25 (06/16 - 06/22)", "lead_or_couple": "Lucas Barry & Dukhmani"},
+    {"week": "Week 25 (06/16 - 06/22)", "lead_or_couple": "Molly Towlson"},
+    {"week": "Week 25 (06/16 - 06/22)", "lead_or_couple": "Pamela Souza & Bryan"},
+    {"week": "Week 25 (06/16 - 06/22)", "lead_or_couple": "Rose Dugue"}
+  ],
+  "operational_hooks": {
+    "feeds_into": [
+      "knowledge/staff_labor_roster.json — to answer 'can we cover Week 25 with 7 events from the current roster?' we need this demand-side calendar joined with roster capacity.",
+      "knowledge/venue_partners.json — if each event names a venue, we can check which venues cluster during peak weeks.",
+      "A future 'summer staffing' project — Week 25's 7-event peak is the single biggest stress test of the labor pool. Deserves its own project record if no plan exists."
+    ],
+    "gap_to_close": "This sheet does not yet function as a labor projection — only as an event calendar. To get a real projection, each event needs a planned staff count (captain + servers + bartenders + extras) and those need to roll up vs roster availability. Flag this to Jake as a tooling/process improvement."
+  },
+  "notes": [
+    "Treat this file as a week-by-week demand signal, not as staffing-side ground truth.",
+    "Week 25 (June 16-22) has 7 named events. Those lead names are candidates for event records — but event records require a venue, owner, quote, and date, which this file alone doesn't provide. Deferring to downstream files (CRM export, kitchen schedule, etc.)."
+  ],
+  "sources": [
+    {
+      "from": "rawdata_ingest",
+      "id": "cowork_rawdata_ingest_2026-04-22_event_labor_projection",
+      "t": "2026-04-22T22:00:00Z",
+      "diff": "Indexed Event Labor Projection Weekly Summary CSV — 38 events Week 12-31 (~mid-March through late July 2026), peak at Week 25 (7 events). 8 named leads/couples extracted for cross-reference. Multiple date-range duplication errors flagged. File is currently a demand calendar, not a labor projection — gap documented."
+    }
+  ]
+}

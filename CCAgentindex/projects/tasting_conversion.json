@@ -1,0 +1,22 @@
+{
+  "id": "tasting_conversion",
+  "name": "Tasting conversion — the playbook's north-star outcome",
+  "status": "active",
+  "next_move": "Watch every lead that reaches 'tasting booked' status in Close. Track each one through the fourfold exit: tasting completed → proposal sent → deposit received → contract signed. Surface every lead stalled >72h between stages as a memory, not an alarm. Monthly rollup of conversion-rate-per-source (FG / IG / Google / partner / word-of-mouth) lands in `summaries/tasting_conversion/<month>.md`. When a specific source converts above or below baseline, flag the anomaly for the admin.",
+  "blockers": [
+    "Need the monthly tasting conversion CSV parsed into structured form (per-rep, per-source, per-month)",
+    "No anchor yet on what 'baseline conversion rate' is — ask the admin",
+    "Lead source attribution in Close may not always match the actual origin — reconcile with the IG/FB/Google lead tracker"
+  ],
+  "live_band": "The playbook's entire machinery converges on this one number. Everything upstream — speed-to-lead, first-touch quality, cadence fidelity, tactical-empathy moves — exists to raise tasting-conversion. Rodbot's job is to make the conversion visible in both directions: wins that should be remembered (which rep, which phrasing, which source compounded), and losses that should be quietly noted without blame. Per the traits file: 'credit flows outward' — when a deal closes, the memory names the rep who closed it; Rodbot never inserts itself.",
+  "tags": ["conversion-rate", "tasting", "kpi", "fourfold-exit", "source-attribution"],
+  "related_knowledge": [
+    "sales_playbook",
+    "welcome_deck"
+  ],
+  "related_anchors": [
+    "tasting_conversion_rate",
+    "fourfold_exit_completion"
+  ],
+  "notes": "From the Welcome deck: 'Trust. It's what matters in this business.' From the playbook: 'The tasting is the cheapest way to compare apples to apples.' The tasting is a trust deposit at scale — it replaces a pricing objection with a food-quality experience. The conversion ritual that follows it is where the deposit lands or slips."
+}

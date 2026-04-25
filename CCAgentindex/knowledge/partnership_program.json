@@ -1,0 +1,246 @@
+{
+  "id": "k_partnership_program",
+  "kind": "knowledge",
+  "name": "Comeketo Partnership Program — Framework, Tiers, Scripts, Ops",
+  "subject": "The 3,557-line internal blueprint for how Comeketo recruits, onboards, tiers, and operates long-term partnerships with event planners, venues, and adjacent wedding-vertical vendors. Despite the document length, this is a FRAMEWORK and an OPERATIONAL SYSTEM, not a record of existing named partners — there are zero specific partners named in the 78KB corpus. The document's most important function is RESOLVING the apparent tension between 'we don't take kickbacks' (sales-deck claim) and 'we have a partnership program' (raw-data file name): the partnership program explicitly is non-monetary, value-first, referrals-optional. No money flows between Comeketo and partners in either direction. Comeketo invests in partners (curated leads, co-branded content, thoughtful gifts, styled shoots); partners refer 'if it makes sense, no pressure.' This document is the structural scaffolding that the named partners in the Welcome-Rodrigo deck (DJ Smokey, Above & Beyond Creatives, Ebenezer Decorations) slot into — the framework and the active roster are two different artifacts that should be read together.",
+  "source_files": [
+    "IG Comeketo catering process - Partnership Program(added final FULL spectrum of partnership program ) .md",
+    "IG Comeketo catering process - Partnership Program(added final FULL spectrum of partnership program ) .txt"
+  ],
+  "note_on_duplicate_files": "Both files (78KB .md and 338KB .txt) cover the same content — .md is the canonical working document (3,557 lines), .txt appears to be a flattened export (3,331 lines). No material differences detected. Treat .md as source of truth.",
+  "document_structure": {
+    "outline_eight_sections": [
+      {"section": "Instagram Outreach Process", "lines": "1-70", "subject": "Basic engagement mechanics + three-message cold-outreach sequence for prospecting partners on IG."},
+      {"section": "Partnership Philosophy & Framing", "lines": "72-304", "subject": "Why partnerships matter. Positioning vs. typical vendor lists."},
+      {"section": "Four-Tier Partnership Model", "lines": "317-554", "subject": "Connected → Preferred → Growth → Advocacy tiers. Non-transactional. Earned, not bought."},
+      {"section": "External Positioning & Communications", "lines": "564-847", "subject": "One-pager PDF, landing page copy, email templates, team training language."},
+      {"section": "Infrastructure & Operations", "lines": "872-1135", "subject": "ClickUp setup, SOP structure, CRM tracking, landing page layout, email sequences."},
+      {"section": "Team Execution Playbooks", "lines": "1506-1776", "subject": "Loom script, onboarding messages by tier, ownership assignment."},
+      {"section": "Final Infrastructure Hardening", "lines": "1923-3103", "subject": "Teleprompter doc, ClickUp dashboard, offboarding language, 90-day rollout, partner scoring model."},
+      {"section": "6-Month Growth Strategy", "lines": "3105-3557", "subject": "Month-by-month execution roadmap."}
+    ],
+    "observation": "Document is organized by stage-of-build (discovery → philosophy → tiers → external comms → internal ops → team playbook → hardening → scale), not by partner category. This is a FRAMEWORK document authored as Comeketo stood the program up — it reads like the program's founding blueprint."
+  },
+  "the_no_kickbacks_reconciliation": {
+    "sales_deck_claim": "Sales decks (Welcome-Rodrigo, Beyond Catering) tell prospects that 'other caterers take kickbacks from their vendors' and that those kickbacks end up marked up on the couple's bill. Comeketo positions itself as integrity-first — no kickbacks.",
+    "raw_data_apparent_tension": "This document is literally named 'Partnership Program' — which on its face could imply Comeketo has financial partnerships with vendors.",
+    "resolution_verbatim": [
+      "'We don't collect vendor lists. We build long-term partnerships with planners and venues who value excellence, reliability, and guest experience as much as we do.'",
+      "'This is not a referral program. This is a shared growth ecosystem.'",
+      "'This is not a referral program. It's not pay-to-play. There are no commissions, kickbacks, or transactional expectations.'",
+      "'If a partner asks, What do you expect from me? This is the approved response: Nothing formal. If we're aligned and it makes sense to refer us, great. If not, we still value the relationship.'"
+    ],
+    "what_actually_flows_between_comeketo_and_partners": {
+      "comeketo_to_partner": [
+        "Curated lead referrals ('curated, not dumped')",
+        "Co-branded content (Reels, carousels, features)",
+        "Brand exposure (IG spotlights, email features)",
+        "Thoughtful gifts (handwritten notes, seasonal items, vendor kits — 'thoughtful > expensive')",
+        "Strategic opportunities (styled shoots, post-event recaps, quarterly strategy calls)"
+      ],
+      "partner_to_comeketo": [
+        "Referrals — ONLY if it makes sense, no obligation, no expectation",
+        "Collaboration (content co-creation, styled shoots)"
+      ],
+      "money_flow": "ZERO between Comeketo and partners — in either direction. Explicitly, verbatim: 'No commissions. No kickbacks. No pay-to-play.'"
+    },
+    "reconciliation_verdict": "The two sides are RECONCILED. The sales-deck 'no kickbacks' claim is about OUTBOUND: Comeketo doesn't take kickbacks from vendors (DJs, decorators, photographers) in exchange for sending couples to them. This Partnership Program document confirms that position is real in the operating model. It does, however, reveal that Comeketo invests time, content, and attention in those same partners — which the sales deck is less forthcoming about. The 'no money changes hands' claim is defensible. The 'we have no partnership program' claim would NOT be defensible — but the decks don't make that claim.",
+    "where_the_named_partners_come_from": "The Welcome-Rodrigo deck names DJ Smokey ($1,000 premium upgrades), Above & Beyond Creatives ($300-$700), Ebenezer Decorations ($350). These are the ACTIVE ROSTER. This Partnership Program document is the FRAMEWORK. The framework doesn't name partners because it predates/abstracts the active roster. Two complementary artifacts — don't conflate."
+  },
+  "four_tier_model": {
+    "tiers": [
+      {
+        "tier": "Connected Partner",
+        "who": "New planners/venues, IG connections, not yet worked together",
+        "objective": "Build familiarity without pressure",
+        "what_they_get": ["Partner Network inclusion", "Social engagement", "Occasional content features", "Access to tastings/open houses", "Light education"],
+        "what_comeketo_expects": ["Alignment with values", "Openness to collaboration", "No referral requirement yet"]
+      },
+      {
+        "tier": "Preferred Partner",
+        "who": "Vendors who have referred or executed successfully with Comeketo",
+        "objective": "Make them look good, make their job easier",
+        "what_they_get": ["Priority referrals", "Co-branded content", "Styled shoots", "Planner-first communication", "Fast escalation access", "Early access to new menus"],
+        "what_comeketo_expects": ["Referrals based on fit (not obligation)", "Professional standards", "Clear communication"]
+      },
+      {
+        "tier": "Growth Partner",
+        "who": "Consistent referrers, long-term-relationship oriented, brand-building focused",
+        "objective": "Actively help them grow",
+        "what_they_get": ["Qualified lead sharing", "Joint marketing", "Exclusive experiences for their clients", "Priority scheduling", "Quarterly strategy touchpoints", "Surprise/delight gifting"],
+        "what_comeketo_expects": ["Consistent referrals", "Brand alignment", "Willingness to co-market", "Mutual accountability"]
+      },
+      {
+        "tier": "Advocacy Partner",
+        "who": "Top referrers, flagship venues, partners who trust Comeketo with their reputation",
+        "objective": "Deep integration and long-term dominance",
+        "what_they_get": ["First access to high-value leads", "Custom co-branded experiences", "Invite-only partner dinners/events", "VIP tastings", "Annual planning collaboration", "Public recognition as Signature Partner", "Direct leadership access"],
+        "what_comeketo_expects": ["Active advocacy", "Consistent referrals", "Shared standards", "Honest feedback"]
+      }
+    ],
+    "guardrails": [
+      "No tier is bought. All tiers are EARNED.",
+      "Never lead with tiers publicly — say 'We build relationships in stages. As alignment deepens, so does the support.'",
+      "Tiers are internal operating construct, not marketed as a ladder."
+    ]
+  },
+  "instagram_outreach_process": {
+    "mechanics": [
+      "Pick 10 IG profiles per week targeting Massachusetts / New England",
+      "Start following",
+      "Like their posts",
+      "Comment on their posts",
+      "Share their posts to IG Story and retag them",
+      "After 2 weeks of warm engagement, initiate conversation",
+      "Send intro message (3-message sequence)"
+    ],
+    "cadence": "At least 3 days per week — 1 day liking, 1 day commenting, 1 day story-sharing. At least 2 posts per day touched.",
+    "tracker": "IG profiles logged on a tracker sheet (NOT named — flag for identification. Likely one of the sheets in the Google Sheet Registry inventoried under knowledge/infrastructure_inventory.json).",
+    "channel_progression": "IG = sourcing/warm-up channel. Once warm, move the relationship off IG inbox onto CLOSE (Close CRM) for structured tracking.",
+    "the_three_message_sequence": {
+      "message_1_initial_follow": "I have been looking at your IG page now for some time and I am impressed .. [Complement on something(Job)] [ask them a question about what they do]",
+      "message_2_learning": "We've been following the wonderful services you provide — from seamless event coordination to creating memorable experiences for your clients — and we truly admire the level of quality you bring to every project. At Comeketo Catering, we specialize in vibrant Brazilian-inspired cuisine for corporate events, HR activations, venue gatherings, and private celebrations. We'd love to explore how our catering could complement the services you already offer, whether through bookings, preferred vendor partnerships, or private tastings. Before we dive deeper, may we ask — do you currently service Massachusetts or the New England area? We'd love to see if our regions align so we can explore a potential partnership. Looking forward to connecting!",
+      "message_3_in_person_invitation": "Start to really engage, ask them to get to know us and we get to know them. Invite them for a tasting or ask if we can visit them (especially if they're a venue)."
+    }
+  },
+  "tier_specific_dm_scripts": {
+    "connected": "Hey [Name], I came across your work and really respect how you approach [specific detail]. We work closely with planners and venues and always enjoy connecting with people who clearly care about guest experience. Just wanted to say hello and follow along. No ask. Full stop.",
+    "preferred": "Hey [Name], we've really enjoyed watching how you run your events. We're building a small circle of planners and venues we actively support through collaboration, content, and lead alignment. No pressure at all, but if you're ever open to exploring that kind of partnership, I'd love to connect.",
+    "growth": "Hey [Name], I appreciate how consistently aligned our teams have been. We've been intentional about sharing leads, collaborating on content, and supporting partners who are growing in similar ways. I'd love to explore how we can be more proactive in helping each other grow this year.",
+    "advocacy": "Hey [Name], I just wanted to say we genuinely value the trust you place in us. We consider you a core partner and want to continue building something long-term that supports your business, your clients, and your brand. Always open if there's anything we can do better or differently."
+  },
+  "rodbot_voice_samples_verbatim": [
+    {
+      "topic": "Partnership philosophy",
+      "text": "We're not trying to 'network.' We're trying to become the caterer they trust their reputation with. Event planners and venue owners don't refer vendors they like. They refer vendors who: Make *them* look good, Reduce friction in *their* process, Protect *their* brand, Help *their* business grow. Everything below ladders into that."
+    },
+    {
+      "topic": "Posture",
+      "text": "We are not asking venues and planners to help us. We are inviting them into a growth ecosystem. When they win, we win. When they grow, we grow. That's the posture."
+    },
+    {
+      "topic": "Not leading with tiers",
+      "text": "The Hidden Power Move: We never lead with tiers publicly. We say: 'We build relationships in stages. As alignment deepens, so does the support.' That keeps it human. Not corporate. Not cheesy."
+    },
+    {
+      "topic": "Program feel",
+      "text": "This program should feel: Calm, Professional, Intentional, Relationship-first, Long-term. No hype. No pressure. No chasing."
+    },
+    {
+      "topic": "The red line",
+      "text": "We do not pressure partners for referrals. We do not promise anything transactional. We do not change our tone based on who we're talking to. How we perform matters just as much as what we achieve. If something about this program ever feels uncomfortable, unclear, or off-brand — raise it immediately."
+    },
+    {
+      "topic": "Safest, not most recommended",
+      "text": "We don't want to be the most recommended caterer. We want to be the safest caterer to recommend."
+    }
+  ],
+  "rodbot_voice_rules_distilled": [
+    "Lead with admiration for the other party's work, not with an ask.",
+    "'No ask. Full stop.' is a closing move — signal that the outreach is genuine, not a pitch in disguise.",
+    "Use 'ecosystem' language over 'referral' language. Ecosystem = shared growth. Referral = transactional.",
+    "Frame value to PARTNERS in terms of what's good for THEIR reputation, THEIR workflow, THEIR brand — not Comeketo's.",
+    "Calm > hype. Intentional > urgent. Relationship > transaction.",
+    "When asked 'what do you expect from me?' the approved answer is 'Nothing formal. If we're aligned and it makes sense to refer us, great. If not, we still value the relationship.'",
+    "Never lead with tier names publicly. Tiers are internal ops.",
+    "Bilingual principle holds from other Rodbot sources — Portuguese authenticity anchors the brand, but partner outreach is English-first (they're vendors in MA, not family)."
+  ],
+  "operational_infrastructure_named": {
+    "primary_system": "ClickUp — Vendor Partnerships space",
+    "clickup_structure": {
+      "lists_by_tier": ["Connected", "Preferred", "Growth", "Advocacy"],
+      "custom_fields": ["Partner Type", "Tier", "Market", "IG Handle", "Referral Count", "Last Touchpoint Date", "Next Touchpoint Due", "Account Manager", "Relationship Notes"]
+    },
+    "dashboard_views": [
+      "Partner Tier Breakdown (pie chart)",
+      "At-Risk Partners (list)",
+      "Referrals by Partner (table)",
+      "Touchpoint Compliance (progress bar)",
+      "Tier Movement (tracking)"
+    ],
+    "processes": [
+      "Quarterly Partner Review — formal review of tier distribution, referral activity, at-risk relationships",
+      "Partner Scoring Model — 0-100 point system across 5 dimensions (Brand Alignment, Execution, Referral Quality, Engagement, Reputation/Influence). Removes emotion, favoritism, and guesswork from tier advancement.",
+      "Offboarding process — respectful, preserves the door: 'Our door remains open should alignment make sense again in the future.'",
+      "Loom training — scripted onboarding for team members (script lives verbatim in the document)"
+    ],
+    "sops_and_docs": [
+      "Partner tracker sheet (for IG prospecting)",
+      "Living SOP in ClickUp (ownership, lifecycle, required actions, reviews, removal criteria)",
+      "One-pager PDF for partner recruitment",
+      "Landing page copy",
+      "Email templates by stage",
+      "Teleprompter doc for team"
+    ]
+  },
+  "partner_scoring_model": {
+    "framework": "0-100 points across 5 dimensions",
+    "dimensions": [
+      "Brand Alignment",
+      "Execution",
+      "Referral Quality",
+      "Engagement",
+      "Reputation/Influence"
+    ],
+    "purpose": "Remove feelings, favoritism, and guesswork from tier advancement. Make tier movement a function of documented performance."
+  },
+  "six_month_growth_roadmap": {
+    "scope": "Lines 3105-3557 — month-by-month execution plan for scaling the program from zero to established.",
+    "granularity": "Handoff-ready — team member can execute without interpretation.",
+    "not_extracted_in_detail": "Roadmap not expanded here to keep this file manageable. If Rodrigo or the team wants month-by-month extraction into project/* records, flag and build. Suggest: projects/partnership_program_q2_rollout.json etc."
+  },
+  "what_this_document_is_and_isnt": {
+    "is": [
+      "A framework for building a non-transactional partnership program",
+      "A voice/tone guide for outreach (IG, DM, email)",
+      "An operational playbook with ClickUp structure, scoring model, review cadence",
+      "A 6-month rollout plan",
+      "A clear articulation of what 'no kickbacks' means in practice on the inbound/referral side"
+    ],
+    "isnt": [
+      "A record of actual named partners — ZERO are named",
+      "A source of dollar amounts — ZERO partner bonuses are specified ($1,000 DJ Smokey / $350 Ebenezer live in the Welcome-Rodrigo deck, not here)",
+      "A customer-facing document — it's explicitly internal ('never lead with tiers publicly')",
+      "A source for the sales-deck integrity-vs-kickback framing — that framing is in the sales decks, not echoed back here"
+    ]
+  },
+  "cross_references": {
+    "partnership_artifacts_in_bedrock": [
+      "knowledge/brand_welcome_rodrigo.json — names the active partner roster (DJ Smokey, Above & Beyond Creatives, Ebenezer Decorations) and their dollar-value couple-bonuses. That file = WHO. This file = HOW.",
+      "knowledge/brand_wedding_experience.json — the customer-facing 'Partnership Pile-Up vs Comeketo Way' framing. That file = WHAT WE TELL COUPLES. This file = HOW WE ACTUALLY OPERATE.",
+      "knowledge/venue_partners.json — frequency-of-jobs-there data for active venue relationships. Some of those venues are likely Preferred/Growth/Advocacy tier in the framework defined here.",
+      "knowledge/infrastructure_inventory.json — 'Venue Partners' Google Sheet + 'Facebook Links' sheet + 'IG Insight Weekly Monitoring' sheet are the operational artifacts this framework refers to."
+    ],
+    "people_who_run_this": "Document doesn't name an owner, but cross-referencing infrastructure_inventory.json — Cathlyn, Eufy, Rena, and Camila are the people on the venue/partner/IG sheets. One of them (likely Cathlyn given her broad access) is probably the partnership program owner. Confirm with Rodrigo.",
+    "close_crm_handoff": "Partner progression: IG warm-up → off-IG conversation → CLOSE CRM. The document treats Close as the structured-tracking step. This is a real integration dependency for the agent — Close-CRM-sourced partner-state would complete the picture."
+  },
+  "operational_hooks": {
+    "feeds_into": [
+      "Rodbot character.md — this document is arguably the single richest source of Rodbot's voice when talking TO OTHER BUSINESSES (as opposed to talking to couples). The tone is different: less urgent, more admiring, more relationship-first.",
+      "A partners/ directory under projects or a dedicated partnerships/ index — consider promoting the 4 tiers into explicit records and slotting real partners (DJ Smokey, A&B Creatives, Ebenezer, venue-partners-file entries) into them.",
+      "ClickUp integration — if Cowork gets ClickUp MCP set up, this document is the map of how that ClickUp workspace is structured.",
+      "A future partner-outreach automation — the 3-message IG sequence and 4 tier-specific DM scripts are ready-to-automate assets."
+    ],
+    "gap_to_close": [
+      "Named partners missing here. The Welcome-Rodrigo deck has DJ Smokey, A&B Creatives, Ebenezer. That's 3. Is that the entire active roster? Are there more? Flag for raw-data request: partner tracker sheet actual contents.",
+      "No audit of actual program state vs. this framework. Is the program live? Is ClickUp set up as described? Are quarterly reviews happening? The document reads as future-state; verify current-state with Rodrigo.",
+      "The 6-month roadmap (lines 3105-3557) was not extracted. If the team wants it, promote to projects/* as a rollout plan record.",
+      "The tracker sheet's actual name/location. The IG-prospecting tracker is referenced but not named in the registry."
+    ]
+  },
+  "notes": [
+    "This is the MOST systematic document in the raw-data corpus. Every other document is either data (scorecards, prep lists, schedules) or sales copy. This one is operational doctrine. The team invested serious time in this.",
+    "The 'no-hype, no-pressure, no-chasing' voice guidance is a direct counterweight to the sales decks' urgency tactics. Two different audiences, two different voices: (a) couples we're closing = urgency, 4-week decision, bonuses expire. (b) partners we're building with = calm, long-term, relationship-first. Rodbot must hold both voices separately.",
+    "The 'safest caterer to recommend' line is a strong positioning quote. It's the partnership-program mirror of 'Trust — it's what matters in this business' from the Welcome-Rodrigo deck.",
+    "The fact that this document is 3,557 lines and names ZERO partners is itself a signal — the team prioritized doctrine over inventory. Good for Rodbot voice training; bad for Rodbot answering the question 'who are our current partners?'",
+    "The duplicate .txt (338KB) vs .md (78KB) — the .txt is about 4× larger despite being shorter in lines. Likely the .txt includes extensive whitespace, image references, or formatting artifacts from an export. The .md is authoritative."
+  ],
+  "sources": [
+    {
+      "from": "rawdata_ingest",
+      "id": "cowork_rawdata_ingest_2026-04-22_partnership_program",
+      "t": "2026-04-22T23:45:00Z",
+      "diff": "Indexed the 3,557-line Partnership Program corpus (.md + .txt, same content). Extracted 8-section structure, 4-tier model (Connected/Preferred/Growth/Advocacy), 3-message IG outreach sequence, 4 tier-specific DM scripts, 6 verbatim Rodbot voice samples, 8 distilled voice rules, and full ClickUp operational infrastructure (lists, custom fields, dashboard views, scoring model). Critical finding: the 'no kickbacks' tension with the 'Partnership Program' file name is RESOLVED — document explicitly states no money flows between Comeketo and partners in either direction. Document is framework-only; zero specific partners are named (those live in the Welcome-Rodrigo deck). Flagged 4 gaps: active partner roster audit, program live-state vs framework verification, 6-month roadmap promotion to projects/*, and IG tracker sheet identification."
+    }
+  ]
+}

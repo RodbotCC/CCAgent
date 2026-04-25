@@ -1,0 +1,109 @@
+{
+  "id": "k_menu_catalog_bibi_prep_list",
+  "kind": "knowledge",
+  "name": "Menu Catalog — Bibi's Weekly Prep List (Brazilian Menu Inventory)",
+  "subject": "Bibi (Captain + Food Allotment owner) maintains a weekly prep list. The template version captured here (copy of 01/12 = January 12, probably 2026) contains Comeketo's core Brazilian catering menu in prep-list form — 32 dishes spanning hors d'oeuvres, salads, sides, mains-adjacent, and desserts. This is the most complete inventory of what Comeketo actually serves in the raw data, and it's the concrete product anchor behind the 'Brazilian Grill' and 'Churrasco' brand claims in the sales decks.",
+  "source_files": [
+    "Weekly Prep List - BIBI - Copy of 01_12.csv"
+  ],
+  "template_shape": {
+    "columns": ["dish", "PREP TIME", "HEAVY PREP", "#1", "#2", "#3", "#4", "TOTAL", "CookNAME", "DONE", "NOTE"],
+    "sections_per_cook": 3,
+    "total_prep_target_stated": "8hrs worth of prep",
+    "interpretation": "Each cook takes a section of the menu and fills in prep times, whether it's heavy prep, quantity targets (#1-#4 appear to be per-event batches), total quantity, cook name, done-checkbox, and notes. Template has 3 cook slots."
+  },
+  "menu_categories": {
+    "hors_doeuvres_and_savory_bites": [
+      {"dish": "Chicken Salad sandwiches on cheese bread", "brazilian_accent": true, "note": "Cheese bread = pão de queijo base."},
+      {"dish": "Authentic Brazilian Cheese Bread (Pão de Queijo)", "brazilian_accent": true, "signature": true, "note": "Signature Brazilian item. Appears on most catering offerings."},
+      {"dish": "Quinoa & Chickpea Salad in mini cups", "brazilian_accent": false},
+      {"dish": "Coxinha", "brazilian_accent": true, "signature": true, "note": "Iconic Brazilian chicken croquette. Signature item."},
+      {"dish": "Beef & Yuca Croquettes", "brazilian_accent": true},
+      {"dish": "Corn & Cheese Croquettes", "brazilian_accent": true},
+      {"dish": "Garlic Shrimp", "brazilian_accent": false},
+      {"dish": "Fried Polenta (corn)", "brazilian_accent": false},
+      {"dish": "Dadinhos de Tapioca with Jelly", "brazilian_accent": true, "note": "Tapioca cheese cubes — popular Brazilian bar snack."},
+      {"dish": "Beef Mini Turnovers", "brazilian_accent": true, "note": "Likely pastéis or empadinhas style."},
+      {"dish": "Cheese Mini Turnovers", "brazilian_accent": true},
+      {"dish": "Chicken Mini Turnovers", "brazilian_accent": true},
+      {"dish": "Cheese and Crackers Platter", "brazilian_accent": false},
+      {"dish": "Fruit Platter", "brazilian_accent": false}
+    ],
+    "desserts": [
+      {"dish": "Flan (Caramel Custard)", "brazilian_accent": true, "note": "Pudim de leite — Brazilian staple."},
+      {"dish": "Passion Fruit Mousse", "brazilian_accent": true, "signature": true, "note": "Mousse de maracujá — iconic Brazilian dessert."}
+    ],
+    "salads": [
+      {"dish": "Quinoa Spinach Salad", "brazilian_accent": false},
+      {"dish": "Potato Salad", "brazilian_accent": false},
+      {"dish": "Pasta Salad", "brazilian_accent": false},
+      {"dish": "Mango & Mint Salad", "brazilian_accent": false},
+      {"dish": "Vinaigrette Salad (Vinagrette)", "brazilian_accent": true, "note": "Vinagrete — classic tomato-onion-vinegar relish served with churrasco."},
+      {"dish": "Brazilian Tropical Corn Salad", "brazilian_accent": true}
+    ],
+    "sides_and_starches": [
+      {"dish": "Beans", "brazilian_accent": true, "note": "Generic here — Brazilian-style black beans or feijão typical."},
+      {"dish": "Garlic Mashed Potatoes", "brazilian_accent": false},
+      {"dish": "Collard Greens", "brazilian_accent": true, "note": "Couve — classic churrasco accompaniment."},
+      {"dish": "Piamontes Rice (Brazilian Risotto)", "brazilian_accent": true, "note": "Arroz piamontese — Brazilian-Italian crossover rice dish."},
+      {"dish": "Tropeiro Beans", "brazilian_accent": true, "signature": true, "note": "Feijão tropeiro — Brazilian signature side from Minas Gerais."},
+      {"dish": "Mac & Cheese", "brazilian_accent": false},
+      {"dish": "Fried Yuca", "brazilian_accent": true},
+      {"dish": "Sweet Plantains", "brazilian_accent": true}
+    ],
+    "sauces_and_accents": [
+      {"dish": "Chimichurri", "brazilian_accent": false, "note": "Argentine/South American grilled-meat sauce — served alongside churrasco."}
+    ],
+    "grilled_vegetables": [
+      {"dish": "Grilled Zucchini & Squash", "brazilian_accent": false}
+    ]
+  },
+  "menu_summary_stats": {
+    "total_items": 32,
+    "brazilian_items": 21,
+    "brazilian_percentage": 65.6,
+    "signature_items": [
+      "Pão de Queijo (Authentic Brazilian Cheese Bread)",
+      "Coxinha",
+      "Passion Fruit Mousse",
+      "Tropeiro Beans"
+    ],
+    "not_captured_here": [
+      "Churrasco / grilled meats — conspicuously absent from this prep list, which is consistent with 'Bibi's prep' (hot grill items are handled on-site at the event by the grill team, not prepped weekly). Churrasco is the headline product per the sales decks but isn't in this weekly-prep document."
+    ]
+  },
+  "rodbot_voice_implications": {
+    "anchor_for_brand_specificity": "The sales decks reference 'Brazilian Grill' and 'Churrasco' as product anchors but don't itemize the menu. This prep list grounds those claims in concrete named dishes — Pão de Queijo, Coxinha, Dadinhos de Tapioca, Feijão Tropeiro, Mousse de Maracujá. Rodbot should be able to name these by Portuguese names with English gloss, not just say 'Brazilian food'.",
+    "bilingual_naming_convention": [
+      "Pão de Queijo → Authentic Brazilian Cheese Bread",
+      "Coxinha (no English translation in source)",
+      "Dadinhos de Tapioca with Jelly",
+      "Vinaigrette Salad (Vinagrette)",
+      "Piamontes Rice (Brazilian Risotto)",
+      "Flan (Caramel Custard)"
+    ],
+    "portuguese_english_pattern": "When a dish has a Portuguese name the prep list keeps both. Rodbot should follow the same convention: Portuguese first, parenthetical English, not English-only.",
+    "churrasco_handling": "The word 'Churrasco' does NOT appear in this prep list — it's a grill-side product, not a prep-side product. For Rodbot to talk about churrasco specifics (cuts of meat, serving style, Deluxe Churrasco package) we need a separate grill/churrasco document. Flag as missing from raw data."
+  },
+  "operational_hooks": {
+    "feeds_into": [
+      "knowledge/brand_welcome_rodrigo.json — the 'Brazilian Grill' product anchor is now grounded in a named menu.",
+      "knowledge/brand_wedding_experience.json — the One-Stop Shop / Premium Rentals pillars need this menu to be credible when talking about what's actually served.",
+      "A future Rodbot/ character file — the Portuguese/English naming convention is a voice rule that belongs in Rodbot's style guide."
+    ],
+    "gap_to_close": "No churrasco/grill-side menu document in raw data. Packages (Deluxe Churrasco, etc.) referenced in the sales decks don't have a corresponding prep/ingredient list in the indexed material. Flag for Rodrigo."
+  },
+  "notes": [
+    "The prep-list template has empty slots for cook #2 and cook #3 — only cook #1's section is populated with dish names. This may be a weekly rotation (different cook leads different weeks) or a template that hadn't been fully filled in on 01/12.",
+    "'Bibi' owns food allotment per the kitchen schedule and is Captain per the staff roster. This prep list is her instrument — the canonical source of what Comeketo's kitchen is preparing.",
+    "The Vinagrette (with Portuguese spelling) is an authentic tell — staff-internal Portuguese terminology bleeding into customer-facing documents. Consistent with the bilingual note in the kitchen schedule ('criar uns projetos essa semana ta fraco de eventos')."
+  ],
+  "sources": [
+    {
+      "from": "rawdata_ingest",
+      "id": "cowork_rawdata_ingest_2026-04-22_menu_catalog",
+      "t": "2026-04-22T22:15:00Z",
+      "diff": "Indexed Weekly Prep List (Bibi, copy of 01/12) — 32 Brazilian catering menu items across 6 categories (hors d'oeuvres, salads, sides, desserts, sauces, grilled veg). 4 signature items identified (Pão de Queijo, Coxinha, Passion Fruit Mousse, Tropeiro Beans). Churrasco/grill product flagged as missing — not in prep list, needs separate doc."
+    }
+  ]
+}
