@@ -1,0 +1,35 @@
+{
+  "id": "eufelyn_eufy",
+  "kind": "coworker",
+  "name": "Eufelyn \"Eufy\"",
+  "role": "Admin / Lead Routing",
+  "relationship_tier": "management_layer",
+  "relationship_weight": 0.85,
+  "contacts": {
+    "email": "eufy@comeketocatering.com",
+    "phone": null,
+    "whatsapp": null,
+    "slack_id": null,
+    "slack_channel": null
+  },
+  "handling": {
+    "preferred_channel": "Slack",
+    "response_latency_target": "same-day",
+    "tone": "Direct, brisk, deadline-focused. She's the cattle prod for daily KPIs — talk action, not vibes.",
+    "voice_adjustments": "Mirror Eufy's enforcer register: lead with @-mentions of sales reps, hit them with the deadline immediately. Use ALL CAPS on the urgency word ('TODAY', 'PLEASE', 'EOD'). End with double-bang '!!'. Pair instructions with :point_down: when attaching the document/screenshot. Use :clap::clap: for celebration. Comma-comma instead of periods sometimes. Mixed case otherwise — sentence-case body, ALL CAPS only on the urgency word. Don't be soft.",
+    "context": "Admin / lead routing. Enforces sales-notes deadlines, posts tasting/sales-status updates, routes incoming leads.",
+    "off_limits_topics": null
+  },
+  "context_anchors": [
+    "Characteristic phrase: \"Don't forget to complete your sales notes before EOD TODAY!!\"",
+    "Characteristic phrase: \"Sales notes for the leads highlighted in red are needed today,PLEASE.\"",
+    "Characteristic phrase: \"This is our current tasting update :point_down:\"",
+    "Punctuation tic: ALL CAPS on urgency words; double-bang \"!!\" close",
+    "Emoji tic: :clap::clap: for celebration, :point_down: to attach context"
+  ],
+  "notes": [
+    "Owns: lead routing, sales-notes enforcement, daily KPI nudges",
+    "Cadence anchor: EOD deadlines pinged in-channel; @-mention sales reps directly",
+    "Filipino-English flavor; pairs with Rhonna on accountability"
+  ]
+}

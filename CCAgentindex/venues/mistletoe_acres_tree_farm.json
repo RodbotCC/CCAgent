@@ -1,0 +1,29 @@
+{
+  "id": "mistletoe_acres_tree_farm",
+  "kind": "venue",
+  "name": "Mistletoe Acres Tree Farm",
+  "city": null,
+  "venue_type": "Farm",
+  "website": null,
+  "tier": "tier_2",
+  "deal_stats": {
+    "opp_count": 2,
+    "total_value": 15621.75,
+    "avg_deal_value": 7810.88,
+    "lead_name_refs": 2
+  },
+  "close_account": {
+    "has_lead": false,
+    "lead_status": null,
+    "lead_url": null
+  },
+  "raw_variants": [
+    "Mistletoe Acres Tree Farm"
+  ],
+  "action": "📋 Create venue lead account",
+  "notes": [
+    "2 opportunities totaling $15,621.75 — rank #19 by deal value.",
+    "No Close lead account yet — recommend creating one to track relationship.",
+    "2 leads have referenced this as their venue choice."
+  ]
+}

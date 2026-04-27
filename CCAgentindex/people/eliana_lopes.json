@@ -1,0 +1,85 @@
+{
+  "id": "eliana_lopes",
+  "kind": "lead",
+  "name": "Eliana Lopes",
+  "role": "Birthday · June 20, 2026 · 60-70 guests · Taunton MA",
+  "relationship_tier": "stalled",
+  "relationship_weight": 0.42,
+  "contacts": {
+    "email": null,
+    "phone": null,
+    "whatsapp": null,
+    "slack_id": null,
+    "slack_channel": null,
+    "clickup_user_id": null,
+    "other": null
+  },
+  "handling": {
+    "preferred_channel": "SMS",
+    "response_latency_target": "within-24h",
+    "tone": "Portuguese surname (Lopes) + Taunton MA (heavy Portuguese-Brazilian community) = bilingual-aware. Day 1 was too aggressive — back off and give her room. One short, respectful re-engagement.",
+    "voice_adjustments": "Andre voice: brief, warm, Portuguese tag where natural. Don't pile on more drip — that created the silence.",
+    "context": "Inbound Apr 23 from FB Lead Form. 8 weeks out (HIGH urgency). 60-70 guests, $1,950 ballpark. Day 1 push was very heavy (2 calls, 2 emails, 2 SMS) and she shut down. Cultural fit perfect.",
+    "off_limits_topics": null
+  },
+  "context_anchors": [
+    "Lopes = Portuguese surname, common in Taunton MA",
+    "Taunton MA, 02780 — heavy Portuguese-Brazilian community",
+    "June 20, 2026 — 8 weeks out, HIGH urgency",
+    "60-70 guests = mid-tier event",
+    "Day 1 push was overwhelming — back off"
+  ],
+  "lead": {
+    "status": "stalled",
+    "stage": "cold_no_response_re_engagement",
+    "owner": "andre_raw",
+    "source": "FB Lead Form — VIDEO RODS WEDDING & FACELESS",
+    "event_type": "Birthday",
+    "event_date": "2026-06-20",
+    "guest_count": 65,
+    "venue": null,
+    "city": "Taunton, MA",
+    "quote_value": null,
+    "opportunity_value": 1950,
+    "score_tags": ["bilingual_fit", "day1_overload", "high_urgency_8wk", "lusophone"],
+    "last_activity": "2026-04-23 — re-engagement push, no response",
+    "speed_urgency": "high",
+    "next_move": "Short bilingual binary: 'still looking, or already fechou com alguém?'"
+  },
+  "enrichment": {
+    "confidence": 0.55,
+    "identity_notes": "Lopes Portuguese surname, especially prevalent in MA (heavy Portuguese-Brazilian in Taunton, Fall River, New Bedford, Brockton). Combined with Taunton zip + Comeketo lead form = very likely Brazilian/Portuguese cultural background.",
+    "win_angles": [
+      "Portuguese cultural angle, gently — open EN with soft PT tag ('Tudo bem?')",
+      "Backing off gives her room — Day 1 was overwhelming",
+      "8 weeks for 60-70 = approaching urgency",
+      "Birthday at 60-70 = mid-budget, appetizer-forward, full meal possibly drop-off + bar"
+    ],
+    "nepq_openers": [
+      "PT/EN: 'Oi Eliana — tudo bem? June 20 está chegando rápido. Pra eu não te encher de mensagem, me responde uma só: você ainda está procurando catering pra essa festa, ou já fechou com alguém?'",
+      "Or EN: 'Eliana, June 20 is getting close — I don't want to keep filling your inbox. Just one quick question: are you still looking for catering for the party, or did you go with someone else?'",
+      "Anchor: 'For 60-70, depending on drop-off vs buffet vs full-service, $X-Y. Want me to send a quick comparison?'"
+    ],
+    "open_gaps": [
+      "Is she still looking, or committed elsewhere?",
+      "Phone preference (text vs call)",
+      "Specific birthday person",
+      "Venue (home, rented, restaurant?)",
+      "Cultural cuisine preference (Brazilian-leaning vs mixed American)",
+      "Service style",
+      "Budget reality"
+    ],
+    "strategic_note": "Went cold because Day 1 was too aggressive. ONE short respectful re-engagement giving binary. If she comes back, conversation restarts. If not, status to 'Probably Not.' Resist piling on more drip."
+  },
+  "comms": [
+    {"ts": "2026-04-23T10:58:00Z", "channel": "live_chat", "direction": "in", "summary": "Live chat started"},
+    {"ts": "2026-04-23T11:00:00Z", "channel": "sms", "direction": "out", "summary": "Inbound acknowledged + 2 calls (no answer)"},
+    {"ts": "2026-04-23T11:30:00Z", "channel": "email", "direction": "out", "summary": "Service-types breakdown (resent)"},
+    {"ts": "2026-04-23T12:00:00Z", "channel": "sms", "direction": "out", "summary": "'Just tried calling' + re-engagement push"}
+  ],
+  "notes": [
+    "Day 1 over-pursued — back off",
+    "Bilingual cultural fit perfect",
+    "If silent past Apr 30, status to Probably Not"
+  ]
+}

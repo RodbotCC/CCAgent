@@ -1,0 +1,15 @@
+{
+  "schema": "comeketo.trigger.v1",
+  "slug": "brenda_steve_pre_tasting_brief",
+  "kind": "cron",
+  "label": "Brenda & Steve · Pre-tasting brief for May 3",
+  "enabled": true,
+  "tone": "mint",
+  "notes": "Live — R3 one-shot, Saturday May 2 6pm. Lands the full pre-tasting brief in Andre's Slack the night before the May 3 5:30pm tasting.",
+  "created_at": "2026-04-27T00:00:00+00:00",
+  "last_modified": "2026-04-27T00:00:00+00:00",
+  "cron": "0 18 2 5 *",
+  "tz": "America/New_York",
+  "one_shot": true,
+  "workflow_slug": "brenda-steve-seven-day"
+}

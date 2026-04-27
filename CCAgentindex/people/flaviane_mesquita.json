@@ -1,0 +1,86 @@
+{
+  "id": "flaviane_mesquita",
+  "kind": "lead",
+  "name": "Flaviane Mesquita",
+  "role": "Wedding · Sept 4, 2026 · ~50 guests · Ludlow MA",
+  "relationship_tier": "post_tasting",
+  "relationship_weight": 0.62,
+  "contacts": {
+    "email": "flavianemesquita27@icloud.com",
+    "phone": "+1-617-320-9961",
+    "whatsapp": null,
+    "slack_id": null,
+    "slack_channel": null,
+    "clickup_user_id": null,
+    "other": "fcmesquita@bol.com.br (BOUNCING — do not use)"
+  },
+  "handling": {
+    "preferred_channel": "SMS",
+    "response_latency_target": "same-day",
+    "tone": "Bilingual EN/PT — switch to Portuguese where it lands more naturally; she engaged in mixed language. Brazilian wedding cultural fit is our home court.",
+    "voice_adjustments": "Andre voice: short, lowercase, mix Portuguese phrases. The .com.br email is dead — only iCloud works. SMS-first.",
+    "context": "Discovery call Apr 15 went well — walked the full Brazilian menu in PT (churrasco, picanha, mandioca, caipirinhas). Missed Apr 19 tasting. Email bounce on .com.br address — keep everything on iCloud + SMS.",
+    "off_limits_topics": null
+  },
+  "context_anchors": [
+    "Brazilian wedding — full bar with caipirinhas, churrasco core",
+    "~50 guests, Sept 4, 2026 (drifted from late July/August)",
+    "Email bounce: fcmesquita@bol.com.br is dead — iCloud only",
+    "Tasting miss: Apr 19 no-show, no explanation",
+    "Bilingual fluent — comfortable in PT and EN",
+    "01890 Winchester MA — affluent Boston suburb"
+  ],
+  "lead": {
+    "status": "post_tasting",
+    "stage": "post_discovery_call_email_bounce_recovery_needed",
+    "owner": "andre_raw",
+    "source": "Crisp Chat / Instagram + FB Lead Ad (DOM'S FACELESS)",
+    "event_type": "Wedding",
+    "event_date": "2026-09-04",
+    "guest_count": 50,
+    "venue": null,
+    "city": "Winchester / Ludlow MA",
+    "quote_value": null,
+    "opportunity_value": null,
+    "score_tags": ["bilingual", "brazilian_cultural_fit", "email_bounce", "tasting_no_show"],
+    "last_activity": "2026-04-24 — Day-4 cadence SMS, no response",
+    "speed_urgency": "medium",
+    "next_move": "Bilingual SMS locking May 17 tasting + confirming iCloud as working email"
+  },
+  "enrichment": {
+    "confidence": 0.78,
+    "identity_notes": "Unambiguously Brazilian — first and surname Portuguese-Brazilian. .com.br email confirms Brazilian roots; iCloud is US-active. Active bilingual communicator.",
+    "win_angles": [
+      "Bilingual fluency — switch to Portuguese where natural",
+      "Brazilian wedding cultural authenticity — churrasco, picanha, mandioca, caipirinhas",
+      "Reframe Apr 19 miss as 'May 17 was the better date anyway'",
+      "Email-bounce recovery: SMS-first going forward"
+    ],
+    "nepq_openers": [
+      "PT: 'Oi Flaviane — vi que um dos seus emails está com problema. Vou confirmar tudo no iCloud daqui pra frente. Quer que eu te guarde uma vaga na degustação de 17 de maio às 14h em Fitchburg?'",
+      "EN: 'Hey Flaviane — looks like one of your emails is bouncing. I'll keep everything on the iCloud one. Want me to hold May 17 tasting at 2 PM?'",
+      "Anchor: 'For 50 guests with full churrasco + bar + service, looking at $X-Y. Want me to send a tight quote to your iCloud this week?'"
+    ],
+    "open_gaps": [
+      "Specific event venue",
+      "Fiancé's involvement",
+      "Guest cultural mix (Brazilian only, mixed)",
+      "Bar package preference",
+      "Why Apr 19 tasting was missed"
+    ],
+    "strategic_note": "Strong Probably for a reason — discovery went well, cuisine fit is perfect. Only blocker is logistical. One bilingual SMS that locks May 17, confirms iCloud, acknowledges miss without making it big. Don't email broken address again — that's how leads quietly drift away."
+  },
+  "comms": [
+    {"ts": "2026-04-15T11:00:00Z", "channel": "call", "direction": "out", "summary": "6-min discovery — full Brazilian menu walked, tasting invited"},
+    {"ts": "2026-04-15T14:00:00Z", "channel": "sms", "direction": "in", "summary": "iCloud email shared; confirmed late-July/August window, ~50 people"},
+    {"ts": "2026-04-19T14:00:00Z", "channel": "calendar", "direction": "in", "summary": "Tasting no-show — no explanation"},
+    {"ts": "2026-04-22T10:00:00Z", "channel": "email", "direction": "out", "summary": "Two email bounces from bol.com.br server"},
+    {"ts": "2026-04-23T11:00:00Z", "channel": "sms", "direction": "out", "summary": "Re-engagement: call vs tasting (May 3 / May 17)"},
+    {"ts": "2026-04-24T13:00:00Z", "channel": "sms", "direction": "out", "summary": "Day-4 cadence — what's left to figure out?"}
+  ],
+  "notes": [
+    "Email bounce + tasting miss = pivot to SMS as primary channel",
+    "Brazilian wedding cultural fit is the deal's natural close",
+    "Once May 17 tasting locked, deal is on glide path"
+  ]
+}

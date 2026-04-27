@@ -1,0 +1,87 @@
+{
+  "id": "madame_badose",
+  "kind": "lead",
+  "name": "Madame Badose",
+  "role": "Birthday · May 19, 2026 · 50 guests · Lewiston ME (BAR SERVICE ONLY)",
+  "relationship_tier": "active_quote",
+  "relationship_weight": 0.30,
+  "contacts": {
+    "email": null,
+    "phone": null,
+    "whatsapp": null,
+    "slack_id": null,
+    "slack_channel": null,
+    "clickup_user_id": null,
+    "other": null
+  },
+  "handling": {
+    "preferred_channel": "Phone",
+    "response_latency_target": "within-24h",
+    "tone": "Specialty bar-service-only ask. Don't pivot to full catering. Honor the specific scope. Honest about geography (~150 mi north of Boston).",
+    "voice_adjustments": "Andre voice: direct, scope-respecting. Apr 24 churrasco/rodizio email was off-target — she wants BAR not food.",
+    "context": "Inbound Apr 23 from FB Bar Service Lead Form. May 19 — 3.5 weeks out (HIGH urgency). 50 guests, $1,500 ballpark. Lewiston ME = ~150 mi north, far outside typical zone. Need to confirm whether Comeketo bar service operates this far.",
+    "off_limits_topics": null
+  },
+  "context_anchors": [
+    "Lewiston ME, 04240 — ~150 mi north of Boston, OUT-OF-ZONE",
+    "BAR SERVICE ONLY — not food (specifically targeted ad)",
+    "May 19 — 3.5 weeks out, HIGH urgency",
+    "50 guests, $1,500 = $30/pp range",
+    "'Madame Badose' — possibly French/African transliteration; Lewiston has Somali/African community",
+    "Apr 24 churrasco email was off-scope"
+  ],
+  "lead": {
+    "status": "active_quote",
+    "stage": "bar_service_only_cold",
+    "owner": "andre_raw",
+    "source": "FB Lead Form — 01. BAR SERVICE CBO",
+    "event_type": "Birthday (Bar Service Only)",
+    "event_date": "2026-05-19",
+    "guest_count": 50,
+    "venue": null,
+    "city": "Lewiston, ME",
+    "quote_value": null,
+    "opportunity_value": 1500,
+    "score_tags": ["bar_only", "out_of_zone_150mi", "immediate_need_3wk", "specialty_ask"],
+    "last_activity": "2026-04-24 — bar service follow-up SMS",
+    "speed_urgency": "high",
+    "next_move": "Honest geography message: can we serve Lewiston? + bar specifics (hours, style, venue)"
+  },
+  "enrichment": {
+    "confidence": 0.40,
+    "identity_notes": "'Madame' as name prefix is unusual in standard US naming. Likely public-facing persona, French/African transliteration, or Haitian/West African community leader. Badose surname uncommon — possibly Yoruba/Nigerian or French Caribbean. Lewiston ME has significant Somali and African immigrant community.",
+    "win_angles": [
+      "Specialty bar-service framing — honor the specific ask",
+      "Honesty about geography — better upfront than 11th hour",
+      "3.5-week window = decision fast",
+      "$30/pp realistic — don't over-quote"
+    ],
+    "nepq_openers": [
+      "Continuation: 'Hi Madame Badose — wanted to be straight before going further. Lewiston is ~150 mi from typical area. Quick honest questions: (1) Specifically wanting Comeketo for bar, or also exploring local Maine providers? (2) For May 19 with 50 guests, bar standalone or food handled separately? (3) Venue and how many hours of bar service?'",
+      "Frame: 'For 50 guests on a birthday, bar service usually breaks down to bartender + setup + recommended drinks + cleanup. That what you're picturing, or something more specific like signature cocktail focus?'",
+      "Anchor: 'If geography works, $X for full bar for 50 — bartender + setup + 4-hour service + recommended cocktails. Travel surcharge $Y to Lewiston. Want me to write that up tight?'"
+    ],
+    "open_gaps": [
+      "Geography reality — can we deliver to Lewiston?",
+      "Phone (pull from Close)",
+      "Specific venue",
+      "Bar service hours",
+      "Cocktail style preference (open, signature, beer/wine, themed?)",
+      "Whose birthday and cultural context"
+    ],
+    "strategic_note": "'Yes or no, but quickly' lead. The question isn't strategy; it's logistics. Can we serve Lewiston? If yes, deal is straightforward and worth $1,500. If no, redirect gracefully. Get geography answer in writing internally first, then respond. Don't pretend uncertainty."
+  },
+  "comms": [
+    {"ts": "2026-04-23T09:38:00Z", "channel": "live_chat", "direction": "in", "summary": "Live chat started — bar service ad inbound"},
+    {"ts": "2026-04-23T10:00:00Z", "channel": "sms", "direction": "out", "summary": "Inbound acknowledged + 'best time' SMS"},
+    {"ts": "2026-04-23T11:00:00Z", "channel": "email", "direction": "out", "summary": "Bar service pitch — 'Raise a Glass to Perfect Events'"},
+    {"ts": "2026-04-23T13:00:00Z", "channel": "sms", "direction": "out", "summary": "Re-engagement: call vs tasting"},
+    {"ts": "2026-04-24T11:00:00Z", "channel": "email", "direction": "out", "summary": "Churrasco/Rodizio email (off-scope)"},
+    {"ts": "2026-04-24T14:00:00Z", "channel": "sms", "direction": "out", "summary": "Best time to talk about bar service"}
+  ],
+  "notes": [
+    "Bar-only — don't pitch food",
+    "Geography is the existential question",
+    "Confirm internal capacity before quoting"
+  ]
+}

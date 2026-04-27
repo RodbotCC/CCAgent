@@ -1,0 +1,11 @@
+{
+  "schema": "comeketo.catalog.edge.v1",
+  "slug": "workflow_to_lead",
+  "name": "workflow_to_lead",
+  "kind": "data",
+  "label": "instantiated for",
+  "notes": "Workflow targets a specific lead's cadence. Hugo + Brenda&Steve workflows instantiate the seven-day NEPQ template; metadata.person_id pins the instance.",
+  "created_at": "2026-04-27T00:00:00+00:00",
+  "last_modified": "2026-04-27T00:00:00+00:00",
+  "usage_count": 2
+}

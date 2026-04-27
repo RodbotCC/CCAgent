@@ -1,0 +1,28 @@
+{
+  "id": "st_mary_s_syriac_orthodox_church_shrewsbury",
+  "kind": "venue",
+  "name": "St. Mary's Syriac Orthodox Church (Shrewsbury)",
+  "city": "Shrewsbury",
+  "venue_type": null,
+  "website": null,
+  "tier": "tier_2",
+  "deal_stats": {
+    "opp_count": 2,
+    "total_value": 16120.0,
+    "avg_deal_value": 8060.0,
+    "lead_name_refs": 0
+  },
+  "close_account": {
+    "has_lead": false,
+    "lead_status": null,
+    "lead_url": null
+  },
+  "raw_variants": [
+    "St. Mary's Syriac Orthodox Church, 1 Industrial Dr, Shrewsbury, MA 01545"
+  ],
+  "action": "📋 Create venue lead account",
+  "notes": [
+    "2 opportunities totaling $16,120.00 — rank #17 by deal value.",
+    "No Close lead account yet — recommend creating one to track relationship."
+  ]
+}

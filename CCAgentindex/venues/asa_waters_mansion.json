@@ -1,0 +1,31 @@
+{
+  "id": "asa_waters_mansion",
+  "kind": "venue",
+  "name": "Asa Waters Mansion",
+  "city": null,
+  "venue_type": "Historic mansion",
+  "website": null,
+  "tier": "tier_1",
+  "deal_stats": {
+    "opp_count": 27,
+    "total_value": 100746.27,
+    "avg_deal_value": 3731.34,
+    "lead_name_refs": 10
+  },
+  "close_account": {
+    "has_lead": false,
+    "lead_status": null,
+    "lead_url": null
+  },
+  "raw_variants": [
+    "ASA WATERS",
+    "ASA WATERS MANSION",
+    "Asa Waters Mansion"
+  ],
+  "action": "ENRICH NOW — high-volume, no lead account",
+  "notes": [
+    "27 opportunities totaling $100,746.27 — rank #2 by deal value.",
+    "No Close lead account yet — recommend creating one to track relationship.",
+    "10 leads have referenced this as their venue choice."
+  ]
+}

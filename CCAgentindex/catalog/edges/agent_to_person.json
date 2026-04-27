@@ -1,0 +1,11 @@
+{
+  "schema": "comeketo.catalog.edge.v1",
+  "slug": "agent_to_person",
+  "name": "agent_to_person",
+  "kind": "data",
+  "label": "represents",
+  "notes": "Sub-agent represents one person (lead or coworker). Every agent_plan record carries metadata.person_id pointing at a people/*.json file.",
+  "created_at": "2026-04-27T00:00:00+00:00",
+  "last_modified": "2026-04-27T00:00:00+00:00",
+  "usage_count": 38
+}

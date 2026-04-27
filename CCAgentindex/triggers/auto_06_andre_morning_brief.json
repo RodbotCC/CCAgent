@@ -1,0 +1,15 @@
+{
+  "schema": "comeketo.trigger.v1",
+  "slug": "auto_06_andre_morning_brief",
+  "kind": "cron",
+  "label": "AUTO.06 · Andre morning brief",
+  "enabled": true,
+  "tone": "lemon",
+  "notes": "Live — page-surfaced via bin/today.py. Reads active leads' plan-day, renders draft + alerts on today.html. Push delivery (Slack DM / macOS notification) is W3.2.",
+  "created_at": "2026-04-27T00:00:00+00:00",
+  "last_modified": "2026-04-27T00:00:00+00:00",
+  "cron": "0 8 * * 1-5",
+  "tz": "America/New_York",
+  "workflow_slug": null,
+  "preset": "every_weekday_8am"
+}

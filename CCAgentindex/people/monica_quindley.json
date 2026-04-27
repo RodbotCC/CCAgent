@@ -1,0 +1,89 @@
+{
+  "id": "monica_quindley",
+  "kind": "lead",
+  "name": "Monica Quindley",
+  "role": "Wedding (daughter Julia) · June 12, 2027 · 150 guests · Private waterside property",
+  "relationship_tier": "tasting_scheduled",
+  "relationship_weight": 0.70,
+  "contacts": {
+    "email": null,
+    "phone": null,
+    "whatsapp": null,
+    "slack_id": null,
+    "slack_channel": null,
+    "clickup_user_id": null,
+    "other": null
+  },
+  "handling": {
+    "preferred_channel": "Phone",
+    "response_latency_target": "same-day",
+    "tone": "Mom-of-the-bride at a premium zip code. Treat as gatekeeper-protector for daughter Julia's first big-spend-on-her-behalf. Trust-building register, not sales.",
+    "voice_adjustments": "Andre voice: composed, lowercase, references the wedding expo origin and Julia's specific vision. Don't pitch on price; pitch on 'we'll make this property look like a wedding venue.'",
+    "context": "14-month patience deal. Discovery call Apr 19 — 14 min, very productive. Monica found us at Kingston Wedding Expo Apr 15. Tasting invited (May 3 missed timing; May 17 or May 31 in play). Open task: 'Get the answer for the tasting' due 04/27.",
+    "off_limits_topics": null
+  },
+  "context_anchors": [
+    "Daughter Julia's wedding — Julia is first-time-with-pro-caterer",
+    "Private waterside property (donation-only) — main house + carriage house + tent in field",
+    "150 guests, June 12, 2027 — 14 months out",
+    "Discovered via Kingston Wedding Expo Apr 15",
+    "The Pinehills MA / 02360 — gated golf community, retired-affluent demo",
+    "Monica is gatekeeper; Julia drives vision (free-flowing, not plated)"
+  ],
+  "lead": {
+    "status": "tasting_scheduled",
+    "stage": "post_discovery_call_tasting_invited",
+    "owner": "andre_raw",
+    "source": "FB Lead Form — CBO COMEKETO CROWN+ (Kingston Wedding Expo)",
+    "event_type": "Wedding",
+    "event_date": "2027-06-12",
+    "guest_count": 150,
+    "venue": "Private waterside property, Plymouth area",
+    "city": "The Pinehills, MA",
+    "quote_value": null,
+    "opportunity_value": 5400,
+    "score_tags": ["far_event_12mo+", "wedding_expo_origin", "premium_property", "gatekeeper_mom"],
+    "last_activity": "2026-04-24 — Day-4 cadence SMS",
+    "speed_urgency": "low",
+    "next_move": "Lock May 17 or May 31 tasting — both Monica and Julia ideally"
+  },
+  "enrichment": {
+    "confidence": 0.78,
+    "identity_notes": "The Pinehills is upscale planned-community in Plymouth, MA — gated golf course, retired-affluent and 50-70s professionals. Classic mom-of-the-bride at premium zip code.",
+    "win_angles": [
+      "Daughter's first wedding catering — Julia leans on Mom's judgment",
+      "Premium property = premium expectations, don't pitch price",
+      "Wedding Expo origin — reference 'Julia caught your attention at Kingston'",
+      "Multi-zone setup as a feature: tent + house + waterside Insta-grade visuals",
+      "14-month runway = relationship play, not contract play"
+    ],
+    "nepq_openers": [
+      "Continuation: 'Hi Monica — circling back on tasting. May 17 at 2 PM or May 31 at 2 PM in Fitchburg. Which works better for you and Julia?'",
+      "Identity frame: 'Julia's first time planning with a caterer — what would help her feel like she's in good hands?'",
+      "Anchor: 'For 150 at private property — tent + multi-zone + real food + bar — realistically $X-Y. Rather not lock that until we've seen the property.'"
+    ],
+    "open_gaps": [
+      "Tasting commitment (primary task)",
+      "Julia's involvement vs Monica's authority",
+      "Property logistics (kitchen access, power, water, parking)",
+      "Cuisine direction",
+      "Bar package vision",
+      "Whether they're talking to other caterers",
+      "Actual property location — for site visit feasibility"
+    ],
+    "strategic_note": "Long-game flagship lead. Premium property + 150 guests + Julia's first big spend + Monica as gatekeeper. Lock tasting (May 17 or May 31), make tasting day extraordinary, then patient quarterly check-ins through fall 2026 with site visit summer 2026. Generates Pinehills referrals for years if closed."
+  },
+  "comms": [
+    {"ts": "2026-04-15T10:00:00Z", "channel": "in_person", "direction": "in", "summary": "Met at Kingston Wedding Expo — initial interest"},
+    {"ts": "2026-04-19T10:00:00Z", "channel": "sms", "direction": "in", "summary": "'Around noon' — call time given"},
+    {"ts": "2026-04-19T12:00:00Z", "channel": "call", "direction": "out", "summary": "14-min discovery call — full event vision, venue, tasting invited"},
+    {"ts": "2026-04-19T13:00:00Z", "channel": "sms", "direction": "out", "summary": "Tasting invite — May 3, 5:30 PM, Fitchburg"},
+    {"ts": "2026-04-23T11:00:00Z", "channel": "sms", "direction": "out", "summary": "Re-engagement: call vs tasting"},
+    {"ts": "2026-04-24T13:00:00Z", "channel": "sms", "direction": "out", "summary": "Day-4 cadence SMS"}
+  ],
+  "notes": [
+    "Patience deal — quarterly cadence through fall 2026",
+    "Tasting attendance jumps probability 20% → 40%+",
+    "Treat Monica like long-term client, not quarterly target"
+  ]
+}

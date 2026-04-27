@@ -1,0 +1,31 @@
+{
+  "id": "christalight_auditorium_event_hall",
+  "kind": "venue",
+  "name": "Christalight Auditorium & Event Hall",
+  "city": null,
+  "venue_type": null,
+  "website": "http://www.christalightandco.com",
+  "tier": "tier_2",
+  "deal_stats": {
+    "opp_count": 10,
+    "total_value": 21031.45,
+    "avg_deal_value": 2103.14,
+    "lead_name_refs": 5
+  },
+  "close_account": {
+    "has_lead": true,
+    "lead_status": "✅ Won",
+    "lead_url": "https://app.close.com/lead/lead_ntu5LKoM7wmPIjeSBicppC8JkyjC6CIZBTdByD6yME7/"
+  },
+  "raw_variants": [
+    "Carmen Trinidad 11-10-24 Christalight",
+    "Christalight Auditorium and Event Hall"
+  ],
+  "action": "✅ Profiled & active — keep relationship warm",
+  "notes": [
+    "Came thru Christalight events.",
+    "10 opportunities totaling $21,031.45 — rank #12 by deal value.",
+    "Has Close lead account (status: ✅ Won).",
+    "5 leads have referenced this as their venue choice."
+  ]
+}

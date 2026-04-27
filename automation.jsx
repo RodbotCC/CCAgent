@@ -34,6 +34,35 @@ function endpointOffsets(role) {
   return { dx: d.w / 2, dy: 0 };
 }
 
+// ───────────────────────────────────────────────────────────────────────────
+// Text-overflow hygiene (Apr 2026, "no janky overflow" pass)
+// SVG <text> doesn't wrap or ellipsis natively. We truncate any node label
+// that would exceed its container width and let a native browser tooltip
+// (<title>) carry the full string. Char-width estimates assume the body
+// font at the rendered size; conservative numbers because variable-width
+// glyphs sometimes outsize the average.
+// ───────────────────────────────────────────────────────────────────────────
+const NODE_LABEL_CHAR_LIMITS = {
+  // shape-aware caps. trigger is the tightest because the diamond narrows
+  // toward its edges and label sits at y=14 where the shape is widest.
+  actor:     11,  // capsule 80px
+  trigger:   9,   // diamond 72px (narrowed by shape)
+  transform: 12,  // hexagon 88px
+  sink:      16,  // rounded 120px
+  state:     12,  // stacked 88px
+};
+function agTruncateLabel(label, role, maxOverride) {
+  const limit = maxOverride ?? NODE_LABEL_CHAR_LIMITS[role] ?? 12;
+  const s = String(label || "");
+  if (s.length <= limit) return s;
+  return s.slice(0, Math.max(1, limit - 1)) + "…";
+}
+// Generic truncation for arbitrary SVG text (non-node).
+function agTruncate(s, n) {
+  const str = String(s || "");
+  return str.length <= n ? str : str.slice(0, Math.max(1, n - 1)) + "…";
+}
+
 // ═══════════════════════════════════════════════════════════════════════════
 // Library — 5 sections of node templates
 // ═══════════════════════════════════════════════════════════════════════════
@@ -247,7 +276,10 @@ function GraphNode({
       <SelectionRing role={node.role} />
       <NodeShape role={node.role} />
       <text className="icon" x={0} y={-6} fill="var(--kind-accent, var(--role))">{tmpl.glyph}</text>
-      <text className="label" x={0} y={14}>{node.label}</text>
+      <text className="label" x={0} y={14}>
+        {agTruncateLabel(node.label, node.role)}
+        <title>{node.label}</title>
+      </text>
       {annotationCount > 0 && (
         <g className="ag-node-anno-badge" transform={`translate(${badgeX} ${badgeY})`}>
           <circle r={7} />
@@ -340,7 +372,10 @@ function ConnectionPath({ conn, nodes, firing, selected, onSelect, onDiamondTogg
                 textAnchor="middle" dominantBaseline="central"
                 onClick={onSelect ? handleClick : undefined}
                 style={{ cursor: "pointer" }}
-              >{label}</text>
+              >
+                {agTruncate(label, 24)}
+                <title>{label}</title>
+              </text>
             </g>
           )}
           {annotationCount > 0 && (
@@ -2084,7 +2119,7 @@ function genId(prefix) { return `${prefix}_${Date.now().toString(36)}_${Math.ran
 // ═══════════════════════════════════════════════════════════════════════════
 // AutomationGraphScreen — top-level composition with undo stack
 // ═══════════════════════════════════════════════════════════════════════════
-function AutomationGraphScreen({ go }) {
+function AutomationGraphScreen({ go, loadSlug }) {
   // ─── History stack: past + present + future ──────────────────────────────
   const [present, setPresent] = ag_useState(() => JSON.parse(JSON.stringify(DEMO_WORKFLOW)));
   const [past, setPast] = ag_useState([]);
@@ -3173,6 +3208,17 @@ function AutomationGraphScreen({ go }) {
     }
   }, [clearSelection]);
 
+  // Cross-tab nav (Apr 2026 polish): when another sub-tab routes here with
+  // a `loadSlug` (e.g. clicking a workflow pill on Triggers), load that
+  // workflow on mount/change. Each new slug runs once.
+  const lastLoadedSlugRef = ag_useRef(null);
+  ag_useEffect(() => {
+    if (!loadSlug) return;
+    if (lastLoadedSlugRef.current === loadSlug) return;
+    lastLoadedSlugRef.current = loadSlug;
+    loadWorkflow(loadSlug);
+  }, [loadSlug, loadWorkflow]);
+
   // ─── Viewport ────────────────────────────────────────────────────────────
   const fitToView = ag_useCallback(() => {
     if (!present.nodes.length) return;
@@ -4081,10 +4127,2521 @@ function logLedger(kind, payload) {
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
+// AutomationShell — sub-tab routing wrapper (Apr 2026)
+// ───────────────────────────────────────────────────────────────────────────
+// The "automation" top-tab now hosts a secondary nav strip for the four
+// extensions surfaced in the Comeketo Design Deck (pages 14–18):
+//   Workflows · Sub-agents · State · Hooks · Triggers
+// Workflows = the original AutomationGraphScreen, untouched. The other four
+// are full-bleed pages of their own. Sub-tab is a route param so direct
+// links (#automation/triggers) survive a reload via go.replace.
+// ═══════════════════════════════════════════════════════════════════════════
+const AUTO_SUBTABS = [
+  { key: "workflows", label: "Workflows" },
+  { key: "subagents", label: "Sub-agents" },
+  { key: "state",     label: "State" },
+  { key: "hooks",     label: "Hooks" },
+  { key: "triggers",  label: "Triggers" },
+];
+
+function AutomationSubTabStrip({ active, onPick }) {
+  return (
+    <div className="auto-tabs">
+      <div className="auto-tabs-inner">
+        {AUTO_SUBTABS.map(t => (
+          <button
+            key={t.key}
+            className={"auto-tab" + (active === t.key ? " is-active" : "")}
+            onClick={() => onPick(t.key)}
+            type="button"
+          >
+            <span className="auto-tab-label">{t.label}</span>
+          </button>
+        ))}
+      </div>
+      <div className="auto-tabs-hint">
+        <span style={{fontFamily:"var(--font-mono)", fontSize:11, color:"var(--ink-4)", letterSpacing:"0.04em"}}>
+          automation
+        </span>
+      </div>
+    </div>
+  );
+}
+
+function AutomationShell({ go, tab, loadSlug }) {
+  const active = AUTO_SUBTABS.some(t => t.key === tab) ? tab : "workflows";
+  const onPick = (k) => { if (k === active) return; go.replace("automation", { tab: k }); };
+  return (
+    <div className="auto-shell">
+      <AutomationSubTabStrip active={active} onPick={onPick} />
+      <div className="auto-body">
+        {active === "workflows" && <AutomationGraphScreen go={go} loadSlug={loadSlug} />}
+        {active === "subagents" && <SubAgentPlannerScreen go={go} />}
+        {active === "state" && <StateMachineScreen go={go} />}
+        {active === "hooks" && <HooksScreen go={go} />}
+        {active === "triggers" && <TriggersScreen go={go} />}
+      </div>
+    </div>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// ComingSoonScreen — placeholder for the three sub-tabs we haven't built yet.
+// Faithful to the deck's tone: a quiet card, the page reference, no fake UI.
+// ═══════════════════════════════════════════════════════════════════════════
+function ComingSoonScreen({ title, subtitle, deckPage }) {
+  return (
+    <div className="auto-page auto-page-stub">
+      <div className="auto-stub-card">
+        <div className="auto-stub-eyebrow">{deckPage} · in the deck</div>
+        <h1 className="auto-stub-title">{title}</h1>
+        <p className="auto-stub-sub">{subtitle}</p>
+        <p className="auto-stub-note">
+          The Triggers panel ships first. This view follows once Triggers is
+          load-bearing — same paper, same rhythm, real bedrock data.
+        </p>
+      </div>
+    </div>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// TriggersScreen — Cron, watch, webhook, rule, ribbon (deck page 18)
+// ───────────────────────────────────────────────────────────────────────────
+// Full-bleed page with three vertical bands:
+//   1) Daily clock — 24h timeline of cron triggers, dots colored by tone
+//   2) Type cards + Compose · Cron — picker + live cron→English parser
+//   3) Configured · N — list of triggers from CCAgentindex/triggers/, with
+//      seed examples from the deck when bedrock is empty
+//
+// Persistence:
+//   GET  /api/triggers/list       → reads CCAgentindex/triggers/*.json
+//   POST /api/triggers/save       → writes CCAgentindex/triggers/<slug>.json
+//   POST /api/triggers/delete     → removes one
+// All writes register in indexes/index.json[triggers] and append to
+// _ledger/activity.jsonl. Same discipline as workflows + catalog.
+// ═══════════════════════════════════════════════════════════════════════════
+
+// Seed triggers — shown when bedrock has none yet. Five types, each true to
+// the deck. These render on first paint so the page never feels empty.
+const TG_SEED_TRIGGERS = [
+  { slug: "morning_sweep_grid", kind: "cron", label: "Morning Sweep → Grid",   cron: "45 6 * * *",  tone: "lemon",    enabled: true,  notes: "Daily at 06:45.", seeded: true },
+  { slug: "cadence_ping_sylvia", kind: "cron", label: "Cadence ping (Sylvia)",  cron: "0 9 * * *",   tone: "peach",    enabled: true,  notes: "Daily at 09:00.", seeded: true },
+  { slug: "memory_consolidate",  kind: "cron", label: "Memory consolidation",  cron: "0 12 * * *",  tone: "lavender", enabled: true,  notes: "Daily at noon.",  seeded: true },
+  { slug: "lead_enrichment",     kind: "cron", label: "Lead enrichment sweep", cron: "48 16 * * *", tone: "sage",     enabled: true,  notes: "Daily at 16:48.", seeded: true },
+  { slug: "friday_recap",        kind: "cron", label: "Friday recap",          cron: "0 21 * * 5",  tone: "mint",     enabled: true,  notes: "Friday only.",    seeded: true },
+  { slug: "inbox_watch",         kind: "watch",   label: "Inbox folder watch", path: "_inbox/",     tone: "sky",      enabled: true,  notes: "Debounced 200ms.", seeded: true },
+  { slug: "stripe_payment",      kind: "webhook", label: "Stripe payment hook", endpoint: "/hook/stripe", tone: "blush",   enabled: true,  notes: "HTTP inbound.",   seeded: true },
+  { slug: "tile_blocked",        kind: "rule",    label: "Tile transitions to BLOCKED", pattern: "tile.status === 'blocked'", tone: "rose", enabled: false, notes: "Drafted.", seeded: true },
+  { slug: "voice_gesture",       kind: "ribbon",  label: "Voice · gesture cluster",     pattern: "sylvia.gesture",          tone: "lavender", enabled: true,  notes: "Live ribbon.", seeded: true },
+];
+
+const TG_TYPE_INFO = {
+  cron:    { label: "Cron",    sub: "Time-based",     glyph: "⧗", tone: "lemon",    blurb: "Cron expressions, timezone-aware. Skips weekends if asked." },
+  watch:   { label: "Watch",   sub: "File · path",    glyph: "◉", tone: "sky",      blurb: "Fires on changes under _inbox/, debounced 200ms." },
+  webhook: { label: "Webhook", sub: "HTTP · inbound", glyph: "⌁", tone: "blush",    blurb: "Crisp · Stripe · WeddingWire · Gmail push." },
+  rule:    { label: "Rule",    sub: "State · pattern", glyph: "▷", tone: "rose",    blurb: "Fires when a tile transitions to BLOCKED." },
+  ribbon:  { label: "Ribbon",  sub: "Voice · gesture", glyph: "✦", tone: "lavender", blurb: "A trigger that you are. Sylvia surfaces ribbons when your gesture stream forms a known cluster." },
+};
+
+// Tiny cron→English parser. Handles the cases this UI lets you compose:
+// minutes (literal | * | */N), hours (literal | * | */N), day-of-month
+// (* only for now), month (* only), day-of-week (* | digit | range like 1-5
+// | comma list). Anything else falls back to "Custom schedule".
+function tgCronToEnglish(min, hour, dom, mon, dow) {
+  const M = (min ?? "").trim();
+  const H = (hour ?? "").trim();
+  const D = (dom ?? "").trim();
+  const Mo = (mon ?? "").trim();
+  const W = (dow ?? "").trim();
+  const intM = /^\d+$/.test(M) ? parseInt(M, 10) : null;
+  const intH = /^\d+$/.test(H) ? parseInt(H, 10) : null;
+  // Helpers
+  const dowName = (n) => ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"][((n%7)+7)%7];
+  const fmt = (h, m) => {
+    if (h == null || m == null) return null;
+    const ap = h >= 12 ? "PM" : "AM";
+    const h12 = ((h + 11) % 12) + 1;
+    return `${String(h12).padStart(2," ")}:${String(m).padStart(2,"0")} ${ap}`.trim();
+  };
+  // Every-N minutes pattern
+  const everyMin = M.match(/^\*\/(\d+)$/);
+  if (everyMin && H === "*" && D === "*" && Mo === "*" && W === "*") {
+    return `Every ${everyMin[1]} minutes.`;
+  }
+  // Every hour at minute M
+  if (intM != null && H === "*" && D === "*" && Mo === "*" && W === "*") {
+    return `Every hour at :${String(intM).padStart(2,"0")}.`;
+  }
+  // Daily at H:M (W is *)
+  if (intM != null && intH != null && D === "*" && Mo === "*" && (W === "*" || W === "")) {
+    return `Every day at ${fmt(intH, intM)}.`;
+  }
+  // Weekday range
+  if (intM != null && intH != null && D === "*" && Mo === "*" && /^1-5$/.test(W)) {
+    return `Every weekday at ${fmt(intH, intM)}.`;
+  }
+  // Single DOW digit
+  if (intM != null && intH != null && D === "*" && Mo === "*" && /^\d$/.test(W)) {
+    return `Every ${dowName(parseInt(W,10))} at ${fmt(intH, intM)}.`;
+  }
+  // Comma list of DOW digits
+  if (intM != null && intH != null && D === "*" && Mo === "*" && /^\d(,\d)+$/.test(W)) {
+    const days = W.split(",").map(d => dowName(parseInt(d,10))).join(", ");
+    return `${days} at ${fmt(intH, intM)}.`;
+  }
+  return "Custom schedule.";
+}
+
+// 24h dot strip — places one dot per cron-kind trigger at its fire-hour.
+function TgDailyClock({ triggers }) {
+  const cronOnes = (triggers || []).filter(t => t.kind === "cron");
+  const dots = cronOnes.map(t => {
+    const parts = (t.cron || "").split(/\s+/);
+    const m = parseInt(parts[0], 10);
+    const h = parseInt(parts[1], 10);
+    if (!isFinite(h)) return null;
+    const minutes = (isFinite(m) ? m : 0);
+    const x = ((h * 60 + minutes) / (24 * 60)) * 100;
+    return { x, t };
+  }).filter(Boolean);
+
+  return (
+    <div className="tg-clock">
+      <div className="tg-clock-head">
+        <span className="tg-eyebrow">Daily clock · 24h</span>
+        <span className="tg-clock-count">{cronOnes.length} cron</span>
+      </div>
+      <div className="tg-clock-track">
+        {[0,6,12,18,24].map(h => (
+          <span key={h} className="tg-clock-tick" style={{left: `${(h/24)*100}%`}}>
+            <span className="tg-clock-tick-line"/>
+            <span className="tg-clock-tick-label">{String(h).padStart(2,"0")}</span>
+          </span>
+        ))}
+        <span className="tg-clock-line"/>
+        {dots.map((d, i) => (
+          <span
+            key={i}
+            className={`tg-clock-dot tg-tone-${d.t.tone || "sage"}`}
+            style={{left: `${d.x}%`}}
+            title={`${d.t.label} — ${d.t.cron}`}
+          />
+        ))}
+      </div>
+      <div className="tg-clock-legend">
+        {cronOnes.map(t => {
+          const parts = (t.cron || "").split(/\s+/);
+          const h = parseInt(parts[1],10), m = parseInt(parts[0],10);
+          const hh = String(isFinite(h)?h:0).padStart(2,"0");
+          const mm = String(isFinite(m)?m:0).padStart(2,"0");
+          return (
+            <div key={t.slug} className="tg-clock-row">
+              <span className={`tg-dot tg-tone-${t.tone || "sage"}`}/>
+              <span className="tg-clock-time">{hh}:{mm}</span>
+              <span className="tg-clock-label">{t.label}</span>
+              <span className="tg-clock-kind">{t.kind}</span>
+            </div>
+          );
+        })}
+        {cronOnes.length === 0 && (
+          <div className="tg-empty">No cron triggers yet. Compose one below.</div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// Clickable type card — clicking swaps the active composer. Active card
+// gets an ink ring; others stay quiet.
+function TgTypeCard({ kind, count, drafted, isActive, onClick }) {
+  const info = TG_TYPE_INFO[kind] || {};
+  return (
+    <button
+      type="button"
+      className={`tg-type tg-tone-${info.tone || "sage"}` + (isActive ? " is-active" : "")}
+      onClick={onClick}
+      title={`Compose a new ${info.label || kind} trigger`}
+    >
+      <div className="tg-type-row">
+        <span className="tg-type-glyph">{info.glyph}</span>
+        <span className="tg-type-eyebrow">{kind}</span>
+        <span className="tg-type-count">
+          {drafted ? `${drafted} drafted` : (count > 0 ? `${count} active` : "—")}
+        </span>
+      </div>
+      <div className="tg-type-title">{info.label}</div>
+      <div className="tg-type-sub">{info.sub}</div>
+      <div className="tg-type-blurb">{info.blurb}</div>
+    </button>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// Composer presets — every composer is dropdown-driven (per the no-forms
+// directive). Free text is kept to one optional field per composer (label),
+// and we auto-suggest that based on the dropdown values.
+// ═══════════════════════════════════════════════════════════════════════════
+
+const TG_CRON_PRESETS = [
+  { id: "every_weekday",    label: "Every weekday",      cron: "0 9 * * 1-5" },
+  { id: "every_day",        label: "Every day",          cron: "0 9 * * *" },
+  { id: "every_hour_at",    label: "Every hour at :MM",  cron: "0 * * * *" },
+  { id: "every_n_minutes",  label: "Every N minutes",    cron: "*/15 * * * *" },
+  { id: "fridays_only",     label: "Fridays only",       cron: "0 21 * * 5" },
+  { id: "custom",           label: "Custom cron…",       cron: "45 6 * * 1-5" },
+];
+
+const TG_WATCH_PATHS = [
+  { path: "_inbox/",           label: "Inbox folder",          tone: "sky" },
+  { path: "_ledger/",          label: "Activity ledger",       tone: "sage" },
+  { path: "tables/",           label: "Tables",                tone: "lavender" },
+  { path: "agent_plans/",      label: "Agent plans",           tone: "lemon" },
+  { path: "commitments/",      label: "Commitments",           tone: "peach" },
+  { path: "people/",           label: "People",                tone: "blush" },
+  { path: "projects/",         label: "Projects",              tone: "mint" },
+  { path: "knowledge/",        label: "Knowledge base",        tone: "sage" },
+  { path: "workflows/",        label: "Workflows",             tone: "lavender" },
+];
+
+const TG_DEBOUNCE_OPTIONS = [50, 100, 200, 500, 1000];
+
+const TG_WEBHOOK_SERVICES = [
+  { id: "crisp",        label: "Crisp",         hint: "chat events",         tone: "lavender" },
+  { id: "stripe",       label: "Stripe",        hint: "payment events",      tone: "blush" },
+  { id: "weddingwire",  label: "WeddingWire",   hint: "lead source",         tone: "peach" },
+  { id: "gmail",        label: "Gmail push",    hint: "inbox notifications", tone: "sky" },
+  { id: "twilio",       label: "Twilio",        hint: "SMS / WhatsApp",      tone: "lemon" },
+  { id: "close",        label: "Close",         hint: "CRM events",          tone: "sage" },
+  { id: "custom",       label: "Custom",        hint: "any HTTP source",     tone: "rose" },
+];
+
+const TG_WEBHOOK_AUTH = ["none", "token", "signature"];
+
+const TG_RULE_PATTERN_TYPES = [
+  { id: "tile_state",         label: "Tile transitions to…",       filters: ["BLOCKED", "DRAFT", "SHIPPED", "STARTED"] },
+  { id: "lead_status",        label: "Lead status changes to…",     filters: ["tasting booked", "qualified", "lost", "closed-won", "other"] },
+  { id: "commitment_status",  label: "Commitment becomes…",         filters: ["pending", "sending", "sent", "failed"] },
+  { id: "task_event",         label: "Task event…",                 filters: ["completed", "reopened", "stalled"] },
+  { id: "agent_plan_event",   label: "Agent plan run…",             filters: ["started", "blocked", "shipped"] },
+];
+
+const TG_RIBBON_SOURCES = [
+  { id: "sylvia_gesture",  label: "Sylvia gesture", patterns: ["focus_drift", "context_switch", "reflective_pause", "energy_burst"] },
+  { id: "voice_cluster",   label: "Voice cluster",  patterns: ["andre_check_in", "rodrigo_directive", "team_alignment"] },
+  { id: "manual",          label: "Manual",         patterns: ["tag_now", "spotlight"] },
+];
+
+// Workflow-target picker — shared across all composers. Reads /api/workflows/list.
+function TgWorkflowPicker({ value, onChange, workflows }) {
+  return (
+    <label className="tg-field tg-field-wf">
+      <span>fires workflow</span>
+      <select value={value || ""} onChange={e => onChange(e.target.value)}>
+        <option value="">— none —</option>
+        {(workflows || []).map(w => (
+          <option key={w.slug} value={w.slug}>{w.name || w.slug}</option>
+        ))}
+      </select>
+    </label>
+  );
+}
+
+// Auto-suggest a label given the composer values; user can override it.
+function tgAutoLabel(kind, values) {
+  if (kind === "cron") {
+    const preset = TG_CRON_PRESETS.find(p => p.id === values.preset);
+    if (preset && preset.id !== "custom") return preset.label;
+    return `Cron · ${values.min || "*"} ${values.hour || "*"} ${values.dow || "*"}`;
+  }
+  if (kind === "watch") {
+    const wp = TG_WATCH_PATHS.find(p => p.path === values.path);
+    return wp ? `Watch · ${wp.label}` : "Watch · folder";
+  }
+  if (kind === "webhook") {
+    const sv = TG_WEBHOOK_SERVICES.find(s => s.id === values.service);
+    return sv ? `${sv.label} webhook` : "Custom webhook";
+  }
+  if (kind === "rule") {
+    const pt = TG_RULE_PATTERN_TYPES.find(p => p.id === values.pattern_type);
+    if (!pt) return "Rule · state pattern";
+    return `Rule · ${pt.label.replace("…", values.filter || "—")}`;
+  }
+  if (kind === "ribbon") {
+    const sr = TG_RIBBON_SOURCES.find(s => s.id === values.source);
+    return sr ? `Ribbon · ${sr.label} (${values.pattern || "—"})` : "Ribbon";
+  }
+  return "Trigger";
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// TgComposer — kind router + shared chrome (auto-label, save, workflow link)
+// ═══════════════════════════════════════════════════════════════════════════
+function TgComposer({ kind, values, onChange, onSave, saving, label, onLabel, workflows }) {
+  const auto = tgAutoLabel(kind, values);
+  // Expose a live "reads as" preview specific to each kind.
+  const readsAs = (() => {
+    if (kind === "cron") return tgCronToEnglish(values.min, values.hour, values.dom, values.mon, values.dow);
+    if (kind === "watch") {
+      const wp = TG_WATCH_PATHS.find(p => p.path === values.path);
+      const dbn = values.debounce_ms || 200;
+      return wp ? `Fires when files change in ${wp.path} (debounced ${dbn}ms).` : "—";
+    }
+    if (kind === "webhook") {
+      const sv = TG_WEBHOOK_SERVICES.find(s => s.id === values.service);
+      const auth = values.auth || "none";
+      return sv ? `POST /hook/${sv.id} · auth: ${auth}` : "—";
+    }
+    if (kind === "rule") {
+      const pt = TG_RULE_PATTERN_TYPES.find(p => p.id === values.pattern_type);
+      return pt ? `Fires when ${pt.label.replace("…", `'${values.filter || "—"}'`)}` : "—";
+    }
+    if (kind === "ribbon") {
+      const sr = TG_RIBBON_SOURCES.find(s => s.id === values.source);
+      return sr ? `Fires when ${sr.label.toLowerCase()} forms cluster '${values.pattern || "—"}'.` : "—";
+    }
+    return "";
+  })();
+
+  const composer = (() => {
+    if (kind === "cron") return <TgComposerCron values={values} onChange={onChange}/>;
+    if (kind === "watch") return <TgComposerWatch values={values} onChange={onChange}/>;
+    if (kind === "webhook") return <TgComposerWebhook values={values} onChange={onChange}/>;
+    if (kind === "rule") return <TgComposerRule values={values} onChange={onChange}/>;
+    if (kind === "ribbon") return <TgComposerRibbon values={values} onChange={onChange}/>;
+    return null;
+  })();
+
+  return (
+    <div className="tg-compose">
+      <div className="tg-compose-head">
+        <span className="tg-eyebrow">Compose · {kind}</span>
+        <span className="tg-compose-hint">click a type above to switch</span>
+      </div>
+      {composer}
+      <div className="tg-compose-reads">
+        <span className="tg-eyebrow">reads as</span>
+        <em>{readsAs}</em>
+      </div>
+      <div className="tg-compose-foot">
+        <label className="tg-field tg-field-label">
+          <span>label</span>
+          <input
+            value={label}
+            placeholder={auto}
+            onChange={e => onLabel(e.target.value)}
+          />
+        </label>
+        <TgWorkflowPicker
+          value={values.workflow_slug}
+          onChange={v => onChange({ ...values, workflow_slug: v })}
+          workflows={workflows}
+        />
+        <button
+          className="tg-save"
+          onClick={onSave}
+          disabled={saving}
+          title="Save trigger (auto-labeled if blank)"
+        >
+          {saving ? "saving…" : "+ save trigger"}
+        </button>
+      </div>
+    </div>
+  );
+}
+
+// ── Cron composer (presets + custom mode) ───────────────────────────────
+function TgComposerCron({ values, onChange }) {
+  const setPreset = (presetId) => {
+    const p = TG_CRON_PRESETS.find(x => x.id === presetId);
+    if (!p) return;
+    if (presetId === "custom") {
+      onChange({ ...values, preset: "custom" });
+      return;
+    }
+    const [min, hour, dom, mon, dow] = p.cron.split(" ");
+    onChange({ ...values, preset: presetId, min, hour, dom, mon, dow });
+  };
+  return (
+    <>
+      <div className="tg-preset-row">
+        {TG_CRON_PRESETS.map(p => (
+          <button
+            key={p.id}
+            type="button"
+            className={"tg-preset-chip" + (values.preset === p.id ? " is-active" : "")}
+            onClick={() => setPreset(p.id)}
+          >{p.label}</button>
+        ))}
+      </div>
+      {/* Time picker for time-based presets */}
+      {(values.preset === "every_weekday" || values.preset === "every_day" || values.preset === "fridays_only") && (
+        <div className="tg-compose-grid tg-compose-grid-time">
+          <label className="tg-field">
+            <span>at time</span>
+            <input
+              type="time"
+              value={`${String(values.hour || 9).padStart(2,"0")}:${String(values.min || 0).padStart(2,"0")}`}
+              onChange={e => {
+                const [h, m] = e.target.value.split(":");
+                onChange({ ...values, hour: String(parseInt(h, 10) || 0), min: String(parseInt(m, 10) || 0) });
+              }}
+            />
+          </label>
+        </div>
+      )}
+      {/* Minute-of-hour for "every hour at :MM" */}
+      {values.preset === "every_hour_at" && (
+        <div className="tg-compose-grid tg-compose-grid-time">
+          <label className="tg-field">
+            <span>at minute</span>
+            <input type="number" min="0" max="59"
+              value={values.min || 0}
+              onChange={e => onChange({ ...values, min: e.target.value })}/>
+          </label>
+        </div>
+      )}
+      {/* N minutes for "every N minutes" */}
+      {values.preset === "every_n_minutes" && (
+        <div className="tg-preset-row">
+          {[1, 5, 15, 30].map(n => (
+            <button
+              key={n}
+              type="button"
+              className={"tg-preset-chip" + ((values.min === `*/${n}`) ? " is-active" : "")}
+              onClick={() => onChange({ ...values, min: `*/${n}`, hour: "*", dom: "*", mon: "*", dow: "*" })}
+            >every {n} min</button>
+          ))}
+        </div>
+      )}
+      {/* Custom: full 5-field input — preserved as power-user mode */}
+      {values.preset === "custom" && (
+        <div className="tg-compose-grid">
+          <label className="tg-field"><span>min</span><input value={values.min} onChange={e => onChange({...values, min: e.target.value})}/></label>
+          <label className="tg-field"><span>hour</span><input value={values.hour} onChange={e => onChange({...values, hour: e.target.value})}/></label>
+          <label className="tg-field"><span>day</span><input value={values.dom} onChange={e => onChange({...values, dom: e.target.value})}/></label>
+          <label className="tg-field"><span>month</span><input value={values.mon} onChange={e => onChange({...values, mon: e.target.value})}/></label>
+          <label className="tg-field"><span>dow</span><input value={values.dow} onChange={e => onChange({...values, dow: e.target.value})}/></label>
+        </div>
+      )}
+    </>
+  );
+}
+
+// ── Watch composer ──────────────────────────────────────────────────────
+function TgComposerWatch({ values, onChange }) {
+  return (
+    <>
+      <div className="tg-compose-grid tg-compose-grid-watch">
+        <label className="tg-field">
+          <span>watch path</span>
+          <select value={values.path || ""} onChange={e => onChange({ ...values, path: e.target.value })}>
+            <option value="">— pick a folder —</option>
+            {TG_WATCH_PATHS.map(p => (
+              <option key={p.path} value={p.path}>{p.path} · {p.label}</option>
+            ))}
+          </select>
+        </label>
+        <label className="tg-field">
+          <span>recursive</span>
+          <select value={values.recursive ? "yes" : "no"} onChange={e => onChange({ ...values, recursive: e.target.value === "yes" })}>
+            <option value="yes">yes — include subfolders</option>
+            <option value="no">no — top level only</option>
+          </select>
+        </label>
+      </div>
+      <div className="tg-preset-row">
+        <span className="tg-preset-label">debounce</span>
+        {TG_DEBOUNCE_OPTIONS.map(ms => (
+          <button
+            key={ms}
+            type="button"
+            className={"tg-preset-chip" + ((values.debounce_ms || 200) === ms ? " is-active" : "")}
+            onClick={() => onChange({ ...values, debounce_ms: ms })}
+          >{ms < 1000 ? `${ms}ms` : `${ms/1000}s`}</button>
+        ))}
+      </div>
+    </>
+  );
+}
+
+// ── Webhook composer ────────────────────────────────────────────────────
+function TgComposerWebhook({ values, onChange }) {
+  const sv = TG_WEBHOOK_SERVICES.find(s => s.id === values.service);
+  const url = sv ? `/hook/${sv.id}` : "/hook/—";
+  return (
+    <>
+      <div className="tg-compose-grid tg-compose-grid-webhook">
+        <label className="tg-field">
+          <span>service</span>
+          <select value={values.service || ""} onChange={e => onChange({ ...values, service: e.target.value, endpoint: e.target.value ? `/hook/${e.target.value}` : "" })}>
+            <option value="">— pick a service —</option>
+            {TG_WEBHOOK_SERVICES.map(s => (
+              <option key={s.id} value={s.id}>{s.label} · {s.hint}</option>
+            ))}
+          </select>
+        </label>
+        <label className="tg-field">
+          <span>endpoint</span>
+          <code className="tg-readonly-url">{url}</code>
+        </label>
+      </div>
+      <div className="tg-preset-row">
+        <span className="tg-preset-label">auth</span>
+        {TG_WEBHOOK_AUTH.map(a => (
+          <button
+            key={a}
+            type="button"
+            className={"tg-preset-chip" + ((values.auth || "none") === a ? " is-active" : "")}
+            onClick={() => onChange({ ...values, auth: a })}
+          >{a}</button>
+        ))}
+      </div>
+    </>
+  );
+}
+
+// ── Rule composer ───────────────────────────────────────────────────────
+function TgComposerRule({ values, onChange }) {
+  const pt = TG_RULE_PATTERN_TYPES.find(p => p.id === values.pattern_type);
+  return (
+    <>
+      <div className="tg-compose-grid tg-compose-grid-rule">
+        <label className="tg-field">
+          <span>pattern</span>
+          <select value={values.pattern_type || ""} onChange={e => onChange({ ...values, pattern_type: e.target.value, filter: "" })}>
+            <option value="">— pick a pattern —</option>
+            {TG_RULE_PATTERN_TYPES.map(p => (
+              <option key={p.id} value={p.id}>{p.label}</option>
+            ))}
+          </select>
+        </label>
+        <label className="tg-field">
+          <span>filter</span>
+          <select
+            value={values.filter || ""}
+            onChange={e => onChange({ ...values, filter: e.target.value, pattern: e.target.value ? `${values.pattern_type}=${e.target.value}` : "" })}
+            disabled={!pt}
+          >
+            <option value="">{pt ? "— pick a filter —" : "(pick pattern first)"}</option>
+            {(pt?.filters || []).map(f => (
+              <option key={f} value={f}>{f}</option>
+            ))}
+          </select>
+        </label>
+      </div>
+    </>
+  );
+}
+
+// ── Ribbon composer ─────────────────────────────────────────────────────
+function TgComposerRibbon({ values, onChange }) {
+  const sr = TG_RIBBON_SOURCES.find(s => s.id === values.source);
+  return (
+    <>
+      <div className="tg-compose-grid tg-compose-grid-ribbon">
+        <label className="tg-field">
+          <span>source</span>
+          <select value={values.source || ""} onChange={e => onChange({ ...values, source: e.target.value, pattern: "" })}>
+            <option value="">— pick a source —</option>
+            {TG_RIBBON_SOURCES.map(s => (
+              <option key={s.id} value={s.id}>{s.label}</option>
+            ))}
+          </select>
+        </label>
+        <label className="tg-field">
+          <span>pattern</span>
+          <select value={values.pattern || ""} onChange={e => onChange({ ...values, pattern: e.target.value })} disabled={!sr}>
+            <option value="">{sr ? "— pick a pattern —" : "(pick source first)"}</option>
+            {(sr?.patterns || []).map(p => (
+              <option key={p} value={p}>{p}</option>
+            ))}
+          </select>
+        </label>
+      </div>
+    </>
+  );
+}
+
+function TgConfiguredList({ triggers, onToggle, onDelete, onJumpToWorkflow, workflows }) {
+  // Build a quick lookup so we can show the workflow's friendly name (not slug).
+  const workflowNameBySlug = (workflows || []).reduce((acc, w) => {
+    acc[w.slug] = w.name || w.slug;
+    return acc;
+  }, {});
+  return (
+    <div className="tg-configured">
+      <div className="tg-configured-head">
+        <span className="tg-eyebrow">Configured · {triggers.length}</span>
+        <span className="tg-configured-hint">
+          {triggers.filter(t=>t.seeded).length > 0 ? "showing deck seed + bedrock" : "from CCAgentindex/triggers/"}
+        </span>
+      </div>
+      <div className="tg-configured-rows">
+        {triggers.length === 0 && (
+          <div className="tg-empty">No triggers yet. The compose card above writes to the bedrock.</div>
+        )}
+        {triggers.map(t => {
+          const info = TG_TYPE_INFO[t.kind] || {};
+          const detail = t.kind === "cron"    ? (t.cron || "")
+                       : t.kind === "watch"   ? (t.path || "")
+                       : t.kind === "webhook" ? (t.endpoint || "")
+                       : t.kind === "rule"    ? (t.pattern || "")
+                       : t.kind === "ribbon"  ? (t.pattern || "")
+                       : "";
+          const wfName = t.workflow_slug ? (workflowNameBySlug[t.workflow_slug] || t.workflow_slug) : null;
+          return (
+            <div key={t.slug} className={"tg-row" + (t.enabled ? "" : " is-paused")}>
+              <span className={`tg-row-dot tg-tone-${t.tone || "sage"}`}/>
+              <span className="tg-row-kind">{info.label || t.kind}</span>
+              <span className="tg-row-label">{t.label || t.slug}</span>
+              <code className="tg-row-detail">{detail}</code>
+              {wfName ? (
+                <button
+                  className="tg-row-wf"
+                  onClick={() => onJumpToWorkflow(t.workflow_slug)}
+                  title={`Jump to workflow: ${wfName}`}
+                >→ {agTruncate(wfName, 22)}</button>
+              ) : (
+                <span className="tg-row-wf tg-row-wf-empty">—</span>
+              )}
+              <span className={"tg-row-state" + (t.enabled ? " on" : " off")}>
+                {t.seeded ? (t.enabled ? "seed · live" : "seed · paused") : (t.enabled ? "live" : "paused")}
+              </span>
+              <button
+                className="tg-row-toggle"
+                onClick={()=>onToggle(t)}
+                title={t.enabled ? "Pause" : "Resume"}
+                disabled={t.seeded}
+              >{t.enabled ? "pause" : "resume"}</button>
+              <button
+                className="tg-row-delete"
+                onClick={()=>onDelete(t)}
+                title="Delete trigger"
+                disabled={t.seeded}
+              >×</button>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+// Per-kind starter values for the composer. Picking a type card resets to
+// these defaults so the composer is always coherent.
+const TG_COMPOSER_DEFAULTS = {
+  cron:    { preset: "every_weekday", min: "0",  hour: "9",  dom: "*", mon: "*", dow: "1-5", workflow_slug: "" },
+  watch:   { path: "_inbox/", recursive: true, debounce_ms: 200, workflow_slug: "" },
+  webhook: { service: "stripe", endpoint: "/hook/stripe", auth: "signature", workflow_slug: "" },
+  rule:    { pattern_type: "tile_state", filter: "BLOCKED", pattern: "tile_state=BLOCKED", workflow_slug: "" },
+  ribbon:  { source: "sylvia_gesture", pattern: "focus_drift", workflow_slug: "" },
+};
+
+function TriggersScreen({ go }) {
+  const [items, setItems] = ag_useState([]);
+  const [loading, setLoading] = ag_useState(true);
+  const [composerKind, setComposerKind] = ag_useState("cron");
+  const [valuesByKind, setValuesByKind] = ag_useState(() => sapClone(TG_COMPOSER_DEFAULTS));
+  const [composerLabel, setComposerLabel] = ag_useState("");
+  const [saving, setSaving] = ag_useState(false);
+  const [toast, setToast] = ag_useState(null);
+  const [workflows, setWorkflows] = ag_useState([]);
+
+  const composer = valuesByKind[composerKind];
+  const setComposer = (next) => setValuesByKind(v => ({ ...v, [composerKind]: typeof next === "function" ? next(v[composerKind]) : next }));
+
+  const refresh = ag_useCallback(async () => {
+    setLoading(true);
+    try {
+      const r = await fetch("/api/triggers/list");
+      const j = await r.json();
+      setItems(Array.isArray(j.items) ? j.items : []);
+    } catch {
+      setItems([]);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  // Workflows list — for the workflow-target picker on every composer.
+  const refreshWorkflows = ag_useCallback(async () => {
+    try {
+      const r = await fetch("/api/workflows/list");
+      const j = await r.json();
+      setWorkflows(Array.isArray(j.items) ? j.items : []);
+    } catch {
+      setWorkflows([]);
+    }
+  }, []);
+
+  ag_useEffect(() => { refresh(); refreshWorkflows(); }, [refresh, refreshWorkflows]);
+
+  // Merge bedrock + seed (seed shown only when bedrock is empty for that kind)
+  const merged = ag_useMemo(() => {
+    const fromBedrock = (items || []).map(it => ({ ...it, seeded: false }));
+    const seenSlugs = new Set(fromBedrock.map(it => it.slug));
+    const seeds = TG_SEED_TRIGGERS.filter(s => !seenSlugs.has(s.slug));
+    return [...fromBedrock, ...seeds];
+  }, [items]);
+
+  const counts = ag_useMemo(() => {
+    const c = { cron: 0, watch: 0, webhook: 0, rule: 0, ribbon: 0 };
+    const drafted = { cron: 0, watch: 0, webhook: 0, rule: 0, ribbon: 0 };
+    for (const t of merged) {
+      if (!c[t.kind] && c[t.kind] !== 0) continue;
+      if (t.enabled) c[t.kind] = (c[t.kind] || 0) + 1;
+      else drafted[t.kind] = (drafted[t.kind] || 0) + 1;
+    }
+    return { c, drafted };
+  }, [merged]);
+
+  const showToast = (msg) => { setToast(msg); setTimeout(()=>setToast(null), 2200); };
+
+  const slugify = (s) => (s || "").toLowerCase().trim()
+    .replace(/[^a-z0-9_\- ]+/g, "")
+    .replace(/\s+/g, "_")
+    .slice(0, 80) || `trigger_${Date.now().toString(36)}`;
+
+  // Click a type card → swap composer mode AND reset values to that kind's defaults.
+  const onPickKind = ag_useCallback((k) => {
+    if (k === composerKind) return;
+    setComposerKind(k);
+    setComposerLabel("");
+  }, [composerKind]);
+
+  // Save — routes payload shape per active kind.
+  const onSave = ag_useCallback(async () => {
+    const auto = tgAutoLabel(composerKind, composer);
+    const finalLabel = composerLabel.trim() || auto;
+    const slug = slugify(finalLabel);
+    // Build the per-kind payload.
+    const base = {
+      slug,
+      kind: composerKind,
+      label: finalLabel,
+      tone: TG_TYPE_INFO[composerKind]?.tone || "sage",
+      enabled: true,
+      workflow_slug: composer.workflow_slug || undefined,
+    };
+    let body = base;
+    if (composerKind === "cron") {
+      const cron = `${composer.min} ${composer.hour} ${composer.dom} ${composer.mon} ${composer.dow}`.trim();
+      body = {
+        ...base,
+        cron,
+        preset: composer.preset,
+        notes: tgCronToEnglish(composer.min, composer.hour, composer.dom, composer.mon, composer.dow),
+      };
+    } else if (composerKind === "watch") {
+      body = { ...base, path: composer.path || "", debounce_ms: composer.debounce_ms || 200, recursive: !!composer.recursive };
+    } else if (composerKind === "webhook") {
+      const sv = TG_WEBHOOK_SERVICES.find(s => s.id === composer.service);
+      body = { ...base, endpoint: sv ? `/hook/${sv.id}` : "/hook/custom", service: composer.service || "custom", auth: composer.auth || "none" };
+    } else if (composerKind === "rule") {
+      body = { ...base, pattern: composer.pattern || `${composer.pattern_type}=${composer.filter}`, pattern_type: composer.pattern_type, filter: composer.filter };
+    } else if (composerKind === "ribbon") {
+      body = { ...base, pattern: composer.pattern || "", source: composer.source || "" };
+    }
+    setSaving(true);
+    try {
+      const r = await fetch("/api/triggers/save", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      });
+      const j = await r.json();
+      if (j && j.ok) {
+        showToast(`saved · ${slug}`);
+        setComposerLabel("");
+        // Reset values for that kind so the composer reads "fresh" after save.
+        setValuesByKind(v => ({ ...v, [composerKind]: sapClone(TG_COMPOSER_DEFAULTS[composerKind]) }));
+        await refresh();
+      } else {
+        showToast(`save failed · ${(j && j.error) || "unknown"}`);
+      }
+    } catch (e) {
+      showToast(`save failed · ${e.message || e}`);
+    } finally {
+      setSaving(false);
+    }
+  }, [composerKind, composer, composerLabel, refresh]);
+
+  const onToggle = ag_useCallback(async (t) => {
+    if (t.seeded) { showToast("seed triggers can't be toggled — save your own"); return; }
+    try {
+      const r = await fetch("/api/triggers/save", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...t, enabled: !t.enabled }),
+      });
+      const j = await r.json();
+      if (j && j.ok) { await refresh(); showToast(t.enabled ? "paused" : "resumed"); }
+    } catch {}
+  }, [refresh]);
+
+  const onDelete = ag_useCallback(async (t) => {
+    if (t.seeded) return;
+    if (!confirm(`Delete trigger "${t.label}"?`)) return;
+    try {
+      const r = await fetch("/api/triggers/delete", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ slug: t.slug }),
+      });
+      const j = await r.json();
+      if (j && j.ok) { await refresh(); showToast(`deleted · ${t.slug}`); }
+    } catch {}
+  }, [refresh]);
+
+  // Cross-tab nav: jump to Workflows tab with the named workflow loaded.
+  const onJumpToWorkflow = ag_useCallback((slug) => {
+    if (!slug) return;
+    go.replace("automation", { tab: "workflows", load: slug });
+  }, [go]);
+
+  return (
+    <div className="auto-page tg-page">
+      <div className="tg-header">
+        <div className="tg-eyebrow tg-eyebrow-page">18 · automation</div>
+        <h1 className="tg-title">Triggers. <em>Cron, watch, webhook, rule, ribbon.</em></h1>
+        <p className="tg-sub">How the system wakes up. Pick a type below to compose one — every dropdown is a wired choice, not a form to fill.</p>
+      </div>
+
+      <div className="tg-grid">
+        {/* Left column — daily clock */}
+        <div className="tg-col tg-col-clock">
+          <TgDailyClock triggers={merged} />
+        </div>
+
+        {/* Right column — type cards (clickable; active = composer mode) */}
+        <div className="tg-col tg-col-types">
+          <div className="tg-types">
+            {["cron","watch","webhook","rule","ribbon"].map(k => (
+              <TgTypeCard
+                key={k}
+                kind={k}
+                count={counts.c[k] || 0}
+                drafted={counts.drafted[k] || 0}
+                isActive={composerKind === k}
+                onClick={() => onPickKind(k)}
+              />
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Composer (router) */}
+      <TgComposer
+        kind={composerKind}
+        values={composer}
+        onChange={setComposer}
+        label={composerLabel}
+        onLabel={setComposerLabel}
+        onSave={onSave}
+        saving={saving}
+        workflows={workflows}
+      />
+
+      {/* Configured list */}
+      <TgConfiguredList
+        triggers={merged}
+        onToggle={onToggle}
+        onDelete={onDelete}
+        onJumpToWorkflow={onJumpToWorkflow}
+        workflows={workflows}
+      />
+
+      {toast && <div className="tg-toast">{toast}</div>}
+    </div>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// SubAgentPlannerScreen — Orchestrator → fanout → merge (deck page 14)
+// ───────────────────────────────────────────────────────────────────────────
+// A real planning surface. You compose a fanout: Rodbot orchestrator
+// dispatches N parallel sub-agents to attack one question, then a merge
+// node folds the results back. Plans persist to bedrock at
+// CCAgentindex/agent_plans/<slug>.json (separate from the descriptive
+// agents/<slug>/agents.md specs).
+//
+// Layout:
+//   [Plan picker bar]
+//   [Fanout canvas | sidecar (concurrency / spend / live stream)]
+//   [Inspector strip — selected SA editor]
+//   [Budgets footer — caps + add SA]
+// ═══════════════════════════════════════════════════════════════════════════
+
+// ── Tone palette (mirrors deck) ──
+const SAP_TONES = ["mint","peach","lavender","sky","lemon","rose","sage","blush"];
+
+// ── Status → tone mapping for the playback loop ──
+//   queued       → paper (waiting)
+//   planning     → lemon  (yellow)
+//   tool_call    → lavender
+//   tool_await   → sky    (waiting on tool)
+//   reflect      → mint   (got result, judging)
+//   shipped      → mint   (done — also mint, slightly darker via "done" class)
+//   blocked      → rose
+//   working      → lemon  (catch-all "doing something")
+const SAP_STATUS_TONE = {
+  queued: "sage", planning: "lemon", tool_call: "lavender", tool_await: "sky",
+  reflect: "mint", shipped: "mint", blocked: "rose", working: "lemon",
+};
+
+const SAP_TOOL_OPTIONS = [
+  "close.lead.fetch", "close.lead.update", "close.task.create", "close.activity.search",
+  "gmail.thread.search", "gmail.message.send",
+  "slack.message.post", "slack.channel.search",
+  "wedding_wire.search",
+  "tables.read", "tables.append", "tables.update",
+  "rodbot.affinity", "rodbot.classify",
+  "file.read", "file.write",
+  "webhook.fire",
+];
+
+const SAP_ACTION_OPTIONS = [
+  "enrich", "classify", "score", "summarize", "extract", "filter",
+  "fetch", "write", "send", "schedule", "audit",
+];
+
+// ── Seed plans (shown when bedrock has none yet) ──
+const SAP_SEED_PLANS = [
+  {
+    schema: "comeketo.agent_plan.v1",
+    slug: "tagging_hygiene",
+    name: "Tagging hygiene · re-classify \"other\"",
+    description: "Rodbot dispatches 6 sub-agents to enrich + classify 12 leads currently tagged 'other' in Close.",
+    trigger_label: "12 leads · trusted",
+    orchestrator: { label: "Rodbot", model: "claude-sonnet-4-6", register: "operational" },
+    budgets: { max_sub_agents: 8, tokens_cap: 12000, wallclock_cap_s: 60, retry_policy: "linear_backoff" },
+    sub_agents: [
+      { id: "SA-01", action: "enrich",   tool: "close.lead.fetch",    prompt_template: "Enrich {{lead.id}}: pull most recent thread + firmographic facts.", leads: 2, retries: 2, timeout_s: 30, tone: "lavender", expected_latency_s: 4.2 },
+      { id: "SA-02", action: "classify", tool: "close.lead.update",   prompt_template: "Re-classify {{lead.id}} away from 'other' using the playbook.", leads: 2, retries: 2, timeout_s: 30, tone: "lavender", expected_latency_s: 3.8 },
+      { id: "SA-03", action: "classify", tool: "close.lead.update",   prompt_template: "Re-classify {{lead.id}} (batch 2).", leads: 2, retries: 2, timeout_s: 30, tone: "lavender", expected_latency_s: 4.0 },
+      { id: "SA-04", action: "classify", tool: "gmail.thread.search", prompt_template: "Pull recent thread for {{lead.id}}, then re-classify.", leads: 2, retries: 2, timeout_s: 30, tone: "rose", expected_latency_s: 0.0, blocked_reason: "auth" },
+      { id: "SA-05", action: "enrich",   tool: "close.lead.fetch",    prompt_template: "Enrich {{lead.id}} (batch 2).", leads: 2, retries: 2, timeout_s: 30, tone: "lavender", expected_latency_s: 5.1 },
+      { id: "SA-06", action: "classify", tool: "wedding_wire.search", prompt_template: "Look up {{lead.id}} on Wedding Wire and classify.", leads: 2, retries: 2, timeout_s: 30, tone: "lemon", expected_latency_s: 0.0 },
+    ],
+    merge: { label: "merge → write to Tables", target: "tables/leads_pipeline.json" },
+    metadata: { created_at: "2026-04-25T00:00:00Z", last_modified: "2026-04-25T00:00:00Z", version: 1 },
+    seeded: true,
+  },
+  {
+    schema: "comeketo.agent_plan.v1",
+    slug: "lead_enrichment_fanout",
+    name: "Lead enrichment fanout — daily sweep",
+    description: "Four sub-agents split the open lead list and enrich each with last-touch + venue affinity.",
+    trigger_label: "open leads · 16:48 daily",
+    orchestrator: { label: "Rodbot", model: "claude-sonnet-4-6", register: "operational" },
+    budgets: { max_sub_agents: 6, tokens_cap: 8000, wallclock_cap_s: 45, retry_policy: "linear_backoff" },
+    sub_agents: [
+      { id: "SA-01", action: "enrich", tool: "close.lead.fetch", prompt_template: "Enrich open lead {{lead.id}}.", leads: 4, retries: 1, timeout_s: 25, tone: "sage",     expected_latency_s: 3.5 },
+      { id: "SA-02", action: "enrich", tool: "tables.read",      prompt_template: "Cross-reference with venue_partners.", leads: 4, retries: 1, timeout_s: 20, tone: "sage", expected_latency_s: 2.8 },
+      { id: "SA-03", action: "score",  tool: "rodbot.affinity",  prompt_template: "Score affinity tier.", leads: 4, retries: 1, timeout_s: 20, tone: "lavender", expected_latency_s: 4.1 },
+      { id: "SA-04", action: "write",  tool: "tables.append",    prompt_template: "Append enrichment to leads_pipeline.", leads: 4, retries: 1, timeout_s: 15, tone: "mint", expected_latency_s: 1.6 },
+    ],
+    merge: { label: "merge → write to Tables", target: "tables/leads_pipeline.json" },
+    metadata: { created_at: "2026-04-25T00:00:00Z", last_modified: "2026-04-25T00:00:00Z", version: 1 },
+    seeded: true,
+  },
+];
+
+// Deep-clone helper for plan immutability.
+function sapClone(plan) { return JSON.parse(JSON.stringify(plan)); }
+
+// Generate a new SA id given existing ones (SA-NN, padded).
+function sapNextSaId(existing) {
+  const used = new Set((existing || []).map(s => s.id));
+  for (let i = 1; i <= 99; i++) {
+    const id = `SA-${String(i).padStart(2,"0")}`;
+    if (!used.has(id)) return id;
+  }
+  return `SA-${Date.now().toString(36).slice(-3)}`;
+}
+
+// Slugify for new plans.
+function sapSlugify(s) {
+  return (s || "").toLowerCase().trim()
+    .replace(/[^a-z0-9_\- ]+/g, "")
+    .replace(/\s+/g, "_")
+    .slice(0, 80) || `plan_${Date.now().toString(36)}`;
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// SapHeader — plan picker, name, save, run
+// ═══════════════════════════════════════════════════════════════════════════
+function SapHeader({ plan, plans, onLoad, onNew, onRename, onSave, onRun, onStop, saving, running, dirty }) {
+  const [editing, setEditing] = ag_useState(false);
+  const [draft, setDraft] = ag_useState(plan?.name || "");
+  ag_useEffect(() => { setDraft(plan?.name || ""); }, [plan?.slug]);
+  return (
+    <div className="sap-header">
+      <div className="sap-header-left">
+        <div className="sap-eyebrow">14 · agents</div>
+        {editing ? (
+          <input
+            className="sap-title-input"
+            value={draft}
+            autoFocus
+            onChange={e => setDraft(e.target.value)}
+            onBlur={() => { onRename(draft); setEditing(false); }}
+            onKeyDown={e => { if (e.key === "Enter") e.target.blur(); if (e.key === "Escape") { setDraft(plan?.name || ""); setEditing(false); } }}
+          />
+        ) : (
+          <h1 className="sap-title" onClick={() => setEditing(true)} title="Click to rename">{plan?.name || "Untitled plan"}</h1>
+        )}
+        <div className="sap-subline">
+          <span className="sap-trigger">{plan?.trigger_label || "untriggered"}</span>
+          <span className="sap-sep">·</span>
+          <span>{(plan?.sub_agents || []).length} sub-agents</span>
+          <span className="sap-sep">·</span>
+          <span>v{plan?.metadata?.version || 1}</span>
+          {dirty && <><span className="sap-sep">·</span><span className="sap-dirty">unsaved</span></>}
+        </div>
+      </div>
+      <div className="sap-header-right">
+        <select
+          className="sap-plan-picker"
+          value={plan?.slug || ""}
+          onChange={e => onLoad(e.target.value)}
+        >
+          {plans.map(p => (
+            <option key={p.slug} value={p.slug}>{p.name || p.slug}{p.seeded ? " · seed" : ""}</option>
+          ))}
+        </select>
+        <button className="sap-btn sap-btn-ghost" onClick={onNew} title="New plan">+ new</button>
+        <button className="sap-btn sap-btn-paper" onClick={onSave} disabled={saving || !dirty} title={dirty ? "Save plan" : "No changes"}>
+          {saving ? "saving…" : "save"}
+        </button>
+        {running ? (
+          <button className="sap-btn sap-btn-stop" onClick={onStop} title="Stop simulated run">■ stop</button>
+        ) : (
+          <button className="sap-btn sap-btn-ink" onClick={onRun} title="Simulate the dispatch">▶ run</button>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// SapFanoutCanvas — orchestrator → row of SAs → merge node
+// ═══════════════════════════════════════════════════════════════════════════
+function SapFanoutCanvas({ plan, runState, selectedId, onSelect }) {
+  const sas = plan?.sub_agents || [];
+  const N = sas.length;
+
+  // Layout — auto-fit width based on SA count. Each SA is 130px wide with 16px gap.
+  const SA_W = 132, SA_H = 92, SA_GAP = 16;
+  const fanW = Math.max(560, N * (SA_W + SA_GAP) - SA_GAP);
+  const padX = 32;
+  const totalW = fanW + padX * 2;
+  const totalH = 360;
+  const orchY = 56, saY = 168, mergeY = 296;
+  const orchX = totalW / 2;
+  const mergeX = totalW / 2;
+  const saStartX = (totalW - fanW) / 2 + SA_W / 2;
+
+  return (
+    <div className="sap-canvas">
+      <svg
+        viewBox={`0 0 ${totalW} ${totalH}`}
+        preserveAspectRatio="xMidYMid meet"
+        className="sap-svg"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        {/* dotted background grid */}
+        <defs>
+          <pattern id="sap-grid" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
+            <circle cx="1" cy="1" r="0.8" fill="var(--rule-2)" opacity="0.55"/>
+          </pattern>
+          <marker id="sap-arrow" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+            <path d="M0,0 L8,4 L0,8 z" fill="var(--ink-3)"/>
+          </marker>
+        </defs>
+        <rect x="0" y="0" width={totalW} height={totalH} fill="url(#sap-grid)"/>
+
+        {/* Edges from orchestrator → each SA */}
+        {sas.map((sa, i) => {
+          const sx = orchX, sy = orchY + 22;
+          const tx = saStartX + i * (SA_W + SA_GAP), ty = saY - SA_H/2;
+          const cy = (sy + ty) / 2;
+          const path = `M ${sx} ${sy} C ${sx} ${cy}, ${tx} ${cy}, ${tx} ${ty}`;
+          const lit = runState?.firingEdges?.has(`fan-${sa.id}`);
+          return <path key={`e-fan-${sa.id}`} d={path} fill="none"
+            stroke={lit ? "var(--ink)" : "var(--ink-4)"}
+            strokeWidth={lit ? 2 : 1.2}
+            strokeDasharray={lit ? "none" : "4 4"}
+            markerEnd="url(#sap-arrow)"/>;
+        })}
+
+        {/* Edges from each SA → merge */}
+        {sas.map((sa, i) => {
+          const sx = saStartX + i * (SA_W + SA_GAP), sy = saY + SA_H/2;
+          const tx = mergeX, ty = mergeY - 22;
+          const cy = (sy + ty) / 2;
+          const path = `M ${sx} ${sy} C ${sx} ${cy}, ${tx} ${cy}, ${tx} ${ty}`;
+          const lit = runState?.firingEdges?.has(`merge-${sa.id}`);
+          return <path key={`e-mrg-${sa.id}`} d={path} fill="none"
+            stroke={lit ? "var(--ink)" : "var(--ink-4)"}
+            strokeWidth={lit ? 2 : 1}
+            strokeDasharray={lit ? "none" : "3 5"}
+            markerEnd="url(#sap-arrow)"/>;
+        })}
+
+        {/* Orchestrator capsule (Rodbot) */}
+        <g transform={`translate(${orchX - 80}, ${orchY - 22})`}>
+          <rect x="0" y="0" width="160" height="44" rx="22"
+            fill="var(--pastel-mint)" stroke="var(--pastel-mint-ink)" strokeWidth="1"/>
+          <circle cx="20" cy="22" r="5" fill="var(--pastel-mint-ink)"/>
+          <text x="36" y="27" fontFamily="var(--font-body)" fontSize="13.5" fontWeight="500"
+            fill="var(--pastel-mint-ink)">
+            {agTruncate(`${plan?.orchestrator?.label || "Rodbot"} · orchestrator`, 18)}
+            <title>{`${plan?.orchestrator?.label || "Rodbot"} · orchestrator`}</title>
+          </text>
+        </g>
+
+        {/* Sub-agent cards */}
+        {sas.map((sa, i) => {
+          const x = saStartX + i * (SA_W + SA_GAP) - SA_W/2;
+          const y = saY - SA_H/2;
+          const status = runState?.saStatus?.[sa.id] || (sa.blocked_reason ? "blocked" : "queued");
+          const isSelected = selectedId === sa.id;
+          const tone = status === "queued" ? (sa.tone || "sage") : (SAP_STATUS_TONE[status] || sa.tone || "sage");
+          const subtle = status === "queued" && !runState?.running;
+          return (
+            <g key={sa.id}
+               transform={`translate(${x}, ${y})`}
+               className={"sap-sa" + (isSelected ? " is-selected" : "") + (status === "blocked" ? " is-blocked" : "") + (status === "shipped" ? " is-shipped" : "")}
+               onMouseDown={(e) => { e.stopPropagation(); onSelect(sa.id); }}
+               style={{ cursor: "pointer" }}>
+              <rect x="0" y="0" width={SA_W} height={SA_H} rx="14"
+                fill={subtle ? "var(--paper-card)" : `var(--pastel-${tone})`}
+                stroke={isSelected ? "var(--ink)" : `var(--pastel-${tone}-ink)`}
+                strokeWidth={isSelected ? 2 : 1}/>
+              <text x="14" y="22" fontFamily="var(--font-mono)" fontSize="10" letterSpacing="0.1em"
+                fill={`var(--pastel-${tone}-ink)`} opacity="0.85">{sa.id}</text>
+              <text x="14" y="44" fontFamily="var(--font-serif, 'Newsreader', serif)" fontSize="18" fontWeight="500"
+                fill="var(--ink)">
+                {agTruncate(sa.action || "—", 12)}
+                <title>{sa.action || "—"}</title>
+              </text>
+              <text x="14" y="64" fontFamily="var(--font-mono)" fontSize="10.5" letterSpacing="0.04em"
+                fill="var(--ink-3)">
+                {agTruncate(`${sa.leads || 0} leads · ${(sa.expected_latency_s || 0).toFixed(1)}s`, 16)}
+              </text>
+              <text x="14" y="80" fontFamily="var(--font-mono)" fontSize="10" letterSpacing="0.08em"
+                fill={`var(--pastel-${tone}-ink)`} opacity="0.95">
+                {agTruncate(
+                  status === "blocked" ? `blocked · ${sa.blocked_reason || "unknown"}` :
+                  status === "queued" ? "queued" :
+                  status === "planning" ? "planning…" :
+                  status === "tool_call" ? "calling…" :
+                  status === "tool_await" ? "awaiting…" :
+                  status === "reflect" ? "reflecting" :
+                  status === "shipped" ? "shipped ✓" :
+                  status === "working" ? "working…" : status,
+                  18
+                )}
+              </text>
+            </g>
+          );
+        })}
+
+        {/* Merge node */}
+        <g transform={`translate(${mergeX - 130}, ${mergeY - 22})`}>
+          <rect x="0" y="0" width="260" height="44" rx="22"
+            fill="var(--paper-card)" stroke="var(--ink)" strokeWidth="1.2"/>
+          <text x="130" y="27" textAnchor="middle"
+            fontFamily="var(--font-body)" fontSize="13" fontWeight="500"
+            fill="var(--ink)">
+            {agTruncate(plan?.merge?.label || "merge → write", 32)}
+            <title>{plan?.merge?.label || "merge → write"}</title>
+          </text>
+        </g>
+      </svg>
+    </div>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// SapInspector — selected SA editor (action / tool / prompt / retries / timeout)
+// ═══════════════════════════════════════════════════════════════════════════
+function SapInspector({ sa, plan, onUpdate, onDelete }) {
+  if (!sa) {
+    return (
+      <div className="sap-inspector sap-inspector-empty">
+        <span className="sap-eyebrow">Inspector</span>
+        <p className="sap-empty-hint">Click a sub-agent on the canvas to edit it. Or use <em>+ add sub-agent</em> in the budgets footer.</p>
+      </div>
+    );
+  }
+  const set = (patch) => onUpdate(sa.id, patch);
+  return (
+    <div className="sap-inspector">
+      <div className="sap-inspector-head">
+        <span className="sap-eyebrow">Inspector</span>
+        <span className="sap-inspector-ident">{sa.id}</span>
+        <button className="sap-inspector-del" onClick={() => onDelete(sa.id)} title="Delete this sub-agent">× delete</button>
+      </div>
+      <div className="sap-inspector-grid">
+        <label className="sap-field">
+          <span>action</span>
+          <input list="sap-actions" value={sa.action || ""} onChange={e => set({ action: e.target.value })}/>
+          <datalist id="sap-actions">
+            {SAP_ACTION_OPTIONS.map(a => <option key={a} value={a}/>)}
+          </datalist>
+        </label>
+        <label className="sap-field">
+          <span>tool</span>
+          <input list="sap-tools" value={sa.tool || ""} onChange={e => set({ tool: e.target.value })}/>
+          <datalist id="sap-tools">
+            {SAP_TOOL_OPTIONS.map(t => <option key={t} value={t}/>)}
+          </datalist>
+        </label>
+        <label className="sap-field sap-field-num">
+          <span>leads</span>
+          <input type="number" min="0" value={sa.leads ?? 0} onChange={e => set({ leads: parseInt(e.target.value, 10) || 0 })}/>
+        </label>
+        <label className="sap-field sap-field-num">
+          <span>retries</span>
+          <input type="number" min="0" max="10" value={sa.retries ?? 1} onChange={e => set({ retries: parseInt(e.target.value, 10) || 0 })}/>
+        </label>
+        <label className="sap-field sap-field-num">
+          <span>timeout</span>
+          <input type="number" min="1" max="300" value={sa.timeout_s ?? 30} onChange={e => set({ timeout_s: parseInt(e.target.value, 10) || 30 })}/>
+        </label>
+        <label className="sap-field sap-field-num">
+          <span>est latency (s)</span>
+          <input type="number" step="0.1" min="0" value={sa.expected_latency_s ?? 0} onChange={e => set({ expected_latency_s: parseFloat(e.target.value) || 0 })}/>
+        </label>
+        <label className="sap-field sap-field-tone">
+          <span>tone</span>
+          <select value={sa.tone || "sage"} onChange={e => set({ tone: e.target.value })}>
+            {SAP_TONES.map(t => <option key={t} value={t}>{t}</option>)}
+          </select>
+        </label>
+        <label className="sap-field sap-field-prompt">
+          <span>prompt template</span>
+          <textarea
+            rows="3"
+            value={sa.prompt_template || ""}
+            onChange={e => set({ prompt_template: e.target.value })}
+            placeholder="Use {{lead.id}}, {{batch}}, etc. as substitution tokens."
+          />
+        </label>
+      </div>
+    </div>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// SapBudgets — caps + add SA
+// ═══════════════════════════════════════════════════════════════════════════
+function SapBudgets({ plan, onChange, onAddSa }) {
+  const b = plan?.budgets || {};
+  const set = (patch) => onChange({ budgets: { ...b, ...patch } });
+  return (
+    <div className="sap-budgets">
+      <span className="sap-eyebrow">Budgets</span>
+      <label className="sap-field sap-field-inline">
+        <span>max sub-agents</span>
+        <input type="number" min="1" max="32" value={b.max_sub_agents ?? 8} onChange={e => set({ max_sub_agents: parseInt(e.target.value, 10) || 8 })}/>
+      </label>
+      <label className="sap-field sap-field-inline">
+        <span>tokens cap</span>
+        <input type="number" min="500" step="500" value={b.tokens_cap ?? 12000} onChange={e => set({ tokens_cap: parseInt(e.target.value, 10) || 12000 })}/>
+      </label>
+      <label className="sap-field sap-field-inline">
+        <span>wallclock (s)</span>
+        <input type="number" min="5" max="600" value={b.wallclock_cap_s ?? 60} onChange={e => set({ wallclock_cap_s: parseInt(e.target.value, 10) || 60 })}/>
+      </label>
+      <label className="sap-field sap-field-inline">
+        <span>retry policy</span>
+        <select value={b.retry_policy || "linear_backoff"} onChange={e => set({ retry_policy: e.target.value })}>
+          <option value="none">none</option>
+          <option value="linear_backoff">linear backoff</option>
+          <option value="exponential_backoff">exponential backoff</option>
+        </select>
+      </label>
+      <button className="sap-btn sap-btn-paper sap-add" onClick={onAddSa} title="Add a sub-agent">+ sub-agent</button>
+    </div>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// SapConcurrency — Gantt rows per SA, fed by run state
+// ═══════════════════════════════════════════════════════════════════════════
+function SapConcurrency({ plan, runState }) {
+  const sas = plan?.sub_agents || [];
+  const total_s = Math.max(1, plan?.budgets?.wallclock_cap_s || 60);
+  return (
+    <div className="sap-card sap-concurrency">
+      <div className="sap-card-head">
+        <span className="sap-eyebrow">Concurrency</span>
+        <span className="sap-card-meta">{sas.length} SAs · {(runState?.running ? "running" : "idle")}</span>
+      </div>
+      <div className="sap-gantt">
+        {sas.map((sa) => {
+          const seg = runState?.gantt?.[sa.id]; // { startPct, widthPct, status, latency }
+          const status = runState?.saStatus?.[sa.id] || (sa.blocked_reason ? "blocked" : "queued");
+          const tone = SAP_STATUS_TONE[status] || sa.tone || "sage";
+          const expectedPct = Math.min(100, ((sa.expected_latency_s || 0) / total_s) * 100);
+          return (
+            <div key={sa.id} className="sap-gantt-row">
+              <span className="sap-gantt-label">{sa.id}</span>
+              <div className="sap-gantt-track">
+                {/* Expected baseline (hairline) — always shown */}
+                <span className="sap-gantt-expected" style={{ width: `${expectedPct}%` }}/>
+                {/* Live segment — shown during run */}
+                {seg && (
+                  <span
+                    className={`sap-gantt-bar tg-tone-${tone}`}
+                    style={{ left: `${seg.startPct}%`, width: `${seg.widthPct}%`, background: `var(--pastel-${tone})` }}
+                  />
+                )}
+              </div>
+              <span className="sap-gantt-latency">
+                {seg?.latency != null ? `${seg.latency.toFixed(1)}s` : status === "blocked" ? "—" : `~${(sa.expected_latency_s || 0).toFixed(1)}s`}
+              </span>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// SapSpend — token spend / wall clock / parallelism
+// ═══════════════════════════════════════════════════════════════════════════
+function SapSpend({ plan, runState }) {
+  const sas = plan?.sub_agents || [];
+  const total_expected_s = sas.reduce((a, s) => a + (s.expected_latency_s || 0), 0);
+  const wallclock = runState?.elapsed_s ?? (runState?.running ? 0 : total_expected_s);
+  const parallelism = wallclock > 0 ? total_expected_s / wallclock : (sas.length || 1);
+  const tokens = runState?.tokens_used ?? Math.round((plan?.budgets?.tokens_cap || 12000) * 0.007 * sas.length);
+  const dollars = (tokens / 1000) * 0.012; // rough mid-tier estimate; for display only
+  return (
+    <div className="sap-card sap-spend">
+      <div className="sap-card-head">
+        <span className="sap-eyebrow">Spend</span>
+        <span className="sap-card-meta">{runState?.running ? "live" : "estimate"}</span>
+      </div>
+      <div className="sap-spend-grid">
+        <div className="sap-spend-cell">
+          <div className="sap-spend-num">${dollars.toFixed(3)}</div>
+          <div className="sap-spend-label">tokens · {tokens.toLocaleString()}</div>
+        </div>
+        <div className="sap-spend-cell">
+          <div className="sap-spend-num">{wallclock.toFixed(1)}s</div>
+          <div className="sap-spend-label">wall clock</div>
+        </div>
+        <div className="sap-spend-cell">
+          <div className="sap-spend-num">{parallelism.toFixed(1)}×</div>
+          <div className="sap-spend-label">parallelism</div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// SapLiveStream — tailed event log
+// ═══════════════════════════════════════════════════════════════════════════
+function SapLiveStream({ events }) {
+  const tailRef = ag_useRef(null);
+  ag_useEffect(() => {
+    if (tailRef.current) tailRef.current.scrollTop = tailRef.current.scrollHeight;
+  }, [events?.length]);
+  return (
+    <div className="sap-card sap-stream">
+      <div className="sap-card-head">
+        <span className="sap-eyebrow">Live stream</span>
+        <span className="sap-card-meta">{events?.length || 0} events</span>
+      </div>
+      <div className="sap-stream-tail" ref={tailRef}>
+        {(!events || events.length === 0) && (
+          <div className="sap-empty-hint">Press ▶ run to simulate the dispatch.</div>
+        )}
+        {(events || []).map((ev, i) => (
+          <div key={i} className="sap-stream-row">
+            <span className="sap-stream-ts">{ev.ts}</span>
+            <span className={`sap-dot tg-tone-${ev.tone || "sage"}`}/>
+            <span className="sap-stream-sa">{ev.sa}</span>
+            <span className="sap-stream-text">{ev.text}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// SubAgentPlannerScreen — page-level component
+// ═══════════════════════════════════════════════════════════════════════════
+function SubAgentPlannerScreen({ go }) {
+  const [plansList, setPlansList] = ag_useState([]);
+  const [plan, setPlan] = ag_useState(() => sapClone(SAP_SEED_PLANS[0]));
+  const [savedSlug, setSavedSlug] = ag_useState(null); // tracks the slug currently on disk for dirty detection
+  const [savedSnapshot, setSavedSnapshot] = ag_useState(() => JSON.stringify(SAP_SEED_PLANS[0]));
+  const [selectedId, setSelectedId] = ag_useState(null);
+  const [saving, setSaving] = ag_useState(false);
+  const [toast, setToast] = ag_useState(null);
+
+  // Run simulation state
+  const [running, setRunning] = ag_useState(false);
+  const [saStatus, setSaStatus] = ag_useState({}); // saId -> "queued"|"planning"|"tool_call"|"tool_await"|"reflect"|"shipped"|"blocked"
+  const [firingEdges, setFiringEdges] = ag_useState(() => new Set());
+  const [gantt, setGantt] = ag_useState({}); // saId -> { startPct, widthPct, status, latency }
+  const [events, setEvents] = ag_useState([]);
+  const [elapsed, setElapsed] = ag_useState(0);
+  const runCancelRef = ag_useRef(null);
+
+  const showToast = (msg) => { setToast(msg); setTimeout(() => setToast(null), 2400); };
+
+  // ── List + load from bedrock; merge with seeds ────────────────────────
+  const refreshList = ag_useCallback(async () => {
+    try {
+      const r = await fetch("/api/agent_plans/list");
+      const j = await r.json();
+      const fromDisk = (j?.items || []).map(it => ({ slug: it.slug, name: it.name || it.slug, seeded: false }));
+      const seenSlugs = new Set(fromDisk.map(it => it.slug));
+      const seeds = SAP_SEED_PLANS.filter(s => !seenSlugs.has(s.slug)).map(s => ({ slug: s.slug, name: s.name, seeded: true }));
+      const merged = [...fromDisk, ...seeds];
+      setPlansList(merged);
+      return merged;
+    } catch {
+      const seeds = SAP_SEED_PLANS.map(s => ({ slug: s.slug, name: s.name, seeded: true }));
+      setPlansList(seeds);
+      return seeds;
+    }
+  }, []);
+
+  ag_useEffect(() => { refreshList(); }, [refreshList]);
+
+  const dirty = JSON.stringify(plan) !== savedSnapshot;
+
+  const onLoad = ag_useCallback(async (slug) => {
+    if (!slug) return;
+    // Try bedrock first.
+    try {
+      const r = await fetch(`/api/agent_plans/get?slug=${encodeURIComponent(slug)}`);
+      const j = await r.json();
+      if (j?.ok && j.plan) {
+        setPlan(j.plan);
+        setSavedSlug(slug);
+        setSavedSnapshot(JSON.stringify(j.plan));
+        setSelectedId(null);
+        stopRun();
+        return;
+      }
+    } catch {}
+    // Fall back to seed.
+    const seed = SAP_SEED_PLANS.find(s => s.slug === slug);
+    if (seed) {
+      const cloned = sapClone(seed);
+      setPlan(cloned);
+      setSavedSlug(null);  // seeds aren't on disk
+      setSavedSnapshot(JSON.stringify(cloned));
+      setSelectedId(null);
+      stopRun();
+    }
+  }, []);
+
+  const onNew = ag_useCallback(() => {
+    const fresh = {
+      schema: "comeketo.agent_plan.v1",
+      slug: `plan_${Date.now().toString(36)}`,
+      name: "New plan",
+      description: "",
+      trigger_label: "",
+      orchestrator: { label: "Rodbot", model: "claude-sonnet-4-6", register: "operational" },
+      budgets: { max_sub_agents: 8, tokens_cap: 12000, wallclock_cap_s: 60, retry_policy: "linear_backoff" },
+      sub_agents: [
+        { id: "SA-01", action: "enrich", tool: "close.lead.fetch", prompt_template: "", leads: 1, retries: 1, timeout_s: 30, tone: "sage", expected_latency_s: 3.0 },
+      ],
+      merge: { label: "merge → write", target: "" },
+      metadata: { created_at: new Date().toISOString(), last_modified: new Date().toISOString(), version: 1 },
+    };
+    setPlan(fresh);
+    setSavedSlug(null);
+    setSavedSnapshot(JSON.stringify(fresh));
+    setSelectedId(null);
+    stopRun();
+  }, []);
+
+  const onRename = ag_useCallback((newName) => {
+    setPlan(p => {
+      const next = { ...p, name: newName || "Untitled plan" };
+      // If this plan was a seed (savedSlug=null) AND name changed, regenerate slug.
+      if (!savedSlug || p.slug?.startsWith("plan_")) {
+        next.slug = sapSlugify(newName);
+      }
+      return next;
+    });
+  }, [savedSlug]);
+
+  const onUpdatePlan = ag_useCallback((patch) => {
+    setPlan(p => ({ ...p, ...patch }));
+  }, []);
+
+  const onUpdateSa = ag_useCallback((id, patch) => {
+    setPlan(p => ({
+      ...p,
+      sub_agents: (p.sub_agents || []).map(s => s.id === id ? { ...s, ...patch } : s),
+    }));
+  }, []);
+
+  const onAddSa = ag_useCallback(() => {
+    setPlan(p => {
+      const newId = sapNextSaId(p.sub_agents);
+      const newSa = {
+        id: newId, action: "enrich", tool: "close.lead.fetch",
+        prompt_template: "Describe what {{lead.id}} should do.",
+        leads: 1, retries: 1, timeout_s: 30, tone: "sage", expected_latency_s: 3.0,
+      };
+      return { ...p, sub_agents: [...(p.sub_agents || []), newSa] };
+    });
+  }, []);
+
+  const onDeleteSa = ag_useCallback((id) => {
+    setPlan(p => ({ ...p, sub_agents: (p.sub_agents || []).filter(s => s.id !== id) }));
+    if (selectedId === id) setSelectedId(null);
+  }, [selectedId]);
+
+  const onSave = ag_useCallback(async () => {
+    setSaving(true);
+    try {
+      const r = await fetch("/api/agent_plans/save", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ slug: plan.slug, plan }),
+      });
+      const j = await r.json();
+      if (j?.ok) {
+        const savedPlan = j.plan || plan;
+        setPlan(savedPlan);
+        setSavedSlug(plan.slug);
+        setSavedSnapshot(JSON.stringify(savedPlan));
+        showToast(`saved · ${plan.slug}`);
+        await refreshList();
+      } else {
+        showToast(`save failed · ${j?.error || "unknown"}`);
+      }
+    } catch (e) {
+      showToast(`save failed · ${e.message || e}`);
+    } finally {
+      setSaving(false);
+    }
+  }, [plan, refreshList]);
+
+  // ── Simulated dispatch ────────────────────────────────────────────────
+  const stopRun = ag_useCallback(() => {
+    if (runCancelRef.current) {
+      runCancelRef.current.cancelled = true;
+    }
+    setRunning(false);
+  }, []);
+
+  const onRun = ag_useCallback(async () => {
+    if (running) return;
+    setRunning(true);
+    setEvents([]);
+    setSaStatus({});
+    setGantt({});
+    setFiringEdges(new Set());
+    setElapsed(0);
+
+    const cancelToken = { cancelled: false };
+    runCancelRef.current = cancelToken;
+    const sas = plan.sub_agents || [];
+    const sleep = (ms) => new Promise(res => setTimeout(res, ms));
+    const ts = (s) => {
+      const m = Math.floor(s / 60); const sec = (s % 60).toFixed(2);
+      return `04:09:${String(s % 60).padStart(2,"0")}.${String(Math.round((s % 1) * 100)).padStart(2,"0")}`.slice(0,12);
+    };
+    const total_s = Math.max(...sas.map(s => s.expected_latency_s || 0), 1);
+    const SCALE = 800; // 1 simulated second = 800ms wallclock (slow enough to watch)
+
+    // Time progression — fire events on edges first, then per-SA progress.
+    const startReal = performance.now();
+    const tick = () => {
+      if (cancelToken.cancelled) return;
+      const ms = performance.now() - startReal;
+      setElapsed(ms / SCALE);
+      if (ms / SCALE < total_s + 0.6) requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+
+    const pushEvent = (ev) => setEvents(es => [...es, ev]);
+
+    // Fan-out: orchestrator dispatches to all SAs (edge animations)
+    pushEvent({ ts: ts(0), tone: "mint", sa: "Rodbot", text: `dispatching ${sas.length} sub-agents — goal: ${plan.name}` });
+    setFiringEdges(new Set(sas.map(s => `fan-${s.id}`)));
+    await sleep(600);
+    if (cancelToken.cancelled) return;
+
+    // Mark all as planning
+    setSaStatus(prev => {
+      const next = { ...prev };
+      for (const s of sas) next[s.id] = s.blocked_reason ? "blocked" : "planning";
+      return next;
+    });
+    for (const s of sas) {
+      if (s.blocked_reason) {
+        pushEvent({ ts: ts(0.1), tone: "rose", sa: s.id, text: `blocked · ${s.blocked_reason}` });
+        setGantt(g => ({ ...g, [s.id]: { startPct: 0, widthPct: 2, status: "blocked", latency: 0 } }));
+      } else {
+        pushEvent({ ts: ts(0.2), tone: "lemon", sa: s.id, text: `planning · ${s.action}(${s.leads || 0})` });
+      }
+    }
+    await sleep(400);
+    if (cancelToken.cancelled) return;
+
+    // Per-SA staged playback — each transitions through statuses on its own clock.
+    const promises = sas.map(async (s, i) => {
+      if (s.blocked_reason) return;
+      const lat = Math.max(0.4, s.expected_latency_s || 2.0);
+      const startT = 0.4 + i * 0.05; // tiny stagger
+      const t1 = startT + lat * 0.2;  // tool_call
+      const t2 = startT + lat * 0.6;  // tool_await
+      const t3 = startT + lat * 0.85; // reflect
+      const t4 = startT + lat;        // shipped
+
+      // tool_call
+      await sleep((t1 - 0) * SCALE);
+      if (cancelToken.cancelled) return;
+      setSaStatus(prev => ({ ...prev, [s.id]: "tool_call" }));
+      setGantt(g => ({ ...g, [s.id]: { startPct: (startT / total_s) * 100, widthPct: ((t1 - startT) / total_s) * 100, status: "tool_call", latency: t1 - startT } }));
+      pushEvent({ ts: ts(t1), tone: "lavender", sa: s.id, text: `${s.tool} ← ${s.action}` });
+
+      // tool_await
+      await sleep((t2 - t1) * SCALE);
+      if (cancelToken.cancelled) return;
+      setSaStatus(prev => ({ ...prev, [s.id]: "tool_await" }));
+      setGantt(g => ({ ...g, [s.id]: { startPct: (startT / total_s) * 100, widthPct: ((t2 - startT) / total_s) * 100, status: "tool_await", latency: t2 - startT } }));
+
+      // reflect
+      await sleep((t3 - t2) * SCALE);
+      if (cancelToken.cancelled) return;
+      setSaStatus(prev => ({ ...prev, [s.id]: "reflect" }));
+      setGantt(g => ({ ...g, [s.id]: { startPct: (startT / total_s) * 100, widthPct: ((t3 - startT) / total_s) * 100, status: "reflect", latency: t3 - startT } }));
+      pushEvent({ ts: ts(t3), tone: "mint", sa: s.id, text: `result OK · ${(s.leads || 0)} item(s)` });
+
+      // shipped
+      await sleep((t4 - t3) * SCALE);
+      if (cancelToken.cancelled) return;
+      setSaStatus(prev => ({ ...prev, [s.id]: "shipped" }));
+      setGantt(g => ({ ...g, [s.id]: { startPct: (startT / total_s) * 100, widthPct: ((t4 - startT) / total_s) * 100, status: "shipped", latency: lat } }));
+      setFiringEdges(prev => { const n = new Set(prev); n.add(`merge-${s.id}`); return n; });
+      pushEvent({ ts: ts(t4), tone: "mint", sa: s.id, text: `→ merge` });
+    });
+
+    await Promise.all(promises);
+    if (cancelToken.cancelled) return;
+    pushEvent({ ts: ts(total_s + 0.3), tone: "mint", sa: "merge", text: `→ ${plan.merge?.target || "destination"} · shipped` });
+    await sleep(400);
+    setRunning(false);
+  }, [plan, running]);
+
+  // Approximate token usage for the spend card during run
+  const tokens_used = ag_useMemo(() => {
+    if (!running && elapsed === 0) return null;
+    const sas = plan.sub_agents || [];
+    const totalExpected = sas.reduce((a, s) => a + (s.expected_latency_s || 0), 0) || 1;
+    const ratio = Math.min(1, elapsed / Math.max(1, totalExpected));
+    return Math.round((plan.budgets?.tokens_cap || 12000) * 0.007 * sas.length * ratio);
+  }, [running, elapsed, plan]);
+
+  const selectedSa = (plan.sub_agents || []).find(s => s.id === selectedId) || null;
+
+  return (
+    <div className="auto-page sap-page">
+      <SapHeader
+        plan={plan}
+        plans={plansList}
+        onLoad={onLoad}
+        onNew={onNew}
+        onRename={onRename}
+        onSave={onSave}
+        onRun={onRun}
+        onStop={stopRun}
+        saving={saving}
+        running={running}
+        dirty={dirty}
+      />
+
+      <div className="sap-stage">
+        <div className="sap-canvas-col">
+          <SapFanoutCanvas
+            plan={plan}
+            runState={{ saStatus, firingEdges, running }}
+            selectedId={selectedId}
+            onSelect={setSelectedId}
+          />
+        </div>
+        <div className="sap-sidecar">
+          <SapConcurrency plan={plan} runState={{ gantt, saStatus, running }}/>
+          <SapSpend plan={plan} runState={{ tokens_used, elapsed_s: elapsed, running }}/>
+          <SapLiveStream events={events}/>
+        </div>
+      </div>
+
+      <SapInspector
+        sa={selectedSa}
+        plan={plan}
+        onUpdate={onUpdateSa}
+        onDelete={onDeleteSa}
+      />
+
+      <SapBudgets plan={plan} onChange={onUpdatePlan} onAddSa={onAddSa}/>
+
+      {toast && <div className="tg-toast">{toast}</div>}
+    </div>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// StateMachineScreen — observation-only readout of Rodbot's state (deck p.15)
+// ───────────────────────────────────────────────────────────────────────────
+// Zero forms. Everything is derived from CCAgentindex/_ledger/activity.jsonl
+// via /api/state/snapshot, classified server-side into 7 states. The page
+// polls every 5s; pause/resume via the obvious chip; window picker switches
+// 15m / 1h / 6h / 24h / 7d.
+//
+// Layout:
+//   [Header — title · current-state pill · window picker · pause/refresh]
+//   [State diagram (SVG) | stacked bar + active-context card]
+//   [Stack trace — last N events as a vertical timeline]
+// ═══════════════════════════════════════════════════════════════════════════
+
+const SM_STATES = [
+  { id: "idle",       label: "idle",       tone: "sage",    x: 100, y: 60 },
+  { id: "planning",   label: "planning",   tone: "lemon",   x: 320, y: 60 },
+  { id: "tool_call",  label: "tool · call", tone: "lavender", x: 540, y: 60 },
+  { id: "tool_await", label: "tool · await", tone: "sky",   x: 540, y: 180 },
+  { id: "reflect",    label: "reflect",    tone: "mint",    x: 320, y: 180 },
+  { id: "blocked",    label: "blocked",    tone: "rose",    x: 100, y: 180 },
+  { id: "shipped",    label: "return · shipped", tone: "ink", x: 320, y: 300 },
+];
+const SM_EDGES = [
+  { from: "idle",       to: "planning",   label: "trigger" },
+  { from: "planning",   to: "tool_call",  label: "need-tool" },
+  { from: "planning",   to: "planning",   label: "think",    selfLoop: true },
+  { from: "tool_call",  to: "tool_await", label: "dispatch" },
+  { from: "tool_await", to: "reflect",    label: "result" },
+  { from: "reflect",    to: "planning",   label: "re-plan",  dashed: true },
+  { from: "reflect",    to: "shipped",    label: "satisfied" },
+  { from: "planning",   to: "blocked",    label: "err / auth" },
+];
+
+const SM_WINDOW_OPTIONS = ["15m", "1h", "6h", "24h", "7d"];
+
+function smRelativeTime(iso) {
+  if (!iso) return "—";
+  try {
+    const t = new Date(iso).getTime();
+    const diff = Date.now() - t;
+    if (diff < 0) return "just now";
+    const s = Math.floor(diff / 1000);
+    if (s < 60) return `${s}s ago`;
+    const m = Math.floor(s / 60);
+    if (m < 60) return `${m}m ago`;
+    const h = Math.floor(m / 60);
+    if (h < 24) return `${h}h ago`;
+    const d = Math.floor(h / 24);
+    return `${d}d ago`;
+  } catch { return "—"; }
+}
+
+function smHHMMSS(iso) {
+  if (!iso) return "—";
+  try {
+    const d = new Date(iso);
+    return d.toLocaleTimeString("en-US", { hour12: false });
+  } catch { return "—"; }
+}
+
+// ── State diagram (SVG) ────────────────────────────────────────────────────
+function SmStateDiagram({ currentState, timeInState }) {
+  const stateById = ag_useMemo(() => {
+    const m = {};
+    for (const s of SM_STATES) m[s.id] = s;
+    return m;
+  }, []);
+
+  // Compute simple straight-line path between two state pills with edge offset.
+  const edgePath = (e) => {
+    if (e.selfLoop) {
+      const s = stateById[e.from];
+      // small loop above the node
+      const cx = s.x, cy = s.y - 28;
+      return `M ${s.x - 18} ${s.y - 18} C ${cx - 30} ${cy - 24}, ${cx + 30} ${cy - 24}, ${s.x + 18} ${s.y - 18}`;
+    }
+    const a = stateById[e.from], b = stateById[e.to];
+    const dx = b.x - a.x, dy = b.y - a.y;
+    const len = Math.sqrt(dx * dx + dy * dy) || 1;
+    // Pull endpoints inward by ~38px so the arrow doesn't enter the pill.
+    const nx = dx / len, ny = dy / len;
+    const sx = a.x + nx * 56, sy = a.y + ny * 22;
+    const tx = b.x - nx * 56, ty = b.y - ny * 22;
+    return `M ${sx} ${sy} L ${tx} ${ty}`;
+  };
+
+  // Midpoint of an edge for label placement.
+  const edgeMid = (e) => {
+    if (e.selfLoop) {
+      const s = stateById[e.from];
+      return { x: s.x, y: s.y - 56 };
+    }
+    const a = stateById[e.from], b = stateById[e.to];
+    return { x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 - 8 };
+  };
+
+  return (
+    <div className="sm-card sm-diagram">
+      <div className="sm-card-head">
+        <span className="sm-eyebrow">State machine</span>
+        <span className="sm-card-meta">live</span>
+      </div>
+      <svg viewBox="0 0 640 360" className="sm-svg" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <pattern id="sm-grid" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
+            <circle cx="1" cy="1" r="0.7" fill="var(--rule-2)" opacity="0.45"/>
+          </pattern>
+          <marker id="sm-arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+            <path d="M0,0 L8,4 L0,8 z" fill="var(--ink-3)"/>
+          </marker>
+          <marker id="sm-arrow-active" markerWidth="9" markerHeight="9" refX="7" refY="4" orient="auto">
+            <path d="M0,0 L8,4 L0,8 z" fill="var(--ink)"/>
+          </marker>
+        </defs>
+        <rect x="0" y="0" width="640" height="360" fill="url(#sm-grid)"/>
+
+        {/* Edges */}
+        {SM_EDGES.map((e, i) => {
+          const isActiveEdge = (e.from === currentState);
+          const mid = edgeMid(e);
+          return (
+            <g key={i} className="sm-edge">
+              <path
+                d={edgePath(e)}
+                fill="none"
+                stroke={isActiveEdge ? "var(--ink)" : "var(--ink-4)"}
+                strokeWidth={isActiveEdge ? 1.6 : 1}
+                strokeDasharray={e.dashed ? "5 4" : "none"}
+                markerEnd={isActiveEdge ? "url(#sm-arrow-active)" : "url(#sm-arrow)"}
+              />
+              <text
+                x={mid.x} y={mid.y}
+                textAnchor="middle"
+                fontFamily="var(--font-mono)" fontSize="10" letterSpacing="0.06em"
+                fill="var(--ink-4)"
+              >{agTruncate(e.label, 14)}</text>
+            </g>
+          );
+        })}
+
+        {/* State pills */}
+        {SM_STATES.map((s) => {
+          const isCurrent = s.id === currentState;
+          const pct = timeInState?.[s.id] ?? 0;
+          const w = 110, h = 38;
+          const isShipped = s.id === "shipped";
+          const fill = isShipped ? "var(--ink)" : `var(--pastel-${s.tone})`;
+          const ink = isShipped ? "var(--paper)" : `var(--pastel-${s.tone}-ink)`;
+          return (
+            <g key={s.id} transform={`translate(${s.x - w/2}, ${s.y - h/2})`}
+               className={"sm-state-pill" + (isCurrent ? " is-current" : "")}>
+              {isCurrent && (
+                <rect x={-6} y={-6} width={w + 12} height={h + 12} rx={22}
+                  fill="none" stroke="var(--ink)" strokeWidth="1.5"
+                  strokeDasharray="3 3" className="sm-current-ring"/>
+              )}
+              <rect x="0" y="0" width={w} height={h} rx={19}
+                fill={fill}
+                stroke={isShipped ? "var(--ink)" : ink}
+                strokeWidth="1"
+              />
+              <text x={w/2} y={h/2 + 1}
+                textAnchor="middle" dominantBaseline="middle"
+                fontFamily="var(--font-body)" fontSize="13" fontWeight="500"
+                fill={ink}>
+                {agTruncate(s.label, 14)}
+              </text>
+              {pct > 0 && (
+                <text x={w/2} y={h + 14}
+                  textAnchor="middle"
+                  fontFamily="var(--font-mono)" fontSize="10.5" letterSpacing="0.04em"
+                  fill="var(--ink-3)">{pct.toFixed(1)}%</text>
+              )}
+            </g>
+          );
+        })}
+      </svg>
+    </div>
+  );
+}
+
+// ── Time-in-state stacked bar ───────────────────────────────────────────────
+function SmTimeInState({ timeInState, eventCount, window }) {
+  const order = ["idle", "planning", "tool_call", "tool_await", "reflect", "blocked", "shipped"];
+  const segs = order.map(id => {
+    const s = SM_STATES.find(x => x.id === id);
+    return { id, tone: s?.tone || "sage", label: s?.label || id, pct: timeInState?.[id] || 0 };
+  }).filter(s => s.pct > 0);
+  return (
+    <div className="sm-card sm-tis">
+      <div className="sm-card-head">
+        <span className="sm-eyebrow">Time-in-state · {window}</span>
+        <span className="sm-card-meta">{eventCount} events</span>
+      </div>
+      <div className="sm-tis-bar">
+        {segs.map(s => (
+          <span key={s.id}
+            className={`sm-tis-seg sm-tone-${s.tone === "ink" ? "sage" : s.tone}`}
+            style={{ width: `${s.pct}%` }}
+            title={`${s.label} — ${s.pct.toFixed(1)}%`}/>
+        ))}
+        {segs.length === 0 && <span className="sm-tis-empty">no events in window</span>}
+      </div>
+      <div className="sm-tis-legend">
+        {segs.map(s => (
+          <div key={s.id} className="sm-tis-row">
+            <span className={`sm-dot sm-tone-${s.tone === "ink" ? "sage" : s.tone}`}/>
+            <span className="sm-tis-label">{s.label}</span>
+            <span className="sm-tis-pct">{s.pct.toFixed(1)}%</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// ── Active context card ────────────────────────────────────────────────────
+function SmActiveContext({ context, currentState }) {
+  const stateInfo = SM_STATES.find(s => s.id === currentState) || SM_STATES[0];
+  return (
+    <div className="sm-card sm-context">
+      <div className="sm-card-head">
+        <span className="sm-eyebrow">Active context</span>
+        <span className={`sm-pill sm-tone-${stateInfo.tone === "ink" ? "sage" : stateInfo.tone}`}>
+          {agTruncate(stateInfo.label, 18)}
+        </span>
+      </div>
+      {context ? (
+        <div className="sm-context-body">
+          <div className="sm-context-row">
+            <span className="sm-context-key">last work</span>
+            <span className="sm-context-val">{agTruncate(context.kind === "agent_plan" ? "agent plan" : context.kind, 24)}</span>
+          </div>
+          <div className="sm-context-row">
+            <span className="sm-context-key">name</span>
+            <span className="sm-context-val">{agTruncate(context.name || context.slug || "—", 36)}</span>
+          </div>
+          {context.kind === "agent_plan" && (
+            <div className="sm-context-row">
+              <span className="sm-context-key">sub-agents</span>
+              <span className="sm-context-val">{context.sub_agents ?? "—"} · v{context.version ?? 1}</span>
+            </div>
+          )}
+          {context.kind === "workflow" && (
+            <div className="sm-context-row">
+              <span className="sm-context-key">graph</span>
+              <span className="sm-context-val">{context.nodes ?? 0} nodes · {context.connections ?? 0} edges</span>
+            </div>
+          )}
+          <div className="sm-context-row">
+            <span className="sm-context-key">touched</span>
+            <span className="sm-context-val">{smRelativeTime(context.ts)}</span>
+          </div>
+        </div>
+      ) : (
+        <div className="sm-context-empty">No recent plan or workflow activity in this window.</div>
+      )}
+    </div>
+  );
+}
+
+// ── Stack trace (recent events timeline) ───────────────────────────────────
+function SmStackTrace({ events }) {
+  const tail = (events || []).slice(-12).reverse(); // newest first
+  return (
+    <div className="sm-card sm-trace">
+      <div className="sm-card-head">
+        <span className="sm-eyebrow">Stack trace</span>
+        <span className="sm-card-meta">last {tail.length}</span>
+      </div>
+      <div className="sm-trace-list">
+        {tail.length === 0 && (
+          <div className="sm-context-empty">No events yet — Rodbot is quiet.</div>
+        )}
+        {tail.map((ev, i) => {
+          const stateInfo = SM_STATES.find(s => s.id === ev.state) || SM_STATES[0];
+          const tone = stateInfo.tone === "ink" ? "sage" : stateInfo.tone;
+          return (
+            <div key={i} className="sm-trace-row">
+              <span className="sm-trace-ts">{smHHMMSS(ev.ts)}</span>
+              <span className={`sm-dot sm-tone-${tone}`}/>
+              <span className="sm-trace-state">{ev.state}</span>
+              <span className="sm-trace-kind">{agTruncate(ev.kind || "—", 28)}</span>
+              <span className="sm-trace-slug">{agTruncate(ev.slug || "", 30)}</span>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+// ── Page component ─────────────────────────────────────────────────────────
+function StateMachineScreen({ go }) {
+  const [windowKey, setWindowKey] = ag_useState("24h");
+  const [snapshot, setSnapshot] = ag_useState(null);
+  const [paused, setPaused] = ag_useState(false);
+  const [loading, setLoading] = ag_useState(false);
+  const [lastFetched, setLastFetched] = ag_useState(null);
+
+  const refresh = ag_useCallback(async () => {
+    setLoading(true);
+    try {
+      const r = await fetch(`/api/state/snapshot?window=${encodeURIComponent(windowKey)}`);
+      const j = await r.json();
+      if (j?.ok) {
+        setSnapshot(j);
+        setLastFetched(new Date().toISOString());
+      }
+    } catch {} finally { setLoading(false); }
+  }, [windowKey]);
+
+  // Initial fetch + window change.
+  ag_useEffect(() => { refresh(); }, [refresh]);
+
+  // Polling — every 5s when not paused.
+  ag_useEffect(() => {
+    if (paused) return;
+    const id = setInterval(refresh, 5000);
+    return () => clearInterval(id);
+  }, [refresh, paused]);
+
+  const currentState = snapshot?.current_state || "idle";
+
+  return (
+    <div className="auto-page sm-page">
+      <div className="sm-header">
+        <div className="sm-header-left">
+          <div className="sm-eyebrow">15 · agents</div>
+          <h1 className="sm-title">Agent state machine. <em>Idle → planning → tool → return.</em></h1>
+          <p className="sm-sub">A live readout of where Rodbot is right now, derived from the activity ledger. Nothing to fill in — the system tells you what it's doing.</p>
+        </div>
+        <div className="sm-header-right">
+          <div className="sm-window-picker">
+            {SM_WINDOW_OPTIONS.map(w => (
+              <button key={w}
+                className={"sm-window-chip" + (w === windowKey ? " is-active" : "")}
+                onClick={() => setWindowKey(w)}>{w}</button>
+            ))}
+          </div>
+          <button
+            className={"sm-pause-btn" + (paused ? " is-paused" : "")}
+            onClick={() => setPaused(p => !p)}
+            title={paused ? "Resume polling" : "Pause polling"}>
+            {paused ? "▶ resume" : "‖ pause"}
+          </button>
+          <button
+            className="sm-refresh-btn"
+            onClick={refresh}
+            disabled={loading}
+            title="Refresh now">
+            {loading ? "…" : "↻"}
+          </button>
+        </div>
+      </div>
+
+      <div className="sm-stage">
+        <div className="sm-stage-left">
+          <SmStateDiagram
+            currentState={currentState}
+            timeInState={snapshot?.time_in_state}
+          />
+        </div>
+        <div className="sm-stage-right">
+          <SmTimeInState
+            timeInState={snapshot?.time_in_state}
+            eventCount={snapshot?.event_count || 0}
+            window={windowKey}
+          />
+          <SmActiveContext
+            context={snapshot?.active_context}
+            currentState={currentState}
+          />
+        </div>
+      </div>
+
+      <SmStackTrace events={snapshot?.recent_events}/>
+
+      <div className="sm-footnote">
+        {lastFetched ? (
+          <>last sync · {smRelativeTime(lastFetched)} · /api/state/snapshot?window={windowKey}</>
+        ) : (
+          <>polling…</>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// HooksScreen — Pre · post · on · cron timeline (deck p.16)
+// ───────────────────────────────────────────────────────────────────────────
+// Three regions: a request timeline (latest matching event, hook flow as
+// horizontal SVG checkpoints), a configured hooks list (code-defined, with
+// on/pause toggles persisted to CCAgentindex/hooks/state.json), and a
+// performance table (declared p50/p95 + real error counts from the ledger).
+// Polls /api/hooks/snapshot every 6s. Zero forms — toggles only.
+// ═══════════════════════════════════════════════════════════════════════════
+
+const HK_STAGE_TONES = {
+  "pre":        "mint",
+  "run":        "ink",
+  "post":       "sky",
+  "on-blocked": "rose",
+  "on-draft":   "lavender",
+  "cron":       "lemon",
+};
+const HK_WINDOW_OPTIONS = ["1h", "6h", "24h", "7d"];
+
+// ── Header ────────────────────────────────────────────────────────────────
+function HkHeader({ window, onWindow, onRefresh, onPause, paused, loading, requestPreview }) {
+  return (
+    <div className="hk-header">
+      <div className="hk-header-left">
+        <div className="hk-eyebrow">16 · agents</div>
+        <h1 className="hk-title">Hook timeline. <em>Pre · post · on · cron.</em></h1>
+        <p className="hk-sub">A request flows through hooks like rooms in a house — each can read, decorate, or stop it. Toggle any hook off; the system keeps a clean trace either way.</p>
+      </div>
+      <div className="hk-header-right">
+        {requestPreview && (
+          <div className="hk-latest">
+            <span className="hk-latest-eyebrow">latest request</span>
+            <span className="hk-latest-kind">{agTruncate(requestPreview.kind || "—", 22)}</span>
+            <span className="hk-latest-clock">{requestPreview.clock || ""}</span>
+          </div>
+        )}
+        <div className="hk-window-picker">
+          {HK_WINDOW_OPTIONS.map(w => (
+            <button key={w}
+              className={"hk-window-chip" + (w === window ? " is-active" : "")}
+              onClick={() => onWindow(w)}>{w}</button>
+          ))}
+        </div>
+        <button
+          className={"hk-pause-btn" + (paused ? " is-paused" : "")}
+          onClick={onPause}
+          title={paused ? "Resume polling" : "Pause polling"}>
+          {paused ? "▶ resume" : "‖ pause"}
+        </button>
+        <button className="hk-refresh-btn" onClick={onRefresh} disabled={loading} title="Refresh now">
+          {loading ? "…" : "↻"}
+        </button>
+      </div>
+    </div>
+  );
+}
+
+// ── Request timeline (SVG, faithful to deck p.16) ────────────────────────
+function HkRequestTimeline({ preview }) {
+  if (!preview || !preview.steps || preview.steps.length === 0) {
+    return (
+      <div className="hk-card hk-tl">
+        <div className="hk-card-head">
+          <span className="hk-eyebrow">Request · timeline</span>
+        </div>
+        <div className="hk-empty">No recent request in the window. Pick a longer window or wait for activity.</div>
+      </div>
+    );
+  }
+  const steps = preview.steps;
+  const total = Math.max(preview.total_ms || 1, 1);
+  const VW = 940, VH = 200, padX = 36, lineY = 86;
+  // Map each step's offset → x (linear). Pad ends.
+  const x = (ms) => padX + ((VW - padX * 2) * (ms / total));
+
+  return (
+    <div className="hk-card hk-tl">
+      <div className="hk-card-head">
+        <span className="hk-eyebrow">Request · {agTruncate(preview.kind || "—", 24)} · {preview.clock || ""}</span>
+        <span className="hk-card-meta">{preview.total_ms}ms total · {steps.length} hooks</span>
+      </div>
+      <svg viewBox={`0 0 ${VW} ${VH}`} className="hk-tl-svg" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">
+        {/* Horizontal main line */}
+        <line x1={padX} y1={lineY} x2={VW - padX} y2={lineY} stroke="var(--ink-3)" strokeWidth="1"/>
+        {/* Tick marks at 0 and total */}
+        <text x={padX} y={lineY + 38} fontFamily="var(--font-mono)" fontSize="10" fill="var(--ink-4)" letterSpacing="0.06em">+0ms</text>
+        <text x={VW - padX} y={lineY + 38} textAnchor="end" fontFamily="var(--font-mono)" fontSize="10" fill="var(--ink-4)" letterSpacing="0.06em">+{preview.total_ms}ms</text>
+
+        {/* Checkpoints */}
+        {steps.map((s, i) => {
+          const cx = x(s.offset_ms);
+          const tone = HK_STAGE_TONES[s.stage] || "sage";
+          const isRun = s.stage === "run";
+          const isBlocked = s.blocked;
+          const fill = isRun ? "var(--ink)"
+            : isBlocked ? "var(--pastel-rose)"
+            : "var(--paper-card)";
+          const stroke = isRun ? "var(--ink)"
+            : isBlocked ? "var(--pastel-rose-ink)"
+            : "var(--ink-3)";
+          // Stagger labels above and below the line so they don't collide.
+          const labelAbove = i % 2 === 0;
+          const stagePillY = labelAbove ? lineY - 56 : lineY + 18;
+          const labelY = labelAbove ? lineY - 20 : lineY + 56;
+          const offsetTextY = labelAbove ? lineY - 76 : lineY + 78;
+          return (
+            <g key={s.id}>
+              {/* Vertical tick from the dot to its stage pill */}
+              <line x1={cx} y1={lineY} x2={cx} y2={stagePillY + (labelAbove ? 18 : 0)} stroke="var(--ink-4)" strokeWidth="0.7" strokeDasharray="2 3"/>
+              {/* Offset label */}
+              <text x={cx} y={offsetTextY} textAnchor="middle"
+                fontFamily="var(--font-mono)" fontSize="10" fill="var(--ink-4)" letterSpacing="0.06em">
+                +{s.offset_ms}ms
+              </text>
+              {/* Stage pill */}
+              <g transform={`translate(${cx - 32}, ${stagePillY})`}>
+                <rect x="0" y="0" width="64" height="18" rx="9"
+                  fill={`var(--pastel-${tone === "ink" ? "sage" : tone})`}
+                  stroke={isRun ? "var(--ink)" : "transparent"}
+                  strokeWidth="1"/>
+                <text x="32" y="13" textAnchor="middle"
+                  fontFamily="var(--font-mono)" fontSize="9" letterSpacing="0.1em"
+                  fill={isRun ? "var(--paper)" : `var(--pastel-${tone === "ink" ? "sage" : tone}-ink)`}
+                  textTransform="uppercase">
+                  {agTruncate(s.stage.toUpperCase(), 10)}
+                </text>
+              </g>
+              {/* Hook label */}
+              <text x={cx} y={labelY} textAnchor="middle"
+                fontFamily="var(--font-body)" fontSize="11.5" fontWeight="500"
+                fill={isBlocked ? "var(--pastel-rose-ink)" : "var(--ink-2)"}>
+                {agTruncate(s.label, 18)}
+                <title>{s.label} · {s.stage} · +{s.offset_ms}ms (declared {s.duration_ms}ms)</title>
+              </text>
+              {/* Dot on the timeline */}
+              <circle cx={cx} cy={lineY} r="6"
+                fill={fill}
+                stroke={stroke}
+                strokeWidth={isRun ? 2 : 1.2}/>
+            </g>
+          );
+        })}
+      </svg>
+    </div>
+  );
+}
+
+// ── Configured hooks list (toggleable rows) ──────────────────────────────
+function HkConfiguredList({ hooks, onToggle }) {
+  if (!hooks || hooks.length === 0) return null;
+  // Group by stage for readable grouping in the rows.
+  return (
+    <div className="hk-card hk-config">
+      <div className="hk-card-head">
+        <span className="hk-eyebrow">Configured hooks</span>
+        <span className="hk-card-meta">{hooks.filter(h => h.enabled).length} on · {hooks.filter(h => !h.enabled).length} paused</span>
+      </div>
+      <div className="hk-config-rows">
+        {hooks.map(h => {
+          const tone = HK_STAGE_TONES[h.stage] || "sage";
+          return (
+            <div key={h.id} className={"hk-config-row" + (h.enabled ? "" : " is-paused")}>
+              <span className={`hk-stage-pill hk-tone-${tone === "ink" ? "sage" : tone}`}>
+                {h.stage.toUpperCase()}
+              </span>
+              <div className="hk-config-meta">
+                <span className="hk-config-name">{agTruncate(h.label, 26)}</span>
+                <span className="hk-config-desc">{agTruncate(h.description, 60)}</span>
+              </div>
+              <span className={"hk-state-badge " + (h.enabled ? "on" : "off")}>
+                {h.enabled ? "ON" : "PAUSED"}
+              </span>
+              <button
+                className="hk-toggle-switch"
+                onClick={() => onToggle(h.id)}
+                aria-pressed={h.enabled}
+                title={h.enabled ? "Pause this hook" : "Resume this hook"}
+              >
+                <span className={"hk-toggle-thumb" + (h.enabled ? " on" : "")}/>
+              </button>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+// ── Performance table (declared p50/p95 + real error counts) ─────────────
+function HkPerfTable({ hooks }) {
+  if (!hooks || hooks.length === 0) return null;
+  // Sort: errors desc, then p95 desc — surfaces the painful hooks first.
+  const sorted = [...hooks].sort((a, b) => {
+    if ((b.errors || 0) !== (a.errors || 0)) return (b.errors || 0) - (a.errors || 0);
+    return (b.expected_p95_ms || 0) - (a.expected_p95_ms || 0);
+  });
+  return (
+    <div className="hk-card hk-perf">
+      <div className="hk-card-head">
+        <span className="hk-eyebrow">Hook performance</span>
+        <span className="hk-card-meta">declared p50 / p95 · live err count</span>
+      </div>
+      <div className="hk-perf-table">
+        <div className="hk-perf-row hk-perf-head-row">
+          <span>HOOK</span>
+          <span className="hk-perf-num">P50</span>
+          <span className="hk-perf-num">P95</span>
+          <span className="hk-perf-num">FIRES</span>
+          <span className="hk-perf-num">ERR</span>
+          <span>TREND</span>
+        </div>
+        {sorted.map(h => {
+          const isPaused = !h.enabled;
+          const isHot = (h.errors || 0) > 0 || (h.expected_p95_ms || 0) > 200;
+          return (
+            <div key={h.id} className={"hk-perf-row" + (isPaused ? " is-paused" : "")}>
+              <span className="hk-perf-name">
+                <span className={`hk-perf-dot hk-tone-${(HK_STAGE_TONES[h.stage] === "ink" ? "sage" : HK_STAGE_TONES[h.stage]) || "sage"}`}/>
+                {agTruncate(h.label, 24)}
+              </span>
+              <span className="hk-perf-num">{isPaused ? "—" : `${h.expected_p50_ms}ms`}</span>
+              <span className="hk-perf-num">{isPaused ? "—" : `${h.expected_p95_ms}ms`}</span>
+              <span className="hk-perf-num">{isPaused ? "—" : (h.fires || 0).toLocaleString()}</span>
+              <span className={"hk-perf-num" + ((h.errors || 0) > 0 ? " is-err" : "")}>{isPaused ? "—" : (h.errors || 0)}</span>
+              <span className="hk-perf-trend">
+                {isPaused ? <span className="hk-perf-paused">paused</span>
+                  : <HkSparkline isHot={isHot} fires={h.fires || 0} errors={h.errors || 0}/>
+                }
+              </span>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+// ── Tiny inline sparkline — synthetic visual, declared shape ───────────
+// We don't have real time-series for hooks yet; this uses a deterministic
+// pseudo-random walk seeded by the hook's id length so each row gets a
+// stable distinctive shape.
+function HkSparkline({ isHot, fires, errors }) {
+  const W = 88, H = 18, N = 12;
+  const seed = (fires + errors * 7) % 23 + 1;
+  let v = seed % 5;
+  const points = [];
+  for (let i = 0; i < N; i++) {
+    v = (v + ((seed * (i + 3)) % 7) - 3) % 8;
+    if (v < 0) v += 8;
+    const y = 4 + (8 - v) * 1.2;
+    const x = (i / (N - 1)) * (W - 4) + 2;
+    points.push(`${x.toFixed(1)},${y.toFixed(1)}`);
+  }
+  return (
+    <svg viewBox={`0 0 ${W} ${H}`} className="hk-spark" preserveAspectRatio="none">
+      <polyline
+        points={points.join(" ")}
+        fill="none"
+        stroke={isHot ? "var(--pastel-rose-ink)" : "var(--pastel-mint-ink)"}
+        strokeWidth="1.2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        opacity={isHot ? 0.85 : 0.7}
+      />
+    </svg>
+  );
+}
+
+// ── Page component ─────────────────────────────────────────────────────────
+function HooksScreen({ go }) {
+  const [windowKey, setWindowKey] = ag_useState("24h");
+  const [snapshot, setSnapshot] = ag_useState(null);
+  const [paused, setPaused] = ag_useState(false);
+  const [loading, setLoading] = ag_useState(false);
+  const [toast, setToast] = ag_useState(null);
+  const showToast = (m) => { setToast(m); setTimeout(() => setToast(null), 1800); };
+
+  const refresh = ag_useCallback(async () => {
+    setLoading(true);
+    try {
+      const r = await fetch(`/api/hooks/snapshot?window=${encodeURIComponent(windowKey)}`);
+      const j = await r.json();
+      if (j?.ok) setSnapshot(j);
+    } catch {} finally { setLoading(false); }
+  }, [windowKey]);
+
+  ag_useEffect(() => { refresh(); }, [refresh]);
+
+  ag_useEffect(() => {
+    if (paused) return;
+    const id = setInterval(refresh, 6000);
+    return () => clearInterval(id);
+  }, [refresh, paused]);
+
+  const onToggle = ag_useCallback(async (id) => {
+    try {
+      const r = await fetch("/api/hooks/toggle", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id }),
+      });
+      const j = await r.json();
+      if (j?.ok) {
+        showToast(`${id} · ${j.enabled ? "on" : "paused"}`);
+        await refresh();
+      } else {
+        showToast(`toggle failed · ${j?.error || ""}`);
+      }
+    } catch (e) {
+      showToast(`toggle failed · ${e.message || e}`);
+    }
+  }, [refresh]);
+
+  return (
+    <div className="auto-page hk-page">
+      <HkHeader
+        window={windowKey}
+        onWindow={setWindowKey}
+        onRefresh={refresh}
+        onPause={() => setPaused(p => !p)}
+        paused={paused}
+        loading={loading}
+        requestPreview={snapshot?.request_preview}
+      />
+
+      <HkRequestTimeline preview={snapshot?.request_preview}/>
+
+      <div className="hk-grid">
+        <HkConfiguredList hooks={snapshot?.hooks} onToggle={onToggle}/>
+        <HkPerfTable hooks={snapshot?.hooks}/>
+      </div>
+
+      {toast && <div className="tg-toast">{toast}</div>}
+    </div>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
 // Exports
 // ═══════════════════════════════════════════════════════════════════════════
 Object.assign(window, {
   AutomationGraphScreen,
+  AutomationShell,
+  TriggersScreen,
+  SubAgentPlannerScreen,
+  StateMachineScreen,
+  HooksScreen,
+  ComingSoonScreen,
   NODE_DIMS,
   LIBRARY,
   KIND_TABLE,

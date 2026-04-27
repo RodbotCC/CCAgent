@@ -1,0 +1,30 @@
+{
+  "id": "stone_garden",
+  "kind": "venue",
+  "name": "Stone Garden",
+  "city": null,
+  "venue_type": null,
+  "website": "http://www.stonegardenweddings.com",
+  "tier": "tier_3",
+  "deal_stats": {
+    "opp_count": 7,
+    "total_value": 14275.45,
+    "avg_deal_value": 2039.35,
+    "lead_name_refs": 6
+  },
+  "close_account": {
+    "has_lead": true,
+    "lead_status": "🟢 Probably",
+    "lead_url": "https://app.close.com/lead/lead_uc2XQjtJFO4I9P0dMfTwVNnWH0johljtq1NTQvmcWmJ/"
+  },
+  "raw_variants": [
+    "Stone Garden"
+  ],
+  "action": "✅ Profiled & active — keep relationship warm",
+  "notes": [
+    "Jensen & Benjamin's Wedding June 28, 2025. Worked together — invited to tasting.",
+    "7 opportunities totaling $14,275.45 — rank #23 by deal value.",
+    "Has Close lead account (status: 🟢 Probably).",
+    "6 leads have referenced this as their venue choice."
+  ]
+}

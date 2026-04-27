@@ -1,0 +1,91 @@
+{
+  "id": "danielle_paulson",
+  "kind": "lead",
+  "name": "Danielle Paulson",
+  "role": "Friend's Birthday · Mid-July 2026 · ~50 guests · Swim Elite mansion, Haverhill MA",
+  "relationship_tier": "tasting_scheduled",
+  "relationship_weight": 0.88,
+  "contacts": {
+    "email": "daniellecosky@gmail.com",
+    "phone": "+1-719-310-8220",
+    "whatsapp": null,
+    "slack_id": null,
+    "slack_channel": null,
+    "clickup_user_id": null,
+    "other": "Danielle.Cosky@email.com (work alt)"
+  },
+  "handling": {
+    "preferred_channel": "SMS",
+    "response_latency_target": "same-day",
+    "tone": "Text-only by explicit request. Premium venue, Vinwood Tim referral, hosting for friend = host vulnerability. Frame as 'we make YOU look like the smart host who picked the right team.'",
+    "voice_adjustments": "Andre voice: warm, brief, text-first. Reference Tim/Vinwood referral once warmly without name-dropping awkwardly. Over-deliver on responsiveness; under-promise on the food.",
+    "context": "Inbound Apr 21. Tasting BOOKED for May 17 at 2 PM. Recommended by Tim at Vinwood Catering. Hosting friend's birthday at rented Swim Elite mansion. Foodie 'guncles' coming. Skipping pro bartender (BYOB), bar setup still desired. Kids run interference (her note: 'my daughter steals my phone all the time').",
+    "off_limits_topics": null
+  },
+  "context_anchors": [
+    "Tasting BOOKED — Sunday May 17, 2:00 PM Fitchburg",
+    "Tim @ Vinwood Catering referral (industry-adjacent context)",
+    "Swim Elite-rented '~$1M mansion' backyard, outdoor kitchen + pool",
+    "70 invited / ~50 expected eating",
+    "Mid-July 2026, hosting for friend's birthday",
+    "Text-only — explicitly requested",
+    "719 Colorado Springs area code on Haverhill resident — recent transplant"
+  ],
+  "lead": {
+    "status": "tasting_scheduled",
+    "stage": "tasting_booked_quote_in_motion",
+    "owner": "andre_raw",
+    "source": "comeketocatering.com (FB Lead Form + Free Tasting Opt-In)",
+    "event_type": "Birthday (friend's)",
+    "event_date": "2026-07-15",
+    "guest_count": 50,
+    "venue": "Swim Elite mansion, Haverhill MA",
+    "city": "Haverhill, MA",
+    "quote_value": null,
+    "opportunity_value": 1213,
+    "score_tags": ["tasting_booked", "vinwood_referral", "premium_venue", "text_preferred"],
+    "last_activity": "2026-04-23 — discovery call 16 min, tasting locked",
+    "speed_urgency": "medium",
+    "next_move": "Pre-tasting check-in: dietary needs in friend group + anything specific to cover at tasting"
+  },
+  "enrichment": {
+    "confidence": 0.88,
+    "identity_notes": "719 (Colorado Springs) area code on Haverhill resident = recent move from Colorado. Surname 'Cosky' in email vs 'Paulson' last name = maiden vs married. Don't ask which; let her volunteer. Industry-adjacent (Tim/Vinwood). Knows what good catering looks like. Premium budget signaled by Swim Elite venue choice.",
+    "win_angles": [
+      "Tim/Vinwood referral as warm credibility — reference once",
+      "Bar + finger foods + full-service trifecta = 'hosted, not catered' framing",
+      "Premium venue = Insta-grade visuals; talk feel of night not food list",
+      "Birthday for friend = host vulnerability, take risk off her plate",
+      "Text-preferred — she told us, honor it"
+    ],
+    "nepq_openers": [
+      "Pre-tasting: 'Hey Danielle — May 17 is locked. Quick question before then: any dietary needs in the friend group, or anything specific you want to cover during the tasting?'",
+      "Frame: 'Since you're hosting for someone else, what's the part of the night you're most nervous about getting wrong on her behalf?'",
+      "Identity: 'Tim mentioned you're in good hands — what made you trust him on the recommendation?'",
+      "Anchor (text): 'Mansion + 50 eating + bar + finger foods + full service = $X-Y range depending on bar setup. Tight version with two options?'"
+    ],
+    "open_gaps": [
+      "Whose birthday / friend's name (humanize)",
+      "Specific exact event date (currently 'mid-July')",
+      "Guest dietary restrictions",
+      "Bar style preference (open vs cash, signature cocktail, beer/wine)",
+      "Service approach (passed apps vs stations)",
+      "Music/vibe direction",
+      "Final venue address and Swim Elite house rules"
+    ],
+    "strategic_note": "Warmest of the warm. Came through paid + organic, opted into tasting on her own, accepted quote, prefers text, hosting luxury-venue event for friend who recommended us. Strategic frame: 'make her feel like the smart host who picked the right team.' Over-deliver on responsiveness, under-promise on food, let May 17 do the closing work."
+  },
+  "comms": [
+    {"ts": "2026-04-21T10:00:00Z", "channel": "form", "direction": "in", "summary": "FB Lead Form + Free Tasting Opt-In — anytime after 1:30"},
+    {"ts": "2026-04-22T10:00:00Z", "channel": "sms", "direction": "in", "summary": "'I can speak through text if that ok' — text preference confirmed"},
+    {"ts": "2026-04-22T11:00:00Z", "channel": "email", "direction": "out", "summary": "Ballpark quote + tasting options for 50 guests"},
+    {"ts": "2026-04-22T14:00:00Z", "channel": "sms", "direction": "in", "summary": "Asked about full service incl. bartending and servers"},
+    {"ts": "2026-04-23T14:00:00Z", "channel": "call", "direction": "out", "summary": "16-min discovery — venue, menu, tasting locked May 17"},
+    {"ts": "2026-04-23T15:00:00Z", "channel": "sms", "direction": "out", "summary": "Tasting invite May 17 + registration link"}
+  ],
+  "notes": [
+    "Tasting booked = closer's golden ticket, don't fumble May 17",
+    "Text-only — never push to phone",
+    "Pre-tasting dietary capture before May 17"
+  ]
+}

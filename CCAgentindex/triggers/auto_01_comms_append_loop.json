@@ -1,0 +1,15 @@
+{
+  "schema": "comeketo.trigger.v1",
+  "slug": "auto_01_comms_append_loop",
+  "kind": "webhook",
+  "label": "AUTO.01 · Close comms append loop",
+  "enabled": false,
+  "tone": "blush",
+  "notes": "Off — wired but not connected to live Close webhooks yet. Will append new activity to per-lead 01_comms.md and set comms_dirty=true.",
+  "created_at": "2026-04-27T00:00:00+00:00",
+  "last_modified": "2026-04-27T00:00:00+00:00",
+  "endpoint": "/hook/close/comms",
+  "service": "close",
+  "auth": "signature",
+  "workflow_slug": null
+}

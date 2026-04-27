@@ -152,7 +152,43 @@ window.SecretaryChat = (() => {
     // Refresh cached reference after append.
     chat = get(chatId);
 
-    // Build messages array for the provider.
+    // ── Optional prompt enhancement (Settings → Chat intelligence) ─────
+    // When enabled, fire gpt-5.4-mini /api/chat/preprocess in PARALLEL with
+    // attaching the user's bubble. The mini model does two things:
+    //   (1) returns enhanced_prompt — a clearer Claude prompt
+    //   (2) returns thinking_trace[] — contextual flavor steps the UI
+    //       animates while Claude works
+    // The enhanced prompt swaps in for the LAST user message before we
+    // dispatch to the provider. The user still sees their original message
+    // in the chat (we don't rewrite the displayed turn). The thinking
+    // trace is broadcast on a window event for ChatScreen to render.
+    let promptEnhance = false;
+    try {
+      const t = JSON.parse(localStorage.getItem("secretary.tweaks") || "{}");
+      promptEnhance = !!t.promptEnhance;
+    } catch {}
+
+    const userTextForPreprocess = (text && text.trim()) || "";
+    const preprocessPromise = (promptEnhance && userTextForPreprocess && window.fetch)
+      ? Promise.race([
+          fetch("/api/chat/preprocess", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              message: userTextForPreprocess,
+              attachments: (attachments || []).map(a => ({
+                original_filename: a.original_filename || a.filename || null,
+                mime: a.mime || null,
+                size: a.size || 0,
+              })),
+            }),
+          }).then(r => r.json()).catch(() => null),
+          new Promise(resolve => setTimeout(() => resolve(null), 8000)),
+        ])
+      : Promise.resolve(null);
+
+    // Build messages array for the provider. (May get rewritten below
+    // once preprocess returns with an enhanced prompt.)
     const messages = chat.turns.map(t => ({ role: t.role, content: t.content }));
 
     // Build Rodbot's system prompt unless the caller forced one.
@@ -166,6 +202,42 @@ window.SecretaryChat = (() => {
       } catch (e) {
         console.warn("[chat] failed to build Rodbot prompt:", e.message);
       }
+    }
+
+    // ── Wait for preprocess (if enabled) and apply rewrite ────────────
+    // This happens BEFORE the chat dispatch so Claude gets the enhanced
+    // prompt. Preprocess is parallel with bubble append + Pieces grounding,
+    // so the user perceives no extra wait beyond Claude's own latency.
+    let enhancedModel = null;
+    if (promptEnhance) {
+      try {
+        const pp = await preprocessPromise;
+        if (pp && pp.ok && pp.enhanced_prompt) {
+          // Replace the LAST user message's text content with the enhanced
+          // version. Image parts are preserved. Other roles untouched.
+          const lastIdx = messages.length - 1;
+          if (lastIdx >= 0 && messages[lastIdx].role === "user") {
+            const c = messages[lastIdx].content;
+            if (typeof c === "string") {
+              messages[lastIdx] = { ...messages[lastIdx], content: pp.enhanced_prompt };
+            } else if (Array.isArray(c)) {
+              messages[lastIdx] = {
+                ...messages[lastIdx],
+                content: c.map(p => p && p.type === "text" ? { ...p, text: pp.enhanced_prompt } : p),
+              };
+            }
+            enhancedModel = pp.model || "gpt-5.4-mini";
+          }
+          // Broadcast the trace so the UI can animate it while Claude works.
+          if (Array.isArray(pp.thinking_trace) && pp.thinking_trace.length) {
+            try {
+              window.dispatchEvent(new CustomEvent("comeketoagent:thinking-trace", {
+                detail: { chatId, trace: pp.thinking_trace, model: pp.model || "gpt-5.4-mini" },
+              }));
+            } catch {}
+          }
+        }
+      } catch {}
     }
 
     // ── Pieces grounding ───────────────────────────────────────────────

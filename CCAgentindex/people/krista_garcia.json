@@ -1,0 +1,89 @@
+{
+  "id": "krista_garcia",
+  "kind": "lead",
+  "name": "Krista Garcia",
+  "role": "Husband's Brazilian 40th Birthday · Aug 15, 2026 · 75 guests · Pelham NH backyard",
+  "relationship_tier": "active_quote",
+  "relationship_weight": 0.85,
+  "contacts": {
+    "email": "kzane20@yahoo.com",
+    "phone": "+1-978-257-2100",
+    "whatsapp": null,
+    "slack_id": null,
+    "slack_channel": null,
+    "clickup_user_id": null,
+    "other": null
+  },
+  "handling": {
+    "preferred_channel": "Phone",
+    "response_latency_target": "within-week",
+    "tone": "Polite-delay comparison-shopping. She said 'I will reach out when I am ready.' Honor that. Patience over pressure. Authenticity differentiation is the win.",
+    "voice_adjustments": "Andre voice: respectful, peer, references specific call details (Supreme Churrasco, picanha, chicken hearts confirmed off-menu). Husband-Brazilian emotional anchor.",
+    "context": "Quote sent $2,433.78 — Supreme Churrasco + Self-Serve Attended Buffet (food + bar) for 75 guests. Discovery call Apr 15 was 21 min, very productive. Husband Brazilian — full churrasco experience is the cultural anchor. Apr 24 polite-delay reply: 'still obtaining quotes.' Apr 24 tasting pivot offered (May 3).",
+    "off_limits_topics": null
+  },
+  "context_anchors": [
+    "Husband's Brazilian 40th — cultural celebration, churrasco core",
+    "Pelham NH 03076, just over MA-NH border, 30 mi from us",
+    "Backyard with pool, no outside sink, hose for water",
+    "Quote $2,433.78 / 75 guests / Supreme Churrasco + bar = $32/pp",
+    "21-min discovery call Apr 15 established trust",
+    "Apr 24 polite-delay 'still obtaining quotes' — patience window"
+  ],
+  "lead": {
+    "status": "active_quote",
+    "stage": "quote_sent_post_discovery_call_polite_delay",
+    "owner": "andre_raw",
+    "source": "Google → comeketocatering.com",
+    "event_type": "Birthday (Husband's 40th, Brazilian)",
+    "event_date": "2026-08-15",
+    "guest_count": 75,
+    "venue": "Backyard, Pelham NH",
+    "city": "Pelham, NH",
+    "quote_value": 2434,
+    "opportunity_value": 1985,
+    "score_tags": ["quote_sent_75pct", "high_intent_web", "brazilian_husband", "polite_delay"],
+    "last_activity": "2026-04-24 — Krista replied 'still obtaining quotes' + Andre offered May 3 tasting",
+    "speed_urgency": "medium",
+    "next_move": "One thoughtful re-engagement reframing comparison correctly + tasting May 3 pitch"
+  },
+  "enrichment": {
+    "confidence": 0.85,
+    "identity_notes": "Surname Garcia is Hispanic, but husband is BRAZILIAN per discovery call. Either Krista is Hispanic married to Brazilian, or surname from marriage. 978 area code suggests pre-NH MA roots. Backyard pool, no outside sink — André captured logistics specs.",
+    "win_angles": [
+      "Husband's Brazilian heritage = our home court, lean hard on authenticity",
+      "21-min discovery call established trust — reference specific things she said",
+      "Quote SHARP at $2,433 ($32/pp) for 75 with churrasco + bar",
+      "Husband-focused emotional anchor — make HIS 40th feel like home",
+      "Polite-delay = patience window, don't push hard"
+    ],
+    "nepq_openers": [
+      "Continuation: 'Hey Krista — saw your note about weighing options. Totally fair. One thing while you compare: $2,433.78 is full churrasco service with team grilling live + bar setup + attended buffet — all-in, no setup fees. Cheaper quotes = ask what's included so you compare apples-to-apples.'",
+      "Frame: 'For your husband's 40th, what matters more in comparison — total price, what feels most authentic, or which caterer you trust most to actually pull it off?'",
+      "Anchor: 'If $2,433 is over target, easiest trim is dropping bar to beer/wine only — saves $X. Or attendant-only without churrasqueiro grilling — saves $Y. But live grilling makes it feel Brazilian.'"
+    ],
+    "open_gaps": [
+      "Husband's name (humanize the convo)",
+      "How many other quotes she's collecting",
+      "Guest list culturally — Brazilian heavy, Hispanic mix, American friends?",
+      "Bar package preference (alcoholic / kids)",
+      "Final guest count locked",
+      "Whether she'd come to May 17 tasting"
+    ],
+    "strategic_note": "Lives or dies on AUTHENTICITY differentiation. Other caterers will quote churrasco lower because they're approximating it. Comeketo IS what Krista's husband and family are looking for. One sharp message respecting her process, reframing comparison correctly, reminding her of discovery-call warmth. Then patience. 75% close confidence with quote out — 'don't fumble it' deal."
+  },
+  "comms": [
+    {"ts": "2026-04-15T10:00:00Z", "channel": "sms", "direction": "in", "summary": "'anytime before 3pm-' — call window given"},
+    {"ts": "2026-04-15T11:00:00Z", "channel": "call", "direction": "out", "summary": "21-min discovery — full event vision, Supreme Churrasco menu locked"},
+    {"ts": "2026-04-15T13:00:00Z", "channel": "email", "direction": "out", "summary": "Quote sent: $2,433.78 food + bar, Loom walkthrough"},
+    {"ts": "2026-04-17T11:00:00Z", "channel": "sms", "direction": "out", "summary": "Quote follow-up — 'what did you think?'"},
+    {"ts": "2026-04-23T11:00:00Z", "channel": "sms", "direction": "out", "summary": "Re-engagement: call vs tasting"},
+    {"ts": "2026-04-24T10:00:00Z", "channel": "sms", "direction": "in", "summary": "'Still obtaining quotes and weighing options. Will reach out.'"},
+    {"ts": "2026-04-24T11:00:00Z", "channel": "sms", "direction": "out", "summary": "May 3 tasting offered — 'eat our food, see services, talk budget'"}
+  ],
+  "notes": [
+    "Authenticity is the moat — Brazilian-led catering vs 'we do BBQ' caterers",
+    "Patience window: respect 'I'll reach out'",
+    "If silent past May 5, one final value-add then phone call"
+  ]
+}

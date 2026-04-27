@@ -1,0 +1,86 @@
+{
+  "id": "nicole_mcneil",
+  "kind": "lead",
+  "name": "Nicole McNeil",
+  "role": "Baby Shower · August 2026 (TBD) · 30 guests · Dorchester Boston",
+  "relationship_tier": "stalled",
+  "relationship_weight": 0.30,
+  "contacts": {
+    "email": null,
+    "phone": null,
+    "whatsapp": null,
+    "slack_id": null,
+    "slack_channel": null,
+    "clickup_user_id": null,
+    "other": null
+  },
+  "handling": {
+    "preferred_channel": "SMS",
+    "response_latency_target": "within-24h",
+    "tone": "McNeil is Scottish/Irish — Anglo or Irish-American heritage. Day 1 was heavy (3 calls, 2 emails resent, cadence text) — she may have felt overwhelmed. Don't pile on; one warm specific message.",
+    "voice_adjustments": "Andre voice: brief, respect she's busy (probably pregnant or close to someone who is). Frame as 'we make YOU look good as the host.'",
+    "context": "Inbound Apr 23 from FB Lead Form. Baby shower in August — no specific date locked. 30 guests = small intimate. $945 ballpark. Apr 24 had more call attempts but no answer. Day 1 was heavy and didn't land.",
+    "off_limits_topics": null
+  },
+  "context_anchors": [
+    "McNeil = Scottish/Irish surname, Anglo demo",
+    "Dorchester Boston, 02124 — urban core, easy logistics",
+    "Baby shower in August 2026 — no specific day",
+    "30 guests = small intimate, home/community space",
+    "Day 1 push was heavy — back off, warm and specific"
+  ],
+  "lead": {
+    "status": "stalled",
+    "stage": "cold_no_response_baby_shower",
+    "owner": "andre_raw",
+    "source": "FB Lead Form — VIDEO RODS WEDDING & FACELESS",
+    "event_type": "Baby Shower",
+    "event_date": null,
+    "guest_count": 30,
+    "venue": null,
+    "city": "Boston (Dorchester), MA",
+    "quote_value": null,
+    "opportunity_value": 945,
+    "score_tags": ["small_event", "no_specific_date", "day1_overload", "anglo_demo"],
+    "last_activity": "2026-04-24 — call attempts (no answer)",
+    "speed_urgency": "medium",
+    "next_move": "One specific warm message asking date lock + brunch vibe vs afternoon tea/apps"
+  },
+  "enrichment": {
+    "confidence": 0.45,
+    "identity_notes": "Scottish/Irish surname suggests Anglo or Irish-American heritage. Dorchester is one of Boston's largest neighborhoods, demographically diverse. FB ad targeted weddings; she opted in for baby shower (broad-targeting expected).",
+    "win_angles": [
+      "Right-size — 30 guests + baby shower = drop-off + light service most likely",
+      "Hostess emotional driver — make HER look good as host",
+      "Brunch/lunch timing 11 AM-3 PM, mocktail focus (pregnant guests)",
+      "Specific date locking is next milestone",
+      "Day 1 was heavy — don't pile on"
+    ],
+    "nepq_openers": [
+      "Continuation: 'Hi Nicole — quick check-in. For baby shower in August, do you have a specific date locked yet? August dates fill fast on our side. Also, mid-day brunch vibe or afternoon tea / appetizer style?'",
+      "Frame: 'For a friend, family member, or you yourself? Helps me know who I'm helping you make look great.'",
+      "Anchor: 'For 30 guests at baby shower: drop-off ($X), light buffet with attendant ($Y), full hosted ($Z). Most baby showers I do land in middle.'"
+    ],
+    "open_gaps": [
+      "Specific event date — must lock",
+      "Phone preference (call vs text)",
+      "Whose baby shower",
+      "Venue (home, community, restaurant private room?)",
+      "Drink preference (mocktail-focused)",
+      "Cultural/dietary considerations"
+    ],
+    "strategic_note": "Small, simple, tractable IF we can re-engage. Day 1's heavy push didn't land — she may have felt overwhelmed. ONE warm, specific message respecting she's busy, asking date question. Don't pile on more touches."
+  },
+  "comms": [
+    {"ts": "2026-04-23T09:39:00Z", "channel": "live_chat", "direction": "in", "summary": "Crisp Chat started"},
+    {"ts": "2026-04-23T10:00:00Z", "channel": "sms", "direction": "out", "summary": "Inbound acknowledged + 3 call attempts (no answer)"},
+    {"ts": "2026-04-23T11:00:00Z", "channel": "email", "direction": "out", "summary": "Service-types breakdown (resent)"},
+    {"ts": "2026-04-23T13:00:00Z", "channel": "sms", "direction": "out", "summary": "Re-engagement: call vs tasting"},
+    {"ts": "2026-04-24T10:00:00Z", "channel": "call", "direction": "out", "summary": "Two more call attempts, no answer"}
+  ],
+  "notes": [
+    "Don't pile on — Day 1 was already heavy",
+    "Mocktail/brunch baby shower vibe",
+    "Specific date locking is the unlock"
+  ]
+}

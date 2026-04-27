@@ -1,0 +1,99 @@
+{
+  "schema": "comeketo.automation_graph.v1",
+  "id": "wf_seven_day_nepq_template",
+  "slug": "seven-day-nepq-template",
+  "name": "Seven-day NEPQ cadence — template",
+  "description": "Cloneable template — instantiated per lead by the lead_orchestrator. Day-1 outbound, Days 2/3/5/7 passive, Day 4 SMS conditional, Day 6 email conditional. Pluggable close-event hook (quote expiry OR pre-tasting brief) and a comms heartbeat watching Close every 10 min during business hours. Use {{lead.id}}, {{lead.name}}, {{lead.email}}, {{lead.phone}} placeholders. Owner is always p_andre_raw unless instantiation overrides. Day 1 fire-policy and Day 6 always-fires-or-conditional are template parameters set at instantiation.",
+  "owner": "p_andre_raw",
+  "scope": "close_crm_primary",
+  "batch_policy": {
+    "enabled": false,
+    "size": 1,
+    "notes": "Per-lead instantiation. Each clone runs against one Close lead."
+  },
+  "principles": [
+    "REALIGN IS A MUST. Every cadence pass ends with the lead still owned by Andre with an active task.",
+    "Andre sees every send before it lands. R2 never goes silent.",
+    "Borderline reply = pause. R1 writes the escalation flag, R2 holds, Andre takes it personally.",
+    "Skip on reply for conditional days. R1 handles inbound; R2 doesn't compete."
+  ],
+  "nodes": [
+    { "id": "n_trg_plan_executor",   "role": "trigger",   "kind": "cron",         "label": "R2 plan executor",                    "config": { "cron": "{{lead.plan_executor_cron}}", "tz": "America/New_York", "default": "30 10 * * 1-5" }, "x": 160,  "y": 140, "notes": "Per-lead cron — set at instantiation. Most leads default to 10:30am ET weekdays.", "description": "The plan executor — fires per-lead cron. Each fire decides whether today's move ships." },
+    { "id": "n_trg_heartbeat",       "role": "trigger",   "kind": "cron",         "label": "R1 comms heartbeat",                  "config": { "cron": "*/10 9-19 * * 1-5", "tz": "America/New_York" }, "x": 160,  "y": 300, "notes": "Always-on watcher. 10-min poll during business hours.", "description": "The 10-min poll. Pages Andre when {{lead.name}} replies." },
+    { "id": "n_trg_close_webhook",   "role": "trigger",   "kind": "mcp_event",    "label": "Close: lead.activity",                "config": { "service": "close", "event": "activity_created", "lead_id": "{{lead.id}}" }, "x": 160,  "y": 460, "notes": "Optional — Close webhook for sub-second latency.", "description": "Close webhook — bypasses the 10-min poll." },
+    { "id": "n_trg_close_event",     "role": "trigger",   "kind": "cron",         "label": "Close-event hook",                    "config": { "cron": "{{lead.close_event_cron}}", "one_shot": true, "kind": "{{lead.close_event_kind}}", "options": ["quote_expiry", "pre_tasting_brief", "none"] }, "x": 160,  "y": 620, "notes": "Optional one-shot — quote-expiry SMS, pre-tasting brief, or none.", "description": "The lead-specific close event. Quote expiry, pre-tasting brief, or omitted entirely." },
+    { "id": "n_trg_manual",          "role": "trigger",   "kind": "manual",       "label": "Run on demand",                       "config": { "button_label": "Re-fire plan day", "surfaces": ["automation_screen", "lead_box"] }, "x": 160,  "y": 780, "notes": "Manual override.", "description": "Manual button on the lead box." },
+
+    { "id": "n_sto_lead",            "role": "state",     "kind": "people",       "label": "people/{{lead.id}}.json",              "config": { "path": "people/{{lead.id}}.json" }, "x": 360,  "y": 780, "notes": "The lead's identity record.", "description": "The lead's bedrock record — referenced for context, dietary, voice anchors." },
+    { "id": "n_sto_andre",           "role": "state",     "kind": "people",       "label": "people/andre_raw.json",                "config": { "path": "people/andre_raw.json" }, "x": 540,  "y": 780, "notes": "Andre's voice profile.", "description": "Andre's voice handling. Mirror lowercase / no template smell / peer register." },
+    { "id": "n_sto_plan_state",      "role": "state",     "kind": "memory",       "label": "Drive: cadence state",                  "config": { "drive_paths": ["cia-state/{{lead.id}}/plan-start-date.txt", "cia-state/{{lead.id}}/last-move-fired.txt", "cia-state/{{lead.id}}/escalation-paused.txt"] }, "x": 360,  "y": 140, "notes": "Per-lead working memory in Drive.", "description": "Per-lead cadence state in Drive — plan-start, last-fired, escalation flag." },
+
+    { "id": "n_xf_compute_day",      "role": "transform", "kind": "extract",      "label": "Compute plan day",                      "config": { "expr": "(today - plan_start_date).days + 1", "exit_when": "plan_day > 7" }, "x": 580,  "y": 140, "notes": "Day 1 = plan-start.", "description": "Compute plan_day index from plan-start-date." },
+    { "id": "n_xf_pause_gate",       "role": "transform", "kind": "filter",       "label": "Escalation pause?",                     "config": { "condition": "escalation-paused.txt MISSING" }, "x": 800,  "y": 140, "notes": "Hard pause.", "description": "Pause flag check. Hold + DM Andre if set." },
+    { "id": "n_xf_already_fired",    "role": "transform", "kind": "filter",       "label": "Today's slot already fired?",            "config": { "condition": "last_move_fired != (today_plan_day, slot)" }, "x": 1020, "y": 140, "notes": "Idempotency.", "description": "Don't double-fire a slot in a single day." },
+    { "id": "n_xf_inbound_check",    "role": "transform", "kind": "extract",      "label": "Inbound from {{lead.name}}?",            "config": { "service": "close", "lead_id": "{{lead.id}}", "since": "last_move_fired_ts" }, "x": 1240, "y": 140, "notes": "Skip-on-reply gating for conditional days.", "description": "Counts Close inbound since the last touch." },
+
+    { "id": "n_act_day1",            "role": "actor",     "kind": "external_api", "label": "Day 1 — outbound",                       "config": { "service": "close", "fire_policy": "{{lead.day1_policy}}", "options": ["email_only", "sms_then_email", "sms_only"], "templates": "drafts/{{lead.id}}/day1_*.md" }, "x": 1460, "y": 60,  "notes": "Per-instance Day 1 policy. Most leads = email_only. Tasting-event leads can do sms_then_email.", "description": "Day 1 outbound. Always fires on first Day-1 run. Shape varies per lead." },
+    { "id": "n_act_day4_sms",        "role": "actor",     "kind": "external_api", "label": "Day 4 — SMS (conditional)",              "config": { "service": "close", "action": "send_sms", "to": "{{lead.phone}}", "body_template": "drafts/{{lead.id}}/day4_sms.md", "gate": "no_inbound_since_day1" }, "x": 1460, "y": 220, "notes": "Lowercase, brief, peer voice. Skips on reply.", "description": "Day 4 SMS — the unstick move. Skips on any reply since Day 1." },
+    { "id": "n_act_day6_email",      "role": "actor",     "kind": "external_api", "label": "Day 6 — Email",                          "config": { "service": "close", "action": "send_email", "to": "{{lead.email}}", "body_template": "drafts/{{lead.id}}/day6_email.md", "gate_policy": "{{lead.day6_policy}}", "options": ["always_fires", "conditional_no_reply"] }, "x": 1460, "y": 380, "notes": "Tasting leads = always_fires. Quote leads = conditional_no_reply.", "description": "Day 6 email — gate policy set per instance." },
+
+    { "id": "n_act_rodbot_voice",    "role": "actor",     "kind": "rodbot",       "label": "Rodbot voice mirror",                    "config": { "model": "claude-sonnet-4-6", "register": "operational", "reads": ["people/andre_raw.json", "people/{{lead.id}}.json"] }, "x": 1240, "y": 380, "notes": "Renders templates in Andre's voice.", "description": "Voice composer. Reads Andre + the lead and renders the right template." },
+    { "id": "n_act_close_event",     "role": "actor",     "kind": "external_api", "label": "Close-event send",                       "config": { "service": "close", "kind": "{{lead.close_event_kind}}", "options": ["quote_expiry_sms", "pre_tasting_brief_to_andre"] }, "x": 360,  "y": 620, "notes": "Pluggable — quote expiry SMS, pre-tasting Slack brief, or none.", "description": "The lead-specific close event. Quote-expiry SMS for active-quote leads, pre-tasting brief for tasting-scheduled leads." },
+
+    { "id": "n_xf_classify_reply",   "role": "transform", "kind": "extract",      "label": "Classify reply",                          "config": { "by": "rodbot", "categories": ["routine_inbound", "scheduling_yes", "competitor_named", "decision_maker_change", "hostile", "pricing_pushback"] }, "x": 580,  "y": 300, "notes": "R1 classifier.", "description": "Rodbot reads any inbound and classifies." },
+    { "id": "n_xf_escalation_gate",  "role": "transform", "kind": "filter",       "label": "Escalation?",                             "config": { "true_when_any": ["competitor_named", "decision_maker_change", "hostile", "pricing_pushback"] }, "x": 800,  "y": 300, "notes": "Tunable per instance.", "description": "Escalation triggers — tunable per lead (e.g. B&S adds 'sender == steve' as automatic)." },
+
+    { "id": "n_act_slack_andre",     "role": "actor",     "kind": "external_api", "label": "Slack DM — Andre",                        "config": { "service": "slack", "action": "dm", "user": "andre_raw" }, "x": 1020, "y": 300, "notes": "Routine ping or escalation page.", "description": "Andre's single Slack channel. Routine = green. Escalation = red." },
+    { "id": "n_act_slack_receipt",   "role": "actor",     "kind": "external_api", "label": "Slack receipt — every send",              "config": { "service": "slack", "action": "dm", "user": "andre_raw" }, "x": 1680, "y": 220, "notes": "Verbatim copy of every send.", "description": "Send receipts to Slack." },
+
+    { "id": "n_sto_ledger",          "role": "state",     "kind": "ledger",       "label": "_ledger/activity.jsonl",                  "config": { "path": "_ledger/activity.jsonl", "append_only": true }, "x": 1900, "y": 460, "notes": "Append-only audit.", "description": "Audit trail." },
+    { "id": "n_snk_today_html",      "role": "sink",      "kind": "file_write",   "label": "state/today.html",                        "config": { "path": "state/today.html", "section": "{{lead.id}}" }, "x": 1900, "y": 620, "notes": "Andre's daily briefing surface.", "description": "The lead's row on the daily briefing." },
+    { "id": "n_snk_dashboard",       "role": "sink",      "kind": "dashboard",    "label": "Mission-control: per-lead cell",          "config": { "cell_id": "{{lead.id}}_status" }, "x": 1900, "y": 780, "notes": "Live tile.", "description": "One mission-control tile per instantiated lead." }
+  ],
+  "connections": [
+    { "id": "c_r2_state",            "src": "n_trg_plan_executor",   "dst": "n_sto_plan_state",     "kind": "reference",   "label": "read state",      "description": "R2 reads cadence state.", "annotations": [], "narration": "", "created_at": "2026-04-27T00:00:00Z" },
+    { "id": "c_state_compute",       "src": "n_sto_plan_state",      "dst": "n_xf_compute_day",     "kind": "data",        "label": "plan_day",        "description": "Compute today's plan_day.", "annotations": [], "narration": "", "created_at": "2026-04-27T00:00:00Z" },
+    { "id": "c_compute_pause",       "src": "n_xf_compute_day",      "dst": "n_xf_pause_gate",      "kind": "data",        "label": "→ pause check", "description": "Then pause check.", "annotations": [], "narration": "", "created_at": "2026-04-27T00:00:00Z" },
+    { "id": "c_pause_idempotent",    "src": "n_xf_pause_gate",       "dst": "n_xf_already_fired",   "kind": "conditional", "label": "no pause",        "condition": "escalation-paused MISSING", "falsePathTarget": "n_act_slack_andre", "description": "Pause clear → continue. Pause set → DM Andre.", "annotations": [], "narration": "", "created_at": "2026-04-27T00:00:00Z" },
+    { "id": "c_idempotent_inbound",  "src": "n_xf_already_fired",    "dst": "n_xf_inbound_check",   "kind": "conditional", "label": "fresh slot",      "condition": "slot != fired_today", "falsePathTarget": null, "description": "Fresh slot → check inbound. Already fired → exit.", "annotations": [], "narration": "", "created_at": "2026-04-27T00:00:00Z" },
+    { "id": "c_inbound_voice",       "src": "n_xf_inbound_check",    "dst": "n_act_rodbot_voice",   "kind": "data",        "label": "draft compose",   "description": "Hand template to Rodbot.", "annotations": [], "narration": "", "created_at": "2026-04-27T00:00:00Z" },
+
+    { "id": "c_voice_day1",          "src": "n_act_rodbot_voice",    "dst": "n_act_day1",           "kind": "conditional", "label": "Day 1",           "condition": "plan_day == 1", "falsePathTarget": "n_act_day4_sms", "description": "Day 1 — render and fire per lead policy.", "annotations": [], "narration": "", "created_at": "2026-04-27T00:00:00Z" },
+    { "id": "c_voice_day4",          "src": "n_act_rodbot_voice",    "dst": "n_act_day4_sms",       "kind": "conditional", "label": "Day 4",           "condition": "plan_day == 4 AND no_inbound_since_day1", "falsePathTarget": "n_act_day6_email", "description": "Day 4 — conditional.", "annotations": [], "narration": "", "created_at": "2026-04-27T00:00:00Z" },
+    { "id": "c_voice_day6",          "src": "n_act_rodbot_voice",    "dst": "n_act_day6_email",     "kind": "conditional", "label": "Day 6",           "condition": "plan_day == 6", "falsePathTarget": null, "description": "Day 6 — gating per lead policy.", "annotations": [], "narration": "", "created_at": "2026-04-27T00:00:00Z" },
+
+    { "id": "c_andre_voice_ref",     "src": "n_sto_andre",           "dst": "n_act_rodbot_voice",   "kind": "reference",   "label": "voice",           "description": "Voice profile reference.", "annotations": [], "narration": "", "created_at": "2026-04-27T00:00:00Z" },
+    { "id": "c_lead_context_ref",    "src": "n_sto_lead",            "dst": "n_act_rodbot_voice",   "kind": "reference",   "label": "context",         "description": "Lead record reference.", "annotations": [], "narration": "", "created_at": "2026-04-27T00:00:00Z" },
+
+    { "id": "c_day1_receipt",        "src": "n_act_day1",            "dst": "n_act_slack_receipt",  "kind": "data",        "label": "send receipt",    "description": "Day 1 receipt.", "annotations": [], "narration": "", "created_at": "2026-04-27T00:00:00Z" },
+    { "id": "c_day4_receipt",        "src": "n_act_day4_sms",        "dst": "n_act_slack_receipt",  "kind": "data",        "label": "send receipt",    "description": "Day 4 receipt.", "annotations": [], "narration": "", "created_at": "2026-04-27T00:00:00Z" },
+    { "id": "c_day6_receipt",        "src": "n_act_day6_email",      "dst": "n_act_slack_receipt",  "kind": "data",        "label": "send receipt",    "description": "Day 6 receipt.", "annotations": [], "narration": "", "created_at": "2026-04-27T00:00:00Z" },
+
+    { "id": "c_heartbeat_classify",  "src": "n_trg_heartbeat",       "dst": "n_xf_classify_reply",  "kind": "observe",     "label": "poll close",      "description": "R1 polls Close.", "annotations": [], "narration": "", "created_at": "2026-04-27T00:00:00Z" },
+    { "id": "c_webhook_classify",    "src": "n_trg_close_webhook",   "dst": "n_xf_classify_reply",  "kind": "trigger",     "label": "fast path",       "description": "Webhook fast-path.", "annotations": [], "narration": "", "created_at": "2026-04-27T00:00:00Z" },
+    { "id": "c_classify_escalate",   "src": "n_xf_classify_reply",   "dst": "n_xf_escalation_gate", "kind": "data",        "label": "borderline?",     "description": "→ gate.", "annotations": [], "narration": "", "created_at": "2026-04-27T00:00:00Z" },
+    { "id": "c_escalate_pause",      "src": "n_xf_escalation_gate",  "dst": "n_sto_plan_state",     "kind": "conditional", "label": "write pause flag","condition": "escalation == true", "falsePathTarget": "n_act_slack_andre", "description": "Write the pause flag.", "annotations": [], "narration": "", "created_at": "2026-04-27T00:00:00Z" },
+    { "id": "c_escalate_andre",      "src": "n_xf_escalation_gate",  "dst": "n_act_slack_andre",    "kind": "data",        "label": "page andre",      "description": "Andre sees verbatim + plan's next move.", "annotations": [], "narration": "", "created_at": "2026-04-27T00:00:00Z" },
+
+    { "id": "c_close_event_send",    "src": "n_trg_close_event",     "dst": "n_act_close_event",    "kind": "trigger",     "label": "lead-event",      "description": "Quote expiry / pre-tasting brief / none — per instance.", "annotations": [], "narration": "", "created_at": "2026-04-27T00:00:00Z" },
+    { "id": "c_close_event_andre",   "src": "n_act_close_event",     "dst": "n_act_slack_andre",    "kind": "data",        "label": "brief / receipt", "description": "Either a Slack brief (pre-tasting) or a send receipt (quote expiry).", "annotations": [], "narration": "", "created_at": "2026-04-27T00:00:00Z" },
+
+    { "id": "c_manual_voice",        "src": "n_trg_manual",          "dst": "n_act_rodbot_voice",   "kind": "trigger",     "label": "on demand",       "description": "Manual run-button.", "annotations": [], "narration": "", "created_at": "2026-04-27T00:00:00Z" },
+
+    { "id": "c_receipt_ledger",      "src": "n_act_slack_receipt",   "dst": "n_sto_ledger",         "kind": "data",        "label": "append",          "description": "Receipts → ledger.", "annotations": [], "narration": "", "created_at": "2026-04-27T00:00:00Z" },
+    { "id": "c_andre_ledger",        "src": "n_act_slack_andre",     "dst": "n_sto_ledger",         "kind": "data",        "label": "append",          "description": "Pings → ledger.", "annotations": [], "narration": "", "created_at": "2026-04-27T00:00:00Z" },
+    { "id": "c_receipt_today",       "src": "n_act_slack_receipt",   "dst": "n_snk_today_html",     "kind": "data",        "label": "today.html",      "description": "Today briefing.", "annotations": [], "narration": "", "created_at": "2026-04-27T00:00:00Z" },
+    { "id": "c_receipt_dashboard",   "src": "n_act_slack_receipt",   "dst": "n_snk_dashboard",      "kind": "data",        "label": "tile",            "description": "Mission-control tile.", "annotations": [], "narration": "", "created_at": "2026-04-27T00:00:00Z" }
+  ],
+  "metadata": {
+    "created_at": "2026-04-27T00:00:00Z",
+    "last_modified": "2026-04-27T00:00:00Z",
+    "version": 1,
+    "authored_by": "claude_code",
+    "source": "Generic NEPQ cadence template — abstracted from hugo_casillas + brenda_steve.",
+    "linked_agent": "agents/lead_orchestrator/",
+    "linked_skill": ".claude/skills/seven-day-nepq/",
+    "instances": ["hugo-casillas-seven-day", "brenda-steve-seven-day"],
+    "status": "template"
+  }
+}

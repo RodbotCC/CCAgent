@@ -1,0 +1,84 @@
+{
+  "id": "daphney_frankie",
+  "kind": "lead",
+  "name": "Daphney & Frankie",
+  "role": "Wedding · Dec 12, 2026 · 130 guests · Branford House at Avery Point, Groton CT",
+  "relationship_tier": "active_quote",
+  "relationship_weight": 0.65,
+  "contacts": {
+    "email": "daphneypate@gmail.com",
+    "phone": "+1-203-823-5228",
+    "whatsapp": null,
+    "slack_id": null,
+    "slack_channel": null,
+    "clickup_user_id": null,
+    "other": null
+  },
+  "handling": {
+    "preferred_channel": "Phone",
+    "response_latency_target": "within-24h",
+    "tone": "Honest planners on a real budget. Don't oversell. Don't underestimate them either — they've already booked venue + DJ. Lead with transparency about what $8K buys vs what stretching to $10K buys.",
+    "voice_adjustments": "Andre voice: direct, honest, peer. Acknowledge the budget reality, then offer two options. Don't push; respect their process.",
+    "context": "Zola Gold inquiry Apr 22. Venue + DJ booked. Catering capped ~$8K, overall budget flex to $20K. December coastal CT wedding. Status set 'Probably Not' but premature given engagement. ~95+ miles from Comeketo's typical zone — logistics flag.",
+    "off_limits_topics": null
+  },
+  "context_anchors": [
+    "Branford House at Avery Point, Groton CT — UConn-managed waterfront mansion",
+    "130 guests (flexible up to 135)",
+    "Catering cap $8K / overall budget up to $20K (flexible)",
+    "DJ Jacob Graham already booked",
+    "Bride is Daphney; status 'Probably Not' likely premature",
+    "December coastal wedding — indoor reception"
+  ],
+  "lead": {
+    "status": "active_quote",
+    "stage": "zola_inquiry_stalled_re_engagement",
+    "owner": "andre_raw",
+    "source": "Zola Gold Inquiry",
+    "event_type": "Wedding",
+    "event_date": "2026-12-12",
+    "guest_count": 130,
+    "venue": "The Branford House at Avery Point, Groton CT",
+    "city": "Groton, CT",
+    "quote_value": null,
+    "opportunity_value": 8000,
+    "score_tags": ["tight_budget", "zola_gold", "venue_locked", "out_of_zone"],
+    "last_activity": "2026-04-23 — re-engagement push, no response",
+    "speed_urgency": "medium",
+    "next_move": "Direct honest message: 10-min call OR two written options ($8K vs $10K)"
+  },
+  "enrichment": {
+    "confidence": 0.72,
+    "identity_notes": "Younger couple (informal Zola phrasing, Zola usage, capped budget with admitted flexibility = honest planners). 203 area code = CT local. Branford House is UConn-owned waterfront mansion.",
+    "win_angles": [
+      "They're not actually capped — $20K overall, $8K catering = permission to push to $9-10K",
+      "December coastal wedding = comfort food momentum, churrasco lands harder",
+      "Vendor compatibility (Jacob Graham DJ) — coordinate timeline",
+      "Transparency builds trust at low budgets — say $8K is tight for 130, then offer two versions"
+    ],
+    "nepq_openers": [
+      "Continuation: 'Daphney, before this slips off radar — most useful next step? 10-min call to talk what's realistic at the budget, or two options in writing first?'",
+      "Frame: 'You and Frankie clearly did your homework picking Branford and locking your DJ early. What I want to figure out is whether catering at your number is something we can do well.'",
+      "Anchor: '$8K for 130 is doable — but not the dream version. If we have $1.5K of flex, meal goes from fine to memorable. What does that trade off against?'"
+    ],
+    "open_gaps": [
+      "Why 'Probably Not' status was set",
+      "Whether Branford House allows outside catering",
+      "Service style preference at this budget",
+      "Cultural/dietary direction",
+      "Timeline urgency on locking caterer"
+    ],
+    "strategic_note": "'Probably Not' status feels premature: confirmed Zola Gold + real venue + DJ booked + stated budget with flexibility + reasonable runway. Not a 'won't buy' — a 'needs the right offer at the right price.' One direct honest re-engagement that respects budget and offers clear choice. If silent, Probably Not becomes appropriate."
+  },
+  "comms": [
+    {"ts": "2026-04-22T10:00:00Z", "channel": "email", "direction": "in", "summary": "Zola Gold inquiry forwarded — venue, date, budget, vendor list"},
+    {"ts": "2026-04-22T11:00:00Z", "channel": "email", "direction": "out", "summary": "Service overview + service-types breakdown"},
+    {"ts": "2026-04-22T11:30:00Z", "channel": "sms", "direction": "out", "summary": "What time best to reach you?"},
+    {"ts": "2026-04-23T11:00:00Z", "channel": "sms", "direction": "out", "summary": "Re-engagement: call vs tasting (May 3 / May 17)"}
+  ],
+  "notes": [
+    "Status 'Probably Not' premature — flag for review",
+    "Honest budget conversation is the unlock",
+    "Out-of-zone but worth it given $8-10K range"
+  ]
+}

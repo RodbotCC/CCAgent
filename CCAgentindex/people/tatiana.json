@@ -1,0 +1,84 @@
+{
+  "id": "tatiana",
+  "kind": "lead",
+  "name": "Tatiana",
+  "role": "Birthday · May 23, 2026 · ~40 guests · West Roxbury MA backyard",
+  "relationship_tier": "active_quote",
+  "relationship_weight": 0.68,
+  "contacts": {
+    "email": null,
+    "phone": null,
+    "whatsapp": null,
+    "slack_id": null,
+    "slack_channel": null,
+    "clickup_user_id": null,
+    "other": null
+  },
+  "handling": {
+    "preferred_channel": "SMS",
+    "response_latency_target": "within-24h",
+    "tone": "Text-preferred active communicator. She explicitly said 'Please text me.' Honor it. Don't force phone calls. Crisp questions, fast turnaround.",
+    "voice_adjustments": "Andre voice: short bullet questions, lowercase, no terminal punctuation. She's at work — respect time-of-day. Replied 'Hi / Yes' which is gold; build from there.",
+    "context": "Inbound Apr 18 from FB Lead Form — backyard birthday for ~40, only 4 weeks out. Asked to text. Answered 'Hi / Yes' to last cadence. No last name captured — pull from Close.",
+    "off_limits_topics": null
+  },
+  "context_anchors": [
+    "Text-preferred — said 'Please text me.' explicitly",
+    "Backyard West Roxbury, 02132 — easy logistics",
+    "May 23, 2026 — 4 weeks out, HIGH urgency",
+    "Last reply 'Hi / Yes' — warmest signal she gave",
+    "Last name not captured — pull from Close"
+  ],
+  "lead": {
+    "status": "active_quote",
+    "stage": "text_preferred_active_communicator",
+    "owner": "andre_raw",
+    "source": "FB Lead Form — VIDEO RODS WEDDING & FACELESS",
+    "event_type": "Birthday",
+    "event_date": "2026-05-23",
+    "guest_count": 40,
+    "venue": "Backyard, West Roxbury MA",
+    "city": "Boston (West Roxbury), MA",
+    "quote_value": null,
+    "opportunity_value": 1091,
+    "score_tags": ["text_preferred", "high_urgency_4wk", "warm_reply", "no_lastname"],
+    "last_activity": "2026-04-24 — Day-4 cadence SMS",
+    "speed_urgency": "high",
+    "next_move": "SMS with 3 crisp questions: drop-off vs buffet vs hosted; cuisine direction; bar yes/no"
+  },
+  "enrichment": {
+    "confidence": 0.55,
+    "identity_notes": "Single first name only. Could be Brazilian, Eastern European, or Hispanic. West Roxbury demographics are mixed — traditionally Irish-Catholic, increasingly Latino/Caribbean.",
+    "win_angles": [
+      "Honor text preference — SMS-first only",
+      "'Hi / Yes' reply is the entry point — build from there",
+      "Right-size: 40 + backyard + 4 weeks = drop-off or light buffet ($25-40/pp)",
+      "Active communicator, short messages OK"
+    ],
+    "nepq_openers": [
+      "Continuation: 'Hey Tatiana — perfect. Three quick questions: (1) Drop-off / light buffet / full hosted? (2) Brazilian BBQ vibe, classic American, or open? (3) Bar — alcohol or just drinks?'",
+      "Anchor: 'For 40 guests in a backyard, drop-off ~$X, light buffet ~$Y, full hosted ~$Z. Pick a direction and I'll send a tight quote in 24h.'"
+    ],
+    "open_gaps": [
+      "Last name",
+      "Whose birthday",
+      "Cuisine direction",
+      "Service style",
+      "Bar / beverage",
+      "Dietary considerations"
+    ],
+    "strategic_note": "Warmest small-event lead in the batch. She's actively engaged, text-preferred, in-zone, with a specific date and venue. Don't overthink — be fast and clear. Three crisp questions, get answers via text within 48h, send quote, close in days not weeks."
+  },
+  "comms": [
+    {"ts": "2026-04-18T10:00:00Z", "channel": "sms", "direction": "in", "summary": "'Please text me.' — explicit text preference"},
+    {"ts": "2026-04-18T11:00:00Z", "channel": "sms", "direction": "in", "summary": "'Andre I'm at work right now but I can talk at 4pm it's ok?'"},
+    {"ts": "2026-04-18T16:00:00Z", "channel": "sms", "direction": "in", "summary": "'Hi / Yes' — warm reply"},
+    {"ts": "2026-04-23T11:00:00Z", "channel": "sms", "direction": "out", "summary": "Re-engagement: call vs tasting"},
+    {"ts": "2026-04-24T13:00:00Z", "channel": "sms", "direction": "out", "summary": "Day-4 cadence SMS"}
+  ],
+  "notes": [
+    "Text-only — never push to phone",
+    "4-week clock is real; chase the 'Hi / Yes' within 24h",
+    "Don't pile on touches — short crisp questions only"
+  ]
+}

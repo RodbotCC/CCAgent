@@ -170,54 +170,77 @@
     setInterval(sweepPieces, 10 * 60 * 1000);
   })();
 
+  // Hooks state — the boolean toggle map for AUTO.* automations + system hooks.
+  async function fHooksState() {
+    return await fJSON("hooks/state.json", { optional: true });
+  }
+
   window.MissionControlReady = (async () => {
     try {
-      const [manifest, readme, northStar, ratioLattice,
-             projects, people, threads, commitments, knowledge, base,
-             dailyBriefing] = await Promise.all([
-        fJSON("manifests/rebuild_manifest.json"),
-        fetchText("summaries/README.md"),
-        fJSON("ledgers/north_star.json"),
-        fJSON("ledgers/ratio_lattice.json"),
-        fDomain("projects"),
+      // Apr 2026 trim + Apr 27 source-of-truth wire-up: bedrock now feeds the
+      // chat agent's prompt alongside Pieces. Loading the structured domains
+      // here so ai_instructions can splice them into the system prompt as the
+      // "BEDROCK · STRUCTURED TRUTH" section (Pieces stays the temporal feed).
+      const [people, base, dailyBriefing,
+             workflows, triggers, agentPlans, catalogEdges, hooksState,
+             venues] = await Promise.all([
         fDomain("people"),
-        fDomain("threads"),
-        fDomain("commitments"),
-        fDomain("knowledge"),
         fBase(),
         fLatestBriefing(),
+        fDomain("workflows"),
+        fDomain("triggers"),
+        fDomain("agent_plans"),
+        fDomain("catalog_edges"),
+        fHooksState(),
+        fDomain("venues"),
       ]);
 
+      // Split people by kind for the chat prompt (lead vs coworker vs client vs contact).
+      const peopleByKind = { lead: [], client: [], coworker: [], contact: [] };
+      for (const p of people) {
+        const k = p.kind || "coworker";
+        if (peopleByKind[k]) peopleByKind[k].push(p);
+      }
+
       const normalized = {
-        owner: (manifest && manifest.owner) || "Comeketo team",
+        owner: "Comeketo team",
         shape: "personal",
-        generatedAt: manifest && manifest.generated_at,
         base: BASE,
         counts: {
-          projects: projects.length,
           people: people.length,
-          threads: threads.length,
-          commitments: commitments.length,
-          knowledge: knowledge.length,
-          // surfaces consistent with the sales-loader shape so the topbar reads fine
-          leads: projects.length + people.length + threads.length,
+          leads: peopleByKind.lead.length,
+          clients: peopleByKind.client.length,
+          coworkers: peopleByKind.coworker.length,
+          contacts: peopleByKind.contact.length,
+          venues: venues.length,
+          workflows: workflows.length,
+          triggers: triggers.length,
+          agent_plans: agentPlans.length,
+          catalog_edges: catalogEdges.length,
+          // legacy surfaces kept so existing callers don't crash.
           closeReferenceRows: 0,
           clickupTasks: 0,
           clickupRelevantTasks: 0,
-          topLevelFiles: knowledge.length,
+          topLevelFiles: 0,
         },
-        projects, people, threads, commitments, knowledge,
+        people,
+        peopleByKind,
+        venues,
         base,
         dailyBriefing,
-        northStar: northStar || { anchors: [] },
-        ratioLattice: (ratioLattice && ratioLattice.entries) || [],
-        rawManifest: manifest || {},
-        readme: readme || "",
+        // Automation surfaces — the chat agent sees these as part of bedrock truth.
+        workflows,
+        triggers,
+        agent_plans: agentPlans,
+        catalog_edges: catalogEdges,
+        hooks_state: hooksState || {},
       };
 
-      normalized.projectsById = Object.fromEntries(projects.map(p => [p.id, p]).filter(([k]) => k));
-      normalized.peopleById   = Object.fromEntries(people.map(p => [p.id, p]).filter(([k]) => k));
-      normalized.threadsById  = Object.fromEntries(threads.map(t => [t.id, t]).filter(([k]) => k));
+      normalized.peopleById = Object.fromEntries(people.map(p => [p.id, p]).filter(([k]) => k));
+      normalized.venuesById = Object.fromEntries(venues.map(v => [v.id, v]).filter(([k]) => k));
+      normalized.workflowsBySlug = Object.fromEntries(workflows.map(w => [w.slug, w]).filter(([k]) => k));
+      normalized.triggersBySlug = Object.fromEntries(triggers.map(t => [t.slug, t]).filter(([k]) => k));
+      normalized.agentPlansBySlug = Object.fromEntries(agentPlans.map(a => [a.slug, a]).filter(([k]) => k));
 
       window.MissionControl = normalized;
       status.state = "ok";

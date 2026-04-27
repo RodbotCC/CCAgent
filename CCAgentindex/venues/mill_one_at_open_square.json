@@ -1,0 +1,30 @@
+{
+  "id": "mill_one_at_open_square",
+  "kind": "venue",
+  "name": "Mill One at Open Square",
+  "city": null,
+  "venue_type": null,
+  "website": null,
+  "tier": "tier_1",
+  "deal_stats": {
+    "opp_count": 5,
+    "total_value": 22474.05,
+    "avg_deal_value": 4494.81,
+    "lead_name_refs": 0
+  },
+  "close_account": {
+    "has_lead": false,
+    "lead_status": null,
+    "lead_url": null
+  },
+  "raw_variants": [
+    "1 Open Square Holyoke",
+    "Mill 1 Events",
+    "Mill One at Open Square Venue"
+  ],
+  "action": "ENRICH NOW — high-volume, no lead account",
+  "notes": [
+    "5 opportunities totaling $22,474.05 — rank #9 by deal value.",
+    "No Close lead account yet — recommend creating one to track relationship."
+  ]
+}

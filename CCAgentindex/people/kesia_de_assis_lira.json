@@ -1,0 +1,94 @@
+{
+  "id": "kesia_de_assis_lira",
+  "kind": "lead",
+  "name": "Kesia De Assis Lira",
+  "role": "HALAL Wedding · August (year TBD) · 200 guests · Fall River MA",
+  "relationship_tier": "active_quote",
+  "relationship_weight": 0.55,
+  "contacts": {
+    "email": null,
+    "phone": null,
+    "whatsapp": null,
+    "slack_id": null,
+    "slack_channel": null,
+    "clickup_user_id": null,
+    "other": null
+  },
+  "handling": {
+    "preferred_channel": "Phone",
+    "response_latency_target": "within-24h",
+    "tone": "HIGH-stakes, HIGH-complexity. Halal capability is a credibility play — be honest about what we can and cannot do. LEAD with halal, don't bury under generic catering pitches.",
+    "voice_adjustments": "Andre voice: serious, scope-respecting, bilingual-aware (Portuguese surname pattern). Halal sourcing is the entire conversation, not an afterthought.",
+    "context": "Inbound Apr 15 from FB HALAL CAMPAIGN ad — she SAW halal-targeted advertising and clicked. 200 guests, August wedding (year unclear). Largest opportunity in the batch ($7,200). Andre has NOT yet acknowledged halal in any outbound — surface in next message. No engagement after Day-1 push.",
+    "off_limits_topics": null
+  },
+  "context_anchors": [
+    "HALAL WEDDING — 200 guests, central deal-defining requirement",
+    "Fall River MA 02721 — heavy Portuguese-Brazilian + growing Muslim community",
+    "Source: 01. HALAL CAMPAIGN ad (specifically targeted)",
+    "Largest opp in batch: $7,200",
+    "Andre has not yet acknowledged halal in any outbound — gap",
+    "August wedding — year unclear, confirm urgency",
+    "Brazilian-Portuguese surname pattern (De Assis Lira)"
+  ],
+  "lead": {
+    "status": "active_quote",
+    "stage": "halal_wedding_cold_after_day1",
+    "owner": "andre_raw",
+    "source": "FB Lead Form — 01. HALAL CAMPAIGN",
+    "event_type": "Wedding (HALAL)",
+    "event_date": "2026-08-15",
+    "guest_count": 200,
+    "venue": null,
+    "city": "Fall River, MA",
+    "quote_value": null,
+    "opportunity_value": 7200,
+    "score_tags": ["halal_required", "largest_opp_batch", "halal_unaddressed", "cold_after_day1"],
+    "last_activity": "2026-04-24 — Day-4 cadence SMS",
+    "speed_urgency": "high",
+    "next_move": "Re-engage SPECIFICALLY on halal: certification scope + August year + venue"
+  },
+  "enrichment": {
+    "confidence": 0.55,
+    "identity_notes": "'Kesia De Assis Lira' Brazilian-Portuguese (De Assis common Brazilian middle/family name; Lira Portuguese surname). HALAL is dominant feature — Muslim convert household, Brazilian-Muslim community wedding, or significant Muslim guest portion. Came via 01. HALAL CAMPAIGN = SAW halal-targeted ads and clicked = strong intent.",
+    "win_angles": [
+      "Halal capability as credibility play — explicit if we can deliver, honest if we can't",
+      "Campaign she came from — LEAD with halal, don't bury",
+      "Brazilian-Muslim cultural bridge — specific subset of catering experience",
+      "200-guest halal = $10-20K+ potential, worth real effort",
+      "Day 1 was strong opening — re-engage specifically"
+    ],
+    "nepq_openers": [
+      "Continuation: 'Hi Kesia — wanted to circle back specifically on the halal piece. Three quick questions: (1) Halal requirement for whole wedding, or just specific guests? (2) Need fully halal-certified meat sourcing, or guest-acceptable halal-friendly preparation? (3) Date in August?'",
+      "Problem: 'For 200-person halal wedding, what's been hardest about finding caterers who can actually deliver vs say they can?'",
+      "Identity: 'Halal-targeted catering at this scale is its own world — what does doing this right look like for you and the family? I want to be honest about what we can and can't do.'",
+      "Anchor: 'For 200 with full halal sourcing + Brazilian-influenced menu, $X-Y. If we're in your range, next step is phone call. If not, I'll tell you straight and point to specialists.'"
+    ],
+    "open_gaps": [
+      "Halal specificity — fully certified vs guest-acceptable",
+      "Wedding date in August (specific day, specific year)",
+      "Venue",
+      "Phone (pull from Close)",
+      "Cultural mix of guest list",
+      "Cuisine direction (Brazilian-leaning halal? Generic halal? Middle Eastern fusion?)",
+      "Bar/beverage requirements (halal events typically alcohol-free)",
+      "Whether they're getting other halal-caterer quotes"
+    ],
+    "strategic_note": "Serious, specialized deal. Don't pitch generic Brazilian BBQ. ONE direct re-engagement addressing halal head-on, asking date question, offering honest scoping. If we have real halal capability, flagship wedding ($10K+). If not, refer out and earn future relationship through honesty. Halal weddings travel by word-of-mouth in tight communities — one happy customer brings 5 more."
+  },
+  "comms": [
+    {"ts": "2026-04-15T09:11:00Z", "channel": "live_chat", "direction": "in", "summary": "Live chat started — HALAL FB ad inbound"},
+    {"ts": "2026-04-15T10:00:00Z", "channel": "sms", "direction": "out", "summary": "'Got your Halal catering request' + best-time SMS"},
+    {"ts": "2026-04-15T11:00:00Z", "channel": "email", "direction": "out", "summary": "Service-types breakdown (resent)"},
+    {"ts": "2026-04-19T11:00:00Z", "channel": "email", "direction": "out", "summary": "'Quick next step' drip"},
+    {"ts": "2026-04-20T11:00:00Z", "channel": "email", "direction": "out", "summary": "Bar service drip"},
+    {"ts": "2026-04-22T11:00:00Z", "channel": "email", "direction": "out", "summary": "'Quick next step' drip"},
+    {"ts": "2026-04-23T11:00:00Z", "channel": "sms", "direction": "out", "summary": "Re-engagement: call vs tasting"},
+    {"ts": "2026-04-24T13:00:00Z", "channel": "sms", "direction": "out", "summary": "Day-4 cadence SMS"}
+  ],
+  "notes": [
+    "LARGEST opp in batch ($7,200) — worth real effort if halal can be delivered",
+    "Halal NOT yet acknowledged in outbound — flag",
+    "Confirm wedding year before assuming urgency"
+  ]
+}

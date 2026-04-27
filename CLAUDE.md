@@ -18,6 +18,12 @@ This file is structured around six operational disciplines. Follow them in order
 /Users/jakeaaron/Downloads/CC Agent/CCAgentindex/
 ```
 
+**Auto alias (read-only orchestrator passthrough — Apr 27, 2026):**
+```
+/Users/jakeaaron/Downloads/CC Agent/Auto/  →  /Users/jakeaaron/Desktop/Auto/
+```
+This is a symlink to the team's standalone automation folder. It is the **source-of-truth content** the bedrock was populated from: 28 lead boxes (`Auto/Client Boxes/<Name>/`), 10 staff voice profiles (`Auto/Staff Boxes/`), the orchestrator's wiring (`Auto/orchestrator/wiring/automations.md`, routines for hugo + brenda-steve), state snapshots (`Auto/orchestrator/state/master_ledger.csv`, `today.html`), and `Auto/comeketo-inbox/` (the NEPQ skill + ballpark calculator). Read freely; **do not write through this alias** unless the team explicitly asks — the orchestrator owns it.
+
 **Prefer relative paths.** `people/<slug>.json` resolves inside the bedrock. Absolute paths must start with the bedrock root above. If in doubt, relative.
 
 ### NEVER write to these
@@ -62,9 +68,31 @@ Only reach into a vault if the team explicitly names it.
 
 The loader and scoring pipelines depend on schema consistency. A `people/*.json` that omits required fields silently breaks downstream views.
 
-- When creating `people/<slug>.json` — read an existing sibling first. If none exists (bedrock is empty at cold-start), consult `CCAgentindex/Rodbot/identity.md` for the team's preferred shape or surface the gap to the team.
+- When creating `people/<slug>.json` — read an existing sibling first. If none exists (bedrock is empty post-trim — `Rodbot/` was wiped in the Apr 2026 great trim, so there is no `identity.md` fallback anymore), surface the gap to the team and ask for the preferred shape rather than inventing one.
 - Omit fields whose values you don't know. **Do not invent.** No placeholder phone numbers, emails, addresses, dates, IDs.
 - Preserve the file-naming convention: lowercase, underscores, slug-like.
+
+### 3.1) People taxonomy — the `kind` field (Apr 2026)
+
+Every `people/<slug>.json` MUST include a `"kind"` field, set to one of exactly four values. The UI splits People into four pages keyed off this field; if it's missing or wrong, the person lands in the wrong bucket. **Venues are a separate domain** (`venues/<slug>.json`, `kind:"venue"`) with its own UI page, but appears in the same People nav dropdown for convenience — see the 5th row of the table.
+
+| `kind`       | Who                                              | UI page    | Voice register                      |
+|--------------|--------------------------------------------------|------------|--------------------------------------|
+| `"coworker"` | Internal team — Comeketo employees & founders   | Coworkers  | peer · direct · brief                |
+| `"lead"`     | Prospects in the pipeline (couples shopping)    | Leads      | curious · problem-identifier         |
+| `"client"`   | Couples / orgs with confirmed bookings          | Clients    | trusted advisor · composed           |
+| `"contact"`  | Partners, vendors, external relationships        | Contacts   | relationship-first · no-ask          |
+| `"venue"`    | Catering venues — partners, sites we deliver to | Venues     | factual · operational · partner-aware |
+
+**Defaults & migrations:**
+- Existing 13 records were backfilled to `"kind": "coworker"` on 2026-04-25 — they're all team members. Any new records authored from this point forward MUST set kind explicitly.
+- 30 venue records were authored on 2026-04-27 with `"kind": "venue"`. They live under `venues/` (not `people/`) and are registered under `indexes/index.json` key `"venues"`. The Venues UI page reads from `MissionControl.venues`.
+- The UI tolerates missing kind by defaulting to `"coworker"` on read, but DO NOT rely on this — write the field every time.
+- `relationship_tier` (e.g. `"core_partnership"`, `"management_layer"`) is orthogonal to kind. Tier describes operational role within a kind; kind is the broader bucket.
+
+**Reclassification:** changing kind is a one-field edit. No file move, no path change in `indexes/index.json`. Just update the field and append to `_ledger/activity.jsonl` with the diff.
+
+**File layout:** flat. All people records live directly under `people/`. No subdirectories per kind — the loader globs `people/*.json` and the UI filters client-side.
 
 ---
 
@@ -72,7 +100,7 @@ The loader and scoring pipelines depend on schema consistency. A `people/*.json`
 
 The loader authority is `indexes/index.json`. If a file is not listed there, the UI does not see it.
 
-**After every create under `projects/ people/ threads/ commitments/ knowledge/`:**
+**After every create under loader-visible bedrock folders (today: `people/`; the `projects/`, `threads/`, `commitments/`, `knowledge/` domains were retired in the Apr 2026 great trim — folders empty / removed):**
 
 1. Open `indexes/index.json`.
 2. Append the relative path to the matching key's array.
@@ -94,6 +122,20 @@ Every non-trivial delegation leaves a trace in `_ledger/activity.jsonl`.
 **Rules:** append only, never rewrite. One line per event. Same for `_inbox/inbox.jsonl` — entries get marked `"status":"swept"` by appending a new line, never by editing prior ones.
 
 ---
+
+## 5.5) Page-asset sitemap — the Done Gate (Apr 2026)
+
+The team maintains a single source of truth for which pages own which assets, components, APIs, and side effects. Path:
+
+```
+/Users/jakeaaron/Downloads/CC Agent/page_asset_sitemap.md
+```
+
+**Rule:** any task that changes a page, route behavior, or page data binding is **not complete** until that file is updated. Append to the relevant page section's `Asset Ownership`, `Change Checklist`, and `History` lines, and bump `Last Verified`. New pages get a fresh entry following the Mapping Template at the top of the file. Removed assets must be removed in the same change.
+
+Surviving routes after the Apr 2026 great trim (10 pages): `grid, settings, leads, clients, coworkers, contacts, briefing, activity, automation, intake`. The retired pages — `memory, prediction, commitments, commitment_detail, inbox, inbox_detail, calendar, Rodbot, projects, analytics, tables, table_new, table_detail, delegations, chat` — are gone from the sitemap and from `app.jsx`.
+
+This applies whether the work happens in the main session or a delegation — every Comeketo Agent change passes through this gate.
 
 ## 6) Return discipline — clean summary, no meta
 
@@ -122,7 +164,7 @@ The UI renders what you return. That's what the team reads.
 
 ## Notes for the build team
 
-- `Rodbot/` is the identity folder (parallel to where the predecessor stored its reflective layer). `identity.md`, `character.md`, `traits.md`, and `affective_essence.md` are the four files that shape how Rodbot writes memories.
+- `Rodbot/` was the identity folder (held `identity.md`, `character.md`, `traits.md`, `affective_essence.md` shaping how Rodbot wrote memories). Wiped in the Apr 2026 great trim — folder empty / removed. Pieces is now the sole memory backend; rebuild identity files from scratch if the team wants the reflective layer back.
 - The app is a clone of a personal-scope predecessor; many internal API names (e.g. `SecretaryAI`, `SecretaryMemory`, `SecretaryChat`) remain for stability. These are internal — not user-facing. Rename later if desired; safe to leave.
 - Cache-busters on JS/CSS in `Secretary.html` should be bumped after any edit so browsers pick up fresh code.
 - `server.py` is a single-file stdlib HTTP server. No build step. Start with `python3 server.py`.

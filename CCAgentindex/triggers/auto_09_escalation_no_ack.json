@@ -1,0 +1,16 @@
+{
+  "schema": "comeketo.trigger.v1",
+  "slug": "auto_09_escalation_no_ack",
+  "kind": "watch",
+  "label": "AUTO.09 · Escalation when Andre hasn't acknowledged",
+  "enabled": false,
+  "tone": "rose",
+  "notes": "Off — needs a timer service. Re-fires AUTO.06 push if no ack in 30 / 60 / 120 min by altitude tier. Reads ack state from 10_andre_feedback.md.",
+  "created_at": "2026-04-27T00:00:00+00:00",
+  "last_modified": "2026-04-27T00:00:00+00:00",
+  "path": "state/andre_feedback.jsonl",
+  "pattern": "andre_no_ack > 30min",
+  "debounce_ms": 60000,
+  "recursive": false,
+  "workflow_slug": null
+}

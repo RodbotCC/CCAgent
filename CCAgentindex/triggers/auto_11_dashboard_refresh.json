@@ -1,0 +1,15 @@
+{
+  "schema": "comeketo.trigger.v1",
+  "slug": "auto_11_dashboard_refresh",
+  "kind": "cron",
+  "label": "AUTO.11 · Dashboard refresh",
+  "enabled": true,
+  "tone": "sky",
+  "notes": "Live — bin/refresh.py reads CSV, writes state/dashboard.json + state/dashboard.html.",
+  "created_at": "2026-04-27T00:00:00+00:00",
+  "last_modified": "2026-04-27T00:00:00+00:00",
+  "cron": "*/15 * * * *",
+  "tz": "America/New_York",
+  "workflow_slug": null,
+  "preset": "every_15_min"
+}

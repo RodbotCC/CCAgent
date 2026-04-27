@@ -1,0 +1,79 @@
+{
+  "schema": "comeketo.agent_plan.v1",
+  "slug": "lead__danielle_paulson",
+  "name": "Danielle Paulson · Lead orchestrator",
+  "description": "Danielle Paulson's dedicated sub-agent. Birthday (friend's) · 2026-07-15 · 50 guests · Swim Elite mansion, Haverhill MA. Lead status: tasting_scheduled. Stage: tasting_booked_quote_in_motion. Templated 7-day NEPQ cadence (instantiated from seven-day-nepq-template). Next move per orchestrator: Pre-tasting check-in: dietary needs in friend group + anything specific to cover at tasting. Watches Close every 10 min for inbound, drafts in Andre's voice, fires plan-day moves through Close. Cadence not yet activated — awaiting Andre's go-ahead in the lead box.",
+  "trigger_label": "weekdays · plan-day cadence + comms heartbeat · READY",
+  "orchestrator": {
+    "label": "Rodbot",
+    "model": "claude-sonnet-4-6",
+    "register": "operational"
+  },
+  "budgets": {
+    "max_sub_agents": 4,
+    "tokens_cap": 6000,
+    "wallclock_cap_s": 30,
+    "retry_policy": "linear_backoff"
+  },
+  "sub_agents": [
+    {
+      "id": "SA-COMMS",
+      "action": "watch",
+      "tool": "close.lead.fetch",
+      "prompt_template": "Pull last 10 comms for danielle_paulson; flag any inbound since last_seen_ts. Apply lead-specific escalation rules from people/danielle_paulson.json handling.tone.",
+      "leads": 1,
+      "retries": 1,
+      "timeout_s": 15,
+      "tone": "blush",
+      "expected_latency_s": 2.0
+    },
+    {
+      "id": "SA-PLAN",
+      "action": "execute",
+      "tool": "workflow.fire",
+      "prompt_template": "Fire today's plan day for danielle_paulson (template: seven-day-nepq-template). Skip on response. Day 1 = email, Day 4 = SMS conditional, Day 6 = email conditional. Tasting / quote-expiry hook configured per lead.",
+      "leads": 1,
+      "retries": 0,
+      "timeout_s": 25,
+      "tone": "rose",
+      "expected_latency_s": 4.5
+    },
+    {
+      "id": "SA-VOICE",
+      "action": "draft",
+      "tool": "rodbot.voice",
+      "prompt_template": "Mirror Andre's lowercase peer voice. Reference Danielle Paulson's context anchors from people/danielle_paulson.json. No sales heat, no template smell.",
+      "leads": 1,
+      "retries": 1,
+      "timeout_s": 20,
+      "tone": "lavender",
+      "expected_latency_s": 3.5
+    },
+    {
+      "id": "SA-ALERT",
+      "action": "brief",
+      "tool": "today.append",
+      "prompt_template": "Surface Danielle Paulson's row on Andre's today.html — current plan day, last move, watch-fors, days to event (2026-07-15).",
+      "leads": 1,
+      "retries": 1,
+      "timeout_s": 10,
+      "tone": "mint",
+      "expected_latency_s": 1.5
+    }
+  ],
+  "merge": {
+    "label": "merge → write to today.html + activity.jsonl",
+    "target": "state/today.html"
+  },
+  "metadata": {
+    "created_at": "2026-04-27T00:00:00Z",
+    "last_modified": "2026-04-27T00:00:00Z",
+    "version": 1,
+    "person_id": "danielle_paulson",
+    "kind": "lead_orchestrator",
+    "owner_coworker_id": "andre_raw",
+    "linked_workflow": "seven-day-nepq-template",
+    "status": "ready",
+    "lead_status": "tasting_scheduled"
+  }
+}

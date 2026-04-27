@@ -21,6 +21,10 @@ const SCREEN_LABELS = {
   automation: "automation",
 };
 
+// i18n stub — i18n.js was retired (Apr 2026 trim). Any straggler `t("key")`
+// calls echo the key back as a literal string so nothing crashes.
+function t(k) { return String(k == null ? "" : k); }
+
 function NavGroup({ label, icon, items, activeNames, currentRoute, badgeTotal }) {
   const [open, setOpen] = useState(false);
   const wrapRef = useRef(null);
@@ -137,7 +141,7 @@ function Breadcrumb({ history, go }) {
 }
 window.Breadcrumb = Breadcrumb;
 
-function Topbar({ route, history, go, stateSig, pendingCount, inboxOpenCount, delegationRunningCount, streakDays, rodbotState, openTasksCount, onOpenSettings, onOpenMemory, onOpenPrediction, onOpenCommitments, onOpenInbox, onOpenContacts, onOpenBriefing, onOpenDelegations, onOpenChat, onOpenCalendar, onOpenRodbot, onOpenProjects, onOpenActivity, onOpenAnalytics, onOpenAutomation, onOpenTables, onOpenIntake, onHome }) {
+function Topbar({ route, history, go, stateSig, onOpenSettings, onOpenLeads, onOpenClients, onOpenCoworkers, onOpenContacts, onOpenVenues, onOpenBriefing, onOpenActivity, onOpenAutomation, onOpenIntake, onHome }) {
   return (
     <div className="topbar">
       {/* ── Row 0: brand (quiet letterhead) + context strip (quiet meta) ── */}
@@ -151,77 +155,41 @@ function Topbar({ route, history, go, stateSig, pendingCount, inboxOpenCount, de
           <button
             className={"chip" + (route.name === "briefing" ? " active" : "")}
             onClick={onOpenBriefing}
-            title={t("briefing")}
+            title="briefing"
           >
-            {t("briefing")}
+            briefing
           </button>
-          <span className="meta-sep">·</span>
-          <NavGroup
-            label={t("today")}
-            icon="calendar"
-            activeNames={["calendar","inbox","commitments"]}
-            currentRoute={route.name}
-            badgeTotal={(streakDays > 0 ? 1 : 0) + inboxOpenCount + pendingCount}
-            items={[
-              { name: "calendar", label: t("calendar"), icon: "calendar", onClick: onOpenCalendar, badge: streakDays > 0 ? { text: String(streakDays), bg: "var(--pastel-mint)", fg: "var(--pastel-mint-ink)" } : null },
-              { name: "inbox", label: t("inbox"), icon: "inbox", onClick: onOpenInbox, badge: inboxOpenCount > 0 ? { text: String(inboxOpenCount), bg: "var(--pastel-peach)", fg: "var(--pastel-peach-ink)" } : null },
-              { name: "commitments", label: t("commitments"), icon: "check-square", onClick: onOpenCommitments, badge: pendingCount > 0 ? { text: String(pendingCount), bg: "var(--pastel-peach)", fg: "var(--pastel-peach-ink)" } : null },
-            ]}
-          />
           <button
             className={"gear" + (route.name === "settings" ? " active" : "")}
             onClick={onOpenSettings}
-            title={t("settings")}
-            aria-label={t("settings")}
+            title="settings"
+            aria-label="settings"
           >
             <Icon name="settings" size={14}/>
           </button>
         </div>
       </div>
 
-      {/* ── Row 1: section tabs (Work / People / Mind / Analytics) ── */}
+      {/* ── Row 1: section tabs (People / Activity / Intake / Automation) ── */}
       <div className="topbar-sections">
         <NavGroup
-          label={t("work")}
-          icon="layers"
-          activeNames={["projects","delegations","prediction"]}
-          currentRoute={route.name}
-          badgeTotal={openTasksCount + delegationRunningCount}
-          items={[
-            { name: "projects", label: t("projects"), icon: "layers", onClick: onOpenProjects, badge: openTasksCount > 0 ? { text: String(openTasksCount), bg: "var(--pastel-mint)", fg: "var(--pastel-mint-ink)" } : null },
-            { name: "delegations", label: t("delegate"), icon: "terminal", onClick: onOpenDelegations, badge: delegationRunningCount > 0 ? { text: String(delegationRunningCount), bg: "var(--pastel-sky)", fg: "var(--pastel-sky-ink)" } : null },
-            { name: "prediction", label: t("prediction"), icon: "target", onClick: onOpenPrediction, badge: null },
-          ]}
-        />
-        <NavGroup
-          label={t("people")}
+          label="people"
           icon="users"
-          activeNames={["contacts"]}
+          activeNames={["leads", "clients", "coworkers", "contacts", "venues"]}
           currentRoute={route.name}
           items={[
-            { name: "contacts", label: t("contacts"), icon: "users", onClick: onOpenContacts, badge: null },
+            { name: "leads",     label: "leads",     icon: "trending-up",  onClick: onOpenLeads,     badge: null },
+            { name: "clients",   label: "clients",   icon: "briefcase",    onClick: onOpenClients,   badge: null },
+            { name: "coworkers", label: "coworkers", icon: "users",        onClick: onOpenCoworkers, badge: null },
+            { name: "contacts",  label: "contacts",  icon: "phone",        onClick: onOpenContacts,  badge: null },
+            { name: "venues",    label: "venues",    icon: "map-pin",      onClick: onOpenVenues,    badge: null },
           ]}
         />
-        <NavGroup
-          label={t("mind")}
-          icon="sparkles"
-          activeNames={["Rodbot","memory","activity"]}
-          currentRoute={route.name}
-          badgeTotal={rodbotState && rodbotState.memory_count > 0 ? rodbotState.memory_count : 0}
-          items={[
-            { name: "Rodbot", label: t("rodbot"), icon: "sparkles", onClick: onOpenRodbot, badge: rodbotState && rodbotState.memory_count > 0 ? { text: String(rodbotState.memory_count), bg: "var(--pastel-lavender)", fg: "var(--pastel-lavender-ink)" } : null },
-            { name: "memory", label: t("memory"), icon: "brain", onClick: onOpenMemory, badge: null },
-            { name: "activity", label: t("activity"), icon: "activity", onClick: onOpenActivity, badge: null },
-          ]}
-        />
-        <button className={"chip" + (["tables","table_detail","table_new"].includes(route.name) ? " active" : "")} onClick={onOpenTables} title="Tables">
-          <Icon name="table" size={14}/>tables
+        <button className={"chip" + (route.name === "activity" ? " active" : "")} onClick={onOpenActivity} title="Activity">
+          <Icon name="activity" size={14}/>activity
         </button>
         <button className={"chip" + (route.name === "intake" ? " active" : "")} onClick={onOpenIntake} title="Intake — drop receipts, invoices, notes">
           <Icon name="inbox" size={14}/>intake
-        </button>
-        <button className={"chip" + (route.name === "analytics" ? " active" : "")} onClick={onOpenAnalytics} title={t("analytics") || "Analytics"}>
-          <Icon name="activity" size={14}/>{t("analytics") || "Analytics"}
         </button>
         <button className={"chip" + (route.name === "automation" ? " active" : "")} onClick={onOpenAutomation} title="Automation graph">
           <Icon name="git-branch" size={14}/>automation
@@ -280,7 +248,7 @@ window.seedTypeLabel = seedTypeLabel;
 // dedicated jsonl ledger (retired_cells / recurring_cells / rejected_cells)
 // plus a mirror line on activity.jsonl. The scorer can then read those to
 // suppress look-alikes on future grids.
-function CellContextMenu({ x, y, cell, gridId, onClose, onEditWithRodbot }) {
+function CellContextMenu({ x, y, cell, gridId, onClose }) {
   const [mode, setMode] = useState("root"); // root | recurring | reject
   const [reason, setReason] = useState("");
   const [cadence, setCadence] = useState("daily");
@@ -307,16 +275,10 @@ function CellContextMenu({ x, y, cell, gridId, onClose, onEditWithRodbot }) {
   };
 
   const base = { gridId, cellId: cell.id, headline: cell.headline, preview: cell.preview || "" };
-  const logMem = (kind, extra) => {
-    if (!window.SecretaryMemory) return;
-    const fn = window.SecretaryMemory.log[kind];
-    if (fn) fn({ cluster: gridId, signature: `cell_${kind} · ${gridId}`, gridId, cellId: cell.id, detail: cell.headline, ...extra });
-  };
-  const retire    = () => { logMem("retire");    return post("/api/cells/retire",    base); };
-  const recurring = () => { logMem("recurring", { cadence }); return post("/api/cells/recurring", { ...base, cadence }); };
+  const retire    = () => post("/api/cells/retire",    base);
+  const recurring = () => post("/api/cells/recurring", { ...base, cadence });
   const reject    = () => {
     if (!reason.trim()) return;
-    logMem("reject", { reason: reason.trim() });
     post("/api/cells/reject", { ...base, reason: reason.trim() });
   };
 
@@ -397,17 +359,16 @@ function CellContextMenu({ x, y, cell, gridId, onClose, onEditWithRodbot }) {
       title={title}
       onClose={onClose}
       items={[
-        { icon: "✎", label: t("edit_with_rodbot"), onClick: () => onEditWithRodbot(cell) },
-        { icon: "✓", label: t("mark_complete"),    onClick: retire,                 disabled: busy, keepOpen: true },
-        { icon: "↻", label: t("mark_recurring"),   onClick: () => setMode("recurring"),             keepOpen: true },
+        { icon: "✓", label: "mark complete",  onClick: retire,                 disabled: busy, keepOpen: true },
+        { icon: "↻", label: "mark recurring", onClick: () => setMode("recurring"),             keepOpen: true },
         { divider: true },
-        { icon: "✕", label: t("delete_block"),     onClick: () => setMode("reject"),  danger: true, keepOpen: true },
+        { icon: "✕", label: "delete block",   onClick: () => setMode("reject"),  danger: true, keepOpen: true },
       ]}
     />
   );
 }
 
-function Grid({ grid, onCellOpen, onSweep, onFrameReject, aiBusy, canGenerate, aiConfigured, historyDepth, onGenerate, onBack, onOpenSettings, onEditWithRodbot }) {
+function Grid({ grid, onCellOpen, onSweep, onFrameReject, aiBusy, canGenerate, aiConfigured, historyDepth, onGenerate, onBack, onOpenSettings }) {
   const [ctx, setCtx] = useState(null); // {x, y, cell}
   const [intent, setIntent] = useState(""); // optional user guardrail for Generate
 
@@ -479,7 +440,6 @@ function Grid({ grid, onCellOpen, onSweep, onFrameReject, aiBusy, canGenerate, a
         <CellContextMenu
           x={ctx.x} y={ctx.y} cell={ctx.cell} gridId={grid.id}
           onClose={() => setCtx(null)}
-          onEditWithRodbot={(cell) => { if (onEditWithRodbot) onEditWithRodbot(cell, grid.id); }}
         />
       )}
       <div className="grid-head">
@@ -504,7 +464,7 @@ function Grid({ grid, onCellOpen, onSweep, onFrameReject, aiBusy, canGenerate, a
                   value={intent}
                   onChange={(e) => setIntent(e.target.value)}
                   onKeyDown={(e) => { if (e.key === "Enter") fireGenerate(); }}
-                  placeholder={t("generate_lens_placeholder")}
+                  placeholder="optional lens for this generation"
                   disabled={aiBusy}
                   style={{
                     width: 320, padding: "8px 12px",
@@ -517,7 +477,7 @@ function Grid({ grid, onCellOpen, onSweep, onFrameReject, aiBusy, canGenerate, a
                   }}
                 />
                 <button className="btn primary" onClick={fireGenerate} disabled={aiBusy} title={intent.trim() ? "Generate with your lens" : "Generate from Mission Control"}>
-                  {aiBusy ? t("generating") : (intent.trim() ? t("generate") + " ·" : t("generate"))}
+                  {aiBusy ? "generating…" : (intent.trim() ? "generate ·" : "generate")}
                 </button>
               </div>
             ) : (
@@ -542,7 +502,7 @@ function Grid({ grid, onCellOpen, onSweep, onFrameReject, aiBusy, canGenerate, a
 }
 
 // ——— Fullscreen cell preview: commit / refine / back
-function FullscreenCell({ cell, grid, onCommit, onRefine, onClose, aiBusy, prewarm }) {
+function FullscreenCell({ cell, grid, onRefine, onClose, aiBusy, prewarm }) {
   if (!cell) return null;
   // Refine is always available when the AI is configured; the handler in App
   // decides whether to navigate to an existing grid or generate a new one.
@@ -600,10 +560,6 @@ function FullscreenCell({ cell, grid, onCommit, onRefine, onClose, aiBusy, prewa
         <Markdown text={cell.detail} className="fs-detail"/>
 
         <div className="fs-actions">
-          <button className="btn primary big" onClick={onCommit}>
-            <span className="a-label">Commit</span>
-            <span className="a-sub">{cell.commit.label}</span>
-          </button>
           <button
             className={"btn big" + (canRefine ? "" : " disabled")}
             onClick={canRefine ? onRefine : undefined}
@@ -703,35 +659,9 @@ function TweaksPanel({ tweaks, setTweaks, onClose }) {
           </span>
         </div>
         <div className="row">
-          <span className="k">Density</span>
+          <span className="k">Demo mode</span>
           <span className="v">
-            <div className="segmented">
-              <button className={tweaks.density === "compact" ? "on" : ""} onClick={() => set("density","compact")}>compact</button>
-              <button className={tweaks.density === "regular" ? "on" : ""} onClick={() => set("density","regular")}>regular</button>
-              <button className={tweaks.density === "generous" ? "on" : ""} onClick={() => set("density","generous")}>generous</button>
-            </div>
-          </span>
-        </div>
-        <div className="row">
-          <span className="k">Pred. acc.</span>
-          <span className="v">
-            <div className="segmented">
-              <button className={tweaks.predLevel === "low" ? "on" : ""} onClick={() => set("predLevel","low")}>0.6</button>
-              <button className={tweaks.predLevel === "mid" ? "on" : ""} onClick={() => set("predLevel","mid")}>0.8</button>
-              <button className={tweaks.predLevel === "hi" ? "on" : ""} onClick={() => set("predLevel","hi")}>0.94</button>
-            </div>
-          </span>
-        </div>
-        <div className="row">
-          <span className="k">Panels</span>
-          <span className="v">
-            <div className={"toggle" + (tweaks.showPanels ? " on" : "")} onClick={() => set("showPanels", !tweaks.showPanels)} />
-          </span>
-        </div>
-        <div className="row">
-          <span className="k">Auto-commit</span>
-          <span className="v">
-            <div className={"toggle" + (tweaks.autoCommit ? " on" : "")} onClick={() => set("autoCommit", !tweaks.autoCommit)} />
+            <div className={"toggle" + (tweaks.demoMode ? " on" : "")} onClick={() => set("demoMode", !tweaks.demoMode)} />
           </span>
         </div>
       </div>
@@ -742,14 +672,28 @@ function TweaksPanel({ tweaks, setTweaks, onClose }) {
 // ——— Markdown renderer (used in chat) ————————————————————————————————————————
 // Renders GFM-ish markdown via `marked`, sanitized through DOMPurify.
 // Falls back to plain text if either lib failed to load.
+//
+// marked v14 supports both `marked.parse(text, options)` AND `marked(text, options)`;
+// some builds return a promise when `async: true` is set on the global config.
+// We handle both, but never await — markdown rendering is sync in the app.
 function Markdown({ text, className }) {
   const html = useMemo(() => {
-    if (!text) return "";
+    if (text == null || text === "") return "";
     const M = window.marked;
     const P = window.DOMPurify;
     if (!M) return null;
     try {
-      const raw = M.parse(String(text), { gfm: true, breaks: true });
+      // Configure once to be safe — gfm + breaks at the global level guards
+      // against builds that ignore per-call options.
+      try {
+        if (typeof M.setOptions === "function") {
+          M.setOptions({ gfm: true, breaks: true, async: false });
+        }
+      } catch { /* noop */ }
+      let raw = (typeof M.parse === "function")
+        ? M.parse(String(text), { gfm: true, breaks: true })
+        : M(String(text), { gfm: true, breaks: true });
+      if (raw && typeof raw.then === "function") return null; // async path → fall back
       return P ? P.sanitize(raw) : raw;
     } catch { return null; }
   }, [text]);
@@ -771,6 +715,14 @@ function ChatRail({ go, gridGenerate, aiBusy }) {
   const [busy, setBusy] = useState(false);
   const scrollRef = useRef(null);
 
+  // Attachments — ported from ChatScreen so the homepage rail can finally
+  // accept files. Same expanded MIME allowlist (images, PDFs, CSV, JSON,
+  // text, code, docx, etc.). Drag-and-drop, paste, and a file picker.
+  const [attachments, setAttachments] = useState([]);
+  const [uploading, setUploading] = useState(false);
+  const [dragOver, setDragOver] = useState(false);
+  const fileInputRef = useRef(null);
+
   useEffect(() => {
     if (!CHAT) return;
     const unsub = CHAT.subscribe((list) => setChats([...list]));
@@ -785,6 +737,55 @@ function ChatRail({ go, gridGenerate, aiBusy }) {
   // Show more turns on the front-page rail now that it's persistent.
   const turns = active ? active.turns.slice(-14) : [];
 
+  // ── File upload pipeline (identical filter to ChatScreen) ─────────────
+  const ingestFiles = async (files) => {
+    const ALLOW_RX = /^(image\/|application\/(pdf|json|x-yaml|xml|zip|x-tar|x-gzip|vnd\.|msword|vnd\.openxmlformats)|text\/)/;
+    const ALLOW_EXT = /\.(pdf|csv|tsv|json|jsonl|md|markdown|txt|log|yaml|yml|xml|html|htm|js|jsx|ts|tsx|py|rb|go|rs|java|kt|swift|c|cpp|h|hpp|cs|php|sh|sql|toml|ini|env|dockerfile|docx|xlsx|pptx|zip|tar|gz)$/i;
+    const list = Array.from(files || []).filter(f => {
+      if (!f) return false;
+      if (ALLOW_RX.test(f.type || "")) return true;
+      if (ALLOW_EXT.test(f.name || "")) return true;
+      return !f.type && f.size && f.size < 2 * 1024 * 1024;
+    });
+    if (!list.length || !CHAT || !CHAT.uploadFile) return;
+    setUploading(true);
+    try {
+      for (const f of list) {
+        try {
+          const meta = await CHAT.uploadFile(f);
+          setAttachments(prev => [...prev, meta]);
+        } catch (e) {
+          console.warn("[chat-rail] upload failed:", e.message);
+          alert("Upload failed: " + e.message);
+        }
+      }
+    } finally { setUploading(false); }
+  };
+  const onDrop = async (e) => {
+    e.preventDefault(); setDragOver(false);
+    if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files.length) {
+      await ingestFiles(e.dataTransfer.files);
+    }
+  };
+  const onDragOver = (e) => { e.preventDefault(); if (!dragOver) setDragOver(true); };
+  const onDragLeave = (e) => { e.preventDefault(); setDragOver(false); };
+  const onPaste = async (e) => {
+    const items = e.clipboardData && e.clipboardData.items;
+    if (!items) return;
+    const files = [];
+    for (const it of items) {
+      if (it.kind === "file") {
+        const f = it.getAsFile();
+        if (f) files.push(f);
+      }
+    }
+    if (files.length) {
+      e.preventDefault();
+      await ingestFiles(files);
+    }
+  };
+  const removeAttachment = (idx) => setAttachments(a => a.filter((_, i) => i !== idx));
+
   // Detect regen/regenerate-style intent. If the user asks for a new grid,
   // pipe the rest of the message (everything after the directive word) into
   // onGenerate as the intent, and echo a system turn instead of calling the
@@ -796,11 +797,13 @@ function ChatRail({ go, gridGenerate, aiBusy }) {
   };
 
   const send = async () => {
-    if (!draft.trim() || busy || !CHAT) return;
+    const hasText = !!draft.trim();
+    const hasAtt  = attachments.length > 0;
+    if ((!hasText && !hasAtt) || busy || !CHAT) return;
     const text = draft.trim();
-    const regen = gridGenerate ? parseRegenIntent(text) : null;
+    // Regen intent only fires on bare text commands — attachments bypass it.
+    const regen = (gridGenerate && !hasAtt) ? parseRegenIntent(text) : null;
     if (regen !== null) {
-      // Regen path: echo user turn, then let the grid generator do the work.
       let cid = activeId;
       if (!cid) { const c = CHAT.newChat(); cid = c.id; setActiveId(cid); }
       CHAT.appendTurn(cid, "user", text);
@@ -816,8 +819,10 @@ function ChatRail({ go, gridGenerate, aiBusy }) {
         const c = CHAT.newChat();
         cid = c.id; setActiveId(cid);
       }
+      const atts = attachments;
       setDraft("");
-      await CHAT.send({ chatId: cid, text });
+      setAttachments([]);
+      await CHAT.send({ chatId: cid, text, attachments: atts });
     } catch (e) {
       alert("Send failed: " + e.message);
     } finally { setBusy(false); }
@@ -846,7 +851,23 @@ function ChatRail({ go, gridGenerate, aiBusy }) {
           </span>
         </header>
 
-        <div ref={scrollRef} className="chat-rail-stream">
+        <div
+          ref={scrollRef}
+          className="chat-rail-stream"
+          onDrop={onDrop}
+          onDragOver={onDragOver}
+          onDragLeave={onDragLeave}
+          style={{
+            position:"relative",
+            outline: dragOver ? "2px dashed color-mix(in oklab, var(--ink) 35%, transparent)" : "none",
+            outlineOffset: "-4px",
+            background: dragOver ? "color-mix(in oklab, var(--ink) 4%, transparent)" : undefined,
+            transition:"background 120ms ease",
+          }}
+        >
+          {/* Silent drop — no overlay text, no centered card. The whole
+              widget accepts files. The dragOver outline (set on the parent)
+              is the only feedback while dragging. */}
           {turns.length === 0 && (
             <div className="chat-rail-empty">
               Ask Comeketo Agent anything. Replies sediment into the bedrock via the reflection layer.
@@ -887,20 +908,114 @@ function ChatRail({ go, gridGenerate, aiBusy }) {
           })}
           {busy && (
             <div className="chat-rail-turn ai">
-              <div className="chat-rail-bubble" style={{fontStyle:"italic", color:"var(--ink-4)"}}>thinking…</div>
+              {/* Animated trace — populated by gpt-5.4-mini preprocess when
+                  prompt-enhance is on (Settings → Chat intelligence). Falls
+                  back to a generic rotating deck when off. */}
+              {window.ThinkingTrace
+                ? <window.ThinkingTrace busy={busy} chatId={activeId} />
+                : <div className="chat-rail-bubble" style={{fontStyle:"italic", color:"var(--ink-4)"}}>thinking…</div>}
             </div>
           )}
         </div>
 
+        {attachments.length > 0 && (
+          <div style={{display:"flex", gap:6, flexWrap:"wrap", padding:"10px 12px 0"}}>
+            {attachments.map((a, i) => {
+              const isImage = a.mime && a.mime.startsWith("image/");
+              const fname = a.original_filename || a.filename || "file";
+              const ext = (fname.split(".").pop() || "").toLowerCase().slice(0, 5) || "file";
+              const kb = a.size ? (a.size < 1024 ? a.size + "b" : a.size < 1024*1024 ? Math.round(a.size/1024) + "kb" : (a.size/1024/1024).toFixed(1) + "mb") : "";
+              const TYPE_TONE = {
+                pdf:  { bg: "var(--rose-bg)",  ink: "var(--rose-ink)"  },
+                csv:  { bg: "var(--mint-bg)",  ink: "var(--mint-ink)"  },
+                tsv:  { bg: "var(--mint-bg)",  ink: "var(--mint-ink)"  },
+                xlsx: { bg: "var(--mint-bg)",  ink: "var(--mint-ink)"  },
+                json: { bg: "var(--lav-bg)",   ink: "var(--lav-ink)"   },
+                jsonl:{ bg: "var(--lav-bg)",   ink: "var(--lav-ink)"   },
+                yaml: { bg: "var(--lav-bg)",   ink: "var(--lav-ink)"   },
+                yml:  { bg: "var(--lav-bg)",   ink: "var(--lav-ink)"   },
+                md:   { bg: "var(--peach-bg)", ink: "var(--peach-ink)" },
+                txt:  { bg: "var(--peach-bg)", ink: "var(--peach-ink)" },
+                log:  { bg: "var(--peach-bg)", ink: "var(--peach-ink)" },
+                docx: { bg: "var(--sky-bg)",   ink: "var(--sky-ink)"   },
+                js:   { bg: "var(--lemon-bg)", ink: "var(--lemon-ink)" },
+                jsx:  { bg: "var(--lemon-bg)", ink: "var(--lemon-ink)" },
+                ts:   { bg: "var(--lemon-bg)", ink: "var(--lemon-ink)" },
+                tsx:  { bg: "var(--lemon-bg)", ink: "var(--lemon-ink)" },
+                py:   { bg: "var(--lemon-bg)", ink: "var(--lemon-ink)" },
+              };
+              const tone = TYPE_TONE[ext] || { bg: "var(--paper-2)", ink: "var(--ink-3)" };
+              return (
+                <div key={i} style={{position:"relative"}} title={`${fname}${kb ? " · " + kb : ""}`}>
+                  {isImage ? (
+                    <img src={a.url} alt={fname}
+                      style={{width:48, height:48, objectFit:"cover", borderRadius:5, border:"1px solid var(--rule-2)", display:"block"}}
+                    />
+                  ) : (
+                    <div style={{
+                      width:48, height:48, borderRadius:5, border:"1px solid var(--rule-2)",
+                      background: tone.bg, color: tone.ink,
+                      display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center",
+                      padding:"3px", overflow:"hidden",
+                      boxShadow:"inset 0 1px 0 rgba(255,255,255,0.4)",
+                    }}>
+                      <div style={{fontFamily:"var(--font-mono)", fontSize:9, fontWeight:600, letterSpacing:"0.04em", textTransform:"uppercase", lineHeight:1}}>
+                        {ext}
+                      </div>
+                      <div style={{
+                        fontFamily:"var(--font-body)", fontSize:8, marginTop:2,
+                        opacity:0.85, lineHeight:1.1, textAlign:"center",
+                        overflow:"hidden", display:"-webkit-box",
+                        WebkitLineClamp:2, WebkitBoxOrient:"vertical", maxWidth:42,
+                      }}>
+                        {fname.replace(new RegExp("\\." + ext + "$", "i"), "").slice(0, 16)}
+                      </div>
+                    </div>
+                  )}
+                  <button onClick={() => removeAttachment(i)}
+                    title="Remove"
+                    style={{position:"absolute", top:-5, right:-5, width:15, height:15, borderRadius:"50%", border:"1px solid var(--rule-2)", background:"var(--paper)", cursor:"pointer", display:"flex", alignItems:"center", justifyContent:"center", padding:0, color:"var(--ink-3)"}}
+                  >
+                    <Icon name="x" size={8}/>
+                  </button>
+                </div>
+              );
+            })}
+            {uploading && <div style={{alignSelf:"center", fontSize:9, color:"var(--ink-4)", fontFamily:"var(--font-mono)", letterSpacing:"0.04em"}}>uploading…</div>}
+          </div>
+        )}
+
         <div className="chat-rail-input">
+          <button
+            onClick={() => fileInputRef.current && fileInputRef.current.click()}
+            title="Attach a file (image, PDF, CSV, JSON, text, code — 25MB max)"
+            style={{
+              background:"transparent", border:"1px solid var(--rule)",
+              borderRadius:"50%", width:32, height:32, cursor:"pointer",
+              display:"inline-flex", alignItems:"center", justifyContent:"center",
+              color:"var(--ink-3)", flexShrink:0, padding:0,
+              alignSelf:"end", marginBottom:6,
+            }}
+          >
+            <Icon name="plus" size={13}/>
+          </button>
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/*,application/pdf,text/*,application/json,application/x-yaml,application/xml,.csv,.tsv,.md,.markdown,.log,.yaml,.yml,.toml,.env,.js,.jsx,.ts,.tsx,.py,.rb,.go,.rs,.java,.kt,.swift,.c,.cpp,.h,.hpp,.cs,.php,.sh,.sql,.html,.htm,.xml,.docx,.xlsx,.pptx,.zip"
+            multiple
+            style={{display:"none"}}
+            onChange={(e) => { ingestFiles(e.target.files); e.target.value = ""; }}
+          />
           <textarea
             value={draft}
             onChange={(e) => setDraft(e.target.value)}
+            onPaste={onPaste}
             onKeyDown={(e) => { if ((e.metaKey || e.ctrlKey) && e.key === "Enter") { e.preventDefault(); send(); } }}
             placeholder="Message Comeketo Agent. ⌘/Ctrl+Enter."
             rows={2}
           />
-          <button className="btn primary" onClick={send} disabled={!draft.trim() || busy} title="Send">
+          <button className="btn primary" onClick={send} disabled={(!draft.trim() && attachments.length === 0) || busy} title="Send">
             <Icon name="send" size={13}/>
           </button>
         </div>
@@ -1265,140 +1380,9 @@ function extractBriefingIdeas(body) {
   return ideas.slice(0, 5);
 }
 
-// QuickCapture — the "I just had an idea, clock it" box (Apr 2026).
-//
-// Sits below the Ideas tray on the home page. Type or paste an idea; on
-// ⌘/Ctrl+Enter (or click ↳), it's appended to the inbox as a note. The
-// agent's next sweep folds it into bedrock.
 //
 // Voice: if Web Speech API is available, the 🎙 button toggles continuous
 // dictation — appending into the textarea. Quietly hidden if unsupported.
-function QuickCapture() {
-  const [text, setText] = useState("");
-  const [status, setStatus] = useState("idle"); // "idle" | "saving" | "saved" | "error"
-  const [listening, setListening] = useState(false);
-  const [voiceSupported, setVoiceSupported] = useState(false);
-  const recRef = useRef(null);
-  const taRef = useRef(null);
-
-  useEffect(() => {
-    const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-    setVoiceSupported(!!SR);
-  }, []);
-
-  const submit = useCallback(async () => {
-    const trimmed = text.trim();
-    if (!trimmed) return;
-    if (!window.SecretaryInbox || !window.SecretaryInbox.append) {
-      setStatus("error");
-      setTimeout(() => setStatus("idle"), 2000);
-      return;
-    }
-    setStatus("saving");
-    try {
-      await window.SecretaryInbox.append({
-        kind: "note",
-        text: trimmed,
-        source: { screen: "home", widget: "quick_capture" },
-      });
-      setText("");
-      setStatus("saved");
-      setTimeout(() => setStatus("idle"), 1600);
-    } catch (e) {
-      console.warn("QuickCapture save failed:", e && e.message);
-      setStatus("error");
-      setTimeout(() => setStatus("idle"), 2400);
-    }
-  }, [text]);
-
-  const onKeyDown = (e) => {
-    if ((e.metaKey || e.ctrlKey) && e.key === "Enter") {
-      e.preventDefault();
-      submit();
-    }
-  };
-
-  const toggleVoice = () => {
-    if (listening) {
-      try { recRef.current && recRef.current.stop(); } catch {}
-      return;
-    }
-    const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-    if (!SR) return;
-    const rec = new SR();
-    rec.lang = "en-US";
-    rec.continuous = true;
-    rec.interimResults = false;
-    let appended = "";
-    rec.onresult = (e) => {
-      for (let i = e.resultIndex; i < e.results.length; i++) {
-        const r = e.results[i];
-        if (r.isFinal) {
-          appended += (appended ? " " : "") + r[0].transcript.trim();
-          setText(prev => (prev ? prev + " " : "") + r[0].transcript.trim());
-        }
-      }
-    };
-    rec.onerror = () => { setListening(false); };
-    rec.onend = () => { setListening(false); recRef.current = null; };
-    try {
-      rec.start();
-      recRef.current = rec;
-      setListening(true);
-      setTimeout(() => taRef.current && taRef.current.focus(), 50);
-    } catch {
-      setListening(false);
-    }
-  };
-
-  const placeholder = listening
-    ? "listening…  speak when ready"
-    : "drop an idea — Rodbot picks it up on next sweep.  ⌘/Ctrl+Enter to save.";
-
-  return (
-    <div className={"quick-capture" + (status === "saved" ? " saved" : "") + (status === "error" ? " errored" : "")}>
-      <div className="qc-head">
-        <span className="qc-title">Capture</span>
-        <span className={"qc-status qc-status-" + status}>
-          {status === "saving" ? "saving…" : status === "saved" ? "captured" : status === "error" ? "save failed" : ""}
-        </span>
-      </div>
-      <textarea
-        ref={taRef}
-        className="qc-input"
-        value={text}
-        onChange={(e) => setText(e.target.value)}
-        onKeyDown={onKeyDown}
-        placeholder={placeholder}
-        rows={3}
-        disabled={status === "saving"}
-      />
-      <div className="qc-actions">
-        {voiceSupported && (
-          <button
-            type="button"
-            className={"qc-mic" + (listening ? " on" : "")}
-            onClick={toggleVoice}
-            title={listening ? "stop listening" : "dictate"}
-            aria-label={listening ? "stop listening" : "dictate"}
-          >
-            {listening ? "● listening" : "🎙 talk"}
-          </button>
-        )}
-        <button
-          type="button"
-          className="qc-send"
-          onClick={submit}
-          disabled={!text.trim() || status === "saving"}
-          title="save to inbox  (⌘/Ctrl+Enter)"
-        >
-          save ↳
-        </button>
-      </div>
-    </div>
-  );
-}
-
 // IdeasTray — flat 5-row list of briefing-derived ideas. Click → chat.
 // No sections, no chips, no refine. The chat is the work; this is the cue.
 function IdeasTray({ ideas, sentId, onPick, onSweep, canSweep, aiBusy }) {
@@ -1544,7 +1528,7 @@ function TeachingStrip({ greeting, instruct, meta }) {
 function FrontPage(props) {
   const {
     grid, onCellOpen, onSweep, onFrameReject, aiBusy, canGenerate, aiConfigured,
-    historyDepth, onGenerate, onBack, onOpenSettings, onEditWithRodbot, go,
+    historyDepth, onGenerate, onBack, onOpenSettings, go,
   } = props;
 
   // Refinement state: null = grid mode; otherwise { cellId, type, axes, positions, children }
@@ -1654,11 +1638,6 @@ function FrontPage(props) {
         if (CHAT.appendSystem) CHAT.appendSystem("Pick failed: " + (e && e.message || e));
       }
     })();
-    if (window.SecretaryLedger && window.SecretaryLedger.log) {
-      window.SecretaryLedger.log("briefing_idea_picked", {
-        idea_id: id, title: idea.title, accent: idea.accent,
-      });
-    }
   }, [ideas]);
 
   const sweepNow = useCallback(() => {
@@ -1724,9 +1703,6 @@ function FrontPage(props) {
       child_card_chosen: childChosen,
       timestamp: new Date().toISOString(),
     };
-    if (window.SecretaryLedger && window.SecretaryLedger.log) {
-      window.SecretaryLedger.log("coordinate", evt);
-    }
   };
 
   const commitChild = (child) => {
@@ -1832,7 +1808,12 @@ function FrontPage(props) {
   return (
     <div className="front-viewport ideas-mode" data-arriving={arriving ? "1" : "0"}>
       <div className="fp-head">
-        <TeachingStrip greeting={greeting} instruct={instruct} meta={meta} />
+        {/* Live Pieces broadcast strip — defined in screens.jsx and exposed
+            on window. Falls back to the static greeting when Pieces is
+            offline or empty, so the homepage NEVER goes blank. */}
+        {window.LivePiecesHeader
+          ? <window.LivePiecesHeader greeting={greeting} instruct={instruct} meta={meta} />
+          : <TeachingStrip greeting={greeting} instruct={instruct} meta={meta} />}
         <FpBreadcrumb
           rootLabel={"grid · " + (grid ? grid.id : "—")}
           trail={trail}
@@ -1850,7 +1831,6 @@ function FrontPage(props) {
             canSweep={canGenerate}
             aiBusy={aiBusy}
           />
-          <QuickCapture />
         </aside>
         <main className="fp-chat">
           <ChatRail go={go} gridGenerate={onGenerate} aiBusy={aiBusy} />

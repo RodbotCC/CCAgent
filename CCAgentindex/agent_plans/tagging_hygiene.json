@@ -1,0 +1,96 @@
+{
+  "schema": "comeketo.agent_plan.v1",
+  "slug": "tagging_hygiene",
+  "name": "Tagging hygiene · re-classify \"other\"",
+  "description": "Rodbot dispatches 6 sub-agents to enrich + classify 12 leads currently tagged 'other' in Close.",
+  "trigger_label": "12 leads · trusted",
+  "orchestrator": {
+    "label": "Rodbot",
+    "model": "claude-sonnet-4-6",
+    "register": "operational"
+  },
+  "budgets": {
+    "max_sub_agents": 8,
+    "tokens_cap": 12000,
+    "wallclock_cap_s": 60,
+    "retry_policy": "linear_backoff"
+  },
+  "sub_agents": [
+    {
+      "id": "SA-01",
+      "action": "enrich",
+      "tool": "close.lead.fetch",
+      "prompt_template": "Enrich {{lead.id}}: pull most recent thread + firmographic facts.",
+      "leads": 2,
+      "retries": 2,
+      "timeout_s": 30,
+      "tone": "lavender",
+      "expected_latency_s": 4.2
+    },
+    {
+      "id": "SA-02",
+      "action": "classify",
+      "tool": "close.lead.update",
+      "prompt_template": "Re-classify {{lead.id}} away from 'other' using the playbook.",
+      "leads": 2,
+      "retries": 2,
+      "timeout_s": 30,
+      "tone": "lavender",
+      "expected_latency_s": 3.8
+    },
+    {
+      "id": "SA-03",
+      "action": "classify",
+      "tool": "close.lead.update",
+      "prompt_template": "Re-classify {{lead.id}} (batch 2).",
+      "leads": 2,
+      "retries": 2,
+      "timeout_s": 30,
+      "tone": "lavender",
+      "expected_latency_s": 4.0
+    },
+    {
+      "id": "SA-04",
+      "action": "classify",
+      "tool": "gmail.thread.search",
+      "prompt_template": "Pull recent thread for {{lead.id}}, then re-classify.",
+      "leads": 2,
+      "retries": 2,
+      "timeout_s": 30,
+      "tone": "rose",
+      "expected_latency_s": 0.0,
+      "blocked_reason": "auth"
+    },
+    {
+      "id": "SA-05",
+      "action": "enrich",
+      "tool": "close.lead.fetch",
+      "prompt_template": "Enrich {{lead.id}} (batch 2).",
+      "leads": 2,
+      "retries": 2,
+      "timeout_s": 30,
+      "tone": "lavender",
+      "expected_latency_s": 5.1
+    },
+    {
+      "id": "SA-06",
+      "action": "classify",
+      "tool": "wedding_wire.search",
+      "prompt_template": "Look up {{lead.id}} on Wedding Wire and classify.",
+      "leads": 2,
+      "retries": 2,
+      "timeout_s": 30,
+      "tone": "lemon",
+      "expected_latency_s": 0.0
+    }
+  ],
+  "merge": {
+    "label": "merge → write to Tables",
+    "target": "tables/leads_pipeline.json"
+  },
+  "metadata": {
+    "created_at": "2026-04-25T00:00:00+00:00",
+    "last_modified": "2026-04-25T00:00:00+00:00",
+    "version": 1
+  }
+}

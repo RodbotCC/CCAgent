@@ -1,0 +1,85 @@
+{
+  "id": "shakeema_washington",
+  "kind": "lead",
+  "name": "Shakeema Washington",
+  "role": "Wedding · Date TBD · 50 guests · Brockton MA",
+  "relationship_tier": "stalled",
+  "relationship_weight": 0.22,
+  "contacts": {
+    "email": "shakeemawashington38@gmail.com",
+    "phone": "+1-508-818-3627",
+    "whatsapp": null,
+    "slack_id": null,
+    "slack_channel": null,
+    "clickup_user_id": null,
+    "other": null
+  },
+  "handling": {
+    "preferred_channel": "SMS",
+    "response_latency_target": "within-24h",
+    "tone": "African-American household, almost certainly Anglo-speaking. Apr 24 Portuguese SMS was a system misfire — switch back to English with graceful reset. No big apology — just move forward.",
+    "voice_adjustments": "Andre voice: warm, English, culturally-aware. Don't pitch Brazilian BBQ first. Black American weddings often want soul food, comfort food, or specific cultural cuisines.",
+    "context": "Crisp Chat / FB inbound Apr 22. 50 guests, no date, $0 opp confidence. Cold no-response. Apr 24 follow-up was sent in Portuguese — third Portuguese-template misfire in batch (after Esther + Michelle). The system's Portuguese-default fired inappropriately.",
+    "off_limits_topics": null
+  },
+  "context_anchors": [
+    "Brockton MA, 02301 — diverse demos (Black, Cape Verdean, Haitian)",
+    "African-American household — first/last name pattern",
+    "Wedding date NOT specified — red flag",
+    "50 guests = mid-size, community venue or large home likely",
+    "Apr 24 Portuguese SMS may have damaged contact",
+    "Open task: 'Change the name of the lead once you find what it is'"
+  ],
+  "lead": {
+    "status": "stalled",
+    "stage": "cold_no_response_portuguese_misfire",
+    "owner": "andre_raw",
+    "source": "Crisp Chat / Facebook (Organic)",
+    "event_type": "Wedding",
+    "event_date": null,
+    "guest_count": 50,
+    "venue": null,
+    "city": "Brockton, MA",
+    "quote_value": null,
+    "opportunity_value": 0,
+    "score_tags": ["language_misfire", "no_date", "cold", "cultural_open"],
+    "last_activity": "2026-04-24 — Portuguese cadence SMS",
+    "speed_urgency": "low",
+    "next_move": "English reset asking for date + cuisine direction (don't assume Brazilian BBQ)"
+  },
+  "enrichment": {
+    "confidence": 0.30,
+    "identity_notes": "Both first and last name patterns strongly associated with Black American identity. Brockton has significant Black American, Cape Verdean, Haitian populations. Highly unlikely Portuguese-speaking.",
+    "win_angles": [
+      "English reset, no awkward apology — just switch and move",
+      "Don't pitch Brazilian BBQ first — open cuisine door",
+      "50 guests + wedding = $30-60/pp = $1,500-3,000 deal",
+      "Day 1 was thorough; she may be testing multiple caterers"
+    ],
+    "nepq_openers": [
+      "Reset EN: 'Hey Shakeema — switching back to English here. For wedding for 50 guests, two questions: (1) date you're working toward? (2) food vibe — soul food, Brazilian BBQ, classic American, or something else?'",
+      "Frame: 'For 50-person wedding, what does the perfect day look like in your head?'",
+      "Anchor: 'For 50 guests, depending on cuisine and service, $X-Y. Want a tight comparison once you know direction?'"
+    ],
+    "open_gaps": [
+      "Wedding date — non-negotiable",
+      "Venue",
+      "Cuisine direction (cultural fit question)",
+      "Phone preference (call vs text)",
+      "Decision-maker dynamic",
+      "Whether Portuguese text affected her view"
+    ],
+    "strategic_note": "Third Portuguese-template misfire in this batch — system bug. For Shakeema: one warm English message that asks date + opens cuisine without assuming Brazilian. If she comes back, deal restarts. The bigger value is the system data point — flag the language guardrail violation."
+  },
+  "comms": [
+    {"ts": "2026-04-22T15:49:00Z", "channel": "live_chat", "direction": "in", "summary": "Crisp chat started from Facebook"},
+    {"ts": "2026-04-22T16:00:00Z", "channel": "sms", "direction": "out", "summary": "Call attempts + churrasco/rodizio explainer"},
+    {"ts": "2026-04-23T11:00:00Z", "channel": "sms", "direction": "out", "summary": "Re-engagement: call vs tasting"},
+    {"ts": "2026-04-24T13:00:00Z", "channel": "sms", "direction": "out", "summary": "Day-4 cadence — sent in PORTUGUESE (likely misfire)"}
+  ],
+  "notes": [
+    "Language guardrail violated — flag system bug",
+    "Don't assume Brazilian BBQ for Black American household",
+    "Reset to English, ask date, open cuisine door"
+  ]
+}

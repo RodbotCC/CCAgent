@@ -1,0 +1,89 @@
+{
+  "id": "elizabeth_peter",
+  "kind": "lead",
+  "name": "Elizabeth & Peter",
+  "role": "Wedding · Sept 4, 2027 · 80 guests · Newport Officers' Club (US Naval Base)",
+  "relationship_tier": "active_quote",
+  "relationship_weight": 0.72,
+  "contacts": {
+    "email": null,
+    "phone": null,
+    "whatsapp": null,
+    "slack_id": null,
+    "slack_channel": null,
+    "clickup_user_id": null,
+    "other": null
+  },
+  "handling": {
+    "preferred_channel": "Phone",
+    "response_latency_target": "same-day",
+    "tone": "Status 'Probably Not' MISCLASSIFIED — she's actively engaged. GF differentiator is the deal-maker. Lead every conversation with 'I want to make sure your night doesn't feel like a compromise food-wise.'",
+    "voice_adjustments": "Andre voice: composed, military-family-aware, GF-focus. 16-month patience deal. Be hireable, don't pressure.",
+    "context": "Zola Gold inquiry Apr 24. Bride is gluten-free — explicit. Heavy cocktail-hour appetizers + buffet vision. Newport Officers' Club venue (US Navy base — vendor approval may be required). Status set 'Probably Not' even though she said 'I am on break now so I am ready to call.' Today (Apr 25) Andre tried 2x, no answer.",
+    "off_limits_topics": null
+  },
+  "context_anchors": [
+    "Newport Officers' Club, Newport RI — US Naval Base",
+    "Elizabeth or Peter (or parent) likely military-affiliated",
+    "Sept 4, 2027 — 16 months out",
+    "80 guests, budget up to $15K = $187/head upper-tier",
+    "BRIDE IS GLUTEN-FREE — non-negotiable, deal-maker",
+    "Vision: heavy cocktail hour + buffet variety",
+    "Status 'Probably Not' is MISCLASSIFIED"
+  ],
+  "lead": {
+    "status": "active_quote",
+    "stage": "actively_engaged_status_premature",
+    "owner": "andre_raw",
+    "source": "Zola Gold Inquiry",
+    "event_type": "Wedding",
+    "event_date": "2027-09-04",
+    "guest_count": 80,
+    "venue": "Newport Officers' Club, Naval Station Newport RI",
+    "city": "Newport, RI",
+    "quote_value": null,
+    "opportunity_value": 15000,
+    "score_tags": ["zola_gold", "gluten_free_deal_maker", "military_venue", "status_misclassified"],
+    "last_activity": "2026-04-25 — Andre called 2x, no answer; status premature 'Probably Not'",
+    "speed_urgency": "low",
+    "next_move": "Reconnect today/tomorrow, GF + base-logistics conversation, then May tasting invite"
+  },
+  "enrichment": {
+    "confidence": 0.82,
+    "identity_notes": "Newport Officers' Club is on US Navy base — Naval Station Newport. Civilian wedding requires active/retired military affiliation OR sponsorship. Either Elizabeth or Peter (or parent) is military-connected. Military families plan weddings differently — efficient, organized, value structure and follow-through.",
+    "win_angles": [
+      "GF differentiator — 'doing this right for you' food-wise is THE thing",
+      "Cocktail-hour-heavy + buffet matches Comeketo strengths perfectly",
+      "Military venue logistics as a flex — most caterers don't want to deal with base access",
+      "16-month runway = trusted advisor play, tasting May/June, contract mid-summer",
+      "$187/head comfortable upper-tier — compete on experience not price"
+    ],
+    "nepq_openers": [
+      "Reconnect: 'Elizabeth, sorry I missed you on break — what's the best window in next day or two for 15-min call? Want to cover GF side of menu and Officers' Club logistics so you have real read on whether we're the right fit.'",
+      "Problem: 'With Officers' Club venue, what's been hardest about finding caterers willing to work through base access pieces?'",
+      "Identity: 'You mentioned GF mattering — that tells me you've been let down before. What does doing this right for you actually look like food-wise?'",
+      "Anchor: 'At your guest count + venue + cocktail-hour-heavy vision, $X-Y range. Bigger question — total or how money splits across food/bar/service?'"
+    ],
+    "open_gaps": [
+      "Is Elizabeth or Peter the military-affiliated person?",
+      "Do we have base catering vendor approval?",
+      "Specific GF needs (celiac vs sensitivity, cross-contamination)",
+      "Bar package preference",
+      "Guest demographics",
+      "Whether they've gotten quotes from other caterers"
+    ],
+    "strategic_note": "Update status from 'Probably Not' to at least 'Maybe' — she actively asked to be called. Misclassification biases cadence wrong. Reconnect ASAP, book discovery call where GF + base-logistics conversations happen, then May 17 tasting. 16-month patience deal requires showing up consistently. She's hiring us slowly — be hireable."
+  },
+  "comms": [
+    {"ts": "2026-04-24T10:00:00Z", "channel": "email", "direction": "in", "summary": "Zola Gold inquiry — venue, GF, vision, $15K budget"},
+    {"ts": "2026-04-24T11:00:00Z", "channel": "call", "direction": "out", "summary": "First call attempt no answer + service-types email"},
+    {"ts": "2026-04-24T13:00:00Z", "channel": "sms", "direction": "in", "summary": "'At work but available in a few hours to call!'"},
+    {"ts": "2026-04-24T16:00:00Z", "channel": "sms", "direction": "in", "summary": "'I am on break now so I am ready to call'"},
+    {"ts": "2026-04-25T11:00:00Z", "channel": "call", "direction": "out", "summary": "2 more call attempts, no answer"}
+  ],
+  "notes": [
+    "Status 'Probably Not' is misclassified — flag for correction",
+    "GF is the deal-maker, not an afterthought",
+    "Confirm base vendor approval status internally"
+  ]
+}

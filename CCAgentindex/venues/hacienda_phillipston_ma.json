@@ -1,0 +1,31 @@
+{
+  "id": "hacienda_phillipston_ma",
+  "kind": "venue",
+  "name": "The Hacienda (Phillipston, MA)",
+  "city": "Phillipston, MA",
+  "venue_type": null,
+  "website": null,
+  "tier": "tier_1",
+  "deal_stats": {
+    "opp_count": 24,
+    "total_value": 134309.35,
+    "avg_deal_value": 5596.22,
+    "lead_name_refs": 6
+  },
+  "close_account": {
+    "has_lead": false,
+    "lead_status": null,
+    "lead_url": null
+  },
+  "raw_variants": [
+    "La Hacienda Blake Corner Rd Phillipston, MA",
+    "The Hacienda",
+    "The Hacienda 95-115 Blake Corner Rd., Phillipston, MA 01331"
+  ],
+  "action": "ENRICH NOW — high-volume, no lead account",
+  "notes": [
+    "24 opportunities totaling $134,309.35 — rank #1 by deal value.",
+    "No Close lead account yet — recommend creating one to track relationship.",
+    "6 leads have referenced this as their venue choice."
+  ]
+}

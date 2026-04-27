@@ -1,0 +1,32 @@
+{
+  "id": "framingham_village_hall",
+  "kind": "venue",
+  "name": "Framingham Village Hall",
+  "city": null,
+  "venue_type": null,
+  "website": null,
+  "tier": "tier_1",
+  "deal_stats": {
+    "opp_count": 9,
+    "total_value": 30781.14,
+    "avg_deal_value": 3420.13,
+    "lead_name_refs": 5
+  },
+  "close_account": {
+    "has_lead": false,
+    "lead_status": null,
+    "lead_url": null
+  },
+  "raw_variants": [
+    "Framingham History Center",
+    "Framingham History Center, Village Hall, 2 Oak Street, Fraimingham, MA, 01701",
+    "Village Hall (Framingham)",
+    "Village Hall on the Common"
+  ],
+  "action": "ENRICH NOW — high-volume, no lead account",
+  "notes": [
+    "9 opportunities totaling $30,781.14 — rank #5 by deal value.",
+    "No Close lead account yet — recommend creating one to track relationship.",
+    "5 leads have referenced this as their venue choice."
+  ]
+}

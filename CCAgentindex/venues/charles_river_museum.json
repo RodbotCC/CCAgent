@@ -1,0 +1,29 @@
+{
+  "id": "charles_river_museum",
+  "kind": "venue",
+  "name": "Charles River Museum",
+  "city": null,
+  "venue_type": null,
+  "website": "https://www.charlesrivermuseum.org",
+  "tier": "tier_3",
+  "deal_stats": {
+    "opp_count": 4,
+    "total_value": 13198.0,
+    "avg_deal_value": 3299.5,
+    "lead_name_refs": 0
+  },
+  "close_account": {
+    "has_lead": true,
+    "lead_status": "📁 Rodrigo's Leads",
+    "lead_url": "https://app.close.com/lead/lead_3AXvsN8n8lmad6y6bS6997SejOPkTqxaqLqx0pB2Pv8/"
+  },
+  "raw_variants": [
+    "Charles River Museum"
+  ],
+  "action": "✅ Profiled & active — keep relationship warm",
+  "notes": [
+    "154 Moody St., Waltham, MA 02453.",
+    "4 opportunities totaling $13,198.00 — rank #25 by deal value.",
+    "Has Close lead account (status: 📁 Rodrigo's Leads)."
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "id": "toni_llagas",
+  "kind": "coworker",
+  "name": "Toni Llagas",
+  "role": "Sales Rep / Process",
+  "relationship_tier": "core_partnership",
+  "relationship_weight": 0.88,
+  "contacts": {
+    "email": "toni@comeketocatering.com",
+    "phone": null,
+    "whatsapp": null,
+    "slack_id": null,
+    "slack_channel": null
+  },
+  "handling": {
+    "preferred_channel": "Slack",
+    "response_latency_target": "same-day",
+    "tone": "Clean, polished, peer. She types the most carefully on the team — match her register. Brief but grammatically intact.",
+    "voice_adjustments": "Mirror Toni's clean register: proper capitalization throughout, full punctuation, complete sentences. Use ':+1:' instead of writing 'ok'. Light emoji only — thumbs-up, the occasional emoji bullet for headers (:memo: :calendar: :clipboard: :key: :no_entry_sign:). Apostrophes always correct. No slang, no excessive emoji. Replies stay brief but grammatically clean — 'Got it, [name].' / 'Done' / 'Here's the [thing]' are the cadence.",
+    "context": "Sales rep with a process bent. Background in meeting minutes; the structural cleanest typist on the team.",
+    "off_limits_topics": null
+  },
+  "context_anchors": [
+    "Characteristic phrase: \"Good morning guys!\"",
+    "Characteristic phrase: \"Got it, [name].\"",
+    "Characteristic phrase: \"Yes [name], click [thing]\"",
+    "Verbatim: \"Done\"",
+    "Verbatim: \"Here's the template title\"",
+    "Punctuation tic: ':+1:' instead of typing 'ok'"
+  ],
+  "notes": [
+    "Owns: sales rep work + process / template hygiene",
+    "Cadence anchor: cleanest grammar on the team — no typos, full stops, proper apostrophes",
+    "Background in meeting minutes — that polish carries through"
+  ]
+}

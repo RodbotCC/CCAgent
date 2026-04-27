@@ -1,0 +1,15 @@
+{
+  "schema": "comeketo.trigger.v1",
+  "slug": "auto_05_outbound_mirror_slack",
+  "kind": "rule",
+  "label": "AUTO.05 · Mirror outbound to #andre-system-actions",
+  "enabled": false,
+  "tone": "lemon",
+  "notes": "Off — downstream of AUTO.06 send. Per-send Slack DM to Andre + mirror to #andre-system-actions for audit trail.",
+  "created_at": "2026-04-27T00:00:00+00:00",
+  "last_modified": "2026-04-27T00:00:00+00:00",
+  "pattern": "outbound_send=any",
+  "pattern_type": "send_event",
+  "filter": "any",
+  "workflow_slug": null
+}

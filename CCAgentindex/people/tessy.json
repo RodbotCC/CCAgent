@@ -1,0 +1,85 @@
+{
+  "id": "tessy",
+  "kind": "lead",
+  "name": "Tessy",
+  "role": "Gathering · Sept 20, 2026 · 40 guests · Fairlee VT (out-of-zone)",
+  "relationship_tier": "stalled",
+  "relationship_weight": 0.18,
+  "contacts": {
+    "email": null,
+    "phone": null,
+    "whatsapp": null,
+    "slack_id": null,
+    "slack_channel": null,
+    "clickup_user_id": null,
+    "other": "Phone 321-317-3920 INVALID per Andre"
+  },
+  "handling": {
+    "preferred_channel": "Email",
+    "response_latency_target": "within-week",
+    "tone": "Stuck lead with two structural blockers (invalid phone + out-of-zone geography). One well-crafted email addressing both directly. Don't quote elaborately for a lead with this many blockers.",
+    "voice_adjustments": "Andre voice: brief, honest about logistics, asks for working number. Don't waste each other's time.",
+    "context": "Inbound Apr 18 from FB Lead Form. Phone 321-317-3920 returns invalid (321 = Florida Brevard County area code on a Vermont resident — possibly recent transplant or typo). Fairlee VT 05051 is ~150 mi from Comeketo zone. No response to any outreach. Vague 'gathering' description.",
+    "off_limits_topics": null
+  },
+  "context_anchors": [
+    "Fairlee VT 05051 — Orange County VT, ~150 mi from us, OUT-OF-ZONE",
+    "Phone 321-317-3920 INVALID — calls error",
+    "321 area code = Florida (Brevard) — possible transplant or typo",
+    "40-guest 'gathering' — vague, could be many things",
+    "Sept 20, 2026 — 21 weeks out, low urgency",
+    "No response to any outreach"
+  ],
+  "lead": {
+    "status": "stalled",
+    "stage": "invalid_phone_email_only_far_event",
+    "owner": "andre_raw",
+    "source": "FB Lead Form — VIDEO RODS WEDDING & FACELESS",
+    "event_type": "Gathering",
+    "event_date": "2026-09-20",
+    "guest_count": 40,
+    "venue": null,
+    "city": "Fairlee, VT",
+    "quote_value": null,
+    "opportunity_value": 1260,
+    "score_tags": ["invalid_phone", "out_of_zone_150mi", "no_response", "vague_event"],
+    "last_activity": "2026-04-22 — churrasco/rodizio drip email",
+    "speed_urgency": "low",
+    "next_move": "One email asking for (1) working phone, (2) honest geography clarification — 'specifically wanting Comeketo or also exploring local VT?'"
+  },
+  "enrichment": {
+    "confidence": 0.25,
+    "identity_notes": "'Tessy' single name = likely nickname (Theresa, Tessa, etc.). 321 (Florida Brevard / Space Coast) on VT resident interesting — recent transplant, ported number, or form typo. Email is only working contact.",
+    "win_angles": [
+      "Email-only outreach until phone fixed",
+      "Geography reality check — Fairlee VT is 3-hour drive each way",
+      "Long runway = patience, wait for her to respond",
+      "Vague event description = need clarity before pitching"
+    ],
+    "nepq_openers": [
+      "Continuation: 'Hi Tessy — wanted to circle back. Two things to make sure we don't waste each other's time: (1) Could you send a working phone number? 321-317-3920 isn't going through. (2) Quick reality check — your zip is Fairlee VT, ~3 hours from us. We CAN come up there for the right event, but it adds real cost. Is the gathering specifically wanting Comeketo, or also exploring local Vermont caterers?'",
+      "Frame: 'What kind of gathering is the September 20th event? 40 guests is a sweet spot for several formats — knowing if it's family reunion, anniversary, milestone birthday, etc. helps me tell you what's realistic.'"
+    ],
+    "open_gaps": [
+      "Working phone number — non-negotiable",
+      "Geographic feasibility — can/should we even quote?",
+      "Event specifics (wedding? reunion? birthday?)",
+      "Whose gathering",
+      "Whether Vermont-resident or visiting MA",
+      "Budget reality"
+    ],
+    "strategic_note": "Stuck lead with two structural blockers: invalid phone + out-of-zone. One well-crafted email addressing BOTH directly. If she comes back with working phone AND confirms wanting Comeketo specifically (despite haul), real deal. If not, long-term followup. Don't quote elaborately for lead with this many blockers — get blockers resolved first."
+  },
+  "comms": [
+    {"ts": "2026-04-19T10:00:00Z", "channel": "call", "direction": "out", "summary": "Call attempt — number returned INVALID error"},
+    {"ts": "2026-04-19T11:00:00Z", "channel": "email", "direction": "out", "summary": "Service overview + flagged invalid number"},
+    {"ts": "2026-04-20T11:00:00Z", "channel": "email", "direction": "out", "summary": "Service-types breakdown resend"},
+    {"ts": "2026-04-21T11:00:00Z", "channel": "email", "direction": "out", "summary": "Tasting pitch"},
+    {"ts": "2026-04-22T11:00:00Z", "channel": "email", "direction": "out", "summary": "Churrasco/Rodizio explainer"}
+  ],
+  "notes": [
+    "Two structural blockers — phone + geography",
+    "20% close probability is fictional",
+    "One email then long-term followup if no response"
+  ]
+}

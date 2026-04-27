@@ -1,0 +1,28 @@
+{
+  "id": "five_bridge_inn",
+  "kind": "venue",
+  "name": "Five Bridge Inn",
+  "city": null,
+  "venue_type": "Inn",
+  "website": null,
+  "tier": "tier_3",
+  "deal_stats": {
+    "opp_count": 4,
+    "total_value": 13169.23,
+    "avg_deal_value": 3292.31,
+    "lead_name_refs": 0
+  },
+  "close_account": {
+    "has_lead": false,
+    "lead_status": null,
+    "lead_url": null
+  },
+  "raw_variants": [
+    "Five Bridge Inn"
+  ],
+  "action": "📋 Create venue lead account",
+  "notes": [
+    "4 opportunities totaling $13,169.23 — rank #26 by deal value.",
+    "No Close lead account yet — recommend creating one to track relationship."
+  ]
+}

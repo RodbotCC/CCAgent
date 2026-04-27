@@ -1,0 +1,15 @@
+{
+  "schema": "comeketo.trigger.v1",
+  "slug": "auto_02_liaison_agent_wake",
+  "kind": "rule",
+  "label": "AUTO.02 · Liaison agent wake",
+  "enabled": false,
+  "tone": "lavender",
+  "notes": "Off — downstream of AUTO.01. Wakes the per-lead liaison sub-agent the moment comms_dirty=true is set. Tier 1+2+3 composition.",
+  "created_at": "2026-04-27T00:00:00+00:00",
+  "last_modified": "2026-04-27T00:00:00+00:00",
+  "pattern": "comms_dirty=true",
+  "pattern_type": "rule_flag",
+  "filter": "true",
+  "workflow_slug": null
+}

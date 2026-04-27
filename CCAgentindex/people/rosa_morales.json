@@ -1,0 +1,87 @@
+{
+  "id": "rosa_morales",
+  "kind": "lead",
+  "name": "Rosa Morales",
+  "role": "21st Birthday · June 6, 2026 · 30 guests · Boston",
+  "relationship_tier": "active_quote",
+  "relationship_weight": 0.62,
+  "contacts": {
+    "email": "kollitarmp@msn.com",
+    "phone": "+1-617-605-5813",
+    "whatsapp": null,
+    "slack_id": null,
+    "slack_channel": null,
+    "clickup_user_id": null,
+    "other": null
+  },
+  "handling": {
+    "preferred_channel": "Email",
+    "response_latency_target": "within-24h",
+    "tone": "Warmest active conversation. She explicitly asked for email details. Andre responded today (Apr 25) with details + 2 qualifying questions. Wait for response, don't pile on.",
+    "voice_adjustments": "Andre voice: warm, listening register. 21st birthday = emotional milestone for the family. Walk in as advisor not vendor.",
+    "context": "Inbound Apr 24 from FB Lead Form (~7:15 PM Friday). Asked specifically for emailed details. Andre responded Apr 25 with framework + asked guest count confirmation + service style. 6 weeks to event = HIGH urgency. MSN.com email suggests older planner (mom-as-planner scenario likely).",
+    "off_limits_topics": null
+  },
+  "context_anchors": [
+    "21st Birthday June 6, 2026 — 6 weeks out, HIGH urgency",
+    "30 guests, $1,040 ballpark = appetizer-heavy or drop-off + light service",
+    "617 area code = Boston/Cambridge mobile",
+    "MSN.com email + Friday-evening form = older demo, mom-planner skew",
+    "Asked specifically for email details — text-light",
+    "Morales = common Latin surname, cuisine direction open question"
+  ],
+  "lead": {
+    "status": "active_quote",
+    "stage": "post_inbound_email_sent_today",
+    "owner": "andre_raw",
+    "source": "FB Lead Form — 01. [CATER] LF EVERGREEN - QUOTE",
+    "event_type": "21st Birthday Party",
+    "event_date": "2026-06-06",
+    "guest_count": 30,
+    "venue": null,
+    "city": "Boston, MA",
+    "quote_value": null,
+    "opportunity_value": 1040,
+    "score_tags": ["immediate_need_3mo", "warm_active", "email_preferred", "mom_planner_likely"],
+    "last_activity": "2026-04-25 — Andre sent catering details email with 2 qualifying questions",
+    "speed_urgency": "high",
+    "next_move": "Wait 24-48h for reply; if silent 72h, one warm SMS nudge ('did the email come through?')"
+  },
+  "enrichment": {
+    "confidence": 0.55,
+    "identity_notes": "'Rosa Morales' one of most common Latin-American names in MA. 617 area = Boston metro. MSN email + Friday-evening form pattern slightly skews older demographic (mom-as-planner) over Gen-Z self-planner. Two scenarios: (1) mom planning for someone turning 21, or (2) younger Rosa with low public footprint. Don't assume — open with 'whose 21st?'",
+    "win_angles": [
+      "Emotional milestone weight — 21st birthdays are rite-of-passage",
+      "She's already leaning in — requested details, will reply in 24-48h",
+      "Right-size the package — 30 + $1,040 = appetizer-heavy or drop-off + light service",
+      "Cultural door open — Morales = Latin surname, ask cuisine direction",
+      "Win the relationship — if mom-planner, more events come (quinceañeras, graduations)"
+    ],
+    "nepq_openers": [
+      "After her reply: 'Rosa, thanks for getting back. Quick — are you the planner here or the birthday person? That changes how I think about the night for you. Also, cuisine: Latin/family-style food, more American party menu, or open?'",
+      "Frame (mom): 'For a mom putting together her daughter's 21st, what are you most worried about getting wrong?'",
+      "Anchor: 'For 30 people, drop-off / light service / fully hosted = $X-Y. Want a tight comparison so you can pick what feels right?'"
+    ],
+    "open_gaps": [
+      "Whose 21st (planner vs birthday person)",
+      "Venue",
+      "Service style preference",
+      "Cuisine direction (Latin vs American vs mixed)",
+      "Dietary considerations",
+      "Budget reality",
+      "Whether comparing other caterers"
+    ],
+    "strategic_note": "Warmest thing in active set. Came in Friday, asked for emailed details, Andre responded today with details + 2 qualifying questions. Now wait. Job here: listen, mirror, show Comeketo gets the moment. Walk in as advisor not vendor. Patience and one well-crafted follow-up if she goes silent."
+  },
+  "comms": [
+    {"ts": "2026-04-24T19:15:00Z", "channel": "live_chat", "direction": "in", "summary": "Live chat started — FB form + chat"},
+    {"ts": "2026-04-24T19:30:00Z", "channel": "sms", "direction": "in", "summary": "'Hi, do you mind send me by email all the details?'"},
+    {"ts": "2026-04-24T20:00:00Z", "channel": "email", "direction": "out", "summary": "Service overview + types breakdown"},
+    {"ts": "2026-04-25T11:00:00Z", "channel": "email", "direction": "out", "summary": "Catering details for 21st birthday + 2 qualifying questions"}
+  ],
+  "notes": [
+    "Don't pile on — wait for reply",
+    "Mom-planner scenario unlocks future events",
+    "Cuisine direction key first question after reply"
+  ]
+}

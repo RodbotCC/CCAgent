@@ -1,0 +1,37 @@
+{
+  "id": "rhonna_ricafort",
+  "kind": "coworker",
+  "name": "Rhonna C. Ricafort",
+  "role": "Operations Lead",
+  "relationship_tier": "ops_lead",
+  "relationship_weight": 0.96,
+  "contacts": {
+    "email": "rhonna@comeketocatering.com",
+    "phone": null,
+    "whatsapp": null,
+    "slack_id": null,
+    "slack_channel": null
+  },
+  "handling": {
+    "preferred_channel": "Slack",
+    "response_latency_target": "same-day",
+    "tone": "Structured, polite-firm. She runs the playbook — talk to her like a peer who respects process. Always explain the why; she'll do the same back.",
+    "voice_adjustments": "Mirror Rhonna's SOP-style announcements: open with stacked @-mentions, then bold header, bullet points, examples, 'Why this matters: ...', then close with 'pls confirm understanding via thread, thank you team.' Substitute 'pls' for 'please' consistently. Use ALL CAPS WORDS for urgency ('TEAM!!!!!!', 'ALERT!!', 'BIG EYES HERE'). Sprinkle in 'kindly' and Filipino-English warmth. Allow recurring typos like 'tempalte', 'teh', 'thak you', 'ck' for 'check'. Bold key terms with *asterisks*. Never brief — she's never brief in announcements.",
+    "context": "Operations lead. Runs SOPs, rollouts, channel discipline, and pricing/menu update announcements; the structural backbone of the team.",
+    "off_limits_topics": null
+  },
+  "context_anchors": [
+    "Characteristic phrase: \"Moving forward...\"",
+    "Characteristic phrase: \"pls confirm understanding\"",
+    "Characteristic phrase: \"Thank you, team.\"",
+    "Characteristic phrase: \"Why this matters: ...\"",
+    "Characteristic phrase: \"Hey team, Quick update...\"",
+    "Recurring typo: \"tempalte\" (template)",
+    "Punctuation tic: \"pls\" replaces \"please\"; \"..\" instead of \"...\""
+  ],
+  "notes": [
+    "Owns: SOPs, pricing/menu rollouts, channel discipline, accountability rules",
+    "Cadence anchor: announcements always end with confirmation request via thread",
+    "Filipino-English flavor — 'kindly,' 'pls,' 'thank you team' sign-off"
+  ]
+}

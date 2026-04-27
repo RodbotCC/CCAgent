@@ -5,6 +5,11 @@
    Voice model + clusters are the only real seeds; they describe the team,
    not a demo.
 */
+
+// Minimal i18n stub — i18n.js was retired in the Apr 2026 trim. Surviving
+// `t("key")` call sites just echo the key back as a literal label.
+window.t = function (k) { return String(k || ""); };
+
 window.SECRETARY_DATA = (() => {
 
   const briefing = {

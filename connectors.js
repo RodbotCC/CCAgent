@@ -21,7 +21,6 @@ window.SecretaryConnectors = (() => {
     { id: "email",       label: "Email",       icon: "mail",           blurb: "Gmail / SMTP",                       requires: "email",       accent: "sky"      },
     { id: "whatsapp",    label: "WhatsApp",    icon: "message-square", blurb: "Twilio / Cloud API",                 requires: "whatsapp",    accent: "mint"     },
     { id: "sms",         label: "SMS",         icon: "phone",          blurb: "Twilio text",                         requires: "sms",         accent: "sage"     },
-    { id: "calendar",    label: "Calendar",    icon: "calendar",       blurb: "Google Calendar event",              requires: "calendar",    accent: "rose"     },
     { id: "note",        label: "Note",        icon: "sticky-note",    blurb: "Local note — nothing leaves",        requires: null,          accent: "peach"    },
     { id: "internal",    label: "Internal",    icon: "brain",          blurb: "For your eyes only",                  requires: null,          accent: "blush"    },
     { id: "open_url",    label: "Open URL",    icon: "external-link",  blurb: "Opens the target in a new tab",      requires: null,          accent: "neutral"  },
@@ -65,7 +64,6 @@ window.SecretaryConnectors = (() => {
       case "email":    return s.email ? "ready" : "needs-setup";
       case "whatsapp": return s.whatsapp ? "ready" : "needs-setup";
       case "sms":      return s.sms ? "ready" : "needs-setup";
-      case "calendar": return s.calendar ? "ready" : "needs-setup";
       default: return "needs-setup";
     }
   }
@@ -84,7 +82,6 @@ window.SecretaryConnectors = (() => {
       case "email":    return "Set GMAIL_ACCESS_TOKEN (or SMTP creds) in .env. See docs/connectors.md for the OAuth flow.";
       case "whatsapp": return "Set TWILIO_ACCOUNT_SID + TWILIO_AUTH_TOKEN + TWILIO_WHATSAPP_FROM in .env.";
       case "sms":      return "Set TWILIO_ACCOUNT_SID + TWILIO_AUTH_TOKEN + TWILIO_SMS_FROM in .env.";
-      case "calendar": return "Set GOOGLE_CALENDAR_ACCESS_TOKEN (or OAuth refresh token) in .env.";
       default:         return "";
     }
   }
@@ -210,7 +207,6 @@ window.SecretaryConnectors = (() => {
       case "email":       return notImplemented("email");
       case "whatsapp":    return notImplemented("whatsapp");
       case "sms":         return notImplemented("sms");
-      case "calendar":    return notImplemented("calendar");
       case "note":        return sendNote();
       case "internal":    return sendNote();
       case "open_url":    return sendOpenURL({ target });

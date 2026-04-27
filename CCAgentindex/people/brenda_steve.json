@@ -1,0 +1,88 @@
+{
+  "id": "brenda_steve",
+  "kind": "lead",
+  "name": "Brenda & Steve Catalano",
+  "role": "Daughter's Wedding · Sept 5, 2026 · 80-90 guests · Backyard, North Central MA",
+  "relationship_tier": "tasting_scheduled",
+  "relationship_weight": 0.78,
+  "contacts": {
+    "email": "bcatalano85@comcast.net",
+    "phone": "+1-978-885-9800",
+    "whatsapp": null,
+    "slack_id": null,
+    "slack_channel": null,
+    "clickup_user_id": null,
+    "other": null
+  },
+  "handling": {
+    "preferred_channel": "Phone",
+    "response_latency_target": "same-day",
+    "tone": "Mom + dad team (Brenda + husband Steve) co-planning daughter's backyard wedding. Cleanest demographic fit Comeketo gets. Don't fumble — they're already half-in.",
+    "voice_adjustments": "Andre voice: warm, peer, references daughter as the emotional anchor. Italian-American family in Fitchburg/Leominster/Worcester corridor.",
+    "context": "Inbound call Apr 19 — 16-min discovery went very well. Brazilian BBQ + churrasco aligned with their vision. Allergen-friendly options confirmed (45-day pre-event coordination). Tasting invited May 3 5:30 PM but tasting fee not yet received — Andre's Apr 22 SMS chases it.",
+    "off_limits_topics": null
+  },
+  "context_anchors": [
+    "Daughter's small backyard wedding, Sept 5, 2026 (Saturday)",
+    "80-90 guests (estimated 100 for pricing)",
+    "Italian-American (Catalano) — Fitchburg/Leominster/Worcester corridor",
+    "Found Comeketo via Facebook",
+    "Brenda + husband Steve co-planning",
+    "Allergy/dietary 45-day coordination already discussed (GF + dairy-free flagged)",
+    "Tasting May 3 invited but fee not yet received"
+  ],
+  "lead": {
+    "status": "tasting_scheduled",
+    "stage": "tasting_invited_warm",
+    "owner": "andre_raw",
+    "source": "Inbound Call (found via Facebook)",
+    "event_type": "Wedding (daughter's)",
+    "event_date": "2026-09-05",
+    "guest_count": 85,
+    "venue": "Backyard, North Central MA",
+    "city": "North Central MA (978 area)",
+    "quote_value": null,
+    "opportunity_value": null,
+    "score_tags": ["co_planners", "cultural_fit", "tasting_invited", "allergy_aware"],
+    "last_activity": "2026-04-22 — Andre chasing tasting fee receipt",
+    "speed_urgency": "high",
+    "next_move": "Lock May 3 tasting RSVP — both Brenda + Steve ideally"
+  },
+  "enrichment": {
+    "confidence": 0.85,
+    "identity_notes": "Comcast email + 978 area code + Catalano surname = North-Central MA family-planner profile. Italian-American, common in Fitchburg/Leominster/Worcester corridor. 16-min discovery confirmed Brenda + Steve co-planning. Cleanest demographic fit Comeketo gets — parents 40s-60s, daughter's backyard wedding, want memorable Brazilian BBQ.",
+    "win_angles": [
+      "Emotional anchor on daughter — primary driver",
+      "Brazilian BBQ as differentiator — they didn't book generic",
+      "Co-planner dynamic: get Steve on call too",
+      "45-day pre-event coordination as feature: 'be a guest at your daughter's wedding, not the project manager'"
+    ],
+    "nepq_openers": [
+      "Continuation: 'Hey Brenda, just circling back on May 3rd tasting at 5:30 — are you and Steve both able to come, or planning around just one of you for now?'",
+      "Frame: 'When you imagine the night going perfectly for your daughter, what does that look like?'",
+      "Anchor: 'Tasting is the cheapest way to know if we're the right fit — $35/head, $70 of which comes back as a credit if you book.'"
+    ],
+    "open_gaps": [
+      "Steve's level of decision involvement",
+      "Whether daughter (bride) wants menu input",
+      "Final guest count locking",
+      "Specific cuisine preferences (Brazilian-leaning vs mixed)",
+      "Allergies/dietary for 45-day coordination",
+      "Bar package — open vs cash vs mocktail-heavy"
+    ],
+    "strategic_note": "'Don't fumble it' lead, not 'convince them' lead. Brenda came in warm. Make sure May 3 is locked, both there, tasting is dialed enough they leave wanting to book. Tasting attendance jumps probability 50% → 75%+. The whole game is making sure they show up."
+  },
+  "comms": [
+    {"ts": "2026-04-19T10:00:00Z", "channel": "call", "direction": "in", "summary": "Inbound call — Brenda inquiring about catering"},
+    {"ts": "2026-04-19T11:00:00Z", "channel": "sms", "direction": "in", "summary": "'September 5th 2026 / About 100 people'"},
+    {"ts": "2026-04-19T11:30:00Z", "channel": "sms", "direction": "out", "summary": "Tasting invite May 3, 5:30 PM Fitchburg"},
+    {"ts": "2026-04-19T12:00:00Z", "channel": "call", "direction": "out", "summary": "16-min discovery — full event details, allergies, churrasco vision"},
+    {"ts": "2026-04-19T13:00:00Z", "channel": "sms", "direction": "in", "summary": "Asked about gluten-free / dairy-free at tasting"},
+    {"ts": "2026-04-22T11:00:00Z", "channel": "sms", "direction": "out", "summary": "Chasing tasting fee receipt to reserve table"}
+  ],
+  "notes": [
+    "GF + dairy-free flagged for tasting prep",
+    "Tasting fee not received — chase before May 3",
+    "Get Steve on call for joint buy-in"
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "id": "lowell_memorial_auditorium",
+  "kind": "venue",
+  "name": "Lowell Memorial Auditorium",
+  "city": null,
+  "venue_type": null,
+  "website": "https://lowellauditorium.com/rentals",
+  "tier": "tier_3",
+  "deal_stats": {
+    "opp_count": 3,
+    "total_value": 14487.12,
+    "avg_deal_value": 4829.04,
+    "lead_name_refs": 0
+  },
+  "close_account": {
+    "has_lead": true,
+    "lead_status": "🔘 Maybe",
+    "lead_url": "https://app.close.com/lead/lead_Dnr7lIunSaZpjP0RrmnCwvaRT5aILggf6VgGFSwXbxf/"
+  },
+  "raw_variants": [
+    "Lowell Memorial Auditorium"
+  ],
+  "action": "✅ Profiled & active — keep relationship warm",
+  "notes": [
+    "3 opportunities totaling $14,487.12 — rank #22 by deal value.",
+    "Has Close lead account (status: 🔘 Maybe)."
+  ]
+}

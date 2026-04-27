@@ -1,0 +1,183 @@
+Brenda & Steve Catalano — 7-Day Approach Plan
+🐋 WHALE — and probably the biggest one in the entire 28.
+
+Real read: Steve Catalano = 40-year franchise empire (Dunkin' + Baskin-Robbins) across Central MA + Middle Tennessee, actively expanding, BBB-accredited corporate operation in Harvard MA, podcast-featured business operator, 500+ LinkedIn connections in food service, owns commercial real estate in the Fitchburg/Leominster/Harvard corridor. Brenda is co-decision-maker — she's the one calling, texting, and holding the email account (bcatalano85@comcast.net). Steve is the validator and likely the financial decision-maker. The daughter's wedding is a showcase event where Steve's professional reputation is on the line — and Steve is the kind of operator who personally evaluates Comeketo the way he evaluates new franchise vendors. The opportunity value of $0 in Close is the most laughably wrong number in the database. Real ceiling: $15-25K for the wedding alone, $200K+ over five years if Comeketo earns the relationship across his portfolio.
+
+The strategic shift: Stop selling a wedding. Start being evaluated for a vendor relationship. Steve already told us what he respects on the discovery call — operational rigor, advance logistics planning, allergen protocols, real systems. The drip emails about churrasco style are insulting to a guy who runs ice cream + coffee operations across two states. He needs to see Comeketo as a peer business, not a wedding caterer.
+
+Primary CTA: Get Steve + Brenda + their planner (and anyone else they want to bring) at the May 3rd tasting, treated like the operators they are. Tasting attendance = booking, full stop, if Comeketo doesn't fumble it.
+
+Voice: Andre at his ceiling. Lowercase still works for SMS to Brenda. Email for Steve gets real sentences with operator-grade language. Brenda gets warmth + operational competence; Steve gets respect + peer-to-peer business language when he enters the conversation.
+
+Channel mix: SMS to Brenda (responsive). Email when something needs to land in writing for Steve to read at his desk. Steve almost certainly doesn't text vendors.
+
+Watch-fors before we start:
+
+🚨 PAUSE THE DRIP CADENCE IMMEDIATELY. No more "Understanding Our Catering Service Types" auto-emails. No more Churrasco/Rodizio explainers. Manual-only from this hour forward.
+🚨 Drop the tasting-fee dunning energy. "I still don't see the tasting fee" was the wrong move. We don't chase Steve Catalano for $70. Waive the tasting fee for the entire party and put it in writing today. Position it as "operators recognizing operators."
+🚨 Confirm the venue name. "Backyard" might mean the Catalano family compound or one of their commercial properties. Detail changes the logistics conversation entirely.
+🚨 Brenda's allergen question is the operational signal of the whole conversation. Make sure we deliver gluten- and dairy-free visibly on May 3rd or we lose them.
+🚨 The May 3rd tasting is the full deal. Steve will decide that night.
+
+
+Day 1 — Today (Friday) — SMS to Brenda — early afternoon
+
+hey brenda — wanted to reach out personally. dropping the tasting fee for you and Steve. just bring whoever you want and we'll take care of it. May 3 at 5:30, 199 Main St Fitchburg. you and Steve plus whoever's helping you plan — up to 10 people, no charge.
+can you send me the venue name when you get a chance? want to make sure I have everything lined up before we sit down.
+
+Why this move:
+
+Waiving the fee resets the entire energy. We were chasing $70 from a multimillionaire 12 hours ago. Now we're hosting them. Total reframe.
+"personally" signals this isn't the system talking. Brenda will recognize the difference.
+Generous on the headcount (up to 10) — Steve might bring a GM, his planner, the daughter and her fiancé, anyone. Make it easy for him to bring his evaluation team.
+The venue ask is operational and respectful. "Want to make sure I have everything lined up" speaks Steve's language even though Brenda's reading it.
+Lowercase, conversational, signed off cleanly. No corporate decoration.
+
+If Brenda replies same-day with venue: confirm tasting headcount, send the clean tasting confirmation email by EOD (Day 1 follow-up below).
+If silent through Day 2: hold; Day 1 email below carries the message regardless.
+
+Day 1 — Same day, ~2 hours after SMS — Email to both Brenda AND Steve
+Subject: Confirming May 3rd — and dropping the tasting fee
+
+Brenda and Steve,
+Following up on my text — wanted this in writing. The tasting fee is on us. May 3rd at 5:30, 199 Main St Fitchburg. Bring up to 10 people. No fee, no credit-toward-booking math, just come and let us cook for you.
+Steve, I know you've been in food service a long time. I'd rather you walk into our kitchen and watch how we run a service than read another email about it. The 45-day planner coordination, allergen labeling, setup timing — all of that runs the same way you'd want it to run. May 3rd is the chance to see it firsthand.
+A couple of operational notes for your planning:
+
+We start setup at 4:30 PM for a 6:00 PM dinner. That's our standard, fits a typical backyard timeline.
+Allergen-free options will be on the tasting table. Brenda asked — we listened.
+Once we know the venue, I'll walk through electrical, water, and load-in needs with you in person at the tasting so we don't waste a phone call on it later.
+
+Looking forward to having you in.
+Andre
+Comeketo Catering
+
+Why this move:
+
+The email goes to both Brenda and Steve. Steve probably hasn't read a single Comeketo email yet — this is the first one worth his time.
+"I know you've been in food service a long time" is the only signal in the message that we know who Steve is. We don't list his businesses, we don't reference his LinkedIn, we don't perform research. We demonstrate awareness with one sentence. Steve will notice and lean in.
+The operational notes (4:30 setup, allergen options, electrical/water at tasting) are the language of an operations conversation, not a sales conversation. That's the level Steve evaluates at.
+"We start setup at 4:30 for a 6:00 dinner. That's our standard." is exactly the kind of confident specificity an operator respects.
+Brenda's allergen question gets explicit credit. "Brenda asked — we listened." That earns trust with both: Steve sees that we track customer questions; Brenda feels heard.
+No menu marketing. No service-style explainer. No churrasco-vs-rodizio. Steve already had the discovery call. He knows what we do.
+"Looking forward to having you in." is a peer-to-peer signoff. Hosts say that. Vendors say "we appreciate your business." Big difference.
+
+If they reply with venue + confirmation: lock the May 3rd attendance, send a brief "see you Sunday" the day before.
+If silent by Day 4: Day 4 SMS.
+
+Day 2 — Saturday — No outbound.
+Saturday is family time for Brenda and operations time for Steve (Saturdays are peak for franchise traffic — Steve is at one of his locations or with family, not reading vendor emails). Hold.
+
+Day 3 — Sunday — No outbound.
+The tasting is next Sunday. We're not interrupting their weekend the week before with vendor follow-ups.
+
+Day 4 — Monday — SMS to Brenda — late morning
+(Only if no reply yet to either Day 1 message.)
+
+hey brenda just bumping this up — sent you a text and email Friday with the tasting fee waived. you and Steve are good for May 3 at 5:30 with up to 10 people, no charge. let me know if you're confirmed and I'll get the venue logistics squared away
+
+Why this move:
+
+Soft "bumping this up" — acknowledges they may be busy without shaming them for not replying.
+Re-states the offer cleanly so if Brenda missed the original messages, she has the full picture in one text.
+Single ask: "let me know if you're confirmed."
+Andre's voice — short, lowercase, clean, no template smell.
+
+If Brenda replies: move to confirmation flow.
+If silent through Day 5: Day 6 carries the next move.
+
+Day 5 — Tuesday — No outbound.
+Two contacts in five days is enough. Operators respect discipline. Pushing harder shows neediness, which is the opposite of what we want Steve to read.
+
+Day 6 — Wednesday — Email to both — ~3 days before tasting
+(Send regardless of reply. This is the pre-tasting confirmation move.)
+Subject: Sunday at 5:30 — quick prep before you come in
+
+Brenda and Steve,
+Tasting is Sunday at 5:30, 199 Main St Fitchburg. Whether you've confirmed numbers or not yet, I'm holding the table for you and up to 10 guests. No fee.
+Three things to know:
+
+Park anywhere on Main St or in the lot behind the building — easy access.
+Plan for about 90 minutes. We'll move through 30+ items including the carved-meat demonstration, plus the gluten-free and dairy-free options Brenda asked about.
+If anyone in your group has additional dietary needs I should know about, send them my way before Friday and I'll prep accordingly.
+
+If you want to bring a planner, the daughter and her fiancé, or anyone else helping with this — they're welcome.
+Andre
+
+Why this move:
+
+Even if they haven't confirmed, this message converts the tasting from "we'll see" to "we're going." Stating it as confirmed creates a soft commitment without pressure.
+Three-item operational checklist. Steve will recognize this as a competent vendor preparing a customer for a visit. Most caterers don't do this.
+Inviting "the daughter and her fiancé" is the right move — the daughter is the actual person getting married, her vote matters, and bringing her in early is the relationship play that converts.
+"I'll prep accordingly" reinforces the operator-to-operator language from Day 1.
+
+If they confirm: Day 7 prep.
+If silent: Final SMS Saturday morning.
+
+Day 7 — Thursday — Internal prep day. No outbound (unless they replied earlier and a confirmation is pending).
+Today is internal prep day for Sunday. Andre's job:
+
+Confirm the kitchen knows. Allergen-free items need to be visibly labeled at the tasting table — not "available on request." Brenda asked the question; Steve is watching to see if we deliver.
+Have the menu ready in print. Steve runs operations. He'll respect a printed, organized menu over a verbal walkthrough. Bring three copies — one for Steve, one for Brenda, one for the planner if they bring one.
+Pre-brief whoever's running the tasting. They need to know: this is a multimillion-dollar franchise operator and his wife. Treat them with operator-grade respect. No "let me tell you about our churrasco!" energy. Let Steve ask the questions; answer them with precision.
+Have the catering agreement ready. Not pushed. Available. If Steve says at the end of the tasting "we'd like to book," Andre needs to be able to walk to a printer and have the catering agreement ready to sign on the spot. Don't make him wait three days for paperwork. Operators sign deals when they're ready, not when the vendor's ready.
+Know the venue by Sunday. If Brenda hasn't sent it, ask in person at the start of the tasting — but try to know before, because that lets Andre walk Steve through logistics with concrete details ("we've delivered to that area before, here's the load-in approach") instead of generic statements.
+
+
+At the Tasting (May 3rd) — How Andre Should Run It
+Everything before this is setup. Everything after is execution. The tasting is where Steve decides.
+
+The first 5 minutes:
+Greet them at the door. Take their coats. Walk them to the table personally — not "the host will seat you." Andre, in person, escort. Steve will read this as respect, which is the currency that matters most to him.
+
+The opener — say this exactly or close to it:
+
+"Steve, Brenda — glad you came. Before we eat, I want you to do one thing for me. Look at how we run this tasting like you'd evaluate a new vendor for your stores. That's the level I want to be held to. Then we'll talk about your daughter's wedding."
+
+That sentence, said with conviction, closes the deal before the food hits the table. It tells Steve: "I see who you are, I respect what you do, and I'm not afraid to be evaluated by your standards." Steve will lean forward.
+
+During the tasting:
+
+Let Steve ask operational questions. Answer them precisely. If Andre doesn't know an answer, say so and follow up after the tasting. Operators hate bullshit answers more than they hate "I don't know."
+Make sure Brenda gets dietary attention specifically. Her allergen question was the only operational signal she gave us — make it visible that we delivered.
+Do not pitch upsells. Do not mention "complimentary dessert table if you book." Steve already knows the offer; saying it out loud cheapens it. Let the food and the service do the closing.
+If the daughter and her fiancé came, make sure they feel seen. Address them directly during the tasting at least twice. They're the actual couple; their happiness is what Steve is buying.
+
+The close — when the meal winds down:
+
+"What would you need to see from us to feel confident this is the right fit for the wedding?"
+
+Then shut up and listen. Whatever Steve says, that's the actual close conversation. If he says "we want to think about it," fine — say "I'll send the agreement Monday so you have it when you're ready." If he says "we want to book," walk to the printer, hand him the agreement, sign it at the table.
+
+
+Watch-fors throughout the 7 days
+
+Steve emails directly. The biggest possible signal. Steve doesn't email vendors — Brenda does. If Steve writes, he's invested. Reply within 30 minutes, in tighter, more operational language. Treat it like a B2B email, because it is.
+They ask to bring more than 10 people. Say yes. Always say yes. Add a chair. The cost is nothing compared to the deal.
+They ask about pricing before the tasting. Don't quote. Say "let's eat first, talk numbers Sunday after. I want you to fall in love with the food before we get into dollars." Steve will respect this — it's how he sells.
+They mention the daughter's preferences. Pivot the conversation toward her. The daughter has veto power; if she likes Comeketo, they book.
+The Tennessee operations come up. Slow down. If Steve mentions Tennessee, that's the door to the long-term relationship. Don't push it open — let Steve. Just acknowledge it ("I'd love to hear about that someday") and refocus on the wedding. Trying to sell into Tennessee on May 3rd is the move that loses everything. That's a year-two conversation.
+
+
+Fallbacks
+
+They cancel the tasting: "no problem — what works better for you and Steve? happy to do a private weekday tasting if that's easier with the businesses." A private weekday tasting is the recovery move that rescues this lead.
+They go silent through Day 7: Saturday morning, single SMS to Brenda: "see you tomorrow at 5:30 — we're set up for you." Confidence, not chasing. If they don't show, call Brenda Monday (don't text — call) and ask warmly what happened.
+Steve pushes on price: This won't be a "lowest-bidder" conversation. Steve doesn't shop on price; he shops on operational fit. If he negotiates, it'll be on value — "what's included, what's not." Andre should be ready to itemize cleanly.
+The daughter or fiancé pushes back on Brazilian as the cuisine: Real risk. The parents found Comeketo via Facebook; the couple might want something else. Don't argue. Ask: "what's the food vision for your day?" If churrasco isn't it, pivot — Comeketo can do plated, family-style, full-service in any direction.
+
+
+Strategic Note
+This is a family-relationship-disguised-as-a-wedding-deal, and it's the single highest long-term-value lead in this batch. The wedding is $15-25K of revenue if executed cleanly. The Catalano relationship is potentially $200K+ over five years if Comeketo earns it — every Dunkin' GM event, every Baskin-Robbins regional gathering, every Tennessee market launch, every personal Catalano family event for the next decade. And Steve is plugged into the Central MA franchise community in ways that make him a referral engine into other multi-unit operators.
+
+The play is:
+
+Stop running the cadence on this lead. Run the relationship.
+Get them to May 3rd on operator-to-operator terms, with the fee waived.
+Let the food and the operational rigor close the deal — not the pitch.
+Deliver the wedding as if Steve is going to evaluate every detail. Because he will.
+Once the wedding is in the books, stay in touch quarterly. Not promotionally. Personally.
+
+Land this, and Comeketo has a peer-tier business relationship for a generation, not a one-time customer.
+
+The wedding is the audition. The relationship is the role.

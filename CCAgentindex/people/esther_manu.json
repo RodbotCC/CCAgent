@@ -1,0 +1,83 @@
+{
+  "id": "esther_manu",
+  "kind": "lead",
+  "name": "Esther Manu",
+  "role": "Birthday · Date TBD · 75 guests · Worcester MA",
+  "relationship_tier": "stalled",
+  "relationship_weight": 0.25,
+  "contacts": {
+    "email": null,
+    "phone": null,
+    "whatsapp": null,
+    "slack_id": null,
+    "slack_channel": null,
+    "clickup_user_id": null,
+    "other": null
+  },
+  "handling": {
+    "preferred_channel": "Email",
+    "response_latency_target": "within-week",
+    "tone": "West African / Ghanaian heritage likely (Manu = common Akan surname). Apr 24 Portuguese SMS was a system misfire — switch to English with implicit acknowledgment. No formal apology, just warmth.",
+    "voice_adjustments": "Andre voice: warm English, opens cuisine direction (Comeketo's churrasco isn't the default for Ghanaian-heritage event). Don't pitch first.",
+    "context": "Inbound Apr 16 from FB Lead Form. 75 guests, no date locked. Cold no-response. Worcester has meaningful Ghanaian and West African community. Apr 24 Portuguese SMS misfire — first instance flagged in batch.",
+    "off_limits_topics": null
+  },
+  "context_anchors": [
+    "Manu = common Akan/Ghanaian surname",
+    "Worcester MA, 01605 — diverse, has Ghanaian community",
+    "75 guests, no date locked = mid-tier, low urgency anchor",
+    "$2,363 ballpark — real spend if we get it",
+    "Apr 24 Portuguese SMS misfire — first in batch"
+  ],
+  "lead": {
+    "status": "stalled",
+    "stage": "cold_no_response_portuguese_misfire",
+    "owner": "andre_raw",
+    "source": "FB Lead Form — VIDEO RODS WEDDING & FACELESS",
+    "event_type": "Birthday Party",
+    "event_date": null,
+    "guest_count": 75,
+    "venue": null,
+    "city": "Worcester, MA",
+    "quote_value": null,
+    "opportunity_value": 2363,
+    "score_tags": ["language_misfire", "no_date", "west_african_heritage", "cold"],
+    "last_activity": "2026-04-24 — Portuguese cadence SMS",
+    "speed_urgency": "low",
+    "next_move": "English reset asking date + opening cuisine direction (don't assume churrasco)"
+  },
+  "enrichment": {
+    "confidence": 0.32,
+    "identity_notes": "'Manu' commonly West African / Ghanaian (Akan surname) or Caribbean diaspora. Not typically Portuguese-Brazilian. Worcester has meaningful Ghanaian and West African community.",
+    "win_angles": [
+      "Reset language mistake — English, no formal apology",
+      "Worcester = real opportunity, $2,363 ballpark mid-tier",
+      "No date = ask first thing",
+      "Cultural fit may differ from Brazilian-default Comeketo brand"
+    ],
+    "nepq_openers": [
+      "Reset EN: 'Hey Esther — switching back to English here. For the birthday at 75 guests, what's the date you're working toward, and is the picture more sit-down dinner, buffet, or something more casual like passed apps and stations?'",
+      "Frame: 'Whose birthday are we celebrating?'",
+      "Anchor: 'For 75 guests, depending on style, $X-Y. Quick comparison of two options?'"
+    ],
+    "open_gaps": [
+      "Event date — most important",
+      "Whose birthday",
+      "Cuisine direction (Ghanaian-heritage event might want different food)",
+      "Service style preference",
+      "Preferred language (English safe bet)"
+    ],
+    "strategic_note": "Cautionary tale lead. Portuguese template was sent without checking fit. May have eroded interest before we knew her. One English reset that's warm and direct, asks date, leaves cuisine open. The Portuguese-default needs upstream fix."
+  },
+  "comms": [
+    {"ts": "2026-04-16T10:00:00Z", "channel": "sms", "direction": "out", "summary": "Inbound acknowledged + call attempts"},
+    {"ts": "2026-04-16T11:00:00Z", "channel": "email", "direction": "out", "summary": "Service overview + service-types breakdown"},
+    {"ts": "2026-04-21T11:00:00Z", "channel": "email", "direction": "out", "summary": "Bar service drip"},
+    {"ts": "2026-04-24T13:00:00Z", "channel": "sms", "direction": "out", "summary": "Day-4 cadence — sent in PORTUGUESE (misfire)"}
+  ],
+  "notes": [
+    "Language guardrail violated — flag system bug",
+    "Don't assume Brazilian BBQ for Ghanaian-heritage event",
+    "One English reset, then long-term followup if no response"
+  ]
+}

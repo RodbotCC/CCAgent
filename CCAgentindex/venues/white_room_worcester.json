@@ -1,0 +1,30 @@
+{
+  "id": "white_room_worcester",
+  "kind": "venue",
+  "name": "The White Room (Worcester)",
+  "city": "Worcester",
+  "venue_type": null,
+  "website": null,
+  "tier": "tier_1",
+  "deal_stats": {
+    "opp_count": 10,
+    "total_value": 29407.57,
+    "avg_deal_value": 2940.76,
+    "lead_name_refs": 6
+  },
+  "close_account": {
+    "has_lead": false,
+    "lead_status": null,
+    "lead_url": null
+  },
+  "raw_variants": [
+    "The White Room",
+    "The White Room in Worcester MA"
+  ],
+  "action": "ENRICH NOW — high-volume, no lead account",
+  "notes": [
+    "10 opportunities totaling $29,407.57 — rank #6 by deal value.",
+    "No Close lead account yet — recommend creating one to track relationship.",
+    "6 leads have referenced this as their venue choice."
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "id": "bibi_de_los_santos",
+  "kind": "coworker",
+  "name": "Bibi de los Santos",
+  "role": "Manager / Closer",
+  "relationship_tier": "core_partnership",
+  "relationship_weight": 0.92,
+  "contacts": {
+    "email": "bibi@comeketocatering.com",
+    "phone": null,
+    "whatsapp": null,
+    "slack_id": null,
+    "slack_channel": null
+  },
+  "handling": {
+    "preferred_channel": "Slack",
+    "response_latency_target": "same-day",
+    "tone": "Warm, bilingual, on-the-floor. She's the heart of the team — talk to her with familiarity, not formality. lol/hahaha land naturally with her.",
+    "voice_adjustments": "Mirror Bibi's warm bilingual register: drop 'lol' and 'hahaha' in casual context, use 'Tks' for thanks and 'abt' for about, allow 'picts' for pics. Double up :heart::heart: when announcing events ('Sneak peek! [Name] event today :heart::heart:'). Announce closes with the format '[Name] closed <@SalesRep>' or '[Name]'s lead'. Sentence-case mostly with names capitalized; occasionally drop capitals in casual replies. Spanish is her first language — names with proper accents (José) are natural. Never cold or formal — she's the warmest voice on the team.",
+    "context": "Manager and closer. Runs events on the floor and closes deals; bridges sales and ops with warmth and bilingual range.",
+    "off_limits_topics": null
+  },
+  "context_anchors": [
+    "Characteristic phrase: \"Sneak peek!\" + :heart::heart: (event today celebration)",
+    "Characteristic phrase: \"[Name] closed <@Andre>\" — close announcement format",
+    "Characteristic phrase: \"Already spoke with him, Tks Camila\"",
+    "Verbatim: \"confused me here lol\"",
+    "Verbatim: \"And he apologized abt calling so many times hahaha pocket call\"",
+    "Spelling tics: \"Tks\", \"abt\", \"picts\""
+  ],
+  "notes": [
+    "Owns: floor management, event execution, closing handoffs",
+    "Cadence anchor: announces closes in real-time with [Name] closed <@SalesRep> format",
+    "Spanish first language — bilingual ES/EN; warmth is the brand"
+  ]
+}

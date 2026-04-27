@@ -1,0 +1,88 @@
+{
+  "id": "flavia_benson",
+  "kind": "lead",
+  "name": "Flávia Benson",
+  "role": "Graduation Party · May 31, 2026 · 40 guests · Boston",
+  "relationship_tier": "active_quote",
+  "relationship_weight": 0.62,
+  "contacts": {
+    "email": "flaviabenson@gmail.com",
+    "phone": "+1-617-224-8277",
+    "whatsapp": null,
+    "slack_id": null,
+    "slack_channel": null,
+    "clickup_user_id": null,
+    "other": null
+  },
+  "handling": {
+    "preferred_channel": "Phone",
+    "response_latency_target": "same-day",
+    "tone": "Brazilian-Anglo household. Organized — gave specific call time. Andre missed scheduled 10 AM Apr 24 by 20 min. Recovery requires precision: propose another exact slot, not 'whenever works.'",
+    "voice_adjustments": "Andre voice: brief, exact times. Don't over-apologize, don't dwell. Be on-time the next time.",
+    "context": "Crisp Chat inbound Apr 23. Locked 10 AM Apr 24 call. Andre missed by 20 min, called at 10:20, has been chasing recovery contact since. Today (Apr 25) — Andre called again, no connect. 5 weeks to graduation event.",
+    "off_limits_topics": null
+  },
+  "context_anchors": [
+    "May 31, 2026 graduation — 5 weeks out, HIGH urgency",
+    "40 guests = backyard/home-hosted",
+    "617 area code Boston/Cambridge",
+    "'Flávia' Brazilian + 'Benson' Anglo = Brazilian-Anglo household",
+    "Locked 10 AM Apr 24 call — Andre missed by 20 min",
+    "Open task: 'Change name of lead once you find what it is'"
+  ],
+  "lead": {
+    "status": "active_quote",
+    "stage": "missed_call_window_recovery",
+    "owner": "andre_raw",
+    "source": "Crisp Chat",
+    "event_type": "Graduation Party",
+    "event_date": "2026-05-31",
+    "guest_count": 40,
+    "venue": null,
+    "city": "Boston, MA",
+    "quote_value": null,
+    "opportunity_value": null,
+    "score_tags": ["missed_scheduled_call", "high_urgency_5wk", "bilingual_fit", "needs_precision_recovery"],
+    "last_activity": "2026-04-25 — Andre called again, no connect",
+    "speed_urgency": "high",
+    "next_move": "Recovery message offering exact 15-min slots (9 AM, 11 AM, 1 PM, 3 PM tomorrow) OR text top question"
+  },
+  "enrichment": {
+    "confidence": 0.78,
+    "identity_notes": "Flávia with accent = Brazilian/Portuguese background. Benson = Anglo. Brazilian woman married to/partnered with English-Anglo heritage — common pattern in Greater Boston Brazilian community. Organized: Crisp-chatted, gave clear call time.",
+    "win_angles": [
+      "Honor her time precision — match her energy",
+      "5 weeks to event = real pressure, losing time per missed connection",
+      "Brazilian-Anglo cultural bridge — Brazilian for family side, American for friends",
+      "Graduation = emotional milestone but smaller stakes than wedding",
+      "40 + Boston backyard = drop-off / appetizer-heavy / casual buffet"
+    ],
+    "nepq_openers": [
+      "Recovery: 'Hey Flávia — totally my bad on missing 10 AM yesterday. To make it up: pick a 15-min window in the next 24h and I'll be on the dot this time. 9 AM, 11 AM, 1 PM, or 3 PM tomorrow. Or text your top question right now.'",
+      "Frame: 'Whose graduation? Family-formal, friends-casual, or somewhere in between?'",
+      "Anchor: 'For 40 guests: drop-off ($X), buffet with light service ($Y), full hosted ($Z). What does the day look like — host while it's happening, or hand off?'"
+    ],
+    "open_gaps": [
+      "Whose graduation (her child, herself, family, friend)",
+      "Education level (HS / college / grad school)",
+      "Venue (home backyard most likely)",
+      "Cuisine direction — Brazilian vs American vs blended",
+      "Drop-off vs full-service",
+      "Bar / beverage",
+      "Hard budget cap"
+    ],
+    "strategic_note": "Hinges on getting one good 15-min call done. She showed organized when she scheduled. Will likely be patient with one specific reschedule attempt. Miss again or follow up vaguely = write us off. Be precise, on-time, helpful in call. Small but real opportunity well within wheelhouse."
+  },
+  "comms": [
+    {"ts": "2026-04-23T20:30:00Z", "channel": "live_chat", "direction": "in", "summary": "Crisp Chat started"},
+    {"ts": "2026-04-23T20:45:00Z", "channel": "sms", "direction": "in", "summary": "'I can do a call tomorrow at 10 am if that works for you.'"},
+    {"ts": "2026-04-23T20:50:00Z", "channel": "sms", "direction": "out", "summary": "Andre confirms 10 AM"},
+    {"ts": "2026-04-24T10:20:00Z", "channel": "call", "direction": "out", "summary": "Andre 20 min late, apologized, indicated availability all day"},
+    {"ts": "2026-04-25T11:00:00Z", "channel": "call", "direction": "out", "summary": "Another call attempt, no connect"}
+  ],
+  "notes": [
+    "Andre missed scheduled 10 AM — recovery requires precision",
+    "5-week event clock real",
+    "If miss again, she'll go elsewhere"
+  ]
+}

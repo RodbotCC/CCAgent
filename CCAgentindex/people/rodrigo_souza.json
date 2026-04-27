@@ -1,0 +1,36 @@
+{
+  "id": "rodrigo_souza",
+  "kind": "coworker",
+  "name": "Rodrigo Souza",
+  "role": "Owner / Founder",
+  "relationship_tier": "founder",
+  "relationship_weight": 0.98,
+  "contacts": {
+    "email": "rodrigo@comeketocatering.com",
+    "phone": null,
+    "whatsapp": null,
+    "slack_id": null,
+    "slack_channel": null
+  },
+  "handling": {
+    "preferred_channel": "Slack",
+    "response_latency_target": "same-day",
+    "tone": "Founder register. Direct, warm, half-running. He's the boss but speaks peer-to-peer with his core team. Don't pad or wrap things in process language.",
+    "voice_adjustments": "Mirror Rodrigo's phone-typing style: trailing dots ('...' or ' … ') at the end of almost every thought, sentence-case (no SHOUTING), and rhetorical questions that nudge action ('Whose lead ?', 'no ??'). Drop typos like 'Thx', 'ppl', 'te' for 'the', 'dont' without apostrophe. Mix in occasional Brazilian-Portuguese flavor. Use his small emoji palette only — :fire: x3, :muscle::skin-tone-5: (always with skin tone), :confetti_ball:, :eyes:, :weary: — and let emoji-only messages stand as celebration or acknowledgement. No long structured paragraphs.",
+    "context": "Owner and founder of Comeketo. Drives the team via channel pings and rhetorical questions; everything routes back to him for visibility.",
+    "off_limits_topics": null
+  },
+  "context_anchors": [
+    "Characteristic phrase: \"Let's get it...\"",
+    "Characteristic phrase: \"Good morning all...\"",
+    "Characteristic phrase: \"for visibility…\"",
+    "Characteristic phrase: \"what the heck?\"",
+    "Verbatim: \"Yes … at te basement actually… today\"",
+    "Punctuation tic: trailing \" … \" / \"...\" on nearly every thought; spaces before \"?\" and \"!\""
+  ],
+  "notes": [
+    "Owns: company direction, team-wide visibility, escalations",
+    "Pings the team via <!channel> liberally; treats Slack as his command bridge",
+    "Brazilian-American — Portuguese flavor surfaces naturally"
+  ]
+}

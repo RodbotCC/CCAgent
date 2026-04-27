@@ -1,0 +1,86 @@
+{
+  "id": "natalia_angulo",
+  "kind": "lead",
+  "name": "Natália Angulo",
+  "role": "Wedding · Date TBD · 100 guests · Reston VA (OUT-OF-MARKET)",
+  "relationship_tier": "active_quote",
+  "relationship_weight": 0.32,
+  "contacts": {
+    "email": null,
+    "phone": null,
+    "whatsapp": null,
+    "slack_id": null,
+    "slack_channel": null,
+    "clickup_user_id": null,
+    "other": null
+  },
+  "handling": {
+    "preferred_channel": "Email",
+    "response_latency_target": "within-24h",
+    "tone": "Geographic disambiguation needed — Reston VA is 450+ mi from MA. Bilingual (PT/EN) — Andre opened with mixed Portuguese on Apr 19. Either Brazilian or Spanish-speaking.",
+    "voice_adjustments": "Andre voice: bilingual-aware, direct. Honest about geography limits. Don't pretend uncertainty — get the location answer first.",
+    "context": "Inbound Apr 19 from FB Lead Form. 100 guests, no date. Andre sent detailed BALLPARK QUOTE Apr 25 (today): Option 1 Brazilian BBQ ~$2,656.69, Option 2 Deluxe Churrasco ~$3,049.69. BUT zip is 20190 Reston VA — Close score 'within immediate area' is WRONG. Wedding location TBD.",
+    "off_limits_topics": null
+  },
+  "context_anchors": [
+    "Reston VA 20190 — 450+ miles from MA service zone",
+    "Close score 'Within immediate area' is MIS-SCORED",
+    "Andre sent detailed ballpark quote Apr 25 (today)",
+    "Bilingual (Portuguese-leaning per Andre's opening)",
+    "100 guests, wedding, no date specified",
+    "'Angulo' Spanish surname; 'Natália' with Portuguese accent leans Brazilian"
+  ],
+  "lead": {
+    "status": "active_quote",
+    "stage": "ballpark_quote_sent_out_of_market",
+    "owner": "andre_raw",
+    "source": "FB Lead Form — VIDEO RODS WEDDING & FACELESS",
+    "event_type": "Wedding",
+    "event_date": null,
+    "guest_count": 100,
+    "venue": null,
+    "city": "Reston, VA (OUT-OF-MARKET)",
+    "quote_value": 3050,
+    "opportunity_value": 3780,
+    "score_tags": ["geographic_mismatch", "ballpark_sent", "bilingual", "no_date"],
+    "last_activity": "2026-04-25 — detailed ballpark quote email sent",
+    "speed_urgency": "medium",
+    "next_move": "Wait 48-72h for response; if no reply by Apr 29, send geography-clarification message"
+  },
+  "enrichment": {
+    "confidence": 0.40,
+    "identity_notes": "Natália with accent + Angulo surname = Hispanic/Latin American background. Angulo common Spanish-origin; Natália with Portuguese accent leans Brazilian. Bilingual phrasing Andre used ('Te liguei agorinha, Vc ta precisando de Catering?') was Portuguese.",
+    "win_angles": [
+      "Resolve geographic question FIRST — don't let it drift",
+      "Bilingual warmth — match language she responds in",
+      "Don't dismiss out-of-market — she may be planning destination MA wedding",
+      "Ballpark quote already went today — wait for response"
+    ],
+    "nepq_openers": [
+      "PT: 'Olá Natália — vi que seu CEP é 20190 Reston, Virginia. Quero confirmar uma coisa importante: o casamento vai ser em Massachusetts ou em Virginia? Isso muda completamente o que conseguimos fazer pra você.'",
+      "EN: 'Hi Natália — noticed your zip is 20190 Reston, Virginia. Critical question: is the wedding in Massachusetts or Virginia? Changes everything about what's feasible.'",
+      "Frame: 'How did you find Comeketo all the way from Virginia — family in MA, planning here for a reason?'"
+    ],
+    "open_gaps": [
+      "WHERE is the wedding — primary blocker",
+      "Wedding date",
+      "Venue (location-dependent)",
+      "Phone (pull from Close)",
+      "Language preference (Portuguese, Spanish, English)",
+      "Cultural mix of guest list",
+      "Why she came to Comeketo from VA"
+    ],
+    "strategic_note": "'Within immediate area' Close score is misleading — 450-mi-away lead. Andre may not have noticed. ONE bilingual clarification asking location directly. If wedding in MA, real deal. If VA, refer to Virginia caterer. Current state — sending detailed quotes without geographic clarity — is process leak to patch in intake."
+  },
+  "comms": [
+    {"ts": "2026-04-19T10:00:00Z", "channel": "sms", "direction": "out", "summary": "Inbound acknowledged + 3 call attempts (no answer)"},
+    {"ts": "2026-04-19T11:00:00Z", "channel": "email", "direction": "out", "summary": "Bilingual opener 'Te liguei agorinha, Vc ta precisando?' + service overview"},
+    {"ts": "2026-04-20T11:00:00Z", "channel": "live_chat", "direction": "in", "summary": "Live chat started"},
+    {"ts": "2026-04-25T11:00:00Z", "channel": "email", "direction": "out", "summary": "Detailed BALLPARK quote: Option 1 Brazilian BBQ $2,657, Option 2 Deluxe $3,050"}
+  ],
+  "notes": [
+    "Out-of-market — geography is the existential question",
+    "Quote was sent without geographic verification (process leak)",
+    "Wait 48-72h for response before pushing"
+  ]
+}

@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Comeketo Agent</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=IBM+Plex+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="tokens.css">
+  <link rel="stylesheet" href="app.css">
+</head>
+<body>
+
+<!-- Inline icon set (lucide-style monolines, hand-tuned) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-layers" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 2 2 7l10 5 10-5-10-5z"/><path d="m2 17 10 5 10-5"/><path d="m2 12 10 5 10-5"/>
+    </symbol>
+    <symbol id="i-users" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+    </symbol>
+    <symbol id="i-sparkles" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+      <path d="m12 3-1.9 5.8L4 11l6.1 2.2L12 19l1.9-5.8L20 11l-6.1-2.2L12 3z"/><path d="M5 3v4"/><path d="M19 17v4"/><path d="M3 5h4"/><path d="M17 19h4"/>
+    </symbol>
+    <symbol id="i-table" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+      <rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18"/><path d="M3 15h18"/><path d="M9 3v18"/><path d="M15 3v18"/>
+    </symbol>
+    <symbol id="i-inbox" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="22 12 16 12 14 15 10 15 8 12 2 12"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11Z"/>
+    </symbol>
+    <symbol id="i-activity" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+    </symbol>
+    <symbol id="i-git-branch" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+      <line x1="6" x2="6" y1="3" y2="15"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 9a9 9 0 0 1-9 9"/>
+    </symbol>
+    <symbol id="i-calendar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+      <rect width="18" height="18" x="3" y="4" rx="2"/><path d="M16 2v4"/><path d="M8 2v4"/><path d="M3 10h18"/>
+    </symbol>
+    <symbol id="i-settings" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/>
+    </symbol>
+    <symbol id="i-message" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+    </symbol>
+    <symbol id="i-mic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="9" y="2" width="6" height="12" rx="3"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/>
+    </symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 5v14"/><path d="M5 12h14"/>
+    </symbol>
+    <symbol id="i-arrow-up" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 19V5"/><path d="m5 12 7-7 7 7"/>
+    </symbol>
+    <symbol id="i-corner-down" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="9 10 4 15 9 20"/><path d="M20 4v7a4 4 0 0 1-4 4H4"/>
+    </symbol>
+  </defs>
+</svg>
+
+<div class="shell">
+
+  <!-- ── Topbar ── -->
+  <header class="topbar">
+    <button class="brand" aria-label="Home">Comeketo Agent</button>
+
+    <div class="nav-stack">
+      <!-- Row 0: context + briefing + today + settings -->
+      <nav class="context-strip" aria-label="context">
+        <span class="ctx-mode"><b>proposals</b></span>
+        <span class="sep">·</span>
+        <span>personal</span>
+        <span class="sep">·</span>
+        <button class="nav-link">Briefing</button>
+        <span class="sep">·</span>
+        <button class="nav-link">
+          <span class="badge">
+            <svg class="icon-inline" width="13" height="13"><use href="#i-calendar"/></svg>
+            Today
+            <span class="num">50</span>
+          </span>
+        </button>
+        <button class="gear" aria-label="Settings">
+          <svg width="14" height="14"><use href="#i-settings"/></svg>
+        </button>
+      </nav>
+
+      <!-- Row 1: section tabs -->
+      <nav class="section-strip" aria-label="sections">
+        <button class="sec">
+          <span class="ic"><svg width="14" height="14"><use href="#i-layers"/></svg></span>
+          Work
+          <span class="count">29</span>
+          <span class="caret">▾</span>
+        </button>
+        <button class="sec">
+          <span class="ic"><svg width="14" height="14"><use href="#i-users"/></svg></span>
+          People
+          <span class="caret">▾</span>
+        </button>
+        <button class="sec">
+          <span class="ic"><svg width="14" height="14"><use href="#i-sparkles"/></svg></span>
+          Mind
+          <span class="count">23</span>
+          <span class="caret">▾</span>
+        </button>
+        <button class="sec">
+          <span class="ic"><svg width="14" height="14"><use href="#i-table"/></svg></span>
+          tables
+        </button>
+        <button class="sec">
+          <span class="ic"><svg width="14" height="14"><use href="#i-inbox"/></svg></span>
+          intake
+        </button>
+        <button class="sec">
+          <span class="ic"><svg width="14" height="14"><use href="#i-activity"/></svg></span>
+          Analytics
+        </button>
+        <button class="sec">
+          <span class="ic"><svg width="14" height="14"><use href="#i-git-branch"/></svg></span>
+          automation
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ── Main ── -->
+  <main class="shell-main">
+
+    <!-- Pieces clip hero card -->
+    <article class="clip-card" aria-label="Latest pieces clip">
+      <div>
+        <h2 class="clip-title">Just clipped — Claude</h2>
+        <p class="clip-body">Hey, just so you know, I've been working with a couple other co-work tabs here. I feel like a lot of you guys might be missing the fact that, even though we've done a lot of aesthetic stuff, if we end up making new ideas and stuff like…</p>
+        <div class="clip-meta">
+          <span>6m ago from pieces</span>
+          <span class="meta-sep">·</span>
+          <span>clipboard</span>
+          <span class="meta-sep">·</span>
+          <span>7 hrs, 11 mins ago (2026-04-25 4:56 AM Saturday April 25 2026)</span>
+          <span class="meta-sep">·</span>
+          <span>1 mentioned</span>
+        </div>
+      </div>
+      <div class="clip-status">
+        <span class="live-pip"><span class="dot"></span>LIVE · PIECES</span>
+        <span class="progress">6/12</span>
+      </div>
+    </article>
+
+    <!-- grid · morning indicator -->
+    <div class="section-indicator">
+      <span class="dot"></span>
+      <span><b>grid</b> · morning</span>
+    </div>
+
+    <!-- Workspace: ideas rail + chat column -->
+    <section class="workspace">
+
+      <!-- Left rail -->
+      <aside class="rail">
+        <div class="panel">
+          <div class="panel-header">
+            <h3 class="panel-title">Ideas</h3>
+            <button class="sweep-pill">SWEEP</button>
+          </div>
+          <ul class="ideas">
+            <li>Clear 86 overdue Close tasks</li>
+            <li>Redirect April pending tastings</li>
+            <li>Close week 4/19 revenue</li>
+            <li>Crisp Chat speed-to-lead gap</li>
+            <li>December Other attribution cleanup</li>
+          </ul>
+          <p class="panel-hint">click an idea — Rodbot picks it up in chat.</p>
+        </div>
+
+        <div class="panel">
+          <div class="panel-header">
+            <h3 class="panel-title">Capture</h3>
+            <div class="capture-actions">
+              <button>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="9" y="2" width="6" height="12" rx="3"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+                </svg>
+                TALK
+              </button>
+              <button class="active">
+                SAVE
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="9 10 4 15 9 20"/><path d="M20 4v7a4 4 0 0 1-4 4H4"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+          <p class="panel-hint" style="border-top:0; padding-top:0; margin-top:0;">drop an idea — Rodbot picks it up on next sweep. ⌘/Ctrl+Enter to save.</p>
+        </div>
+      </aside>
+
+      <!-- Chat column -->
+      <section class="chat-col" aria-label="Chat">
+        <header class="chat-header">
+          <span class="chat-tag">
+            <svg><use href="#i-message"/></svg>
+            CHAT
+          </span>
+          <button class="chat-new">
+            <svg width="11" height="11"><use href="#i-plus"/></svg>
+            new
+          </button>
+        </header>
+
+        <div class="chat-body">
+          <ol start="2">
+            <li>
+              <strong>Comparing-shoppers</strong> — they're sitting on two or three quotes and ours is one of them. Email works here, but it has to name the comparison directly. Tactical-empathy mirror: <em>"I'd guess you're weighing a couple of options right now — happy to walk through what flexes on ours if it's useful."</em> Not a nudge. A door.
+            </li>
+            <li>
+              <strong>Already gone</strong> — they ghosted because they booked someone else and don't want to say it. These don't need a touch, they need a one-line "no hard feelings, door's open" close-out that frees the rep's queue and gives us clean conversion math. Three or four of these.
+            </li>
+          </ol>
+
+          <p class="h-move">The move I'd push:</p>
+          <p>Pull the 14 into Close, sort by last-touch age, and have the owning rep tag each one as Hot/Comparing/Gone in the next 30 minutes. That triage <em>is</em> the work — once we know which bucket a couple's in, the move writes itself. Templating across all 14 is the failure mode.</p>
+
+          <p><strong>The 72-hour rule:</strong> anything past three days of silence post-quote, the next touch is a phone call or a channel switch. Not another email into the same dead thread. Email already lost; the rep's voice is the unlock.</p>
+
+          <p><strong>What I want to know before drafting anything:</strong></p>
+          <ul class="bullets">
+            <li>Who ran each tasting? Anne should have notes — specific dish reactions, what the couple gravitated to, what they said about the venue. <em>That's</em> what the redirect message is built from. Not "following up" — "you mentioned the Coxinha and the ocean view, here's how we're thinking about it."</li>
+            <li>Are any of these on partner venues? If yes, that's a separate lever — the venue planner can re-warm the couple in a way the caterer can't.</li>
+          </ul>
+
+          <p>Want me to draft a triage prompt for the reps to run on the 14 this morning, or do you want to pick two yourself and we draft the actual outbound for those?</p>
+        </div>
+
+        <div class="chat-input">
+          <button class="plus" aria-label="Attach">
+            <svg width="16" height="16"><use href="#i-plus"/></svg>
+          </button>
+          <input type="text" placeholder="Message Comeketo Agent. ⌘/Ctrl+Enter." aria-label="Message" />
+          <button class="send" aria-label="Send">
+            <svg width="16" height="16"><use href="#i-arrow-up"/></svg>
+          </button>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <!-- ── Footer strip ── -->
+  <footer class="footer-strip">
+    <span>grid · morning</span>
+    <div class="right">
+      <span>proposals</span>
+      <span class="sep">·</span>
+      <span>personal</span>
+      <span class="brand-mark">Comeketo Agent</span>
+    </div>
+  </footer>
+
+</div>
+
+</body>
+</html>

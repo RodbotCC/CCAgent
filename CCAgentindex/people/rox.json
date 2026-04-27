@@ -1,0 +1,85 @@
+{
+  "id": "rox",
+  "kind": "lead",
+  "name": "Rox",
+  "role": "Baby Shower · May 23, 2026 · 60 guests · Lawrence MA",
+  "relationship_tier": "stalled",
+  "relationship_weight": 0.28,
+  "contacts": {
+    "email": null,
+    "phone": null,
+    "whatsapp": null,
+    "slack_id": null,
+    "slack_channel": null,
+    "clickup_user_id": null,
+    "other": null
+  },
+  "handling": {
+    "preferred_channel": "SMS",
+    "response_latency_target": "within-24h",
+    "tone": "Possibly younger Latina, single nickname only. Lawrence MA heavily Hispanic (Dominican-American largest in NE). Apr 24 Portuguese SMS may have hit close, but likely English-preferred.",
+    "voice_adjustments": "Andre voice: urgency-aware, brief, English-first with light Spanish if it lands. Last name capture is step 1.",
+    "context": "Inbound Apr 15 from FB Lead Form. Baby shower 4 weeks out (HIGH URGENCY). 60 guests, mid-size. $2,079 ballpark. No engagement after Day-1 push. No last name captured.",
+    "off_limits_topics": null
+  },
+  "context_anchors": [
+    "Single nickname 'Rox' — likely Roxanne/Roxana/Roxy",
+    "Lawrence MA, 01843 — heavily Hispanic (Dominican largest)",
+    "Baby shower May 23 — 4 weeks out, HIGH urgency",
+    "60 guests, mid-size = $2,079 ballpark",
+    "No last name — pull from Close"
+  ],
+  "lead": {
+    "status": "stalled",
+    "stage": "cold_no_response_baby_shower_high_urgency",
+    "owner": "andre_raw",
+    "source": "FB Lead Form — VIDEO RODS WEDDING & FACELESS",
+    "event_type": "Baby Shower",
+    "event_date": "2026-05-23",
+    "guest_count": 60,
+    "venue": null,
+    "city": "Lawrence, MA",
+    "quote_value": null,
+    "opportunity_value": 2079,
+    "score_tags": ["immediate_need_3mo", "no_lastname", "hispanic_demo", "high_urgency"],
+    "last_activity": "2026-04-24 — Portuguese cadence SMS",
+    "speed_urgency": "high",
+    "next_move": "Urgency-aware re-engagement giving fast path: text/email/call binary + last name + venue"
+  },
+  "enrichment": {
+    "confidence": 0.40,
+    "identity_notes": "Single name only — could be nickname (Roxanne, Roxana, Roxy) or stage/handle. Lawrence demographics + single-name presentation suggests younger Latina with social media presence under 'Rox'.",
+    "win_angles": [
+      "Last-name capture is step 1",
+      "Latin cultural fit possible — ask, don't assume",
+      "60 guests + 4 weeks = mid-tier, drop-off+attendant most likely",
+      "Baby shower energy — celebrate the mom-to-be, brunch/lunch timing",
+      "Day 1 was thorough but no engagement — re-engage with urgency"
+    ],
+    "nepq_openers": [
+      "Continuation: 'Hi Rox — quick check on May 23 baby shower. ~4 weeks to go. Two questions: (1) date locked at May 23? (2) best way to send a quick proposal — text, email, 10-min call? You're tight on calendar so I want to be useful fast.'",
+      "Frame: 'Whose baby shower? Want to make sure I help make HER day feel special.'",
+      "Anchor: 'For 60 baby shower 4 weeks out: drop-off ($X), light buffet ($Y), full hosted ($Z). Tight proposal in 24h if you tell me direction.'"
+    ],
+    "open_gaps": [
+      "Last name / full name",
+      "Phone preference (text vs call)",
+      "Whose baby shower",
+      "Venue (home, community, restaurant)",
+      "Cuisine preference (Latin-leaning?)",
+      "Mocktail focus typical for baby showers"
+    ],
+    "strategic_note": "Tight clock + missing personal info + cultural nuance unaddressed. One urgency-aware re-engagement giving fast binary, gets last name + venue. If she comes back, move fast — propose, quote, close in days. If no response by 5/1, accept the loss."
+  },
+  "comms": [
+    {"ts": "2026-04-15T10:00:00Z", "channel": "sms", "direction": "out", "summary": "Inbound acknowledged + 'best time' + 2 call attempts"},
+    {"ts": "2026-04-15T11:00:00Z", "channel": "email", "direction": "out", "summary": "Service overview + types breakdown"},
+    {"ts": "2026-04-21T11:00:00Z", "channel": "email", "direction": "out", "summary": "Bar service drip"},
+    {"ts": "2026-04-24T13:00:00Z", "channel": "sms", "direction": "out", "summary": "Day-4 cadence — sent in PORTUGUESE (likely misfire)"}
+  ],
+  "notes": [
+    "4-week clock real — fast win or accept loss",
+    "Pregnancy-friendly menu + mocktail focus typical",
+    "Last name capture priority"
+  ]
+}

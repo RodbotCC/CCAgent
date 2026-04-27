@@ -1,0 +1,30 @@
+{
+  "id": "mechanics_hall_worcester",
+  "kind": "venue",
+  "name": "Mechanics Hall (Worcester)",
+  "city": "Worcester",
+  "venue_type": null,
+  "website": null,
+  "tier": "tier_2",
+  "deal_stats": {
+    "opp_count": 5,
+    "total_value": 15800.0,
+    "avg_deal_value": 3160.0,
+    "lead_name_refs": 2
+  },
+  "close_account": {
+    "has_lead": false,
+    "lead_status": null,
+    "lead_url": null
+  },
+  "raw_variants": [
+    "Mechanics Hall",
+    "Mechanics Hall Worcester"
+  ],
+  "action": "ENRICH NOW — high-volume, no lead account",
+  "notes": [
+    "5 opportunities totaling $15,800.00 — rank #18 by deal value.",
+    "No Close lead account yet — recommend creating one to track relationship.",
+    "2 leads have referenced this as their venue choice."
+  ]
+}

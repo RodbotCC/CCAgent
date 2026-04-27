@@ -3,23 +3,11 @@
 function App() {
   const data = window.SECRETARY_DATA;
 
-  // i18n — re-render the tree whenever the user flips language.
-  // Components call window.t("key") at render time so this covers the app.
-  const [, setLang] = useState(() => (window.Comeketoi18n && window.Comeketoi18n.get()) || "en");
-  useEffect(() => {
-    const onChange = (e) => setLang(e.detail.lang);
-    window.addEventListener("comeketoagent:language", onChange);
-    return () => window.removeEventListener("comeketoagent:language", onChange);
-  }, []);
-
   const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
     "theme": "light",
-    "density": "regular",
-    "predLevel": "hi",
-    "autoCommit": true,
-    "showPanels": true,
     "demoMode": true,
-    "piecesModel": "claude-sonnet-4-5"
+    "piecesModel": "claude-sonnet-4-5",
+    "promptEnhance": false
   }/*EDITMODE-END*/;
 
   const [tweaks, setTweaks] = useState(() => {
@@ -31,8 +19,6 @@ function App() {
   useEffect(() => { localStorage.setItem("secretary.tweaks", JSON.stringify(tweaks)); }, [tweaks]);
 
   const [tweaksOpen, setTweaksOpen] = useState(false);
-  // In-place "Edit with Rodbot" overlay — replaces the old tab-hop behavior.
-  const [rodbotEdit, setRodbotEdit] = useState(null); // { cell, gridId }
   useEffect(() => {
     const h = (e) => {
       if (!e.data || typeof e.data !== "object") return;
@@ -49,8 +35,7 @@ function App() {
 
   useEffect(() => {
     document.documentElement.dataset.theme = tweaks.theme;
-    document.documentElement.dataset.density = tweaks.density;
-  }, [tweaks.theme, tweaks.density]);
+  }, [tweaks.theme]);
 
   // --- Mission Control status ------------------------------------------------
   const [mcStatus, setMcStatus] = useState(() => {
@@ -116,12 +101,6 @@ function App() {
       if (stack.length > 12) stack.shift();
       return { ...prev, [gridId]: stack };
     });
-    if (window.SecretaryLedger) {
-      window.SecretaryLedger.log("grid_version_pushed", {
-        gridId, title: grid.title,
-        generated: !!grid._aiGenerated,
-      });
-    }
   }, []);
   // Back-one-generation — pop the top grid if there's more than one version.
   // Returns true if it popped, false if already at bottom.
@@ -149,186 +128,10 @@ function App() {
   const [aiError, setAiError] = useState(null);      // last error message (dismissible)
   const [aiNote, setAiNote] = useState(null);        // last success note (auto-clears)
 
-  // --- Commitments ledger ----------------------------------------------------
-  // status: 'pending' | 'sent' | 'canceled' | 'failed'
-  // shape:  { id, createdAt, source:{gridId,cellId,headline,preview,detail},
-  //           commit:{kind,label,target?}, subject, body, target, status, result?, sentAt?, demoSent? }
-  const [commitments, setCommitments] = useState(() => {
-    try { return JSON.parse(localStorage.getItem("secretary.commitments") || "[]"); }
-    catch { return []; }
-  });
-  useEffect(() => {
-    try { localStorage.setItem("secretary.commitments", JSON.stringify(commitments)); } catch {}
-  }, [commitments]);
-  const pendingCount = commitments.filter(c => c.status === "pending").length;
-
-  // Inbox open count — badge on the Inbox chip. Live-subscribes to the store.
-  const [inboxOpenCount, setInboxOpenCount] = useState(
-    () => (window.SecretaryInbox ? window.SecretaryInbox.openCount() : 0)
-  );
-  useEffect(() => {
-    if (!window.SecretaryInbox) return;
-    const unsub = window.SecretaryInbox.subscribe(() => {
-      setInboxOpenCount(window.SecretaryInbox.openCount());
-    });
-    return unsub;
-  }, []);
-
-  // Delegation running count — badge on the Delegations chip.
-  const [delegationRunningCount, setDelegationRunningCount] = useState(0);
-  useEffect(() => {
-    if (!window.SecretaryDelegator) return;
-    const unsub = window.SecretaryDelegator.subscribe(() => {
-      setDelegationRunningCount(window.SecretaryDelegator.runningCount());
-    });
-    return unsub;
-  }, []);
-
-  const addCommitment = useCallback((source, cell) => {
-    const id = "cmt_" + Date.now().toString(36) + "_" + Math.random().toString(36).slice(2, 6);
-    const entry = {
-      id,
-      createdAt: new Date().toISOString(),
-      source,
-      commit: { ...cell.commit },
-      subject: cell.headline,
-      body: cell.detail || cell.preview || "",
-      target: (cell.commit && cell.commit.target) || "",
-      status: "pending",
-    };
-    setCommitments(list => [entry, ...list]);
-    if (window.SecretaryLedger) {
-      window.SecretaryLedger.log("commitment_created", {
-        id, subject: entry.subject, commit_kind: entry.commit && entry.commit.kind,
-        source: entry.source,
-      });
-    }
-    return entry;
-  }, []);
-
-  const updateCommitment = useCallback((id, patch) => {
-    setCommitments(list => list.map(c => c.id === id ? { ...c, ...patch } : c));
-  }, []);
-
-  const removeCommitment = useCallback((id) => {
-    setCommitments(list => list.filter(c => c.id !== id));
-  }, []);
-
-  // Dispatch routes through SecretaryConnectors. Demo-mode enforcement lives
-  // server-side (the proxy blocks writes when X-Demo-Mode: 1 is set); connectors.js
-  // forwards that header. Returns uniform { ok, note, transcript?, openUrl? }.
-  const dispatchCommitment = useCallback(async (c) => {
-    if (!window.SecretaryConnectors) return { ok: false, note: "connectors layer not loaded" };
-    // Channel resolution: explicit c.channel (AI-picked or user-picked) > commit.kind mapping > 'note'.
-    let channel = c.channel;
-    if (!channel) {
-      const k = c.commit && c.commit.kind;
-      if (k === "open" || k === "open_url") channel = "open_url";
-      else if (k === "done")                 channel = "note";
-      else                                   channel = "note";
-    }
-    return window.SecretaryConnectors.send(channel, {
-      target: c.target || (c.commit && c.commit.target),
-      subject: c.subject,
-      body: c.body,
-    });
-  }, []);
-
-  const sendCommitment = useCallback(async (id) => {
-    const c = commitments.find(x => x.id === id);
-    if (!c || c.status === "sent") return;
-    updateCommitment(id, { status: "sending" });
-    try {
-      const r = await dispatchCommitment(c);
-      if (r.ok) {
-        updateCommitment(id, { status: "sent", result: r.note, sentAt: new Date().toISOString(), demoSent: !!tweaks.demoMode });
-        setAiNote(`Sent: ${c.subject} — ${r.note}`);
-        window.SecretaryMemory && window.SecretaryMemory.log.send({
-          cluster: (c.source && c.source.cluster) || "unknown",
-          gridId: c.source && c.source.gridId, cellId: c.source && c.source.cellId,
-          detail: `${c.commit && c.commit.kind} · ${c.subject}${tweaks.demoMode ? " (demo)" : ""}`,
-          demo: !!tweaks.demoMode,
-        });
-        window.SecretaryLedger && window.SecretaryLedger.log("commitment_sent", {
-          id, subject: c.subject, channel: c.channel, target: c.target,
-          demo: !!tweaks.demoMode, result: r.note,
-        });
-      } else {
-        updateCommitment(id, { status: "failed", result: r.note });
-        setAiError(`Send failed: ${r.note}`);
-        window.SecretaryLedger && window.SecretaryLedger.log("commitment_failed", {
-          id, subject: c.subject, channel: c.channel, target: c.target, error: r.note,
-        });
-      }
-    } catch (e) {
-      updateCommitment(id, { status: "failed", result: e.message || String(e) });
-      setAiError("Send failed: " + (e.message || e));
-    } finally {
-      setTimeout(() => setAiNote(null), 3000);
-    }
-  }, [commitments, dispatchCommitment, tweaks.demoMode, updateCommitment]);
-
-  const sendAllPending = useCallback(async () => {
-    const pending = commitments.filter(c => c.status === "pending");
-    for (const c of pending) {
-      // sequential so status updates visibly
-      // eslint-disable-next-line no-await-in-loop
-      await sendCommitment(c.id);
-    }
-  }, [commitments, sendCommitment]);
-
-  const cancelCommitment = useCallback((id) => {
-    updateCommitment(id, { status: "canceled" });
-  }, [updateCommitment]);
-
   const aiConfigured = !!(window.SecretaryAI && window.SecretaryAI.isConfigured());
 
-  // --- Streak (ledger-derived; refreshed on load and after any commit) -------
-  // Shown on the Calendar chip so the team sees the streak without leaving the grid.
-  const [streakDays, setStreakDays] = useState(0);
-  // Open-task count (across all projects) surfaced on the topbar.
-  const [openTasksCount, setOpenTasksCount] = useState(0);
-  const refreshOpenTasks = useCallback(async () => {
-    try {
-      const res = await fetch("/api/projects", { cache: "no-cache" });
-      if (!res.ok) return;
-      const j = await res.json();
-      let n = 0;
-      for (const p of (j.projects || [])) n += (p.open_task_count || 0);
-      setOpenTasksCount(n);
-    } catch {}
-  }, []);
-  useEffect(() => { refreshOpenTasks(); }, [refreshOpenTasks]);
-
-  // --- Rodbot snapshot (subscription so Topbar count updates live) ----------
-  const [rodbotState, setRodbotState] = useState(() => (window.Rodbot ? window.Rodbot.snapshot() : null));
-  useEffect(() => {
-    if (!window.Rodbot) return;
-    const unsub = window.Rodbot.subscribe(s => setRodbotState({ ...s }));
-    return unsub;
-  }, []);
-  const refreshStreak = useCallback(async () => {
-    try {
-      const L = window.SecretaryLedger;
-      const F = window.computeStreak;
-      const S = window.isShipEvent;
-      if (!L || !F || !S) return;
-      const events = await L.read();
-      const days = new Set();
-      for (const ev of events) {
-        if (!S(ev) || !ev.t) continue;
-        const d = new Date(ev.t);
-        if (isNaN(d.getTime())) continue;
-        const slug = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
-        days.add(slug);
-      }
-      setStreakDays(F(days).current);
-    } catch {}
-  }, []);
-  useEffect(() => { refreshStreak(); }, [refreshStreak]);
-
   // --- Routing ---------------------------------------------------------------
-  const KNOWN_SCREENS = ["grid", "settings", "memory", "prediction", "commitments", "inbox", "contacts", "briefing", "delegations", "chat", "calendar", "Rodbot", "projects", "tables", "table_detail", "table_new", "analytics", "automation", "activity", "commitment_detail", "inbox_detail", "intake"];
+  const KNOWN_SCREENS = ["grid", "settings", "leads", "clients", "coworkers", "contacts", "venues", "briefing", "automation", "activity", "intake"];
   const getGridFor = (id) => gridOverrides[id] || data.grids[id] || null;
   const validHistory = (h) => {
     if (!Array.isArray(h) || !h.length) return null;
@@ -395,26 +198,6 @@ function App() {
   const prewarmKey = openCellId ? `${currentGridId}:${openCellId}` : null;
   const currentPrewarm = prewarmKey ? prewarmRef.current[prewarmKey] : null;
 
-  // Pre-warmed COMMIT DRAFTS — the actual outbound message. Same keyed shape.
-  // value: { state, draft?, error?, promise? }  where draft = { channel, to, subject, body, why_channel, voice_check }
-  const draftPrewarmRef = useRef({});
-  const currentDraftPrewarm = prewarmKey ? draftPrewarmRef.current[prewarmKey] : null;
-
-  // --- Gesture log -----------------------------------------------------------
-  const [gestureLog, setGestureLog] = useState([]);
-  const [gestureCount, setGestureCount] = useState(342);
-  const pushGesture = useCallback((entry) => {
-    const now = new Date();
-    const time = `${String(now.getHours()).padStart(2,"0")}:${String(now.getMinutes()).padStart(2,"0")}:${String(now.getSeconds()).padStart(2,"0")}`;
-    setGestureLog(log => [...log, { time, ...entry }]);
-    setGestureCount(n => n + 1);
-    // Stream to disk via SecretaryLedger — gestures are the main temporal
-    // signal, so they all go to _ledger/activity.jsonl automatically.
-    if (window.SecretaryLedger) {
-      window.SecretaryLedger.log("gesture", { ...entry });
-    }
-  }, []);
-
   // --- State signature -------------------------------------------------------
   const stateSig = useMemo(() => {
     const base = {
@@ -428,13 +211,6 @@ function App() {
     if (g.id === "correspondence") return { ...base, mode: "drafts",    domain: "threads",       comparator: "relationship_weight", cluster: "correspondence", signature: "correspondence" };
     return base;
   }, [currentGrid, currentGridId]);
-
-  const baseThresh = tweaks.predLevel === "hi" ? 0.94 : tweaks.predLevel === "mid" ? 0.80 : 0.60;
-  const predAcc = useMemo(() => {
-    const cl = data.clusters.find(c => c.id === stateSig.cluster);
-    return cl ? (cl.predAcc + baseThresh) / 2 : baseThresh;
-  }, [stateSig.cluster, baseThresh, data.clusters]);
-  const autoCommitArmed = tweaks.autoCommit && predAcc >= baseThresh;
 
   // --- AI ctx builder --------------------------------------------------------
   const buildCtx = useCallback(() => ({
@@ -470,172 +246,14 @@ function App() {
     return prewarmRef.current[key];
   }, [aiConfigured, buildCtx]);
 
-  // --- Pre-warm the actual OUTBOUND DRAFT for a cell -------------------------
-  // Fires at cell-open so by the time user clicks Commit, the real message is ready.
-  // Only fires for cells that would produce outbound content (send/schedule kinds, or open/done if you'd ever want a personal note).
-  const startDraftPrewarm = useCallback((gridId, cellId, cell, grid) => {
-    const key = `${gridId}:${cellId}`;
-    const existing = draftPrewarmRef.current[key];
-    if (existing && (existing.state === "loading" || existing.state === "ready")) return existing;
-    if (!aiConfigured) return null;
-    const entry = { state: "loading" };
-    draftPrewarmRef.current[key] = entry;
-    setPrewarmTick(t => t + 1);
-    entry.promise = window.SecretaryActions.draftCommitment({
-      cell: { ...cell, _id: cellId },
-      grid,
-      ctx: buildCtx(),
-    }).then(draft => {
-      draftPrewarmRef.current[key] = { state: "ready", draft };
-      setPrewarmTick(t => t + 1);
-      return draft;
-    }).catch(err => {
-      draftPrewarmRef.current[key] = { state: "error", error: err.message || String(err) };
-      setPrewarmTick(t => t + 1);
-      throw err;
-    });
-    return draftPrewarmRef.current[key];
-  }, [aiConfigured, buildCtx]);
-
-  // --- Regenerate a commitment's draft (called from the Commitments page) ----
-  const regenerateCommitmentDraft = useCallback(async (commitmentId) => {
-    const c = commitments.find(x => x.id === commitmentId);
-    if (!c) return;
-    const srcGrid = c.source && getGridFor(c.source.gridId);
-    const srcCell = srcGrid && srcGrid.cells && srcGrid.cells[c.source.cellId];
-    if (!srcGrid || !srcCell) {
-      setAiError("Can't regenerate — source grid/cell no longer available");
-      return;
-    }
-    if (!aiConfigured) {
-      setAiError("No API key set — add one in Settings → Intelligence");
-      return;
-    }
-    updateCommitment(commitmentId, { drafting: true });
-    try {
-      const draft = await window.SecretaryActions.draftCommitment({
-        cell: { ...srcCell, _id: c.source.cellId },
-        grid: srcGrid,
-        ctx: buildCtx(),
-      });
-      updateCommitment(commitmentId, {
-        drafting: false,
-        subject: draft.subject || c.subject,
-        body: draft.body,
-        target: draft.to || c.target,
-        channel: draft.channel,
-        voice_check: draft.voice_check,
-        why_channel: draft.why_channel,
-      });
-      setAiNote(`Re-drafted via ${draft.channel}`);
-      setTimeout(() => setAiNote(null), 2500);
-    } catch (e) {
-      updateCommitment(commitmentId, { drafting: false, draftError: e.message || String(e) });
-      setAiError("Re-draft failed: " + (e.message || e));
-    }
-  }, [commitments, getGridFor, aiConfigured, buildCtx, updateCommitment]);
-
   // --- Handlers --------------------------------------------------------------
   const onCellOpen = (cellId) => {
     setOpenCellId(cellId);
     const c = currentGrid.cells[cellId];
-    pushGesture({ type: "open", target: cellId, detail: c.headline });
-    window.SecretaryMemory && window.SecretaryMemory.log.open({
-      cluster: stateSig.cluster, signature: stateSig.signature,
-      gridId: currentGridId, cellId, detail: c.headline, predicted: !!c.predicted,
-    });
-    // Fire both pre-warms in the background — user may click Refine, Commit, or neither.
+    // Pre-warm a refine grid in the background — user may click Refine or close.
     startPrewarm(currentGridId, cellId, c, currentGrid);
-    startDraftPrewarm(currentGridId, cellId, c, currentGrid);
   };
   const onCloseFullscreen = () => setOpenCellId(null);
-
-  // Commit: queue the commitment with the ACTUAL AI-drafted message as the body.
-  //   1. If the draft pre-warm is ready → use it instantly.
-  //   2. If it's in-flight → queue a placeholder now, fill in body when the draft resolves.
-  //   3. If no draft was warmed (AI not configured, or error) → fall back to the cell's detail (current lazy behavior).
-  const onCommit = () => {
-    const c = openCell;
-    if (!c) return;
-    const source = {
-      gridId: currentGridId,
-      cellId: c._id,
-      headline: c.headline,
-      preview: c.preview,
-      detail: c.detail,
-      // Provenance for the affinity learner: which seed fed this cell?
-      // Written by Phase 1 of grid generation (grid_scorer.js).
-      ...(c.seed ? {
-        seed_source_type: c.seed.source_type,
-        seed_source_id:   c.seed.source_id,
-        seed_score:       c.seed.score,
-      } : {}),
-    };
-    const key = `${currentGridId}:${c._id}`;
-    const warm = draftPrewarmRef.current[key];
-
-    // Shape the commitment entry to accept an AI draft.
-    const applyDraft = (entry, draft) => ({
-      ...entry,
-      subject: draft.subject || c.headline,
-      body: draft.body,
-      target: draft.to || entry.target,
-      channel: draft.channel,
-      voice_check: draft.voice_check,
-      why_channel: draft.why_channel,
-      drafting: false,
-    });
-
-    let entry;
-    if (warm && warm.state === "ready" && warm.draft) {
-      // AI draft ready — use it directly.
-      entry = addCommitment(source, c);
-      updateCommitment(entry.id, applyDraft({}, warm.draft));
-      setAiNote(`Queued with AI-drafted ${warm.draft.channel}: ${c.headline}`);
-    } else if (warm && warm.state === "loading" && warm.promise) {
-      // In-flight — queue with placeholder body; update when it resolves.
-      entry = addCommitment(source, {
-        ...c,
-        detail: "(drafting…)",
-      });
-      updateCommitment(entry.id, { drafting: true });
-      warm.promise
-        .then(draft => updateCommitment(entry.id, applyDraft({}, draft)))
-        .catch(err => updateCommitment(entry.id, {
-          drafting: false,
-          draftError: err.message || String(err),
-        }));
-      setAiNote(`Queued: ${c.headline} — AI is drafting the message…`);
-    } else {
-      // No AI or draft errored — fall back to cell detail. (The old behavior.)
-      entry = addCommitment(source, c);
-      if (aiConfigured && !warm) {
-        // Kick off a draft anyway so the user can at least regenerate-on-view.
-        updateCommitment(entry.id, { drafting: true });
-        window.SecretaryActions.draftCommitment({
-          cell: c, grid: currentGrid, ctx: buildCtx(),
-        })
-          .then(draft => updateCommitment(entry.id, applyDraft({}, draft)))
-          .catch(err => updateCommitment(entry.id, {
-            drafting: false,
-            draftError: err.message || String(err),
-          }));
-      }
-      setAiNote(`Queued: ${c.headline} — review on Commitments before sending`);
-    }
-
-    pushGesture({ type: "commit", target: c._id, detail: c.headline + " → queued for review" });
-    window.SecretaryMemory && window.SecretaryMemory.log.commit({
-      cluster: stateSig.cluster, signature: stateSig.signature,
-      gridId: currentGridId, cellId: c._id, detail: c.headline, predicted: !!c.predicted,
-    });
-    // Refresh affinity so next generation learns from this commit.
-    if (window.SecretaryScorer) {
-      window.SecretaryScorer.refreshAffinityFromLedger().catch(() => {});
-    }
-    setTimeout(() => setAiNote(null), 3500);
-    setOpenCellId(null);
-  };
 
   // Refine:
   //   1. explicit refine → just navigate.
@@ -647,11 +265,6 @@ function App() {
     if (!c) return;
     // 1. explicit target
     if (c.refine && getGridFor(c.refine)) {
-      pushGesture({ type: "lean", target: c._id, detail: "refine → " + c.refine });
-      window.SecretaryMemory && window.SecretaryMemory.log.lean({
-        cluster: stateSig.cluster, signature: stateSig.signature,
-        gridId: currentGridId, cellId: c._id, detail: "refine → " + c.refine,
-      });
       setOpenCellId(null);
       setRefineStack(s => [...s, c.refine]);
       go.push("grid", { gridId: c.refine });
@@ -667,11 +280,6 @@ function App() {
     // 2. cached-ready
     if (warm && warm.state === "ready" && warm.grid) {
       setGridOverride(warm.grid.id, warm.grid);
-      pushGesture({ type: "lean", target: c._id, detail: "refine → " + warm.grid.id + " · prewarmed" });
-      window.SecretaryMemory && window.SecretaryMemory.log.lean({
-        cluster: stateSig.cluster, signature: stateSig.signature,
-        gridId: currentGridId, cellId: c._id, detail: "refine → " + warm.grid.id + " · prewarmed",
-      });
       setOpenCellId(null);
       setRefineStack(s => [...s, warm.grid.id]);
       go.push("grid", { gridId: warm.grid.id });
@@ -694,11 +302,6 @@ function App() {
         prewarmRef.current[key] = { state: "ready", grid: newGrid };
       }
       setGridOverride(newGrid.id, newGrid);
-      pushGesture({ type: "lean", target: c._id, detail: "refine → " + newGrid.id + " · ai" });
-      window.SecretaryMemory && window.SecretaryMemory.log.lean({
-        cluster: stateSig.cluster, signature: stateSig.signature,
-        gridId: currentGridId, cellId: c._id, detail: "refine → " + newGrid.id + " · ai",
-      });
       setOpenCellId(null);
       setRefineStack(s => [...s, newGrid.id]);
       go.push("grid", { gridId: newGrid.id });
@@ -710,10 +313,6 @@ function App() {
   };
 
   const onSweep = async () => {
-    pushGesture({ type: "sweep", target: "X", detail: "regenerate · " + currentGrid.id });
-    window.SecretaryMemory && window.SecretaryMemory.log.sweep({
-      cluster: stateSig.cluster, signature: stateSig.signature, gridId: currentGridId,
-    });
     if (!aiConfigured) {
       setAiError("No API key set — sweep requires the OpenAI key (Settings → Intelligence).");
       return;
@@ -732,35 +331,6 @@ function App() {
   };
 
   const onFrameReject = async (text) => {
-    // Figure out the dominant seed type in the rejected grid so the affinity
-    // learner can damp that type. "You asked the wrong question about X" is
-    // training signal on the selection process, not just the wording.
-    const typeCounts = Object.create(null);
-    for (const id of Object.keys(currentGrid.cells || {})) {
-      const seed = currentGrid.cells[id] && currentGrid.cells[id].seed;
-      if (seed && seed.source_type) {
-        typeCounts[seed.source_type] = (typeCounts[seed.source_type] || 0) + 1;
-      }
-    }
-    let dominant_seed_type = null;
-    let best = 0;
-    for (const k of Object.keys(typeCounts)) {
-      if (typeCounts[k] > best) { best = typeCounts[k]; dominant_seed_type = k; }
-    }
-    pushGesture({ type: "frame_reject", target: "USER", detail: text });
-    if (window.SecretaryLedger) {
-      window.SecretaryLedger.log("frame_reject", {
-        gridId: currentGridId, rejected_title: currentGrid.title,
-        user_text: text,
-        source: { dominant_seed_type, type_counts: typeCounts },
-      });
-    }
-    window.SecretaryMemory && window.SecretaryMemory.log.frameReject({
-      cluster: stateSig.cluster, signature: stateSig.signature, gridId: currentGridId,
-      rejected: currentGrid.frameNote || currentGrid.frameType || "(previous frame)",
-      text,
-      weight: "high",
-    });
     // Refresh affinity so the next generation reflects the reframe.
     if (window.SecretaryScorer) {
       window.SecretaryScorer.refreshAffinityFromLedger().catch(() => {});
@@ -829,11 +399,6 @@ function App() {
       setGridOverride(currentGridId, { ...newGrid, id: currentGridId });
       setAiNote(`Generated from Mission Control · ${window.MissionControl.counts.leads} leads considered`);
       setTimeout(() => setAiNote(null), 3000);
-      pushGesture({ type: "generate", target: "MC", detail: newGrid.title });
-      window.SecretaryMemory && window.SecretaryMemory.log.generate({
-        cluster: stateSig.cluster, signature: stateSig.signature, gridId: currentGridId,
-        detail: newGrid.title,
-      });
     } catch (e) {
       setAiError("Generate failed: " + (e.message || e));
     } finally { setAiBusy(false); }
@@ -846,7 +411,6 @@ function App() {
     if (popped) {
       setAiNote("Back one generation");
       setTimeout(() => setAiNote(null), 1500);
-      window.SecretaryLedger && window.SecretaryLedger.log("grid_back", { gridId: currentGridId });
     } else {
       setAiNote("Nothing to undo — already at the earliest version.");
       setTimeout(() => setAiNote(null), 2000);
@@ -885,85 +449,29 @@ function App() {
           onGenerate={onGenerateFromMC}
           onBack={onBackOneGeneration}
           onOpenSettings={() => go.push("settings")}
-          onEditWithRodbot={(cell, gridId) => {
-            setRodbotEdit({ cell: { id: cell.id, headline: cell.headline, preview: cell.preview, detail: cell.detail, kind: cell.kind, predicted: cell.predicted }, gridId });
-            pushGesture({ type: "edit", target: cell.id, detail: cell.headline + " → rodbot overlay" });
-            window.SecretaryMemory && window.SecretaryMemory.log.edit({
-              cluster: gridId, signature: `cell_edit · ${gridId}`, gridId, cellId: cell.id, detail: cell.headline,
-            });
-          }}
         />
       </div>
     );
   } else if (route.name === "settings") {
-    screen = <SettingsScreen tweaks={tweaks} setTweaks={setTweaks} go={go} onReset={() => { setGestureLog([]); setRefineStack(["morning"]); setGridOverrides({}); setHistory([{name:"grid", gridId:"morning"}]); }} />;
-  } else if (route.name === "memory") {
-    screen = <MemoryScreen data={data} go={go} />;
-  } else if (route.name === "prediction") {
-    screen = <PredictionScreen data={data} tweaks={tweaks} go={go} />;
-  } else if (route.name === "inbox") {
-    screen = <InboxScreen go={go} />;
+    screen = <SettingsScreen tweaks={tweaks} setTweaks={setTweaks} go={go} onReset={() => { setRefineStack(["morning"]); setGridOverrides({}); setHistory([{name:"grid", gridId:"morning"}]); }} />;
+  } else if (route.name === "leads") {
+    screen = <PeopleScreen go={go} kind="lead" />;
+  } else if (route.name === "clients") {
+    screen = <PeopleScreen go={go} kind="client" />;
+  } else if (route.name === "coworkers") {
+    screen = <PeopleScreen go={go} kind="coworker" />;
   } else if (route.name === "contacts") {
-    screen = <ContactsScreen go={go} />;
+    screen = <PeopleScreen go={go} kind="contact" />;
+  } else if (route.name === "venues") {
+    screen = <VenuesScreen go={go} />;
   } else if (route.name === "briefing") {
     screen = <DailyBriefingScreen go={go} />;
-  } else if (route.name === "delegations") {
-    screen = <DelegationsScreen go={go} />;
-  } else if (route.name === "chat") {
-    // /chat has been absorbed into the persistent rail on the home route.
-    // Any remaining deep-link to /chat redirects back to the grid.
-    setTimeout(() => setHistory([{ name: "grid", gridId: "morning" }]), 0);
-    screen = null;
-  } else if (route.name === "calendar") {
-    screen = <CalendarScreen go={go} />;
-  } else if (route.name === "Rodbot") {
-    screen = <RodbotScreen go={go} />;
   } else if (route.name === "activity") {
     screen = <PiecesActivityScreen go={go} />;
-  } else if (route.name === "analytics") {
-    screen = <AnalyticsScreen go={go} />;
   } else if (route.name === "automation") {
-    screen = <AutomationGraphScreen go={go} />;
-  } else if (route.name === "projects") {
-    screen = <ProjectsScreen go={go} />;
-  } else if (route.name === "tables") {
-    screen = <TablesScreen go={go} />;
-  } else if (route.name === "table_new") {
-    screen = <TableCreateScreen go={go} template={route.template} seedSlug={route.seedSlug} />;
-  } else if (route.name === "table_detail") {
-    screen = <TableDetailScreen go={go} slug={route.slug} />;
+    screen = <AutomationShell go={go} tab={route.tab || "workflows"} loadSlug={route.load} />;
   } else if (route.name === "intake") {
-    screen = <IntakeScreen go={go} onAddCommitment={addCommitment} />;
-  } else if (route.name === "commitments") {
-    screen = (
-      <CommitmentsScreen
-        commitments={commitments}
-        demoMode={tweaks.demoMode}
-        onUpdate={updateCommitment}
-        onRemove={removeCommitment}
-        onSend={sendCommitment}
-        onSendAll={sendAllPending}
-        onCancel={cancelCommitment}
-        onRegenerate={regenerateCommitmentDraft}
-        go={go}
-      />
-    );
-  } else if (route.name === "commitment_detail") {
-    screen = (
-      <CommitmentDetailScreen
-        go={go}
-        commitmentId={route.commitmentId}
-        commitments={commitments}
-        demoMode={tweaks.demoMode}
-        onUpdate={updateCommitment}
-        onRemove={removeCommitment}
-        onSend={sendCommitment}
-        onCancel={cancelCommitment}
-        onRegenerate={regenerateCommitmentDraft}
-      />
-    );
-  } else if (route.name === "inbox_detail") {
-    screen = <InboxDetailScreen go={go} entryId={route.entryId} />;
+    screen = <IntakeScreen go={go} />;
   } else {
     screen = null;
     setTimeout(() => setHistory([{ name: "grid", gridId: "morning" }]), 0);
@@ -979,29 +487,16 @@ function App() {
         mcStatus={mcStatus}
         aiConfigured={aiConfigured}
         aiBusy={aiBusy}
-        pendingCount={pendingCount}
-        inboxOpenCount={inboxOpenCount}
         onOpenSettings={() => go.push("settings")}
-        onOpenMemory={() => go.push("memory")}
-        onOpenPrediction={() => go.push("prediction")}
-        onOpenCommitments={() => go.push("commitments")}
-        onOpenInbox={() => go.push("inbox")}
+        onOpenLeads={() => go.push("leads")}
+        onOpenClients={() => go.push("clients")}
+        onOpenCoworkers={() => go.push("coworkers")}
         onOpenContacts={() => go.push("contacts")}
+        onOpenVenues={() => go.push("venues")}
         onOpenBriefing={() => go.push("briefing")}
-        onOpenDelegations={() => go.push("delegations")}
-        onOpenChat={() => go.home()}
-        onOpenCalendar={() => { refreshStreak(); go.push("calendar"); }}
-        streakDays={streakDays}
-        onOpenRodbot={() => go.push("Rodbot")}
         onOpenActivity={() => go.push("activity")}
-        onOpenAnalytics={() => go.push("analytics")}
         onOpenAutomation={() => go.push("automation")}
-        onOpenTables={() => go.push("tables")}
         onOpenIntake={() => go.push("intake")}
-        rodbotState={rodbotState}
-        onOpenProjects={() => { refreshOpenTasks(); go.push("projects"); }}
-        openTasksCount={openTasksCount}
-        delegationRunningCount={delegationRunningCount}
         onHome={onHome}
       />
       <main className="main" data-screen-label={route.name + (route.gridId ? "·" + route.gridId : "")}>{screen}</main>
@@ -1010,7 +505,6 @@ function App() {
         <FullscreenCell
           cell={openCell}
           grid={currentGrid}
-          onCommit={onCommit}
           onRefine={onRefine}
           onClose={onCloseFullscreen}
           aiBusy={aiBusy}
@@ -1018,30 +512,6 @@ function App() {
         />
       )}
       {tweaksOpen && <TweaksPanel tweaks={tweaks} setTweaks={setTweaks} onClose={() => setTweaksOpen(false)} />}
-      {rodbotEdit && (
-        <EditWithRodbotOverlay
-          cell={rodbotEdit.cell}
-          gridId={rodbotEdit.gridId}
-          onClose={() => setRodbotEdit(null)}
-          onRewriteApplied={(newHeadline) => {
-            // The rewrite replaces the cell's headline in the current grid.
-            const gid = rodbotEdit.gridId;
-            const cid = rodbotEdit.cell.id;
-            const grid = getGridFor(gid) || data.grids[gid];
-            if (!grid || !grid.cells || !grid.cells[cid]) return;
-            const updated = { ...grid, cells: { ...grid.cells, [cid]: { ...grid.cells[cid], headline: newHeadline } } };
-            setGridOverride(gid, updated);
-          }}
-          onRetire={() => {
-            // Fire the same /api/cells/retire endpoint the context menu uses.
-            const { cell, gridId } = rodbotEdit;
-            fetch("/api/cells/retire", {
-              method: "POST", headers: {"Content-Type":"application/json"},
-              body: JSON.stringify({ gridId, cellId: cell.id, headline: cell.headline, preview: cell.preview || "" }),
-            }).catch(() => {});
-          }}
-        />
-      )}
       {(aiError || aiNote || aiBusy) && (
         <AIBanner error={aiError} note={aiNote} busy={aiBusy} onDismiss={() => setAiError(null)} />
       )}

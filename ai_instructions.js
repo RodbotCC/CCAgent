@@ -122,7 +122,8 @@ the schema the caller asks for. The Mission Control bedrock you see in
 the WORLD section below is the normalized shape:
 
   projects[]     { id, name, status, next_move, blockers[], live_band, tags[], notes }
-  people[]       { id, name, role, last_contact, owed_response, relationship_weight, handling: {...}, notes }
+  people[]       { id, name, kind, role, last_contact, owed_response, relationship_weight, handling: {...}, notes }
+                 kind ∈ "lead" | "client" | "coworker" | "contact" — see CLAUDE.md §3.1 for register guidance per kind
   threads[]      { id, subject, channel, waiting_on, last_touched, notes }
   commitments[]  { id, label, to, due, why, status }
   knowledge[]    { id, title, tags[], body }
@@ -205,62 +206,225 @@ the WORLD section below is the normalized shape:
     ].join("\n");
   }
 
+  // ── Bedrock formatters ────────────────────────────────────────────────────
+  // Each formatter renders one record in a compact-but-faithful way.
+  // The prompt is "thick" by user choice (Apr 27 wire-up): full coworker
+  // voice profiles + full lead enrichment + automation summaries inline. The
+  // chat agent treats this entire section as STRUCTURED TRUTH (vs Pieces,
+  // which is ambient/temporal context surfaced under its own heading below).
+
+  function fmtCoworker(p) {
+    const lines = [];
+    lines.push(`  • ${p.name} (${p.id}) — ${p.role || "team member"}`);
+    if (p.relationship_tier) lines.push(`    tier: ${p.relationship_tier}` + (p.relationship_weight != null ? ` · weight: ${p.relationship_weight.toFixed(2)}` : ""));
+    const c = p.contacts || {};
+    const contactBits = [c.email, c.phone, c.slack_id, c.whatsapp].filter(Boolean);
+    if (contactBits.length) lines.push(`    contact: ${contactBits.join(" · ")}`);
+    const h = p.handling || {};
+    if (h.tone)              lines.push(`    tone: ${h.tone}`);
+    if (h.voice_adjustments) lines.push(`    voice: ${h.voice_adjustments}`);
+    if (h.context)           lines.push(`    context: ${h.context}`);
+    if (h.preferred_channel || h.response_latency_target) {
+      const bits = [];
+      if (h.preferred_channel) bits.push(`channel ${h.preferred_channel}`);
+      if (h.response_latency_target) bits.push(`latency ${h.response_latency_target}`);
+      lines.push(`    handling: ${bits.join(" · ")}`);
+    }
+    if (Array.isArray(p.context_anchors) && p.context_anchors.length) {
+      lines.push(`    anchors:`);
+      for (const a of p.context_anchors.slice(0, 8)) lines.push(`      - ${a}`);
+    }
+    if (Array.isArray(p.notes) && p.notes.length) {
+      lines.push(`    notes:`);
+      for (const n of p.notes.slice(0, 4)) lines.push(`      - ${n}`);
+    }
+    return lines.join("\n");
+  }
+
+  function fmtLead(p) {
+    const lines = [];
+    lines.push(`  • ${p.name} (${p.id}) — ${p.role || "lead"}`);
+    if (p.relationship_tier) lines.push(`    tier: ${p.relationship_tier}` + (p.relationship_weight != null ? ` · weight: ${p.relationship_weight.toFixed(2)}` : ""));
+    const c = p.contacts || {};
+    const contactBits = [c.email, c.phone, c.whatsapp].filter(Boolean);
+    if (contactBits.length) lines.push(`    contact: ${contactBits.join(" · ")}`);
+    const h = p.handling || {};
+    if (h.tone)              lines.push(`    tone: ${h.tone}`);
+    if (h.voice_adjustments) lines.push(`    voice: ${h.voice_adjustments}`);
+    if (h.context)           lines.push(`    context: ${h.context}`);
+    const lead = p.lead || {};
+    if (Object.keys(lead).length) {
+      const bits = [];
+      if (lead.status)           bits.push(`status ${lead.status}`);
+      if (lead.stage)            bits.push(`stage ${lead.stage}`);
+      if (lead.owner)            bits.push(`owner ${lead.owner}`);
+      if (lead.source)           bits.push(`source ${lead.source}`);
+      if (lead.event_type)       bits.push(`${lead.event_type}`);
+      if (lead.event_date)       bits.push(`event ${lead.event_date}`);
+      if (lead.guest_count)      bits.push(`${lead.guest_count}pax`);
+      if (lead.venue)            bits.push(`${lead.venue}`);
+      if (lead.city)             bits.push(`${lead.city}`);
+      if (lead.quote_value)      bits.push(`quote $${lead.quote_value}`);
+      if (lead.opportunity_value) bits.push(`opp $${lead.opportunity_value}`);
+      if (lead.speed_urgency)    bits.push(`urgency ${lead.speed_urgency}`);
+      lines.push(`    lead: ${bits.join(" · ")}`);
+      if (Array.isArray(lead.score_tags) && lead.score_tags.length) lines.push(`    tags: ${lead.score_tags.join(", ")}`);
+      if (lead.last_activity) lines.push(`    last: ${lead.last_activity}`);
+      if (lead.next_move)     lines.push(`    next: ${lead.next_move}`);
+    }
+    const enr = p.enrichment || {};
+    if (Object.keys(enr).length) {
+      if (enr.confidence != null) lines.push(`    confidence: ${enr.confidence}`);
+      if (enr.identity_notes)     lines.push(`    identity: ${enr.identity_notes}`);
+      if (Array.isArray(enr.win_angles) && enr.win_angles.length) {
+        lines.push(`    win_angles:`);
+        for (const a of enr.win_angles.slice(0, 6)) lines.push(`      - ${a}`);
+      }
+      if (Array.isArray(enr.nepq_openers) && enr.nepq_openers.length) {
+        lines.push(`    nepq_openers:`);
+        for (const a of enr.nepq_openers.slice(0, 4)) lines.push(`      - ${a}`);
+      }
+      if (Array.isArray(enr.open_gaps) && enr.open_gaps.length) {
+        lines.push(`    gaps:`);
+        for (const a of enr.open_gaps.slice(0, 4)) lines.push(`      - ${a}`);
+      }
+      if (enr.strategic_note) lines.push(`    strategic: ${enr.strategic_note}`);
+    }
+    if (Array.isArray(p.context_anchors) && p.context_anchors.length) {
+      lines.push(`    anchors:`);
+      for (const a of p.context_anchors.slice(0, 6)) lines.push(`      - ${a}`);
+    }
+    if (Array.isArray(p.comms) && p.comms.length) {
+      lines.push(`    comms (last ${Math.min(p.comms.length, 6)}):`);
+      for (const c of p.comms.slice(-6)) {
+        const dir = c.direction === "in" ? "←" : "→";
+        const ts = (c.ts || "").slice(0, 10);
+        lines.push(`      ${ts} ${dir} ${c.channel || "?"} · ${c.summary || ""}`);
+      }
+    }
+    if (Array.isArray(p.notes) && p.notes.length) {
+      lines.push(`    notes:`);
+      for (const n of p.notes.slice(0, 3)) lines.push(`      - ${n}`);
+    }
+    return lines.join("\n");
+  }
+
+  function fmtWorkflow(w) {
+    const nodes = Array.isArray(w.nodes) ? w.nodes.length : 0;
+    const conns = Array.isArray(w.connections) ? w.connections.length : 0;
+    const owner = w.owner ? ` · owner ${w.owner}` : "";
+    const scope = w.scope ? ` · scope ${w.scope}` : "";
+    const stats = ` (${nodes} nodes, ${conns} connections)`;
+    const lines = [`  • ${w.slug} — ${w.name}${stats}${owner}${scope}`];
+    if (w.description) lines.push(`    ${w.description.slice(0, 280)}`);
+    if (Array.isArray(w.principles) && w.principles.length) {
+      lines.push(`    principles:`);
+      for (const p of w.principles.slice(0, 3)) lines.push(`      - ${p}`);
+    }
+    return lines.join("\n");
+  }
+
+  function fmtTrigger(t) {
+    const enabled = t.enabled === false ? "OFF" : "on";
+    const wf = t.workflow_slug ? ` → ${t.workflow_slug}` : "";
+    const detail = t.cron ? ` · cron ${t.cron}`
+                : t.endpoint ? ` · endpoint ${t.endpoint}`
+                : t.pattern ? ` · pattern ${t.pattern}`
+                : "";
+    return `  • ${t.slug} [${t.kind}, ${enabled}] — ${t.label || ""}${detail}${wf}`;
+  }
+
+  function fmtAgentPlan(a) {
+    const lines = [];
+    const meta = a.metadata || {};
+    const status = meta.status ? ` [${meta.status}]` : "";
+    const kind = meta.kind ? ` · ${meta.kind}` : "";
+    const person = meta.person_id ? ` · person ${meta.person_id}` : "";
+    const linked = meta.linked_workflow ? ` · workflow ${meta.linked_workflow}` : "";
+    lines.push(`  • ${a.slug}${status}${kind}${person}${linked}`);
+    if (a.description) lines.push(`    ${a.description.slice(0, 240)}`);
+    if (Array.isArray(a.sub_agents) && a.sub_agents.length) {
+      const ids = a.sub_agents.map(s => `${s.id}:${s.action}`).join(", ");
+      lines.push(`    sub_agents: ${ids}`);
+    }
+    return lines.join("\n");
+  }
+
+  function fmtHooks(map) {
+    if (!map || typeof map !== "object") return "  (no hooks state)";
+    const entries = Object.entries(map);
+    if (!entries.length) return "  (no hooks state)";
+    return entries.map(([k, v]) => `  ${v ? "✓" : "✗"} ${k}`).join("\n");
+  }
+
   function personalBlock(mc) {
-    const ns = mc.northStar && Array.isArray(mc.northStar.anchors) ? mc.northStar.anchors : [];
-    const nsLines = ns.length
-      ? ns.map(a => `  ${(a.weight||0).toFixed(2)} · ${a.label}${a.comparator_hint ? " — " + a.comparator_hint : ""}`).join("\n")
-      : "  (no North Star anchors declared yet)";
+    const byKind = mc.peopleByKind || { coworker: [], lead: [], client: [], contact: [] };
 
-    const projects = (mc.projects || []).slice(0, 20).map(p => {
-      const status = p.status ? ` · ${p.status}` : "";
-      const next = p.next_move ? ` — ${p.next_move}` : "";
-      return `  [${p.id || "?"}] ${p.name || p.label || "(untitled)"}${status}${next}`;
-    }).join("\n") || "  (no projects)";
+    const coworkers = (byKind.coworker || []).map(fmtCoworker).join("\n\n") || "  (no coworkers)";
+    const leads     = (byKind.lead     || []).map(fmtLead).join("\n\n")     || "  (no leads)";
+    const clients   = (byKind.client   || []).map(fmtLead).join("\n\n")     || "  (no clients)";
+    const contacts  = (byKind.contact  || []).map(c => `  • ${c.name} (${c.id})${c.role ? " — " + c.role : ""}`).join("\n") || "  (no contacts)";
 
-    const people = (mc.people || []).slice(0, 20).map(p => {
-      const last = p.last_contact ? ` · last ${p.last_contact}` : "";
-      const owed = p.owed_response ? ` · OWED` : "";
-      const w = p.relationship_weight != null ? ` · rw ${p.relationship_weight}` : "";
-      return `  ${p.name || p.id}${last}${owed}${w}`;
-    }).join("\n") || "  (no people)";
+    const workflows = (mc.workflows  || []).map(fmtWorkflow).join("\n\n") || "  (no workflows)";
+    const triggers  = (mc.triggers   || []).map(fmtTrigger).join("\n")    || "  (no triggers)";
+    const plans     = (mc.agent_plans|| []).map(fmtAgentPlan).join("\n\n")|| "  (no agent_plans)";
+    const hooks     = fmtHooks(mc.hooks_state);
 
-    const threads = (mc.threads || []).slice(0, 20).map(t => {
-      const waiting = t.waiting_on ? ` · waiting on ${t.waiting_on}` : "";
-      const chan = t.channel ? ` [${t.channel}]` : "";
-      return `  ${t.subject || t.id}${chan}${waiting}`;
-    }).join("\n") || "  (no threads)";
-
-    const commitments = (mc.commitments || []).slice(0, 20).map(c => {
-      const due = c.due ? ` · due ${c.due}` : "";
-      const who = c.to ? ` → ${c.to}` : "";
-      return `  ${c.label || c.id}${who}${due}`;
-    }).join("\n") || "  (no commitments)";
-
-    const lattice = (mc.ratioLattice || []).slice(0, 12).map(e => {
-      return `  ${e.a} : ${e.b} = ${e.ratio}${e.context ? " (" + e.context + ")" : ""}`;
-    }).join("\n") || "  (no entries)";
-
+    const c = mc.counts || {};
     return [
-      `MISSION CONTROL (owner: ${mc.owner} · personal · generated ${mc.generatedAt || "unknown"})`,
-      `  counts: projects=${mc.counts.projects} people=${mc.counts.people} threads=${mc.counts.threads} commitments=${mc.counts.commitments} knowledge=${mc.counts.knowledge}`,
+      `══════════════════════════════════════════════════════════════════════════`,
+      `  BEDROCK · STRUCTURED TRUTH`,
+      `  Owner: ${mc.owner} · Comeketo Catering operations bedrock at ${mc.base}/`,
+      `  Counts: ${c.coworkers || 0} coworkers · ${c.leads || 0} leads · ${c.clients || 0} clients · ${c.contacts || 0} contacts`,
+      `          ${c.workflows || 0} workflows · ${c.triggers || 0} triggers · ${c.agent_plans || 0} agent_plans`,
       ``,
-      `NORTH STAR ANCHORS (weighted):`,
-      nsLines,
+      `  This section is the STRUCTURED, AUTHORITATIVE truth about who/what we`,
+      `  have. When you cite a fact about a person, deal, or automation, cite`,
+      `  it from here. (Pieces, below, is ambient observation — softer source.)`,
+      `══════════════════════════════════════════════════════════════════════════`,
       ``,
-      `PROJECTS (active):`,
-      projects,
+      `── COWORKERS (${(byKind.coworker || []).length}) ─────────────────────────`,
+      `Each coworker below has a voice profile. When drafting on their behalf,`,
+      `mirror their voice_adjustments. When messaging them, follow their tone.`,
       ``,
-      `PEOPLE (in orbit):`,
-      people,
+      coworkers,
       ``,
-      `THREADS (open conversations):`,
-      threads,
+      `── LEADS (${(byKind.lead || []).length}) ─────────────────────────────────`,
+      `Active pipeline. Each lead carries: snapshot fields (lead.*), enrichment`,
+      `(win_angles, NEPQ openers, gaps, strategic note), and a comms tail.`,
       ``,
-      `COMMITMENTS (durable promises):`,
-      commitments,
+      leads,
       ``,
-      `RATIO LATTICE (scoring ledger):`,
-      lattice,
+      `── CLIENTS (${(byKind.client || []).length}) ─────────────────────────────`,
+      clients,
+      ``,
+      `── CONTACTS (${(byKind.contact || []).length}) ───────────────────────────`,
+      contacts,
+      ``,
+      `── WORKFLOWS (${(mc.workflows || []).length}) ────────────────────────────`,
+      `Automation graphs. Each is a positioned node-and-edge plan. Hugo and`,
+      `Brenda & Steve are the live cadences; the rest are templates / records.`,
+      ``,
+      workflows,
+      ``,
+      `── TRIGGERS (${(mc.triggers || []).length}) ──────────────────────────────`,
+      `What fires the workflows. AUTO.* are the orchestrator's 11 numbered`,
+      `automations; per-lead schedules ride alongside.`,
+      ``,
+      triggers,
+      ``,
+      `── AGENT PLANS (${(mc.agent_plans || []).length}) ────────────────────────`,
+      `Sub-agents — one per person. Every lead has a dedicated lead_orchestrator`,
+      `(comms-watch · plan-execute · voice-mirror · alert-fire). Every coworker`,
+      `has a coworker_voice agent (draft · coach · guard) that ghostwrites in`,
+      `their voice without violating their off-limits.`,
+      ``,
+      plans,
+      ``,
+      `── HOOKS STATE ──────────────────────────────────────────────────────────`,
+      `Boolean toggles for system + AUTO.* automations. ✓ live, ✗ off.`,
+      ``,
+      hooks,
     ].join("\n");
   }
 
@@ -581,6 +745,10 @@ the WORLD section below is the normalized shape:
       if (ctx.ghostwriting_for && ctx.ghostwriting_for.handling) {
         const h = ctx.ghostwriting_for.handling;
         const lines = [];
+        // Kind drives baseline register before per-person overrides:
+        //   coworker → peer/direct ; lead → curious/problem-identifier
+        //   client   → trusted-advisor/composed ; contact → relationship-first/no-ask
+        if (ctx.ghostwriting_for.kind) lines.push(`  kind: ${ctx.ghostwriting_for.kind}`);
         if (h.preferred_channel) lines.push(`  preferred_channel: ${h.preferred_channel}`);
         if (h.tone)              lines.push(`  tone: ${h.tone}`);
         if (h.context)           lines.push(`  context: ${h.context}`);

@@ -1,0 +1,14 @@
+{
+  "schema": "comeketo.trigger.v1",
+  "slug": "hugo_comms_heartbeat",
+  "kind": "cron",
+  "label": "Hugo · Comms heartbeat",
+  "enabled": true,
+  "tone": "blush",
+  "notes": "Live — R1 polls Close every 10 min during business hours. Pings Andre on Slack the moment Hugo replies.",
+  "created_at": "2026-04-27T00:00:00+00:00",
+  "last_modified": "2026-04-27T00:00:00+00:00",
+  "cron": "*/10 9-19 * * 1-5",
+  "tz": "America/New_York",
+  "workflow_slug": "hugo-casillas-seven-day"
+}

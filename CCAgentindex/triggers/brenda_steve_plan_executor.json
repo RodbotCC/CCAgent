@@ -1,0 +1,14 @@
+{
+  "schema": "comeketo.trigger.v1",
+  "slug": "brenda_steve_plan_executor",
+  "kind": "cron",
+  "label": "Brenda & Steve · Plan executor (Days 1/4/6)",
+  "enabled": true,
+  "tone": "mint",
+  "notes": "Live — R2 fires weekdays 1pm ET. Day 1 = TWO sends (SMS to Brenda, then email to both ~2 min later). Day 4 SMS conditional. Day 6 ALWAYS fires (operational confirmation).",
+  "created_at": "2026-04-27T00:00:00+00:00",
+  "last_modified": "2026-04-27T00:00:00+00:00",
+  "cron": "0 13 * * 1-5",
+  "tz": "America/New_York",
+  "workflow_slug": "brenda-steve-seven-day"
+}

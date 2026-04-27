@@ -1,0 +1,85 @@
+{
+  "id": "michelle_levesque",
+  "kind": "lead",
+  "name": "Michelle Levesque",
+  "role": "Birthday · July 3, 2026 · 25-35 guests · Somerset MA",
+  "relationship_tier": "stalled",
+  "relationship_weight": 0.28,
+  "contacts": {
+    "email": null,
+    "phone": null,
+    "whatsapp": null,
+    "slack_id": null,
+    "slack_channel": null,
+    "clickup_user_id": null,
+    "other": null
+  },
+  "handling": {
+    "preferred_channel": "Email",
+    "response_latency_target": "within-week",
+    "tone": "French-Canadian / Quebec / New England French heritage. Apr 24 Portuguese SMS was second misfire in batch — switch to English, no awkward apology.",
+    "voice_adjustments": "Andre voice: warm English, brief. Small event, summer weekend, likely backyard. Don't oversell full-service.",
+    "context": "Inbound Apr 16 from FB Lead Form. July 3 (day before July 4) — possibly combined birthday + holiday gathering. 25-35 guests = small intimate. $788 ballpark = drop-off pricing. No engagement after Day-1 push.",
+    "off_limits_topics": null
+  },
+  "context_anchors": [
+    "Levesque = French-Canadian / Quebec / NE French surname",
+    "Somerset MA, 02726 — South Coast, French-Canadian heritage common",
+    "July 3 (day before July 4) — possible holiday combo",
+    "25-35 guests, $788 ballpark = drop-off",
+    "Apr 24 Portuguese SMS misfire — second in batch"
+  ],
+  "lead": {
+    "status": "stalled",
+    "stage": "cold_no_response_portuguese_misfire",
+    "owner": "andre_raw",
+    "source": "FB Lead Form — VIDEO RODS WEDDING & FACELESS",
+    "event_type": "Birthday",
+    "event_date": "2026-07-03",
+    "guest_count": 30,
+    "venue": null,
+    "city": "Somerset, MA",
+    "quote_value": null,
+    "opportunity_value": 788,
+    "score_tags": ["language_misfire", "small_event", "july_4_combo", "french_canadian"],
+    "last_activity": "2026-04-24 — Portuguese cadence SMS",
+    "speed_urgency": "medium",
+    "next_move": "English reset: at home or venue + drop-off vs light buffet vs hosted"
+  },
+  "enrichment": {
+    "confidence": 0.35,
+    "identity_notes": "Michelle Levesque = French-Canadian / Quebec / NE French. Levesque is one of the most common French-Canadian surnames; Michelle anglicized. Almost certainly Anglo or French-Canadian heritage, not Portuguese-Brazilian.",
+    "win_angles": [
+      "English reset, no awkward apology",
+      "Small + summer weekend + likely backyard = drop-off or appetizer-heavy",
+      "July 3 = pre-July-4 possibly combo gathering",
+      "$788 = realistic, don't over-quote"
+    ],
+    "nepq_openers": [
+      "Reset EN: 'Hey Michelle — switching back to English here. For your birthday on July 3 with 25-35 guests, quick question: at home or venue, and what's the vibe — drop-off-and-relax, light buffet, or something more hosted?'",
+      "Frame: 'July 3 — combined with the holiday weekend, or a separate birthday day-before?'",
+      "Anchor: 'For 25-35 guests: drop-off ($X), light buffet with light service ($Y), full hosted ($Z). Quick comparison?'"
+    ],
+    "open_gaps": [
+      "Phone/email — pull from Close",
+      "Whose birthday",
+      "Venue (home most likely)",
+      "Cuisine direction",
+      "Service style preference",
+      "Whether it's combined July 4 weekend"
+    ],
+    "strategic_note": "Second Portuguese-template misfire (after Esther Manu). One warm English message, doesn't dwell on mistake. Bigger system note: flag Portuguese-default behavior so it stops auto-firing on Anglo names."
+  },
+  "comms": [
+    {"ts": "2026-04-16T10:00:00Z", "channel": "sms", "direction": "out", "summary": "Inbound acknowledged + 'best time to call' SMS"},
+    {"ts": "2026-04-16T11:00:00Z", "channel": "email", "direction": "out", "summary": "Service-types breakdown"},
+    {"ts": "2026-04-16T14:00:00Z", "channel": "call", "direction": "out", "summary": "Call answered but recipient unavailable, no voicemail"},
+    {"ts": "2026-04-21T11:00:00Z", "channel": "email", "direction": "out", "summary": "Bar service drip"},
+    {"ts": "2026-04-24T13:00:00Z", "channel": "sms", "direction": "out", "summary": "Day-4 cadence — sent in PORTUGUESE (misfire)"}
+  ],
+  "notes": [
+    "Language guardrail violated — flag system bug",
+    "Small event, fast quote or move on",
+    "July 4 combo angle worth asking"
+  ]
+}

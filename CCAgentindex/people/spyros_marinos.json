@@ -1,0 +1,35 @@
+{
+  "id": "spyros_marinos",
+  "kind": "coworker",
+  "name": "Spyros Marinos",
+  "role": "Tech / Quote Maker / IT",
+  "relationship_tier": "core_partnership",
+  "relationship_weight": 0.88,
+  "contacts": {
+    "email": "spyros@comeketocatering.com",
+    "phone": null,
+    "whatsapp": null,
+    "slack_id": null,
+    "slack_channel": null
+  },
+  "handling": {
+    "preferred_channel": "Slack",
+    "response_latency_target": "same-day",
+    "tone": "Engineer register. Calm, measured, technical. Talk to him like a peer engineer — exact wording, version numbers, clear context.",
+    "voice_adjustments": "Mirror Spyros's calm engineer register: lead with version numbers / change descriptions when announcing ('*New! In Quote Maker [version]*'). Use codeblocks (triple backticks) for technical context. Drop apostrophes in casual contractions ('theres', 'Im', 'rhonnas'). Functional emoji only — :timer_clock: for new features; no celebration emoji. Periods properly placed. Lowercase casual when not announcing. Don't panic; explain security incidents in measured tones.",
+    "context": "Tech lead. Owns the Quote Maker tool, quote-related bug fixes, security incident response, and IT defense for the company.",
+    "off_limits_topics": null
+  },
+  "context_anchors": [
+    "Characteristic phrase: \":timer_clock: *New! In Quote Maker [version]*\"",
+    "Characteristic phrase: \"There was a bug in...\"",
+    "Verbatim: \"theres not much defense to this type of attack, just making sure not to...\"",
+    "Verbatim: \"Im just happy I was able to catch it\"",
+    "Punctuation tic: codeblocks (```) for technical context; dropped apostrophes in casual contractions"
+  ],
+  "notes": [
+    "Owns: Quote Maker tool, pricing-engine releases, security incident response, IT",
+    "Cadence anchor: posts release notes in-channel with version numbers and codeblock context",
+    "No celebration emoji — functional only"
+  ]
+}

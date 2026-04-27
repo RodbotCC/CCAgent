@@ -1,0 +1,28 @@
+{
+  "id": "top_of_the_tower_worcester",
+  "kind": "venue",
+  "name": "Top of the Tower (Worcester)",
+  "city": "Worcester",
+  "venue_type": null,
+  "website": null,
+  "tier": "tier_2",
+  "deal_stats": {
+    "opp_count": 2,
+    "total_value": 20570.0,
+    "avg_deal_value": 10285.0,
+    "lead_name_refs": 0
+  },
+  "close_account": {
+    "has_lead": false,
+    "lead_status": null,
+    "lead_url": null
+  },
+  "raw_variants": [
+    "Top of the Tower - 446 Main St, Worcester, MA 01608"
+  ],
+  "action": "📋 Create venue lead account",
+  "notes": [
+    "2 opportunities totaling $20,570.00 — rank #13 by deal value.",
+    "No Close lead account yet — recommend creating one to track relationship."
+  ]
+}

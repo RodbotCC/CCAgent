@@ -194,12 +194,15 @@ Record shape:
 {
   "id": "p_xxx",
   "name": "...",
+  "kind": "lead" | "client" | "coworker" | "contact",
   "role": "...",
   "relationship_weight": 0.0-1.0,
   "contacts": { "email", "phone", "whatsapp", "slack_id", "slack_channel", "clickup_user_id", "other" },
   "handling": { "preferred_channel", "tone", "response_latency_target", "off_limits_topics", "context", "voice_adjustments" }
 }
 ```
+
+**`kind` is required** on every new person record (Apr 2026 schema change — see CLAUDE.md §3.1 for the taxonomy and voice-register guidance per kind). On updates, do not erase a previously-set kind unless the correction explicitly changes it. Reclassification (e.g. lead → client when a booking confirms) is just a `kind` field edit — no file move, no index change.
 
 ### 9.4) Update manifest
 Rewrite `manifests/rebuild_manifest.json`:

@@ -1,0 +1,27 @@
+{
+  "schema": "comeketo.agent_plan.v1",
+  "slug": "lead__brenda_steve",
+  "name": "Brenda & Steve Catalano · Lead orchestrator",
+  "description": "B&S's dedicated sub-agent. Runs the live 7-day pre-tasting cadence (Day-1 SMS to Brenda + email to both Apr 27 1pm, Day-4 SMS Apr 30 conditional, Day-6 email May 2 ALWAYS, pre-tasting brief May 2 6pm, in-person tasting May 3 5:30pm). Treats Steve direct-engagement as ALWAYS escalation regardless of tone — he doesn't email vendors, so any message from him pages Andre. Daughter or fiancé writing = plan-redesign trigger. Brenda-routine = green ping per plan. Don't-fumble-it lead — they came in warm.",
+  "trigger_label": "weekdays · plan-day cadence + comms heartbeat · LIVE · tasting May 3",
+  "orchestrator": { "label": "Rodbot", "model": "claude-sonnet-4-6", "register": "operational" },
+  "budgets": { "max_sub_agents": 4, "tokens_cap": 6000, "wallclock_cap_s": 30, "retry_policy": "linear_backoff" },
+  "sub_agents": [
+    { "id": "SA-COMMS", "action": "watch", "tool": "close.lead.fetch", "prompt_template": "Pull last 10 comms for brenda_steve; flag any inbound. STEVE WRITING = ALWAYS escalation, even if friendly. Daughter or fiancé writing = plan-redesign trigger. Brenda routine = green ping.", "leads": 1, "retries": 1, "timeout_s": 15, "tone": "blush", "expected_latency_s": 2.0 },
+    { "id": "SA-PLAN", "action": "execute", "tool": "workflow.fire", "prompt_template": "Fire today's plan day for brenda_steve (workflow: brenda-steve-seven-day). Day 1 = TWO sends (SMS first, email 2 min later). Day 4 = SMS conditional on no reply. Day 6 = email ALWAYS fires (operational confirmation). Day 7 = internal prep DM only.", "leads": 1, "retries": 0, "timeout_s": 25, "tone": "rose", "expected_latency_s": 4.5 },
+    { "id": "SA-VOICE", "action": "draft", "tool": "rodbot.voice", "prompt_template": "Mirror Andre's voice for B&S. SMS to Brenda = personal, lowercase, fee-waiver framing. Email to both = operator-to-operator language for Steve (4:30 setup, 45-day coordination, allergen labeling). No churrasco evangelism — operator-grade respect.", "leads": 1, "retries": 1, "timeout_s": 20, "tone": "lavender", "expected_latency_s": 3.5 },
+    { "id": "SA-ALERT", "action": "brief", "tool": "today.append", "prompt_template": "Surface tasting countdown on today.html. Saturday May 2 6pm: full pre-tasting brief — recent comms, opener line, 30-min structure, watch-fors, allergen-table check, agreement-ready note. Day 7 (May 3): system silent, Andre runs the tasting in person.", "leads": 1, "retries": 1, "timeout_s": 10, "tone": "mint", "expected_latency_s": 1.5 }
+  ],
+  "merge": { "label": "merge → write to today.html + activity.jsonl", "target": "state/today.html" },
+  "metadata": {
+    "created_at": "2026-04-27T00:00:00Z",
+    "last_modified": "2026-04-27T00:00:00Z",
+    "version": 1,
+    "person_id": "brenda_steve",
+    "kind": "lead_orchestrator",
+    "owner_coworker_id": "andre_raw",
+    "linked_workflow": "brenda-steve-seven-day",
+    "status": "live",
+    "tasting_date": "2026-05-03T17:30:00-04:00"
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "schema": "comeketo.trigger.v1",
+  "slug": "hugo_plan_executor",
+  "kind": "cron",
+  "label": "Hugo · Plan executor (Days 1/4/6)",
+  "enabled": true,
+  "tone": "blush",
+  "notes": "Live — R2 fires weekdays 10:30am ET. Decides whether today's plan-day move ships. Day 1 always, Day 4 SMS conditional on no reply, Day 6 email conditional on no reply.",
+  "created_at": "2026-04-27T00:00:00+00:00",
+  "last_modified": "2026-04-27T00:00:00+00:00",
+  "cron": "30 10 * * 1-5",
+  "tz": "America/New_York",
+  "workflow_slug": "hugo-casillas-seven-day"
+}

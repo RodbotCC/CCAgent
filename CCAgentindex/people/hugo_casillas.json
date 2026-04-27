@@ -1,0 +1,85 @@
+{
+  "id": "hugo_casillas",
+  "kind": "lead",
+  "name": "Hugo Casillas",
+  "role": "Wedding · Aug 2026 · 110 guests · Highland Orchard, Sturbridge",
+  "relationship_tier": "active_quote",
+  "relationship_weight": 0.82,
+  "contacts": {
+    "email": "hugocasillas2@gmail.com",
+    "phone": "+1-832-296-9175",
+    "whatsapp": null,
+    "slack_id": null,
+    "slack_channel": null,
+    "clickup_user_id": null,
+    "other": null
+  },
+  "handling": {
+    "preferred_channel": "Phone",
+    "response_latency_target": "same-day",
+    "tone": "Strong-fit, post-discovery, post-quote. Curious-but-comparing. Lead with specificity — name Highland Orchard as the trust anchor. Decision-making with fiancée; vegetarian fiancée is the dietary anchor.",
+    "voice_adjustments": "Andre voice: lowercase, brief, no sales heat. Reference real call details (the 30-min discovery, the picanha + bacon-wrapped chicken + cauliflower steak menu) so it doesn't read like a template.",
+    "context": "Quote sent $11,595 ($37.90/pp) for Deluxe Buffet 125 with linens. Highland Orchard sent him to us — venue referral. Tasting not yet locked; May 17 at 2 PM is the natural close trigger. Houston transplant (832 area code), Mexican-American.",
+    "off_limits_topics": null
+  },
+  "context_anchors": [
+    "Venue: Highland Orchard, Sturbridge — venue-recommended, repeat-customer site",
+    "Quote: $11,595 / 125 pax / Deluxe Buffet incl. linens",
+    "Dietary: fiancée vegetarian; some guests vegetarian; couple gluten-free",
+    "Discovery: 30-min call Apr 17 — full menu walked, website feedback noted",
+    "Decision pattern: Fiancée drives logistics; Hugo is the inbound contact",
+    "Date confirmed Aug 23, 2026 — only one other 150-pax event that day"
+  ],
+  "lead": {
+    "status": "active_quote",
+    "stage": "quote_sent_post_discovery",
+    "owner": "andre_raw",
+    "source": "comeketocatering.com (Highland Orchard recommended caterer list)",
+    "event_type": "Wedding",
+    "event_date": "2026-08-23",
+    "guest_count": 110,
+    "venue": "Highland Orchard, Sturbridge MA",
+    "city": "Waltham, MA",
+    "quote_value": 11595,
+    "opportunity_value": 5689,
+    "score_tags": ["high_intent_web", "big_event_budget", "venue_referral", "dietary_trifecta"],
+    "last_activity": "2026-04-24 — re-engagement SMS, no response since quote",
+    "speed_urgency": "high",
+    "next_move": "Lock May 17 tasting at 2 PM; reference Highland referral + GF/veg/vegan demo plan"
+  },
+  "enrichment": {
+    "confidence": 0.85,
+    "identity_notes": "Spanish surname (Casillas, Mexican origin), Houston-area-code phone on a Waltham resident — recent Texas transplant. Hispanic-Mexican-American + suburban Boston household.",
+    "win_angles": [
+      "Highland Orchard venue-referral as social proof in every message",
+      "Vegetarian/vegan/GF trifecta as differentiator — make it explicit at tasting",
+      "August orchard wedding visual storytelling: stations + churrasco demo",
+      "Discovery-call warmth — reference specific menu items he liked"
+    ],
+    "nepq_openers": [
+      "Continuation: 'Hugo — checking on the quote. Does $11,595 land where you and your fiancée were expecting? Want me to lock you in for May 17 tasting at 2 PM?'",
+      "Identity frame: 'Highland Orchard sent you our way — what made them recommend us specifically?'",
+      "Anchor: 'If $11,595 is over target, easiest lever is dropping deluxe to standard — saves $X.'"
+    ],
+    "open_gaps": [
+      "Whose dietary needs (couple vs guests)",
+      "Fiancée's name and direct contact",
+      "Bar package decisions",
+      "Venue logistics (kitchen access, power, water at Highland)",
+      "Whether they're talking to other Highland-recommended caterers"
+    ],
+    "strategic_note": "Highest-confidence active deal in the pipeline. Venue referral + matched demographic + clear dietary ask + quote out + discovery call done. Only thing missing is closure. Treat Highland Orchard referrals as relationship gold — every win deepens venue-pipeline."
+  },
+  "comms": [
+    {"ts": "2026-04-16T10:00:00Z", "channel": "sms", "direction": "out", "summary": "Inbound from website acknowledged; first call attempts"},
+    {"ts": "2026-04-17T14:30:00Z", "channel": "call", "direction": "out", "summary": "30-min discovery call — full menu, venue logistics, fiancée vegetarian, GF guests"},
+    {"ts": "2026-04-17T16:00:00Z", "channel": "email", "direction": "out", "summary": "Quote sent: $11,595 Deluxe Buffet 125 pax + linens, Loom walkthrough"},
+    {"ts": "2026-04-23T11:00:00Z", "channel": "sms", "direction": "out", "summary": "Re-engagement: lock call vs tasting (May 3 / May 17)"},
+    {"ts": "2026-04-24T13:00:00Z", "channel": "sms", "direction": "out", "summary": "Day-4 cadence — what are you trying to get clear on?"}
+  ],
+  "notes": [
+    "Highland Orchard referral is the unique trust anchor — protect it",
+    "Tasting-on-May-17 is the close trigger; if no RSVP by end of next week, deal leaks",
+    "Vegetarian + vegan + GF dietary asks are real differentiator if delivered well"
+  ]
+}

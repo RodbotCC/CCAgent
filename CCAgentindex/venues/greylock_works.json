@@ -1,0 +1,30 @@
+{
+  "id": "greylock_works",
+  "kind": "venue",
+  "name": "Greylock Works",
+  "city": null,
+  "venue_type": "Industrial venue",
+  "website": "http://www.greylockworks.com",
+  "tier": "tier_1",
+  "deal_stats": {
+    "opp_count": 5,
+    "total_value": 26126.0,
+    "avg_deal_value": 5225.2,
+    "lead_name_refs": 0
+  },
+  "close_account": {
+    "has_lead": true,
+    "lead_status": "🟢 Probably",
+    "lead_url": "https://app.close.com/lead/lead_7J6j6nZrCdGBRlGDAm1uw96WqmOBzhqzNkqFaCDufEd/"
+  },
+  "raw_variants": [
+    "Greylock WORKS",
+    "Greylock Works"
+  ],
+  "action": "✅ Profiled & active — keep relationship warm",
+  "notes": [
+    "Rodrigo & Nina's Project. Address: 508 State Road, North Adams MA 01247",
+    "5 opportunities totaling $26,126.00 — rank #8 by deal value.",
+    "Has Close lead account (status: 🟢 Probably)."
+  ]
+}

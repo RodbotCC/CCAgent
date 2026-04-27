@@ -1,0 +1,30 @@
+{
+  "id": "hammond_castle_gloucester",
+  "kind": "venue",
+  "name": "Hammond Castle (Gloucester)",
+  "city": "Gloucester",
+  "venue_type": null,
+  "website": null,
+  "tier": "tier_2",
+  "deal_stats": {
+    "opp_count": 8,
+    "total_value": 16335.58,
+    "avg_deal_value": 2041.95,
+    "lead_name_refs": 4
+  },
+  "close_account": {
+    "has_lead": false,
+    "lead_status": null,
+    "lead_url": null
+  },
+  "raw_variants": [
+    "Hammond Castle Museum",
+    "Hammond Castle in Gloucester, MA"
+  ],
+  "action": "ENRICH NOW — high-volume, no lead account",
+  "notes": [
+    "8 opportunities totaling $16,335.58 — rank #16 by deal value.",
+    "No Close lead account yet — recommend creating one to track relationship.",
+    "4 leads have referenced this as their venue choice."
+  ]
+}

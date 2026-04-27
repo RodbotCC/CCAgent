@@ -1,0 +1,28 @@
+{
+  "id": "monadnock_berries_troy_nh",
+  "kind": "venue",
+  "name": "Monadnock Berries (Troy, NH)",
+  "city": "Troy, NH",
+  "venue_type": null,
+  "website": null,
+  "tier": "tier_2",
+  "deal_stats": {
+    "opp_count": 6,
+    "total_value": 21947.95,
+    "avg_deal_value": 3657.99,
+    "lead_name_refs": 0
+  },
+  "close_account": {
+    "has_lead": false,
+    "lead_status": null,
+    "lead_url": null
+  },
+  "raw_variants": [
+    "Monadnock Berries, 545 W Hill Rd Troy, NH, 04365"
+  ],
+  "action": "ENRICH NOW — high-volume, no lead account",
+  "notes": [
+    "6 opportunities totaling $21,947.95 — rank #11 by deal value.",
+    "No Close lead account yet — recommend creating one to track relationship."
+  ]
+}

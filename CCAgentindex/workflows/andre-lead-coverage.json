@@ -1,0 +1,4425 @@
+{
+  "schema": "comeketo.automation_graph.v1",
+  "id": "wf_andre_lead_coverage",
+  "slug": "andre-lead-coverage",
+  "name": "André Lead Coverage Automation",
+  "description": "The flagship automation. Watches the 9 blue diamond Smart Views in Close, covers every Andre-owned lead with a 10-day NEPQ-style SMS + email cadence via Close API, pauses immediately on any reply, classifies replies into 7 categories, schedules Slack DM reminders for call-time requests, and posts three daily reports plus a night safety sweep that compare against the prior snapshot. Every action runs through the EACE loop (Explore → Audit → Connect → Execute) and a post-processing EACE on the result. DRY_RUN and AUTOMATION_PAUSED are honored at every send. The automation NEVER places phone calls — every call is André's hands.",
+  "owner": "p_andre_raw",
+  "scope": "close_crm_primary",
+  "principles": [
+    "EACE on every action. Explore → Audit → Connect → Execute. No phase skipped.",
+    "Post-processing EACE after every external action. An action without proof is no action.",
+    "Texts and emails ONLY via Close API. The system never calls. Never claims a call happened.",
+    "DRY_RUN=true is the default. Customer sends become [DRY-RUN] previews to the team channel.",
+    "AUTOMATION_PAUSED=true blocks all customer sends. Reports and observation continue.",
+    "Pause cadence on any reply. Resume is always manual.",
+    "9 blue diamond Smart Views are the operating surface. Nothing outside scope.",
+    "Triple anti-duplicate defense: ledger / Close activity / idempotency key.",
+    "Reports never modify ledgers. Reports are read-only observers.",
+    "Never auto-mark a lead lost. After Day 10 with no reply, surface for André review.",
+    "Owner change away from André = pause. Owner change to André = resume only if no manual review pending.",
+    "Three reports per day — morning, midday, night — each comparing against the prior snapshot."
+  ],
+  "batch_policy": {
+    "enabled": true,
+    "size": 8,
+    "notes": "Small per-tick batches. The 5-min/10-min/15-min cadence ensures fresh visibility."
+  },
+  "nodes": [
+    {
+      "id": "n_view_v01_today",
+      "role": "state",
+      "kind": "people",
+      "label": "🔷 01. Today's Leads",
+      "config": {
+        "path": "diamond_views.json",
+        "view_kind": "saved_search",
+        "category": "v01_today"
+      },
+      "x": 120,
+      "y": 80,
+      "notes": "Intake queue. New leads land here.",
+      "description": "Lead Intake Sweep watches this view every 5 min. Each new lead becomes a fresh ledger + Day 1 send.",
+      "annotations": []
+    },
+    {
+      "id": "n_view_v02_d1_5",
+      "role": "state",
+      "kind": "people",
+      "label": "🔷 02. Day 1-5 Cadence",
+      "config": {
+        "path": "diamond_views.json",
+        "view_kind": "saved_search",
+        "category": "v02_d1_5"
+      },
+      "x": 340,
+      "y": 80,
+      "notes": "Active early-cadence cohort.",
+      "description": "Cadence Sender pulls from here every 15 min for Days 1-5 of the playbook.",
+      "annotations": []
+    },
+    {
+      "id": "n_view_v03_d6_10",
+      "role": "state",
+      "kind": "people",
+      "label": "🔷 03. Day 6-10 Cadence",
+      "config": {
+        "path": "diamond_views.json",
+        "view_kind": "saved_search",
+        "category": "v03_d6_10"
+      },
+      "x": 560,
+      "y": 80,
+      "notes": "Active late-cadence cohort.",
+      "description": "Cadence Sender uses the Day 6-10 messages from the playbook for leads in this view.",
+      "annotations": []
+    },
+    {
+      "id": "n_view_v04_opened",
+      "role": "state",
+      "kind": "people",
+      "label": "🔷 04. Opened Email (24hr)",
+      "config": {
+        "path": "diamond_views.json",
+        "view_kind": "saved_search",
+        "category": "v04_opened"
+      },
+      "x": 780,
+      "y": 80,
+      "notes": "Engagement signal — lead opened email recently.",
+      "description": "An email-open is NOT a reply. Cadence continues. Lead is added to report's 'engagement signals'.",
+      "annotations": []
+    },
+    {
+      "id": "n_view_v05_no_connect",
+      "role": "state",
+      "kind": "people",
+      "label": "🔷 05. No Connect Made",
+      "config": {
+        "path": "diamond_views.json",
+        "view_kind": "saved_search",
+        "category": "v05_no_connect"
+      },
+      "x": 1000,
+      "y": 80,
+      "notes": "Stale risk — no successful sends.",
+      "description": "Reports flag any lead in this view with cadence_status: active but zero successful sends.",
+      "annotations": []
+    },
+    {
+      "id": "n_view_v06_needs_resp",
+      "role": "state",
+      "kind": "people",
+      "label": "🔷 06. Needs Response",
+      "config": {
+        "path": "diamond_views.json",
+        "view_kind": "saved_search",
+        "category": "v06_needs_resp"
+      },
+      "x": 1220,
+      "y": 80,
+      "notes": "Manual review queue — the lead replied.",
+      "description": "Any lead here MUST be cadence_status: paused. Mismatch = sync gap. Stuck >24h surfaces in morning report.",
+      "annotations": []
+    },
+    {
+      "id": "n_view_v07_tasting",
+      "role": "state",
+      "kind": "people",
+      "label": "🔷 07. Booked Tastings",
+      "config": {
+        "path": "diamond_views.json",
+        "view_kind": "saved_search",
+        "category": "v07_tasting"
+      },
+      "x": 1440,
+      "y": 80,
+      "notes": "Progressing toward close — tasting on calendar.",
+      "description": "Cadence STOPS. Status flips to completed_via_tasting. No more automated outreach.",
+      "annotations": []
+    },
+    {
+      "id": "n_view_v08_dormant",
+      "role": "state",
+      "kind": "people",
+      "label": "🔷 08. Long-Term / Dormant",
+      "config": {
+        "path": "diamond_views.json",
+        "view_kind": "saved_search",
+        "category": "v08_dormant"
+      },
+      "x": 1660,
+      "y": 80,
+      "notes": "Nurture pile — NOT eligible for cadence.",
+      "description": "Reports show count and sample. Cadence Sender never touches this view.",
+      "annotations": []
+    },
+    {
+      "id": "n_view_v10_other",
+      "role": "state",
+      "kind": "people",
+      "label": "🔷 10. All Other Followup",
+      "config": {
+        "path": "diamond_views.json",
+        "view_kind": "saved_search",
+        "category": "v10_other"
+      },
+      "x": 1880,
+      "y": 80,
+      "notes": "Catch-all. Manual review only.",
+      "description": "Surfaced in daily reports. Rapid growth >50%/day triggers warning — possible mis-routing.",
+      "annotations": []
+    },
+    {
+      "id": "n_env",
+      "role": "state",
+      "kind": "memory",
+      "label": ".env config",
+      "config": {
+        "path": "/Users/jakeaaron/Documents/Notify/.env",
+        "must_re_read": true
+      },
+      "x": 120,
+      "y": 220,
+      "notes": "DRY_RUN, AUTOMATION_PAUSED, all credentials. Re-read every Explore phase.",
+      "description": ".env carries the live kill-switch state and credentials. SKILL.md mandates re-reading at the start of EVERY Explore phase — the values are not cached because they're the panic-button surface.",
+      "annotations": []
+    },
+    {
+      "id": "n_view_map",
+      "role": "state",
+      "kind": "memory",
+      "label": "diamond_views.json",
+      "config": {
+        "path": "/Users/jakeaaron/Documents/Notify/diamond_views.json"
+      },
+      "x": 340,
+      "y": 220,
+      "notes": "Maps view name → saved_search_id. Re-read on every session start.",
+      "description": "Source of truth for which Close saved-search ID corresponds to each blue diamond view name. Re-read in case André renames or rebuilds a view.",
+      "annotations": []
+    },
+    {
+      "id": "n_state_leads",
+      "role": "state",
+      "kind": "people",
+      "label": "state/leads/ ledgers",
+      "config": {
+        "path": "state/leads/lead_<close_lead_id>.json",
+        "schema_doc": "state-schema.md"
+      },
+      "x": 560,
+      "y": 220,
+      "notes": "One JSON file per lead under cadence. Append-only history.",
+      "description": "The per-lead ledger. The single source of truth for cadence_day, cadence_status, last_sms_sent_at, last_email_sent_at, response_status, risk_flags, history. Atomic write via .tmp + rename.",
+      "annotations": []
+    },
+    {
+      "id": "n_state_snapshots",
+      "role": "state",
+      "kind": "memory",
+      "label": "state/snapshots/",
+      "config": {
+        "path": "state/snapshots/<YYYY-MM-DD>_<morning|midday|night>.json"
+      },
+      "x": 780,
+      "y": 220,
+      "notes": "One snapshot per report run. Retain ≥14 days.",
+      "description": "Report snapshots — totals, by-cadence-day counts, leads-in-view buckets, risk flags, call-time requests, comparison_to_previous. Reports diff against the prior snapshot to compute deltas.",
+      "annotations": []
+    },
+    {
+      "id": "n_state_errors",
+      "role": "state",
+      "kind": "ledger",
+      "label": "state/errors/",
+      "config": {
+        "path": "state/errors/<YYYY-MM-DD>_errors.json"
+      },
+      "x": 1000,
+      "y": 220,
+      "notes": "One file per day. Append-only. retryable: true|false per entry.",
+      "description": "Daily error log. Each entry: timestamp, run_id, task, lead_id, action_attempted, error_type, error_message, retryable, next_retry_at. Permanent errors carry human_action_required.",
+      "annotations": []
+    },
+    {
+      "id": "n_state_runs",
+      "role": "state",
+      "kind": "ledger",
+      "label": "state/runs/",
+      "config": {
+        "path": "state/runs/run_<UTC_timestamp>_<task>.json"
+      },
+      "x": 1220,
+      "y": 220,
+      "notes": "One run summary per scheduled-task fire.",
+      "description": "Run summaries. Required for every session. Schema: task, run_id, started/ended, dry_run, leads_inspected, actions_executed/skipped/failed, ledger_files_updated, next_risks, errors. Reports compute deltas from these.",
+      "annotations": []
+    },
+    {
+      "id": "n_doc_skill",
+      "role": "state",
+      "kind": "memory",
+      "label": "SKILL.md",
+      "config": {
+        "path": "andre-lead-coverage/SKILL.md"
+      },
+      "x": 1440,
+      "y": 220,
+      "notes": "Operating skill. Read at start of every session.",
+      "description": "The skill prompt every scheduled task reads first. Defines the EACE loop, kill switches, deferral rules, and what success looks like.",
+      "annotations": []
+    },
+    {
+      "id": "n_doc_cadence",
+      "role": "state",
+      "kind": "memory",
+      "label": "cadence-playbook.md",
+      "config": {
+        "path": "references/cadence-playbook.md"
+      },
+      "x": 1660,
+      "y": 220,
+      "notes": "Source of truth for the 10-day message copy.",
+      "description": "The cadence playbook — Day 1 through Day 10 message templates. Cadence Sender reads this every fire and renders {{first_name}} / {{event_type}} substitutions.",
+      "annotations": []
+    },
+    {
+      "id": "n_doc_response",
+      "role": "state",
+      "kind": "memory",
+      "label": "response-classification.md",
+      "config": {
+        "path": "references/response-classification.md"
+      },
+      "x": 1880,
+      "y": 220,
+      "notes": "7-category classifier rules and priority order.",
+      "description": "Response classification rules. 7 categories with explicit trigger phrases and priority order: not_interested → unclear_response → call_time_given → tasting_interest → pricing_question → send_info → needs_manual_review.",
+      "annotations": []
+    },
+    {
+      "id": "n_trg_intake",
+      "role": "trigger",
+      "kind": "cron",
+      "label": "Lead Intake Sweep",
+      "config": {
+        "cron": "*/5 8-20 * * *",
+        "tz": "America/New_York",
+        "task_name": "INTAKE",
+        "skill": "andre-lead-coverage"
+      },
+      "x": 120,
+      "y": 440,
+      "notes": "Schedule: */5 8-20 * * * ET",
+      "description": "Scheduled task #1. Find new André-owned leads in 🔷 01 and start cadence (or dry-run preview).",
+      "annotations": []
+    },
+    {
+      "id": "n_trg_ownersync",
+      "role": "trigger",
+      "kind": "cron",
+      "label": "Ownership / View Sync",
+      "config": {
+        "cron": "*/10 8-20 * * *",
+        "tz": "America/New_York",
+        "task_name": "OWNERSYNC",
+        "skill": "andre-lead-coverage"
+      },
+      "x": 340,
+      "y": 440,
+      "notes": "Schedule: */10 8-20 * * * ET",
+      "description": "Scheduled task #2. Keep ledger state in sync with live blue diamond views and lead ownership.",
+      "annotations": []
+    },
+    {
+      "id": "n_trg_respsync",
+      "role": "trigger",
+      "kind": "cron",
+      "label": "Response Sync",
+      "config": {
+        "cron": "*/10 8-20 * * *",
+        "tz": "America/New_York",
+        "task_name": "RESPSYNC",
+        "skill": "andre-lead-coverage"
+      },
+      "x": 560,
+      "y": 440,
+      "notes": "Schedule: */10 8-20 * * * ET",
+      "description": "Scheduled task #3. Detect inbound replies and pause cadences immediately.",
+      "annotations": []
+    },
+    {
+      "id": "n_trg_cadence",
+      "role": "trigger",
+      "kind": "cron",
+      "label": "Cadence Sender",
+      "config": {
+        "cron": "*/15 8-20 * * *",
+        "tz": "America/New_York",
+        "task_name": "CADENCE",
+        "skill": "andre-lead-coverage"
+      },
+      "x": 780,
+      "y": 440,
+      "notes": "Schedule: */15 8-20 * * * ET",
+      "description": "Scheduled task #4. Send (or dry-run) any cadence messages whose send window is open right now.",
+      "annotations": []
+    },
+    {
+      "id": "n_trg_calltime",
+      "role": "trigger",
+      "kind": "cron",
+      "label": "Call-Time Reminder Creator",
+      "config": {
+        "cron": "*/15 8-20 * * *",
+        "tz": "America/New_York",
+        "task_name": "CALLTIME",
+        "skill": "andre-lead-coverage"
+      },
+      "x": 1000,
+      "y": 440,
+      "notes": "Schedule: */15 8-20 * * * ET",
+      "description": "Scheduled task #5. For every call_time_given lead, ensure a Slack DM reminder is scheduled 5 min before the requested time.",
+      "annotations": []
+    },
+    {
+      "id": "n_trg_morning",
+      "role": "trigger",
+      "kind": "cron",
+      "label": "Morning Report",
+      "config": {
+        "cron": "30 8 * * *",
+        "tz": "America/New_York",
+        "task_name": "MORNING",
+        "skill": "andre-lead-coverage"
+      },
+      "x": 1220,
+      "y": 440,
+      "notes": "Schedule: 30 8 * * * ET",
+      "description": "Scheduled task #6. 8:30 AM ET. Compares against previous night's snapshot.",
+      "annotations": []
+    },
+    {
+      "id": "n_trg_midday",
+      "role": "trigger",
+      "kind": "cron",
+      "label": "Midday Report",
+      "config": {
+        "cron": "0 13 * * *",
+        "tz": "America/New_York",
+        "task_name": "MIDDAY",
+        "skill": "andre-lead-coverage"
+      },
+      "x": 1440,
+      "y": 440,
+      "notes": "Schedule: 0 13 * * * ET",
+      "description": "Scheduled task #7. 1:00 PM ET. Compares against the morning snapshot.",
+      "annotations": []
+    },
+    {
+      "id": "n_trg_night",
+      "role": "trigger",
+      "kind": "cron",
+      "label": "Night Report",
+      "config": {
+        "cron": "30 20 * * *",
+        "tz": "America/New_York",
+        "task_name": "NIGHT",
+        "skill": "andre-lead-coverage"
+      },
+      "x": 1660,
+      "y": 440,
+      "notes": "Schedule: 30 20 * * * ET",
+      "description": "Scheduled task #8. 8:30 PM ET. Compares against BOTH morning and midday.",
+      "annotations": []
+    },
+    {
+      "id": "n_trg_safety",
+      "role": "trigger",
+      "kind": "cron",
+      "label": "Night Safety Sweep",
+      "config": {
+        "cron": "45 20 * * *",
+        "tz": "America/New_York",
+        "task_name": "SAFETY",
+        "skill": "andre-lead-coverage"
+      },
+      "x": 1880,
+      "y": 440,
+      "notes": "Schedule: 45 20 * * * ET",
+      "description": "Scheduled task #9. 8:45 PM ET. Last line of defense — hunts for anomalies.",
+      "annotations": []
+    },
+    {
+      "id": "n_intake_explore",
+      "role": "transform",
+      "kind": "extract",
+      "label": "Explore",
+      "config": {
+        "job": "intake",
+        "phase": "explore",
+        "policy_doc": "eace-loop.md"
+      },
+      "x": 120,
+      "y": 560,
+      "notes": "Lead Intake Sweep — Explore: Gather facts. Take no action.",
+      "description": "Lead Intake Sweep · Explore phase. Read views, ledgers, recent Close activity, last snapshot, kill-switches. NO writes, NO sends. (See eace-loop.md / post-processing.md.)",
+      "annotations": []
+    },
+    {
+      "id": "n_intake_audit",
+      "role": "transform",
+      "kind": "filter",
+      "label": "Audit",
+      "config": {
+        "job": "intake",
+        "phase": "audit",
+        "policy_doc": "eace-loop.md"
+      },
+      "x": 120,
+      "y": 680,
+      "notes": "Lead Intake Sweep — Audit: Pressure-test for safety + eligibility.",
+      "description": "Lead Intake Sweep · Audit phase. Owner is André? Phone OR email? Already responded? Send already happened (anti-dupe)? Status terminal? DRY_RUN/AUTOMATION_PAUSED on? (See eace-loop.md / post-processing.md.)",
+      "annotations": []
+    },
+    {
+      "id": "n_intake_connect",
+      "role": "transform",
+      "kind": "reflect",
+      "label": "Connect",
+      "config": {
+        "job": "intake",
+        "phase": "connect",
+        "policy_doc": "eace-loop.md"
+      },
+      "x": 120,
+      "y": 800,
+      "notes": "Lead Intake Sweep — Connect: Compare new facts to known state. Decide intent.",
+      "description": "Lead Intake Sweep · Connect phase. Output a small specific list of intended actions, each tied to a lead and a reason. No execution yet. (See eace-loop.md / post-processing.md.)",
+      "annotations": []
+    },
+    {
+      "id": "n_intake_execute",
+      "role": "actor",
+      "kind": "rodbot",
+      "label": "Execute",
+      "config": {
+        "job": "intake",
+        "phase": "execute",
+        "policy_doc": "eace-loop.md"
+      },
+      "x": 120,
+      "y": 920,
+      "notes": "Lead Intake Sweep — Execute: Now do the work.",
+      "description": "Lead Intake Sweep · Execute phase. Send via Close API, post Slack, write ledger, update Close note. Trigger post-processing immediately. Sign off with explicit status. (See eace-loop.md / post-processing.md.)",
+      "annotations": []
+    },
+    {
+      "id": "n_intake_postproc",
+      "role": "transform",
+      "kind": "reflect",
+      "label": "Post-EACE",
+      "config": {
+        "job": "intake",
+        "phase": "postproc",
+        "policy_doc": "post-processing.md"
+      },
+      "x": 120,
+      "y": 1040,
+      "notes": "Lead Intake Sweep — Post-EACE: Second EACE on the result.",
+      "description": "Lead Intake Sweep · Post-EACE phase. Did it actually happen? Did the API confirm? Was the ledger updated? Anti-duplicate cross-check. Sign off: success | dry_run_only | skipped | paused | failed | needs_manual_review. (See eace-loop.md / post-processing.md.)",
+      "annotations": []
+    },
+    {
+      "id": "n_ownersync_explore",
+      "role": "transform",
+      "kind": "extract",
+      "label": "Explore",
+      "config": {
+        "job": "ownersync",
+        "phase": "explore",
+        "policy_doc": "eace-loop.md"
+      },
+      "x": 340,
+      "y": 560,
+      "notes": "Ownership / View Sync — Explore: Gather facts. Take no action.",
+      "description": "Ownership / View Sync · Explore phase. Read views, ledgers, recent Close activity, last snapshot, kill-switches. NO writes, NO sends. (See eace-loop.md / post-processing.md.)",
+      "annotations": []
+    },
+    {
+      "id": "n_ownersync_audit",
+      "role": "transform",
+      "kind": "filter",
+      "label": "Audit",
+      "config": {
+        "job": "ownersync",
+        "phase": "audit",
+        "policy_doc": "eace-loop.md"
+      },
+      "x": 340,
+      "y": 680,
+      "notes": "Ownership / View Sync — Audit: Pressure-test for safety + eligibility.",
+      "description": "Ownership / View Sync · Audit phase. Owner is André? Phone OR email? Already responded? Send already happened (anti-dupe)? Status terminal? DRY_RUN/AUTOMATION_PAUSED on? (See eace-loop.md / post-processing.md.)",
+      "annotations": []
+    },
+    {
+      "id": "n_ownersync_connect",
+      "role": "transform",
+      "kind": "reflect",
+      "label": "Connect",
+      "config": {
+        "job": "ownersync",
+        "phase": "connect",
+        "policy_doc": "eace-loop.md"
+      },
+      "x": 340,
+      "y": 800,
+      "notes": "Ownership / View Sync — Connect: Compare new facts to known state. Decide intent.",
+      "description": "Ownership / View Sync · Connect phase. Output a small specific list of intended actions, each tied to a lead and a reason. No execution yet. (See eace-loop.md / post-processing.md.)",
+      "annotations": []
+    },
+    {
+      "id": "n_ownersync_execute",
+      "role": "actor",
+      "kind": "rodbot",
+      "label": "Execute",
+      "config": {
+        "job": "ownersync",
+        "phase": "execute",
+        "policy_doc": "eace-loop.md"
+      },
+      "x": 340,
+      "y": 920,
+      "notes": "Ownership / View Sync — Execute: Now do the work.",
+      "description": "Ownership / View Sync · Execute phase. Send via Close API, post Slack, write ledger, update Close note. Trigger post-processing immediately. Sign off with explicit status. (See eace-loop.md / post-processing.md.)",
+      "annotations": []
+    },
+    {
+      "id": "n_ownersync_postproc",
+      "role": "transform",
+      "kind": "reflect",
+      "label": "Post-EACE",
+      "config": {
+        "job": "ownersync",
+        "phase": "postproc",
+        "policy_doc": "post-processing.md"
+      },
+      "x": 340,
+      "y": 1040,
+      "notes": "Ownership / View Sync — Post-EACE: Second EACE on the result.",
+      "description": "Ownership / View Sync · Post-EACE phase. Did it actually happen? Did the API confirm? Was the ledger updated? Anti-duplicate cross-check. Sign off: success | dry_run_only | skipped | paused | failed | needs_manual_review. (See eace-loop.md / post-processing.md.)",
+      "annotations": []
+    },
+    {
+      "id": "n_respsync_explore",
+      "role": "transform",
+      "kind": "extract",
+      "label": "Explore",
+      "config": {
+        "job": "respsync",
+        "phase": "explore",
+        "policy_doc": "eace-loop.md"
+      },
+      "x": 560,
+      "y": 560,
+      "notes": "Response Sync — Explore: Gather facts. Take no action.",
+      "description": "Response Sync · Explore phase. Read views, ledgers, recent Close activity, last snapshot, kill-switches. NO writes, NO sends. (See eace-loop.md / post-processing.md.)",
+      "annotations": []
+    },
+    {
+      "id": "n_respsync_audit",
+      "role": "transform",
+      "kind": "filter",
+      "label": "Audit",
+      "config": {
+        "job": "respsync",
+        "phase": "audit",
+        "policy_doc": "eace-loop.md"
+      },
+      "x": 560,
+      "y": 680,
+      "notes": "Response Sync — Audit: Pressure-test for safety + eligibility.",
+      "description": "Response Sync · Audit phase. Owner is André? Phone OR email? Already responded? Send already happened (anti-dupe)? Status terminal? DRY_RUN/AUTOMATION_PAUSED on? (See eace-loop.md / post-processing.md.)",
+      "annotations": []
+    },
+    {
+      "id": "n_respsync_connect",
+      "role": "transform",
+      "kind": "reflect",
+      "label": "Connect",
+      "config": {
+        "job": "respsync",
+        "phase": "connect",
+        "policy_doc": "eace-loop.md"
+      },
+      "x": 560,
+      "y": 800,
+      "notes": "Response Sync — Connect: Compare new facts to known state. Decide intent.",
+      "description": "Response Sync · Connect phase. Output a small specific list of intended actions, each tied to a lead and a reason. No execution yet. (See eace-loop.md / post-processing.md.)",
+      "annotations": []
+    },
+    {
+      "id": "n_respsync_execute",
+      "role": "actor",
+      "kind": "rodbot",
+      "label": "Execute",
+      "config": {
+        "job": "respsync",
+        "phase": "execute",
+        "policy_doc": "eace-loop.md"
+      },
+      "x": 560,
+      "y": 920,
+      "notes": "Response Sync — Execute: Now do the work.",
+      "description": "Response Sync · Execute phase. Send via Close API, post Slack, write ledger, update Close note. Trigger post-processing immediately. Sign off with explicit status. (See eace-loop.md / post-processing.md.)",
+      "annotations": []
+    },
+    {
+      "id": "n_respsync_postproc",
+      "role": "transform",
+      "kind": "reflect",
+      "label": "Post-EACE",
+      "config": {
+        "job": "respsync",
+        "phase": "postproc",
+        "policy_doc": "post-processing.md"
+      },
+      "x": 560,
+      "y": 1040,
+      "notes": "Response Sync — Post-EACE: Second EACE on the result.",
+      "description": "Response Sync · Post-EACE phase. Did it actually happen? Did the API confirm? Was the ledger updated? Anti-duplicate cross-check. Sign off: success | dry_run_only | skipped | paused | failed | needs_manual_review. (See eace-loop.md / post-processing.md.)",
+      "annotations": []
+    },
+    {
+      "id": "n_cadence_explore",
+      "role": "transform",
+      "kind": "extract",
+      "label": "Explore",
+      "config": {
+        "job": "cadence",
+        "phase": "explore",
+        "policy_doc": "eace-loop.md"
+      },
+      "x": 780,
+      "y": 560,
+      "notes": "Cadence Sender — Explore: Gather facts. Take no action.",
+      "description": "Cadence Sender · Explore phase. Read views, ledgers, recent Close activity, last snapshot, kill-switches. NO writes, NO sends. (See eace-loop.md / post-processing.md.)",
+      "annotations": []
+    },
+    {
+      "id": "n_cadence_audit",
+      "role": "transform",
+      "kind": "filter",
+      "label": "Audit",
+      "config": {
+        "job": "cadence",
+        "phase": "audit",
+        "policy_doc": "eace-loop.md"
+      },
+      "x": 780,
+      "y": 680,
+      "notes": "Cadence Sender — Audit: Pressure-test for safety + eligibility.",
+      "description": "Cadence Sender · Audit phase. Owner is André? Phone OR email? Already responded? Send already happened (anti-dupe)? Status terminal? DRY_RUN/AUTOMATION_PAUSED on? (See eace-loop.md / post-processing.md.)",
+      "annotations": []
+    },
+    {
+      "id": "n_cadence_connect",
+      "role": "transform",
+      "kind": "reflect",
+      "label": "Connect",
+      "config": {
+        "job": "cadence",
+        "phase": "connect",
+        "policy_doc": "eace-loop.md"
+      },
+      "x": 780,
+      "y": 800,
+      "notes": "Cadence Sender — Connect: Compare new facts to known state. Decide intent.",
+      "description": "Cadence Sender · Connect phase. Output a small specific list of intended actions, each tied to a lead and a reason. No execution yet. (See eace-loop.md / post-processing.md.)",
+      "annotations": []
+    },
+    {
+      "id": "n_cadence_execute",
+      "role": "actor",
+      "kind": "rodbot",
+      "label": "Execute",
+      "config": {
+        "job": "cadence",
+        "phase": "execute",
+        "policy_doc": "eace-loop.md"
+      },
+      "x": 780,
+      "y": 920,
+      "notes": "Cadence Sender — Execute: Now do the work.",
+      "description": "Cadence Sender · Execute phase. Send via Close API, post Slack, write ledger, update Close note. Trigger post-processing immediately. Sign off with explicit status. (See eace-loop.md / post-processing.md.)",
+      "annotations": []
+    },
+    {
+      "id": "n_cadence_postproc",
+      "role": "transform",
+      "kind": "reflect",
+      "label": "Post-EACE",
+      "config": {
+        "job": "cadence",
+        "phase": "postproc",
+        "policy_doc": "post-processing.md"
+      },
+      "x": 780,
+      "y": 1040,
+      "notes": "Cadence Sender — Post-EACE: Second EACE on the result.",
+      "description": "Cadence Sender · Post-EACE phase. Did it actually happen? Did the API confirm? Was the ledger updated? Anti-duplicate cross-check. Sign off: success | dry_run_only | skipped | paused | failed | needs_manual_review. (See eace-loop.md / post-processing.md.)",
+      "annotations": []
+    },
+    {
+      "id": "n_calltime_explore",
+      "role": "transform",
+      "kind": "extract",
+      "label": "Explore",
+      "config": {
+        "job": "calltime",
+        "phase": "explore",
+        "policy_doc": "eace-loop.md"
+      },
+      "x": 1000,
+      "y": 560,
+      "notes": "Call-Time Reminder Creator — Explore: Gather facts. Take no action.",
+      "description": "Call-Time Reminder Creator · Explore phase. Read views, ledgers, recent Close activity, last snapshot, kill-switches. NO writes, NO sends. (See eace-loop.md / post-processing.md.)",
+      "annotations": []
+    },
+    {
+      "id": "n_calltime_audit",
+      "role": "transform",
+      "kind": "filter",
+      "label": "Audit",
+      "config": {
+        "job": "calltime",
+        "phase": "audit",
+        "policy_doc": "eace-loop.md"
+      },
+      "x": 1000,
+      "y": 680,
+      "notes": "Call-Time Reminder Creator — Audit: Pressure-test for safety + eligibility.",
+      "description": "Call-Time Reminder Creator · Audit phase. Owner is André? Phone OR email? Already responded? Send already happened (anti-dupe)? Status terminal? DRY_RUN/AUTOMATION_PAUSED on? (See eace-loop.md / post-processing.md.)",
+      "annotations": []
+    },
+    {
+      "id": "n_calltime_connect",
+      "role": "transform",
+      "kind": "reflect",
+      "label": "Connect",
+      "config": {
+        "job": "calltime",
+        "phase": "connect",
+        "policy_doc": "eace-loop.md"
+      },
+      "x": 1000,
+      "y": 800,
+      "notes": "Call-Time Reminder Creator — Connect: Compare new facts to known state. Decide intent.",
+      "description": "Call-Time Reminder Creator · Connect phase. Output a small specific list of intended actions, each tied to a lead and a reason. No execution yet. (See eace-loop.md / post-processing.md.)",
+      "annotations": []
+    },
+    {
+      "id": "n_calltime_execute",
+      "role": "actor",
+      "kind": "rodbot",
+      "label": "Execute",
+      "config": {
+        "job": "calltime",
+        "phase": "execute",
+        "policy_doc": "eace-loop.md"
+      },
+      "x": 1000,
+      "y": 920,
+      "notes": "Call-Time Reminder Creator — Execute: Now do the work.",
+      "description": "Call-Time Reminder Creator · Execute phase. Send via Close API, post Slack, write ledger, update Close note. Trigger post-processing immediately. Sign off with explicit status. (See eace-loop.md / post-processing.md.)",
+      "annotations": []
+    },
+    {
+      "id": "n_calltime_postproc",
+      "role": "transform",
+      "kind": "reflect",
+      "label": "Post-EACE",
+      "config": {
+        "job": "calltime",
+        "phase": "postproc",
+        "policy_doc": "post-processing.md"
+      },
+      "x": 1000,
+      "y": 1040,
+      "notes": "Call-Time Reminder Creator — Post-EACE: Second EACE on the result.",
+      "description": "Call-Time Reminder Creator · Post-EACE phase. Did it actually happen? Did the API confirm? Was the ledger updated? Anti-duplicate cross-check. Sign off: success | dry_run_only | skipped | paused | failed | needs_manual_review. (See eace-loop.md / post-processing.md.)",
+      "annotations": []
+    },
+    {
+      "id": "n_morning_explore",
+      "role": "transform",
+      "kind": "extract",
+      "label": "Explore",
+      "config": {
+        "job": "morning",
+        "phase": "explore",
+        "policy_doc": "eace-loop.md"
+      },
+      "x": 1220,
+      "y": 560,
+      "notes": "Morning Report — Explore: Gather facts. Take no action.",
+      "description": "Morning Report · Explore phase. Read views, ledgers, recent Close activity, last snapshot, kill-switches. NO writes, NO sends. (See eace-loop.md / post-processing.md.)",
+      "annotations": []
+    },
+    {
+      "id": "n_morning_audit",
+      "role": "transform",
+      "kind": "filter",
+      "label": "Audit",
+      "config": {
+        "job": "morning",
+        "phase": "audit",
+        "policy_doc": "eace-loop.md"
+      },
+      "x": 1220,
+      "y": 680,
+      "notes": "Morning Report — Audit: Pressure-test for safety + eligibility.",
+      "description": "Morning Report · Audit phase. Owner is André? Phone OR email? Already responded? Send already happened (anti-dupe)? Status terminal? DRY_RUN/AUTOMATION_PAUSED on? (See eace-loop.md / post-processing.md.)",
+      "annotations": []
+    },
+    {
+      "id": "n_morning_connect",
+      "role": "transform",
+      "kind": "reflect",
+      "label": "Connect",
+      "config": {
+        "job": "morning",
+        "phase": "connect",
+        "policy_doc": "eace-loop.md"
+      },
+      "x": 1220,
+      "y": 800,
+      "notes": "Morning Report — Connect: Compare new facts to known state. Decide intent.",
+      "description": "Morning Report · Connect phase. Output a small specific list of intended actions, each tied to a lead and a reason. No execution yet. (See eace-loop.md / post-processing.md.)",
+      "annotations": []
+    },
+    {
+      "id": "n_morning_execute",
+      "role": "actor",
+      "kind": "rodbot",
+      "label": "Execute",
+      "config": {
+        "job": "morning",
+        "phase": "execute",
+        "policy_doc": "eace-loop.md"
+      },
+      "x": 1220,
+      "y": 920,
+      "notes": "Morning Report — Execute: Now do the work.",
+      "description": "Morning Report · Execute phase. Send via Close API, post Slack, write ledger, update Close note. Trigger post-processing immediately. Sign off with explicit status. (See eace-loop.md / post-processing.md.)",
+      "annotations": []
+    },
+    {
+      "id": "n_morning_postproc",
+      "role": "transform",
+      "kind": "reflect",
+      "label": "Post-EACE",
+      "config": {
+        "job": "morning",
+        "phase": "postproc",
+        "policy_doc": "post-processing.md"
+      },
+      "x": 1220,
+      "y": 1040,
+      "notes": "Morning Report — Post-EACE: Second EACE on the result.",
+      "description": "Morning Report · Post-EACE phase. Did it actually happen? Did the API confirm? Was the ledger updated? Anti-duplicate cross-check. Sign off: success | dry_run_only | skipped | paused | failed | needs_manual_review. (See eace-loop.md / post-processing.md.)",
+      "annotations": []
+    },
+    {
+      "id": "n_midday_explore",
+      "role": "transform",
+      "kind": "extract",
+      "label": "Explore",
+      "config": {
+        "job": "midday",
+        "phase": "explore",
+        "policy_doc": "eace-loop.md"
+      },
+      "x": 1440,
+      "y": 560,
+      "notes": "Midday Report — Explore: Gather facts. Take no action.",
+      "description": "Midday Report · Explore phase. Read views, ledgers, recent Close activity, last snapshot, kill-switches. NO writes, NO sends. (See eace-loop.md / post-processing.md.)",
+      "annotations": []
+    },
+    {
+      "id": "n_midday_audit",
+      "role": "transform",
+      "kind": "filter",
+      "label": "Audit",
+      "config": {
+        "job": "midday",
+        "phase": "audit",
+        "policy_doc": "eace-loop.md"
+      },
+      "x": 1440,
+      "y": 680,
+      "notes": "Midday Report — Audit: Pressure-test for safety + eligibility.",
+      "description": "Midday Report · Audit phase. Owner is André? Phone OR email? Already responded? Send already happened (anti-dupe)? Status terminal? DRY_RUN/AUTOMATION_PAUSED on? (See eace-loop.md / post-processing.md.)",
+      "annotations": []
+    },
+    {
+      "id": "n_midday_connect",
+      "role": "transform",
+      "kind": "reflect",
+      "label": "Connect",
+      "config": {
+        "job": "midday",
+        "phase": "connect",
+        "policy_doc": "eace-loop.md"
+      },
+      "x": 1440,
+      "y": 800,
+      "notes": "Midday Report — Connect: Compare new facts to known state. Decide intent.",
+      "description": "Midday Report · Connect phase. Output a small specific list of intended actions, each tied to a lead and a reason. No execution yet. (See eace-loop.md / post-processing.md.)",
+      "annotations": []
+    },
+    {
+      "id": "n_midday_execute",
+      "role": "actor",
+      "kind": "rodbot",
+      "label": "Execute",
+      "config": {
+        "job": "midday",
+        "phase": "execute",
+        "policy_doc": "eace-loop.md"
+      },
+      "x": 1440,
+      "y": 920,
+      "notes": "Midday Report — Execute: Now do the work.",
+      "description": "Midday Report · Execute phase. Send via Close API, post Slack, write ledger, update Close note. Trigger post-processing immediately. Sign off with explicit status. (See eace-loop.md / post-processing.md.)",
+      "annotations": []
+    },
+    {
+      "id": "n_midday_postproc",
+      "role": "transform",
+      "kind": "reflect",
+      "label": "Post-EACE",
+      "config": {
+        "job": "midday",
+        "phase": "postproc",
+        "policy_doc": "post-processing.md"
+      },
+      "x": 1440,
+      "y": 1040,
+      "notes": "Midday Report — Post-EACE: Second EACE on the result.",
+      "description": "Midday Report · Post-EACE phase. Did it actually happen? Did the API confirm? Was the ledger updated? Anti-duplicate cross-check. Sign off: success | dry_run_only | skipped | paused | failed | needs_manual_review. (See eace-loop.md / post-processing.md.)",
+      "annotations": []
+    },
+    {
+      "id": "n_night_explore",
+      "role": "transform",
+      "kind": "extract",
+      "label": "Explore",
+      "config": {
+        "job": "night",
+        "phase": "explore",
+        "policy_doc": "eace-loop.md"
+      },
+      "x": 1660,
+      "y": 560,
+      "notes": "Night Report — Explore: Gather facts. Take no action.",
+      "description": "Night Report · Explore phase. Read views, ledgers, recent Close activity, last snapshot, kill-switches. NO writes, NO sends. (See eace-loop.md / post-processing.md.)",
+      "annotations": []
+    },
+    {
+      "id": "n_night_audit",
+      "role": "transform",
+      "kind": "filter",
+      "label": "Audit",
+      "config": {
+        "job": "night",
+        "phase": "audit",
+        "policy_doc": "eace-loop.md"
+      },
+      "x": 1660,
+      "y": 680,
+      "notes": "Night Report — Audit: Pressure-test for safety + eligibility.",
+      "description": "Night Report · Audit phase. Owner is André? Phone OR email? Already responded? Send already happened (anti-dupe)? Status terminal? DRY_RUN/AUTOMATION_PAUSED on? (See eace-loop.md / post-processing.md.)",
+      "annotations": []
+    },
+    {
+      "id": "n_night_connect",
+      "role": "transform",
+      "kind": "reflect",
+      "label": "Connect",
+      "config": {
+        "job": "night",
+        "phase": "connect",
+        "policy_doc": "eace-loop.md"
+      },
+      "x": 1660,
+      "y": 800,
+      "notes": "Night Report — Connect: Compare new facts to known state. Decide intent.",
+      "description": "Night Report · Connect phase. Output a small specific list of intended actions, each tied to a lead and a reason. No execution yet. (See eace-loop.md / post-processing.md.)",
+      "annotations": []
+    },
+    {
+      "id": "n_night_execute",
+      "role": "actor",
+      "kind": "rodbot",
+      "label": "Execute",
+      "config": {
+        "job": "night",
+        "phase": "execute",
+        "policy_doc": "eace-loop.md"
+      },
+      "x": 1660,
+      "y": 920,
+      "notes": "Night Report — Execute: Now do the work.",
+      "description": "Night Report · Execute phase. Send via Close API, post Slack, write ledger, update Close note. Trigger post-processing immediately. Sign off with explicit status. (See eace-loop.md / post-processing.md.)",
+      "annotations": []
+    },
+    {
+      "id": "n_night_postproc",
+      "role": "transform",
+      "kind": "reflect",
+      "label": "Post-EACE",
+      "config": {
+        "job": "night",
+        "phase": "postproc",
+        "policy_doc": "post-processing.md"
+      },
+      "x": 1660,
+      "y": 1040,
+      "notes": "Night Report — Post-EACE: Second EACE on the result.",
+      "description": "Night Report · Post-EACE phase. Did it actually happen? Did the API confirm? Was the ledger updated? Anti-duplicate cross-check. Sign off: success | dry_run_only | skipped | paused | failed | needs_manual_review. (See eace-loop.md / post-processing.md.)",
+      "annotations": []
+    },
+    {
+      "id": "n_safety_explore",
+      "role": "transform",
+      "kind": "extract",
+      "label": "Explore",
+      "config": {
+        "job": "safety",
+        "phase": "explore",
+        "policy_doc": "eace-loop.md"
+      },
+      "x": 1880,
+      "y": 560,
+      "notes": "Night Safety Sweep — Explore: Gather facts. Take no action.",
+      "description": "Night Safety Sweep · Explore phase. Read views, ledgers, recent Close activity, last snapshot, kill-switches. NO writes, NO sends. (See eace-loop.md / post-processing.md.)",
+      "annotations": []
+    },
+    {
+      "id": "n_safety_audit",
+      "role": "transform",
+      "kind": "filter",
+      "label": "Audit",
+      "config": {
+        "job": "safety",
+        "phase": "audit",
+        "policy_doc": "eace-loop.md"
+      },
+      "x": 1880,
+      "y": 680,
+      "notes": "Night Safety Sweep — Audit: Pressure-test for safety + eligibility.",
+      "description": "Night Safety Sweep · Audit phase. Owner is André? Phone OR email? Already responded? Send already happened (anti-dupe)? Status terminal? DRY_RUN/AUTOMATION_PAUSED on? (See eace-loop.md / post-processing.md.)",
+      "annotations": []
+    },
+    {
+      "id": "n_safety_connect",
+      "role": "transform",
+      "kind": "reflect",
+      "label": "Connect",
+      "config": {
+        "job": "safety",
+        "phase": "connect",
+        "policy_doc": "eace-loop.md"
+      },
+      "x": 1880,
+      "y": 800,
+      "notes": "Night Safety Sweep — Connect: Compare new facts to known state. Decide intent.",
+      "description": "Night Safety Sweep · Connect phase. Output a small specific list of intended actions, each tied to a lead and a reason. No execution yet. (See eace-loop.md / post-processing.md.)",
+      "annotations": []
+    },
+    {
+      "id": "n_safety_execute",
+      "role": "actor",
+      "kind": "rodbot",
+      "label": "Execute",
+      "config": {
+        "job": "safety",
+        "phase": "execute",
+        "policy_doc": "eace-loop.md"
+      },
+      "x": 1880,
+      "y": 920,
+      "notes": "Night Safety Sweep — Execute: Now do the work.",
+      "description": "Night Safety Sweep · Execute phase. Send via Close API, post Slack, write ledger, update Close note. Trigger post-processing immediately. Sign off with explicit status. (See eace-loop.md / post-processing.md.)",
+      "annotations": []
+    },
+    {
+      "id": "n_safety_postproc",
+      "role": "transform",
+      "kind": "reflect",
+      "label": "Post-EACE",
+      "config": {
+        "job": "safety",
+        "phase": "postproc",
+        "policy_doc": "post-processing.md"
+      },
+      "x": 1880,
+      "y": 1040,
+      "notes": "Night Safety Sweep — Post-EACE: Second EACE on the result.",
+      "description": "Night Safety Sweep · Post-EACE phase. Did it actually happen? Did the API confirm? Was the ledger updated? Anti-duplicate cross-check. Sign off: success | dry_run_only | skipped | paused | failed | needs_manual_review. (See eace-loop.md / post-processing.md.)",
+      "annotations": []
+    },
+    {
+      "id": "n_kill_dryrun",
+      "role": "transform",
+      "kind": "filter",
+      "label": "Kill switch · DRY_RUN",
+      "config": {
+        "env_var": "DRY_RUN",
+        "behavior": "post [DRY-RUN] preview to team channel; ledger=dry_run_only"
+      },
+      "x": 120,
+      "y": 1180,
+      "notes": "DRY_RUN=true: customers receive nothing. Previews go to the team Slack.",
+      "description": "The first kill switch. When DRY_RUN=true, no customer-facing send happens — full message body posts to SLACK_TEAM_CHANNEL with a [DRY-RUN] prefix instead. Ledger writes use status `dry_run_only`. Reports continue normally.",
+      "annotations": []
+    },
+    {
+      "id": "n_kill_paused",
+      "role": "transform",
+      "kind": "filter",
+      "label": "Kill switch · AUTOMATION_PAUSED",
+      "config": {
+        "env_var": "AUTOMATION_PAUSED",
+        "behavior": "block all customer sends; reports + response sync continue"
+      },
+      "x": 340,
+      "y": 1180,
+      "notes": "Panic-button switch. Stops sends without disabling schedules.",
+      "description": "The panic button. AUTOMATION_PAUSED=true blocks all customer-facing sends regardless of DRY_RUN. Reports continue. Response Sync continues. Ownership Sync continues. Cadence Sender / Lead Intake / Reminder Creator skip Execute and log skipped: automation_paused.",
+      "annotations": []
+    },
+    {
+      "id": "n_kill_per_lead",
+      "role": "transform",
+      "kind": "filter",
+      "label": "Per-lead pause",
+      "config": {
+        "ledger_field": "cadence_status",
+        "values": [
+          "paused",
+          "stopped_not_interested",
+          "completed",
+          "failed"
+        ]
+      },
+      "x": 560,
+      "y": 1180,
+      "notes": "A single lead with cadence_status=paused/stopped/completed/failed receives no further sends.",
+      "description": "Per-lead pause via the ledger's cadence_status. Reasons: lead replied, owner changed away from André, lead entered 🔷 06 or 🔷 07, two consecutive send failures, manual hold. Resume is always manual — never auto.",
+      "annotations": []
+    },
+    {
+      "id": "n_dupe_l1",
+      "role": "transform",
+      "kind": "filter",
+      "label": "Anti-dupe · ledger check",
+      "config": {
+        "window_sms": "6h",
+        "window_email": "12h"
+      },
+      "x": 780,
+      "y": 1180,
+      "notes": "Layer 1: re-read ledger. SMS within 6h or email within 12h → skip.",
+      "description": "Layer 1 anti-duplicate defense. Before any send, re-read the lead's ledger fresh from disk. Check cadence_day, last_sms_sent_at, last_email_sent_at, and the most-recent history entry. If any signal says already-sent, skip.",
+      "annotations": []
+    },
+    {
+      "id": "n_dupe_l2",
+      "role": "transform",
+      "kind": "filter",
+      "label": "Anti-dupe · Close activity",
+      "config": {
+        "window": "4h",
+        "scope": "lead.recent_outbound_activities"
+      },
+      "x": 1000,
+      "y": 1180,
+      "notes": "Layer 2: query Close. Outbound on same channel in last 4h → skip.",
+      "description": "Layer 2 anti-duplicate defense. Even if the ledger says nothing was sent, query Close itself for recent outbound SMS/email activities on this lead. Catches manual sends by André or another rep.",
+      "annotations": []
+    },
+    {
+      "id": "n_dupe_l3",
+      "role": "transform",
+      "kind": "filter",
+      "label": "Anti-dupe · idempotency key",
+      "config": {
+        "key_format": "<lead_id>_<channel>_day_<N>_<YYYYMMDD>"
+      },
+      "x": 1220,
+      "y": 1180,
+      "notes": "Layer 3: today's run summaries. Same key already done → skip.",
+      "description": "Layer 3 anti-duplicate defense. Every cadence-send action carries an idempotency key. If today's run summaries already contain that key, the send is skipped.",
+      "annotations": []
+    },
+    {
+      "id": "n_day_d1",
+      "role": "transform",
+      "kind": "format",
+      "label": "Day 1 · NEPQ open",
+      "config": {
+        "day_slug": "d1",
+        "send_window": "1-5 min after André-owned",
+        "channels": [
+          "sms",
+          "email"
+        ],
+        "playbook_doc": "cadence-playbook.md"
+      },
+      "x": 120,
+      "y": 1480,
+      "notes": "Window: 1-5 min after André-owned. Channels: sms, email.",
+      "description": "Cadence Day 1. 1-5 min after André-owned. Renders the message from cadence-playbook.md, substitutes {first_name} / {event_type}. If the lead replies, this day is skipped.",
+      "annotations": []
+    },
+    {
+      "id": "n_day_d1_2nd",
+      "role": "transform",
+      "kind": "format",
+      "label": "Day 1 +3-4h · still comparing?",
+      "config": {
+        "day_slug": "d1_2nd",
+        "send_window": "+3-4h if no reply",
+        "channels": [
+          "sms",
+          "email"
+        ],
+        "playbook_doc": "cadence-playbook.md"
+      },
+      "x": 340,
+      "y": 1480,
+      "notes": "Window: +3-4h if no reply. Channels: sms, email.",
+      "description": "Cadence Day 1_2n. +3-4h if no reply. Renders the message from cadence-playbook.md, substitutes {first_name} / {event_type}. If the lead replies, this day is skipped.",
+      "annotations": []
+    },
+    {
+      "id": "n_day_d2",
+      "role": "transform",
+      "kind": "format",
+      "label": "Day 2 · pricing vs tasting",
+      "config": {
+        "day_slug": "d2",
+        "send_window": "9:30-11:30 AM ET",
+        "channels": [
+          "sms",
+          "email"
+        ],
+        "playbook_doc": "cadence-playbook.md"
+      },
+      "x": 560,
+      "y": 1480,
+      "notes": "Window: 9:30-11:30 AM ET. Channels: sms, email.",
+      "description": "Cadence Day 2. 9:30-11:30 AM ET. Renders the message from cadence-playbook.md, substitutes {first_name} / {event_type}. If the lead replies, this day is skipped.",
+      "annotations": []
+    },
+    {
+      "id": "n_day_d3",
+      "role": "transform",
+      "kind": "format",
+      "label": "Day 3 · phone call ask",
+      "config": {
+        "day_slug": "d3",
+        "send_window": "12:00-2:30 PM ET",
+        "channels": [
+          "sms",
+          "email"
+        ],
+        "playbook_doc": "cadence-playbook.md"
+      },
+      "x": 780,
+      "y": 1480,
+      "notes": "Window: 12:00-2:30 PM ET. Channels: sms, email.",
+      "description": "Cadence Day 3. 12:00-2:30 PM ET. Renders the message from cadence-playbook.md, substitutes {first_name} / {event_type}. If the lead replies, this day is skipped.",
+      "annotations": []
+    },
+    {
+      "id": "n_day_d4",
+      "role": "transform",
+      "kind": "format",
+      "label": "Day 4 · tasting info push",
+      "config": {
+        "day_slug": "d4",
+        "send_window": "4:00-6:30 PM ET",
+        "channels": [
+          "sms",
+          "email"
+        ],
+        "playbook_doc": "cadence-playbook.md"
+      },
+      "x": 1000,
+      "y": 1480,
+      "notes": "Window: 4:00-6:30 PM ET. Channels: sms, email.",
+      "description": "Cadence Day 4. 4:00-6:30 PM ET. Renders the message from cadence-playbook.md, substitutes {first_name} / {event_type}. If the lead replies, this day is skipped.",
+      "annotations": []
+    },
+    {
+      "id": "n_day_d5",
+      "role": "transform",
+      "kind": "format",
+      "label": "Day 5 · what matters most",
+      "config": {
+        "day_slug": "d5",
+        "send_window": "9:00-11:00 AM ET",
+        "channels": [
+          "sms",
+          "email"
+        ],
+        "playbook_doc": "cadence-playbook.md"
+      },
+      "x": 1220,
+      "y": 1480,
+      "notes": "Window: 9:00-11:00 AM ET. Channels: sms, email.",
+      "description": "Cadence Day 5. 9:00-11:00 AM ET. Renders the message from cadence-playbook.md, substitutes {first_name} / {event_type}. If the lead replies, this day is skipped.",
+      "annotations": []
+    },
+    {
+      "id": "n_day_d6",
+      "role": "transform",
+      "kind": "format",
+      "label": "Day 6 · soft urgency + alert",
+      "config": {
+        "day_slug": "d6",
+        "send_window": "2:00-4:30 PM ET",
+        "channels": [
+          "sms",
+          "andre_dm"
+        ],
+        "playbook_doc": "cadence-playbook.md"
+      },
+      "x": 1440,
+      "y": 1480,
+      "notes": "Window: 2:00-4:30 PM ET. Channels: sms, andre_dm.",
+      "description": "Cadence Day 6. 2:00-4:30 PM ET. Renders the message from cadence-playbook.md, substitutes {first_name} / {event_type}. If the lead replies, this day is skipped.",
+      "annotations": []
+    },
+    {
+      "id": "n_day_d7",
+      "role": "transform",
+      "kind": "format",
+      "label": "Day 7 · close the loop",
+      "config": {
+        "day_slug": "d7",
+        "send_window": "10:00 AM-1:00 PM ET",
+        "channels": [
+          "sms",
+          "email"
+        ],
+        "playbook_doc": "cadence-playbook.md"
+      },
+      "x": 1660,
+      "y": 1480,
+      "notes": "Window: 10:00 AM-1:00 PM ET. Channels: sms, email.",
+      "description": "Cadence Day 7. 10:00 AM-1:00 PM ET. Renders the message from cadence-playbook.md, substitutes {first_name} / {event_type}. If the lead replies, this day is skipped.",
+      "annotations": []
+    },
+    {
+      "id": "n_day_d8",
+      "role": "transform",
+      "kind": "format",
+      "label": "Day 8 · tasting next week?",
+      "config": {
+        "day_slug": "d8",
+        "send_window": "11:00 AM-1:30 PM ET",
+        "channels": [
+          "sms"
+        ],
+        "playbook_doc": "cadence-playbook.md"
+      },
+      "x": 1880,
+      "y": 1480,
+      "notes": "Window: 11:00 AM-1:30 PM ET. Channels: sms.",
+      "description": "Cadence Day 8. 11:00 AM-1:30 PM ET. Renders the message from cadence-playbook.md, substitutes {first_name} / {event_type}. If the lead replies, this day is skipped.",
+      "annotations": []
+    },
+    {
+      "id": "n_day_d9",
+      "role": "transform",
+      "kind": "format",
+      "label": "Day 9 · what's in the way?",
+      "config": {
+        "day_slug": "d9",
+        "send_window": "3:00-5:30 PM ET",
+        "channels": [
+          "sms",
+          "email"
+        ],
+        "playbook_doc": "cadence-playbook.md"
+      },
+      "x": 2100,
+      "y": 1480,
+      "notes": "Window: 3:00-5:30 PM ET. Channels: sms, email.",
+      "description": "Cadence Day 9. 3:00-5:30 PM ET. Renders the message from cadence-playbook.md, substitutes {first_name} / {event_type}. If the lead replies, this day is skipped.",
+      "annotations": []
+    },
+    {
+      "id": "n_day_d10",
+      "role": "transform",
+      "kind": "format",
+      "label": "Day 10 · stepping back",
+      "config": {
+        "day_slug": "d10",
+        "send_window": "10:00 AM-12:00 PM ET",
+        "channels": [
+          "sms",
+          "email"
+        ],
+        "playbook_doc": "cadence-playbook.md"
+      },
+      "x": 2320,
+      "y": 1480,
+      "notes": "Window: 10:00 AM-12:00 PM ET. Channels: sms, email.",
+      "description": "Cadence Day 10. 10:00 AM-12:00 PM ET. Renders the message from cadence-playbook.md, substitutes {first_name} / {event_type}. If the lead replies, this day is skipped.",
+      "annotations": []
+    },
+    {
+      "id": "n_cadence_complete",
+      "role": "transform",
+      "kind": "format",
+      "label": "Cadence completed",
+      "config": {
+        "action": "set cadence_status: completed; close_note",
+        "next_action": "André manual review"
+      },
+      "x": 2540,
+      "y": 1480,
+      "notes": "Day 10 done with no reply. Status flips to `completed`. Never auto-marks lost.",
+      "description": "Reached after Day 10's send completes with no response received. Sets cadence_status: completed. Adds Close note: '10-day text/email cadence completed with no response. Do not mark lost automatically. André review recommended.' Lead is added to next morning report's 'Cadence completed — needs review' bucket.",
+      "annotations": []
+    },
+    {
+      "id": "n_resp_pause",
+      "role": "transform",
+      "kind": "filter",
+      "label": "Pause cadence (any reply)",
+      "config": {
+        "action": "set cadence_status: paused; close_note; slack_dm_alert"
+      },
+      "x": 120,
+      "y": 1620,
+      "notes": "The first thing every reply does. Pause is universal.",
+      "description": "Universal first step on any inbound reply. Sets cadence_status: paused (or stopped_not_interested). Writes a Close note. Posts an alert to SLACK_ANDRE_DM_CHANNEL. Then the classifier branches by response type.",
+      "annotations": []
+    },
+    {
+      "id": "n_resp_classify",
+      "role": "transform",
+      "kind": "extract",
+      "label": "Classify reply (priority order)",
+      "config": {
+        "priority_order": [
+          "not_interested",
+          "unclear_response",
+          "call_time_given",
+          "tasting_interest",
+          "pricing_question",
+          "send_info",
+          "needs_manual_review"
+        ]
+      },
+      "x": 340,
+      "y": 1620,
+      "notes": "First match wins. Multi-intent → highest priority bucket; André's manual reply covers the rest.",
+      "description": "Run categories in priority order. not_interested ALWAYS wins (must honor opt-outs). unclear_response checked second (empty/MMS-only/malformed bodies must surface as ambiguity, not be guessed at). Then the normal categories. needs_manual_review is the catch-all.",
+      "annotations": []
+    },
+    {
+      "id": "n_resp_not_interested",
+      "role": "actor",
+      "kind": "external_api",
+      "label": "Not interested",
+      "config": {
+        "tone": "rose",
+        "action": "stop cadence, optional polite closer, Slack DM alert. Do not auto-mark lost.",
+        "doc": "response-classification.md"
+      },
+      "x": 560,
+      "y": 1740,
+      "notes": "stop cadence, optional polite closer, Slack DM alert. Do not auto-mark lost.",
+      "description": "Response classification: Not interested. stop cadence, optional polite closer, Slack DM alert. Do not auto-mark lost.",
+      "annotations": []
+    },
+    {
+      "id": "n_resp_unclear_response",
+      "role": "actor",
+      "kind": "external_api",
+      "label": "Unclear / no parseable text",
+      "config": {
+        "tone": "blush",
+        "action": "pause cadence, NO auto-reply, post alert with whatever metadata available.",
+        "doc": "response-classification.md"
+      },
+      "x": 780,
+      "y": 1740,
+      "notes": "pause cadence, NO auto-reply, post alert with whatever metadata available.",
+      "description": "Response classification: Unclear / no parseable text. pause cadence, NO auto-reply, post alert with whatever metadata available.",
+      "annotations": []
+    },
+    {
+      "id": "n_resp_call_time_given",
+      "role": "actor",
+      "kind": "external_api",
+      "label": "Call time given",
+      "config": {
+        "tone": "lemon",
+        "action": "pause, parse time, schedule Slack reminder T-5min, send confirmation SMS, Close note, DM alert.",
+        "doc": "response-classification.md"
+      },
+      "x": 1000,
+      "y": 1740,
+      "notes": "pause, parse time, schedule Slack reminder T-5min, send confirmation SMS, Close note, DM alert.",
+      "description": "Response classification: Call time given. pause, parse time, schedule Slack reminder T-5min, send confirmation SMS, Close note, DM alert.",
+      "annotations": []
+    },
+    {
+      "id": "n_resp_tasting_interest",
+      "role": "actor",
+      "kind": "external_api",
+      "label": "Tasting interest",
+      "config": {
+        "tone": "mint",
+        "action": "pause, send tasting-quick-call reply, alert André.",
+        "doc": "response-classification.md"
+      },
+      "x": 1220,
+      "y": 1740,
+      "notes": "pause, send tasting-quick-call reply, alert André.",
+      "description": "Response classification: Tasting interest. pause, send tasting-quick-call reply, alert André.",
+      "annotations": []
+    },
+    {
+      "id": "n_resp_pricing_question",
+      "role": "actor",
+      "kind": "external_api",
+      "label": "Pricing question",
+      "config": {
+        "tone": "lavender",
+        "action": "pause, send 'pricing depends on guest count + style + menu' reply asking guest count, alert André. Never auto-quote.",
+        "doc": "response-classification.md"
+      },
+      "x": 1440,
+      "y": 1740,
+      "notes": "pause, send 'pricing depends on guest count + style + menu' reply asking guest count, alert André. Never auto-quote.",
+      "description": "Response classification: Pricing question. pause, send 'pricing depends on guest count + style + menu' reply asking guest count, alert André. Never auto-quote.",
+      "annotations": []
+    },
+    {
+      "id": "n_resp_send_info",
+      "role": "actor",
+      "kind": "external_api",
+      "label": "Send info",
+      "config": {
+        "tone": "sky",
+        "action": "pause, send brief reply asking event type, alert André.",
+        "doc": "response-classification.md"
+      },
+      "x": 1660,
+      "y": 1740,
+      "notes": "pause, send brief reply asking event type, alert André.",
+      "description": "Response classification: Send info. pause, send brief reply asking event type, alert André.",
+      "annotations": []
+    },
+    {
+      "id": "n_resp_needs_manual_review",
+      "role": "actor",
+      "kind": "external_api",
+      "label": "Needs manual review",
+      "config": {
+        "tone": "peach",
+        "action": "pause, NO auto-reply, ping André's DM with reply text + Close link.",
+        "doc": "response-classification.md"
+      },
+      "x": 1880,
+      "y": 1740,
+      "notes": "pause, NO auto-reply, ping André's DM with reply text + Close link.",
+      "description": "Response classification: Needs manual review. pause, NO auto-reply, ping André's DM with reply text + Close link.",
+      "annotations": []
+    },
+    {
+      "id": "n_risk_flags",
+      "role": "state",
+      "kind": "memory",
+      "label": "Risk flag bank (9 flags)",
+      "config": {
+        "flags": [
+          "urgent_event_date",
+          "no_contact_info",
+          "needs_andre_review",
+          "call_time_given",
+          "tasting_interest_unactioned",
+          "cadence_near_end",
+          "send_failed",
+          "ownership_conflict",
+          "duplicate_view_membership"
+        ]
+      },
+      "x": 2100,
+      "y": 1180,
+      "notes": "Canonical risk-flag list. Each ledger carries an array of active flags. Reports surface them.",
+      "description": "The 9 canonical risk flags from safety-rules.md. Active flags surface in every report's Risk List. Flags get added by Audit (no_contact_info, urgent_event_date, ownership_conflict), Connect (cadence_near_end, tasting_interest_unactioned), and Post-EACE (send_failed, needs_andre_review).",
+      "annotations": []
+    },
+    {
+      "id": "n_snk_close_sms",
+      "role": "sink",
+      "kind": "sms_send",
+      "label": "Close API · SMS activity",
+      "config": {
+        "endpoint": "POST /activity/sms/",
+        "from_phone_id": "{{CLOSE_SMS_PHONE_ID}}",
+        "from_number": "+19783811212",
+        "in_dry_run": "post [DRY-RUN] preview to team channel"
+      },
+      "x": 120,
+      "y": 2120,
+      "notes": "All cadence/response SMS go through Close API as activities. Phone ID required.",
+      "description": "Close API SMS activity sink. Every outbound SMS is created here as a Close activity using the group line +19783811212. In DRY_RUN mode, the would-send body is posted to SLACK_TEAM_CHANNEL with a [DRY-RUN] prefix and the Close API is NOT called.",
+      "annotations": []
+    },
+    {
+      "id": "n_snk_close_email",
+      "role": "sink",
+      "kind": "email_send",
+      "label": "Close API · Email activity",
+      "config": {
+        "endpoint": "POST /activity/email/",
+        "from": "team@comeketocatering.com",
+        "in_dry_run": "post [DRY-RUN] preview to team channel"
+      },
+      "x": 340,
+      "y": 2120,
+      "notes": "All cadence/response email go through Close as activities.",
+      "description": "Close API email activity sink. Outbound email from team@comeketocatering.com so replies land in the shared inbox. DRY_RUN posts to team channel instead.",
+      "annotations": []
+    },
+    {
+      "id": "n_snk_close_note",
+      "role": "sink",
+      "kind": "file_write",
+      "label": "Close API · Note activity",
+      "config": {
+        "endpoint": "POST /activity/note/",
+        "templates": "see docs"
+      },
+      "x": 560,
+      "y": 2120,
+      "notes": "Every notable workflow event writes one Close note for the timeline.",
+      "description": "Close note sink. Cadence start, every send, every reply, every pause, every reminder creation, cadence completion — all write structured notes here so the Close timeline tells the full story.",
+      "annotations": []
+    },
+    {
+      "id": "n_snk_slack_dm",
+      "role": "sink",
+      "kind": "slack_post",
+      "label": "Slack DM · André",
+      "config": {
+        "channel": "D0AMX3BV64T",
+        "envelope": "realtime alerts only"
+      },
+      "x": 780,
+      "y": 2120,
+      "notes": "Realtime alerts to André's DM. Replies, call-times, send failures, ownership conflicts.",
+      "description": "André's Slack DM (D0AMX3BV64T) — the realtime visibility layer. Replies, call-times, tasting interest, pricing questions, send failures, ownership conflicts, safety-sweep findings.",
+      "annotations": []
+    },
+    {
+      "id": "n_snk_slack_team",
+      "role": "sink",
+      "kind": "slack_post",
+      "label": "Slack channel · team",
+      "config": {
+        "channel": "C0AV913L1LJ",
+        "envelope": "daily reports + dry-run previews"
+      },
+      "x": 1000,
+      "y": 2120,
+      "notes": "Team channel — daily reports, dry-run previews, baseline announcements.",
+      "description": "Team Slack channel (C0AV913L1LJ). Receives the three daily reports (morning/midday/night), dry-run send previews, baseline-snapshot announcements, and any team-wide visibility posts.",
+      "annotations": []
+    },
+    {
+      "id": "n_snk_slack_sched",
+      "role": "sink",
+      "kind": "slack_post",
+      "label": "Slack · scheduled message",
+      "config": {
+        "tool": "slack_schedule_message",
+        "for": "5-min-before-call reminders"
+      },
+      "x": 1220,
+      "y": 2120,
+      "notes": "Scheduled future Slack post — used for the 5-min-before-call reminder.",
+      "description": "Slack scheduled-message sink. Used by Call-Time Reminder Creator to post to D0AMX3BV64T at requested_time minus 5 minutes with: 📞 Call {lead_name} · phone · Close link · original ask.",
+      "annotations": []
+    }
+  ],
+  "connections": [
+    {
+      "id": "c_trg_intake_to_explore",
+      "src": "n_trg_intake",
+      "dst": "n_intake_explore",
+      "kind": "trigger",
+      "description": "The intake cron fires; the session begins by reading the skill, references, and .env (Explore phase).",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "fire"
+    },
+    {
+      "id": "c_trg_ownersync_to_explore",
+      "src": "n_trg_ownersync",
+      "dst": "n_ownersync_explore",
+      "kind": "trigger",
+      "description": "The ownersync cron fires; the session begins by reading the skill, references, and .env (Explore phase).",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "fire"
+    },
+    {
+      "id": "c_trg_respsync_to_explore",
+      "src": "n_trg_respsync",
+      "dst": "n_respsync_explore",
+      "kind": "trigger",
+      "description": "The respsync cron fires; the session begins by reading the skill, references, and .env (Explore phase).",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "fire"
+    },
+    {
+      "id": "c_trg_cadence_to_explore",
+      "src": "n_trg_cadence",
+      "dst": "n_cadence_explore",
+      "kind": "trigger",
+      "description": "The cadence cron fires; the session begins by reading the skill, references, and .env (Explore phase).",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "fire"
+    },
+    {
+      "id": "c_trg_calltime_to_explore",
+      "src": "n_trg_calltime",
+      "dst": "n_calltime_explore",
+      "kind": "trigger",
+      "description": "The calltime cron fires; the session begins by reading the skill, references, and .env (Explore phase).",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "fire"
+    },
+    {
+      "id": "c_trg_morning_to_explore",
+      "src": "n_trg_morning",
+      "dst": "n_morning_explore",
+      "kind": "trigger",
+      "description": "The morning cron fires; the session begins by reading the skill, references, and .env (Explore phase).",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "fire"
+    },
+    {
+      "id": "c_trg_midday_to_explore",
+      "src": "n_trg_midday",
+      "dst": "n_midday_explore",
+      "kind": "trigger",
+      "description": "The midday cron fires; the session begins by reading the skill, references, and .env (Explore phase).",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "fire"
+    },
+    {
+      "id": "c_trg_night_to_explore",
+      "src": "n_trg_night",
+      "dst": "n_night_explore",
+      "kind": "trigger",
+      "description": "The night cron fires; the session begins by reading the skill, references, and .env (Explore phase).",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "fire"
+    },
+    {
+      "id": "c_trg_safety_to_explore",
+      "src": "n_trg_safety",
+      "dst": "n_safety_explore",
+      "kind": "trigger",
+      "description": "The safety cron fires; the session begins by reading the skill, references, and .env (Explore phase).",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "fire"
+    },
+    {
+      "id": "c_intake_explore_to_audit",
+      "src": "n_intake_explore",
+      "dst": "n_intake_audit",
+      "kind": "data",
+      "description": "intake: gather→test — passes the phase output forward inside the EACE loop.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "gather→test"
+    },
+    {
+      "id": "c_intake_audit_to_connect",
+      "src": "n_intake_audit",
+      "dst": "n_intake_connect",
+      "kind": "data",
+      "description": "intake: test→reason — passes the phase output forward inside the EACE loop.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "test→reason"
+    },
+    {
+      "id": "c_intake_connect_to_execute",
+      "src": "n_intake_connect",
+      "dst": "n_intake_execute",
+      "kind": "data",
+      "description": "intake: reason→act — passes the phase output forward inside the EACE loop.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "reason→act"
+    },
+    {
+      "id": "c_intake_execute_to_postproc",
+      "src": "n_intake_execute",
+      "dst": "n_intake_postproc",
+      "kind": "data",
+      "description": "intake: act→verify — passes the phase output forward inside the EACE loop.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "act→verify"
+    },
+    {
+      "id": "c_ownersync_explore_to_audit",
+      "src": "n_ownersync_explore",
+      "dst": "n_ownersync_audit",
+      "kind": "data",
+      "description": "ownersync: gather→test — passes the phase output forward inside the EACE loop.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "gather→test"
+    },
+    {
+      "id": "c_ownersync_audit_to_connect",
+      "src": "n_ownersync_audit",
+      "dst": "n_ownersync_connect",
+      "kind": "data",
+      "description": "ownersync: test→reason — passes the phase output forward inside the EACE loop.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "test→reason"
+    },
+    {
+      "id": "c_ownersync_connect_to_execute",
+      "src": "n_ownersync_connect",
+      "dst": "n_ownersync_execute",
+      "kind": "data",
+      "description": "ownersync: reason→act — passes the phase output forward inside the EACE loop.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "reason→act"
+    },
+    {
+      "id": "c_ownersync_execute_to_postproc",
+      "src": "n_ownersync_execute",
+      "dst": "n_ownersync_postproc",
+      "kind": "data",
+      "description": "ownersync: act→verify — passes the phase output forward inside the EACE loop.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "act→verify"
+    },
+    {
+      "id": "c_respsync_explore_to_audit",
+      "src": "n_respsync_explore",
+      "dst": "n_respsync_audit",
+      "kind": "data",
+      "description": "respsync: gather→test — passes the phase output forward inside the EACE loop.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "gather→test"
+    },
+    {
+      "id": "c_respsync_audit_to_connect",
+      "src": "n_respsync_audit",
+      "dst": "n_respsync_connect",
+      "kind": "data",
+      "description": "respsync: test→reason — passes the phase output forward inside the EACE loop.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "test→reason"
+    },
+    {
+      "id": "c_respsync_connect_to_execute",
+      "src": "n_respsync_connect",
+      "dst": "n_respsync_execute",
+      "kind": "data",
+      "description": "respsync: reason→act — passes the phase output forward inside the EACE loop.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "reason→act"
+    },
+    {
+      "id": "c_respsync_execute_to_postproc",
+      "src": "n_respsync_execute",
+      "dst": "n_respsync_postproc",
+      "kind": "data",
+      "description": "respsync: act→verify — passes the phase output forward inside the EACE loop.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "act→verify"
+    },
+    {
+      "id": "c_cadence_explore_to_audit",
+      "src": "n_cadence_explore",
+      "dst": "n_cadence_audit",
+      "kind": "data",
+      "description": "cadence: gather→test — passes the phase output forward inside the EACE loop.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "gather→test"
+    },
+    {
+      "id": "c_cadence_audit_to_connect",
+      "src": "n_cadence_audit",
+      "dst": "n_cadence_connect",
+      "kind": "data",
+      "description": "cadence: test→reason — passes the phase output forward inside the EACE loop.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "test→reason"
+    },
+    {
+      "id": "c_cadence_connect_to_execute",
+      "src": "n_cadence_connect",
+      "dst": "n_cadence_execute",
+      "kind": "data",
+      "description": "cadence: reason→act — passes the phase output forward inside the EACE loop.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "reason→act"
+    },
+    {
+      "id": "c_cadence_execute_to_postproc",
+      "src": "n_cadence_execute",
+      "dst": "n_cadence_postproc",
+      "kind": "data",
+      "description": "cadence: act→verify — passes the phase output forward inside the EACE loop.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "act→verify"
+    },
+    {
+      "id": "c_calltime_explore_to_audit",
+      "src": "n_calltime_explore",
+      "dst": "n_calltime_audit",
+      "kind": "data",
+      "description": "calltime: gather→test — passes the phase output forward inside the EACE loop.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "gather→test"
+    },
+    {
+      "id": "c_calltime_audit_to_connect",
+      "src": "n_calltime_audit",
+      "dst": "n_calltime_connect",
+      "kind": "data",
+      "description": "calltime: test→reason — passes the phase output forward inside the EACE loop.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "test→reason"
+    },
+    {
+      "id": "c_calltime_connect_to_execute",
+      "src": "n_calltime_connect",
+      "dst": "n_calltime_execute",
+      "kind": "data",
+      "description": "calltime: reason→act — passes the phase output forward inside the EACE loop.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "reason→act"
+    },
+    {
+      "id": "c_calltime_execute_to_postproc",
+      "src": "n_calltime_execute",
+      "dst": "n_calltime_postproc",
+      "kind": "data",
+      "description": "calltime: act→verify — passes the phase output forward inside the EACE loop.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "act→verify"
+    },
+    {
+      "id": "c_morning_explore_to_audit",
+      "src": "n_morning_explore",
+      "dst": "n_morning_audit",
+      "kind": "data",
+      "description": "morning: gather→test — passes the phase output forward inside the EACE loop.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "gather→test"
+    },
+    {
+      "id": "c_morning_audit_to_connect",
+      "src": "n_morning_audit",
+      "dst": "n_morning_connect",
+      "kind": "data",
+      "description": "morning: test→reason — passes the phase output forward inside the EACE loop.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "test→reason"
+    },
+    {
+      "id": "c_morning_connect_to_execute",
+      "src": "n_morning_connect",
+      "dst": "n_morning_execute",
+      "kind": "data",
+      "description": "morning: reason→act — passes the phase output forward inside the EACE loop.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "reason→act"
+    },
+    {
+      "id": "c_morning_execute_to_postproc",
+      "src": "n_morning_execute",
+      "dst": "n_morning_postproc",
+      "kind": "data",
+      "description": "morning: act→verify — passes the phase output forward inside the EACE loop.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "act→verify"
+    },
+    {
+      "id": "c_midday_explore_to_audit",
+      "src": "n_midday_explore",
+      "dst": "n_midday_audit",
+      "kind": "data",
+      "description": "midday: gather→test — passes the phase output forward inside the EACE loop.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "gather→test"
+    },
+    {
+      "id": "c_midday_audit_to_connect",
+      "src": "n_midday_audit",
+      "dst": "n_midday_connect",
+      "kind": "data",
+      "description": "midday: test→reason — passes the phase output forward inside the EACE loop.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "test→reason"
+    },
+    {
+      "id": "c_midday_connect_to_execute",
+      "src": "n_midday_connect",
+      "dst": "n_midday_execute",
+      "kind": "data",
+      "description": "midday: reason→act — passes the phase output forward inside the EACE loop.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "reason→act"
+    },
+    {
+      "id": "c_midday_execute_to_postproc",
+      "src": "n_midday_execute",
+      "dst": "n_midday_postproc",
+      "kind": "data",
+      "description": "midday: act→verify — passes the phase output forward inside the EACE loop.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "act→verify"
+    },
+    {
+      "id": "c_night_explore_to_audit",
+      "src": "n_night_explore",
+      "dst": "n_night_audit",
+      "kind": "data",
+      "description": "night: gather→test — passes the phase output forward inside the EACE loop.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "gather→test"
+    },
+    {
+      "id": "c_night_audit_to_connect",
+      "src": "n_night_audit",
+      "dst": "n_night_connect",
+      "kind": "data",
+      "description": "night: test→reason — passes the phase output forward inside the EACE loop.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "test→reason"
+    },
+    {
+      "id": "c_night_connect_to_execute",
+      "src": "n_night_connect",
+      "dst": "n_night_execute",
+      "kind": "data",
+      "description": "night: reason→act — passes the phase output forward inside the EACE loop.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "reason→act"
+    },
+    {
+      "id": "c_night_execute_to_postproc",
+      "src": "n_night_execute",
+      "dst": "n_night_postproc",
+      "kind": "data",
+      "description": "night: act→verify — passes the phase output forward inside the EACE loop.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "act→verify"
+    },
+    {
+      "id": "c_safety_explore_to_audit",
+      "src": "n_safety_explore",
+      "dst": "n_safety_audit",
+      "kind": "data",
+      "description": "safety: gather→test — passes the phase output forward inside the EACE loop.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "gather→test"
+    },
+    {
+      "id": "c_safety_audit_to_connect",
+      "src": "n_safety_audit",
+      "dst": "n_safety_connect",
+      "kind": "data",
+      "description": "safety: test→reason — passes the phase output forward inside the EACE loop.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "test→reason"
+    },
+    {
+      "id": "c_safety_connect_to_execute",
+      "src": "n_safety_connect",
+      "dst": "n_safety_execute",
+      "kind": "data",
+      "description": "safety: reason→act — passes the phase output forward inside the EACE loop.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "reason→act"
+    },
+    {
+      "id": "c_safety_execute_to_postproc",
+      "src": "n_safety_execute",
+      "dst": "n_safety_postproc",
+      "kind": "data",
+      "description": "safety: act→verify — passes the phase output forward inside the EACE loop.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "act→verify"
+    },
+    {
+      "id": "c_intake_explore_reads_env",
+      "src": "n_env",
+      "dst": "n_intake_explore",
+      "kind": "reference",
+      "description": "Re-read .env every Explore. Never cached.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "kill-switches",
+      "readPattern": "DRY_RUN, AUTOMATION_PAUSED"
+    },
+    {
+      "id": "c_intake_explore_reads_skill",
+      "src": "n_doc_skill",
+      "dst": "n_intake_explore",
+      "kind": "reference",
+      "description": "Read SKILL.md as the operating discipline at session start.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "skill",
+      "readPattern": "full"
+    },
+    {
+      "id": "c_ownersync_explore_reads_env",
+      "src": "n_env",
+      "dst": "n_ownersync_explore",
+      "kind": "reference",
+      "description": "Re-read .env every Explore. Never cached.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "kill-switches",
+      "readPattern": "DRY_RUN, AUTOMATION_PAUSED"
+    },
+    {
+      "id": "c_ownersync_explore_reads_skill",
+      "src": "n_doc_skill",
+      "dst": "n_ownersync_explore",
+      "kind": "reference",
+      "description": "Read SKILL.md as the operating discipline at session start.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "skill",
+      "readPattern": "full"
+    },
+    {
+      "id": "c_respsync_explore_reads_env",
+      "src": "n_env",
+      "dst": "n_respsync_explore",
+      "kind": "reference",
+      "description": "Re-read .env every Explore. Never cached.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "kill-switches",
+      "readPattern": "DRY_RUN, AUTOMATION_PAUSED"
+    },
+    {
+      "id": "c_respsync_explore_reads_skill",
+      "src": "n_doc_skill",
+      "dst": "n_respsync_explore",
+      "kind": "reference",
+      "description": "Read SKILL.md as the operating discipline at session start.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "skill",
+      "readPattern": "full"
+    },
+    {
+      "id": "c_cadence_explore_reads_env",
+      "src": "n_env",
+      "dst": "n_cadence_explore",
+      "kind": "reference",
+      "description": "Re-read .env every Explore. Never cached.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "kill-switches",
+      "readPattern": "DRY_RUN, AUTOMATION_PAUSED"
+    },
+    {
+      "id": "c_cadence_explore_reads_skill",
+      "src": "n_doc_skill",
+      "dst": "n_cadence_explore",
+      "kind": "reference",
+      "description": "Read SKILL.md as the operating discipline at session start.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "skill",
+      "readPattern": "full"
+    },
+    {
+      "id": "c_calltime_explore_reads_env",
+      "src": "n_env",
+      "dst": "n_calltime_explore",
+      "kind": "reference",
+      "description": "Re-read .env every Explore. Never cached.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "kill-switches",
+      "readPattern": "DRY_RUN, AUTOMATION_PAUSED"
+    },
+    {
+      "id": "c_calltime_explore_reads_skill",
+      "src": "n_doc_skill",
+      "dst": "n_calltime_explore",
+      "kind": "reference",
+      "description": "Read SKILL.md as the operating discipline at session start.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "skill",
+      "readPattern": "full"
+    },
+    {
+      "id": "c_morning_explore_reads_env",
+      "src": "n_env",
+      "dst": "n_morning_explore",
+      "kind": "reference",
+      "description": "Re-read .env every Explore. Never cached.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "kill-switches",
+      "readPattern": "DRY_RUN, AUTOMATION_PAUSED"
+    },
+    {
+      "id": "c_morning_explore_reads_skill",
+      "src": "n_doc_skill",
+      "dst": "n_morning_explore",
+      "kind": "reference",
+      "description": "Read SKILL.md as the operating discipline at session start.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "skill",
+      "readPattern": "full"
+    },
+    {
+      "id": "c_midday_explore_reads_env",
+      "src": "n_env",
+      "dst": "n_midday_explore",
+      "kind": "reference",
+      "description": "Re-read .env every Explore. Never cached.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "kill-switches",
+      "readPattern": "DRY_RUN, AUTOMATION_PAUSED"
+    },
+    {
+      "id": "c_midday_explore_reads_skill",
+      "src": "n_doc_skill",
+      "dst": "n_midday_explore",
+      "kind": "reference",
+      "description": "Read SKILL.md as the operating discipline at session start.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "skill",
+      "readPattern": "full"
+    },
+    {
+      "id": "c_night_explore_reads_env",
+      "src": "n_env",
+      "dst": "n_night_explore",
+      "kind": "reference",
+      "description": "Re-read .env every Explore. Never cached.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "kill-switches",
+      "readPattern": "DRY_RUN, AUTOMATION_PAUSED"
+    },
+    {
+      "id": "c_night_explore_reads_skill",
+      "src": "n_doc_skill",
+      "dst": "n_night_explore",
+      "kind": "reference",
+      "description": "Read SKILL.md as the operating discipline at session start.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "skill",
+      "readPattern": "full"
+    },
+    {
+      "id": "c_safety_explore_reads_env",
+      "src": "n_env",
+      "dst": "n_safety_explore",
+      "kind": "reference",
+      "description": "Re-read .env every Explore. Never cached.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "kill-switches",
+      "readPattern": "DRY_RUN, AUTOMATION_PAUSED"
+    },
+    {
+      "id": "c_safety_explore_reads_skill",
+      "src": "n_doc_skill",
+      "dst": "n_safety_explore",
+      "kind": "reference",
+      "description": "Read SKILL.md as the operating discipline at session start.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "skill",
+      "readPattern": "full"
+    },
+    {
+      "id": "c_intake_explore_reads_v01",
+      "src": "n_view_v01_today",
+      "dst": "n_intake_explore",
+      "kind": "reference",
+      "description": "Lead Intake Sweep queries 🔷 01. Today's Leads to find new arrivals.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "🔷 01",
+      "readPattern": "saved_search"
+    },
+    {
+      "id": "c_intake_explore_reads_views",
+      "src": "n_view_map",
+      "dst": "n_intake_explore",
+      "kind": "reference",
+      "description": "Look up the saved_search_id for 🔷 01 from diamond_views.json.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "view ids",
+      "readPattern": "lookup"
+    },
+    {
+      "id": "c_ownersync_reads_v01_today",
+      "src": "n_view_v01_today",
+      "dst": "n_ownersync_explore",
+      "kind": "reference",
+      "description": "Ownership Sync re-checks membership in v01_today.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "check membership",
+      "readPattern": "saved_search"
+    },
+    {
+      "id": "c_ownersync_reads_v02_d1_5",
+      "src": "n_view_v02_d1_5",
+      "dst": "n_ownersync_explore",
+      "kind": "reference",
+      "description": "Ownership Sync re-checks membership in v02_d1_5.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "check membership",
+      "readPattern": "saved_search"
+    },
+    {
+      "id": "c_ownersync_reads_v03_d6_10",
+      "src": "n_view_v03_d6_10",
+      "dst": "n_ownersync_explore",
+      "kind": "reference",
+      "description": "Ownership Sync re-checks membership in v03_d6_10.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "check membership",
+      "readPattern": "saved_search"
+    },
+    {
+      "id": "c_ownersync_reads_v04_opened",
+      "src": "n_view_v04_opened",
+      "dst": "n_ownersync_explore",
+      "kind": "reference",
+      "description": "Ownership Sync re-checks membership in v04_opened.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "check membership",
+      "readPattern": "saved_search"
+    },
+    {
+      "id": "c_ownersync_reads_v05_no_connect",
+      "src": "n_view_v05_no_connect",
+      "dst": "n_ownersync_explore",
+      "kind": "reference",
+      "description": "Ownership Sync re-checks membership in v05_no_connect.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "check membership",
+      "readPattern": "saved_search"
+    },
+    {
+      "id": "c_ownersync_reads_v06_needs_resp",
+      "src": "n_view_v06_needs_resp",
+      "dst": "n_ownersync_explore",
+      "kind": "reference",
+      "description": "Ownership Sync re-checks membership in v06_needs_resp.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "check membership",
+      "readPattern": "saved_search"
+    },
+    {
+      "id": "c_ownersync_reads_v07_tasting",
+      "src": "n_view_v07_tasting",
+      "dst": "n_ownersync_explore",
+      "kind": "reference",
+      "description": "Ownership Sync re-checks membership in v07_tasting.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "check membership",
+      "readPattern": "saved_search"
+    },
+    {
+      "id": "c_ownersync_reads_v08_dormant",
+      "src": "n_view_v08_dormant",
+      "dst": "n_ownersync_explore",
+      "kind": "reference",
+      "description": "Ownership Sync re-checks membership in v08_dormant.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "check membership",
+      "readPattern": "saved_search"
+    },
+    {
+      "id": "c_ownersync_reads_v10_other",
+      "src": "n_view_v10_other",
+      "dst": "n_ownersync_explore",
+      "kind": "reference",
+      "description": "Ownership Sync re-checks membership in v10_other.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "check membership",
+      "readPattern": "saved_search"
+    },
+    {
+      "id": "c_ownersync_reads_ledger",
+      "src": "n_state_leads",
+      "dst": "n_ownersync_explore",
+      "kind": "reference",
+      "description": "Read every active/paused ledger to compare against live Close state.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "active ledgers",
+      "readPattern": "cadence_status in [active,paused]"
+    },
+    {
+      "id": "c_respsync_reads_ledger",
+      "src": "n_state_leads",
+      "dst": "n_respsync_explore",
+      "kind": "reference",
+      "description": "Read each active ledger; query Close activities since last_checked_at.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "active ledgers",
+      "readPattern": "cadence_status: active"
+    },
+    {
+      "id": "c_respsync_reads_classifier",
+      "src": "n_doc_response",
+      "dst": "n_respsync_connect",
+      "kind": "reference",
+      "description": "The Connect phase classifies replies via response-classification.md priority order.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "classifier rules"
+    },
+    {
+      "id": "c_cadence_reads_playbook",
+      "src": "n_doc_cadence",
+      "dst": "n_cadence_connect",
+      "kind": "reference",
+      "description": "Cadence Sender renders the Day-N message from cadence-playbook.md.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "message copy"
+    },
+    {
+      "id": "c_cadence_reads_ledger",
+      "src": "n_state_leads",
+      "dst": "n_cadence_explore",
+      "kind": "reference",
+      "description": "Find leads whose next_due_action.earliest_send_at..latest_send_at brackets now.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "due actions",
+      "readPattern": "next_due_action in window"
+    },
+    {
+      "id": "c_cadence_reads_v02",
+      "src": "n_view_v02_d1_5",
+      "dst": "n_cadence_explore",
+      "kind": "reference",
+      "description": "Day 1-5 cohort source.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "🔷 02"
+    },
+    {
+      "id": "c_cadence_reads_v03",
+      "src": "n_view_v03_d6_10",
+      "dst": "n_cadence_explore",
+      "kind": "reference",
+      "description": "Day 6-10 cohort source.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "🔷 03"
+    },
+    {
+      "id": "c_calltime_reads_ledger",
+      "src": "n_state_leads",
+      "dst": "n_calltime_explore",
+      "kind": "reference",
+      "description": "Find every ledger with response_status=call_time_given that doesn't yet have a slack_reminder_scheduled history entry.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "call_time_given",
+      "readPattern": "response_status: call_time_given"
+    },
+    {
+      "id": "c_morning_reads_snapshots",
+      "src": "n_state_snapshots",
+      "dst": "n_morning_explore",
+      "kind": "reference",
+      "description": "Morning report reads its prior snapshot for the comparison section.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "prior snapshot",
+      "readPattern": "most_recent_<scope>"
+    },
+    {
+      "id": "c_morning_reads_ledgers",
+      "src": "n_state_leads",
+      "dst": "n_morning_explore",
+      "kind": "reference",
+      "description": "Morning report reads ledgers; reports never WRITE to ledgers (post-processing.md report exception).",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "ledgers (read-only)"
+    },
+    {
+      "id": "c_morning_reads_runs",
+      "src": "n_state_runs",
+      "dst": "n_morning_explore",
+      "kind": "reference",
+      "description": "Morning report walks run summaries to surface what jobs did since the last snapshot.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "run summaries",
+      "readPattern": "window since prior snapshot"
+    },
+    {
+      "id": "c_morning_reads_errors",
+      "src": "n_state_errors",
+      "dst": "n_morning_explore",
+      "kind": "reference",
+      "description": "Morning report includes any send failures from the daily error log.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "errors today"
+    },
+    {
+      "id": "c_midday_reads_snapshots",
+      "src": "n_state_snapshots",
+      "dst": "n_midday_explore",
+      "kind": "reference",
+      "description": "Midday report reads its prior snapshot for the comparison section.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "prior snapshot",
+      "readPattern": "most_recent_<scope>"
+    },
+    {
+      "id": "c_midday_reads_ledgers",
+      "src": "n_state_leads",
+      "dst": "n_midday_explore",
+      "kind": "reference",
+      "description": "Midday report reads ledgers; reports never WRITE to ledgers (post-processing.md report exception).",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "ledgers (read-only)"
+    },
+    {
+      "id": "c_midday_reads_runs",
+      "src": "n_state_runs",
+      "dst": "n_midday_explore",
+      "kind": "reference",
+      "description": "Midday report walks run summaries to surface what jobs did since the last snapshot.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "run summaries",
+      "readPattern": "window since prior snapshot"
+    },
+    {
+      "id": "c_midday_reads_errors",
+      "src": "n_state_errors",
+      "dst": "n_midday_explore",
+      "kind": "reference",
+      "description": "Midday report includes any send failures from the daily error log.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "errors today"
+    },
+    {
+      "id": "c_night_reads_snapshots",
+      "src": "n_state_snapshots",
+      "dst": "n_night_explore",
+      "kind": "reference",
+      "description": "Night report reads its prior snapshot for the comparison section.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "prior snapshot",
+      "readPattern": "most_recent_<scope>"
+    },
+    {
+      "id": "c_night_reads_ledgers",
+      "src": "n_state_leads",
+      "dst": "n_night_explore",
+      "kind": "reference",
+      "description": "Night report reads ledgers; reports never WRITE to ledgers (post-processing.md report exception).",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "ledgers (read-only)"
+    },
+    {
+      "id": "c_night_reads_runs",
+      "src": "n_state_runs",
+      "dst": "n_night_explore",
+      "kind": "reference",
+      "description": "Night report walks run summaries to surface what jobs did since the last snapshot.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "run summaries",
+      "readPattern": "window since prior snapshot"
+    },
+    {
+      "id": "c_night_reads_errors",
+      "src": "n_state_errors",
+      "dst": "n_night_explore",
+      "kind": "reference",
+      "description": "Night report includes any send failures from the daily error log.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "errors today"
+    },
+    {
+      "id": "c_safety_reads_snapshots",
+      "src": "n_state_snapshots",
+      "dst": "n_safety_explore",
+      "kind": "reference",
+      "description": "Safety report reads its prior snapshot for the comparison section.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "prior snapshot",
+      "readPattern": "most_recent_<scope>"
+    },
+    {
+      "id": "c_safety_reads_ledgers",
+      "src": "n_state_leads",
+      "dst": "n_safety_explore",
+      "kind": "reference",
+      "description": "Safety report reads ledgers; reports never WRITE to ledgers (post-processing.md report exception).",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "ledgers (read-only)"
+    },
+    {
+      "id": "c_safety_reads_runs",
+      "src": "n_state_runs",
+      "dst": "n_safety_explore",
+      "kind": "reference",
+      "description": "Safety report walks run summaries to surface what jobs did since the last snapshot.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "run summaries",
+      "readPattern": "window since prior snapshot"
+    },
+    {
+      "id": "c_safety_reads_errors",
+      "src": "n_state_errors",
+      "dst": "n_safety_explore",
+      "kind": "reference",
+      "description": "Safety report includes any send failures from the daily error log.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "errors today"
+    },
+    {
+      "id": "c_safety_reads_v01_today",
+      "src": "n_view_v01_today",
+      "dst": "n_safety_explore",
+      "kind": "reference",
+      "description": "Safety Sweep re-queries v01_today for anomaly detection.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "re-query"
+    },
+    {
+      "id": "c_safety_reads_v02_d1_5",
+      "src": "n_view_v02_d1_5",
+      "dst": "n_safety_explore",
+      "kind": "reference",
+      "description": "Safety Sweep re-queries v02_d1_5 for anomaly detection.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "re-query"
+    },
+    {
+      "id": "c_safety_reads_v03_d6_10",
+      "src": "n_view_v03_d6_10",
+      "dst": "n_safety_explore",
+      "kind": "reference",
+      "description": "Safety Sweep re-queries v03_d6_10 for anomaly detection.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "re-query"
+    },
+    {
+      "id": "c_safety_reads_v04_opened",
+      "src": "n_view_v04_opened",
+      "dst": "n_safety_explore",
+      "kind": "reference",
+      "description": "Safety Sweep re-queries v04_opened for anomaly detection.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "re-query"
+    },
+    {
+      "id": "c_safety_reads_v05_no_connect",
+      "src": "n_view_v05_no_connect",
+      "dst": "n_safety_explore",
+      "kind": "reference",
+      "description": "Safety Sweep re-queries v05_no_connect for anomaly detection.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "re-query"
+    },
+    {
+      "id": "c_safety_reads_v06_needs_resp",
+      "src": "n_view_v06_needs_resp",
+      "dst": "n_safety_explore",
+      "kind": "reference",
+      "description": "Safety Sweep re-queries v06_needs_resp for anomaly detection.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "re-query"
+    },
+    {
+      "id": "c_safety_reads_v07_tasting",
+      "src": "n_view_v07_tasting",
+      "dst": "n_safety_explore",
+      "kind": "reference",
+      "description": "Safety Sweep re-queries v07_tasting for anomaly detection.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "re-query"
+    },
+    {
+      "id": "c_safety_reads_v08_dormant",
+      "src": "n_view_v08_dormant",
+      "dst": "n_safety_explore",
+      "kind": "reference",
+      "description": "Safety Sweep re-queries v08_dormant for anomaly detection.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "re-query"
+    },
+    {
+      "id": "c_safety_reads_v10_other",
+      "src": "n_view_v10_other",
+      "dst": "n_safety_explore",
+      "kind": "reference",
+      "description": "Safety Sweep re-queries v10_other for anomaly detection.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "re-query"
+    },
+    {
+      "id": "c_intake_audit_kill_dryrun",
+      "src": "n_kill_dryrun",
+      "dst": "n_intake_audit",
+      "kind": "reference",
+      "description": "intake Audit checks the dryrun kill switch before any execute.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "check"
+    },
+    {
+      "id": "c_intake_audit_kill_paused",
+      "src": "n_kill_paused",
+      "dst": "n_intake_audit",
+      "kind": "reference",
+      "description": "intake Audit checks the paused kill switch before any execute.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "check"
+    },
+    {
+      "id": "c_intake_audit_kill_per_lead",
+      "src": "n_kill_per_lead",
+      "dst": "n_intake_audit",
+      "kind": "reference",
+      "description": "intake Audit checks the per_lead kill switch before any execute.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "check"
+    },
+    {
+      "id": "c_cadence_audit_kill_dryrun",
+      "src": "n_kill_dryrun",
+      "dst": "n_cadence_audit",
+      "kind": "reference",
+      "description": "cadence Audit checks the dryrun kill switch before any execute.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "check"
+    },
+    {
+      "id": "c_cadence_audit_kill_paused",
+      "src": "n_kill_paused",
+      "dst": "n_cadence_audit",
+      "kind": "reference",
+      "description": "cadence Audit checks the paused kill switch before any execute.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "check"
+    },
+    {
+      "id": "c_cadence_audit_kill_per_lead",
+      "src": "n_kill_per_lead",
+      "dst": "n_cadence_audit",
+      "kind": "reference",
+      "description": "cadence Audit checks the per_lead kill switch before any execute.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "check"
+    },
+    {
+      "id": "c_respsync_audit_kill_dryrun",
+      "src": "n_kill_dryrun",
+      "dst": "n_respsync_audit",
+      "kind": "reference",
+      "description": "respsync Audit checks the dryrun kill switch before any execute.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "check"
+    },
+    {
+      "id": "c_respsync_audit_kill_paused",
+      "src": "n_kill_paused",
+      "dst": "n_respsync_audit",
+      "kind": "reference",
+      "description": "respsync Audit checks the paused kill switch before any execute.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "check"
+    },
+    {
+      "id": "c_respsync_audit_kill_per_lead",
+      "src": "n_kill_per_lead",
+      "dst": "n_respsync_audit",
+      "kind": "reference",
+      "description": "respsync Audit checks the per_lead kill switch before any execute.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "check"
+    },
+    {
+      "id": "c_calltime_audit_kill_dryrun",
+      "src": "n_kill_dryrun",
+      "dst": "n_calltime_audit",
+      "kind": "reference",
+      "description": "calltime Audit checks the dryrun kill switch before any execute.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "check"
+    },
+    {
+      "id": "c_calltime_audit_kill_paused",
+      "src": "n_kill_paused",
+      "dst": "n_calltime_audit",
+      "kind": "reference",
+      "description": "calltime Audit checks the paused kill switch before any execute.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "check"
+    },
+    {
+      "id": "c_calltime_audit_kill_per_lead",
+      "src": "n_kill_per_lead",
+      "dst": "n_calltime_audit",
+      "kind": "reference",
+      "description": "calltime Audit checks the per_lead kill switch before any execute.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "check"
+    },
+    {
+      "id": "c_cadence_audit_dupe_l1",
+      "src": "n_dupe_l1",
+      "dst": "n_cadence_audit",
+      "kind": "reference",
+      "description": "Cadence Sender's Audit phase consults dupe layer L1.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "check"
+    },
+    {
+      "id": "c_cadence_audit_dupe_l2",
+      "src": "n_dupe_l2",
+      "dst": "n_cadence_audit",
+      "kind": "reference",
+      "description": "Cadence Sender's Audit phase consults dupe layer L2.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "check"
+    },
+    {
+      "id": "c_cadence_audit_dupe_l3",
+      "src": "n_dupe_l3",
+      "dst": "n_cadence_audit",
+      "kind": "reference",
+      "description": "Cadence Sender's Audit phase consults dupe layer L3.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "check"
+    },
+    {
+      "id": "c_cadence_exec_to_d1",
+      "src": "n_cadence_execute",
+      "dst": "n_day_d1",
+      "kind": "trigger",
+      "description": "Cadence Sender Execute renders Day 1 SMS + email and (dry-run or live) sends them.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "start"
+    },
+    {
+      "id": "c_n_day_d1_to_n_day_d1_2nd",
+      "src": "n_day_d1",
+      "dst": "n_day_d1_2nd",
+      "kind": "conditional",
+      "description": "If no reply by the next day's window, the cadence advances to d1_2nd.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "if no reply",
+      "condition": "ledger.last_response_at == null AND next_due_action window open",
+      "falsePathTarget": null
+    },
+    {
+      "id": "c_n_day_d1_2nd_to_n_day_d2",
+      "src": "n_day_d1_2nd",
+      "dst": "n_day_d2",
+      "kind": "conditional",
+      "description": "If no reply by the next day's window, the cadence advances to d2.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "if no reply",
+      "condition": "ledger.last_response_at == null AND next_due_action window open",
+      "falsePathTarget": null
+    },
+    {
+      "id": "c_n_day_d2_to_n_day_d3",
+      "src": "n_day_d2",
+      "dst": "n_day_d3",
+      "kind": "conditional",
+      "description": "If no reply by the next day's window, the cadence advances to d3.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "if no reply",
+      "condition": "ledger.last_response_at == null AND next_due_action window open",
+      "falsePathTarget": null
+    },
+    {
+      "id": "c_n_day_d3_to_n_day_d4",
+      "src": "n_day_d3",
+      "dst": "n_day_d4",
+      "kind": "conditional",
+      "description": "If no reply by the next day's window, the cadence advances to d4.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "if no reply",
+      "condition": "ledger.last_response_at == null AND next_due_action window open",
+      "falsePathTarget": null
+    },
+    {
+      "id": "c_n_day_d4_to_n_day_d5",
+      "src": "n_day_d4",
+      "dst": "n_day_d5",
+      "kind": "conditional",
+      "description": "If no reply by the next day's window, the cadence advances to d5.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "if no reply",
+      "condition": "ledger.last_response_at == null AND next_due_action window open",
+      "falsePathTarget": null
+    },
+    {
+      "id": "c_n_day_d5_to_n_day_d6",
+      "src": "n_day_d5",
+      "dst": "n_day_d6",
+      "kind": "conditional",
+      "description": "If no reply by the next day's window, the cadence advances to d6.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "if no reply",
+      "condition": "ledger.last_response_at == null AND next_due_action window open",
+      "falsePathTarget": null
+    },
+    {
+      "id": "c_n_day_d6_to_n_day_d7",
+      "src": "n_day_d6",
+      "dst": "n_day_d7",
+      "kind": "conditional",
+      "description": "If no reply by the next day's window, the cadence advances to d7.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "if no reply",
+      "condition": "ledger.last_response_at == null AND next_due_action window open",
+      "falsePathTarget": null
+    },
+    {
+      "id": "c_n_day_d7_to_n_day_d8",
+      "src": "n_day_d7",
+      "dst": "n_day_d8",
+      "kind": "conditional",
+      "description": "If no reply by the next day's window, the cadence advances to d8.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "if no reply",
+      "condition": "ledger.last_response_at == null AND next_due_action window open",
+      "falsePathTarget": null
+    },
+    {
+      "id": "c_n_day_d8_to_n_day_d9",
+      "src": "n_day_d8",
+      "dst": "n_day_d9",
+      "kind": "conditional",
+      "description": "If no reply by the next day's window, the cadence advances to d9.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "if no reply",
+      "condition": "ledger.last_response_at == null AND next_due_action window open",
+      "falsePathTarget": null
+    },
+    {
+      "id": "c_n_day_d9_to_n_day_d10",
+      "src": "n_day_d9",
+      "dst": "n_day_d10",
+      "kind": "conditional",
+      "description": "If no reply by the next day's window, the cadence advances to d10.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "if no reply",
+      "condition": "ledger.last_response_at == null AND next_due_action window open",
+      "falsePathTarget": null
+    },
+    {
+      "id": "c_d10_to_complete",
+      "src": "n_day_d10",
+      "dst": "n_cadence_complete",
+      "kind": "data",
+      "description": "Day 10's send completes the cadence.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "end"
+    },
+    {
+      "id": "c_respsync_to_pause",
+      "src": "n_respsync_execute",
+      "dst": "n_resp_pause",
+      "kind": "data",
+      "description": "Response Sync's Execute phase routes every detected reply through universal Pause first.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "reply detected"
+    },
+    {
+      "id": "c_pause_to_classify",
+      "src": "n_resp_pause",
+      "dst": "n_resp_classify",
+      "kind": "data",
+      "description": "After pausing, the reply text is run through the classifier in priority order.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "classify"
+    },
+    {
+      "id": "c_classify_to_not_interested",
+      "src": "n_resp_classify",
+      "dst": "n_resp_not_interested",
+      "kind": "conditional",
+      "description": "If the classifier returns not_interested, route to its handler.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "not interested",
+      "condition": "classification == 'not_interested'",
+      "falsePathTarget": null
+    },
+    {
+      "id": "c_classify_to_unclear_response",
+      "src": "n_resp_classify",
+      "dst": "n_resp_unclear_response",
+      "kind": "conditional",
+      "description": "If the classifier returns unclear_response, route to its handler.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "unclear response",
+      "condition": "classification == 'unclear_response'",
+      "falsePathTarget": null
+    },
+    {
+      "id": "c_classify_to_call_time_given",
+      "src": "n_resp_classify",
+      "dst": "n_resp_call_time_given",
+      "kind": "conditional",
+      "description": "If the classifier returns call_time_given, route to its handler.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "call time given",
+      "condition": "classification == 'call_time_given'",
+      "falsePathTarget": null
+    },
+    {
+      "id": "c_classify_to_tasting_interest",
+      "src": "n_resp_classify",
+      "dst": "n_resp_tasting_interest",
+      "kind": "conditional",
+      "description": "If the classifier returns tasting_interest, route to its handler.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "tasting interest",
+      "condition": "classification == 'tasting_interest'",
+      "falsePathTarget": null
+    },
+    {
+      "id": "c_classify_to_pricing_question",
+      "src": "n_resp_classify",
+      "dst": "n_resp_pricing_question",
+      "kind": "conditional",
+      "description": "If the classifier returns pricing_question, route to its handler.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "pricing question",
+      "condition": "classification == 'pricing_question'",
+      "falsePathTarget": null
+    },
+    {
+      "id": "c_classify_to_send_info",
+      "src": "n_resp_classify",
+      "dst": "n_resp_send_info",
+      "kind": "conditional",
+      "description": "If the classifier returns send_info, route to its handler.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "send info",
+      "condition": "classification == 'send_info'",
+      "falsePathTarget": null
+    },
+    {
+      "id": "c_classify_to_needs_manual_review",
+      "src": "n_resp_classify",
+      "dst": "n_resp_needs_manual_review",
+      "kind": "conditional",
+      "description": "If the classifier returns needs_manual_review, route to its handler.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "needs manual review",
+      "condition": "classification == 'needs_manual_review'",
+      "falsePathTarget": null
+    },
+    {
+      "id": "c_pause_halts_cadence",
+      "src": "n_resp_pause",
+      "dst": "n_day_d1",
+      "kind": "conditional",
+      "description": "A pause signal from Response Sync halts the cadence at whichever Day node is current for that lead.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "halts active day",
+      "condition": "lead.cadence_status == active",
+      "falsePathTarget": null
+    },
+    {
+      "id": "c_intake_audit_risk",
+      "src": "n_risk_flags",
+      "dst": "n_intake_audit",
+      "kind": "reference",
+      "description": "intake Audit references the canonical flag list when annotating leads.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "flag rules"
+    },
+    {
+      "id": "c_ownersync_audit_risk",
+      "src": "n_risk_flags",
+      "dst": "n_ownersync_audit",
+      "kind": "reference",
+      "description": "ownersync Audit references the canonical flag list when annotating leads.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "flag rules"
+    },
+    {
+      "id": "c_respsync_audit_risk",
+      "src": "n_risk_flags",
+      "dst": "n_respsync_audit",
+      "kind": "reference",
+      "description": "respsync Audit references the canonical flag list when annotating leads.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "flag rules"
+    },
+    {
+      "id": "c_cadence_audit_risk",
+      "src": "n_risk_flags",
+      "dst": "n_cadence_audit",
+      "kind": "reference",
+      "description": "cadence Audit references the canonical flag list when annotating leads.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "flag rules"
+    },
+    {
+      "id": "c_calltime_audit_risk",
+      "src": "n_risk_flags",
+      "dst": "n_calltime_audit",
+      "kind": "reference",
+      "description": "calltime Audit references the canonical flag list when annotating leads.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "flag rules"
+    },
+    {
+      "id": "c_morning_audit_risk",
+      "src": "n_risk_flags",
+      "dst": "n_morning_audit",
+      "kind": "reference",
+      "description": "morning Audit references the canonical flag list when annotating leads.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "flag rules"
+    },
+    {
+      "id": "c_midday_audit_risk",
+      "src": "n_risk_flags",
+      "dst": "n_midday_audit",
+      "kind": "reference",
+      "description": "midday Audit references the canonical flag list when annotating leads.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "flag rules"
+    },
+    {
+      "id": "c_night_audit_risk",
+      "src": "n_risk_flags",
+      "dst": "n_night_audit",
+      "kind": "reference",
+      "description": "night Audit references the canonical flag list when annotating leads.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "flag rules"
+    },
+    {
+      "id": "c_safety_audit_risk",
+      "src": "n_risk_flags",
+      "dst": "n_safety_audit",
+      "kind": "reference",
+      "description": "safety Audit references the canonical flag list when annotating leads.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "flag rules"
+    },
+    {
+      "id": "c_day_d1_to_sms",
+      "src": "n_day_d1",
+      "dst": "n_snk_close_sms",
+      "kind": "data",
+      "description": "Day d1 SMS goes through Close API.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "sms"
+    },
+    {
+      "id": "c_day_d1_to_email",
+      "src": "n_day_d1",
+      "dst": "n_snk_close_email",
+      "kind": "data",
+      "description": "Day d1 email goes through Close API.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "email"
+    },
+    {
+      "id": "c_day_d1_to_note",
+      "src": "n_day_d1",
+      "dst": "n_snk_close_note",
+      "kind": "data",
+      "description": "Day d1 adds a Close note describing the send.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "close note"
+    },
+    {
+      "id": "c_day_d1_2nd_to_sms",
+      "src": "n_day_d1_2nd",
+      "dst": "n_snk_close_sms",
+      "kind": "data",
+      "description": "Day d1_2nd SMS goes through Close API.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "sms"
+    },
+    {
+      "id": "c_day_d1_2nd_to_email",
+      "src": "n_day_d1_2nd",
+      "dst": "n_snk_close_email",
+      "kind": "data",
+      "description": "Day d1_2nd email goes through Close API.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "email"
+    },
+    {
+      "id": "c_day_d1_2nd_to_note",
+      "src": "n_day_d1_2nd",
+      "dst": "n_snk_close_note",
+      "kind": "data",
+      "description": "Day d1_2nd adds a Close note describing the send.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "close note"
+    },
+    {
+      "id": "c_day_d2_to_sms",
+      "src": "n_day_d2",
+      "dst": "n_snk_close_sms",
+      "kind": "data",
+      "description": "Day d2 SMS goes through Close API.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "sms"
+    },
+    {
+      "id": "c_day_d2_to_email",
+      "src": "n_day_d2",
+      "dst": "n_snk_close_email",
+      "kind": "data",
+      "description": "Day d2 email goes through Close API.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "email"
+    },
+    {
+      "id": "c_day_d2_to_note",
+      "src": "n_day_d2",
+      "dst": "n_snk_close_note",
+      "kind": "data",
+      "description": "Day d2 adds a Close note describing the send.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "close note"
+    },
+    {
+      "id": "c_day_d3_to_sms",
+      "src": "n_day_d3",
+      "dst": "n_snk_close_sms",
+      "kind": "data",
+      "description": "Day d3 SMS goes through Close API.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "sms"
+    },
+    {
+      "id": "c_day_d3_to_email",
+      "src": "n_day_d3",
+      "dst": "n_snk_close_email",
+      "kind": "data",
+      "description": "Day d3 email goes through Close API.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "email"
+    },
+    {
+      "id": "c_day_d3_to_note",
+      "src": "n_day_d3",
+      "dst": "n_snk_close_note",
+      "kind": "data",
+      "description": "Day d3 adds a Close note describing the send.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "close note"
+    },
+    {
+      "id": "c_day_d4_to_sms",
+      "src": "n_day_d4",
+      "dst": "n_snk_close_sms",
+      "kind": "data",
+      "description": "Day d4 SMS goes through Close API.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "sms"
+    },
+    {
+      "id": "c_day_d4_to_email",
+      "src": "n_day_d4",
+      "dst": "n_snk_close_email",
+      "kind": "data",
+      "description": "Day d4 email goes through Close API.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "email"
+    },
+    {
+      "id": "c_day_d4_to_note",
+      "src": "n_day_d4",
+      "dst": "n_snk_close_note",
+      "kind": "data",
+      "description": "Day d4 adds a Close note describing the send.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "close note"
+    },
+    {
+      "id": "c_day_d5_to_sms",
+      "src": "n_day_d5",
+      "dst": "n_snk_close_sms",
+      "kind": "data",
+      "description": "Day d5 SMS goes through Close API.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "sms"
+    },
+    {
+      "id": "c_day_d5_to_email",
+      "src": "n_day_d5",
+      "dst": "n_snk_close_email",
+      "kind": "data",
+      "description": "Day d5 email goes through Close API.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "email"
+    },
+    {
+      "id": "c_day_d5_to_note",
+      "src": "n_day_d5",
+      "dst": "n_snk_close_note",
+      "kind": "data",
+      "description": "Day d5 adds a Close note describing the send.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "close note"
+    },
+    {
+      "id": "c_day_d6_to_sms",
+      "src": "n_day_d6",
+      "dst": "n_snk_close_sms",
+      "kind": "data",
+      "description": "Day d6 SMS goes through Close API.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "sms"
+    },
+    {
+      "id": "c_day_d6_to_dm",
+      "src": "n_day_d6",
+      "dst": "n_snk_slack_dm",
+      "kind": "data",
+      "description": "Day d6 fires an internal alert to André's DM (Day 6 specifically — 'review needed').",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "andre dm"
+    },
+    {
+      "id": "c_day_d6_to_note",
+      "src": "n_day_d6",
+      "dst": "n_snk_close_note",
+      "kind": "data",
+      "description": "Day d6 adds a Close note describing the send.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "close note"
+    },
+    {
+      "id": "c_day_d7_to_sms",
+      "src": "n_day_d7",
+      "dst": "n_snk_close_sms",
+      "kind": "data",
+      "description": "Day d7 SMS goes through Close API.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "sms"
+    },
+    {
+      "id": "c_day_d7_to_email",
+      "src": "n_day_d7",
+      "dst": "n_snk_close_email",
+      "kind": "data",
+      "description": "Day d7 email goes through Close API.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "email"
+    },
+    {
+      "id": "c_day_d7_to_note",
+      "src": "n_day_d7",
+      "dst": "n_snk_close_note",
+      "kind": "data",
+      "description": "Day d7 adds a Close note describing the send.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "close note"
+    },
+    {
+      "id": "c_day_d8_to_sms",
+      "src": "n_day_d8",
+      "dst": "n_snk_close_sms",
+      "kind": "data",
+      "description": "Day d8 SMS goes through Close API.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "sms"
+    },
+    {
+      "id": "c_day_d8_to_note",
+      "src": "n_day_d8",
+      "dst": "n_snk_close_note",
+      "kind": "data",
+      "description": "Day d8 adds a Close note describing the send.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "close note"
+    },
+    {
+      "id": "c_day_d9_to_sms",
+      "src": "n_day_d9",
+      "dst": "n_snk_close_sms",
+      "kind": "data",
+      "description": "Day d9 SMS goes through Close API.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "sms"
+    },
+    {
+      "id": "c_day_d9_to_email",
+      "src": "n_day_d9",
+      "dst": "n_snk_close_email",
+      "kind": "data",
+      "description": "Day d9 email goes through Close API.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "email"
+    },
+    {
+      "id": "c_day_d9_to_note",
+      "src": "n_day_d9",
+      "dst": "n_snk_close_note",
+      "kind": "data",
+      "description": "Day d9 adds a Close note describing the send.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "close note"
+    },
+    {
+      "id": "c_day_d10_to_sms",
+      "src": "n_day_d10",
+      "dst": "n_snk_close_sms",
+      "kind": "data",
+      "description": "Day d10 SMS goes through Close API.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "sms"
+    },
+    {
+      "id": "c_day_d10_to_email",
+      "src": "n_day_d10",
+      "dst": "n_snk_close_email",
+      "kind": "data",
+      "description": "Day d10 email goes through Close API.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "email"
+    },
+    {
+      "id": "c_day_d10_to_note",
+      "src": "n_day_d10",
+      "dst": "n_snk_close_note",
+      "kind": "data",
+      "description": "Day d10 adds a Close note describing the send.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "close note"
+    },
+    {
+      "id": "c_complete_to_note",
+      "src": "n_cadence_complete",
+      "dst": "n_snk_close_note",
+      "kind": "data",
+      "description": "Cadence completion writes a 'no-response 10-day' Close note.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "recap note"
+    },
+    {
+      "id": "c_complete_to_dm",
+      "src": "n_cadence_complete",
+      "dst": "n_snk_slack_dm",
+      "kind": "data",
+      "description": "Cadence completion alerts André via DM that the lead is awaiting his manual review.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "recap dm"
+    },
+    {
+      "id": "c_resp_not_interested_to_note",
+      "src": "n_resp_not_interested",
+      "dst": "n_snk_close_note",
+      "kind": "data",
+      "description": "not_interested branch writes a Close note describing the classification + action.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "note"
+    },
+    {
+      "id": "c_resp_not_interested_to_dm",
+      "src": "n_resp_not_interested",
+      "dst": "n_snk_slack_dm",
+      "kind": "data",
+      "description": "not_interested branch alerts André's DM with the reply text and Close link.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "alert"
+    },
+    {
+      "id": "c_resp_unclear_response_to_note",
+      "src": "n_resp_unclear_response",
+      "dst": "n_snk_close_note",
+      "kind": "data",
+      "description": "unclear_response branch writes a Close note describing the classification + action.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "note"
+    },
+    {
+      "id": "c_resp_unclear_response_to_dm",
+      "src": "n_resp_unclear_response",
+      "dst": "n_snk_slack_dm",
+      "kind": "data",
+      "description": "unclear_response branch alerts André's DM with the reply text and Close link.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "alert"
+    },
+    {
+      "id": "c_resp_call_time_given_to_note",
+      "src": "n_resp_call_time_given",
+      "dst": "n_snk_close_note",
+      "kind": "data",
+      "description": "call_time_given branch writes a Close note describing the classification + action.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "note"
+    },
+    {
+      "id": "c_resp_call_time_given_to_dm",
+      "src": "n_resp_call_time_given",
+      "dst": "n_snk_slack_dm",
+      "kind": "data",
+      "description": "call_time_given branch alerts André's DM with the reply text and Close link.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "alert"
+    },
+    {
+      "id": "c_resp_call_time_given_to_sms",
+      "src": "n_resp_call_time_given",
+      "dst": "n_snk_close_sms",
+      "kind": "data",
+      "description": "call_time_given branch sends its auto-reply SMS via Close (respecting DRY_RUN).",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "auto-reply"
+    },
+    {
+      "id": "c_resp_tasting_interest_to_note",
+      "src": "n_resp_tasting_interest",
+      "dst": "n_snk_close_note",
+      "kind": "data",
+      "description": "tasting_interest branch writes a Close note describing the classification + action.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "note"
+    },
+    {
+      "id": "c_resp_tasting_interest_to_dm",
+      "src": "n_resp_tasting_interest",
+      "dst": "n_snk_slack_dm",
+      "kind": "data",
+      "description": "tasting_interest branch alerts André's DM with the reply text and Close link.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "alert"
+    },
+    {
+      "id": "c_resp_tasting_interest_to_sms",
+      "src": "n_resp_tasting_interest",
+      "dst": "n_snk_close_sms",
+      "kind": "data",
+      "description": "tasting_interest branch sends its auto-reply SMS via Close (respecting DRY_RUN).",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "auto-reply"
+    },
+    {
+      "id": "c_resp_pricing_question_to_note",
+      "src": "n_resp_pricing_question",
+      "dst": "n_snk_close_note",
+      "kind": "data",
+      "description": "pricing_question branch writes a Close note describing the classification + action.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "note"
+    },
+    {
+      "id": "c_resp_pricing_question_to_dm",
+      "src": "n_resp_pricing_question",
+      "dst": "n_snk_slack_dm",
+      "kind": "data",
+      "description": "pricing_question branch alerts André's DM with the reply text and Close link.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "alert"
+    },
+    {
+      "id": "c_resp_pricing_question_to_sms",
+      "src": "n_resp_pricing_question",
+      "dst": "n_snk_close_sms",
+      "kind": "data",
+      "description": "pricing_question branch sends its auto-reply SMS via Close (respecting DRY_RUN).",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "auto-reply"
+    },
+    {
+      "id": "c_resp_send_info_to_note",
+      "src": "n_resp_send_info",
+      "dst": "n_snk_close_note",
+      "kind": "data",
+      "description": "send_info branch writes a Close note describing the classification + action.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "note"
+    },
+    {
+      "id": "c_resp_send_info_to_dm",
+      "src": "n_resp_send_info",
+      "dst": "n_snk_slack_dm",
+      "kind": "data",
+      "description": "send_info branch alerts André's DM with the reply text and Close link.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "alert"
+    },
+    {
+      "id": "c_resp_send_info_to_sms",
+      "src": "n_resp_send_info",
+      "dst": "n_snk_close_sms",
+      "kind": "data",
+      "description": "send_info branch sends its auto-reply SMS via Close (respecting DRY_RUN).",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "auto-reply"
+    },
+    {
+      "id": "c_resp_needs_manual_review_to_note",
+      "src": "n_resp_needs_manual_review",
+      "dst": "n_snk_close_note",
+      "kind": "data",
+      "description": "needs_manual_review branch writes a Close note describing the classification + action.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "note"
+    },
+    {
+      "id": "c_resp_needs_manual_review_to_dm",
+      "src": "n_resp_needs_manual_review",
+      "dst": "n_snk_slack_dm",
+      "kind": "data",
+      "description": "needs_manual_review branch alerts André's DM with the reply text and Close link.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "alert"
+    },
+    {
+      "id": "c_calltime_to_sched",
+      "src": "n_resp_call_time_given",
+      "dst": "n_snk_slack_sched",
+      "kind": "data",
+      "description": "Call-time branch: schedule a Slack DM reminder for 5 min before the requested time.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "schedule T-5"
+    },
+    {
+      "id": "c_calltime_exec_to_sched",
+      "src": "n_calltime_execute",
+      "dst": "n_snk_slack_sched",
+      "kind": "data",
+      "description": "Call-Time Reminder Creator backstops the response sync — every call_time_given lead must have a scheduled Slack DM.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "ensure reminder"
+    },
+    {
+      "id": "c_morning_exec_to_snapshot",
+      "src": "n_morning_execute",
+      "dst": "n_state_snapshots",
+      "kind": "data",
+      "description": "Morning report writes a fresh snapshot for the next report to diff against.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "write snapshot"
+    },
+    {
+      "id": "c_morning_exec_to_slack",
+      "src": "n_morning_execute",
+      "dst": "n_snk_slack_team",
+      "kind": "data",
+      "description": "Morning report posts to the team Slack channel as a Block Kit message.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "post report"
+    },
+    {
+      "id": "c_midday_exec_to_snapshot",
+      "src": "n_midday_execute",
+      "dst": "n_state_snapshots",
+      "kind": "data",
+      "description": "Midday report writes a fresh snapshot for the next report to diff against.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "write snapshot"
+    },
+    {
+      "id": "c_midday_exec_to_slack",
+      "src": "n_midday_execute",
+      "dst": "n_snk_slack_team",
+      "kind": "data",
+      "description": "Midday report posts to the team Slack channel as a Block Kit message.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "post report"
+    },
+    {
+      "id": "c_night_exec_to_snapshot",
+      "src": "n_night_execute",
+      "dst": "n_state_snapshots",
+      "kind": "data",
+      "description": "Night report writes a fresh snapshot for the next report to diff against.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "write snapshot"
+    },
+    {
+      "id": "c_night_exec_to_slack",
+      "src": "n_night_execute",
+      "dst": "n_snk_slack_team",
+      "kind": "data",
+      "description": "Night report posts to the team Slack channel as a Block Kit message.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "post report"
+    },
+    {
+      "id": "c_safety_exec_to_dm",
+      "src": "n_safety_execute",
+      "dst": "n_snk_slack_dm",
+      "kind": "data",
+      "description": "Safety sweep posts a single consolidated alert to André's DM with all human-required findings.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "findings"
+    },
+    {
+      "id": "c_safety_exec_to_leads",
+      "src": "n_safety_execute",
+      "dst": "n_state_leads",
+      "kind": "data",
+      "description": "For safe-to-correct findings (e.g., create missing ledger), Safety Sweep writes the ledger directly.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "auto-corrections"
+    },
+    {
+      "id": "c_intake_to_ledger",
+      "src": "n_intake_execute",
+      "dst": "n_state_leads",
+      "kind": "data",
+      "description": "Lead Intake Sweep Execute creates the per-lead ledger file with cadence_day: 1.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "init ledger"
+    },
+    {
+      "id": "c_intake_to_d1",
+      "src": "n_intake_execute",
+      "dst": "n_day_d1",
+      "kind": "trigger",
+      "description": "Lead Intake Sweep Execute queues Day 1 SMS + email immediately (within 1-5 min of becoming André-owned).",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "queue Day 1"
+    },
+    {
+      "id": "c_cadence_exec_writes_ledger",
+      "src": "n_cadence_execute",
+      "dst": "n_state_leads",
+      "kind": "data",
+      "description": "After every send (or dry-run), the ledger is updated atomically with a new history entry and updated last_*_sent_at.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "append history"
+    },
+    {
+      "id": "c_respsync_exec_writes_ledger",
+      "src": "n_respsync_execute",
+      "dst": "n_state_leads",
+      "kind": "data",
+      "description": "Response Sync Execute pauses the cadence (cadence_status: paused) and appends a response_received history entry.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "pause + history"
+    },
+    {
+      "id": "c_ownersync_exec_writes_ledger",
+      "src": "n_ownersync_execute",
+      "dst": "n_state_leads",
+      "kind": "data",
+      "description": "Ownership Sync Execute reconciles the ledger with the live Close + view state. Pauses if owner left André.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "sync state"
+    },
+    {
+      "id": "c_ownersync_exec_to_dm",
+      "src": "n_ownersync_execute",
+      "dst": "n_snk_slack_dm",
+      "kind": "conditional",
+      "description": "If ownership flipped away from André, post an alert to his DM.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "conflict",
+      "condition": "ownership_conflict_detected",
+      "falsePathTarget": null
+    },
+    {
+      "id": "c_intake_postproc_to_runs",
+      "src": "n_intake_postproc",
+      "dst": "n_state_runs",
+      "kind": "data",
+      "description": "intake Post-EACE writes the required run summary to state/runs/.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "run summary"
+    },
+    {
+      "id": "c_ownersync_postproc_to_runs",
+      "src": "n_ownersync_postproc",
+      "dst": "n_state_runs",
+      "kind": "data",
+      "description": "ownersync Post-EACE writes the required run summary to state/runs/.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "run summary"
+    },
+    {
+      "id": "c_respsync_postproc_to_runs",
+      "src": "n_respsync_postproc",
+      "dst": "n_state_runs",
+      "kind": "data",
+      "description": "respsync Post-EACE writes the required run summary to state/runs/.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "run summary"
+    },
+    {
+      "id": "c_cadence_postproc_to_runs",
+      "src": "n_cadence_postproc",
+      "dst": "n_state_runs",
+      "kind": "data",
+      "description": "cadence Post-EACE writes the required run summary to state/runs/.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "run summary"
+    },
+    {
+      "id": "c_calltime_postproc_to_runs",
+      "src": "n_calltime_postproc",
+      "dst": "n_state_runs",
+      "kind": "data",
+      "description": "calltime Post-EACE writes the required run summary to state/runs/.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "run summary"
+    },
+    {
+      "id": "c_morning_postproc_to_runs",
+      "src": "n_morning_postproc",
+      "dst": "n_state_runs",
+      "kind": "data",
+      "description": "morning Post-EACE writes the required run summary to state/runs/.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "run summary"
+    },
+    {
+      "id": "c_midday_postproc_to_runs",
+      "src": "n_midday_postproc",
+      "dst": "n_state_runs",
+      "kind": "data",
+      "description": "midday Post-EACE writes the required run summary to state/runs/.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "run summary"
+    },
+    {
+      "id": "c_night_postproc_to_runs",
+      "src": "n_night_postproc",
+      "dst": "n_state_runs",
+      "kind": "data",
+      "description": "night Post-EACE writes the required run summary to state/runs/.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "run summary"
+    },
+    {
+      "id": "c_safety_postproc_to_runs",
+      "src": "n_safety_postproc",
+      "dst": "n_state_runs",
+      "kind": "data",
+      "description": "safety Post-EACE writes the required run summary to state/runs/.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "run summary"
+    },
+    {
+      "id": "c_cadence_postproc_to_errors",
+      "src": "n_cadence_postproc",
+      "dst": "n_state_errors",
+      "kind": "conditional",
+      "description": "Cadence Post-EACE logs send failures with retryable + next_retry_at to today's error file.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "if failed",
+      "condition": "send_status in [4xx, 5xx]",
+      "falsePathTarget": null
+    },
+    {
+      "id": "c_cadence_postproc_to_dm_failure",
+      "src": "n_cadence_postproc",
+      "dst": "n_snk_slack_dm",
+      "kind": "conditional",
+      "description": "If both SMS and email fail, alert André's DM. The cadence is marked failed.",
+      "annotations": [],
+      "narration": "",
+      "created_at": "2026-04-25T14:08:26.513477+00:00",
+      "label": "both fail",
+      "condition": "sms_failed AND email_failed",
+      "falsePathTarget": null
+    }
+  ],
+  "metadata": {
+    "created_at": "2026-04-25T14:08:26.513477+00:00",
+    "last_modified": "2026-04-25T14:08:26.513477+00:00",
+    "version": 2,
+    "node_count": 106,
+    "connection_count": 232,
+    "spec_files": [
+      "SKILL.md",
+      "eace-loop.md",
+      "post-processing.md",
+      "safety-rules.md",
+      "smart-view-map.md",
+      "cadence-playbook.md",
+      "response-classification.md",
+      "state-schema.md",
+      "reporting-playbook.md",
+      "scheduled_task_prompts.md",
+      "dry_run_test_plan.md"
+    ]
+  }
+}

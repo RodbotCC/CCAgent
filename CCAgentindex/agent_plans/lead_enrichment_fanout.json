@@ -1,0 +1,73 @@
+{
+  "schema": "comeketo.agent_plan.v1",
+  "slug": "lead_enrichment_fanout",
+  "name": "Lead enrichment fanout — daily sweep",
+  "description": "Four sub-agents split the open lead list and enrich each with last-touch + venue affinity.",
+  "trigger_label": "open leads · 16:48 daily",
+  "orchestrator": {
+    "label": "Rodbot",
+    "model": "claude-sonnet-4-6",
+    "register": "operational"
+  },
+  "budgets": {
+    "max_sub_agents": 6,
+    "tokens_cap": 8000,
+    "wallclock_cap_s": 45,
+    "retry_policy": "linear_backoff"
+  },
+  "sub_agents": [
+    {
+      "id": "SA-01",
+      "action": "enrich",
+      "tool": "close.lead.fetch",
+      "prompt_template": "Enrich open lead {{lead.id}}.",
+      "leads": 4,
+      "retries": 1,
+      "timeout_s": 25,
+      "tone": "sage",
+      "expected_latency_s": 3.5
+    },
+    {
+      "id": "SA-02",
+      "action": "enrich",
+      "tool": "tables.read",
+      "prompt_template": "Cross-reference with venue_partners.",
+      "leads": 4,
+      "retries": 1,
+      "timeout_s": 20,
+      "tone": "sage",
+      "expected_latency_s": 2.8
+    },
+    {
+      "id": "SA-03",
+      "action": "score",
+      "tool": "rodbot.affinity",
+      "prompt_template": "Score affinity tier.",
+      "leads": 4,
+      "retries": 1,
+      "timeout_s": 20,
+      "tone": "lavender",
+      "expected_latency_s": 4.1
+    },
+    {
+      "id": "SA-04",
+      "action": "write",
+      "tool": "tables.append",
+      "prompt_template": "Append enrichment to leads_pipeline.",
+      "leads": 4,
+      "retries": 1,
+      "timeout_s": 15,
+      "tone": "mint",
+      "expected_latency_s": 1.6
+    }
+  ],
+  "merge": {
+    "label": "merge → write to Tables",
+    "target": "tables/leads_pipeline.json"
+  },
+  "metadata": {
+    "created_at": "2026-04-25T00:00:00+00:00",
+    "last_modified": "2026-04-25T00:00:00+00:00",
+    "version": 1
+  }
+}

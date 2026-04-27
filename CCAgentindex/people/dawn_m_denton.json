@@ -1,0 +1,88 @@
+{
+  "id": "dawn_m_denton",
+  "kind": "lead",
+  "name": "Dawn M Denton",
+  "role": "Wedding · Aug 16, 2026 · 125 guests · North Kingstown RI",
+  "relationship_tier": "active_quote",
+  "relationship_weight": 0.55,
+  "contacts": {
+    "email": null,
+    "phone": null,
+    "whatsapp": null,
+    "slack_id": null,
+    "slack_channel": null,
+    "clickup_user_id": null,
+    "other": null
+  },
+  "handling": {
+    "preferred_channel": "Phone",
+    "response_latency_target": "same-day",
+    "tone": "First-real-pickup TODAY after 10 days of cold outbound. Treat next 24h like first-contact, not follow-up. Establish warmth, ask one good question, get scheduled time.",
+    "voice_adjustments": "Andre voice: warm, peer, Newport-adjacent upscale-aware. Don't lead with budget catering. Apr 24 Portuguese drip text may have confused her if not Portuguese-speaking.",
+    "context": "Inbound Apr 15 from FB Lead Form. After 10 days of cold outbound, she answered today (Apr 25, Saturday) — call task is due today. Andre tried 4 times today; she's not picking up but answered briefly Apr 24 and scheduled Saturday afternoon call.",
+    "off_limits_topics": null
+  },
+  "context_anchors": [
+    "North Kingstown RI 02852 — coastal, affluent, Newport-adjacent",
+    "Aug 16, 2026 — peak summer wedding season",
+    "125 guests = mid-large wedding",
+    "Middle initial usage = formal in business contexts",
+    "First answered call TODAY after 10 days cold",
+    "Apr 24 Portuguese SMS may have confused her"
+  ],
+  "lead": {
+    "status": "active_quote",
+    "stage": "first_live_connect_today",
+    "owner": "andre_raw",
+    "source": "FB Lead Form — VIDEO RODS WEDDING & FACELESS",
+    "event_type": "Wedding",
+    "event_date": "2026-08-16",
+    "guest_count": 125,
+    "venue": null,
+    "city": "North Kingstown, RI",
+    "quote_value": null,
+    "opportunity_value": 4725,
+    "score_tags": ["first_pickup_today", "peak_summer", "newport_adjacent", "language_misfire_risk"],
+    "last_activity": "2026-04-25 — Andre tried 4x today, no full connect",
+    "speed_urgency": "high",
+    "next_move": "Skip catering pitch — ask venue + picture of night; one well-crafted message tomorrow morning if no connect today"
+  },
+  "enrichment": {
+    "confidence": 0.50,
+    "identity_notes": "Middle initial signals formal business register. North Kingstown affluent coastal RI, neighbor to Newport. Demographics older established families. Could be bride's mother, bride herself married, or planner. Until call confirms, don't assume role.",
+    "win_angles": [
+      "First-connect window — don't blow with generic follow-up",
+      "Low ballpark probability is opportunity, not warning — 125 + 02852 likely > $4,725",
+      "Newport-adjacent upscale = lead with experience not budget",
+      "Acknowledge Portuguese-text drip if she mentions"
+    ],
+    "nepq_openers": [
+      "Continuation: 'Dawn, glad we finally connected. Real quick — skip the catering pitch and just understand the wedding first. What's the venue and what's the picture you and the couple have for the night?'",
+      "Frame: 'Whose wedding is this — yours, your daughter's? Want to make sure I'm giving you advice that actually fits your role here.'",
+      "Anchor: 'For 125 guests on peak summer Saturday, real catering — proper hosted service — typically $X-Y. Shape depends on what you want the night to feel like.'"
+    ],
+    "open_gaps": [
+      "Whose wedding (Dawn herself, daughter, friend?)",
+      "Venue (North Kingstown has several wedding venues)",
+      "Service style preference",
+      "Cuisine direction",
+      "Bar package",
+      "Decision-maker dynamic",
+      "Why no pickup for 10 days"
+    ],
+    "strategic_note": "Today is the inflection point. After week of missed calls and cold drips (incl. Portuguese text she may not have understood), Dawn answered. Treat next 24h like first-contact. One good question, scheduled time to talk properly. Don't pitch in first message. Probability is low precisely because no context yet — get context, probability moves."
+  },
+  "comms": [
+    {"ts": "2026-04-15T10:00:00Z", "channel": "sms", "direction": "out", "summary": "Inbound acknowledged + 'best time' SMS"},
+    {"ts": "2026-04-15T11:00:00Z", "channel": "email", "direction": "out", "summary": "Service-types breakdown"},
+    {"ts": "2026-04-16T10:00:00Z", "channel": "call", "direction": "out", "summary": "2 call attempts (no answer)"},
+    {"ts": "2026-04-21T11:00:00Z", "channel": "email", "direction": "out", "summary": "Bar service drip"},
+    {"ts": "2026-04-24T11:00:00Z", "channel": "call", "direction": "out", "summary": "2 calls, second answered (0 min) — Saturday afternoon agreed"},
+    {"ts": "2026-04-25T13:00:00Z", "channel": "sms", "direction": "out", "summary": "'Can we talk now?' + 4 calls today, no connect"}
+  ],
+  "notes": [
+    "First pickup today after 10 days cold — don't fumble",
+    "Portuguese-text drip Apr 24 may have hit confusing",
+    "If no connect today, one well-crafted message tomorrow then back off 48h"
+  ]
+}

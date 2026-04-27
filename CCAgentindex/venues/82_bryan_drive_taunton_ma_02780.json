@@ -1,0 +1,28 @@
+{
+  "id": "82_bryan_drive_taunton_ma_02780",
+  "kind": "venue",
+  "name": "82 Bryan Drive, Taunton, MA 02780",
+  "city": null,
+  "venue_type": null,
+  "website": null,
+  "tier": "tier_3",
+  "deal_stats": {
+    "opp_count": 2,
+    "total_value": 11850.0,
+    "avg_deal_value": 5925.0,
+    "lead_name_refs": 0
+  },
+  "close_account": {
+    "has_lead": false,
+    "lead_status": null,
+    "lead_url": null
+  },
+  "raw_variants": [
+    "82 Bryan Drive, Taunton, MA 02780"
+  ],
+  "action": "📋 Create venue lead account",
+  "notes": [
+    "2 opportunities totaling $11,850.00 — rank #29 by deal value.",
+    "No Close lead account yet — recommend creating one to track relationship."
+  ]
+}

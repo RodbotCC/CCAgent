@@ -53,6 +53,22 @@ CC Agent/
     └── agents/               # sub-agents (inbox_triage lives here by default)
 ```
 
+## Page-Asset Truth Gate
+
+`docs/page_asset_sitemap.md` is the canonical map of:
+- every app route/page
+- visible assets on each page
+- the code paths and API/data bindings that control those assets
+
+Completion rule for all UI/routing/data-binding work:
+
+- If you change a page, route behavior, asset wiring, or page-level API path, you must update `docs/page_asset_sitemap.md` in the same change.
+- A task touching page behavior is not done until the sitemap is updated.
+- Review checklist:
+  - route/component mapping still matches `app.jsx`
+  - asset ownership references still match real code paths
+  - backend/API references still match `server.py`
+
 ## Rodbot
 
 Reflective intelligence layer. Watches ledger events, distills them into structured memories with an editorial voice. Configure Rodbot's personality and voice in:
@@ -73,6 +89,10 @@ Cold-start bedrock is empty by design. Populate by either:
 3. **Delegations** — ask Claude Code (via the Delegate tab) to scaffold a project or a person from a description.
 
 After every create under a loader-visible directory, **append the path to `indexes/index.json`** or the UI won't see the file.
+
+### People taxonomy
+
+Every `people/<slug>.json` includes a `"kind"` field set to one of: `"lead"`, `"client"`, `"coworker"`, `"contact"`. The UI splits People into four pages off this field. New records MUST set kind explicitly. Reclassification is a one-field edit — no file move. See `CLAUDE.md` §3.1 for the full taxonomy and `CCAgentindex/Rodbot/identity.md` for how Rodbot's voice register shifts per kind.
 
 ## North Star anchors
 

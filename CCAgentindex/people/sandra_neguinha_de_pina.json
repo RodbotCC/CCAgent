@@ -1,0 +1,85 @@
+{
+  "id": "sandra_neguinha_de_pina",
+  "kind": "lead",
+  "name": "Sandra Neguinha De Pina",
+  "role": "Graduation · June 10, 2026 · 20 guests · East Providence RI",
+  "relationship_tier": "stalled",
+  "relationship_weight": 0.32,
+  "contacts": {
+    "email": null,
+    "phone": null,
+    "whatsapp": null,
+    "slack_id": null,
+    "slack_channel": null,
+    "clickup_user_id": null,
+    "other": null
+  },
+  "handling": {
+    "preferred_channel": "SMS",
+    "response_latency_target": "within-24h",
+    "tone": "Cape Verdean / Lusophone heritage. Open in English; if she replies in Portuguese, switch. The 'Neguinha' nickname suggests warmth and informality is the right register.",
+    "voice_adjustments": "Andre voice: warm, bilingual-aware, brief. The Portuguese-template auto-fire on Apr 24 may have already hit her — be careful next move.",
+    "context": "Small graduation lead, June 10. 20 guests = drop-off territory ($660 ballpark). No response to any outreach. Cape Verdean / Portuguese-Lusophone surname pattern + East Providence demographic = cultural fit, modest scale.",
+    "off_limits_topics": null
+  },
+  "context_anchors": [
+    "Cape Verdean / Lusophone heritage (De Pina, Neguinha)",
+    "East Providence RI, 02915 — Cape Verdean/Portuguese corridor",
+    "20 guests / $660 ballpark = drop-off",
+    "June 10 (Wed) — possibly school graduation, weekday celebration",
+    "No response to any outreach yet",
+    "Apr 24 follow-up sent in Portuguese"
+  ],
+  "lead": {
+    "status": "stalled",
+    "stage": "cold_no_response_small_event",
+    "owner": "andre_raw",
+    "source": "FB Lead Form — VIDEO RODS WEDDING & FACELESS",
+    "event_type": "Graduation",
+    "event_date": "2026-06-10",
+    "guest_count": 20,
+    "venue": null,
+    "city": "East Providence, RI",
+    "quote_value": null,
+    "opportunity_value": 660,
+    "score_tags": ["immediate_need_3mo", "cape_verdean_fit", "small_event", "no_response"],
+    "last_activity": "2026-04-24 — Day-4 cadence SMS in Portuguese",
+    "speed_urgency": "high",
+    "next_move": "One bilingual-aware re-engagement message: drop-off vs light buffet + cuisine direction"
+  },
+  "enrichment": {
+    "confidence": 0.55,
+    "identity_notes": "'De Pina' = Cape Verdean / Portuguese-Lusophone surname. 'Neguinha' = Portuguese affectionate form, common in Brazilian and Cape Verdean communities. East Providence has meaningful Cape Verdean and Portuguese community.",
+    "win_angles": [
+      "Lusophone cultural fit — open EN, switch PT if she does",
+      "Right-size the offer — $660 drop-off is realistic",
+      "Cultural cuisine option — Brazilian/Portuguese-leaning would feel familiar",
+      "Graduation = emotional milestone, smaller event with real meaning"
+    ],
+    "nepq_openers": [
+      "Bilingual: 'Hey Sandra — for graduation June 10 with 20 guests, drop-off and you handle it, or light setup with attendant? Cuisine — Brazilian/Portuguese-leaning, or open? Tudo bem se preferir português.'",
+      "Frame: 'Whose graduation? Want to make sure the food honors the moment for them.'",
+      "Anchor: 'For 20 people, drop-off ~$X, light buffet ~$Y. Quick comparison?'"
+    ],
+    "open_gaps": [
+      "Phone capture (pull from Close)",
+      "Whose graduation",
+      "Venue (home most likely)",
+      "Service style preference",
+      "Cuisine direction",
+      "Language preference for ongoing comms"
+    ],
+    "strategic_note": "Small but culturally-aligned. One warm bilingual-aware message that gets cuisine direction + service style answered, then fast simple quote. Don't overinvest. If she comes back, close fast. If not, accept the loss — small jobs need fast wins, not long courtships."
+  },
+  "comms": [
+    {"ts": "2026-04-22T10:00:00Z", "channel": "sms", "direction": "out", "summary": "Inbound acknowledged + call attempts (no answer)"},
+    {"ts": "2026-04-22T11:00:00Z", "channel": "email", "direction": "out", "summary": "Service-types breakdown sent"},
+    {"ts": "2026-04-23T11:00:00Z", "channel": "sms", "direction": "out", "summary": "Re-engagement: call vs tasting"},
+    {"ts": "2026-04-24T13:00:00Z", "channel": "sms", "direction": "out", "summary": "Day-4 cadence in Portuguese"}
+  ],
+  "notes": [
+    "Cape Verdean cultural fit — language register matters",
+    "Small event = fast win or accept loss",
+    "Drop to long-term followup if no response in 7 days"
+  ]
+}

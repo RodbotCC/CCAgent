@@ -1,0 +1,28 @@
+{
+  "id": "3_lund_road_nashua_nh_church",
+  "kind": "venue",
+  "name": "3 Lund Road, Nashua NH (Church)",
+  "city": "Church",
+  "venue_type": null,
+  "website": null,
+  "tier": "tier_2",
+  "deal_stats": {
+    "opp_count": 2,
+    "total_value": 18200.0,
+    "avg_deal_value": 9100.0,
+    "lead_name_refs": 0
+  },
+  "close_account": {
+    "has_lead": false,
+    "lead_status": null,
+    "lead_url": null
+  },
+  "raw_variants": [
+    "3 Lund Road, Nashua NH (Church)"
+  ],
+  "action": "📋 Create venue lead account",
+  "notes": [
+    "2 opportunities totaling $18,200.00 — rank #14 by deal value.",
+    "No Close lead account yet — recommend creating one to track relationship."
+  ]
+}

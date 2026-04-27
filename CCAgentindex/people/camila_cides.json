@@ -1,0 +1,36 @@
+{
+  "id": "camila_cides",
+  "kind": "coworker",
+  "name": "Camila Cides",
+  "role": "Admin / Phone Screener",
+  "relationship_tier": "support",
+  "relationship_weight": 0.78,
+  "contacts": {
+    "email": "camila@comeketocatering.com",
+    "phone": null,
+    "whatsapp": null,
+    "slack_id": null,
+    "slack_channel": null
+  },
+  "handling": {
+    "preferred_channel": "Slack",
+    "response_latency_target": "same-day",
+    "tone": "Brief, warm, professional. She bridges incoming calls to the team — keep messages to her short and actionable.",
+    "voice_adjustments": "Mirror Camila's phone-bridge register: italicize live phone alerts using the format '*[Person] just called*' or '*[Phone] is calling*' so they pop in channel. Beyond alerts, stay brief and warm — 'Good morning everybody!', 'this is the other one' (forwarding lead links), 'ok:+1:'. The format IS the message — don't elaborate. Use :+1: occasionally. Otherwise proper capitalization and punctuation.",
+    "context": "Admin / phone screener. Catches inbound calls and posts italicized real-time alerts for the sales team to pick up.",
+    "off_limits_topics": null
+  },
+  "context_anchors": [
+    "Characteristic phrase: \"*[Name] just called*\" — italicized phone alert",
+    "Characteristic phrase: \"*[Phone number] is calling*\"",
+    "Characteristic phrase: \"Good morning everybody!\"",
+    "Characteristic phrase: \"this is the other one\" (forwarding lead links)",
+    "Verbatim: \"ok:+1:\"",
+    "Punctuation tic: *italics* for phone-call alerts"
+  ],
+  "notes": [
+    "Owns: inbound phone screening, lead-link forwarding",
+    "Cadence anchor: italicized phone alerts in real-time as calls come in",
+    "Greets across timezones — 'Good morning everybody! Good evening Toni!'"
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "id": "old_town_hall",
+  "kind": "venue",
+  "name": "Old Town Hall",
+  "city": null,
+  "venue_type": null,
+  "website": null,
+  "tier": "tier_3",
+  "deal_stats": {
+    "opp_count": 5,
+    "total_value": 12538.4,
+    "avg_deal_value": 2507.68,
+    "lead_name_refs": 2
+  },
+  "close_account": {
+    "has_lead": false,
+    "lead_status": null,
+    "lead_url": null
+  },
+  "raw_variants": [
+    "Old Town Hall"
+  ],
+  "action": "ENRICH NOW — high-volume, no lead account",
+  "notes": [
+    "5 opportunities totaling $12,538.40 — rank #28 by deal value.",
+    "No Close lead account yet — recommend creating one to track relationship.",
+    "2 leads have referenced this as their venue choice."
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "id": "camp_robindel",
+  "kind": "venue",
+  "name": "Camp  Robindel",
+  "city": null,
+  "venue_type": null,
+  "website": null,
+  "tier": "tier_3",
+  "deal_stats": {
+    "opp_count": 3,
+    "total_value": 11435.02,
+    "avg_deal_value": 3811.67,
+    "lead_name_refs": 0
+  },
+  "close_account": {
+    "has_lead": false,
+    "lead_status": null,
+    "lead_url": null
+  },
+  "raw_variants": [
+    "Camp  Robindel"
+  ],
+  "action": "📋 Create venue lead account",
+  "notes": [
+    "3 opportunities totaling $11,435.02 — rank #30 by deal value.",
+    "No Close lead account yet — recommend creating one to track relationship."
+  ]
+}

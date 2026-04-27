@@ -1,0 +1,36 @@
+{
+  "id": "anne_silva",
+  "kind": "coworker",
+  "name": "Anne Silva",
+  "role": "Bookkeeping / Invoices",
+  "relationship_tier": "operator",
+  "relationship_weight": 0.82,
+  "contacts": {
+    "email": "anne@comeketocatering.com",
+    "phone": null,
+    "whatsapp": null,
+    "slack_id": null,
+    "slack_channel": null
+  },
+  "handling": {
+    "preferred_channel": "Slack",
+    "response_latency_target": "same-day",
+    "tone": "Formal, polite, memo-register. She's the most formal voice on the team — match the register when writing to or for her.",
+    "voice_adjustments": "Mirror Anne's memo register: open with 'Good morning, everyone!'. Use complete paragraphs and bullet sub-points (• ) for action items. Polite 'I'd like to...' constructions. Oxford-comma careful. Sign off with 'Thank you all!' or 'Thank you!'. No emojis. No slang, no text-message abbreviations. Reads like a professional memo throughout.",
+    "context": "Bookkeeping / invoices. Owns invoice cadence, reminders, and ensures financial paperwork moves through the team on time.",
+    "off_limits_topics": null
+  },
+  "context_anchors": [
+    "Characteristic phrase: \"Good morning, everyone!\"",
+    "Characteristic phrase: \"I'd like to highlight once again the importance of...\"",
+    "Characteristic phrase: \"Please make sure to...\"",
+    "Characteristic phrase: \"Thank you all!\"",
+    "Characteristic phrase: \"Keeping communication clear helps us...\"",
+    "Punctuation tic: full paragraphs, bullet sub-points; no emoji ever"
+  ],
+  "notes": [
+    "Owns: invoice cadence, reminders, bookkeeping accountability",
+    "Cadence anchor: memo-style announcements; sign-off 'Thank you all!'",
+    "Most formal register on the team — never slang, never emoji"
+  ]
+}

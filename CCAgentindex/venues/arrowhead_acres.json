@@ -1,0 +1,30 @@
+{
+  "id": "arrowhead_acres",
+  "kind": "venue",
+  "name": "Arrowhead Acres",
+  "city": null,
+  "venue_type": null,
+  "website": null,
+  "tier": "tier_1",
+  "deal_stats": {
+    "opp_count": 22,
+    "total_value": 53358.79,
+    "avg_deal_value": 2425.4,
+    "lead_name_refs": 9
+  },
+  "close_account": {
+    "has_lead": false,
+    "lead_status": null,
+    "lead_url": null
+  },
+  "raw_variants": [
+    "Arrow Head Acres",
+    "Arrowhead Acres"
+  ],
+  "action": "ENRICH NOW — high-volume, no lead account",
+  "notes": [
+    "22 opportunities totaling $53,358.79 — rank #4 by deal value.",
+    "No Close lead account yet — recommend creating one to track relationship.",
+    "9 leads have referenced this as their venue choice."
+  ]
+}

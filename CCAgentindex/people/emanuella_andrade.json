@@ -1,0 +1,86 @@
+{
+  "id": "emanuella_andrade",
+  "kind": "lead",
+  "name": "Emanuella Andrade",
+  "role": "Wedding · Date TBD · 101-200 guests · Bedford MA",
+  "relationship_tier": "stalled",
+  "relationship_weight": 0.18,
+  "contacts": {
+    "email": "emanuellaandrade06@gmail.com",
+    "phone": null,
+    "whatsapp": null,
+    "slack_id": null,
+    "slack_channel": null,
+    "clickup_user_id": null,
+    "other": "Phone (791) 698-6073 INVALID — area code doesn't exist in NANP"
+  },
+  "handling": {
+    "preferred_channel": "Email",
+    "response_latency_target": "within-week",
+    "tone": "Email-only constraint until phone is fixed. Don't lose the Instagram-organic goodwill with annoyed messaging. Soft and helpful.",
+    "voice_adjustments": "Andre voice: warm, brief, asking once for working number + wedding date. Don't transactional-shame.",
+    "context": "Inbound Apr 15 from Instagram → website. Phone (791) 698-6073 — 791 is NOT a valid US area code (likely typo of 781, North/Greater Boston). All calls blocked. Andre demoted to 'Probably Not.' Email is only working channel. No event date, large guest count.",
+    "off_limits_topics": null
+  },
+  "context_anchors": [
+    "Phone (791) 698-6073 INVALID — likely typo of 781",
+    "Bedford MA, 01730 — affluent MetroWest, 17 mi from Boston",
+    "Andrade = Portuguese/Brazilian surname",
+    "Instagram → website discovery (organic, sought us out)",
+    "Wedding date NOT specified",
+    "101-200 guests, full-service requested = mid-five-figure deal potential"
+  ],
+  "lead": {
+    "status": "stalled",
+    "stage": "invalid_phone_email_only_stalled",
+    "owner": "andre_raw",
+    "source": "Instagram → comeketocatering.com",
+    "event_type": "Wedding",
+    "event_date": null,
+    "guest_count": 150,
+    "venue": null,
+    "city": "Bedford, MA",
+    "quote_value": null,
+    "opportunity_value": 5689,
+    "score_tags": ["invalid_phone", "no_date", "instagram_organic", "full_service_request"],
+    "last_activity": "2026-04-22 — calls blocked, status demoted",
+    "speed_urgency": "low",
+    "next_move": "One excellent email asking for correct phone + wedding date framed as 'I want to take care of you properly'"
+  },
+  "enrichment": {
+    "confidence": 0.30,
+    "identity_notes": "791 area code does NOT exist in NANP — either typo (781 likely fit) or fake. 'Andrade' Portuguese/Brazilian surname. Instagram → website organic = sought us out specifically. Bedford = upper-mid-tier expectations.",
+    "win_angles": [
+      "Instagram-discovery path = brand goodwill, don't lose it",
+      "Email-only is a constraint, not a death sentence",
+      "Bedford = upper-mid-tier, discerning when she responds",
+      "Full-service + 100-200 guests = mid-five-figure deal worth patience"
+    ],
+    "nepq_openers": [
+      "Email continuation: 'Hi Emanuella — quick note. The number on your form (791-698-6073) seems to be a typo somewhere. Could you send the correct one when you get a moment? In the meantime, want to make sure we don't lose momentum: what's the wedding date you're working toward?'",
+      "Problem: 'For 100-200 guests, full-service usually involves 4-6 month minimum runway. Knowing your date helps me tell you whether we have time to do this right.'",
+      "Identity: 'From Instagram to our site, looks like you found us before we found you — what caught your attention about Comeketo?'"
+    ],
+    "open_gaps": [
+      "Working phone number — non-negotiable",
+      "Wedding date — non-negotiable",
+      "Venue",
+      "Bride's role (Emanuella herself or planning for someone)",
+      "Cultural/cuisine direction",
+      "Budget reality"
+    ],
+    "strategic_note": "Stuck because we can't reach her. ONE excellent email asking for phone + date in 'I want to take care of you properly' framing. If responds with details, opp probability legitimately moves to 75%. If not, opp moves to 15% and quarterly nurture. Current state — high probability + no contact path — is fictional."
+  },
+  "comms": [
+    {"ts": "2026-04-15T10:00:00Z", "channel": "email", "direction": "out", "summary": "Inbound from website + service overview"},
+    {"ts": "2026-04-15T11:00:00Z", "channel": "email", "direction": "out", "summary": "'What's a good number to call?' email"},
+    {"ts": "2026-04-19T11:00:00Z", "channel": "email", "direction": "out", "summary": "'Quick question about your...' drip"},
+    {"ts": "2026-04-22T10:00:00Z", "channel": "call", "direction": "out", "summary": "3 call attempts — all blocked/no answer"},
+    {"ts": "2026-04-22T11:00:00Z", "channel": "email", "direction": "out", "summary": "'Number I have for you is invalid' final"}
+  ],
+  "notes": [
+    "75% Close confidence is fictional given no contact path",
+    "Email-only until phone resolved",
+    "Don't burn cycles — one good email then quarterly nurture"
+  ]
+}

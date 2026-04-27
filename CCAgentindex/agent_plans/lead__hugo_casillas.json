@@ -1,0 +1,26 @@
+{
+  "schema": "comeketo.agent_plan.v1",
+  "slug": "lead__hugo_casillas",
+  "name": "Hugo Casillas · Lead orchestrator",
+  "description": "Hugo's dedicated sub-agent. Runs the live 7-day NEPQ cadence (Day-1 email Apr 27, Day-4 SMS Apr 30, Day-5 quote-expiry SMS May 1, Day-6 email May 2, May 17 tasting target). Watches Close every 10 min for Hugo's reply. Drafts in Andre's voice mirroring people/andre_raw.json. Fires the plan executor (R2) at 10:30am ET weekdays. Briefs Andre on the May 1 quote-expiry deadline and the May 16 6pm pre-tasting brief if Hugo confirms. Highland Orchard is the trust anchor — used once, used right, in Day-1.",
+  "trigger_label": "weekdays · plan-day cadence + comms heartbeat · LIVE",
+  "orchestrator": { "label": "Rodbot", "model": "claude-sonnet-4-6", "register": "operational" },
+  "budgets": { "max_sub_agents": 4, "tokens_cap": 6000, "wallclock_cap_s": 30, "retry_policy": "linear_backoff" },
+  "sub_agents": [
+    { "id": "SA-COMMS", "action": "watch", "tool": "close.lead.fetch", "prompt_template": "Pull last 10 comms for hugo_casillas; flag any inbound since last_seen_ts. Steve-equivalent for Hugo: fiancée writing directly = STRONGEST signal — escalate.", "leads": 1, "retries": 1, "timeout_s": 15, "tone": "blush", "expected_latency_s": 2.0 },
+    { "id": "SA-PLAN", "action": "execute", "tool": "workflow.fire", "prompt_template": "Fire today's plan day for hugo_casillas (workflow: hugo-casillas-seven-day). Skip on response. Draft in Andre voice. Day 1 = email, Day 4 = SMS, Day 6 = email, all conditional on no inbound except Day 1.", "leads": 1, "retries": 0, "timeout_s": 25, "tone": "rose", "expected_latency_s": 4.5 },
+    { "id": "SA-VOICE", "action": "draft", "tool": "rodbot.voice", "prompt_template": "Mirror Andre's lowercase peer voice (people/andre_raw.json handling.voice_adjustments). Reference Highland Orchard, the picanha/bacon-wrapped chicken/cauliflower steak menu, and the fiancée's vegetarian anchor. No sales heat, no 'circling back', no template smell.", "leads": 1, "retries": 1, "timeout_s": 20, "tone": "lavender", "expected_latency_s": 3.5 },
+    { "id": "SA-ALERT", "action": "brief", "tool": "today.append", "prompt_template": "If quote expires within 7d (May 1) or tasting within 48h (May 17), append to Andre's today.html. Day-of: surface watch-fors — competing-quote pushback, fiancée engagement, Highland Orchard logistics.", "leads": 1, "retries": 1, "timeout_s": 10, "tone": "mint", "expected_latency_s": 1.5 }
+  ],
+  "merge": { "label": "merge → write to today.html + activity.jsonl", "target": "state/today.html" },
+  "metadata": {
+    "created_at": "2026-04-27T00:00:00Z",
+    "last_modified": "2026-04-27T00:00:00Z",
+    "version": 1,
+    "person_id": "hugo_casillas",
+    "kind": "lead_orchestrator",
+    "owner_coworker_id": "andre_raw",
+    "linked_workflow": "hugo-casillas-seven-day",
+    "status": "live"
+  }
+}

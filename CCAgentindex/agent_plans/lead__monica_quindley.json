@@ -1,0 +1,79 @@
+{
+  "schema": "comeketo.agent_plan.v1",
+  "slug": "lead__monica_quindley",
+  "name": "Monica Quindley · Lead orchestrator",
+  "description": "Monica Quindley's dedicated sub-agent. Wedding · 2027-06-12 · 150 guests · Private waterside property, Plymouth area. Lead status: tasting_scheduled. Stage: post_discovery_call_tasting_invited. Templated 7-day NEPQ cadence (instantiated from seven-day-nepq-template). Next move per orchestrator: Lock May 17 or May 31 tasting — both Monica and Julia ideally. Watches Close every 10 min for inbound, drafts in Andre's voice, fires plan-day moves through Close. Cadence not yet activated — awaiting Andre's go-ahead in the lead box.",
+  "trigger_label": "weekdays · plan-day cadence + comms heartbeat · READY",
+  "orchestrator": {
+    "label": "Rodbot",
+    "model": "claude-sonnet-4-6",
+    "register": "operational"
+  },
+  "budgets": {
+    "max_sub_agents": 4,
+    "tokens_cap": 6000,
+    "wallclock_cap_s": 30,
+    "retry_policy": "linear_backoff"
+  },
+  "sub_agents": [
+    {
+      "id": "SA-COMMS",
+      "action": "watch",
+      "tool": "close.lead.fetch",
+      "prompt_template": "Pull last 10 comms for monica_quindley; flag any inbound since last_seen_ts. Apply lead-specific escalation rules from people/monica_quindley.json handling.tone.",
+      "leads": 1,
+      "retries": 1,
+      "timeout_s": 15,
+      "tone": "blush",
+      "expected_latency_s": 2.0
+    },
+    {
+      "id": "SA-PLAN",
+      "action": "execute",
+      "tool": "workflow.fire",
+      "prompt_template": "Fire today's plan day for monica_quindley (template: seven-day-nepq-template). Skip on response. Day 1 = email, Day 4 = SMS conditional, Day 6 = email conditional. Tasting / quote-expiry hook configured per lead.",
+      "leads": 1,
+      "retries": 0,
+      "timeout_s": 25,
+      "tone": "rose",
+      "expected_latency_s": 4.5
+    },
+    {
+      "id": "SA-VOICE",
+      "action": "draft",
+      "tool": "rodbot.voice",
+      "prompt_template": "Mirror Andre's lowercase peer voice. Reference Monica Quindley's context anchors from people/monica_quindley.json. No sales heat, no template smell.",
+      "leads": 1,
+      "retries": 1,
+      "timeout_s": 20,
+      "tone": "lavender",
+      "expected_latency_s": 3.5
+    },
+    {
+      "id": "SA-ALERT",
+      "action": "brief",
+      "tool": "today.append",
+      "prompt_template": "Surface Monica Quindley's row on Andre's today.html — current plan day, last move, watch-fors, days to event (2027-06-12).",
+      "leads": 1,
+      "retries": 1,
+      "timeout_s": 10,
+      "tone": "mint",
+      "expected_latency_s": 1.5
+    }
+  ],
+  "merge": {
+    "label": "merge → write to today.html + activity.jsonl",
+    "target": "state/today.html"
+  },
+  "metadata": {
+    "created_at": "2026-04-27T00:00:00Z",
+    "last_modified": "2026-04-27T00:00:00Z",
+    "version": 1,
+    "person_id": "monica_quindley",
+    "kind": "lead_orchestrator",
+    "owner_coworker_id": "andre_raw",
+    "linked_workflow": "seven-day-nepq-template",
+    "status": "ready",
+    "lead_status": "tasting_scheduled"
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "schema": "comeketo.trigger.v1",
+  "slug": "morning_brief",
+  "kind": "cron",
+  "label": "AUTO.06 · Andre morning brief (alias)",
+  "enabled": true,
+  "tone": "lemon",
+  "notes": "Alias of auto_06_andre_morning_brief — kept for backward compatibility with the original test slug. Live — page-surfaced via bin/today.py. Reads active leads' plan-day, renders draft + alerts on today.html.",
+  "created_at": "2026-04-25T09:05:09.440507+00:00",
+  "last_modified": "2026-04-27T00:00:00+00:00",
+  "cron": "0 8 * * 1-5",
+  "tz": "America/New_York",
+  "workflow_slug": null,
+  "preset": "every_weekday_8am",
+  "alias_of": "auto_06_andre_morning_brief"
+}

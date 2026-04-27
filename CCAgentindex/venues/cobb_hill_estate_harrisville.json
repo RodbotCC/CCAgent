@@ -1,0 +1,30 @@
+{
+  "id": "cobb_hill_estate_harrisville",
+  "kind": "venue",
+  "name": "Cobb Hill Estate (Harrisville)",
+  "city": "Harrisville",
+  "venue_type": null,
+  "website": null,
+  "tier": "tier_3",
+  "deal_stats": {
+    "opp_count": 6,
+    "total_value": 12792.75,
+    "avg_deal_value": 2132.12,
+    "lead_name_refs": 3
+  },
+  "close_account": {
+    "has_lead": false,
+    "lead_status": null,
+    "lead_url": null
+  },
+  "raw_variants": [
+    "Cobb Hill Estate",
+    "Cobb Hill Estate in Harrisville"
+  ],
+  "action": "ENRICH NOW — high-volume, no lead account",
+  "notes": [
+    "6 opportunities totaling $12,792.75 — rank #27 by deal value.",
+    "No Close lead account yet — recommend creating one to track relationship.",
+    "3 leads have referenced this as their venue choice."
+  ]
+}

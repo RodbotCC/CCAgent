@@ -27,7 +27,7 @@ import urllib.error
 import urllib.parse
 import urllib.request
 import uuid
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 
@@ -401,230 +401,6 @@ def resolve_and_cache_clickup():
     return _CLICKUP_DEFAULT
 
 
-# ═══════════════════ Analytics CSV parsers ═══════════════════
-
-def _csv_rows(path):
-    import csv
-    with open(path, newline="", encoding="utf-8", errors="replace") as f:
-        return list(csv.reader(f))
-
-def _find_rawfile(rawdir, fragment):
-    import os
-    # Files have long cosmetic names; match by substring so we don't care
-    # about exact spacing/emoji/punctuation.
-    for fn in os.listdir(rawdir):
-        if fragment.lower() in fn.lower():
-            return rawdir / fn
-    raise FileNotFoundError(rawdir / fragment)
-
-def _to_num(s):
-    if s is None: return None
-    s = str(s).strip().replace("$","").replace(",","").replace("%","")
-    if not s or s == "#DIV/0!": return None
-    try: return float(s)
-    except Exception: return None
-
-def _parse_tasting_conversion(rawdir):
-    path = _find_rawfile(rawdir, "MONTHLY TASTING CONVERSION")
-    rows = _csv_rows(path)
-    # header row: MONTH, # Attended, # Won, # Pending, Tasting→Booking %, DATE
-    data = []
-    for r in rows[2:]:
-        if len(r) < 5: continue
-        month = (r[0] or "").strip()
-        if not month: continue
-        attended = _to_num(r[1])
-        won      = _to_num(r[2])
-        pending  = _to_num(r[3])
-        rate     = _to_num(r[4])
-        if attended is None: continue
-        data.append({
-            "month": month,
-            "attended": int(attended or 0),
-            "won": int(won or 0),
-            "pending": int(pending or 0),
-            "conversion_rate": rate,  # percentage
-        })
-    # Totals across the period
-    total_attended = sum(d["attended"] for d in data)
-    total_won      = sum(d["won"]      for d in data)
-    total_pending  = sum(d["pending"]  for d in data)
-    overall_rate   = (total_won / total_attended * 100) if total_attended else None
-    return {
-        "ok": True,
-        "dataset": "tasting_conversion",
-        "months": data,
-        "totals": {
-            "attended": total_attended,
-            "won":      total_won,
-            "pending":  total_pending,
-            "conversion_rate": overall_rate,
-        },
-    }
-
-def _parse_lead_sources(rawdir):
-    path = _find_rawfile(rawdir, "Leads Source")
-    rows = _csv_rows(path)
-    # row 0: headers — first col is lead name, rest are source columns + TOTAL
-    header = rows[0]
-    source_cols = [(i, h.strip()) for i, h in enumerate(header[1:], start=1) if h.strip() and h.strip().upper() not in ("TOTAL", "COLUMN 1")]
-    counts = {name: 0 for _, name in source_cols}
-    leads_per_source = {name: [] for _, name in source_cols}
-    total_leads = 0
-    for r in rows[1:]:
-        if len(r) < 2: continue
-        lead = (r[0] or "").strip()
-        if not lead: continue
-        total_leads += 1
-        for i, name in source_cols:
-            val = r[i] if i < len(r) else ""
-            if val and val.strip():
-                counts[name] += 1
-                leads_per_source[name].append(lead)
-    # Sort sources by count desc and drop zeros
-    ranked = sorted(
-        [{"source": name, "count": counts[name], "sample_leads": leads_per_source[name][:5]}
-         for name in counts if counts[name] > 0],
-        key=lambda x: -x["count"],
-    )
-    return {
-        "ok": True,
-        "dataset": "lead_sources",
-        "period": "December 2025",
-        "total_leads": total_leads,
-        "sources": ranked,
-    }
-
-def _parse_revenue_timeline(rawdir):
-    path = _find_rawfile(rawdir, "Payments _ Cash Collection _ Cash Flow")
-    rows = _csv_rows(path)
-    # Row 0: explanatory note. Row 1: week-range headers (col 0 = "Won Deals"
-    # label, cols 1..n = "7/6/25 - 7/12/25"). Row 2: weekly totals (col 0 =
-    # grand total $693,837, cols 1..n = per-week totals). Row 3+: individual
-    # customer payment rows (not needed here).
-    if len(rows) < 3:
-        raise ValueError("revenue file too short")
-    headers = rows[1][1:]
-    totals  = rows[2][1:]
-    weekly = []
-    for h, t in zip(headers, totals):
-        h = (h or "").strip(); t = (t or "").strip()
-        if not h: continue
-        n = _to_num(t)
-        # Keep zero weeks — the timeline should show flat periods too
-        if n is None: n = 0
-        start = h.split(" - ")[0].strip()
-        weekly.append({"week_start": start, "week_label": h, "revenue": n})
-    grand_total = _to_num(rows[2][0]) or sum(w["revenue"] for w in weekly)
-    # Peak + running stats
-    non_zero = [w for w in weekly if w["revenue"] > 0]
-    peak = max(non_zero, key=lambda w: w["revenue"]) if non_zero else None
-    avg = (sum(w["revenue"] for w in non_zero) / len(non_zero)) if non_zero else 0
-    return {
-        "ok": True,
-        "dataset": "revenue_timeline",
-        "weeks": weekly,
-        "grand_total": grand_total,
-        "peak_week": peak,
-        "avg_weekly": avg,
-        "active_weeks": len(non_zero),
-        "week_count": len(weekly),
-    }
-
-def _parse_venue_partners(rawdir):
-    path = _find_rawfile(rawdir, "Venue Partners")
-    rows = _csv_rows(path)
-    # Column 0: "# OF COMPLETED EVENTS" banner OR row with tier+venue.
-    # Column 3: VENUE NAME. Column 1: tier. We treat rows where col 3 has a
-    # real venue name as venue records, and interpret col 0 to extract the
-    # event-count bucket.
-    venues = []
-    current_bucket = None
-    import re
-    for r in rows[2:]:
-        if len(r) < 4: continue
-        banner = (r[0] or "").strip().upper()
-        m = re.match(r"COMPLETED\s+(\d+)\s+EVENTS?", banner)
-        if m:
-            current_bucket = int(m.group(1))
-            continue
-        name = (r[3] or "").strip()
-        tier = (r[1] or "").strip()
-        address = (r[5] or "").strip() if len(r) > 5 else ""
-        if not name: continue
-        # Skip tier-header rows (they have tier but no venue)
-        if tier and not name: continue
-        events = current_bucket if current_bucket is not None else (_to_num(r[0]) or 0)
-        venues.append({
-            "name": name,
-            "tier": tier or None,
-            "events_completed": int(events or 0),
-            "address": address or None,
-        })
-    # Aggregate by tier
-    tiers = {}
-    for v in venues:
-        k = v.get("tier") or "Unclassified"
-        tiers[k] = tiers.get(k, 0) + 1
-    # Top venues by events
-    top_venues = sorted([v for v in venues if v["events_completed"] > 0], key=lambda v: -v["events_completed"])[:20]
-    return {
-        "ok": True,
-        "dataset": "venue_partners",
-        "venues": venues,
-        "venue_count": len(venues),
-        "partnered_count": sum(1 for v in venues if v["tier"] and "TIER" in (v["tier"] or "").upper()),
-        "top_venues": top_venues,
-        "tiers": [{"tier": t, "count": n} for t, n in sorted(tiers.items(), key=lambda x: -x[1])],
-    }
-
-def _parse_event_labor(rawdir):
-    path = _find_rawfile(rawdir, "Event Labor Projection")
-    rows = _csv_rows(path)
-    # Each row: WEEK label, Event, COUNTA event date, (blank), WEEK (number), staff_counta, bartender, extra
-    weeks = []
-    import re
-    for r in rows[1:]:
-        if len(r) < 3: continue
-        label = (r[0] or "").strip()
-        if not label or label.lower().startswith("total") or label.lower() == "grand total":
-            continue
-        count = _to_num(r[2])
-        if count is None: continue
-        m = re.match(r"Week\s*(\d+)\s*\(([^)]+)\)\s*(Total)?", label, re.I)
-        if not m: continue
-        week_num = int(m.group(1))
-        window = m.group(2).strip()
-        is_total = bool(m.group(3))
-        if is_total:
-            weeks.append({"week": week_num, "window": window, "events": int(count)})
-    return {
-        "ok": True,
-        "dataset": "event_labor",
-        "weeks": sorted(weeks, key=lambda w: w["week"]),
-    }
-
-def _build_overview(rawdir):
-    # Headline numbers across every dataset for the Analytics → Overview tab.
-    out = {"ok": True, "dataset": "overview"}
-    try:
-        tc = _parse_tasting_conversion(rawdir); out["tasting"] = tc["totals"]; out["tasting"]["months"] = tc["months"]
-    except Exception as e: out["tasting_error"] = str(e)
-    try:
-        ls = _parse_lead_sources(rawdir)
-        out["lead_sources"] = {"total_leads": ls["total_leads"], "top_3": ls["sources"][:3]}
-    except Exception as e: out["lead_sources_error"] = str(e)
-    try:
-        rt = _parse_revenue_timeline(rawdir)
-        out["revenue"] = {"grand_total": rt["grand_total"], "peak_week": rt["peak_week"], "week_count": rt["week_count"]}
-    except Exception as e: out["revenue_error"] = str(e)
-    try:
-        vp = _parse_venue_partners(rawdir)
-        out["venues"] = {"venue_count": vp["venue_count"], "partnered_count": vp["partnered_count"], "top_tier": vp["tiers"][:3]}
-    except Exception as e: out["venues_error"] = str(e)
-    return out
-
-
 def _twilio_basic():
     """Basic auth pair for Twilio REST. Prefer API Key (SK...) + secret because
     it's revocable without rotating the whole account. Falls back to Account
@@ -769,9 +545,6 @@ class Handler(SimpleHTTPRequestHandler):
 
     def do_GET(self):
         p = self._api_path()
-        if p.startswith("/api/analytics/"):
-            name = p[len("/api/analytics/"):]
-            return self._analytics_get(name)
         if p == "/api/status":
             return self._json({
                 "openai":  bool(ENV.get("OPENAI_API_KEY")),
@@ -799,8 +572,6 @@ class Handler(SimpleHTTPRequestHandler):
             # Re-resolve on demand (e.g. after user renames a list in ClickUp).
             result = resolve_and_cache_clickup()
             return self._json(result)
-        if p == "/api/inbox":
-            return self._inbox_list()
         if p == "/api/briefings":
             return self._briefings_list()
         if p.startswith("/api/briefings/"):
@@ -834,11 +605,6 @@ class Handler(SimpleHTTPRequestHandler):
             return self._streak_read()
         if p == "/api/grid_affinity":
             return self._grid_affinity_read()
-        if p == "/api/projects":
-            return self._projects_list()
-        if p.startswith("/api/projects/"):
-            pid = p[len("/api/projects/"):].split("/")[0]
-            return self._project_read(pid)
         if p == "/api/workflows/list":
             return self._workflows_list()
         if p.startswith("/api/workflows/get"):
@@ -847,28 +613,22 @@ class Handler(SimpleHTTPRequestHandler):
             return self._catalog_edges_list()
         if p.startswith("/api/catalog/edges/get"):
             return self._catalog_edge_get()
+        if p == "/api/triggers/list":
+            return self._triggers_list()
+        if p == "/api/agent_plans/list":
+            return self._agent_plans_list()
+        if p.startswith("/api/agent_plans/get"):
+            return self._agent_plan_get()
+        if p == "/api/state/snapshot":
+            return self._state_snapshot()
+        if p == "/api/hooks/snapshot":
+            return self._hooks_snapshot()
         if p.startswith("/annotations/"):
             return self._annotation_serve()
-        if p == "/api/tables/list":
-            return self._tables_list()
-        if p.startswith("/api/tables/get"):
-            return self._table_get()
-        if p.startswith("/api/charts/list"):
-            return self._charts_list()
-        if p.startswith("/api/charts/get"):
-            return self._chart_get()
-        if p == "/api/rodbot/identity":
-            return self._rodbot_identity()
-        if p == "/api/rodbot/palette":
-            return self._rodbot_palette()
-        if p == "/api/rodbot/character":
-            return self._rodbot_character()
-        if p == "/api/rodbot/traits":
-            return self._rodbot_traits()
-        if p.startswith("/api/rodbot/memory"):
-            return self._rodbot_memory_read()
-        if p.startswith("/api/rodbot/reflections"):
-            return self._rodbot_reflections_read()
+        if p == "/api/reports/list":
+            return self._reports_list()
+        if p == "/api/reports/get":
+            return self._reports_get()
         if p.startswith("/api/proxy/"):
             return self._proxy()
         return super().do_GET()
@@ -1027,178 +787,6 @@ class Handler(SimpleHTTPRequestHandler):
         p.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
         return self._json({"ok": True})
 
-    # ────── Rodbot: the reflective intelligence inside Comeketo Agent ──────────
-    # Rodbot watches ledger events and distills them into structured memories.
-    # She runs on OpenAI (gpt-5.4-mini by default — cheap, fast, always-on) even
-    # when the main chat is routed to Claude Code. This is deliberate:
-    # reflections are background work and shouldn't burn your Max plan turns.
-
-    def _rodbot_dir(self):
-        return HERE / "CCAgentindex" / "Rodbot"
-
-    def _rodbot_identity(self):
-        p = self._rodbot_dir() / "identity.md"
-        if not p.exists():
-            return self._json({"ok": False, "error": "identity.md missing"}, code=404)
-        return self._json({"ok": True, "body": p.read_text(encoding="utf-8")})
-
-    def _rodbot_character(self):
-        p = self._rodbot_dir() / "character.md"
-        if not p.exists():
-            return self._json({"ok": True, "body": ""})
-        return self._json({"ok": True, "body": p.read_text(encoding="utf-8")})
-
-    def _rodbot_traits(self):
-        p = self._rodbot_dir() / "traits.md"
-        if not p.exists():
-            return self._json({"ok": True, "body": ""})
-        return self._json({"ok": True, "body": p.read_text(encoding="utf-8")})
-
-    def _rodbot_palette(self):
-        # Compressed essence only — the full palette is ~10KB, too heavy for
-        # every reflection. Essence is ~2KB and steers voice without quoting.
-        p = self._rodbot_dir() / "affective_essence.md"
-        if not p.exists():
-            return self._json({"ok": True, "body": ""})
-        return self._json({"ok": True, "body": p.read_text(encoding="utf-8")})
-
-    def _rodbot_memory_path(self):
-        return self._rodbot_dir() / "memory.jsonl"
-
-    def _rodbot_reflections_path(self):
-        return self._rodbot_dir() / "reflections.jsonl"
-
-    def _read_jsonl_tail(self, p, limit):
-        if not p.exists():
-            return []
-        lines = p.read_text(encoding="utf-8").splitlines()
-        out = []
-        for raw in lines[-max(limit, 1):] if limit else lines:
-            s = raw.strip()
-            if not s: continue
-            try: out.append(json.loads(s))
-            except Exception: out.append({"_parse_error": True, "raw": s})
-        return out
-
-    def _rodbot_memory_read(self):
-        q = self.path.split("?", 1)[1] if "?" in self.path else ""
-        params = urllib.parse.parse_qs(q)
-        try:
-            limit = int((params.get("limit") or ["0"])[0])
-        except Exception:
-            limit = 0
-        memories = self._read_jsonl_tail(self._rodbot_memory_path(), limit)
-        return self._json({"ok": True, "count": len(memories), "memories": memories})
-
-    def _rodbot_reflections_read(self):
-        q = self.path.split("?", 1)[1] if "?" in self.path else ""
-        params = urllib.parse.parse_qs(q)
-        try:
-            limit = int((params.get("limit") or ["100"])[0])
-        except Exception:
-            limit = 100
-        items = self._read_jsonl_tail(self._rodbot_reflections_path(), limit)
-        return self._json({"ok": True, "count": len(items), "reflections": items})
-
-    def _rodbot_reflect(self, body):
-        """Persist a pre-generated reflection.
-
-        The LLM call happens client-side via SecretaryAI.respond() — the same
-        path chat, grid generation, and commitment drafting use. This endpoint
-        is purely persistence: it receives the parsed reflection object, writes
-        the audit trail, writes a memory if importance clears the threshold,
-        and files an inbox entry if the reflection is actionable.
-
-        Request: {
-          parsed: {summary, tags, actionable, action_hint, related, importance, source_kinds, abstain},
-          source_event_count: int,
-          model: "gpt-5.4-mini" (informational — just recorded),
-          min_importance_to_remember: 0.5
-        }
-        """
-        try:
-            payload = json.loads(body.decode("utf-8")) if body else {}
-        except Exception as e:
-            return self._json({"ok": False, "error": f"bad json: {e}"}, code=400)
-
-        parsed = payload.get("parsed") or {}
-        if not isinstance(parsed, dict):
-            return self._json({"ok": False, "error": "missing parsed"}, code=400)
-
-        threshold = float(payload.get("min_importance_to_remember") or 0.5)
-        now = datetime.now(timezone.utc).isoformat()
-
-        # Record parse failures as reflection entries so the team can see what went wrong.
-        if parsed.get("parse_error"):
-            raw_entry = {
-                "id": "ref_" + uuid.uuid4().hex[:10], "t": now, "parse_error": True,
-                "raw": (parsed.get("raw") or "")[:2000],
-                "source_event_count": int(payload.get("source_event_count") or 0),
-                "model": payload.get("model") or "",
-            }
-            self._append_jsonl(self._rodbot_reflections_path(), raw_entry)
-            return self._json({"ok": False, "error": "client reported parse error", "recorded": True}, code=202)
-
-        reflection = {
-            "id": "ref_" + uuid.uuid4().hex[:10],
-            "t": now,
-            "summary":      (parsed.get("summary") or "").strip(),
-            "affect":       (parsed.get("affect") or "neutral").strip().lower(),
-            "tags":         [t for t in (parsed.get("tags") or []) if isinstance(t, str)],
-            "actionable":   bool(parsed.get("actionable")),
-            "action_hint":  parsed.get("action_hint") or None,
-            "related":      parsed.get("related") or {},
-            "importance":   0.0 if parsed.get("abstain") else float(parsed.get("importance") or 0.0),
-            "source_kinds": [k for k in (parsed.get("source_kinds") or []) if isinstance(k, str)],
-            "abstain":      bool(parsed.get("abstain")),
-            "source_event_count": int(payload.get("source_event_count") or 0),
-            "model":        payload.get("model") or "",
-        }
-
-        self._append_jsonl(self._rodbot_reflections_path(), reflection)
-
-        wrote_memory = False
-        if not reflection["abstain"] and reflection["importance"] >= threshold and reflection["summary"]:
-            mem = {
-                "id": "mem_" + uuid.uuid4().hex[:10],
-                "t": now,
-                "summary":      reflection["summary"],
-                "affect":       reflection["affect"],
-                "tags":         reflection["tags"],
-                "actionable":   reflection["actionable"],
-                "action_hint":  reflection["action_hint"],
-                "related":      reflection["related"],
-                "importance":   reflection["importance"],
-                "source_kinds": reflection["source_kinds"],
-                "reflection_id": reflection["id"],
-            }
-            self._append_jsonl(self._rodbot_memory_path(), mem)
-            wrote_memory = True
-
-        wrote_inbox = False
-        if reflection["actionable"] and reflection["importance"] >= threshold and reflection["summary"]:
-            try:
-                inbox_entry = {
-                    "id": "ib_" + uuid.uuid4().hex[:10],
-                    "kind": "note",
-                    "text": reflection["summary"] + (f"\n\n→ {reflection['action_hint']}" if reflection["action_hint"] else ""),
-                    "status": "open",
-                    "source": {"origin": "Rodbot", "reflection_id": reflection["id"]},
-                    "meta":   {"tags": reflection["tags"], "importance": reflection["importance"]},
-                    "t": now,
-                }
-                self._append_jsonl(self._inbox_path(), inbox_entry)
-                wrote_inbox = True
-            except Exception:
-                pass
-
-        return self._json({"ok": True, "reflection": reflection, "wrote_memory": wrote_memory, "wrote_inbox": wrote_inbox})
-
-    def _append_jsonl(self, p, obj):
-        p.parent.mkdir(parents=True, exist_ok=True)
-        with p.open("a", encoding="utf-8") as f:
-            f.write(json.dumps(obj, ensure_ascii=False) + "\n")
-
     # ────── Attachments: images dropped into chat ─────────────────────────
     # Saved to CCAgentindex/_inbox/attachments/<YYYY-MM-DD>/<uuid>.<ext>
     # and served back via the static file handler the base class provides.
@@ -1261,83 +849,10 @@ class Handler(SimpleHTTPRequestHandler):
             "url":  url,
         })
 
-    def _inbox_path(self):
-        return HERE / "CCAgentindex" / "_inbox" / "inbox.jsonl"
-
-    def _inbox_list(self):
-        p = self._inbox_path()
-        entries = []
-        if p.exists():
-            for i, raw in enumerate(p.read_text().splitlines()):
-                s = raw.strip()
-                if not s: continue
-                try: entries.append(json.loads(s))
-                except Exception: entries.append({"_parse_error": True, "_line": i, "raw": s})
-        return self._json({"entries": entries, "count": len(entries)})
-
-    def _inbox_append(self, body):
-        try:
-            entry = json.loads(body.decode("utf-8")) if body else {}
-        except Exception as e:
-            return self._json({"ok": False, "error": f"bad json: {e}"}, code=400)
-        # Ensure required fields / defaults.
-        from datetime import datetime, timezone
-        import uuid
-        entry.setdefault("id", f"ibx_{uuid.uuid4().hex[:10]}")
-        entry.setdefault("t", datetime.now(timezone.utc).isoformat())
-        entry.setdefault("kind", "note")
-        entry.setdefault("status", "open")
-        entry.setdefault("text", "")
-        p = self._inbox_path()
-        p.parent.mkdir(parents=True, exist_ok=True)
-        with p.open("a", encoding="utf-8") as f:
-            f.write(json.dumps(entry, ensure_ascii=False) + "\n")
-        return self._json({"ok": True, "entry": entry, "path": str(p.relative_to(HERE))})
-
-    def _inbox_update(self, body):
-        try:
-            patch = json.loads(body.decode("utf-8")) if body else {}
-        except Exception as e:
-            return self._json({"ok": False, "error": f"bad json: {e}"}, code=400)
-        target_id = patch.get("id")
-        if not target_id:
-            return self._json({"ok": False, "error": "missing id"}, code=400)
-        p = self._inbox_path()
-        if not p.exists():
-            return self._json({"ok": False, "error": "no inbox yet"}, code=404)
-        lines = p.read_text().splitlines()
-        out = []
-        updated = None
-        for line in lines:
-            s = line.strip()
-            if not s: continue
-            try:
-                e = json.loads(s)
-            except Exception:
-                out.append(line); continue
-            if e.get("id") == target_id:
-                for k, v in patch.items():
-                    if k == "id": continue
-                    e[k] = v
-                updated = e
-            out.append(json.dumps(e, ensure_ascii=False))
-        if not updated:
-            return self._json({"ok": False, "error": "id not found"}, code=404)
-        p.write_text("\n".join(out) + "\n", encoding="utf-8")
-        return self._json({"ok": True, "entry": updated})
-
     def do_POST(self):    return self._api_or_404()
     def do_PUT(self):     return self._api_or_404()
     def do_DELETE(self):  return self._api_or_404()
     def do_PATCH(self):   return self._api_or_404()
-
-    # ────── Projects: list/read/write project JSON files ─────────────────
-    # Path: CCAgentindex/projects/<id>.json
-    # Schema is additive — existing fields preserved, new fields (phases,
-    # deliverables, tasks, wins, misses) layered on top without breaking
-    # projects that don't have them yet.
-    def _projects_dir(self):
-        return HERE / "CCAgentindex" / "projects"
 
     # ────── Workflows: Automation Graph persistence ─────────────────────
     # Files at CCAgentindex/workflows/<slug>.json
@@ -1622,6 +1137,734 @@ class Handler(SimpleHTTPRequestHandler):
             return self._json({"ok": False, "error": f"write failed: {e}"}, code=500)
         return self._json({"ok": True, "slug": slug, "usage_count": data["usage_count"]})
 
+    # ────── Triggers: cron / watch / webhook / rule / ribbon ────────────
+    # Files at CCAgentindex/triggers/<slug>.json. Each trigger carries its
+    # kind, label, enabled flag, tone, and a kind-specific payload field
+    # (cron expression, watch path, webhook endpoint, rule pattern, ribbon
+    # pattern). Save → atomic write + index registration + ledger append.
+    def _triggers_dir(self):
+        return HERE / "CCAgentindex" / "triggers"
+
+    _TRIGGER_KINDS = ("cron", "watch", "webhook", "rule", "ribbon")
+    _TRIGGER_TONES = ("mint", "peach", "lavender", "sky", "lemon", "rose", "sage", "blush")
+
+    def _trigger_save(self, body):
+        try:
+            payload = json.loads(body.decode("utf-8")) if body else {}
+        except Exception as e:
+            return self._json({"ok": False, "error": f"bad json: {e}"}, code=400)
+        slug = (payload.get("slug") or "").strip()
+        if not self._slug_ok(slug):
+            return self._json({"ok": False, "error": "bad slug"}, code=400)
+        kind = (payload.get("kind") or "").strip()
+        if kind not in self._TRIGGER_KINDS:
+            return self._json({"ok": False, "error": f"unknown trigger kind: {kind}"}, code=400)
+        tone = (payload.get("tone") or "sage").strip()
+        if tone not in self._TRIGGER_TONES:
+            tone = "sage"
+
+        d = self._triggers_dir()
+        path = d / f"{slug}.json"
+        now_iso = datetime.now(timezone.utc).isoformat()
+        # Preserve created_at if entry exists; treat save as upsert.
+        prior = {}
+        if path.exists():
+            try:
+                prior = json.loads(path.read_text(encoding="utf-8")) or {}
+            except Exception:
+                prior = {}
+        entry = {
+            "schema": "comeketo.trigger.v1",
+            "slug": slug,
+            "kind": kind,
+            "label": (payload.get("label") or slug).strip(),
+            "enabled": bool(payload.get("enabled", True)),
+            "tone": tone,
+            "notes": payload.get("notes") or "",
+            "created_at": prior.get("created_at") or now_iso,
+            "last_modified": now_iso,
+        }
+        # Kind-specific payload — accept only the field that matches the kind,
+        # so a "watch" can't smuggle in a cron expression.
+        kind_field = {
+            "cron":    "cron",
+            "watch":   "path",
+            "webhook": "endpoint",
+            "rule":    "pattern",
+            "ribbon":  "pattern",
+        }[kind]
+        if payload.get(kind_field) not in (None, ""):
+            entry[kind_field] = payload[kind_field]
+        # Optional extras that are useful for any kind.
+        for k in ("description", "tz", "debounce_ms"):
+            if payload.get(k) not in (None, ""):
+                entry[k] = payload[k]
+        # Workflow linkage — every trigger may optionally name the workflow it
+        # fires. Validated lazily here (slug-shape only); the UI lists
+        # available workflows so cross-references stay honest.
+        wf_slug = (payload.get("workflow_slug") or "").strip()
+        if wf_slug and self._slug_ok(wf_slug):
+            entry["workflow_slug"] = wf_slug
+        # Per-kind extras that the UI composers send. Only the fields
+        # appropriate to this kind are stored.
+        kind_extras = {
+            "cron":    ("preset",),
+            "watch":   ("recursive",),
+            "webhook": ("service", "auth"),
+            "rule":    ("pattern_type", "filter"),
+            "ribbon":  ("source",),
+        }.get(kind, ())
+        for k in kind_extras:
+            v = payload.get(k)
+            if v not in (None, ""):
+                entry[k] = v
+
+        try:
+            d.mkdir(parents=True, exist_ok=True)
+            tmp = d / f".{slug}.json.tmp"
+            tmp.write_text(json.dumps(entry, indent=2, ensure_ascii=False), encoding="utf-8")
+            tmp.replace(path)
+        except Exception as e:
+            return self._json({"ok": False, "error": f"write failed: {e}"}, code=500)
+
+        rel = f"triggers/{slug}.json"
+        self._register_in_index("triggers", rel)
+        # Ledger entry — distinguish create vs. update so the audit trail is honest.
+        try:
+            ledger = HERE / "CCAgentindex" / "_ledger" / "activity.jsonl"
+            ledger.parent.mkdir(parents=True, exist_ok=True)
+            with ledger.open("a", encoding="utf-8") as fh:
+                fh.write(json.dumps({
+                    "ts": now_iso,
+                    "kind": "trigger_save" if prior else "trigger_create",
+                    "actor": "ui",
+                    "slug": slug,
+                    "trigger_kind": kind,
+                    "enabled": entry["enabled"],
+                    "path": rel,
+                }, ensure_ascii=False) + "\n")
+        except Exception:
+            pass
+
+        return self._json({"ok": True, "slug": slug, "path": rel, "trigger": entry})
+
+    def _triggers_list(self):
+        d = self._triggers_dir()
+        out = []
+        if d.exists():
+            for p in sorted(d.glob("*.json")):
+                try:
+                    data = json.loads(p.read_text(encoding="utf-8"))
+                    # Surface every relevant field — the UI decides what to render.
+                    out.append({
+                        "slug": p.stem,
+                        "kind": data.get("kind") or "cron",
+                        "label": data.get("label") or p.stem,
+                        "enabled": bool(data.get("enabled", True)),
+                        "tone": data.get("tone") or "sage",
+                        "notes": data.get("notes") or "",
+                        "cron": data.get("cron"),
+                        "path": data.get("path"),
+                        "endpoint": data.get("endpoint"),
+                        "pattern": data.get("pattern"),
+                        "tz": data.get("tz"),
+                        "debounce_ms": data.get("debounce_ms"),
+                        # Workflow linkage and per-kind extras (Apr 2026 polish)
+                        "workflow_slug": data.get("workflow_slug"),
+                        "preset": data.get("preset"),
+                        "recursive": data.get("recursive"),
+                        "service": data.get("service"),
+                        "auth": data.get("auth"),
+                        "pattern_type": data.get("pattern_type"),
+                        "filter": data.get("filter"),
+                        "source": data.get("source"),
+                        "last_modified": data.get("last_modified"),
+                    })
+                except Exception:
+                    out.append({"slug": p.stem, "_parse_error": True})
+        return self._json({"ok": True, "items": out, "count": len(out)})
+
+    def _trigger_delete(self, body):
+        try:
+            payload = json.loads(body.decode("utf-8")) if body else {}
+        except Exception as e:
+            return self._json({"ok": False, "error": f"bad json: {e}"}, code=400)
+        slug = (payload.get("slug") or "").strip()
+        if not self._slug_ok(slug):
+            return self._json({"ok": False, "error": "bad slug"}, code=400)
+        path = self._triggers_dir() / f"{slug}.json"
+        if not path.exists():
+            return self._json({"ok": False, "error": "not found"}, code=404)
+        try:
+            path.unlink()
+        except Exception as e:
+            return self._json({"ok": False, "error": f"delete failed: {e}"}, code=500)
+        rel = f"triggers/{slug}.json"
+        self._unregister_from_index("triggers", rel)
+        try:
+            ledger = HERE / "CCAgentindex" / "_ledger" / "activity.jsonl"
+            with ledger.open("a", encoding="utf-8") as fh:
+                fh.write(json.dumps({
+                    "ts": datetime.now(timezone.utc).isoformat(),
+                    "kind": "trigger_delete",
+                    "actor": "ui",
+                    "slug": slug,
+                    "path": rel,
+                }, ensure_ascii=False) + "\n")
+        except Exception:
+            pass
+        return self._json({"ok": True, "slug": slug})
+
+    # ────── Agent plans: sub-agent fanout planner persistence ──────────
+    # Files at CCAgentindex/agent_plans/<slug>.json. Each plan is an
+    # executable description of an orchestrator → N sub-agents → merge
+    # fanout, with budgets and per-SA config (tool, prompt template,
+    # retries, timeout, expected latency). Distinct from the descriptive
+    # `agents/<slug>/agents.md` specs — those are markdown documentation,
+    # these are the JSON the planner UI reads/writes.
+    def _agent_plans_dir(self):
+        return HERE / "CCAgentindex" / "agent_plans"
+
+    _AGENT_PLAN_TONES = ("mint", "peach", "lavender", "sky", "lemon", "rose", "sage", "blush")
+
+    def _agent_plan_save(self, body):
+        try:
+            payload = json.loads(body.decode("utf-8")) if body else {}
+        except Exception as e:
+            return self._json({"ok": False, "error": f"bad json: {e}"}, code=400)
+        slug = (payload.get("slug") or "").strip()
+        if not self._slug_ok(slug):
+            return self._json({"ok": False, "error": "bad slug"}, code=400)
+
+        # Accept either a fully-formed plan object on `plan` or the payload
+        # itself as the plan (schema-by-example: match what _workflow_save does).
+        raw = payload.get("plan")
+        if isinstance(raw, str):
+            try:
+                parsed = json.loads(raw)
+            except Exception as e:
+                return self._json({"ok": False, "error": f"bad plan json: {e}"}, code=400)
+        elif isinstance(raw, dict):
+            parsed = raw
+        else:
+            parsed = {k: v for k, v in payload.items() if k not in ("slug",)}
+        if not isinstance(parsed, dict):
+            return self._json({"ok": False, "error": "plan must be an object"}, code=400)
+
+        # Stamp metadata; preserve created_at if file exists.
+        d = self._agent_plans_dir()
+        path = d / f"{slug}.json"
+        prior = {}
+        if path.exists():
+            try:
+                prior = json.loads(path.read_text(encoding="utf-8")) or {}
+            except Exception:
+                prior = {}
+        meta = parsed.get("metadata") or {}
+        now_iso = datetime.now(timezone.utc).isoformat()
+        meta["last_modified"] = now_iso
+        prior_meta = prior.get("metadata") or {}
+        meta.setdefault("created_at", prior_meta.get("created_at") or meta.get("created_at") or now_iso)
+        # Version: first write = 1, every subsequent save bumps by 1.
+        if prior:
+            meta["version"] = int(prior_meta.get("version") or 0) + 1
+        else:
+            meta["version"] = int(meta.get("version") or 1)
+        parsed["metadata"] = meta
+        parsed.setdefault("schema", "comeketo.agent_plan.v1")
+        parsed.setdefault("slug", slug)
+
+        # Tone scrub on sub_agents — defaults to sage if unknown.
+        for sa in parsed.get("sub_agents") or []:
+            if isinstance(sa, dict):
+                t = sa.get("tone")
+                if t not in self._AGENT_PLAN_TONES:
+                    sa["tone"] = "sage"
+
+        try:
+            d.mkdir(parents=True, exist_ok=True)
+            tmp = d / f".{slug}.json.tmp"
+            tmp.write_text(json.dumps(parsed, indent=2, ensure_ascii=False), encoding="utf-8")
+            tmp.replace(path)
+        except Exception as e:
+            return self._json({"ok": False, "error": f"write failed: {e}"}, code=500)
+
+        rel = f"agent_plans/{slug}.json"
+        self._register_in_index("agent_plans", rel)
+        try:
+            ledger = HERE / "CCAgentindex" / "_ledger" / "activity.jsonl"
+            ledger.parent.mkdir(parents=True, exist_ok=True)
+            with ledger.open("a", encoding="utf-8") as fh:
+                fh.write(json.dumps({
+                    "ts": now_iso,
+                    "kind": "agent_plan_save" if prior else "agent_plan_create",
+                    "actor": "ui",
+                    "slug": slug,
+                    "name": parsed.get("name"),
+                    "sub_agents": len(parsed.get("sub_agents") or []),
+                    "version": meta.get("version"),
+                    "path": rel,
+                }, ensure_ascii=False) + "\n")
+        except Exception:
+            pass
+
+        return self._json({"ok": True, "slug": slug, "path": rel, "plan": parsed})
+
+    def _agent_plans_list(self):
+        d = self._agent_plans_dir()
+        out = []
+        if d.exists():
+            for p in sorted(d.glob("*.json")):
+                try:
+                    data = json.loads(p.read_text(encoding="utf-8"))
+                    meta = data.get("metadata") or {}
+                    out.append({
+                        "slug": p.stem,
+                        "name": data.get("name") or p.stem,
+                        "description": data.get("description") or "",
+                        "sub_agents": len(data.get("sub_agents") or []),
+                        "version": int(meta.get("version") or 1),
+                        "last_modified": meta.get("last_modified"),
+                    })
+                except Exception:
+                    out.append({"slug": p.stem, "_parse_error": True})
+        return self._json({"ok": True, "items": out, "count": len(out)})
+
+    def _agent_plan_get(self):
+        from urllib.parse import urlparse, parse_qs
+        qs = parse_qs(urlparse(self.path).query)
+        slug = (qs.get("slug") or [""])[0].strip()
+        if not self._slug_ok(slug):
+            return self._json({"ok": False, "error": "bad slug"}, code=400)
+        path = self._agent_plans_dir() / f"{slug}.json"
+        if not path.exists():
+            return self._json({"ok": False, "error": "not found"}, code=404)
+        try:
+            data = json.loads(path.read_text(encoding="utf-8"))
+        except Exception as e:
+            return self._json({"ok": False, "error": f"parse failed: {e}"}, code=500)
+        return self._json({"ok": True, "slug": slug, "plan": data})
+
+    def _agent_plan_delete(self, body):
+        try:
+            payload = json.loads(body.decode("utf-8")) if body else {}
+        except Exception as e:
+            return self._json({"ok": False, "error": f"bad json: {e}"}, code=400)
+        slug = (payload.get("slug") or "").strip()
+        if not self._slug_ok(slug):
+            return self._json({"ok": False, "error": "bad slug"}, code=400)
+        path = self._agent_plans_dir() / f"{slug}.json"
+        if not path.exists():
+            return self._json({"ok": False, "error": "not found"}, code=404)
+        try:
+            path.unlink()
+        except Exception as e:
+            return self._json({"ok": False, "error": f"delete failed: {e}"}, code=500)
+        rel = f"agent_plans/{slug}.json"
+        self._unregister_from_index("agent_plans", rel)
+        try:
+            ledger = HERE / "CCAgentindex" / "_ledger" / "activity.jsonl"
+            with ledger.open("a", encoding="utf-8") as fh:
+                fh.write(json.dumps({
+                    "ts": datetime.now(timezone.utc).isoformat(),
+                    "kind": "agent_plan_delete",
+                    "actor": "ui",
+                    "slug": slug,
+                    "path": rel,
+                }, ensure_ascii=False) + "\n")
+        except Exception:
+            pass
+        return self._json({"ok": True, "slug": slug})
+
+    # ────── Agent state snapshot: read-only observation of Rodbot ──────
+    # Reads CCAgentindex/_ledger/activity.jsonl, classifies each event into
+    # one of 7 states (idle / planning / tool_call / tool_await / reflect /
+    # blocked / shipped), and returns aggregates over a configurable window.
+    # The State sub-tab polls this every 5s. Server-side aggregation keeps
+    # the client thin and avoids shipping the full ledger over the wire.
+
+    # Mapping rules — each is a substring-match heuristic against event["kind"].
+    # First match wins; tested top-to-bottom. "kind" strings come from the
+    # various ledger writers across the app (workflow saves, trigger CRUD,
+    # agent plan ops, delegation lifecycle, chat reflections, etc.).
+    _STATE_RULES = [
+        # blocked — explicit failure / auth / error words
+        ("blocked",   ["blocked", "failed", "error", "denied", "rejected", "auth_fail"]),
+        # shipped — explicit completion / sent / done words
+        ("shipped",   ["sent", "completed", "shipped", "delivered", "done", "closed"]),
+        # reflect — reflection / ledger / activity-summary kinds
+        ("reflect",   ["reflect", "reflection", "summary", "audit", "review"]),
+        # tool_await — read / search / fetch / list / wait
+        ("tool_await",["search", "fetch", "read", "list", "get", "poll", "wait", "await"]),
+        # tool_call — outbound action verbs
+        ("tool_call", ["dispatch", "send", "call", "fire", "post", "ping", "trigger", "delegation_write", "delegation"]),
+        # planning — create / save / update / write / plan / draft
+        ("planning",  ["create", "save", "update", "write", "plan", "draft", "modified", "edit", "delete", "configure"]),
+    ]
+
+    def _classify_event_state(self, event):
+        """Return one of: idle / planning / tool_call / tool_await / reflect / blocked / shipped."""
+        kind = (event.get("kind") or "").lower()
+        if not kind:
+            return "idle"
+        for state, needles in self._STATE_RULES:
+            for n in needles:
+                if n in kind:
+                    return state
+        return "idle"
+
+    def _state_snapshot(self):
+        """GET /api/state/snapshot?window=1h|24h|7d — aggregated state observation."""
+        from urllib.parse import urlparse, parse_qs
+        qs = parse_qs(urlparse(self.path).query)
+        window = (qs.get("window") or ["24h"])[0].strip()
+        # Window → seconds
+        WINDOW_SECONDS = {"15m": 900, "1h": 3600, "6h": 21600, "24h": 86400, "7d": 604800, "30d": 2592000}
+        if window not in WINDOW_SECONDS:
+            window = "24h"  # normalize unknown values so the client always sees a valid label
+        window_s = WINDOW_SECONDS[window]
+        now_dt = datetime.now(timezone.utc)
+        cutoff_dt = now_dt - timedelta(seconds=window_s)
+
+        ledger = HERE / "CCAgentindex" / "_ledger" / "activity.jsonl"
+        events_in_window = []
+        last_event = None
+        if ledger.exists():
+            try:
+                for raw in ledger.read_text(encoding="utf-8").splitlines():
+                    s = raw.strip()
+                    if not s:
+                        continue
+                    try:
+                        ev = json.loads(s)
+                    except Exception:
+                        continue
+                    ts_str = ev.get("ts") or ev.get("t") or ""
+                    if not ts_str:
+                        continue
+                    # Parse the timestamp; tolerate the various ISO formats in the ledger.
+                    try:
+                        ts_norm = ts_str.replace("Z", "+00:00")
+                        ev_dt = datetime.fromisoformat(ts_norm)
+                        if ev_dt.tzinfo is None:
+                            ev_dt = ev_dt.replace(tzinfo=timezone.utc)
+                    except Exception:
+                        continue
+                    last_event = ev  # we keep walking — last in file is freshest
+                    if ev_dt < cutoff_dt:
+                        continue
+                    ev["_state"] = self._classify_event_state(ev)
+                    ev["_dt"] = ev_dt.isoformat()
+                    events_in_window.append(ev)
+            except Exception:
+                pass
+
+        # Time-in-state — count events per state, normalize to percentages.
+        # We don't have real durations; counts are the most honest proxy.
+        bucket = {}
+        for ev in events_in_window:
+            st = ev.get("_state") or "idle"
+            bucket[st] = bucket.get(st, 0) + 1
+        total = sum(bucket.values()) or 1
+        time_in_state_pct = {k: round((v / total) * 100, 1) for k, v in bucket.items()}
+
+        # Current state — implied by the most recent event in the window.
+        # Within ~30s of "now", we believe the implied state. Otherwise idle.
+        current_state = "idle"
+        recent_events = []
+        if events_in_window:
+            tail = events_in_window[-25:]
+            recent_events = [
+                {
+                    "ts": ev.get("_dt") or ev.get("ts"),
+                    "kind": ev.get("kind"),
+                    "state": ev.get("_state") or "idle",
+                    "actor": ev.get("actor"),
+                    "slug": ev.get("slug") or ev.get("name") or ev.get("target") or ev.get("path"),
+                    "preview": ev.get("notes") or ev.get("description") or "",
+                }
+                for ev in tail
+            ]
+            # Heat-decay: only mark "currently in X" if the latest event is fresh.
+            try:
+                latest_dt = datetime.fromisoformat((tail[-1]["_dt"] or "").replace("Z", "+00:00"))
+                if latest_dt.tzinfo is None:
+                    latest_dt = latest_dt.replace(tzinfo=timezone.utc)
+                age_s = (now_dt - latest_dt).total_seconds()
+                current_state = tail[-1]["_state"] if age_s < 90 else "idle"
+            except Exception:
+                current_state = "idle"
+
+        # Active-context derivation — pull the most recent plan/workflow save
+        # for a "what was just being worked on" hint.
+        active_context = None
+        for ev in reversed(events_in_window):
+            k = (ev.get("kind") or "").lower()
+            if k in ("agent_plan_save", "agent_plan_create"):
+                active_context = {
+                    "kind": "agent_plan",
+                    "name": ev.get("name"),
+                    "slug": ev.get("slug"),
+                    "sub_agents": ev.get("sub_agents"),
+                    "version": ev.get("version"),
+                    "ts": ev.get("ts"),
+                }
+                break
+            if k == "automation_workflow_save":
+                active_context = {
+                    "kind": "workflow",
+                    "name": ev.get("name"),
+                    "slug": ev.get("slug"),
+                    "nodes": ev.get("nodes"),
+                    "connections": ev.get("connections"),
+                    "ts": ev.get("ts"),
+                }
+                break
+
+        return self._json({
+            "ok": True,
+            "window": window,
+            "window_start": cutoff_dt.isoformat(),
+            "window_end": now_dt.isoformat(),
+            "current_state": current_state,
+            "time_in_state": time_in_state_pct,
+            "event_count": len(events_in_window),
+            "recent_events": recent_events,
+            "active_context": active_context,
+        })
+
+    # ────── Hooks: pre / post / on / cron observation surface ──────────
+    # Hook catalog is code-defined (NOT user-configurable per Apr 2026
+    # "no-forms" directive). User-controlled state — the on/paused flag
+    # for each hook — lives in CCAgentindex/hooks/state.json keyed by
+    # hook_id. The Hooks sub-tab reads /api/hooks/snapshot which returns
+    # config + current state + perf aggregation from the activity ledger.
+
+    # Canonical hook catalog. Stage = where in a request lifecycle it fires.
+    # expected_p50_ms / expected_p95_ms are DECLARED budgets (not measured)
+    # — they let the UI show what each hook is supposed to take. err_kind
+    # is a list of substring matches against ledger event["kind"] to count
+    # real errors attributable to this hook class.
+    _HOOK_CATALOG = [
+        # PRE — run before the main handler
+        {"id": "authn.check",     "stage": "pre",         "label": "authn.check",     "description": "verify request authenticated",                "expected_p50_ms": 1,    "expected_p95_ms": 3,    "err_kinds": []},
+        {"id": "budget.gate",     "stage": "pre",         "label": "budget.gate",     "description": "stops if tokens > cap or wallclock exceeded", "expected_p50_ms": 2,    "expected_p95_ms": 5,    "err_kinds": ["budget_exceeded"]},
+        {"id": "observe.snap",    "stage": "pre",         "label": "observe.snap",    "description": "writes raw input → _state/raw/",              "expected_p50_ms": 12,   "expected_p95_ms": 31,   "err_kinds": []},
+        {"id": "slug.validate",   "stage": "pre",         "label": "slug.validate",   "description": "verifies slug well-formed, rejects bad input", "expected_p50_ms": 1,    "expected_p95_ms": 2,    "err_kinds": ["bad_slug"]},
+        # RUN — the main handler (always implicit, shown for context)
+        {"id": "handler",         "stage": "run",         "label": "handler",         "description": "the actual request handler",                  "expected_p50_ms": 18,   "expected_p95_ms": 120,  "err_kinds": []},
+        # POST — run after the main handler
+        {"id": "infer",           "stage": "post",        "label": "infer",           "description": "promotes Observed → Inferred",                "expected_p50_ms": 88,   "expected_p95_ms": 240,  "err_kinds": []},
+        {"id": "trace.write",     "stage": "post",        "label": "trace.write",     "description": "appends a trace line to _ledger/",            "expected_p50_ms": 4,    "expected_p95_ms": 9,    "err_kinds": []},
+        {"id": "index.register",  "stage": "post",        "label": "index.register",  "description": "registers new file in indexes/index.json",    "expected_p50_ms": 6,    "expected_p95_ms": 18,   "err_kinds": []},
+        # ON-BLOCKED — fires when a request fails or is blocked
+        {"id": "notify.slack",    "stage": "on-blocked",  "label": "notify.slack",    "description": "human-in-loop ping when work blocks",         "expected_p50_ms": 142,  "expected_p95_ms": 410,  "err_kinds": []},
+        # ON-DRAFT — fires when a draft is queued for human review
+        {"id": "sylvia.ribbon",   "stage": "on-draft",    "label": "sylvia.ribbon",   "description": "surfaces draft for review on the home page",  "expected_p50_ms": 22,   "expected_p95_ms": 45,   "err_kinds": []},
+        # CRON — scheduled hooks
+        {"id": "morning.sweep",   "stage": "cron",        "label": "morning.sweep",   "description": "06:45 daily — bedrock sweep + grid render",   "expected_p50_ms": 1800, "expected_p95_ms": 4200, "err_kinds": []},
+        {"id": "memory.consolidate","stage": "cron",       "label": "memory.consolidate","description": "12:00 daily — memory cluster pass",          "expected_p50_ms": 800,  "expected_p95_ms": 2100, "err_kinds": []},
+    ]
+    _HOOK_DEFAULT_PAUSED = {"sylvia.ribbon"}  # paused by default to match deck
+
+    def _hooks_dir(self):
+        return HERE / "CCAgentindex" / "hooks"
+
+    def _hooks_state_path(self):
+        return self._hooks_dir() / "state.json"
+
+    def _hooks_state_load(self):
+        """Returns { hook_id: bool_enabled }. Falls back to defaults on missing/parse."""
+        defaults = {h["id"]: (h["id"] not in self._HOOK_DEFAULT_PAUSED) for h in self._HOOK_CATALOG}
+        p = self._hooks_state_path()
+        if not p.exists():
+            return defaults
+        try:
+            on_disk = json.loads(p.read_text(encoding="utf-8")) or {}
+            # Merge — disk values win, but unknown hooks fall back to defaults.
+            return {**defaults, **{k: bool(v) for k, v in on_disk.items() if k in defaults}}
+        except Exception:
+            return defaults
+
+    def _hooks_state_save(self, state):
+        d = self._hooks_dir()
+        d.mkdir(parents=True, exist_ok=True)
+        path = self._hooks_state_path()
+        tmp = d / ".state.json.tmp"
+        tmp.write_text(json.dumps(state, indent=2, ensure_ascii=False), encoding="utf-8")
+        tmp.replace(path)
+
+    def _hook_toggle(self, body):
+        try:
+            payload = json.loads(body.decode("utf-8")) if body else {}
+        except Exception as e:
+            return self._json({"ok": False, "error": f"bad json: {e}"}, code=400)
+        hid = (payload.get("id") or "").strip()
+        catalog_ids = {h["id"] for h in self._HOOK_CATALOG}
+        if hid not in catalog_ids:
+            return self._json({"ok": False, "error": f"unknown hook: {hid}"}, code=400)
+        state = self._hooks_state_load()
+        # If a target enabled value is supplied, use it; else flip current.
+        if "enabled" in payload:
+            state[hid] = bool(payload["enabled"])
+        else:
+            state[hid] = not bool(state.get(hid, True))
+        try:
+            self._hooks_state_save(state)
+        except Exception as e:
+            return self._json({"ok": False, "error": f"write failed: {e}"}, code=500)
+        # Ledger
+        try:
+            ledger = HERE / "CCAgentindex" / "_ledger" / "activity.jsonl"
+            ledger.parent.mkdir(parents=True, exist_ok=True)
+            with ledger.open("a", encoding="utf-8") as fh:
+                fh.write(json.dumps({
+                    "ts": datetime.now(timezone.utc).isoformat(),
+                    "kind": "hook_toggle",
+                    "actor": "ui",
+                    "hook_id": hid,
+                    "enabled": state[hid],
+                }, ensure_ascii=False) + "\n")
+        except Exception:
+            pass
+        return self._json({"ok": True, "id": hid, "enabled": state[hid]})
+
+    def _hooks_snapshot(self):
+        """GET /api/hooks/snapshot?window=1h|24h|7d — full hooks observation."""
+        from urllib.parse import urlparse, parse_qs
+        qs = parse_qs(urlparse(self.path).query)
+        window = (qs.get("window") or ["24h"])[0].strip()
+        WINDOW_SECONDS = {"15m": 900, "1h": 3600, "6h": 21600, "24h": 86400, "7d": 604800}
+        if window not in WINDOW_SECONDS:
+            window = "24h"
+        window_s = WINDOW_SECONDS[window]
+        now_dt = datetime.now(timezone.utc)
+        cutoff_dt = now_dt - timedelta(seconds=window_s)
+
+        # Walk the ledger once. Build:
+        #  - fire counts per hook (roughly: any save/create event implies the
+        #    full PRE→RUN→POST chain fired — count each)
+        #  - error counts per hook (substring match on the err_kinds list)
+        #  - latest event for the request-timeline preview
+        ledger = HERE / "CCAgentindex" / "_ledger" / "activity.jsonl"
+        fire_counts = {h["id"]: 0 for h in self._HOOK_CATALOG}
+        err_counts = {h["id"]: 0 for h in self._HOOK_CATALOG}
+        latest_request = None
+        if ledger.exists():
+            try:
+                for raw in ledger.read_text(encoding="utf-8").splitlines():
+                    s = raw.strip()
+                    if not s:
+                        continue
+                    try:
+                        ev = json.loads(s)
+                    except Exception:
+                        continue
+                    ts_str = ev.get("ts") or ev.get("t") or ""
+                    if not ts_str:
+                        continue
+                    try:
+                        ev_dt = datetime.fromisoformat(ts_str.replace("Z", "+00:00"))
+                        if ev_dt.tzinfo is None:
+                            ev_dt = ev_dt.replace(tzinfo=timezone.utc)
+                    except Exception:
+                        continue
+                    if ev_dt < cutoff_dt:
+                        continue
+                    kind = (ev.get("kind") or "").lower()
+                    # Latest "real" request — anything that looks like a save/create/etc.
+                    if any(v in kind for v in ("save", "create", "delete", "modified", "write", "send", "dispatch", "fire")):
+                        latest_request = ev
+                    # Fire counts: every event in window counts as one fire of
+                    # the canonical PRE/RUN/POST chain. Hooks scoped to certain
+                    # stages still count per event.
+                    for h in self._HOOK_CATALOG:
+                        # CRON hooks only "fire" on cron events
+                        if h["stage"] == "cron":
+                            if h["id"] in kind or "cron" in kind:
+                                fire_counts[h["id"]] += 1
+                        # ON-BLOCKED — only when something errored / blocked
+                        elif h["stage"] == "on-blocked":
+                            if any(b in kind for b in ("blocked", "failed", "error", "denied")):
+                                fire_counts[h["id"]] += 1
+                        # ON-DRAFT — only when a draft event landed
+                        elif h["stage"] == "on-draft":
+                            if "draft" in kind:
+                                fire_counts[h["id"]] += 1
+                        else:
+                            # PRE / RUN / POST run on every request
+                            fire_counts[h["id"]] += 1
+                    # Errors per hook
+                    for h in self._HOOK_CATALOG:
+                        for needle in h.get("err_kinds", []):
+                            if needle in kind:
+                                err_counts[h["id"]] += 1
+            except Exception:
+                pass
+
+        # Build the request-preview timeline. For the latest request, render
+        # the canonical 8-step flow (PRE×3, RUN, POST×2 or ×3, ON if blocked,
+        # ON-DRAFT if drafted). Offsets cumulate the declared p50 budgets.
+        request_preview = None
+        if latest_request:
+            kind = (latest_request.get("kind") or "").lower()
+            blocked = any(b in kind for b in ("blocked", "failed", "error"))
+            drafted = "draft" in kind
+            chain = ["authn.check", "budget.gate", "observe.snap", "handler", "infer", "trace.write"]
+            if blocked: chain.append("notify.slack")
+            if drafted: chain.append("sylvia.ribbon")
+            cat_by_id = {h["id"]: h for h in self._HOOK_CATALOG}
+            steps = []
+            elapsed = 0
+            for hid in chain:
+                h = cat_by_id.get(hid)
+                if not h:
+                    continue
+                steps.append({
+                    "id": h["id"],
+                    "stage": h["stage"],
+                    "label": h["label"],
+                    "offset_ms": elapsed,
+                    "duration_ms": h["expected_p50_ms"],
+                    "blocked": blocked and h["id"] == "notify.slack",
+                })
+                elapsed += h["expected_p50_ms"]
+            ts = latest_request.get("ts", "")
+            try:
+                clock = ts.split("T", 1)[1].split(".", 1)[0] if "T" in ts else ""
+            except Exception:
+                clock = ""
+            request_preview = {
+                "kind": latest_request.get("kind"),
+                "slug": latest_request.get("slug") or latest_request.get("name") or latest_request.get("path"),
+                "ts": ts,
+                "clock": clock,
+                "blocked": blocked,
+                "drafted": drafted,
+                "total_ms": elapsed,
+                "steps": steps,
+            }
+
+        # Combine catalog + state + perf for the response.
+        state = self._hooks_state_load()
+        hooks_out = []
+        for h in self._HOOK_CATALOG:
+            hooks_out.append({
+                **h,
+                "enabled": bool(state.get(h["id"], True)),
+                "fires": fire_counts.get(h["id"], 0),
+                "errors": err_counts.get(h["id"], 0),
+            })
+
+        return self._json({
+            "ok": True,
+            "window": window,
+            "window_start": cutoff_dt.isoformat(),
+            "window_end": now_dt.isoformat(),
+            "hooks": hooks_out,
+            "request_preview": request_preview,
+        })
+
     # ────── Annotations: content-addressed image store ──────────────────
     # Files at CCAgentindex/annotations/<sha256>.png + <sha256>.json sidecar.
     # Sidecar holds regions (normalized 0-1 coords), original mime, size.
@@ -1753,12 +1996,11 @@ class Handler(SimpleHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(body)
 
-    # ────── Tables: structured-row persistence ───────────────────────────
-    # Files at CCAgentindex/tables/<slug>.json
-    # Each table is {slug, name, schema: [{key, label, type, ...}], rows: [...],
-    #                metadata: {created_at, updated_at, template?, provenance?}}.
-    # Save appends a table_created OR table_updated ledger event.
-    # _table_add_rows appends a table_row_added event per row batch.
+    # ────── Tables: structured-row persistence (intake-only) ─────────────
+    # Files at CCAgentindex/tables/<slug>.json. The Tables UI is gone; intake
+    # routing still creates/appends rows here for receipt/invoice/contact/list
+    # captures so the data isn't lost. Index registration + activity ledger
+    # writes shared with intake_reports.
     def _tables_dir(self):
         return HERE / "CCAgentindex" / "tables"
 
@@ -1803,179 +2045,6 @@ class Handler(SimpleHTTPRequestHandler):
                 fh.write(json.dumps(entry, ensure_ascii=False) + "\n")
         except Exception:
             pass
-
-    def _tables_list(self):
-        d = self._tables_dir()
-        out = []
-        if d.exists():
-            for p in sorted(d.glob("*.json")):
-                try:
-                    data = json.loads(p.read_text(encoding="utf-8"))
-                    meta = data.get("metadata") or {}
-                    stat = p.stat()
-                    mtime = datetime.fromtimestamp(stat.st_mtime, tz=timezone.utc).isoformat()
-                    rows = data.get("rows") or []
-                    schema = data.get("schema") or []
-                    out.append({
-                        "slug":       p.stem,
-                        "name":       data.get("name") or p.stem,
-                        "row_count":  len(rows),
-                        "col_count":  len(schema),
-                        "template":   meta.get("template"),
-                        "updated_at": meta.get("updated_at") or mtime,
-                        "created_at": meta.get("created_at"),
-                    })
-                except Exception:
-                    out.append({"slug": p.stem, "name": p.stem, "_parse_error": True})
-        return self._json({"ok": True, "items": out, "count": len(out)})
-
-    def _table_get(self):
-        from urllib.parse import urlparse, parse_qs
-        qs = parse_qs(urlparse(self.path).query)
-        slug = (qs.get("slug") or [""])[0].strip()
-        if not self._slug_ok(slug):
-            return self._json({"ok": False, "error": "bad slug"}, code=400)
-        path = self._tables_dir() / f"{slug}.json"
-        if not path.exists():
-            return self._json({"ok": False, "error": "not found"}, code=404)
-        try:
-            data = json.loads(path.read_text(encoding="utf-8"))
-        except Exception as e:
-            return self._json({"ok": False, "error": f"parse failed: {e}"}, code=500)
-        return self._json({"ok": True, "slug": slug, "table": data})
-
-    def _table_save(self, body):
-        try:
-            payload = json.loads(body.decode("utf-8")) if body else {}
-        except Exception as e:
-            return self._json({"ok": False, "error": f"bad json: {e}"}, code=400)
-        slug = (payload.get("slug") or "").strip()
-        if not self._slug_ok(slug):
-            return self._json({"ok": False, "error": "bad slug"}, code=400)
-        name = (payload.get("name") or slug).strip()
-        schema = payload.get("schema") or []
-        if not isinstance(schema, list) or not schema:
-            return self._json({"ok": False, "error": "schema must be a non-empty list"}, code=400)
-        rows = payload.get("rows") or []
-        if not isinstance(rows, list):
-            return self._json({"ok": False, "error": "rows must be a list"}, code=400)
-
-        now_iso = datetime.now(timezone.utc).isoformat()
-        d = self._tables_dir()
-        try:
-            d.mkdir(parents=True, exist_ok=True)
-            path = d / f"{slug}.json"
-            existed = path.exists()
-            prior_meta = {}
-            if existed:
-                try:
-                    prior = json.loads(path.read_text(encoding="utf-8"))
-                    prior_meta = prior.get("metadata") or {}
-                except Exception:
-                    prior_meta = {}
-            meta = payload.get("metadata") or {}
-            meta.setdefault("created_at", prior_meta.get("created_at") or now_iso)
-            meta["updated_at"] = now_iso
-            if payload.get("template"): meta.setdefault("template", payload["template"])
-            doc = {
-                "slug":     slug,
-                "name":     name,
-                "schema":   schema,
-                "rows":     rows,
-                "metadata": meta,
-            }
-            tmp = d / f".{slug}.json.tmp"
-            tmp.write_text(json.dumps(doc, indent=2, ensure_ascii=False), encoding="utf-8")
-            tmp.replace(path)
-        except Exception as e:
-            return self._json({"ok": False, "error": f"write failed: {e}"}, code=500)
-
-        relpath = f"tables/{slug}.json"
-        self._register_in_index("tables", relpath)
-        self._activity_ledger_write({
-            "ts": now_iso,
-            "kind": "table_updated" if existed else "table_created",
-            "actor": "ui",
-            "slug": slug,
-            "name": name,
-            "rows": len(rows),
-            "cols": len(schema),
-            "template": meta.get("template"),
-            "path": relpath,
-        })
-        return self._json({"ok": True, "slug": slug, "path": relpath, "saved_at": now_iso,
-                           "rows": len(rows), "cols": len(schema), "created": not existed})
-
-    def _table_delete(self, body):
-        try:
-            payload = json.loads(body.decode("utf-8")) if body else {}
-        except Exception as e:
-            return self._json({"ok": False, "error": f"bad json: {e}"}, code=400)
-        slug = (payload.get("slug") or "").strip()
-        if not self._slug_ok(slug):
-            return self._json({"ok": False, "error": "bad slug"}, code=400)
-        path = self._tables_dir() / f"{slug}.json"
-        if not path.exists():
-            return self._json({"ok": False, "error": "not found"}, code=404)
-        try:
-            path.unlink()
-        except Exception as e:
-            return self._json({"ok": False, "error": f"delete failed: {e}"}, code=500)
-        relpath = f"tables/{slug}.json"
-        self._unregister_from_index("tables", relpath)
-        self._activity_ledger_write({
-            "ts": datetime.now(timezone.utc).isoformat(),
-            "kind": "table_deleted",
-            "actor": "ui",
-            "slug": slug,
-            "path": relpath,
-        })
-        return self._json({"ok": True, "slug": slug})
-
-    def _table_add_rows(self, body):
-        """Append rows to an existing table. Body: {slug, rows: [...], source?}.
-        Emits a single table_row_added ledger event for the batch."""
-        try:
-            payload = json.loads(body.decode("utf-8")) if body else {}
-        except Exception as e:
-            return self._json({"ok": False, "error": f"bad json: {e}"}, code=400)
-        slug = (payload.get("slug") or "").strip()
-        if not self._slug_ok(slug):
-            return self._json({"ok": False, "error": "bad slug"}, code=400)
-        new_rows = payload.get("rows") or []
-        if not isinstance(new_rows, list) or not new_rows:
-            return self._json({"ok": False, "error": "rows must be a non-empty list"}, code=400)
-        path = self._tables_dir() / f"{slug}.json"
-        if not path.exists():
-            return self._json({"ok": False, "error": "not found"}, code=404)
-        try:
-            data = json.loads(path.read_text(encoding="utf-8"))
-        except Exception as e:
-            return self._json({"ok": False, "error": f"parse failed: {e}"}, code=500)
-        rows = data.get("rows") or []
-        rows.extend(new_rows)
-        data["rows"] = rows
-        meta = data.get("metadata") or {}
-        now_iso = datetime.now(timezone.utc).isoformat()
-        meta["updated_at"] = now_iso
-        data["metadata"] = meta
-        try:
-            tmp = self._tables_dir() / f".{slug}.json.tmp"
-            tmp.write_text(json.dumps(data, indent=2, ensure_ascii=False), encoding="utf-8")
-            tmp.replace(path)
-        except Exception as e:
-            return self._json({"ok": False, "error": f"write failed: {e}"}, code=500)
-        self._activity_ledger_write({
-            "ts": now_iso,
-            "kind": "table_row_added",
-            "actor": "ui",
-            "slug": slug,
-            "added": len(new_rows),
-            "total": len(rows),
-            "source": payload.get("source") or "manual",
-            "path": f"tables/{slug}.json",
-        })
-        return self._json({"ok": True, "slug": slug, "added": len(new_rows), "total": len(rows)})
 
     # ════════════════════════ INTAKE PIPELINE ═════════════════════════════
     # Receipts, invoices, business cards, handwritten notes, lists — anything
@@ -2491,341 +2560,475 @@ class Handler(SimpleHTTPRequestHandler):
             "tally": tally,
         })
 
-    # ────── Charts: saved visualizations ────────────────────────────────
-    # Files at CCAgentindex/charts/<slug>.json. Each chart is:
-    # {slug, name, kind, template, variant, accent, table_slug, mapping,
-    #  seed, metadata:{created_at, updated_at}}. The chart references an
-    # existing table by slug — the UI re-aggregates slices at render time,
-    # so the chart file is lightweight (no copied row data).
-    def _charts_dir(self):
-        return HERE / "CCAgentindex" / "charts"
+    # ════════════════════════ REPORTS (Smorgasbord) ═══════════════════════
+    # Universal-intake workspaces. A "report" is a folder under
+    # CCAgentindex/reports/<slug>/ holding:
+    #   report.json          — metadata + documents[] + summary
+    #   documents/<id>.<ext> — raw uploaded bytes
+    #   conversation.jsonl   — append-only Q&A history with Rodbot
+    # Endpoints: list / create / get / <slug>/ingest / <slug>/ask /
+    # <slug>/documents/<id>/delete / delete
+    # Frontend page: IntakeScreen → screens.jsx
+    # Restored 2026-04-27 after great-trim oversight.
 
-    def _charts_list(self):
-        from urllib.parse import urlparse, parse_qs
-        qs = parse_qs(urlparse(self.path).query)
-        table_filter = (qs.get("table") or [""])[0].strip()
-        d = self._charts_dir()
-        out = []
-        if d.exists():
-            for p in sorted(d.glob("*.json")):
-                try:
-                    data = json.loads(p.read_text(encoding="utf-8"))
-                    if table_filter and (data.get("table_slug") or "") != table_filter:
-                        continue
-                    meta = data.get("metadata") or {}
-                    stat = p.stat()
-                    mtime = datetime.fromtimestamp(stat.st_mtime, tz=timezone.utc).isoformat()
-                    out.append({
-                        "slug":       p.stem,
-                        "name":       data.get("name") or p.stem,
-                        "kind":       data.get("kind"),
-                        "template":   data.get("template"),
-                        "variant":    data.get("variant"),
-                        "accent":     data.get("accent"),
-                        "table_slug": data.get("table_slug"),
-                        "mapping":    data.get("mapping") or {},
-                        "seed":       data.get("seed"),
-                        "updated_at": meta.get("updated_at") or mtime,
-                        "created_at": meta.get("created_at"),
-                    })
-                except Exception:
-                    out.append({"slug": p.stem, "name": p.stem, "_parse_error": True})
-        return self._json({"ok": True, "items": out, "count": len(out)})
+    def _reports_root(self):
+        return HERE / "CCAgentindex" / "reports"
 
-    def _chart_get(self):
-        from urllib.parse import urlparse, parse_qs
-        qs = parse_qs(urlparse(self.path).query)
-        slug = (qs.get("slug") or [""])[0].strip()
-        if not self._slug_ok(slug):
-            return self._json({"ok": False, "error": "bad slug"}, code=400)
-        path = self._charts_dir() / f"{slug}.json"
-        if not path.exists():
-            return self._json({"ok": False, "error": "not found"}, code=404)
+    def _reports_slug_ok(self, s):
+        if not s or not isinstance(s, str): return False
+        if "/" in s or "\\" in s or ".." in s: return False
+        if len(s) > 80: return False
+        return all(c.isalnum() or c in "-_" for c in s)
+
+    def _reports_slug_from_name(self, name):
+        s = re.sub(r"[^a-zA-Z0-9]+", "_", (name or "").strip().lower()).strip("_")
+        s = s[:60] or "report"
+        # Dedupe: if reports/<slug>/ exists, append _2, _3, …
+        base = s
+        n = 2
+        root = self._reports_root()
+        while (root / s).exists():
+            s = f"{base}_{n}"
+            n += 1
+            if n > 999: break
+        return s
+
+    def _reports_doc_type_from_mime(self, mime, filename):
+        m = (mime or "").lower()
+        ext = (filename.rsplit(".", 1)[-1].lower() if "." in (filename or "") else "")
+        if m.startswith("image/"): return "image"
+        if m == "application/pdf" or ext == "pdf": return "pdf"
+        if m == "text/csv" or ext in ("csv", "tsv"): return "csv"
+        if m == "application/json" or ext in ("json", "jsonl"): return "json"
+        if m in ("text/markdown",) or ext in ("md", "markdown"): return "md"
+        if m.startswith("text/") or ext in ("txt", "log", "yaml", "yml", "xml", "html", "htm"): return "txt"
+        return "unknown"
+
+    def _reports_ext_from(self, mime, filename):
+        ext_map = {
+            "image/png": "png", "image/jpeg": "jpg", "image/jpg": "jpg",
+            "image/gif": "gif", "image/webp": "webp", "image/svg+xml": "svg",
+            "image/heic": "heic", "image/heif": "heif",
+            "application/pdf": "pdf",
+            "application/json": "json", "text/csv": "csv",
+            "text/markdown": "md", "text/plain": "txt", "text/html": "html",
+        }
+        e = ext_map.get((mime or "").lower())
+        if e: return e
+        if filename and "." in filename:
+            return filename.rsplit(".", 1)[-1].lower()[:8]
+        return "bin"
+
+    def _reports_extract_text(self, raw_bytes, mime, filename):
+        """Return (extracted_text, error_or_none). Best-effort text extraction
+        for the universal-intake reports flow. Heavy lifting:
+          text/* → decode as utf-8 (replace errors)
+          application/pdf → pypdf if available
+          image/* → placeholder
+          else → binary placeholder
+        """
+        m = (mime or "").lower()
+        size = len(raw_bytes)
         try:
-            data = json.loads(path.read_text(encoding="utf-8"))
+            if m.startswith("text/") or m in ("application/json",) \
+               or (filename and filename.rsplit(".", 1)[-1].lower() in
+                   ("md", "markdown", "txt", "csv", "tsv", "json", "jsonl",
+                    "log", "yaml", "yml", "xml", "html", "htm")):
+                return (raw_bytes.decode("utf-8", "replace"), None)
+            if m == "application/pdf" or (filename or "").lower().endswith(".pdf"):
+                try:
+                    import io
+                    try:
+                        import pypdf
+                    except ImportError:
+                        return (f"[pdf: {filename}, {size} bytes] — pypdf not installed; "
+                                f"run `pip install --break-system-packages pypdf` to enable text extraction.", None)
+                    reader = pypdf.PdfReader(io.BytesIO(raw_bytes))
+                    parts = []
+                    for i, page in enumerate(reader.pages):
+                        try:
+                            parts.append(page.extract_text() or "")
+                        except Exception:
+                            parts.append(f"[page {i+1}: extraction failed]")
+                    text = "\n\n".join(parts).strip()
+                    if not text:
+                        text = f"[pdf: {filename}, {size} bytes, {len(reader.pages)} pages] — no extractable text (likely scanned)."
+                    return (text, None)
+                except Exception as e:
+                    return (f"[pdf: {filename}, {size} bytes] — extraction failed: {e}", None)
+            if m.startswith("image/"):
+                return (f"[image: {filename}] — visual content, no text extraction", None)
+            return (f"[binary: {filename}, {mime}, {size} bytes]", None)
         except Exception as e:
-            return self._json({"ok": False, "error": f"parse failed: {e}"}, code=500)
-        return self._json({"ok": True, "slug": slug, "chart": data})
+            return (f"[extract failed: {e}]", str(e))
 
-    def _chart_save(self, body):
+    def _reports_load(self, slug):
+        """Return (report_dict, abs_dir, error). report.json is created lazily."""
+        if not self._reports_slug_ok(slug):
+            return (None, None, "bad slug")
+        d = self._reports_root() / slug
+        if not d.exists():
+            return (None, None, "not found")
+        meta = d / "report.json"
+        if not meta.exists():
+            return (None, None, "report.json missing")
+        try:
+            return (json.loads(meta.read_text(encoding="utf-8")), d, None)
+        except Exception as e:
+            return (None, None, f"report.json parse failed: {e}")
+
+    def _reports_save(self, slug, report):
+        d = self._reports_root() / slug
+        d.mkdir(parents=True, exist_ok=True)
+        meta = d / "report.json"
+        tmp = d / ".report.json.tmp"
+        tmp.write_text(json.dumps(report, indent=2, ensure_ascii=False), encoding="utf-8")
+        tmp.replace(meta)
+
+    def _reports_conversation_path(self, slug):
+        return self._reports_root() / slug / "conversation.jsonl"
+
+    def _reports_read_conversation(self, slug):
+        p = self._reports_conversation_path(slug)
+        if not p.exists(): return []
+        out = []
+        try:
+            with p.open("r", encoding="utf-8") as fh:
+                for line in fh:
+                    line = line.strip()
+                    if not line: continue
+                    try: out.append(json.loads(line))
+                    except Exception: pass
+        except Exception:
+            pass
+        return out
+
+    def _reports_append_qa(self, slug, qa):
+        p = self._reports_conversation_path(slug)
+        p.parent.mkdir(parents=True, exist_ok=True)
+        with p.open("a", encoding="utf-8") as fh:
+            fh.write(json.dumps(qa, ensure_ascii=False) + "\n")
+
+    def _reports_list(self):
+        root = self._reports_root()
+        if not root.exists():
+            return self._json({"ok": True, "reports": [], "items": []})
+        out = []
+        for d in root.iterdir():
+            if not d.is_dir() or d.name.startswith("."): continue
+            meta_path = d / "report.json"
+            if not meta_path.exists(): continue
+            try:
+                rep = json.loads(meta_path.read_text(encoding="utf-8"))
+            except Exception:
+                continue
+            docs = rep.get("documents") or []
+            doc_types = []
+            for doc in docs:
+                t = doc.get("type") or "unknown"
+                if t not in doc_types: doc_types.append(t)
+            qa_count = 0
+            qa_path = self._reports_conversation_path(d.name)
+            if qa_path.exists():
+                try:
+                    qa_count = sum(1 for line in qa_path.read_text(encoding="utf-8").splitlines() if line.strip())
+                except Exception:
+                    qa_count = 0
+            out.append({
+                "slug":         rep.get("slug") or d.name,
+                "name":         rep.get("name") or d.name,
+                "doc_count":    len(docs),
+                "doc_types":    doc_types,
+                "qa_count":     qa_count,
+                "conversation_count": qa_count,
+                "created_at":   rep.get("created_at"),
+                "last_modified": rep.get("last_modified") or rep.get("created_at"),
+                "updated_at":   rep.get("last_modified") or rep.get("created_at"),
+            })
+        out.sort(key=lambda r: r.get("last_modified") or "", reverse=True)
+        return self._json({"ok": True, "reports": out, "items": out})
+
+    def _reports_create(self, body):
         try:
             payload = json.loads(body.decode("utf-8")) if body else {}
         except Exception as e:
             return self._json({"ok": False, "error": f"bad json: {e}"}, code=400)
-        slug = (payload.get("slug") or "").strip()
-        if not self._slug_ok(slug):
-            return self._json({"ok": False, "error": "bad slug"}, code=400)
-        name = (payload.get("name") or slug).strip()
-        kind = (payload.get("kind") or "").strip()
-        if not kind:
-            return self._json({"ok": False, "error": "kind is required"}, code=400)
-        table_slug = (payload.get("table_slug") or "").strip()
-        if not self._slug_ok(table_slug):
-            return self._json({"ok": False, "error": "table_slug is required and must be a valid slug"}, code=400)
-        # Confirm the source table exists — charts without a table are dead.
-        tbl_path = self._tables_dir() / f"{table_slug}.json"
-        if not tbl_path.exists():
-            return self._json({"ok": False, "error": f"table '{table_slug}' not found"}, code=400)
-
-        now_iso = datetime.now(timezone.utc).isoformat()
-        d = self._charts_dir()
-        try:
-            d.mkdir(parents=True, exist_ok=True)
-            path = d / f"{slug}.json"
-            existed = path.exists()
-            prior_meta = {}
-            if existed:
-                try:
-                    prior = json.loads(path.read_text(encoding="utf-8"))
-                    prior_meta = prior.get("metadata") or {}
-                except Exception:
-                    prior_meta = {}
-            meta = payload.get("metadata") or {}
-            meta.setdefault("created_at", prior_meta.get("created_at") or now_iso)
-            meta["updated_at"] = now_iso
-            doc = {
-                "slug":       slug,
-                "name":       name,
-                "kind":       kind,
-                "template":   payload.get("template") or "",
-                "variant":    payload.get("variant") or "",
-                "accent":     payload.get("accent") or "",
-                "table_slug": table_slug,
-                "mapping":    payload.get("mapping") or {},
-                "seed":       payload.get("seed") or slug,
-                "metadata":   meta,
-            }
-            tmp = d / f".{slug}.json.tmp"
-            tmp.write_text(json.dumps(doc, indent=2, ensure_ascii=False), encoding="utf-8")
-            tmp.replace(path)
-        except Exception as e:
-            return self._json({"ok": False, "error": f"write failed: {e}"}, code=500)
-
-        relpath = f"charts/{slug}.json"
-        self._register_in_index("charts", relpath)
+        name = (payload.get("name") or "").strip()
+        if not name:
+            return self._json({"ok": False, "error": "missing name"}, code=400)
+        slug = self._reports_slug_from_name(name)
+        d = self._reports_root() / slug
+        d.mkdir(parents=True, exist_ok=True)
+        (d / "documents").mkdir(parents=True, exist_ok=True)
+        now = _iso_now()
+        report = {
+            "slug": slug,
+            "name": name,
+            "description": (payload.get("description") or "").strip() or None,
+            "created_at": now,
+            "last_modified": now,
+            "documents": [],
+        }
+        self._reports_save(slug, report)
         self._activity_ledger_write({
-            "ts": now_iso,
-            "kind": "chart_updated" if existed else "chart_created",
+            "ts": now,
+            "kind": "report_created",
             "actor": "ui",
             "slug": slug,
             "name": name,
-            "chart_kind": kind,
-            "template": payload.get("template"),
-            "variant": payload.get("variant"),
-            "table_slug": table_slug,
-            "path": relpath,
         })
-        return self._json({"ok": True, "slug": slug, "path": relpath, "saved_at": now_iso,
-                           "created": not existed})
+        return self._json({"ok": True, "slug": slug, "report": report})
 
-    def _chart_delete(self, body):
+    def _reports_get(self):
+        from urllib.parse import urlparse, parse_qs
+        qs = parse_qs(urlparse(self.path).query)
+        slug = (qs.get("slug") or [""])[0]
+        if not self._reports_slug_ok(slug):
+            return self._json({"ok": False, "error": "bad slug"}, code=400)
+        report, _d, err = self._reports_load(slug)
+        if err:
+            return self._json({"ok": False, "error": err}, code=404)
+        report["conversation"] = self._reports_read_conversation(slug)
+        return self._json({"ok": True, "report": report})
+
+    def _reports_ingest(self, slug, body):
+        if not self._reports_slug_ok(slug):
+            return self._json({"ok": False, "error": "bad slug"}, code=400)
+        try:
+            payload = json.loads(body.decode("utf-8")) if body else {}
+        except Exception as e:
+            return self._json({"ok": False, "error": f"bad json: {e}"}, code=400)
+        upload_path = (payload.get("upload_path") or "").strip()
+        mime        = (payload.get("mime") or "application/octet-stream").strip()
+        filename    = (payload.get("filename") or "file").strip()
+        if not upload_path:
+            return self._json({"ok": False, "error": "missing upload_path"}, code=400)
+        src = Path(upload_path)
+        if not src.exists():
+            return self._json({"ok": False, "error": f"upload not found at {upload_path}"}, code=404)
+
+        report, d, err = self._reports_load(slug)
+        if err:
+            return self._json({"ok": False, "error": err}, code=404)
+
+        try:
+            raw = src.read_bytes()
+        except Exception as e:
+            return self._json({"ok": False, "error": f"read upload failed: {e}"}, code=500)
+
+        doc_id = f"d_{uuid.uuid4().hex[:10]}"
+        ext = self._reports_ext_from(mime, filename)
+        docs_dir = d / "documents"
+        docs_dir.mkdir(parents=True, exist_ok=True)
+        doc_path = docs_dir / f"{doc_id}.{ext}"
+        try:
+            doc_path.write_bytes(raw)
+        except Exception as e:
+            return self._json({"ok": False, "error": f"write failed: {e}"}, code=500)
+
+        extracted, _err = self._reports_extract_text(raw, mime, filename)
+        # Cap stored extracted_text per-document to keep report.json sane.
+        if extracted and len(extracted) > 200_000:
+            extracted = extracted[:200_000] + "\n\n[... truncated ...]"
+
+        now = _iso_now()
+        doc_entry = {
+            "id":             doc_id,
+            "filename":       filename,
+            "mime":           mime,
+            "type":           self._reports_doc_type_from_mime(mime, filename),
+            "size":           len(raw),
+            "uploaded_at":    now,
+            "extracted_text": extracted or "",
+            "summary":        (extracted or "")[:200].strip().replace("\n", " ") if extracted else "",
+            "stored_path":    str(doc_path.relative_to(HERE)),
+        }
+        documents = report.get("documents") or []
+        documents.append(doc_entry)
+        report["documents"] = documents
+        report["last_modified"] = now
+        self._reports_save(slug, report)
+
+        self._activity_ledger_write({
+            "ts": now,
+            "kind": "report_ingest",
+            "actor": "ui",
+            "slug": slug,
+            "doc_id": doc_id,
+            "filename": filename,
+            "mime": mime,
+            "size": len(raw),
+        })
+        return self._json({"ok": True, "document": doc_entry})
+
+    def _reports_ask(self, slug, body):
+        if not self._reports_slug_ok(slug):
+            return self._json({"ok": False, "error": "bad slug"}, code=400)
+        try:
+            payload = json.loads(body.decode("utf-8")) if body else {}
+        except Exception as e:
+            return self._json({"ok": False, "error": f"bad json: {e}"}, code=400)
+        question        = (payload.get("question") or "").strip()
+        enhanced_prompt = (payload.get("enhanced_prompt") or "").strip() or None
+        thinking_trace  = payload.get("thinking_trace")
+        thinking_model  = payload.get("thinking_model")
+        if not question:
+            return self._json({"ok": False, "error": "missing question"}, code=400)
+
+        report, _d, err = self._reports_load(slug)
+        if err:
+            return self._json({"ok": False, "error": err}, code=404)
+        documents = report.get("documents") or []
+
+        # Build the document corpus for the model.
+        PER_DOC_CAP = 6000
+        TOTAL_CAP   = 24000
+        doc_blocks = []
+        running = 0
+        for doc in documents:
+            txt = (doc.get("extracted_text") or "").strip()
+            if not txt: continue
+            if len(txt) > PER_DOC_CAP:
+                txt = txt[:PER_DOC_CAP] + "\n[... truncated ...]"
+            block = f"### Document: {doc.get('filename') or doc.get('id')}\n({doc.get('type')} · {doc.get('size')} bytes)\n\n{txt}"
+            if running + len(block) > TOTAL_CAP:
+                doc_blocks.append("[remaining documents omitted — total context cap reached]")
+                break
+            doc_blocks.append(block)
+            running += len(block)
+        corpus = "\n\n".join(doc_blocks) if doc_blocks else "(no extractable text in any document)"
+
+        system_prompt = (
+            "You are Rodbot, reading documents the team uploaded. "
+            "Answer in concise GitHub-flavored markdown. Use **bold** for key terms, "
+            "bullets for lists, and `code` only for actual code/identifiers. "
+            "Do NOT escape the markdown — return raw markdown characters."
+        )
+        user_prompt = (enhanced_prompt or question).strip()
+        full_user = (
+            f"{user_prompt}\n\n"
+            f"---\n\n"
+            f"DOCUMENTS:\n\n{corpus}\n"
+        )
+
+        # Provider routing — same convention as _intake_classify: prefer OpenAI
+        # if available (faster), fall back to Claude Code subprocess.
+        provider = "openai" if ENV.get("OPENAI_API_KEY") else "claude_code"
+        chat_payload = {
+            "provider": provider,
+            "timeout":  120,
+            "system":   system_prompt,
+            "messages": [{
+                "role": "user",
+                "content": [{"type": "text", "text": full_user}],
+            }],
+        }
+        reply, route_tag, perr = self._intake_dispatch_chat(chat_payload)
+        if perr or not reply:
+            # Fallback to the OTHER provider once.
+            fallback = "claude_code" if provider == "openai" else "openai"
+            if fallback == "openai" and not ENV.get("OPENAI_API_KEY"):
+                return self._json({"ok": False, "error": perr or "no reply", "route": route_tag}, code=502)
+            chat_payload["provider"] = fallback
+            reply, route_tag, perr = self._intake_dispatch_chat(chat_payload)
+            if perr or not reply:
+                return self._json({"ok": False, "error": perr or "no reply", "route": route_tag}, code=502)
+
+        now = _iso_now()
+        qa = {
+            "id":         f"qa_{uuid.uuid4().hex[:10]}",
+            "question":   question,
+            "answer":     reply,  # raw markdown — frontend renders via marked.parse()
+            "ts":         now,
+            "doc_count":  len(documents),
+            "route":      route_tag or provider,
+        }
+        if enhanced_prompt:    qa["enhanced_prompt"] = enhanced_prompt
+        if thinking_trace:     qa["thinking_trace"]  = thinking_trace
+        if thinking_model:     qa["thinking_model"]  = thinking_model
+
+        self._reports_append_qa(slug, qa)
+        # Bump last_modified on the report.
+        report["last_modified"] = now
+        self._reports_save(slug, report)
+        self._activity_ledger_write({
+            "ts": now,
+            "kind": "report_ask",
+            "actor": "ui",
+            "slug": slug,
+            "qa_id": qa["id"],
+            "doc_count": len(documents),
+            "route": qa["route"],
+        })
+        return self._json({"ok": True, "qa": qa})
+
+    def _reports_doc_delete(self, slug, doc_id):
+        if not self._reports_slug_ok(slug):
+            return self._json({"ok": False, "error": "bad slug"}, code=400)
+        if not re.fullmatch(r"[A-Za-z0-9_]+", doc_id or ""):
+            return self._json({"ok": False, "error": "bad doc id"}, code=400)
+        report, d, err = self._reports_load(slug)
+        if err:
+            return self._json({"ok": False, "error": err}, code=404)
+        docs = report.get("documents") or []
+        keep = []
+        removed = None
+        for doc in docs:
+            if doc.get("id") == doc_id:
+                removed = doc
+                continue
+            keep.append(doc)
+        if not removed:
+            return self._json({"ok": False, "error": "doc not found"}, code=404)
+        # Try to delete the file
+        stored = removed.get("stored_path")
+        if stored:
+            try:
+                p = HERE / stored
+                if p.exists() and p.is_file():
+                    p.unlink()
+            except Exception:
+                pass
+        report["documents"] = keep
+        report["last_modified"] = _iso_now()
+        self._reports_save(slug, report)
+        self._activity_ledger_write({
+            "ts": _iso_now(),
+            "kind": "report_doc_delete",
+            "actor": "ui",
+            "slug": slug,
+            "doc_id": doc_id,
+            "filename": removed.get("filename"),
+        })
+        return self._json({"ok": True})
+
+    def _reports_delete(self, body):
         try:
             payload = json.loads(body.decode("utf-8")) if body else {}
         except Exception as e:
             return self._json({"ok": False, "error": f"bad json: {e}"}, code=400)
         slug = (payload.get("slug") or "").strip()
-        if not self._slug_ok(slug):
+        if not self._reports_slug_ok(slug):
             return self._json({"ok": False, "error": "bad slug"}, code=400)
-        path = self._charts_dir() / f"{slug}.json"
-        if not path.exists():
+        d = self._reports_root() / slug
+        if not d.exists():
             return self._json({"ok": False, "error": "not found"}, code=404)
         try:
-            path.unlink()
+            shutil.rmtree(d)
         except Exception as e:
             return self._json({"ok": False, "error": f"delete failed: {e}"}, code=500)
-        relpath = f"charts/{slug}.json"
-        self._unregister_from_index("charts", relpath)
         self._activity_ledger_write({
-            "ts": datetime.now(timezone.utc).isoformat(),
-            "kind": "chart_deleted",
+            "ts": _iso_now(),
+            "kind": "report_deleted",
             "actor": "ui",
             "slug": slug,
-            "path": relpath,
         })
-        return self._json({"ok": True, "slug": slug})
-
-    def _projects_list(self):
-        import math
-        d = self._projects_dir()
-        out = []
-        now = datetime.now(timezone.utc)
-        if d.exists():
-            for p in sorted(d.glob("*.json")):
-                try:
-                    data = json.loads(p.read_text(encoding="utf-8"))
-                    stats = self._project_stats(data, now)
-                    out.append({
-                        "id":     data.get("id") or p.stem,
-                        "name":   data.get("name") or p.stem,
-                        "status": data.get("status"),
-                        "tags":   data.get("tags") or [],
-                        "phase_count":      len(data.get("phases") or []),
-                        "open_task_count":  stats["tasks_open"],
-                        "done_task_count":  stats["tasks_done"],
-                        "progress_pct":     stats["progress_pct"],
-                        "momentum_score":   round(stats["momentum_score"], 3),
-                        "days_since_last_completion": stats["days_since_last_completion"],
-                        "wins":   len(data.get("wins")   or []),
-                        "misses": len(data.get("misses") or []),
-                    })
-                except Exception:
-                    out.append({"id": p.stem, "name": p.stem, "_parse_error": True})
-        return self._json({"projects": out, "count": len(out)})
-
-    def _project_stats(self, data, now):
-        """Compute project-level momentum signals. Mirrors the client-side
-        computeProjectMomentum so list rendering doesn't need to fetch every
-        full project body."""
-        import math
-        tasks_done = 0
-        tasks_open = 0
-        momentum = 0.0
-        last_completion = None
-        for ph in (data.get("phases") or []):
-            for d in (ph.get("deliverables") or []):
-                for t in (d.get("tasks") or []):
-                    if t.get("state") == "done":
-                        tasks_done += 1
-                        ca = t.get("completed_at")
-                        if ca:
-                            try:
-                                ct = datetime.fromisoformat(ca.replace("Z", "+00:00"))
-                                age_days = (now - ct).total_seconds() / 86400.0
-                                momentum += math.exp(-math.log(2) * age_days / 7.0)
-                                if last_completion is None or ct > last_completion:
-                                    last_completion = ct
-                            except Exception:
-                                pass
-                    else:
-                        tasks_open += 1
-        total = tasks_done + tasks_open
-        progress_pct = (tasks_done / total) if total else 0.0
-        days_since = None
-        if last_completion:
-            days_since = round((now - last_completion).total_seconds() / 86400.0, 1)
-        return {
-            "tasks_done": tasks_done,
-            "tasks_open": tasks_open,
-            "progress_pct": progress_pct,
-            "momentum_score": momentum,
-            "days_since_last_completion": days_since,
-        }
-
-    def _open_task_count(self, project):
-        n = 0
-        for ph in (project.get("phases") or []):
-            if ph.get("state") == "done": continue
-            for d in (ph.get("deliverables") or []):
-                if d.get("state") == "done": continue
-                for t in (d.get("tasks") or []):
-                    if t.get("state") != "done": n += 1
-        return n
-
-    def _project_path(self, pid):
-        import re
-        if not re.match(r"^[a-zA-Z0-9_-]{1,120}$", pid or ""):
-            return None
-        return self._projects_dir() / f"{pid}.json"
-
-    def _project_read(self, pid):
-        p = self._project_path(pid)
-        if not p:
-            return self._json({"ok": False, "error": "bad id"}, code=400)
-        if not p.exists():
-            return self._json({"ok": False, "error": "not found"}, code=404)
-        try:
-            return self._json({"ok": True, "project": json.loads(p.read_text(encoding="utf-8"))})
-        except Exception as e:
-            return self._json({"ok": False, "error": str(e)}, code=500)
-
-    def _project_write(self, pid, body):
-        p = self._project_path(pid)
-        if not p:
-            return self._json({"ok": False, "error": "bad id"}, code=400)
-        try:
-            payload = json.loads(body.decode("utf-8")) if body else {}
-        except Exception as e:
-            return self._json({"ok": False, "error": f"bad json: {e}"}, code=400)
-        payload["id"] = pid  # ensure consistency
-        p.parent.mkdir(parents=True, exist_ok=True)
-        # Atomic-ish: write to tmp then rename.
-        tmp = p.with_suffix(".json.tmp")
-        tmp.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
-        tmp.replace(p)
-        return self._json({"ok": True, "project": payload})
-
-    def _project_task_patch(self, pid, tid, body):
-        p = self._project_path(pid)
-        if not p or not p.exists():
-            return self._json({"ok": False, "error": "project not found"}, code=404)
-        try:
-            patch = json.loads(body.decode("utf-8")) if body else {}
-        except Exception as e:
-            return self._json({"ok": False, "error": f"bad json: {e}"}, code=400)
-        new_state = patch.get("state")
-        if new_state not in ("open", "done"):
-            return self._json({"ok": False, "error": "state must be open|done"}, code=400)
-        data = json.loads(p.read_text(encoding="utf-8"))
-        now_iso = datetime.now(timezone.utc).isoformat()
-        now_dt  = datetime.now(timezone.utc)
-        hit_task = None
-        hit_phase = None
-        hit_deliv = None
-        for ph in (data.get("phases") or []):
-            for d in (ph.get("deliverables") or []):
-                for t in (d.get("tasks") or []):
-                    if t.get("id") == tid:
-                        # Completion bookkeeping — capture time-to-complete and
-                        # increment reopened_count if flipping back.
-                        if new_state == "done":
-                            t["state"] = "done"
-                            t["completed_at"] = now_iso
-                            created = t.get("created_at")
-                            if created:
-                                try:
-                                    ct = datetime.fromisoformat(created.replace("Z", "+00:00"))
-                                    t["days_to_complete"] = round((now_dt - ct).total_seconds() / 86400.0, 3)
-                                except Exception:
-                                    pass
-                        else:  # flipping back to open — count reopen
-                            t["state"] = "open"
-                            t["completed_at"] = None
-                            t["days_to_complete"] = None
-                            t["reopened_count"] = int(t.get("reopened_count") or 0) + 1
-                            t["last_reopened_at"] = now_iso
-                        hit_task = t
-                        hit_phase = ph
-                        hit_deliv = d
-                        break
-                if hit_task: break
-            if hit_task: break
-        if not hit_task:
-            return self._json({"ok": False, "error": "task not found"}, code=404)
-        tmp = p.with_suffix(".json.tmp")
-        tmp.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8")
-        tmp.replace(p)
-        return self._json({
-            "ok": True,
-            "project_id": pid,
-            "task_id": tid,
-            "state": new_state,
-            "t": now_iso,
-            "days_to_complete": hit_task.get("days_to_complete"),
-            "reopened_count": hit_task.get("reopened_count") or 0,
-            "phase_id": hit_phase.get("id"),
-            "deliverable_id": hit_deliv.get("id"),
-        })
+        return self._json({"ok": True})
 
     def _api_or_404(self):
         p = self._api_path()
         if p.startswith("/api/proxy/"):
             return self._proxy()
-        if p == "/api/inbox/append":
-            length = int(self.headers.get("Content-Length") or 0)
-            return self._inbox_append(self.rfile.read(length) if length else b"")
-        if p == "/api/inbox/update":
-            length = int(self.headers.get("Content-Length") or 0)
-            return self._inbox_update(self.rfile.read(length) if length else b"")
         if p.startswith("/api/ledger/") and p.endswith("/append"):
             # POST /api/ledger/<name>/append  → append one event to the named ledger
             name = p[len("/api/ledger/"):-len("/append")]
@@ -2866,6 +3069,13 @@ class Handler(SimpleHTTPRequestHandler):
             # persistence lives client-side and in the chat ledger.
             length = int(self.headers.get("Content-Length") or 0)
             return self._chat_send(self.rfile.read(length) if length else b"")
+        if p == "/api/chat/preprocess":
+            # Optional pre-flight: pass user message through gpt-5.4-mini to
+            # (1) rewrite it as a clearer Claude prompt and (2) generate a
+            # short list of flavor strings the UI can animate as a "thinking
+            # trace" while Claude works. See _chat_preprocess.
+            length = int(self.headers.get("Content-Length") or 0)
+            return self._chat_preprocess(self.rfile.read(length) if length else b"")
         if p.startswith("/api/accomplishments/"):
             # POST /api/accomplishments/<YYYY-MM-DD>  → freeze a day's rollup
             slug = p[len("/api/accomplishments/"):]
@@ -2874,9 +3084,6 @@ class Handler(SimpleHTTPRequestHandler):
         if p == "/api/streak":
             length = int(self.headers.get("Content-Length") or 0)
             return self._streak_write(self.rfile.read(length) if length else b"")
-        if p == "/api/rodbot/reflect":
-            length = int(self.headers.get("Content-Length") or 0)
-            return self._rodbot_reflect(self.rfile.read(length) if length else b"")
         if p == "/api/attachments/upload":
             length = int(self.headers.get("Content-Length") or 0)
             return self._attachment_upload(self.rfile.read(length) if length else b"")
@@ -2892,18 +3099,24 @@ class Handler(SimpleHTTPRequestHandler):
         if p == "/api/catalog/edges/bump_usage":
             length = int(self.headers.get("Content-Length") or 0)
             return self._catalog_edge_bump_usage(self.rfile.read(length) if length else b"")
+        if p == "/api/triggers/save":
+            length = int(self.headers.get("Content-Length") or 0)
+            return self._trigger_save(self.rfile.read(length) if length else b"")
+        if p == "/api/triggers/delete":
+            length = int(self.headers.get("Content-Length") or 0)
+            return self._trigger_delete(self.rfile.read(length) if length else b"")
+        if p == "/api/agent_plans/save":
+            length = int(self.headers.get("Content-Length") or 0)
+            return self._agent_plan_save(self.rfile.read(length) if length else b"")
+        if p == "/api/agent_plans/delete":
+            length = int(self.headers.get("Content-Length") or 0)
+            return self._agent_plan_delete(self.rfile.read(length) if length else b"")
+        if p == "/api/hooks/toggle":
+            length = int(self.headers.get("Content-Length") or 0)
+            return self._hook_toggle(self.rfile.read(length) if length else b"")
         if p == "/api/annotations/upload":
             length = int(self.headers.get("Content-Length") or 0)
             return self._annotations_upload(self.rfile.read(length) if length else b"")
-        if p == "/api/tables/save":
-            length = int(self.headers.get("Content-Length") or 0)
-            return self._table_save(self.rfile.read(length) if length else b"")
-        if p == "/api/tables/delete":
-            length = int(self.headers.get("Content-Length") or 0)
-            return self._table_delete(self.rfile.read(length) if length else b"")
-        if p == "/api/tables/add_rows":
-            length = int(self.headers.get("Content-Length") or 0)
-            return self._table_add_rows(self.rfile.read(length) if length else b"")
         if p == "/api/intake/classify":
             length = int(self.headers.get("Content-Length") or 0)
             return self._intake_classify(self.rfile.read(length) if length else b"")
@@ -2913,28 +3126,31 @@ class Handler(SimpleHTTPRequestHandler):
         if p == "/api/intake/report":
             length = int(self.headers.get("Content-Length") or 0)
             return self._intake_report(self.rfile.read(length) if length else b"")
-        if p == "/api/charts/save":
+        # Reports (Smorgasbord) — universal-intake workspaces
+        if p == "/api/reports/create":
             length = int(self.headers.get("Content-Length") or 0)
-            return self._chart_save(self.rfile.read(length) if length else b"")
-        if p == "/api/charts/delete":
+            return self._reports_create(self.rfile.read(length) if length else b"")
+        if p == "/api/reports/delete":
             length = int(self.headers.get("Content-Length") or 0)
-            return self._chart_delete(self.rfile.read(length) if length else b"")
+            return self._reports_delete(self.rfile.read(length) if length else b"")
+        if p.startswith("/api/reports/") and p.endswith("/ingest"):
+            slug = p[len("/api/reports/"):-len("/ingest")]
+            length = int(self.headers.get("Content-Length") or 0)
+            return self._reports_ingest(slug, self.rfile.read(length) if length else b"")
+        if p.startswith("/api/reports/") and p.endswith("/ask"):
+            slug = p[len("/api/reports/"):-len("/ask")]
+            length = int(self.headers.get("Content-Length") or 0)
+            return self._reports_ask(slug, self.rfile.read(length) if length else b"")
+        # POST /api/reports/<slug>/documents/<docId>/delete
+        m_doc_del = re.match(r"^/api/reports/([^/]+)/documents/([^/]+)/delete$", p)
+        if m_doc_del:
+            length = int(self.headers.get("Content-Length") or 0)
+            # Drain body even if we don't use it.
+            if length: self.rfile.read(length)
+            return self._reports_doc_delete(m_doc_del.group(1), m_doc_del.group(2))
         if p == "/api/grid_affinity":
             length = int(self.headers.get("Content-Length") or 0)
             return self._grid_affinity_write(self.rfile.read(length) if length else b"")
-        # Projects: PUT writes whole file atomically; PATCH toggles a task.
-        if self.command == "PUT" and p.startswith("/api/projects/"):
-            pid = p[len("/api/projects/"):].split("/")[0]
-            length = int(self.headers.get("Content-Length") or 0)
-            return self._project_write(pid, self.rfile.read(length) if length else b"")
-        if self.command == "PATCH" and p.startswith("/api/projects/"):
-            # /api/projects/<pid>/task/<tid>   PATCH {state: "open"|"done"}
-            tail = p[len("/api/projects/"):]
-            parts = tail.split("/")
-            if len(parts) >= 3 and parts[1] == "task":
-                length = int(self.headers.get("Content-Length") or 0)
-                return self._project_task_patch(parts[0], parts[2], self.rfile.read(length) if length else b"")
-            return self._json({"ok": False, "error": "bad patch path"}, code=400)
         return self._json(
             {"ok": False, "error": "not found", "method": self.command, "path": p},
             code=404,
@@ -3076,6 +3292,96 @@ class Handler(SimpleHTTPRequestHandler):
                         if isinstance(c.get("text"), str): parts.append(c["text"])
                 text = "\n".join(parts).strip()
             return self._json({"ok": True, "reply": text, "provider_route": "openai-server-proxy"})
+        except urllib.error.HTTPError as e:
+            return self._json({"ok": False, "error": f"openai {e.code}", "detail": e.read().decode()[:600]}, code=502)
+        except Exception as e:
+            return self._json({"ok": False, "error": f"{type(e).__name__}: {e}"}, code=500)
+
+    # ────── Chat preprocess — gpt-5.4-mini prompt rewrite + thinking trace
+    # POST /api/chat/preprocess
+    #   body: { "message": "...", "attachments": [{filename, mime, size}, ...] }
+    # Returns: { ok, enhanced_prompt, thinking_trace[], model }
+    # Thin OpenAI Responses-API call using a compact instructions block that
+    # forces strict JSON output. Falls back gracefully on any error so the
+    # main chat send still works. Demo win: the trace is *contextual* — the
+    # mini model reads the question and emits steps that feel earned.
+    def _chat_preprocess(self, body):
+        try:
+            payload = json.loads(body.decode("utf-8")) if body else {}
+        except Exception as e:
+            return self._json({"ok": False, "error": f"bad json: {e}"}, code=400)
+        if not ENV.get("OPENAI_API_KEY"):
+            return self._json({"ok": False, "error": "no OPENAI_API_KEY"}, code=503)
+        message = (payload.get("message") or "").strip()
+        if not message:
+            return self._json({"ok": False, "error": "missing message"}, code=400)
+        attachments = payload.get("attachments") or []
+        att_summary = ""
+        if attachments:
+            bits = []
+            for a in attachments[:6]:
+                bits.append(f"{a.get('original_filename') or a.get('filename') or 'file'} ({a.get('mime') or 'file'})")
+            att_summary = " · attachments: " + ", ".join(bits)
+        model = (payload.get("model") or "gpt-5.4-mini").strip()
+        instructions = (
+            "You are a prompt-engineering co-pilot. Given an operator's raw chat message, do TWO things and return ONLY a single strict JSON object — no markdown, no prose. "
+            "Schema: {\"enhanced_prompt\": string, \"thinking_trace\": string[]}.\n\n"
+            "(1) enhanced_prompt: rewrite the operator's message as a clearer, more directed prompt for Claude. "
+            "Preserve their voice and intent exactly; just sharpen the ask. Keep it concise. Do NOT add greetings, apologies, or meta. "
+            "If the message is already a clean prompt, return it nearly verbatim.\n\n"
+            "(2) thinking_trace: 6 to 9 short flavor strings (3-7 words each) that describe what an AI orchestrator would actually be doing, step by step, while answering this specific question. "
+            "Make them concrete and contextual — name the systems/people/concepts the operator mentioned. "
+            "No emoji. No trailing punctuation. Imperative or present-continuous voice. "
+            "Examples for 'where am I with Andre on the Marriott deck': "
+            "[\"Pulling Andre's recent activity\", \"Reading the Marriott deck history\", \"Checking the latest sweep for edits\", \"Cross-referencing pricing tier DMs\", \"Composing the answer\"]"
+        )
+        req_body = {
+            "model": model,
+            "input": [{"role": "user", "content": [{"type": "input_text", "text": message + att_summary}]}],
+            "instructions": instructions,
+        }
+        try:
+            req = urllib.request.Request("https://api.openai.com/v1/responses",
+                data=json.dumps(req_body).encode(), method="POST")
+            req.add_header("Content-Type", "application/json")
+            req.add_header("Authorization", f"Bearer {ENV.get('OPENAI_API_KEY').strip()}")
+            with urllib.request.urlopen(req, timeout=20) as resp:
+                data = json.loads(resp.read().decode())
+            text = data.get("output_text") or ""
+            if not text and isinstance(data.get("output"), list):
+                parts = []
+                for item in data["output"]:
+                    for c in (item.get("content") or []):
+                        if isinstance(c.get("text"), str): parts.append(c["text"])
+                text = "\n".join(parts).strip()
+            # Try to parse the strict JSON the model was instructed to return.
+            # Be forgiving: if it wrapped the JSON in fences, strip them.
+            cleaned = text.strip()
+            if cleaned.startswith("```"):
+                cleaned = re.sub(r"^```(?:json)?\s*", "", cleaned)
+                cleaned = re.sub(r"\s*```$", "", cleaned)
+            parsed = None
+            try:
+                parsed = json.loads(cleaned)
+            except Exception:
+                # Try to grab the first {...} block.
+                m = re.search(r"\{[\s\S]+\}", cleaned)
+                if m:
+                    try: parsed = json.loads(m.group(0))
+                    except Exception: parsed = None
+            if not isinstance(parsed, dict):
+                return self._json({"ok": False, "error": "model did not return valid JSON", "raw": text[:600]}, code=502)
+            enhanced = (parsed.get("enhanced_prompt") or message).strip()
+            trace = parsed.get("thinking_trace") or []
+            if not isinstance(trace, list):
+                trace = []
+            trace = [str(t).strip() for t in trace if t][:12]
+            return self._json({
+                "ok": True,
+                "enhanced_prompt": enhanced,
+                "thinking_trace": trace,
+                "model": model,
+            })
         except urllib.error.HTTPError as e:
             return self._json({"ok": False, "error": f"openai {e.code}", "detail": e.read().decode()[:600]}, code=502)
         except Exception as e:
@@ -3361,32 +3667,6 @@ class Handler(SimpleHTTPRequestHandler):
         except Exception as e:
             return self._json({"ok": False, "error": f"ledger write failed: {e}"}, code=500)
         return self._json({"ok": True, "sweep": record})
-
-    # ────── Analytics — parse CSVs from rawdata/ into chart-ready JSON ──
-    # Each dataset has a quirky shape (merged headers, weird tier rows,
-    # multi-table files). The parsers below knead each one into a clean
-    # structure the client charts can render without extra logic.
-    def _analytics_get(self, name):
-        raw_dir = HERE / "rawdata"
-        try:
-            if name == "tasting_conversion":
-                return self._json(_parse_tasting_conversion(raw_dir))
-            if name == "lead_sources":
-                return self._json(_parse_lead_sources(raw_dir))
-            if name == "revenue_timeline":
-                return self._json(_parse_revenue_timeline(raw_dir))
-            if name == "venue_partners":
-                return self._json(_parse_venue_partners(raw_dir))
-            if name == "event_labor":
-                return self._json(_parse_event_labor(raw_dir))
-            if name == "overview":
-                # Composite — just stitch key numbers from the other parsers
-                return self._json(_build_overview(raw_dir))
-            return self._json({"ok": False, "error": f"unknown dataset '{name}'"}, code=404)
-        except FileNotFoundError as e:
-            return self._json({"ok": False, "error": f"raw file missing: {e.filename}"}, code=404)
-        except Exception as e:
-            return self._json({"ok": False, "error": f"{type(e).__name__}: {e}"}, code=500)
 
     # ────── Sub-agent registry ────────────────────────────────────────────
     # GET /api/agents → { agents: [{name, hasPrompt, hasSpec}] }

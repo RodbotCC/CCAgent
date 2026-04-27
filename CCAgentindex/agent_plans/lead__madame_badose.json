@@ -1,0 +1,79 @@
+{
+  "schema": "comeketo.agent_plan.v1",
+  "slug": "lead__madame_badose",
+  "name": "Madame Badose · Lead orchestrator",
+  "description": "Madame Badose's dedicated sub-agent. Birthday (Bar Service Only) · 2026-05-19 · 50 guests · None. Lead status: active_quote. Stage: bar_service_only_cold. Templated 7-day NEPQ cadence (instantiated from seven-day-nepq-template). Next move per orchestrator: Honest geography message: can we serve Lewiston? + bar specifics (hours, style, venue). Watches Close every 10 min for inbound, drafts in Andre's voice, fires plan-day moves through Close. Cadence not yet activated — awaiting Andre's go-ahead in the lead box.",
+  "trigger_label": "weekdays · plan-day cadence + comms heartbeat · READY",
+  "orchestrator": {
+    "label": "Rodbot",
+    "model": "claude-sonnet-4-6",
+    "register": "operational"
+  },
+  "budgets": {
+    "max_sub_agents": 4,
+    "tokens_cap": 6000,
+    "wallclock_cap_s": 30,
+    "retry_policy": "linear_backoff"
+  },
+  "sub_agents": [
+    {
+      "id": "SA-COMMS",
+      "action": "watch",
+      "tool": "close.lead.fetch",
+      "prompt_template": "Pull last 10 comms for madame_badose; flag any inbound since last_seen_ts. Apply lead-specific escalation rules from people/madame_badose.json handling.tone.",
+      "leads": 1,
+      "retries": 1,
+      "timeout_s": 15,
+      "tone": "blush",
+      "expected_latency_s": 2.0
+    },
+    {
+      "id": "SA-PLAN",
+      "action": "execute",
+      "tool": "workflow.fire",
+      "prompt_template": "Fire today's plan day for madame_badose (template: seven-day-nepq-template). Skip on response. Day 1 = email, Day 4 = SMS conditional, Day 6 = email conditional. Tasting / quote-expiry hook configured per lead.",
+      "leads": 1,
+      "retries": 0,
+      "timeout_s": 25,
+      "tone": "rose",
+      "expected_latency_s": 4.5
+    },
+    {
+      "id": "SA-VOICE",
+      "action": "draft",
+      "tool": "rodbot.voice",
+      "prompt_template": "Mirror Andre's lowercase peer voice. Reference Madame Badose's context anchors from people/madame_badose.json. No sales heat, no template smell.",
+      "leads": 1,
+      "retries": 1,
+      "timeout_s": 20,
+      "tone": "lavender",
+      "expected_latency_s": 3.5
+    },
+    {
+      "id": "SA-ALERT",
+      "action": "brief",
+      "tool": "today.append",
+      "prompt_template": "Surface Madame Badose's row on Andre's today.html — current plan day, last move, watch-fors, days to event (2026-05-19).",
+      "leads": 1,
+      "retries": 1,
+      "timeout_s": 10,
+      "tone": "mint",
+      "expected_latency_s": 1.5
+    }
+  ],
+  "merge": {
+    "label": "merge → write to today.html + activity.jsonl",
+    "target": "state/today.html"
+  },
+  "metadata": {
+    "created_at": "2026-04-27T00:00:00Z",
+    "last_modified": "2026-04-27T00:00:00Z",
+    "version": 1,
+    "person_id": "madame_badose",
+    "kind": "lead_orchestrator",
+    "owner_coworker_id": "andre_raw",
+    "linked_workflow": "seven-day-nepq-template",
+    "status": "ready",
+    "lead_status": "active_quote"
+  }
+}

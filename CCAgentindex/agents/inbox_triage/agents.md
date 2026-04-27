@@ -55,6 +55,10 @@ Also one line on `_ledger/activity.jsonl`:
 2. **`drop`** — noise, duplicate, already reflected in bedrock, or expired. Name the reason.
 3. **`surface-in-grid`** — actionable next-move worth proposing as a grid cell in the next generation. Name the anchor it ladders to and a one-line headline candidate.
 
+### People targets — `kind` is mandatory
+
+When the verdict is `fold-to-bedrock` and the target is `people/<slug>.json`, the `fields` object MUST include a `"kind"` value chosen from `"lead" | "client" | "coworker" | "contact"`. If the inbox entry doesn't supply enough context to choose with confidence, abstain with `why: "person kind ambiguous — the team should classify"` rather than guessing. See `CLAUDE.md` §3.1 for the taxonomy. The downstream sweep treats kind as required and will refuse to write a person record without it.
+
 ## Failure modes → Θ (abstain)
 
 - Evidence thin on a specific entry → put it in `abstained[]` with a one-sentence reason. Don't force a verdict.

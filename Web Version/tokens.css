@@ -1,0 +1,100 @@
+/* =========================================================
+   Comeketo Agent — Web Version
+   Design tokens. PAPER · CARD · RULE · INK.
+   Lifted from the master Comeketo design deck (Apr 2026)
+   and trimmed to what this build actually needs.
+   ========================================================= */
+
+:root {
+  /* ----- Surfaces ----- */
+  --paper:        #EEECE6;
+  --paper-2:      #E7E4DB;
+  --card:         #FBFAF5;
+  --card-2:       #F5F2EA;
+  --ink:          #16161A;
+  --ink-2:        #232326;
+  --rule:         #D9D5C9;
+  --rule-2:       #C7C2B3;
+  --muted:        #7A7568;
+  --muted-2:      #A39E90;
+
+  /* ----- 8 Tones (color = meaning) ----- */
+  --mint-bg:   #DDEDD8;  --mint-ink:   #2E5A2A;  --mint-dot:   #4D7A47;
+  --peach-bg:  #F8DEC3;  --peach-ink:  #7A4A1F;  --peach-dot:  #B0712E;
+  --lav-bg:    #DCD3EE;  --lav-ink:    #4B3B7A;  --lav-dot:    #6F5BB0;
+  --sky-bg:    #C9D6E9;  --sky-ink:    #2A3F66;  --sky-dot:    #3F5A8E;
+  --lemon-bg:  #F0E6B5;  --lemon-ink:  #6B5A1A;  --lemon-dot:  #8E7724;
+  --rose-bg:   #F4CFCF;  --rose-ink:   #7A2E2E;  --rose-dot:   #A33F3F;
+  --sage-bg:   #DCDFC8;  --sage-ink:   #4A4F2A;  --sage-dot:   #6B7240;
+  --blush-bg:  #F2D6DA;  --blush-ink:  #813044;  --blush-dot:  #B14861;
+
+  /* ----- Type ----- */
+  --serif: "Newsreader", "Source Serif 4", Georgia, serif;
+  --sans:  "IBM Plex Sans", system-ui, -apple-system, sans-serif;
+  --mono:  "JetBrains Mono", ui-monospace, Menlo, monospace;
+
+  --t-xs:  11px;
+  --t-sm:  13px;
+  --t-md:  15px;
+  --t-lg:  17px;
+  --t-xl:  21px;
+  --t-2xl: 28px;
+  --t-3xl: 38px;
+
+  --tight:  -0.02em;
+  --normal: -0.005em;
+  --wide:    0.08em;
+
+  /* ----- Spacing ----- */
+  --s-1: 4px;
+  --s-2: 8px;
+  --s-3: 12px;
+  --s-4: 16px;
+  --s-5: 20px;
+  --s-6: 24px;
+  --s-7: 32px;
+  --s-8: 40px;
+  --s-9: 56px;
+
+  /* ----- Radii ----- */
+  --r-1: 4px;
+  --r-2: 8px;
+  --r-card: 10px;
+  --r-pill: 999px;
+
+  /* ----- Borders / shadows ----- */
+  --hairline:   1px solid var(--rule);
+  --hairline-2: 1px solid var(--rule-2);
+  --shadow-sm: 0 1px 2px rgba(20,20,15,0.04), 0 0 0 1px rgba(20,20,15,0.04);
+  --shadow-md: 0 2px 6px rgba(20,20,15,0.06), 0 0 0 1px rgba(20,20,15,0.05);
+}
+
+/* ----- Reset ----- */
+*, *::before, *::after { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: var(--t-md);
+  line-height: 1.5;
+  letter-spacing: var(--normal);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+button { font-family: inherit; cursor: pointer; }
+a { color: inherit; text-decoration: none; }
+
+/* ----- Typography helpers ----- */
+.eyebrow {
+  font-family: var(--mono);
+  font-size: var(--t-xs);
+  letter-spacing: var(--wide);
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.muted  { color: var(--muted); }
+.muted-2 { color: var(--muted-2); }
+.mono   { font-family: var(--mono); }
+.serif  { font-family: var(--serif); }
+.italic { font-style: italic; }

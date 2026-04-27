@@ -1,0 +1,34 @@
+{
+  "id": "overlook_at_meehan",
+  "kind": "venue",
+  "name": "The Overlook at Meehan",
+  "city": null,
+  "venue_type": null,
+  "website": null,
+  "tier": "tier_1",
+  "deal_stats": {
+    "opp_count": 11,
+    "total_value": 28443.5,
+    "avg_deal_value": 2585.77,
+    "lead_name_refs": 5
+  },
+  "close_account": {
+    "has_lead": false,
+    "lead_status": null,
+    "lead_url": null
+  },
+  "raw_variants": [
+    "Outlook at Meehan",
+    "The Meehan, 2 Gov Notte Pkwy Building # 3, North Providence, RI 02904",
+    "The Over look of the Meehan",
+    "The Overlook",
+    "The Overlook at Meean",
+    "The Overlook at Meehan"
+  ],
+  "action": "ENRICH NOW — high-volume, no lead account",
+  "notes": [
+    "11 opportunities totaling $28,443.50 — rank #7 by deal value.",
+    "No Close lead account yet — recommend creating one to track relationship.",
+    "5 leads have referenced this as their venue choice."
+  ]
+}

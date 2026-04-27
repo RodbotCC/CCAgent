@@ -1,0 +1,31 @@
+{
+  "id": "versailles_swansea_ma",
+  "kind": "venue",
+  "name": "Versailles (Swansea, MA)",
+  "city": "Swansea, MA",
+  "venue_type": null,
+  "website": "http://www.versaillesvenue.com",
+  "tier": "tier_1",
+  "deal_stats": {
+    "opp_count": 16,
+    "total_value": 22238.2,
+    "avg_deal_value": 1389.89,
+    "lead_name_refs": 6
+  },
+  "close_account": {
+    "has_lead": true,
+    "lead_status": "✅ Won",
+    "lead_url": "https://app.close.com/lead/lead_YfbTUDcMSlVu14b269hqlWTG9t36bBQcc90gi2KiE7n/"
+  },
+  "raw_variants": [
+    "Versailles",
+    "Versailles (Partner Vendor)"
+  ],
+  "action": "✅ Profiled & active — keep relationship warm",
+  "notes": [
+    "262 Swansea Mall Dr, #408 Swansea, MA 02777. Has kitchenette (no full kitchen). Outside grill ok.",
+    "16 opportunities totaling $22,238.20 — rank #10 by deal value.",
+    "Has Close lead account (status: ✅ Won).",
+    "6 leads have referenced this as their venue choice."
+  ]
+}

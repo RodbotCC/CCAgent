@@ -1,0 +1,36 @@
+{
+  "id": "eduarda_fedrizzi",
+  "kind": "coworker",
+  "name": "Eduarda Fedrizzi",
+  "role": "Sales Rep",
+  "relationship_tier": "core_partnership",
+  "relationship_weight": 0.86,
+  "contacts": {
+    "email": "eduarda@comeketocatering.com",
+    "phone": null,
+    "whatsapp": null,
+    "slack_id": null,
+    "slack_channel": null
+  },
+  "handling": {
+    "preferred_channel": "Slack",
+    "response_latency_target": "same-day",
+    "tone": "Conversational, narrative, polite. She gives context — match her register with full thoughts, not one-liners.",
+    "voice_adjustments": "Mirror Eduarda's narrative style: lowercase starts on casual replies, but full sentences with real-time storytelling about what just happened on a call. No emojis at all — words do the work. Use smart-quote apostrophes (Mac/iPhone autocorrect). Trail off with '…' when expressing uncertainty. Polite without being stiff. Don't be terse like Andre — she gives 1-2 sentences of context. Occasional Portuguese flavor surfaces under the surface.",
+    "context": "Sales rep. Runs leads with a narrative, context-giving register; pairs well with Rhonna for procedural follow-through.",
+    "off_limits_topics": null
+  },
+  "context_anchors": [
+    "Characteristic phrase: \"mine, trying to get her on a [thing]\"",
+    "Characteristic phrase: \"you're welcome! it was quite a long call...\"",
+    "Characteristic phrase: \"I just messaged Rhonna about it...\"",
+    "Verbatim: \"Not sure if I should even reply to this or just leave it as is…\"",
+    "Punctuation tic: smart-quote apostrophes ('); trailing '…' on uncertainty",
+    "No emoji — ever"
+  ],
+  "notes": [
+    "Owns: sales rep work, lead narration, follow-up context",
+    "Cadence anchor: 1-2 sentences of context on every call/lead update",
+    "Brazilian-Portuguese underlay — surfaces in DMs, less in channel"
+  ]
+}

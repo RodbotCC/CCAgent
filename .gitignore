@@ -12,3 +12,7 @@ __pycache__/
 *.swo
 
 .claude/
+
+# Symlink to ~/Desktop/Auto (orchestrator passthrough — see CLAUDE.md §1)
+Auto
+

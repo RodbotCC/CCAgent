@@ -1,0 +1,77 @@
+{
+  "schema": "comeketo.agent_plan.v1",
+  "slug": "coworker__rhonna_ricafort",
+  "name": "Rhonna C. Ricafort · Voice mirror",
+  "description": "Rhonna C. Ricafort's dedicated voice-mirror sub-agent. Role: Operations Lead. Drafts on Rhonna's behalf, knows the tone, refuses to violate handling.off_limits_topics. Voice notes: Mirror Rhonna's SOP-style announcements: open with stacked @-mentions, then bold header, bullet points, examples, 'Why this matters: ...', then close with 'pls confirm understanding via thread, thank you team.' Substitute 'pls' for 'please' consistently. Use ALL CAPS WORDS for ur…",
+  "trigger_label": "on-demand · operations lead",
+  "orchestrator": {
+    "label": "Rodbot",
+    "model": "claude-sonnet-4-6",
+    "register": "operational"
+  },
+  "budgets": {
+    "max_sub_agents": 5,
+    "tokens_cap": 5000,
+    "wallclock_cap_s": 25,
+    "retry_policy": "linear_backoff"
+  },
+  "sub_agents": [
+    {
+      "id": "SA-VOICE",
+      "action": "draft",
+      "tool": "rodbot.voice",
+      "prompt_template": "Mirror Rhonna C. Ricafort's voice from people/rhonna_ricafort.json handling.voice_adjustments. Match register, punctuation tics, and characteristic phrases. Don't generic-ify.",
+      "leads": 0,
+      "retries": 1,
+      "timeout_s": 20,
+      "tone": "lavender",
+      "expected_latency_s": 3.0
+    },
+    {
+      "id": "SA-COACH",
+      "action": "advise",
+      "tool": "rodbot.coach",
+      "prompt_template": "When Rhonna asks 'how should I respond?', return a draft + a 1-line rationale tied to the relevant playbook (NEPQ for sales, SOPs for ops, etc.).",
+      "leads": 0,
+      "retries": 1,
+      "timeout_s": 15,
+      "tone": "sage",
+      "expected_latency_s": 2.5
+    },
+    {
+      "id": "SA-PROTECT",
+      "action": "guard",
+      "tool": "rodbot.guard",
+      "prompt_template": "Refuse to draft anything that violates handling.off_limits_topics for rhonna_ricafort. Refuse if context says 'don't write outbound on this lead'. Hard guard, no overrides.",
+      "leads": 0,
+      "retries": 0,
+      "timeout_s": 5,
+      "tone": "rose",
+      "expected_latency_s": 0.5
+    },
+    {
+      "id": "SA-OWNER",
+      "action": "decide",
+      "tool": "rodbot.owner",
+      "prompt_template": "Owner-level decisions for Rhonna C. Ricafort: escalate to Rhonna if deal value > $ops-decision boundary or scope crosses ops_lead authority. Don't auto-resolve.",
+      "leads": 0,
+      "retries": 1,
+      "timeout_s": 20,
+      "tone": "lemon",
+      "expected_latency_s": 2.5
+    }
+  ],
+  "merge": {
+    "label": "merge → return draft to caller",
+    "target": "stdout"
+  },
+  "metadata": {
+    "created_at": "2026-04-27T00:00:00Z",
+    "last_modified": "2026-04-27T00:00:00Z",
+    "version": 1,
+    "person_id": "rhonna_ricafort",
+    "kind": "coworker_voice",
+    "relationship_tier": "ops_lead",
+    "status": "live"
+  }
+}

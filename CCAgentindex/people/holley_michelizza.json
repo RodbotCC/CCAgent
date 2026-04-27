@@ -1,0 +1,85 @@
+{
+  "id": "holley_michelizza",
+  "kind": "lead",
+  "name": "Holley Michelizza",
+  "role": "Wedding · Aug 22, 2026 · 101-200 guests · Lancaster NH",
+  "relationship_tier": "active_quote",
+  "relationship_weight": 0.55,
+  "contacts": {
+    "email": "jandhwedding8.22@gmail.com",
+    "phone": "+1-603-366-6024",
+    "whatsapp": null,
+    "slack_id": null,
+    "slack_channel": null,
+    "clickup_user_id": null,
+    "other": null
+  },
+  "handling": {
+    "preferred_channel": "Email",
+    "response_latency_target": "within-24h",
+    "tone": "Organized planners ('J & H Wedding 8.22' email = dedicated wedding inbox). Honor that with our own organization. Send detailed proposals; don't be vague. Address geography head-on.",
+    "voice_adjustments": "Andre voice: direct, honest about logistics. The Apr 24 Portuguese SMS misfire likely confused her — Holley + Lancaster NH = Italian-American, not Lusophone.",
+    "context": "Inbound Apr 19 from comeketocatering.com (FB Paid). Lancaster NH ~150 mi from Comeketo zone — logistics flag. 'J & H Wedding 8.22' email = bride is H (Holley), groom J. 75% Close confidence aggressive but not unfounded. No engagement after Day-1 push.",
+    "off_limits_topics": null
+  },
+  "context_anchors": [
+    "Lancaster NH, 03584 — 150 mi from us, big logistics call",
+    "Email handle 'jandhwedding8.22@gmail.com' = bride H, groom J",
+    "Aug 22, 2026 — peak summer, outdoor wedding likely",
+    "Drop-off + Full-Service requested (keeping options open)",
+    "Italian-American (Michelizza surname) in northern New England",
+    "Apr 24 Portuguese SMS misfire likely off"
+  ],
+  "lead": {
+    "status": "active_quote",
+    "stage": "cold_inbound_no_response",
+    "owner": "andre_raw",
+    "source": "comeketocatering.com (FB Paid)",
+    "event_type": "Wedding",
+    "event_date": "2026-08-22",
+    "guest_count": 150,
+    "venue": null,
+    "city": "Lancaster, NH",
+    "quote_value": null,
+    "opportunity_value": 5689,
+    "score_tags": ["high_intent_web", "big_event_budget", "out_of_zone_150mi", "language_misfire"],
+    "last_activity": "2026-04-24 — Portuguese cadence SMS",
+    "speed_urgency": "medium",
+    "next_move": "Honest message addressing geography: are you specifically wanting us, or also exploring NH-local caterers?"
+  },
+  "enrichment": {
+    "confidence": 0.55,
+    "identity_notes": "Email handle is the cleanest identity signal — 'J & H Wedding 8.22'. Bride Holley + groom 'J'. Michelizza Italian-American, less common = strong signal. Lancaster NH rural — venue likely barn, lodge, or family property.",
+    "win_angles": [
+      "'J & H Wedding' planner energy — honor with detailed proposals",
+      "Drop-off + Full-Service combo = present both with honest cost comparison",
+      "Lancaster NH = small wedding-vendor pond; bring volume + Brazilian differentiation",
+      "101-200 guest range = bigger than typical NH rural wedding"
+    ],
+    "nepq_openers": [
+      "Continuation: 'Hi Holley — quick question that affects everything. Your venue is in Lancaster (~150 mi from us). Have you already gotten quotes from local NH caterers, or specifically interested in someone like us coming up there?'",
+      "Frame: 'The J & H Wedding 8.22 email made me smile — you're clearly running a tight planning ship. What does perfect food experience look like for the night?'",
+      "Anchor: 'For 100+ at Lancaster venue with us coming up, $X-Y depending on drop-off vs hosted. Want a tight written comparison?'"
+    ],
+    "open_gaps": [
+      "Specific venue in Lancaster",
+      "Whether they've already gotten local NH quotes",
+      "The 'J' — fiancé's name and decision involvement",
+      "Drop-off vs full-service final preference",
+      "Cuisine direction (Italian heritage might steer)",
+      "Honest budget reality"
+    ],
+    "strategic_note": "Lancaster geography is the elephant. One HONEST direct message asking 'specifically out-of-region or are local caterers in the running?' If she's local-only, drop probability and move on. If she actually wants us up there, deal is real. Current vague drip earns neither answer."
+  },
+  "comms": [
+    {"ts": "2026-04-19T10:00:00Z", "channel": "sms", "direction": "out", "summary": "Inbound acknowledged + 3 call attempts (no answer)"},
+    {"ts": "2026-04-19T11:00:00Z", "channel": "email", "direction": "out", "summary": "Service overview + service-types breakdown"},
+    {"ts": "2026-04-23T11:00:00Z", "channel": "sms", "direction": "out", "summary": "Re-engagement: call vs tasting"},
+    {"ts": "2026-04-24T13:00:00Z", "channel": "sms", "direction": "out", "summary": "Day-4 cadence — sent in PORTUGUESE (likely misfire)"}
+  ],
+  "notes": [
+    "Geography is the elephant — address head-on",
+    "75% Close confidence inflated until response confirms",
+    "Italian-American = no Portuguese-template default"
+  ]
+}

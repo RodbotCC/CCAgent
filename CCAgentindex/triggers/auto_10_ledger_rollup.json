@@ -1,0 +1,15 @@
+{
+  "schema": "comeketo.trigger.v1",
+  "slug": "auto_10_ledger_rollup",
+  "kind": "cron",
+  "label": "AUTO.10 · Ledger rollup",
+  "enabled": true,
+  "tone": "mint",
+  "notes": "Live — bin/refresh.py walks Client Boxes/, writes state/master_ledger.csv. Powers the Dashboard KPI row + active table.",
+  "created_at": "2026-04-27T00:00:00+00:00",
+  "last_modified": "2026-04-27T00:00:00+00:00",
+  "cron": "*/15 * * * *",
+  "tz": "America/New_York",
+  "workflow_slug": null,
+  "preset": "every_15_min"
+}

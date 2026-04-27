@@ -1,0 +1,83 @@
+{
+  "id": "joseph_jones",
+  "kind": "lead",
+  "name": "Joseph Jones",
+  "role": "Family Get Together · Sept 9, 2026 · 15 guests · Providence RI",
+  "relationship_tier": "stalled",
+  "relationship_weight": 0.20,
+  "contacts": {
+    "email": null,
+    "phone": null,
+    "whatsapp": null,
+    "slack_id": null,
+    "slack_channel": null,
+    "clickup_user_id": null,
+    "other": null
+  },
+  "handling": {
+    "preferred_channel": "Email",
+    "response_latency_target": "within-week",
+    "tone": "Side-of-pipeline lead, casual home gathering. Don't over-pitch. Speed of response wins small jobs. Apr 24 follow-up sent in Portuguese — likely off for an Anglo name.",
+    "voice_adjustments": "Andre voice: brief, no churrasco-pitch first, drop-off menu and price. Casual home gathering ≠ wedding vibe.",
+    "context": "Inbound Apr 22 from FB Lead Form. 15 guests, family get together, 09/09 (year ambiguous). $450 ballpark = drop-off pricing. No response. Common name profile — minimal public footprint.",
+    "off_limits_topics": null
+  },
+  "context_anchors": [
+    "15 guests = small side-of-pipeline lead",
+    "Providence RI, 02909 — urban Providence, mixed demos",
+    "09/09 date — year ambiguous (system shows 2026)",
+    "$450 opp value — drop-off territory",
+    "No response to any outreach"
+  ],
+  "lead": {
+    "status": "stalled",
+    "stage": "small_event_cold_inbound",
+    "owner": "andre_raw",
+    "source": "FB Lead Form — VIDEO RODS WEDDING & FACELESS",
+    "event_type": "Family Get Together",
+    "event_date": "2026-09-09",
+    "guest_count": 15,
+    "venue": null,
+    "city": "Providence, RI",
+    "quote_value": null,
+    "opportunity_value": 450,
+    "score_tags": ["small_event", "no_response", "common_name_low_signal", "drop_off"],
+    "last_activity": "2026-04-24 — Day-4 cadence SMS in Portuguese",
+    "speed_urgency": "low",
+    "next_move": "One quick-quote message: drop-off vs light buffet + cuisine direction; quote 24h"
+  },
+  "enrichment": {
+    "confidence": 0.30,
+    "identity_notes": "Extremely common name (top 100 most common in US). Public web research effectively useless. Providence zip + family-gathering = household head planning casual home event.",
+    "win_angles": [
+      "Right-size the offer — drop-off menu, price for 15, 2-3 entrée options",
+      "Speed wins small jobs — quote fast and clean",
+      "Don't pitch Brazilian BBQ first — open cuisine door",
+      "Future referral source if it goes well"
+    ],
+    "nepq_openers": [
+      "Continuation: 'Hey Joseph — quick check-in. Family get-together 9/9 with 15 people: drop-off (we deliver, you serve), light buffet (drop, set, leave), or full hosted? And cuisine — Brazilian BBQ vibe, classic American comfort, or something else?'",
+      "Frame: 'What's the part of organizing this you're most trying to skip — cooking, cleanup, both?'",
+      "Anchor: 'For 15 people, drop-off typically $20-35/pp = $300-525 ballpark. Want me to put a quick menu in front of you?'"
+    ],
+    "open_gaps": [
+      "Phone (not visible — pull from Close)",
+      "Service style preference",
+      "Cuisine direction",
+      "Date confirmation (year)",
+      "Occasion (birthday, anniversary, reunion?)"
+    ],
+    "strategic_note": "Small-but-profitable side lead. $450 @ 20% = $90 EV — barely justifies time. BUT future referral if booked. One good message, one quick quote, close or move on. Don't overinvest. Won by speed and clarity, not elaborate proposals."
+  },
+  "comms": [
+    {"ts": "2026-04-22T10:00:00Z", "channel": "sms", "direction": "out", "summary": "Inbound acknowledged + call attempts (no answer)"},
+    {"ts": "2026-04-22T11:00:00Z", "channel": "email", "direction": "out", "summary": "Service types breakdown"},
+    {"ts": "2026-04-23T11:00:00Z", "channel": "email", "direction": "out", "summary": "Tasting pitch + re-engagement SMS"},
+    {"ts": "2026-04-24T11:00:00Z", "channel": "email", "direction": "out", "summary": "Churrasco/Rodizio explainer + Portuguese cadence SMS"}
+  ],
+  "notes": [
+    "Side-of-pipeline; speed wins or move on",
+    "Apr 24 Portuguese SMS likely a misfire on Anglo name",
+    "Future referral asset only if booked happily"
+  ]
+}
