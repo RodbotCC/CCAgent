@@ -1,0 +1,1344 @@
+{
+  "Appetizers": [
+    {
+      "_section": "Cold Appetizers"
+    },
+    {
+      "name": "Asparagus and Broccoli Mix",
+      "price": 3.0
+    },
+    {
+      "name": "Asparagus wrap",
+      "price": 5.0
+    },
+    {
+      "name": "Avocado Skins",
+      "price": 4.25
+    },
+    {
+      "name": "Bread & Butter",
+      "price": 1.99
+    },
+    {
+      "name": "Bruschetta",
+      "price": 2.5
+    },
+    {
+      "name": "Chicken Salad Mini Cups",
+      "price": 2.5
+    },
+    {
+      "name": "Chicken Salad Sandwiches on Cheese Bread",
+      "price": 3.5
+    },
+    {
+      "name": "Endive",
+      "price": 6.0
+    },
+    {
+      "name": "Fruit Skewers or Caprese Skewers",
+      "price": 2.95
+    },
+    {
+      "name": "Figs",
+      "price": 6.5
+    },
+    {
+      "name": "Quinoa & Chickpea Salad in Mini Cups",
+      "price": 2.5
+    },
+    {
+      "name": "Spanakopita Cups",
+      "price": 5.0
+    },
+    {
+      "name": "Stuffed Mushrooms",
+      "price": 3.0
+    },
+    {
+      "_section": "Hot Appetizers"
+    },
+    {
+      "name": "Assorted Croquettes (3-in-1 Sampler)",
+      "price": 8.5
+    },
+    {
+      "name": "Buffalo Chicken Dip",
+      "price": 3.0
+    },
+    {
+      "name": "Chicken Wings",
+      "price": 7.0
+    },
+    {
+      "name": "Papa Rellena (Mashed potato balls with meat filling)",
+      "price": 3.75
+    },
+    {
+      "name": "Fried Polenta (Corn)",
+      "price": 2.5
+    },
+    {
+      "name": "Garlic Bread or garlic pamesan bread",
+      "price": 2.99
+    },
+    {
+      "_section": "Seafood"
+    },
+    {
+      "name": "Garlic Shrimp",
+      "price": 5.0
+    },
+    {
+      "name": "Grilled Tequila Lime Shrimp",
+      "price": 7.0
+    },
+    {
+      "name": "Scallops & Bacon",
+      "price": 9.5
+    },
+    {
+      "_section": "Croquettes"
+    },
+    {
+      "name": "Assorted Croquettes (3-in-1 Sampler)",
+      "price": 8.5
+    },
+    {
+      "name": "Beef & Yuca Croquettes",
+      "price": 3.5
+    },
+    {
+      "name": "Corn & Cheese Croquettes",
+      "price": 3.5
+    },
+    {
+      "name": "Chicken & Cheese Croquettes",
+      "price": 3.5
+    },
+    {
+      "name": "Chicken Only Croquettes (Coxhina)",
+      "price": 3.5
+    },
+    {
+      "_section": "P\u00e3o de Queijo (Cheese Bread)"
+    },
+    {
+      "name": "Parmesan Garlic P\u00e3o de Queijo",
+      "price": 2.99
+    },
+    {
+      "name": "Traditional Classic P\u00e3o de Queijo",
+      "price": 2.5
+    },
+    {
+      "_section": "Mini Turnovers"
+    },
+    {
+      "name": "Beef Mini Turnovers",
+      "price": 2.5
+    },
+    {
+      "name": "Cheese Mini Turnovers",
+      "price": 2.5
+    },
+    {
+      "name": "Chicken Mini Turnovers",
+      "price": 2.5
+    },
+    {
+      "name": "Mini Turnover Sampler (3-in-1 Appetizer)",
+      "price": 5.95
+    },
+    {
+      "_section": "Meatballs"
+    },
+    {
+      "name": "BBQ Meatballs",
+      "price": 5.0
+    },
+    {
+      "name": "Italian Meatballs",
+      "price": 5.0
+    },
+    {
+      "name": "Swedish Meatballs",
+      "price": 5.0
+    },
+    {
+      "name": "Sweet & Sour Meatballs",
+      "price": 5.0
+    }
+  ],
+  "Mains": [
+    {
+      "_section": "Beef"
+    },
+    {
+      "name": "Beef Short Ribs",
+      "price": 5.0
+    },
+    {
+      "name": "Beef Wellington",
+      "price": 10.0
+    },
+    {
+      "name": "Beef or Chicken Fajitas"
+    },
+    {
+      "name": "Beef Stroganoff"
+    },
+    {
+      "name": "Flank Steak w/ Chimichurri"
+    },
+    {
+      "name": "Garlic Prime Sirloin (Picanha)",
+      "price": 3.0
+    },
+    {
+      "name": "Prime Sirloin (Picanha)",
+      "price": 3.0
+    },
+    {
+      "name": "Ribeye",
+      "price": 9.0
+    },
+    {
+      "name": "Filet Mignon",
+      "price": 8.0
+    },
+    {
+      "name": "Beef brisket w/madeira sauce"
+    },
+    {
+      "name": "Steak Florentine",
+      "price": 7.0
+    },
+    {
+      "_section": "Chicken"
+    },
+    {
+      "name": "Oven roasted garlic & Rosemary chicken"
+    },
+    {
+      "name": "\u00bd Chicken"
+    },
+    {
+      "name": "Stuffed Boneless Chicken"
+    },
+    {
+      "name": "Chicken  Marsala",
+      "price": 2.0
+    },
+    {
+      "name": "Chicken Pasta Primavera"
+    },
+    {
+      "name": "Chicken, Beef or Tofu Stir Fry"
+    },
+    {
+      "name": "Chicken Broccoli Fettuccine Alfredo"
+    },
+    {
+      "name": "Veal Marsala",
+      "price": 4.0
+    },
+    {
+      "name": "Coq Au Vin",
+      "price": 4.0
+    },
+    {
+      "_section": "Pork"
+    },
+    {
+      "name": "Pork Tenderloin"
+    },
+    {
+      "name": "Pork Chops"
+    },
+    {
+      "name": "Pork Sausage"
+    },
+    {
+      "name": "Garlic Butter Porkloin"
+    },
+    {
+      "name": "Pig Roast",
+      "price": 6.5
+    },
+    {
+      "_section": "Seafood"
+    },
+    {
+      "name": "Sea Bass",
+      "price": 9.0
+    },
+    {
+      "name": "Tuna Steaks",
+      "price": 11.0
+    },
+    {
+      "name": "Sesame Soy Tilapia",
+      "price": 10.0
+    },
+    {
+      "name": "Salmon",
+      "price": 8.0
+    },
+    {
+      "name": "Haddock",
+      "price": 9.0
+    },
+    {
+      "name": "Baked Stuffed Seafood",
+      "price": 10.0
+    },
+    {
+      "name": "Grilled Tilapia"
+    },
+    {
+      "_section": "Lamb"
+    },
+    {
+      "name": "Lamb Chops",
+      "price": 7.0
+    },
+    {
+      "name": "Leg of Lamb",
+      "price": 2.0
+    },
+    {
+      "_section": "Vegetarian"
+    },
+    {
+      "name": "Cauliflower Steak"
+    },
+    {
+      "name": "Tofu Steaks"
+    },
+    {
+      "name": "Stuffed Peppers"
+    },
+    {
+      "name": "Radicchio Cups",
+      "price": 3.0
+    },
+    {
+      "name": "Stuffed Eggplant"
+    },
+    {
+      "name": "Lentil Loaf"
+    },
+    {
+      "name": "Vegetable Lasagna"
+    },
+    {
+      "name": "Beef Lasagna"
+    },
+    {
+      "name": "Chicken Lasagna"
+    },
+    {
+      "_section": "Deals"
+    },
+    {
+      "name": "Free Added Protein for Deluxe Churrasco or Higher",
+      "price": -6.5
+    },
+    {
+      "name": "$19/pp Special",
+      "price": -5.9
+    },
+    {
+      "_section": "Brunch"
+    },
+    {
+      "name": "Quiche - Broccoli & Spinach"
+    },
+    {
+      "name": "Quiche Bacon & Cheese"
+    },
+    {
+      "name": "Eggs (Scrambled with Cheese)"
+    },
+    {
+      "name": "Bacon"
+    },
+    {
+      "name": "Sausage"
+    }
+  ],
+  "Sides": [
+    {
+      "_section": "Potatoes"
+    },
+    {
+      "name": "Baked Potatoes"
+    },
+    {
+      "name": "Oven Roasted Potatoes"
+    },
+    {
+      "name": "Scalloped Potatoes",
+      "price": 2.0
+    },
+    {
+      "name": "Twice Baked Potatoes",
+      "price": 2.0
+    },
+    {
+      "name": "Mashed Potato Casserole",
+      "price": 2.0
+    },
+    {
+      "name": "Garlic Mashed Potatoes"
+    },
+    {
+      "_section": "Rice & Grains"
+    },
+    {
+      "name": "Spanish Rice"
+    },
+    {
+      "name": "Spinach Rice"
+    },
+    {
+      "name": "Confetti Rice",
+      "price": 2.0
+    },
+    {
+      "name": "Papa Rellena (Mashed potato balls with meat filling)",
+      "price": 3.5
+    },
+    {
+      "name": "Brown Rice"
+    },
+    {
+      "name": "Wild Rice"
+    },
+    {
+      "name": "Risotto",
+      "price": 2.0
+    },
+    {
+      "name": "Couscous"
+    },
+    {
+      "name": "Quinoa"
+    },
+    {
+      "name": "Brazilian Risotto (Piemontese Rice)"
+    },
+    {
+      "name": "Rice"
+    },
+    {
+      "_section": "Vegetables"
+    },
+    {
+      "name": "Carrots (savory, tarragon, glazed)"
+    },
+    {
+      "name": "Saut\u00e9ed Green Beans"
+    },
+    {
+      "name": "Asparagus Wraps",
+      "price": 5.0
+    },
+    {
+      "name": "Steamed Asparagus",
+      "price": 3.0
+    },
+    {
+      "name": "Summer Squash and Zucchini"
+    },
+    {
+      "name": "Broccoli"
+    },
+    {
+      "name": "Cauliflower"
+    },
+    {
+      "name": "Vegetable Medley"
+    },
+    {
+      "name": "Collard Greens"
+    },
+    {
+      "_section": "Beans"
+    },
+    {
+      "name": "Beans"
+    },
+    {
+      "name": "Tropeiro Beans"
+    },
+    {
+      "name": "Black Beans"
+    },
+    {
+      "_section": "Specialty Items"
+    },
+    {
+      "name": "Mac N Cheese"
+    },
+    {
+      "name": "Buttered Cavatappi Pasta"
+    },
+    {
+      "name": "Yuca (Fried)"
+    },
+    {
+      "name": "Plantains"
+    },
+    {
+      "name": "Papa Rellena (Spanish mashed potato balls with savory filling, fried)",
+      "price": 3.75
+    },
+    {
+      "_section": "Brunch"
+    },
+    {
+      "name": "Yogurt"
+    },
+    {
+      "name": "Pancakes"
+    },
+    {
+      "name": "Dadinhos de Tapioca with Jelly"
+    }
+  ],
+  "Platters & Boards": [
+    {
+      "_section": "Platters"
+    },
+    {
+      "name": "Cheese and Crackers",
+      "desc": "A variety of domestic and imported cheese, as well as cheese spreads served with an array of flavorful crackers and crostini.",
+      "price": 4.95
+    },
+    {
+      "name": "Fruit Platter",
+      "desc": "Seasonal Fruits such as:\nWatermelon, Honeydew, Pineapple\nGrapes, Cantelope",
+      "price": 4.95
+    },
+    {
+      "name": "Veggie Platter",
+      "desc": "Carrots, Broccoli, Celery, Cherry Tomatoes\nwith Ranch Dipping Sauce.",
+      "price": 4.95
+    },
+    {
+      "name": "Grilled Vegetable Medley",
+      "desc": "Summer Squash, Zucchini, Carrots, Broccoli.",
+      "price": 4.95
+    },
+    {
+      "name": "Hummus",
+      "desc": "Roasted garlic hummus, red pepper hummus, lemon fennel, and sun-dried tomato\nbasil hummus. Served with tortilla chips, pita chips, crostini, and fresh baby carrots, celery, and peppers.",
+      "price": 6.5
+    },
+    {
+      "name": "Shrimp Cocktail",
+      "desc": "Cooked shrimp served with fresh lemon wedges and spicy cocktail sauce\non top of a bed of shaved ice garnished with sprigs of parsley.",
+      "price": 12.0
+    },
+    {
+      "_section": "Charcuterie"
+    },
+    {
+      "name": "Charcuterie Board:\nClassic Meats & Cheeses",
+      "desc": "What's on It:\nCheeses: Sharp cheddar, gouda, and brie\nMeats: Salami, prosciutto, and pepperoni\nAccompaniments: Crackers, mixed nuts, and olives",
+      "price": 12.5
+    },
+    {
+      "name": "Charcuterie Board:\nVegetarian Board",
+      "desc": "What's On It:\nCheeses: Goat cheese, cheddar, and havarti\nAccompaniments: Fresh vegetables (carrot sticks, cherry tomatoes, cucumber slices), hummus, ranch, and mixed nuts\nExtras: Grapes and apple slices",
+      "price": 9.0
+    },
+    {
+      "_section": "Tabletops"
+    },
+    {
+      "name": "Tabletop Hot Appetizer Platter",
+      "desc": "Each table of 6\u20137 gets its own hot sampler: mini empanadas, croquettes, and zesty rose dipping sauce.",
+      "price": 7.5
+    },
+    {
+      "name": "Mini Charcuterie",
+      "desc": "Mini board, major flavors: salami, pepperoni, mixed nuts, berries, cheese: 1 board at each table for approx. 6\u20137 guests covered.",
+      "price": 8.95
+    }
+  ],
+  "Soups & Salads": [
+    {
+      "_section": "Complimentary Salads"
+    },
+    {
+      "name": "Complimentary Cesar Salad",
+      "price": 0.01
+    },
+    {
+      "name": "Complimentary Garden Salad",
+      "price": 0.01
+    },
+    {
+      "name": "Remove Salad from Package",
+      "price": -3.5
+    },
+    {
+      "_section": "Salads"
+    },
+    {
+      "name": "Asian Vegetable Salad",
+      "price": 5.0
+    },
+    {
+      "name": "Beet & Radish Salad",
+      "price": 6.0
+    },
+    {
+      "name": "Broccoli Salad",
+      "price": 3.5
+    },
+    {
+      "name": "Caesar Salad",
+      "price": 3.5
+    },
+    {
+      "name": "Chefs Salad",
+      "price": 3.5
+    },
+    {
+      "name": "Garden Salad",
+      "price": 3.5
+    },
+    {
+      "name": "Pasta Salad",
+      "price": 3.5
+    },
+    {
+      "name": "The Wedge",
+      "price": 3.5
+    },
+    {
+      "name": "Quinoa Chickpea Feta Salad w/Balsamic Drizzle",
+      "price": 3.5
+    },
+    {
+      "name": "Quinoa Spinach Salad",
+      "price": 4.0
+    },
+    {
+      "name": "Vinaigrette Salad",
+      "price": 3.5
+    },
+    {
+      "name": "Spinach Arugula Green Salad",
+      "price": 3.5
+    },
+    {
+      "name": "Potato Salad",
+      "price": 3.5
+    },
+    {
+      "name": "Roasted Zucchini & Summer squash",
+      "price": 3.5
+    },
+    {
+      "name": "Mango & Mint Salad",
+      "price": 4.0
+    },
+    {
+      "name": "Brazilian style chicken salad (salpicao)",
+      "price": 6.5
+    },
+    {
+      "name": "Brazilian tropical corn salad",
+      "price": 4.25
+    },
+    {
+      "_section": "Soups"
+    },
+    {
+      "name": "Chicken Soup",
+      "price": 6.5
+    },
+    {
+      "name": "Turkey Soup",
+      "price": 6.5
+    },
+    {
+      "name": "Beef Vegetable",
+      "price": 6.5
+    },
+    {
+      "name": "Broccoli & Cheese",
+      "price": 6.5
+    },
+    {
+      "name": "Chickpea & Kale",
+      "price": 6.5
+    },
+    {
+      "name": "Clam Chowder",
+      "price": 8.5
+    },
+    {
+      "name": "Corn Chowder",
+      "price": 6.5
+    },
+    {
+      "name": "French Onion Soup",
+      "price": 6.5
+    },
+    {
+      "name": "Mushroom Veloute",
+      "price": 6.5
+    },
+    {
+      "name": "Beef Stew",
+      "price": 6.5
+    },
+    {
+      "name": "Chicken Stew",
+      "price": 6.5
+    },
+    {
+      "name": "Turkey Stew",
+      "price": 6.5
+    },
+    {
+      "name": "Tomato Basil Soup",
+      "price": 6.5
+    },
+    {
+      "name": "Lobster Bisque",
+      "price": 9.5
+    },
+    {
+      "_section": "Desserts"
+    },
+    {
+      "name": "Flan",
+      "price": 4.95
+    },
+    {
+      "name": "Brigadeiro",
+      "price": 4.95
+    },
+    {
+      "name": "Chocolate Truffle",
+      "price": 4.95
+    },
+    {
+      "name": "Passion Fruit Mousse",
+      "price": 4.95
+    },
+    {
+      "name": "Chocolate Mousse",
+      "price": 4.95
+    },
+    {
+      "name": "Grilled Pineapple w/ Cin. Sugar",
+      "price": 4.95
+    },
+    {
+      "name": "FREE COMPLIMENTARY COOKIES",
+      "price": "FREE"
+    }
+  ],
+  "Bar/Beverage": [
+    {
+      "_section": "Set Up"
+    },
+    {
+      "name": "Non-Alcoholic Station Setup",
+      "desc": "Setup includes, equipment disposable napkins, straws, ice, cups, garnishes, etc.",
+      "price": 85.0
+    },
+    {
+      "name": "Standard Bar Setup",
+      "desc": "Complete bar setup with all essentials\n\u2014equipment, ice, disposable cups, garnishes, and liability coverage",
+      "price": 150.0
+    },
+    {
+      "name": "Beverage Package Only",
+      "desc": "Select Beverage Package Below {disposable cups  }",
+      "price": 0.01
+    },
+    {
+      "name": "Brunch",
+      "desc": "Select Beverage Package Below",
+      "price": 0.01
+    },
+    {
+      "_section": "Cash Bar"
+    },
+    {
+      "name": "Standard Cash Bar",
+      "desc": "Cash Bar Pricing: Specialty Drinks: $9-10, Liquor Drinks: $6-8, Beers: $6, White or Red Sangria: $6, Red Wine & White Wine: $6. Soft Drinks: $2.",
+      "price": 6.5
+    },
+    {
+      "name": "Extra Hour Cash Bar",
+      "desc": "Extend your bar service beyond the standard 4 hours with an additional hour.",
+      "price": 1.95
+    },
+    {
+      "name": "Add Open Bar Time: Beer & Wine",
+      "desc": "Beer & Wine: Open Bar (1 Hour)",
+      "price": 12.0
+    },
+    {
+      "name": "Add Open Bar Time: Full Bar",
+      "desc": "Full Bar: Open Bar (1 Hour)",
+      "price": 15.0
+    },
+    {
+      "_section": "Open Bar"
+    },
+    {
+      "name": "Open Bar: Beer & Wine",
+      "desc": "$22 per person. Includes beer, red & white wine, red/white sangria, and soft drinks.  If desired to do just 1 hr open bar, 1st hour open bar will be  $11\nExtra Hour for beer & wine would be: $7",
+      "price": 22.0
+    },
+    {
+      "name": "Open Bar: Beer & Wine \nw/ 3 Signature Drinks",
+      "desc": "$27 per person. Includes 3 specialty drinks, beer, red & white wine, red/white sangria, and soft drinks.  If desired to do just 1 hr open bar, 1st hour open bar will be  $12\nExtra Hour would be full bar + 3 sig. drinks would be: $8",
+      "price": 27.0
+    },
+    {
+      "name": "Open Bar: Full Bar",
+      "desc": "$30 per person. beer, red & white wine, red/white sangria, liquor, and soft drinks. If desired to do just 1 hr open bar, 1st hour open bar will be  $16\nAdd top shelf option: $4 - $8 per person.\nExtra Hour would be for full bar would be: $8",
+      "price": 30.0
+    },
+    {
+      "name": "Open Bar: Full Bar + 2 Signature Drinks",
+      "desc": "$35 per person. beer, red & white wine, red/white sangria, liquor, 2 signature drinks, and soft drinks.  If desired to do just 1 hr open bar, 1st hour open bar will be  $19\nAdd top shelf option: $4 - $8 per person.\nExtra Hour would be for full bar + 2 sig. drinks would be: $9",
+      "price": 35.0
+    },
+    {
+      "_section": "Extras"
+    },
+    {
+      "name": "Wine pouring service",
+      "desc": "Our team will personally offer wine to your guests during the event.",
+      "price": 3.0
+    },
+    {
+      "name": "Water service at table (disposable)",
+      "desc": "Disposable water service at each table, ensuring guests stay refreshed.",
+      "price": 2.5
+    },
+    {
+      "name": "Water Station",
+      "desc": "Tabled Station:\nCome with Water Pitchers staying filled, Disposable Cups, and Ice",
+      "price": 2.0
+    },
+    {
+      "name": "Real glass water glass",
+      "desc": "Glassware",
+      "price": 1.25
+    },
+    {
+      "name": "Real wine glass",
+      "desc": "Glassware",
+      "price": 1.25
+    },
+    {
+      "name": "Real champagne glass",
+      "desc": "Glassware",
+      "price": 1.5
+    },
+    {
+      "name": "Champagne service (disposable flutes)",
+      "desc": "Bar Service",
+      "price": 3.99
+    },
+    {
+      "name": "Champagne service (real flutes)",
+      "desc": "Bar Service",
+      "price": 5.95
+    },
+    {
+      "name": "Mocktail Dispenser Station",
+      "desc": "Pick 2\nLemonade Iced Tea Twist\nTropical Citrus Cooler\nPassion Fruit Spritzer\nCranberry Citrus Fizz\nBlueberry Lemonade Cooler",
+      "price": 3.0
+    },
+    {
+      "name": "Beverage Package",
+      "desc": "Coke, Sprite, Diet Coke Cans, Bottled Water \nand 2 refillable table dispensers \n(can be lemonade, ice tea or one of our juices)",
+      "price": 6.5
+    },
+    {
+      "_section": "Brunch"
+    },
+    {
+      "name": "Tea, Juices and Mimosas",
+      "desc": "A variety of hot teas, fresh juices & sparkling mimosas to brighten your brunch.",
+      "price": 13.0
+    }
+  ],
+  "Kids Menu": [
+    {
+      "name": "Chicken Fingers and Fries",
+      "price": 4.5
+    },
+    {
+      "name": "Mac & Cheese",
+      "price": 3.0
+    },
+    {
+      "name": "Penne Pasta w/Butter or Marinara Sauce",
+      "price": 3.0
+    },
+    {
+      "name": "Mini Burger Sliders w/Fries",
+      "price": 4.5
+    },
+    {
+      "name": "Full Dinner (Half Off)",
+      "price": 12.45
+    }
+  ],
+  "Rentals/Extras": [
+    {
+      "name": "Cake Cutting",
+      "desc": "Expert cake cutting, from slicing to plating and serving, ensuring your guests enjoy dessert promptly. Comes with Free High End Disposable Flatware",
+      "price": 7.5
+    },
+    {
+      "name": "Real china set Apps+Dinner+Bussing",
+      "desc": "Real China\nUpgrade your dining experience with real china, \nappetizer plate, dinner plate, silverware.\nIncludes Table Bussing in this upgrade at $4/pp",
+      "price": 9.95
+    },
+    {
+      "name": "Real china set Apps+Dinner+Bussing+Setup",
+      "desc": "Real China\nUpgrade your dining experience with real china, \nappetizer plate, dinner plate, silverware.\nIncludes Table Setup in this upgrade at $4/pp\nIncludes Table Bussing in this upgrade at $4/pp",
+      "price": 13.95
+    },
+    {
+      "name": "Real china: Dinner Only+Bussing",
+      "desc": "Real China\nUpgrade your dining experience with real china, \nincludes flatware and silverware\n(Dinner Only - No Appetizers)\nIncludes Table Bussing in this upgrade at $4/pp",
+      "price": 7.5
+    },
+    {
+      "name": "Real china: Dinner Only+Bussing+Setup",
+      "desc": "Real China\nUpgrade your dining experience with real china, \nincludes flatware and silverware\n(Dinner Only - No Appetizers)\nIncludes Table Setup in this upgrade at $4/pp\nIncludes Table Bussing in this upgrade at $4/pp",
+      "price": 11.5
+    },
+    {
+      "name": "Real china: Add Desserts/Cake",
+      "desc": "Real China\nUpgrade your dining experience with real china, \nincludes flatware and silverware\n(Desserts / Cake)\n\nIncludes Table Bussing in this upgrade at $1/pp",
+      "price": 2.95
+    },
+    {
+      "name": "Real Fork, Knife & Spoon",
+      "desc": "...",
+      "price": 2.5
+    },
+    {
+      "name": "Passed Hors-d'Oeuvres Service",
+      "desc": "Servers will offer your guests appetizers from elegant trays.",
+      "price": 0.01
+    },
+    {
+      "name": "Tableware  High-end disposable plates, silverware",
+      "desc": "& napkins",
+      "price": 3.5
+    },
+    {
+      "name": "Coffee & Tea Service",
+      "desc": "Coffee & Tea Service",
+      "price": 2.5
+    },
+    {
+      "name": "Cloth Napkins",
+      "desc": "color and size TBD",
+      "price": 3.0
+    },
+    {
+      "name": "Table Clearing: Disposables",
+      "desc": "Table Clearing (Bussers): Responsible for clearing plates, utensils, and maintaining clean dining tables, ensuring a tidy and comfortable environment for your guests.",
+      "price": 4.5
+    },
+    {
+      "name": "Table Clearing: China",
+      "desc": "Table Clearing (Bussers): Responsible for clearing plates, utensils, and maintaining clean dining tables, ensuring a tidy and comfortable environment for your guests.",
+      "price": 4.5
+    },
+    {
+      "name": "Table Setup - Linens Only",
+      "desc": "Setting Up Tables for: Tablecloths & Napkins (if applicable) Only",
+      "price": 4.5
+    },
+    {
+      "name": "Table Setup - China & Silverware Only",
+      "desc": "Setting Up Tables for: China & Silverware Only",
+      "price": 9.0
+    },
+    {
+      "name": "Table Setup - China & Linens",
+      "desc": "Setting Up Tables for: China & Linens",
+      "price": 4.5
+    },
+    {
+      "name": "Table Setup - Misc",
+      "desc": "Setting Up Tables for: China"
+    },
+    {
+      "name": "Rodizio: Family Style Sides",
+      "desc": "Serving your side dishes tableside",
+      "price": 5.0
+    },
+    {
+      "name": "Churrasco: Family Style",
+      "desc": "Upgrade your Churrasco Buffet with a Family Style Service\nwhere our staff serves hearty selections in portions designed for all to share",
+      "price": 10.0
+    },
+    {
+      "name": "Churrasco: Plated Style",
+      "desc": "Upgrade your Churrasco Buffet into a Plated Service\nwhere our professional staff serve each guest their choice of protein alongside two sides, all from a custom curated menu provided in advance",
+      "price": 15.0
+    },
+    {
+      "name": "Drop Off: \nWire Chafers & Sternos for Drop Off",
+      "desc": "Self-Heating Trays with Sternos Flame so you can keep your drop off warm",
+      "price": "#VALUE!"
+    },
+    {
+      "name": "Drop Off: \nBuffet Setup Service",
+      "desc": "Self-Heating Trays with Sternos Flame so you can keep your drop off warm",
+      "price": "#VALUE!"
+    },
+    {
+      "name": "FREE High end Disposable Flatware & Silverware",
+      "desc": "& napkins",
+      "price": 0.01
+    },
+    {
+      "name": "Cake Cutting ( Special Set up)",
+      "desc": "Expert cake cutting, from slicing to plating and we will arrange it on your Buffet table .  Comes with Free High End Disposable Flatware",
+      "price": 4.0
+    }
+  ],
+  "Services": [
+    {
+      "name": "Mini Buffet",
+      "desc": "Self-Serve Attended Buffet\n1 main course + 2 sides + 1 Salad\nAttended: Setup + Breakdown + Refreshing Buffet\nBudget Option: Switch to drop off & save $3/pp",
+      "price": 24.9,
+      "mains": 1.0,
+      "sides": 2.0,
+      "staff": 3.0
+    },
+    {
+      "name": "Full Buffet",
+      "desc": "Self-Serve Attended Buffet\n2 main course + 3 sides + 1 Salad\nAttended: Setup + Breakdown + Refreshing Buffet\nBudget Option: Switch to drop off & save $3/pp",
+      "price": 31.9,
+      "mains": 2.0,
+      "sides": 3.0,
+      "staff": 3.0
+    },
+    {
+      "name": "Deluxe Buffet",
+      "desc": "Self-Serve Attended Buffet\n3 main course + 3 sides + 1 Salad\nAttended: Setup + Breakdown + Refreshing Buffet\nBudget Option: Switch to drop off & save $3/pp",
+      "price": 37.9,
+      "mains": 3.0,
+      "sides": 3.0,
+      "staff": 3.0
+    },
+    {
+      "name": "Family Style: Mini",
+      "desc": "Staff & Service: Family-Style Presentation\n1 Main  + 2 Sides + 1 Salad\nCelebrate togetherness with our family-style service, where our staff serves hearty selections in portions designed for all to share.",
+      "price": 29.9,
+      "mains": 1.0,
+      "sides": 2.0,
+      "staff": 10.0
+    },
+    {
+      "name": "Family Style: Full",
+      "desc": "Staff & Service: Family-Style Presentation\n2 Mains + 4 Sides + 1 Salad\nCelebrate togetherness with our family-style service, where our staff serves hearty selections in portions designed for all to share.",
+      "price": 35.9,
+      "mains": 2.0,
+      "sides": 4.0,
+      "staff": 10.0
+    },
+    {
+      "name": "Family Style: Deluxe",
+      "desc": "Staff & Service: Family-Style Presentation\n3 Mains + 6 sides + 1 Salad\nCelebrate togetherness with our family-style service, where our staff serves hearty selections in portions designed for all to share.",
+      "price": 44.1,
+      "mains": 3.0,
+      "sides": 6.0,
+      "staff": 10.0
+    },
+    {
+      "name": "Mini Plated Service",
+      "desc": "Staff & Service: Personalized Plated Presentation\n1 Protein Choice + 2 Sides + 1 salad\nExperience plated catering as our professional staff serve each guest their choice of protein alongside two sides, all from a custom curated menu provided in advance.\nBudget Option: Switch to Family Style Plated & save $5/pp",
+      "price": 32.4,
+      "mains": 1.0,
+      "sides": 2.0,
+      "staff": 15.0
+    },
+    {
+      "name": "Full Plated Service",
+      "desc": "Staff & Service: Personalized Plated Presentation\n2 Protein Choices + 4 Sides + 1 salad\nExperience plated catering as our professional staff serve each guest their choice of protein alongside two sides, all from a custom curated menu provided in advance.\nBudget Option: Switch to Family Style Plated & save $5/pp",
+      "price": 38.4,
+      "mains": 2.0,
+      "sides": 4.0,
+      "staff": 15.0
+    },
+    {
+      "name": "Deluxe Plated Service",
+      "desc": "Staff & Service: Personalized Plated Presentation\n3 Protein Choices + 6 sides + 1 salad\nExperience plated catering as our professional staff serve each guest their choice of protein alongside two sides, all from a custom curated menu provided in advance.\nBudget Option: Switch to Family Style Plated & save $5/pp",
+      "price": 44.1,
+      "mains": 3.0,
+      "sides": 6.0,
+      "staff": 15.0
+    },
+    {
+      "name": "Mini Drop Off",
+      "desc": "Drop Off Buffet Tray Service\n1 main course + 2 sides + 1 Salad\nRecommended: Upgrade to Add Self-Heating Wire Chafers & Sternos +5%\nRequires: Delivery Service $2/mi\nRecommended: Add a Buffet Setup Service +5%",
+      "price": 24.9,
+      "mains": 1.0,
+      "sides": 2.0,
+      "staff": 0.0
+    },
+    {
+      "name": "Full Drop Off",
+      "desc": "Drop Off Buffet Tray Service\n2 main course + 3 sides + 1 Salad\nRecommended: Upgrade to Add Self-Heating Wire Chafers & Sternos +5%\nRequires: Delivery Service $2/mi\nRecommended: Add a Buffet Setup Service +5%",
+      "price": 31.9,
+      "mains": 2.0,
+      "sides": 3.0,
+      "staff": 0.0
+    },
+    {
+      "name": "Deluxe Drop Off",
+      "desc": "Drop Off Buffet Tray Service\n3 main course + 3 sides + 1 Salad\nRecommended: Upgrade to Add Self-Heating Wire Chafers & Sternos +5%\nRequires: Delivery Service $2/mi\nRecommended: Add a Buffet Setup Service +5%",
+      "price": 37.9,
+      "mains": 3.0,
+      "sides": 3.0,
+      "staff": 0.0
+    },
+    {
+      "name": "Mini Churrasco",
+      "desc": "Churrasco Self-Serve Attended Buffet \n1 meat + 2 sides + 1 salad\nAttended: Setup + Breakdown + Refreshing Buffet\nBring the Brazilian grill to your event with our Churrasco service, featuring onsite grilling and an optional Rodizio upgrade (+$20/pp) for continuous tableside service.",
+      "price": 29.95,
+      "mains": 1.0,
+      "sides": 2.0,
+      "staff": 3.0
+    },
+    {
+      "name": "Full Churrasco",
+      "desc": "Churrasco Self-Serve Attended Buffet\n2 meats + 3 sides + 1 salad\nAttended: Setup + Breakdown + Refreshing Buffet\nBring the Brazilian grill to your event with our Churrasco service, featuring onsite grilling and an optional Rodizio upgrade (+$20/pp) for continuous tableside service.",
+      "price": 36.9,
+      "mains": 2.0,
+      "sides": 3.0,
+      "staff": 3.0
+    },
+    {
+      "name": "Deluxe Churrasco",
+      "desc": "Churrasco Self-Serve Attended Buffet\n3 meats + 3 sides + 1 salad\nAttended: Setup + Breakdown + Refreshing Buffet\nBring the Brazilian grill to your event with our Churrasco service, featuring onsite grilling and an optional Rodizio upgrade (+$20/pp) for continuous tableside service.",
+      "price": 41.9,
+      "mains": 3.0,
+      "sides": 3.0,
+      "staff": 3.0
+    },
+    {
+      "name": "Supreme Churrasco",
+      "desc": "Churrasco Self-Serve Attended Buffet\n4 meats +  3 sides + 1 salad\nAttended: Setup + Breakdown + Refreshing Buffet\nBring the Brazilian grill to your event with our Churrasco service, featuring onsite grilling and an optional Rodizio upgrade (+$20/pp) for continuous tableside service.",
+      "price": 46.9,
+      "mains": 4.0,
+      "sides": 3.0,
+      "staff": 3.0
+    },
+    {
+      "name": "Supreme+ Churrasco",
+      "desc": "Churrasco Self-Serve Attended Buffet\n5 meats+ 3 sides + 2 salads\nAttended: Setup + Breakdown + Refreshing Buffet\nBring the Brazilian grill to your event with our Churrasco service, featuring onsite grilling and an optional Rodizio upgrade (+$20/pp) for continuous tableside service.",
+      "price": 59.9,
+      "mains": 5.0,
+      "sides": 3.0,
+      "staff": 3.0
+    },
+    {
+      "name": "Mini Churrasco Rodizio",
+      "desc": "Churrasco w/Tableside Rodizio Service\n1 meat + 2 sides + 1 salad\nBring the Brazilian grill to your event with our Churrasco service, featuring onsite grilling and tableside meat service, with skewers brought to guests as part of the Churrasco experience, creating an authentic Brazilian dining atmosphere.\nRecommended: Add Family Style Sides for +$5/pp",
+      "price": 29.95,
+      "mains": 1.0,
+      "sides": 2.0,
+      "staff": 20.0
+    },
+    {
+      "name": "Full Churrasco Rodizio",
+      "desc": "Churrasco w/Tableside Rodizio Service\n2 meats + 3 sides + 1 salad\nBring the Brazilian grill to your event with our Churrasco service, featuring onsite grilling and tableside meat service, with skewers brought to guests as part of the Churrasco experience, creating an authentic Brazilian dining atmosphere.\nRecommended: Add Family Style Sides for +$5/pp",
+      "price": 36.9,
+      "mains": 2.0,
+      "sides": 3.0,
+      "staff": 20.0
+    },
+    {
+      "name": "Deluxe Churrasco Rodizio",
+      "desc": "Churrasco w/Tableside Rodizio Service\n3 meats + 3 sides + 1 salad\nBring the Brazilian grill to your event with our Churrasco service, featuring onsite grilling and tableside meat service, with skewers brought to guests as part of the Churrasco experience, creating an authentic Brazilian dining atmosphere.\nRecommended: Add Family Style Sides for +$5/pp",
+      "price": 41.9,
+      "mains": 3.0,
+      "sides": 3.0,
+      "staff": 20.0
+    },
+    {
+      "name": "Supreme Churrasco Rodizio",
+      "desc": "Churrasco w/Tableside Rodizio Service\n4 meats +  3 sides + 1 salad\nBring the Brazilian grill to your event with our Churrasco service, featuring onsite grilling and tableside meat service, with skewers brought to guests as part of the Churrasco experience, creating an authentic Brazilian dining atmosphere.\nRecommended: Add Family Style Sides for +$5/pp",
+      "price": 46.9,
+      "mains": 4.0,
+      "sides": 3.0,
+      "staff": 20.0
+    },
+    {
+      "name": "Supreme+ Churrasco Rodizio",
+      "desc": "Churrasco w/Tableside Rodizio Service\n5 meats+ 3 sides + 2 salads\nBring the Brazilian grill to your event with our Churrasco service, featuring onsite grilling and tableside meat service, with skewers brought to guests as part of the Churrasco experience, creating an authentic Brazilian dining atmosphere.\nRecommended: Add Family Style Sides for +$5/pp",
+      "price": 59.9,
+      "mains": 5.0,
+      "sides": 3.0,
+      "staff": 20.0
+    }
+  ],
+  "Extras": [
+    {
+      "name": "Added Main",
+      "price": 6.5
+    },
+    {
+      "name": "Added Side",
+      "price": 3.5
+    },
+    {
+      "name": "Added Salad",
+      "price": 3.5
+    },
+    {
+      "name": "Table Clearing",
+      "price": 3.0
+    },
+    {
+      "name": "Delivery Service",
+      "price": 2.0
+    }
+  ],
+  "Vendor Meals": [
+    {
+      "name": "Vendor Meal (1 Protein + 2 Sides + Salad)\nBuffet",
+      "price": "_Please specify in notes section what the dish selections are\nGarden or Cesar Salad\n5 Vendor Minimum"
+    },
+    {
+      "name": "Vendor Meals (2 Protein + 3 Sides + Salad)\nBuffet",
+      "price": "_Please specify in notes section what the dish selections are\nGarden or Cesar Salad\n5 Vendor Minimum"
+    }
+  ],
+  "Brunch": [
+    {
+      "name": "Seasonal Fruit Salad",
+      "price": 3.5
+    },
+    {
+      "name": "Yogurt",
+      "price": 3.5
+    },
+    {
+      "name": "Deluxe Charcuterie Board",
+      "price": 12.5
+    },
+    {
+      "name": "Fruit Platter",
+      "price": 4.95
+    },
+    {
+      "name": "Veggie Platter",
+      "price": 4.95
+    },
+    {
+      "name": "Assorted Bread, Butter & Jam Platter",
+      "price": 5.95
+    },
+    {
+      "name": "Croissant & Assorted Muffins",
+      "price": 6.5
+    },
+    {
+      "name": "Pancakes",
+      "price": 4.95
+    },
+    {
+      "name": "Classic Bruchetta",
+      "price": 2.75
+    },
+    {
+      "name": "Pao de Quejo (Cheese Bread) Plain",
+      "price": 2.75
+    },
+    {
+      "name": "Pao de Quejo and Goiaba",
+      "price": 3.0
+    },
+    {
+      "name": "Chicken Salad Mini Cups",
+      "price": 2.75
+    },
+    {
+      "name": "Dadinhos de Tapioca with Jelly",
+      "price": 3.75
+    },
+    {
+      "name": "Assorted Croquettes",
+      "price": 5.95
+    },
+    {
+      "name": "Assorted Turnovers",
+      "price": 5.95
+    },
+    {
+      "name": "Quiche: Brocolli & Spinach",
+      "price": 8.5
+    },
+    {
+      "name": "Eggs, Bacon, Sausage",
+      "price": 8.75
+    },
+    {
+      "name": "Eggs",
+      "price": 2.75
+    },
+    {
+      "name": "Bacon",
+      "price": 3.0
+    },
+    {
+      "name": "Sausage",
+      "price": 3.0
+    },
+    {
+      "name": "Coffee & Tea",
+      "price": 2.5
+    },
+    {
+      "name": "Juices (starts at $4/pp)",
+      "price": 4.0
+    },
+    {
+      "name": "Extra Juices",
+      "price": 2.0
+    },
+    {
+      "_section": "BAR"
+    },
+    {
+      "name": "Mimosa Open Bar (4hrs)",
+      "price": 16.0
+    },
+    {
+      "name": "Mimosa Open Bar (1hr)",
+      "price": 10.0
+    },
+    {
+      "name": "Mimosa Cash Bar + Bartender Service ($100)",
+      "price": 2.75
+    }
+  ]
+}

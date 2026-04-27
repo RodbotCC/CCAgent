@@ -1,0 +1,805 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ballpark · {{client_first_name}} · Comeketo Catering</title>
+<!--
+  ============================================================================
+  COMEKETO CATERING — BALLPARK QUOTE EMAIL TEMPLATE
+  ============================================================================
+  Agent-fillable merge fields (just find/replace these):
+
+  CLIENT
+    {{client_first_name}}        — "Natália"
+    {{event_type}}               — "wedding", "birthday", "corporate dinner"
+    {{guest_count}}              — "100"
+    {{follow_up_window}}         — "10:00 AM, 11:00 AM, or 1:00 PM"
+
+  OPTION 1 (required)
+    {{option_1_name}}            — "Brazilian BBQ (Churrasco)"
+    {{option_1_pitch}}           — short two-clause pitch w/ pipe separator
+    {{option_1_food_pp}}         — "17.99"
+    {{option_1_food_total}}      — "1799.00"
+    {{option_1_extras_label}}    — "Appetizers" or "Apps + Sides"
+    {{option_1_extras_total}}    — "0.00" or e.g. "350.00"
+    {{option_1_tax_rate}}        — "7"
+    {{option_1_tax_total}}       — "125.93"
+    {{option_1_service_rate}}    — "24"
+    {{option_1_service_total}}   — "431.76"
+    {{option_1_charge_label}}    — "Service Charge (over 50 guests at $3/pp)"
+    {{option_1_charge_total}}    — "300.00"
+    {{option_1_grand_total}}     — "2656.69"
+
+  OPTION 2 (required — same structure)
+    {{option_2_name}}, {{option_2_pitch}}, {{option_2_food_pp}}, ...etc.
+
+  DEFAULTS LINE
+    {{default_steak}}            — "Top Sirloin"
+    {{default_chicken}}          — "Chicken Wrapped in Bacon"
+
+  TASTING CARD
+    {{tasting_date}}             — "Sunday, May 3"
+    {{tasting_location}}         — "199 Main St, Fitchburg, MA 01420"
+    {{tasting_time}}              — "5:30 PM"
+    {{tasting_code}}             — "ANDRE"
+    {{tasting_preview_url}}      — landing page URL
+    {{tasting_register_url}}     — registration form URL
+    {{menu_calculator_url}}      — quote builder URL
+
+  SIGNATURE
+    {{rep_name}}                 — "Andre Raw"
+    {{rep_title}}                — "Catering Event Coordinator"
+    {{rep_cell}}                 — "(978) 235-3791"
+    {{rep_office}}               — "(978) 381-1212"
+    {{rep_facebook_url}}, {{rep_instagram_url}}, {{rep_website_url}}
+  ============================================================================
+-->
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
+
+  :root {
+    --bg: #EBE8E0;
+    --bg-2: #f5f3ec;
+    --bg-3: #faf8f1;
+    --ink: #1f1d1a;
+    --ink-2: #4a4640;
+    --ink-3: #8a8478;
+    --line: #d8d3c6;
+    --line-2: #e3ddd0;
+    --sage: #d6e3cc;
+    --sage-ink: #3d5a2c;
+    --amber: #ead6b3;
+    --amber-ink: #7a5a1e;
+    --coral: #f0c9c2;
+    --coral-ink: #8a3a2a;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Inter', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .tabular { font-family: 'JetBrains Mono', ui-monospace, monospace; font-feature-settings: "tnum"; }
+
+  /* ============================================================
+     CONTAINER — emulates an email body, but lives as a webpage
+     ============================================================ */
+  .email {
+    max-width: 720px;
+    margin: 40px auto;
+    background: var(--bg-2);
+    border: 1px solid var(--line);
+  }
+
+  /* ============================================================
+     MASTHEAD
+     ============================================================ */
+  .masthead {
+    padding: 36px 48px 28px;
+    border-bottom: 1px solid var(--line);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .masthead .eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    color: var(--ink-3);
+  }
+  .masthead .brand {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 20px;
+    color: var(--ink);
+  }
+
+  /* ============================================================
+     OPENER
+     ============================================================ */
+  .opener {
+    padding: 40px 48px 32px;
+  }
+  .greeting {
+    font-family: 'Fraunces', serif;
+    font-size: 36px;
+    font-weight: 400;
+    line-height: 1.1;
+    letter-spacing: -0.015em;
+    margin-bottom: 24px;
+  }
+  .greeting .italic {
+    font-style: italic;
+    color: var(--ink-2);
+  }
+  .opener p {
+    font-size: 15px;
+    color: var(--ink-2);
+    margin-bottom: 14px;
+    max-width: 56ch;
+  }
+  .opener p strong {
+    font-weight: 600;
+    color: var(--ink);
+  }
+  .opener .anchor-line {
+    margin-top: 18px;
+    padding: 16px 20px;
+    background: var(--bg-3);
+    border-left: 2px solid var(--ink);
+    font-family: 'Fraunces', serif;
+    font-size: 17px;
+    font-style: italic;
+    color: var(--ink);
+  }
+  .opener .anchor-line .count {
+    font-style: normal;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 500;
+    background: var(--ink);
+    color: var(--bg-2);
+    padding: 2px 8px;
+    margin: 0 2px;
+    font-size: 14px;
+  }
+
+  /* ============================================================
+     CTA — primary
+     ============================================================ */
+  .cta-primary {
+    margin: 28px 48px;
+    display: flex;
+    align-items: stretch;
+    text-decoration: none;
+    background: var(--ink);
+    color: var(--bg-2);
+    border: 1px solid var(--ink);
+    transition: all 0.15s;
+  }
+  .cta-primary:hover {
+    background: var(--ink-2);
+  }
+  .cta-primary .cta-label {
+    flex: 1;
+    padding: 16px 22px;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0.01em;
+  }
+  .cta-primary .cta-sub {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    color: rgba(245, 243, 236, 0.6);
+    margin-top: 2px;
+    text-transform: uppercase;
+    font-weight: 400;
+  }
+  .cta-primary .cta-arrow {
+    padding: 16px 22px;
+    border-left: 1px solid rgba(245, 243, 236, 0.15);
+    font-family: 'Fraunces', serif;
+    font-size: 22px;
+    font-style: italic;
+    display: flex;
+    align-items: center;
+  }
+
+  /* ============================================================
+     OPTION CARDS
+     ============================================================ */
+  .options {
+    padding: 16px 48px 8px;
+  }
+  .option {
+    border: 1px solid var(--line);
+    margin-bottom: 24px;
+    background: var(--bg-3);
+  }
+  .option-head {
+    background: var(--ink);
+    color: var(--bg-2);
+    padding: 16px 22px;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+  .option-head .opt-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    color: rgba(245, 243, 236, 0.55);
+    margin-bottom: 4px;
+  }
+  .option-head .opt-name {
+    font-family: 'Fraunces', serif;
+    font-size: 22px;
+    font-weight: 400;
+    letter-spacing: -0.005em;
+  }
+  .option-pitch {
+    padding: 14px 22px;
+    border-bottom: 1px solid var(--line-2);
+    font-size: 13px;
+    color: var(--ink-3);
+    font-style: italic;
+    line-height: 1.5;
+  }
+  .option-pitch .sep {
+    color: var(--line);
+    margin: 0 6px;
+    font-style: normal;
+  }
+
+  table.lines {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  .lines td {
+    padding: 11px 22px;
+    font-size: 14px;
+    color: var(--ink-2);
+    border-bottom: 1px solid var(--line-2);
+    vertical-align: middle;
+  }
+  .lines td:last-child {
+    text-align: right;
+    color: var(--ink);
+    white-space: nowrap;
+  }
+  .lines tr:last-child td {
+    border-bottom: none;
+  }
+  .lines .line-sub {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--ink-3);
+    margin-left: 8px;
+    letter-spacing: 0.02em;
+  }
+  .lines tr.grand td {
+    background: var(--bg-2);
+    border-top: 1px solid var(--line);
+    padding: 18px 22px;
+  }
+  .lines tr.grand td:first-child {
+    font-family: 'Fraunces', serif;
+    font-size: 18px;
+    font-style: italic;
+    color: var(--ink);
+  }
+  .lines tr.grand td:last-child {
+    font-family: 'Fraunces', serif;
+    font-size: 24px;
+    color: var(--ink);
+    font-weight: 400;
+  }
+  .lines tr.grand td:last-child .approx {
+    color: var(--ink-3);
+    margin-right: 2px;
+  }
+
+  /* ============================================================
+     MAKE IT YOUR OWN
+     ============================================================ */
+  .makeitown {
+    margin: 32px 48px 8px;
+    padding: 24px 26px;
+    background: var(--amber);
+    border: 1px solid #d4b885;
+  }
+  .makeitown-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    color: var(--amber-ink);
+    margin-bottom: 6px;
+  }
+  .makeitown h3 {
+    font-family: 'Fraunces', serif;
+    font-size: 22px;
+    font-weight: 400;
+    color: var(--ink);
+    margin-bottom: 12px;
+    letter-spacing: -0.01em;
+  }
+  .makeitown ul {
+    list-style: none;
+    padding: 0;
+  }
+  .makeitown li {
+    padding: 6px 0;
+    font-size: 14px;
+    color: var(--ink-2);
+    border-bottom: 1px solid rgba(122, 90, 30, 0.12);
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+  .makeitown li:last-child { border-bottom: none; }
+  .makeitown li .item-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    color: var(--amber-ink);
+    background: rgba(122, 90, 30, 0.08);
+    padding: 2px 8px;
+    border-radius: 999px;
+  }
+
+  /* ============================================================
+     DEFAULTS NOTE
+     ============================================================ */
+  .defaults {
+    margin: 0 48px;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--line-2);
+    font-size: 13px;
+    color: var(--ink-3);
+    line-height: 1.7;
+  }
+  .defaults .label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    color: var(--ink-3);
+    text-transform: uppercase;
+  }
+  .defaults strong {
+    color: var(--ink);
+    font-weight: 500;
+  }
+  .defaults .row { margin: 4px 0; }
+
+  /* ============================================================
+     CLOSING COPY
+     ============================================================ */
+  .closing {
+    padding: 28px 48px 8px;
+  }
+  .closing p {
+    font-size: 15px;
+    color: var(--ink-2);
+    margin-bottom: 14px;
+    max-width: 56ch;
+  }
+  .closing .question {
+    font-family: 'Fraunces', serif;
+    font-size: 22px;
+    font-weight: 400;
+    color: var(--ink);
+    margin: 20px 0 16px;
+    line-height: 1.25;
+    letter-spacing: -0.005em;
+  }
+  .closing .question .italic { font-style: italic; }
+  .closing .times-strip {
+    margin: 16px 0 8px;
+    padding: 14px 20px;
+    background: var(--bg-3);
+    border: 1px solid var(--line);
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+  .closing .times-strip .times-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    color: var(--ink-3);
+  }
+  .closing .times-strip .times-val {
+    font-size: 14px;
+    color: var(--ink);
+    font-weight: 500;
+  }
+
+  /* ============================================================
+     TASTING CARD
+     ============================================================ */
+  .tasting {
+    margin: 16px 48px 32px;
+    background: var(--sage);
+    border: 1px solid #b8c8a9;
+    padding: 28px 30px;
+  }
+  .tasting-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    color: var(--sage-ink);
+    margin-bottom: 8px;
+  }
+  .tasting h3 {
+    font-family: 'Fraunces', serif;
+    font-size: 28px;
+    font-weight: 400;
+    color: var(--ink);
+    margin-bottom: 6px;
+    letter-spacing: -0.015em;
+  }
+  .tasting h3 .italic { font-style: italic; }
+  .tasting .pitch {
+    font-size: 14px;
+    color: var(--ink-2);
+    margin-bottom: 20px;
+    max-width: 50ch;
+  }
+  .tasting .details-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: rgba(61, 90, 44, 0.18);
+    border: 1px solid rgba(61, 90, 44, 0.18);
+    margin-bottom: 22px;
+  }
+  .tasting .detail {
+    background: var(--sage);
+    padding: 12px 14px;
+  }
+  .tasting .detail .lab {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.16em;
+    color: var(--sage-ink);
+    margin-bottom: 4px;
+  }
+  .tasting .detail .val {
+    font-size: 13px;
+    color: var(--ink);
+    font-weight: 500;
+    line-height: 1.3;
+  }
+  .tasting .ctas {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .tasting .btn {
+    flex: 1;
+    min-width: 180px;
+    text-decoration: none;
+    text-align: center;
+    padding: 13px 18px;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.15s;
+    border: 1px solid;
+    letter-spacing: 0.005em;
+  }
+  .tasting .btn-primary {
+    background: var(--ink);
+    border-color: var(--ink);
+    color: var(--bg-2);
+  }
+  .tasting .btn-primary:hover { background: var(--ink-2); }
+  .tasting .btn-secondary {
+    background: transparent;
+    border-color: var(--ink);
+    color: var(--ink);
+  }
+  .tasting .btn-secondary:hover {
+    background: var(--ink);
+    color: var(--bg-2);
+  }
+  .tasting .reassure {
+    margin-top: 16px;
+    font-size: 12px;
+    font-style: italic;
+    color: var(--sage-ink);
+  }
+
+  /* ============================================================
+     SIGNATURE
+     ============================================================ */
+  .signature {
+    padding: 28px 48px 32px;
+    border-top: 1px solid var(--line);
+  }
+  .signature .signoff {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 18px;
+    color: var(--ink-2);
+    margin-bottom: 12px;
+  }
+  .signature .name {
+    font-family: 'Fraunces', serif;
+    font-size: 22px;
+    font-weight: 400;
+    color: var(--ink);
+    margin-bottom: 2px;
+  }
+  .signature .title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    color: var(--ink-3);
+    text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+  .signature .contact-row {
+    display: flex;
+    gap: 18px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+    font-size: 13px;
+    color: var(--ink-2);
+  }
+  .signature .contact-row .label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    color: var(--ink-3);
+    margin-right: 6px;
+  }
+  .signature .socials {
+    display: flex;
+    gap: 14px;
+    font-size: 13px;
+  }
+  .signature .socials a {
+    color: var(--ink);
+    text-decoration: none;
+    border-bottom: 1px solid var(--ink-3);
+    padding-bottom: 1px;
+    transition: all 0.15s;
+  }
+  .signature .socials a:hover {
+    border-bottom-color: var(--ink);
+  }
+
+  /* ============================================================
+     FOOTER
+     ============================================================ */
+  .footer {
+    padding: 18px 48px;
+    background: var(--bg-3);
+    border-top: 1px solid var(--line);
+    text-align: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    color: var(--ink-3);
+    text-transform: uppercase;
+  }
+
+  /* ============================================================
+     RESPONSIVE
+     ============================================================ */
+  @media (max-width: 640px) {
+    .email { margin: 0; border: none; }
+    .masthead, .opener, .options, .closing, .signature, .footer { padding-left: 24px; padding-right: 24px; }
+    .cta-primary, .makeitown, .tasting, .defaults { margin-left: 24px; margin-right: 24px; }
+    .greeting { font-size: 28px; }
+    .tasting .details-grid { grid-template-columns: repeat(2, 1fr); }
+    .tasting .ctas .btn { min-width: 100%; }
+  }
+</style>
+</head>
+<body>
+
+<div class="email">
+
+  <!-- MASTHEAD -->
+  <header class="masthead">
+    <div class="eyebrow">BALLPARK · NO COMMITMENT</div>
+    <div class="brand">Comeketo Catering.</div>
+  </header>
+
+  <!-- OPENER -->
+  <section class="opener">
+    <h1 class="greeting">Hi {{client_first_name}}, <span class="italic">a quick ballpark.</span></h1>
+    <p>I put together a fun ballpark for your <strong>{{event_type}}</strong>.</p>
+    <p>Just so I understand where things stand — are you mostly trying to get clarity on <strong>budget</strong>, <strong>menu direction</strong>, or <strong>service style</strong> right now?</p>
+    <div class="anchor-line">
+      Either way, I wanted to put some real numbers in front of you based on <span class="count">{{guest_count}} guests</span> so this stops feeling abstract and starts feeling like a real decision.
+    </div>
+  </section>
+
+  <!-- PRIMARY CTA -->
+  <a href="{{menu_calculator_url}}" class="cta-primary">
+    <div class="cta-label">
+      Explore the Full Menu Calculator
+      <div class="cta-sub">Build your own quote · Live pricing</div>
+    </div>
+    <div class="cta-arrow">→</div>
+  </a>
+
+  <!-- OPTIONS -->
+  <section class="options">
+
+    <!-- OPTION 1 -->
+    <article class="option">
+      <header class="option-head">
+        <div>
+          <div class="opt-eyebrow">OPTION 01</div>
+          <div class="opt-name">{{option_1_name}}</div>
+        </div>
+      </header>
+      <div class="option-pitch">{{option_1_pitch}}</div>
+      <table class="lines">
+        <tbody>
+          <tr>
+            <td>Food <span class="line-sub tabular">${{option_1_food_pp}} × {{guest_count}} guests</span></td>
+            <td class="tabular">${{option_1_food_total}}</td>
+          </tr>
+          <tr>
+            <td>{{option_1_extras_label}}</td>
+            <td class="tabular">${{option_1_extras_total}}</td>
+          </tr>
+          <tr>
+            <td>MA Tax <span class="line-sub tabular">({{option_1_tax_rate}}%)</span></td>
+            <td class="tabular">${{option_1_tax_total}}</td>
+          </tr>
+          <tr>
+            <td>Service, Fuel &amp; Admin <span class="line-sub tabular">({{option_1_service_rate}}%)</span></td>
+            <td class="tabular">${{option_1_service_total}}</td>
+          </tr>
+          <tr>
+            <td>{{option_1_charge_label}}</td>
+            <td class="tabular">${{option_1_charge_total}}</td>
+          </tr>
+          <tr class="grand">
+            <td>Ballpark Total</td>
+            <td class="tabular"><span class="approx">~</span>${{option_1_grand_total}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </article>
+
+    <!-- OPTION 2 -->
+    <article class="option">
+      <header class="option-head">
+        <div>
+          <div class="opt-eyebrow">OPTION 02</div>
+          <div class="opt-name">{{option_2_name}}</div>
+        </div>
+      </header>
+      <div class="option-pitch">{{option_2_pitch}}</div>
+      <table class="lines">
+        <tbody>
+          <tr>
+            <td>Food <span class="line-sub tabular">${{option_2_food_pp}} × {{guest_count}} guests</span></td>
+            <td class="tabular">${{option_2_food_total}}</td>
+          </tr>
+          <tr>
+            <td>{{option_2_extras_label}}</td>
+            <td class="tabular">${{option_2_extras_total}}</td>
+          </tr>
+          <tr>
+            <td>MA Tax <span class="line-sub tabular">({{option_2_tax_rate}}%)</span></td>
+            <td class="tabular">${{option_2_tax_total}}</td>
+          </tr>
+          <tr>
+            <td>Service, Fuel &amp; Admin <span class="line-sub tabular">({{option_2_service_rate}}%)</span></td>
+            <td class="tabular">${{option_2_service_total}}</td>
+          </tr>
+          <tr>
+            <td>{{option_2_charge_label}}</td>
+            <td class="tabular">${{option_2_charge_total}}</td>
+          </tr>
+          <tr class="grand">
+            <td>Ballpark Total</td>
+            <td class="tabular"><span class="approx">~</span>${{option_2_grand_total}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </article>
+
+  </section>
+
+  <!-- MAKE IT YOUR OWN -->
+  <section class="makeitown">
+    <div class="makeitown-eyebrow">CUSTOMIZE</div>
+    <h3>Make it your own.</h3>
+    <ul>
+      <li><span>Appetizers</span><span class="item-tag">ADD ON</span></li>
+      <li><span>Desserts</span><span class="item-tag">ADD ON</span></li>
+      <li><span>Extra proteins &amp; sides</span><span class="item-tag">CUSTOMIZE</span></li>
+    </ul>
+  </section>
+
+  <!-- DEFAULTS -->
+  <section class="defaults">
+    <div class="row"><span class="label">Default steak</span> <strong>{{default_steak}}</strong></div>
+    <div class="row"><span class="label">Default chicken</span> <strong>{{default_chicken}}</strong></div>
+    <div class="row" style="margin-top: 8px; font-style: italic;">Complimentary cookies are included too. Ask me how to get this.</div>
+  </section>
+
+  <!-- CLOSING -->
+  <section class="closing">
+    <p>These are ballpark numbers so I can point you in the right direction without leading you the wrong way before we lock in your final guest count, menu, and service details.</p>
+    <h2 class="question">Which option <span class="italic">feels closer</span> to what you want?</h2>
+    <p>If it helps, we could also jump on a quick call.</p>
+    <div class="times-strip">
+      <span class="times-label">OPEN SLOTS</span>
+      <span class="times-val">{{follow_up_window}}</span>
+    </div>
+  </section>
+
+  <!-- TASTING CARD -->
+  <section class="tasting">
+    <div class="tasting-eyebrow">OR — COME TASTE IT FIRST</div>
+    <h3>Taste before you <span class="italic">decide.</span></h3>
+    <p class="pitch">If tasting makes more sense, I can save you a spot so you can experience the food before deciding from a distance.</p>
+
+    <div class="details-grid">
+      <div class="detail">
+        <div class="lab">DATE</div>
+        <div class="val">{{tasting_date}}</div>
+      </div>
+      <div class="detail">
+        <div class="lab">TIME</div>
+        <div class="val">{{tasting_time}}</div>
+      </div>
+      <div class="detail">
+        <div class="lab">LOCATION</div>
+        <div class="val">{{tasting_location}}</div>
+      </div>
+      <div class="detail">
+        <div class="lab">CODE</div>
+        <div class="val tabular">{{tasting_code}}</div>
+      </div>
+    </div>
+
+    <div class="ctas">
+      <a href="{{tasting_preview_url}}" class="btn btn-secondary">Tasting Preview</a>
+      <a href="{{tasting_register_url}}" class="btn btn-primary">Reserve a Seat →</a>
+    </div>
+
+    <div class="reassure">Seats are limited. The last tasting was a blast — I'd rather let you experience it than guess from a distance.</div>
+  </section>
+
+  <!-- SIGNATURE -->
+  <footer class="signature">
+    <div class="signoff">Talk soon,</div>
+    <div class="name">{{rep_name}}</div>
+    <div class="title">{{rep_title}}</div>
+    <div class="contact-row">
+      <div><span class="label">CELL</span><span class="tabular">{{rep_cell}}</span></div>
+      <div><span class="label">OFFICE</span><span class="tabular">{{rep_office}}</span></div>
+    </div>
+    <div class="socials">
+      <a href="{{rep_facebook_url}}">Facebook</a>
+      <a href="{{rep_instagram_url}}">Instagram</a>
+      <a href="{{rep_website_url}}">Website</a>
+    </div>
+  </footer>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    COMEKETO CATERING · 199 MAIN ST, FITCHBURG, MA 01420 · COMEKETOCATERING.COM
+  </div>
+
+</div>
+
+</body>
+</html>

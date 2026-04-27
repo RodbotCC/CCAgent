@@ -1,0 +1,61 @@
+{
+  "generated_at": "2026-04-26T01:00:00Z",
+  "leads": [
+    {
+      "lead_id": "lead_g4AZCOW7Kpc3tithNBrr9aXPbDHsZ72KJUR55Qjzd6f",
+      "name": "Hugo Casillas",
+      "altitude": "whale",
+      "current_live_state": "active",
+      "current_plan_day": "Day 1 (Friday)",
+      "current_off_ramp": "follow-up",
+      "last_inbound": {
+        "channel": "sms",
+        "date": "2026-04-17",
+        "text": "I'm available most of today"
+      },
+      "last_outbound": {
+        "channel": "sms",
+        "date": "2026-04-24",
+        "actor": "Andre",
+        "summary": "re-engagement SMS asking what's still unclear"
+      },
+      "next_planned_move": {
+        "channel": "email",
+        "scheduled": "2026-04-25 afternoon",
+        "summary": "Highland Orchard ref + walkthrough video offer + weekday call ask"
+      },
+      "next_andre_action": "review + ship Day 1 email",
+      "next_automation_action": "comms-append-loop watches Close (passive)",
+      "current_risk": "medium",
+      "current_value": "whale",
+      "current_freshness": "fresh",
+      "current_blocker": "fianc\u00e9e not engaged; LinkedIn URL not captured in source_index"
+    }
+  ],
+  "rollup": {
+    "active": 1,
+    "altitude_counts": {
+      "whale": 1,
+      "strong": 0,
+      "standard": 0,
+      "soft": 0
+    },
+    "outcomes": {
+      "holds": 0,
+      "blocks": 0,
+      "nurtures": 0,
+      "closes": 0
+    }
+  },
+  "andre_queue_24h": [
+    "Review + ship Day 1 email to Hugo (draft in 05_seven_day_plan.md)",
+    "Confirm voice-andre-at-ceiling profile loaded for outbound composition"
+  ],
+  "system_queue_24h": [
+    "Watch Close for inbound from Hugo; if landed, Liaison Agent wakes per 06_logic.md"
+  ],
+  "health_flags": [
+    "\u00a705 deep-dive sweeps incomplete on Hugo (FB/IG/TikTok/YouTube/podcast/press)",
+    "Master-level rollup automations AUTO.10 / AUTO.11 not yet implemented"
+  ]
+}

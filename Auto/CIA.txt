@@ -1,0 +1,3691 @@
+
+
+Client Intelligence Agent — Full Atomic Deliverables Map
+00. Master System Setup
+00.01 Client workspace root folder
+Creates the top-level place where every client/lead folder lives.
+
+00.02 Master ledger
+Tracks every lead through every stage of the pipeline.
+
+00.03 Master smart view registry
+Stores which Close smart views are active sources of leads.
+
+00.04 Master lead registry
+Stores every lead discovered from Close, including name, pair name, lead ID, and Close URL.
+
+00.05 Master run log
+Records every pipeline run, timestamp, status, and failure.
+
+00.06 Master source index
+Tracks where every source artifact came from.
+
+00.07 Master skills index
+Lists all reusable skills available to the system.
+
+00.08 Master automation index
+Lists all active automations and what they watch, append, notify, or trigger.
+
+01. Lead Harvest / Close Smart View Intake
+Group Purpose
+Find the correct Close smart view, extract all lead addresses, create the initial per-lead file structure, and prepare each lead for comms retrieval.
+
+01.01 Confirm active Close smart view
+Identifies the exact Close view Andre wants the system to work from.
+
+01.02 Store smart view URL
+Saves the URL that points to the active lead list.
+
+01.03 Store smart view label
+Captures the human-readable name of the Close view.
+
+01.04 Store smart view ID
+Captures the unique Close smart view identifier.
+
+01.05 Load smart view lead list
+Accesses the page where the current leads are visible.
+
+01.06 Identify all lead links
+Finds every individual Close lead page connected to the smart view.
+
+01.07 Extract lead names
+Captures the visible names attached to each lead.
+
+01.08 Extract lead URLs
+Captures the individual Close URL for each lead.
+
+01.09 Extract lead IDs
+Captures the unique lead identifier from each Close URL.
+
+01.10 Deduplicate leads
+Removes duplicate lead entries from the harvest.
+
+01.11 Preserve harvested order
+Records the order in which leads appeared in the smart view.
+
+01.12 Create lead harvest JSON
+Produces the structured list of all harvested leads.
+
+01.13 Create lead harvest markdown summary
+Creates a readable version of the harvest.
+
+01.14 Update master ledger with harvested leads
+Adds every lead to the tracking system.
+
+01.15 Mark smart view found
+Checkbox confirming the correct smart view was located.
+
+01.16 Mark lead URL extracted
+Checkbox confirming each lead URL was captured.
+
+01.17 Mark lead ID extracted
+Checkbox confirming each Close lead ID was captured.
+
+01.18 Mark lead added to registry
+Checkbox confirming the lead exists in the master lead registry.
+
+02. Lead Folder Creation / Directory Seeding
+Group Purpose
+Create the per-lead directory structure and seed it with the minimum artifacts needed for all downstream work.
+
+02.01 Normalize lead folder name
+Turns the lead name or couple name into a usable folder name.
+
+02.02 Detect pair lead
+Determines whether the lead represents one person or a couple/pair.
+
+02.03 Create client folder
+Creates the folder for the lead if it does not already exist.
+
+02.04 Confirm existing client folder
+Recognizes when the folder already exists and avoids duplicating it.
+
+02.05 Create source folder
+Creates a place for raw source references.
+
+02.06 Create raw data folder
+Creates a place for unprocessed exports and captures.
+
+02.07 Create assets folder
+Creates a place for screenshots, profile images, media, and visual artifacts.
+
+02.08 Create logs folder
+Creates a place for run logs and step-level status logs.
+
+02.09 Create client ledger file
+Creates a per-client checklist/status file.
+
+02.10 Create lead URL seed file
+Creates a markdown file containing the Close lead URL.
+
+02.11 Create source index file
+Creates a file that will later track every source used for this lead.
+
+02.12 Update master ledger folder-created status
+Marks that the lead folder now exists.
+
+02.13 Update master ledger URL-seeded status
+Marks that the lead’s Close URL has been written into the folder.
+
+03. Raw Comms Retrieval
+Group Purpose
+Retrieve the raw communications history from Close and save it without editorializing.
+
+03.01 Load individual Close lead page
+Accesses the lead’s dedicated Close page.
+
+03.02 Locate comms section
+Finds the part of the lead record containing emails, SMS, calls, notes, and activity.
+
+03.03 Extract raw SMS history
+Captures raw SMS exchanges.
+
+03.04 Extract raw email history
+Captures raw email exchanges.
+
+03.05 Extract raw call history
+Captures call records, notes, timestamps, and outcomes.
+
+03.06 Extract raw notes
+Captures Close notes attached to the lead.
+
+03.07 Extract raw tasks
+Captures visible tasks tied to the lead.
+
+03.08 Extract raw activity timeline
+Captures the broader activity feed.
+
+03.09 Preserve timestamps
+Keeps the chronological anchors of each communication.
+
+03.10 Preserve sender/recipient labels
+Keeps who said or sent what.
+
+03.11 Preserve channel labels
+Marks whether each item was SMS, email, call, task, or note.
+
+03.12 Create raw comms markdown
+Writes the full unprocessed comms file.
+
+03.13 Create comms source capture
+Stores the Close URL and capture timestamp.
+
+03.14 Save comms markdown to lead folder
+Places the raw comms document in the correct client directory.
+
+03.15 Update client ledger comms-found status
+Marks whether comms were successfully found.
+
+03.16 Update client ledger comms-written status
+Marks whether the comms file was created.
+
+03.17 Update master ledger comms status
+Marks comms completion at the master level.
+
+04. People Search Pre-Enrichment
+Group Purpose
+Run a simple public-information pass before deep research so the next stages have better search keys.
+
+04.01 Create people-search checklist
+Creates the checklist of basic identifiers to look for.
+
+04.02 Identify primary person
+Names the first person attached to the lead.
+
+04.03 Identify secondary person
+Names the spouse, partner, or second decision-maker if present.
+
+04.04 Search primary person phone number
+Finds obvious public phone information where available.
+
+04.05 Search secondary person phone number
+Finds obvious public phone information where available.
+
+04.06 Search primary person email
+Finds obvious public email information where available.
+
+04.07 Search secondary person email
+Finds obvious public email information where available.
+
+04.08 Search primary person business
+Finds business or employer context.
+
+04.09 Search secondary person business
+Finds business or employer context.
+
+04.10 Search business location
+Finds where the business operates.
+
+04.11 Search public city/location signal
+Finds general location signals.
+
+04.12 Search public address signal
+Captures only relevant public address information needed for identity matching.
+
+04.13 Search spouse/partner confirmation
+Confirms whether the lead is a couple or family decision unit.
+
+04.14 Search close family public links
+Captures obvious public family/relative connections when relevant and publicly surfaced.
+
+04.15 Capture source URLs
+Records where each people-search finding came from.
+
+04.16 Mark unknowns explicitly
+Records searched-but-not-found fields instead of leaving them blank.
+
+04.17 Create people-search markdown
+Writes the pre-enrichment findings.
+
+04.18 Save people-search markdown to lead folder
+Places the document in the correct client directory.
+
+04.19 Update people-search checklist
+Marks each field found, not found, or out of bounds.
+
+04.20 Update master ledger people-search status
+Marks completion for this stage.
+
+05. Deep Dive Research
+Group Purpose
+Use the pre-enrichment findings to conduct a deeper public-footprint sweep across search engines, social platforms, business sources, media, and public web artifacts.
+
+05.01 Create deep-dive checklist
+Defines every platform and source category to sweep.
+
+05.02 Build search key inventory
+Collects names, emails, phone numbers, businesses, cities, relatives, and lead context as search inputs.
+
+05.03 Run broad web identity search
+Finds general public web references.
+
+05.04 Run Sonar/Perplexity deep search
+Finds cited, synthesized public information.
+
+05.05 Run Grok/X-oriented search
+Finds public X/Twitter and real-time social signal where available.
+
+05.06 Search LinkedIn
+Looks for public professional identity, title, company, tenure, education, and posts.
+
+05.07 Search Facebook
+Looks for public profile, family, event, and community signals.
+
+05.08 Search Instagram
+Looks for public lifestyle, family, event, and visual signals.
+
+05.09 Search TikTok
+Looks for public short-form content or visible public presence.
+
+05.10 Search YouTube owned channels
+Looks for channels owned by the person or business.
+
+05.11 Search YouTube appearances
+Looks for interviews, podcasts, event videos, or public appearances.
+
+05.12 Search podcasts
+Looks for audio appearances, interviews, transcripts, or episode pages.
+
+05.13 Search press mentions
+Looks for news, articles, features, quotes, and public references.
+
+05.14 Search public writing
+Looks for blogs, Medium, Substack, company posts, or authored articles.
+
+05.15 Search business websites
+Finds company bios, About pages, team pages, or business descriptions.
+
+05.16 Search BBB/business profiles
+Finds public business credibility, longevity, complaint history, and operating footprint.
+
+05.17 Search licensing or professional registries
+Finds public credential verification where relevant.
+
+05.18 Search public business filings
+Finds public business registrations and corporate footprint.
+
+05.19 Search public reviews
+Finds customer-facing reputation for any owned business.
+
+05.20 Capture profile images
+Stores public profile photos when available.
+
+05.21 Capture business images
+Stores company logos, storefronts, public business visuals, or related assets.
+
+05.22 Capture relevant screenshots
+Stores screenshots of important public pages.
+
+05.23 Capture video references
+Stores YouTube, podcast, or video appearance links.
+
+05.24 Capture voice/video notes
+Marks whether the person’s voice or public speaking style is available.
+
+05.25 Create raw deep-dive folder
+Stores raw engine output separately from synthesis.
+
+05.26 Create search log
+Records what was searched and what came back.
+
+05.27 Create source index updates
+Adds every deep-dive source to the source index.
+
+05.28 Create asset index
+Lists every image, screenshot, video, or media artifact captured.
+
+05.29 Create deep-dive markdown
+Writes the organized deep-dive findings.
+
+05.30 Save deep-dive markdown to lead folder
+Places the document in the correct client directory.
+
+05.31 Update deep-dive checklist
+Marks each source/platform searched, found, not found, or out of bounds.
+
+05.32 Update master ledger deep-dive status
+Marks completion for this stage.
+
+06. Profile Synthesis
+Group Purpose
+Turn raw data and deep research into an actual useful profile: who this person is, what matters, what kind of buyer they are, and how Andre should understand them.
+
+06.01 Create profile checklist
+Defines the judgment categories to assess.
+
+06.02 Assess identity confidence
+Determines whether the system found the correct person.
+
+06.03 Assess primary person role
+Summarizes who the main person is.
+
+06.04 Assess secondary person role
+Summarizes who the partner/spouse/second decision-maker is.
+
+06.05 Assess buyer altitude
+Classifies lead as whale, strong, standard, soft, or unknown.
+
+06.06 Assess profession altitude
+Determines whether they are owner, executive, professional buyer, operator, industry insider, etc.
+
+06.07 Assess likely decision-maker
+Identifies who probably controls the decision.
+
+06.08 Assess likely gatekeeper
+Identifies who manages communication or access.
+
+06.09 Assess relationship dynamic
+Summarizes how the pair or family decision unit appears to operate.
+
+06.10 Assess age/life-stage signal
+Captures broad life-stage context with confidence labels.
+
+06.11 Assess family-stage signal
+Captures relevant family/event context that affects the sale.
+
+06.12 Assess income/affluence signal
+Classifies visible buying-power signal without pretending it is exact.
+
+06.13 Assess geography story
+Summarizes local, transplant, regional, or mobility context.
+
+06.14 Assess cultural context
+Captures publicly visible cultural context only when relevant and responsibly sourced.
+
+06.15 Assess public interests
+Summarizes visible interests, hobbies, causes, or preferences.
+
+06.16 Assess public taste signals
+Captures aesthetic, lifestyle, food, hospitality, or event-style clues.
+
+06.17 Assess communication style
+Determines whether they seem formal, warm, concise, analytical, casual, direct, etc.
+
+06.18 Assess decision-making style
+Classifies whether they seem fast-moving, consensus-based, detail-heavy, price-sensitive, reputation-driven, etc.
+
+06.19 Assess risk/sensitivity flags
+Captures only publicly volunteered sensitivities that affect respectful communication.
+
+06.20 Assess strategic value beyond transaction
+Estimates future referral, network, corporate, or repeat-event potential.
+
+06.21 Mark verified facts
+Labels facts that are directly sourced.
+
+06.22 Mark reasonable inferences
+Labels interpretations that are plausible but not proven.
+
+06.23 Mark unknowns
+Labels items the system searched for but could not determine.
+
+06.24 Mark out-of-bounds items
+Labels things the system should not infer or use.
+
+06.25 Create profile markdown
+Writes the actual profile kit.
+
+06.26 Save profile markdown to lead folder
+Places the profile in the correct client directory.
+
+06.27 Update profile checklist
+Marks each profile category complete.
+
+06.28 Update master ledger profile status
+Marks completion for this stage.
+
+07. Seven-Day Plan
+Group Purpose
+Turn the profile into an actionable seven-day lead strategy with flexible off-ramps.
+
+07.01 Create plan kickoff state
+Records what is true before Day 1 begins.
+
+07.02 Capture last lead message
+Stores the most recent inbound communication.
+
+07.03 Capture last Comeketo message
+Stores the most recent outbound communication.
+
+07.04 Capture current Close status
+Records where the lead currently sits in the pipeline.
+
+07.05 Capture current scheduled events
+Records calls, tastings, deadlines, or known dates.
+
+07.06 Define primary objective
+States the main desired outcome of the seven-day plan.
+
+07.07 Define secondary objective
+States the backup desired outcome.
+
+07.08 Define lead altitude
+Carries forward whale/strong/standard/soft classification.
+
+07.09 Define voice strategy
+Determines whose voice should be used and how.
+
+07.10 Define channel strategy
+Determines SMS-led, email-led, call-led, mixed, or wait-first approach.
+
+07.11 Define active days
+Marks which days include outbound action.
+
+07.12 Define passive days
+Marks which days are intentional hold/watch days.
+
+07.13 Create Day 1 move
+Defines the first action or intentional hold.
+
+07.14 Create Day 1 off-ramps
+Defines follow-up, close, hold, and block branches.
+
+07.15 Create Day 2 move
+Defines the second-day action or intentional hold.
+
+07.16 Create Day 2 off-ramps
+Defines follow-up, close, hold, and block branches.
+
+07.17 Create Day 3 move
+Defines the third-day action or intentional hold.
+
+07.18 Create Day 3 off-ramps
+Defines follow-up, close, hold, and block branches.
+
+07.19 Create Day 4 move
+Defines the fourth-day action or intentional hold.
+
+07.20 Create Day 4 off-ramps
+Defines follow-up, close, hold, and block branches.
+
+07.21 Create Day 5 move
+Defines the fifth-day action or intentional hold.
+
+07.22 Create Day 5 off-ramps
+Defines follow-up, close, hold, and block branches.
+
+07.23 Create Day 6 move
+Defines the sixth-day action or intentional hold.
+
+07.24 Create Day 6 off-ramps
+Defines follow-up, close, hold, and block branches.
+
+07.25 Create Day 7 move
+Defines the seventh-day action or intentional hold.
+
+07.26 Create Day 7 off-ramps
+Defines follow-up, close, hold, and block branches.
+
+07.27 Define close branch
+States what happens when the lead is ready to commit.
+
+07.28 Define follow-up branch
+States what happens when the lead responds but is not closed yet.
+
+07.29 Define hold branch
+States what happens when silence is expected or tolerable.
+
+07.30 Define block branch
+States what happens after a hard no, objection, ghosting, or bad signal.
+
+07.31 Define replan triggers
+Lists the signals that should cause the agent to rewrite the plan.
+
+07.32 Define Andre-required actions
+Lists the specific moments where Andre must personally act.
+
+07.33 Define system-autonomous actions
+Lists the actions the agent can handle without Andre.
+
+07.34 Define review-required actions
+Lists actions that need approval before sending.
+
+07.35 Define winning unlocks
+States what converting this lead may create beyond the immediate deal.
+
+07.36 Create seven-day plan markdown
+Writes the full plan.
+
+07.37 Save seven-day plan to lead folder
+Places the plan in the correct directory.
+
+07.38 Update plan checklist
+Marks the seven-day plan complete.
+
+07.39 Update master ledger plan status
+Marks completion for this stage.
+
+08. If/Then Logic Layer
+Group Purpose
+Create the flexible decision logic that helps the agent react without needing a rigid script.
+
+08.01 Create logic file
+Creates a dedicated logic document for the lead.
+
+08.02 Define response categories
+Defines follow-up, close, hold, block, and replan.
+
+08.03 Define positive reply handling
+States what the agent should do when the lead responds warmly.
+
+08.04 Define question handling
+States what the agent should do when the lead asks a question.
+
+08.05 Define price objection handling
+States what the agent should do when price comes up.
+
+08.06 Define scheduling objection handling
+States what the agent should do when timing is the issue.
+
+08.07 Define partner involvement handling
+States what happens when the spouse, planner, parent, or second decider enters.
+
+08.08 Define silence handling
+States when silence is normal versus concerning.
+
+08.09 Define hard-no handling
+States what happens when the lead clearly declines.
+
+08.10 Define hostile-response handling
+States what happens when the lead reacts negatively.
+
+08.11 Define close-ready handling
+States what happens when the lead asks for contract, invoice, tasting, or next step.
+
+08.12 Define replan handling
+States what signals require rewriting the plan.
+
+08.13 Define human-escalation handling
+States when Andre, Rhonna, or another human must be pulled in.
+
+08.14 Save logic markdown to lead folder
+Places the logic file in the correct directory.
+
+08.15 Update logic checklist
+Marks logic complete.
+
+08.16 Update master ledger logic status
+Marks completion for this stage.
+
+09. Skill Library Creation
+Group Purpose
+Create reusable skills that let the system execute the plan repeatedly across different lead types.
+
+09A. System Skills
+09A.01 Lead harvest skill
+Handles smart view intake and lead URL extraction.
+
+09A.02 Folder creation skill
+Creates and seeds client folders.
+
+09A.03 Raw comms pull skill
+Retrieves and saves raw Close communication history.
+
+09A.04 People-search skill
+Runs first-pass public identifier enrichment.
+
+09A.05 Deep-dive research skill
+Runs deeper public-footprint research.
+
+09A.06 Profile synthesis skill
+Turns research into a profile.
+
+09A.07 Seven-day plan skill
+Creates the strategic seven-day plan.
+
+09A.08 Logic-writing skill
+Creates the if/then branch logic.
+
+09A.09 Ledger update skill
+Updates step checklists and run states.
+
+09A.10 Source indexing skill
+Records sources and artifacts.
+
+09A.11 Asset capture skill
+Stores images, screenshots, media, and visual artifacts.
+
+09B. Move Skills
+09B.01 NEPQ follow-up skill
+Creates consultative follow-up messages.
+
+09B.02 Ballpark quote email skill
+Creates quote-oriented emails.
+
+09B.03 Tasting invite skill
+Creates tasting invitation messages.
+
+09B.04 Tasting confirmation skill
+Creates pre-tasting confirmation messages.
+
+09B.05 Post-call follow-up skill
+Creates recap and next-step messages after calls.
+
+09B.06 Quote cover email skill
+Creates the email that introduces a formal quote.
+
+09B.07 Recovery message skill
+Creates reset messages when a lead has gone cold.
+
+09B.08 Handoff message skill
+Creates messages when another team member takes over.
+
+09B.09 Objection response skill
+Creates replies to hesitation, price, timing, or uncertainty.
+
+09B.10 Close push skill
+Creates careful messages that move a ready lead toward commitment.
+
+09B.11 Long-term nurture skill
+Creates messages for leads not ready now.
+
+09B.12 Pause cadence skill
+Handles pausing or switching a lead out of active automation.
+
+09C. Profile Calibration Skills
+09C.01 Whale operator profile skill
+Calibrates language for owner/operator/high-status practical buyers.
+
+09C.02 Professional buyer whale skill
+Calibrates language for people who evaluate vendors professionally.
+
+09C.03 Industry insider skill
+Calibrates language for event, catering, hospitality, or vendor-aware leads.
+
+09C.04 Long-runway wedding skill
+Calibrates language for longer wedding planning arcs.
+
+09C.05 Standard event buyer skill
+Calibrates language for normal private event buyers.
+
+09C.06 Soft recovery lead skill
+Calibrates language for low-signal or previously cold leads.
+
+09C.07 Pair decision-maker skill
+Calibrates language when two people are involved.
+
+09C.08 Parent-of-bride/groom skill
+Calibrates language when the buyer is funding or hosting for a child.
+
+09C.09 Corporate/event professional skill
+Calibrates language for business or repeat-event potential.
+
+09D. Voice Skills
+09D.01 Andre voice skill
+Defines Andre’s normal voice.
+
+09D.02 Andre at ceiling voice skill
+Defines Andre’s strongest, cleanest, most polished version.
+
+09D.03 Rhonna voice skill
+Defines Rhonna’s communication style.
+
+09D.04 Toni voice skill
+Defines Toni’s communication style.
+
+09D.05 Bibi voice skill
+Defines Bibi’s communication style.
+
+09D.06 Rodrigo voice skill
+Defines Rodrigo’s communication style.
+
+09D.07 Eduarda voice skill
+Defines Eduarda’s communication style.
+
+09E. Skill Governance Deliverables
+09E.01 Skills index
+Lists every skill, category, purpose, and dependency.
+
+09E.02 Skill dependency map
+Shows which skills rely on which files or other skills.
+
+09E.03 Skill version history
+Tracks changes to skills over time.
+
+09E.04 Skill test examples
+Stores examples of good outputs for each skill.
+
+09E.05 Skill routing map
+Tells the agent which skills apply to which profile types.
+
+09E.06 Missing skills list
+Tracks skills that still need to be created.
+
+09E.07 Retired skills list
+Tracks skills that should no longer be used.
+
+10. Comms Update Automations
+Group Purpose
+Keep the comms file current after the original build, so the client agent always has the latest reality.
+
+10.01 New Close activity watcher
+Detects new emails, SMS, calls, notes, or tasks.
+
+10.02 New SMS append automation
+Appends new SMS activity to the comms file.
+
+10.03 New email append automation
+Appends new email activity to the comms file.
+
+10.04 New call append automation
+Appends new call records to the comms file.
+
+10.05 New note append automation
+Appends new Close notes to the comms file.
+
+10.06 New task append automation
+Appends new task changes to the comms file.
+
+10.07 Activity deduplication record
+Prevents the same Close activity from being appended twice.
+
+10.08 Last activity timestamp record
+Tracks the most recent activity already captured.
+
+10.09 Comms append marker
+Adds timestamped update headers inside the comms document.
+
+10.10 Updated comms markdown
+Maintains the living comms source of truth.
+
+10.11 Comms update log
+Records every append operation.
+
+10.12 Update client ledger last-comms timestamp
+Shows the latest comms refresh time.
+
+10.13 Update master ledger live state
+Shows which leads have fresh activity.
+
+10.14 Trigger Lead Liaison wake-up
+Signals the per-client agent that something changed.
+
+11. Outbound Action Notifications
+Group Purpose
+Make sure Andre always knows when the system sends or changes something in Close.
+
+11.01 Outbound SMS notification
+Notifies Andre when the system sends an SMS.
+
+11.02 Outbound email notification
+Notifies Andre when the system sends an email.
+
+11.03 Close task update notification
+Notifies Andre when the system creates or changes a task.
+
+11.04 Close status update notification
+Notifies Andre when the system changes a lead status.
+
+11.05 Close note update notification
+Notifies Andre when the system adds an internal note.
+
+11.06 Notification lead link
+Includes the Close lead link.
+
+11.07 Notification message copy
+Includes the exact message sent.
+
+11.08 Notification reason
+Explains which plan step or off-ramp caused the action.
+
+11.09 Notification voice label
+States which voice/persona was used.
+
+11.10 Notification expected outcome
+States what the system expects might happen next.
+
+11.11 Andre feedback capture
+Stores Andre’s reaction or correction.
+
+11.12 Andre feedback markdown
+Writes feedback into the lead folder.
+
+11.13 Notification log
+Records every notification sent.
+
+12. Andre Timely Action Alerts
+Group Purpose
+Make sure Andre is told exactly what he personally needs to do and when.
+
+12.01 Andre action extractor
+Finds all Andre-required actions inside the seven-day plan.
+
+12.02 Andre action calendar
+Stores when each action needs to happen.
+
+12.03 Critical action alert
+Sends urgent reminders for high-stakes actions.
+
+12.04 Same-day action alert
+Sends morning reminders for actions due that day.
+
+12.05 Pre-call alert
+Prepares Andre before a scheduled call.
+
+12.06 Pre-tasting alert
+Prepares Andre before a tasting.
+
+12.07 Agreement-ready alert
+Alerts Andre when the lead is ready to close.
+
+12.08 Whale lead escalation alert
+Creates stronger notification rules for high-value leads.
+
+12.09 Alert context card
+Summarizes what Andre needs to know.
+
+12.10 Alert links
+Links to profile, plan, comms, and Close record.
+
+12.11 Alert acknowledgement status
+Tracks whether Andre acknowledged the alert.
+
+12.12 Alert snooze status
+Tracks whether Andre delayed the alert.
+
+12.13 Alert done status
+Tracks whether Andre completed the action.
+
+12.14 Alert blocked status
+Tracks whether Andre could not complete the action.
+
+12.15 Blowout-prevention escalation
+Escalates when critical actions are not acknowledged.
+
+12.16 Andre action log
+Records all action alerts and outcomes.
+
+13. Lead Liaison Agent Configuration
+Group Purpose
+Create the per-client agent brain that reads the client folder and runs the client-specific sales motion.
+
+13.01 Create AGENTS.md
+Defines the lead-specific agent role, context, rules, and sources of truth.
+
+13.02 Create CLAUDE.md
+Defines Claude/Cowork-specific operating instructions for the lead.
+
+13.03 Define agent mission
+States what the agent is trying to accomplish for this lead.
+
+13.04 Define source-of-truth hierarchy
+Tells the agent which files to trust first.
+
+13.05 Define comms file as live truth
+Marks the comms file as the current-state heartbeat.
+
+13.06 Define profile file as identity truth
+Marks the profile as the buyer-understanding document.
+
+13.07 Define seven-day plan as strategy truth
+Marks the plan as the execution guide.
+
+13.08 Define logic file as branch guide
+Marks the if/then file as the reaction guide.
+
+13.09 Define allowed autonomous actions
+States what the agent may do without approval.
+
+13.10 Define approval-required actions
+States what the agent must ask before doing.
+
+13.11 Define forbidden actions
+States what the agent must not do.
+
+13.12 Define Slack notification requirements
+States when Andre must be notified.
+
+13.13 Define wake-up triggers
+States what events cause the agent to act.
+
+13.14 Define sleep conditions
+States when the agent should not act.
+
+13.15 Define replan conditions
+States when the agent should rewrite the plan.
+
+13.16 Define escalation conditions
+States when a human must take over.
+
+13.17 Save agent files to lead folder
+Places AGENTS.md and CLAUDE.md in the client directory.
+
+13.18 Update agent checklist
+Marks agent configuration complete.
+
+13.19 Update master ledger agent status
+Marks the lead as agent-ready.
+
+14. Execution State / Live Dashboard
+Group Purpose
+Give one clean view of what is happening across every active lead.
+
+14.01 Current lead state field
+Shows each lead’s current pipeline state.
+
+14.02 Current plan day field
+Shows which day of the seven-day plan the lead is on.
+
+14.03 Current off-ramp field
+Shows whether the lead is in follow-up, close, hold, block, or replan.
+
+14.04 Last inbound field
+Shows the latest message from the lead.
+
+14.05 Last outbound field
+Shows the latest system or Andre message.
+
+14.06 Next planned move field
+Shows the next expected action.
+
+14.07 Next Andre action field
+Shows what Andre personally needs to do next.
+
+14.08 Next automation action field
+Shows what the system is expected to do next.
+
+14.09 Current risk field
+Flags whether the lead is at risk of being blown.
+
+14.10 Current value field
+Shows whale/strong/standard/soft.
+
+14.11 Current freshness field
+Shows whether comms are up to date.
+
+14.12 Current blocker field
+Shows what is preventing progress.
+
+14.13 Live dashboard markdown
+Creates a readable status board.
+
+14.14 Live dashboard data file
+Creates a structured version for automation.
+
+15. Close / Follow-Up / Block Outcomes
+Group Purpose
+Give every lead a clean final or next state after the active plan window.
+
+15.01 Close outcome file
+Records when the lead moves toward agreement, contract, invoice, or booked event.
+
+15.02 Follow-up outcome file
+Records when the lead is active but not closed.
+
+15.03 Hold outcome file
+Records when the lead is quiet but not dead.
+
+15.04 Block outcome file
+Records when the lead is stopped, paused, rejected, or no longer worth active pursuit.
+
+15.05 Long-term nurture file
+Records leads that should be reactivated later.
+
+15.06 Referral opportunity file
+Records possible future network/referral opportunities.
+
+15.07 Post-close handoff file
+Records what operations needs after a successful sale.
+
+15.08 Outcome ledger update
+Marks the final or next state in the master ledger.
+
+16. Full Per-Lead Folder Deliverables
+Each lead folder should eventually contain:
+
+16.01 lead_url.md
+The Close lead URL seed file.
+
+16.02 01_comms.md
+The raw and continuously appended comms source of truth.
+
+16.03 02_people_search.md
+The basic pre-enrichment people-search document.
+
+16.04 03_deep_dive.md
+The deep research document.
+
+16.05 03_deep_dive_raw/
+The folder containing raw search/research outputs.
+
+16.06 04_profile.md
+The synthesized buyer profile.
+
+16.07 05_seven_day_plan.md
+The custom seven-day plan.
+
+16.08 06_logic.md
+The if/then branch logic.
+
+16.09 07_skills_used.md
+The list of skills selected for this lead.
+
+16.10 08_automations.md
+The automations active for this lead.
+
+16.11 09_andre_alerts.md
+The Andre action and alert history.
+
+16.12 10_andre_feedback.md
+Andre’s approvals, corrections, reactions, and overrides.
+
+16.13 AGENTS.md
+The per-client Lead Liaison Agent configuration.
+
+16.14 CLAUDE.md
+The per-client Claude/Cowork operating instructions.
+
+16.15 source_index.md
+The full list of sources used.
+
+16.16 asset_index.md
+The full list of images, screenshots, videos, and media assets.
+
+16.17 run_log.md
+The operational log for this lead.
+
+16.18 client_ledger.md
+The per-lead checklist and status tracker.
+
+17. Master Ledger Checklist Columns
+The master ledger should track each lead across these atomic states:
+
+17.01 Smart view found
+Confirms the source view exists.
+
+17.02 Lead URL extracted
+Confirms the Close lead link exists.
+
+17.03 Lead ID extracted
+Confirms the unique ID exists.
+
+17.04 Lead folder created
+Confirms the folder exists.
+
+17.05 Lead URL file created
+Confirms the seed URL file exists.
+
+17.06 Raw comms pulled
+Confirms comms were retrieved.
+
+17.07 Raw comms markdown written
+Confirms the comms file exists.
+
+17.08 People search completed
+Confirms pre-enrichment was run.
+
+17.09 Phone searched
+Confirms phone search was completed.
+
+17.10 Email searched
+Confirms email search was completed.
+
+17.11 Business searched
+Confirms business context was searched.
+
+17.12 Location searched
+Confirms location context was searched.
+
+17.13 Family/partner searched
+Confirms pair/family context was searched.
+
+17.14 Deep dive completed
+Confirms full research sweep was run.
+
+17.15 Social media searched
+Confirms social platforms were searched.
+
+17.16 Public media searched
+Confirms podcasts, YouTube, news, and appearances were searched.
+
+17.17 Business footprint searched
+Confirms business and professional public sources were searched.
+
+17.18 Assets captured
+Confirms relevant public visual/media assets were stored.
+
+17.19 Profile written
+Confirms the profile exists.
+
+17.20 Seven-day plan written
+Confirms the plan exists.
+
+17.21 Logic file written
+Confirms if/then logic exists.
+
+17.22 Skills selected
+Confirms execution skills were assigned.
+
+17.23 Automations configured
+Confirms live automations were assigned.
+
+17.24 Comms append active
+Confirms future comms updates will be appended.
+
+17.25 Slack notifications active
+Confirms Andre notification rules are active.
+
+17.26 Andre alerts active
+Confirms timely action alerts are active.
+
+17.27 AGENTS.md created
+Confirms the Lead Liaison Agent file exists.
+
+17.28 CLAUDE.md created
+Confirms the Claude/Cowork instruction file exists.
+
+17.29 Agent ready
+Confirms the lead can be run by the system.
+
+17.30 Current live state
+Shows active, hold, close, block, nurture, or complete.
+
+18. Final Grouped Pipeline Summary
+Stage 1 — Intake
+Creates the lead list from the Close smart view.
+
+Stage 2 — Directory Build
+Creates the folders and seed files.
+
+Stage 3 — Raw Comms
+Captures the real Close communication history.
+
+Stage 4 — People Search
+Finds basic public identity anchors.
+
+Stage 5 — Deep Dive
+Finds the rich public footprint, media, business, and social context.
+
+Stage 6 — Profile
+Turns the research into a buyer/person briefing.
+
+Stage 7 — Seven-Day Plan
+Turns the profile into a tactical sales path.
+
+Stage 8 — Logic
+Creates flexible reaction paths for what might happen.
+
+Stage 9 — Skills
+Creates reusable execution abilities for each move and profile type.
+
+Stage 10 — Comms Automations
+Keeps the source-of-truth comms file alive.
+
+Stage 11 — Slack Notifications
+Keeps Andre aware of system actions.
+
+Stage 12 — Andre Alerts
+Keeps Andre from missing human-required moments.
+
+Stage 13 — Lead Liaison Agent
+Creates the custom per-client agent configuration.
+
+Stage 14 — Live Dashboard
+Shows what is happening across all leads.
+
+Stage 15 — Outcome Handling
+Moves each lead to close, follow-up, hold, block, or nurture.
+
+That’s the whole thing atomized: every deliverable, in the group it belongs to, and what each one is doing.
+
+
+That's absolutely gorgeous. Can we do just step one now or just group one and still keep it pretty short and sweet? Now just give a brief summary of how you think we would do those things. I really like the output you just gave me; I like how easy it is to read. I'd like something else kind of like that, just a little bit more so we can start having some direction on how to do it. Let's just start with group one, one through 18. 
+Show more
+
+Absolutely, boss. Here’s Group 1 only — Lead Harvest / Close Smart View Intake, with the same readable structure, but now with a brief “how we’d do it” direction under each item.
+
+01. Lead Harvest / Close Smart View Intake
+Group Purpose
+Take the Close smart view Andre chooses, pull every lead from it, and turn that view into a clean structured lead list the rest of the system can use.
+
+01.01 Confirm active Close smart view
+What it does: Identifies the exact Close view Andre wants the system to work from.
+How we’d do it: Andre gives us the Close smart view URL, or we store the current approved one as the active source.
+
+01.02 Store smart view URL
+What it does: Saves the URL that points to the active lead list.
+How we’d do it: Put the full Close smart view URL into a config file or master registry so the system can reuse it.
+
+01.03 Store smart view label
+What it does: Captures the human-readable name of the Close view.
+How we’d do it: Read the visible title from Close and save it beside the URL, like A: Day 6-10 Cadence.
+
+01.04 Store smart view ID
+What it does: Captures the unique Close smart view identifier.
+How we’d do it: Extract the save_... portion from the Close URL and store it as the smart view ID.
+
+01.05 Load smart view lead list
+What it does: Accesses the page where the current leads are visible.
+How we’d do it: Have the browser agent or Cowork open the stored smart view URL while logged into Close.
+
+01.06 Identify all lead links
+What it does: Finds every individual Close lead page connected to the smart view.
+How we’d do it: Search the loaded page for links that point to individual Close lead records.
+
+01.07 Extract lead names
+What it does: Captures the visible names attached to each lead.
+How we’d do it: Pull the text label attached to each lead link.
+
+01.08 Extract lead URLs
+What it does: Captures the individual Close URL for each lead.
+How we’d do it: Convert each lead link into a full URL like https://app.close.com/lead/lead_.../.
+
+01.09 Extract lead IDs
+What it does: Captures the unique lead identifier from each Close URL.
+How we’d do it: Parse the lead_... value out of each individual lead URL.
+
+01.10 Deduplicate leads
+What it does: Removes duplicate lead entries from the harvest.
+How we’d do it: Compare by lead ID and keep only one record per unique Close lead.
+
+01.11 Preserve harvested order
+What it does: Records the order in which leads appeared in the smart view.
+How we’d do it: Add a simple position number: 1, 2, 3, etc.
+
+01.12 Create lead harvest JSON
+What it does: Produces the structured list of all harvested leads.
+How we’d do it: Save a machine-readable file with smart view info, timestamp, lead count, and all lead records.
+
+01.13 Create lead harvest markdown summary
+What it does: Creates a readable version of the harvest.
+How we’d do it: Write a simple markdown file listing the smart view, run time, lead count, and each lead name + URL.
+
+01.14 Update master ledger with harvested leads
+What it does: Adds every lead to the tracking system.
+How we’d do it: Add one row per lead to the master ledger with its name, lead ID, URL, and initial status.
+
+01.15 Mark smart view found
+What it does: Checkbox confirming the correct smart view was located.
+How we’d do it: Set this to complete once the page loads and the expected smart view is visible.
+
+01.16 Mark lead URL extracted
+What it does: Checkbox confirming each lead URL was captured.
+How we’d do it: Mark complete for each lead once its Close URL exists in the harvest file.
+
+01.17 Mark lead ID extracted
+What it does: Checkbox confirming each Close lead ID was captured.
+How we’d do it: Mark complete for each lead once the lead_... ID has been parsed and stored.
+
+01.18 Mark lead added to registry
+What it does: Checkbox confirming the lead exists in the master lead registry.
+How we’d do it: Mark complete after the lead has been written into the master ledger/registry.
+
+Group 1 Output
+By the end of this group, we should have:
+
+1. Smart view registry entry
+The active Close smart view URL, label, and ID.
+
+2. Lead harvest JSON
+The structured machine-readable list of all leads.
+
+3. Lead harvest markdown summary
+The human-readable list of all leads.
+
+4. Master ledger rows
+One tracking row for each harvested lead.
+
+5. Completion checkboxes
+Proof that the smart view was found, URLs were extracted, IDs were extracted, and leads were added to the registry.
+
+Simple Read
+This group does one job:
+
+Take Andre’s Close smart view and turn it into a clean list of leads the system can work on.
+
+No comms yet.
+No enrichment yet.
+No folders yet.
+No profiling yet.
+
+Just: find the view, extract the leads, structure the list, update the ledger.
+
+
+Excellent. Okay, when we're in a nice workflow like this, you already know what you got to do, right? You just do the next one now. I'm just going to type the letter P, and I'll come back and copy and paste, and I'll type P again. Just don't even give me any meta commentary. That way I don't have to edit at all. I can just copy and paste, and let's just keep this moving, baby. 
+
+p
+Show more
+
+Thought for a second
+02. Lead Folder Creation / Directory Seeding
+Group Purpose
+Create the folder structure for each harvested lead and seed every folder with the minimum files needed for the rest of the system to work cleanly.
+
+02.01 Normalize lead folder name
+What it does: Turns the lead name or couple name into a clean folder name.
+How we’d do it: Convert the lead name into a consistent format, removing weird characters and keeping it readable.
+
+02.02 Detect pair lead
+What it does: Determines whether the lead represents one person or a couple/pair.
+How we’d do it: Look at the lead name, comms hints, and Close record name to decide if the folder should represent one person or two.
+
+02.03 Create client folder
+What it does: Creates the folder for the lead if it does not already exist.
+How we’d do it: Use the normalized lead name as the folder name and create it inside the main client workspace.
+
+02.04 Confirm existing client folder
+What it does: Recognizes when the folder already exists and avoids duplicating it.
+How we’d do it: Check the workspace before creating anything; if the folder exists, reuse it.
+
+02.05 Create source folder
+What it does: Creates a place for raw source references.
+How we’d do it: Add a sources/ folder inside the client folder.
+
+02.06 Create raw data folder
+What it does: Creates a place for unprocessed exports and captures.
+How we’d do it: Add a raw/ folder for raw Close data, raw search output, and unedited pulls.
+
+02.07 Create assets folder
+What it does: Creates a place for screenshots, profile images, media, and visual artifacts.
+How we’d do it: Add an assets/ folder for images, screenshots, videos, thumbnails, and other media.
+
+02.08 Create logs folder
+What it does: Creates a place for run logs and step-level status logs.
+How we’d do it: Add a logs/ folder that records what happened during each sweep or automation run.
+
+02.09 Create client ledger file
+What it does: Creates a per-client checklist/status file.
+How we’d do it: Add a client_ledger.md file that tracks this specific lead’s progress through every stage.
+
+02.10 Create lead URL seed file
+What it does: Creates a markdown file containing the Close lead URL.
+How we’d do it: Write the lead’s Close URL into a small file like lead_url.md.
+
+02.11 Create source index file
+What it does: Creates a file that will later track every source used for this lead.
+How we’d do it: Add source_index.md and leave it ready for comms, enrichment, deep dive, and profile sources.
+
+02.12 Update master ledger folder-created status
+What it does: Marks that the lead folder now exists.
+How we’d do it: Update the master ledger row for that lead with a completed folder-created checkbox.
+
+02.13 Update master ledger URL-seeded status
+What it does: Marks that the lead’s Close URL has been written into the folder.
+How we’d do it: Update the master ledger once lead_url.md exists and contains the correct Close lead URL.
+
+Group 2 Output
+By the end of this group, each lead should have:
+
+1. Client folder
+A dedicated folder for that specific lead or pair.
+
+2. Lead URL seed file
+A simple markdown file containing the Close lead URL.
+
+3. Client ledger
+A per-lead checklist for tracking progress.
+
+4. Source index
+A file ready to track every source used later.
+
+5. Raw folder
+A place for unprocessed source pulls.
+
+6. Assets folder
+A place for screenshots, photos, videos, and media.
+
+7. Logs folder
+A place for run history and errors.
+
+8. Updated master ledger
+Proof that the folder exists and the lead has been seeded.
+
+Simple Read
+This group does one job:
+
+Take each harvested lead and give it a clean home base.
+
+No comms analysis yet.
+No enrichment yet.
+No profiling yet.
+No plan yet.
+
+Just: make the folder, seed the URL, create the tracking files, and update the ledger.
+
+
+p
+
+03. Raw Comms Retrieval
+Group Purpose
+Pull the raw communication history from each Close lead page and save it exactly as source material, without summarizing, interpreting, or editorializing.
+
+03.01 Load individual Close lead page
+What it does: Accesses the lead’s dedicated Close page.
+How we’d do it: Open the Close URL stored in that lead’s lead_url.md.
+
+03.02 Locate comms section
+What it does: Finds the area of the Close record containing communication and activity history.
+How we’d do it: Have the browser agent identify the emails, SMS, calls, notes, tasks, and timeline activity on the page.
+
+03.03 Extract raw SMS history
+What it does: Captures raw SMS exchanges.
+How we’d do it: Pull every visible text message with sender, recipient, timestamp, and message body.
+
+03.04 Extract raw email history
+What it does: Captures raw email exchanges.
+How we’d do it: Pull every visible email with sender, recipient, timestamp, subject, and body.
+
+03.05 Extract raw call history
+What it does: Captures call records, notes, timestamps, and outcomes.
+How we’d do it: Pull call activity exactly as Close shows it, including missed calls, completed calls, voicemails, and notes.
+
+03.06 Extract raw notes
+What it does: Captures Close notes attached to the lead.
+How we’d do it: Pull all visible internal notes without rewriting them.
+
+03.07 Extract raw tasks
+What it does: Captures visible tasks tied to the lead.
+How we’d do it: Pull task titles, due dates, owners, completion status, and any notes attached.
+
+03.08 Extract raw activity timeline
+What it does: Captures the broader activity feed.
+How we’d do it: Pull the full visible timeline so nothing important gets missed between channels.
+
+03.09 Preserve timestamps
+What it does: Keeps the chronological anchors of each communication.
+How we’d do it: Save the exact date and time shown for every activity item.
+
+03.10 Preserve sender/recipient labels
+What it does: Keeps who said or sent what.
+How we’d do it: Record each message with clear labels for lead, Andre, system, or other Comeketo team member.
+
+03.11 Preserve channel labels
+What it does: Marks whether each item was SMS, email, call, task, or note.
+How we’d do it: Tag every activity item by communication type.
+
+03.12 Create raw comms markdown
+What it does: Writes the full unprocessed comms file.
+How we’d do it: Save the extracted activity into a clean markdown file, organized chronologically.
+
+03.13 Create comms source capture
+What it does: Stores the Close URL and capture timestamp.
+How we’d do it: Add a small source section showing where the comms came from and when they were pulled.
+
+03.14 Save comms markdown to lead folder
+What it does: Places the raw comms document in the correct client directory.
+How we’d do it: Save the file as 01_comms.md inside the lead’s folder.
+
+03.15 Update client ledger comms-found status
+What it does: Marks whether comms were successfully found.
+How we’d do it: Check off the client ledger once communication history is located.
+
+03.16 Update client ledger comms-written status
+What it does: Marks whether the comms file was created.
+How we’d do it: Check off the client ledger once 01_comms.md exists.
+
+03.17 Update master ledger comms status
+What it does: Marks comms completion at the master level.
+How we’d do it: Update the master ledger row for that lead with comms pulled, comms written, and timestamp of completion.
+
+Group 3 Output
+By the end of this group, each lead should have:
+
+1. Raw comms markdown
+A 01_comms.md file containing the unprocessed communication history.
+
+2. SMS history
+All visible text messages captured.
+
+3. Email history
+All visible email exchanges captured.
+
+4. Call history
+All visible calls, missed calls, voicemails, and notes captured.
+
+5. Internal notes
+All visible Close notes captured.
+
+6. Task history
+All visible tasks and task statuses captured.
+
+7. Activity timeline
+The broader visible Close activity preserved.
+
+8. Source capture
+The Close lead URL and capture timestamp recorded.
+
+9. Updated client ledger
+Proof that comms were found and written.
+
+10. Updated master ledger
+Proof that this lead’s comms stage is complete.
+
+Simple Read
+This group does one job:
+
+Take each lead’s Close page and turn the visible communication history into a raw source-of-truth file.
+
+No enrichment yet.
+No profile yet.
+No strategy yet.
+No cleanup yet.
+
+Just: open the lead page, pull the raw comms, preserve the timeline, save the markdown, and update the ledgers.
+
+
+ p
+
+04. People Search Pre-Enrichment
+Group Purpose
+Run a simple first-pass public information sweep so the later deep dive has better search keys and fewer identity mistakes.
+
+04.01 Create people-search checklist
+What it does: Creates the checklist of basic identifiers to look for.
+How we’d do it: Set up fields for phone, email, business, location, partner, family links, and source URLs.
+
+04.02 Identify primary person
+What it does: Names the first person attached to the lead.
+How we’d do it: Use the Close lead name, inquiry name, email signature, and comms to determine the main person.
+
+04.03 Identify secondary person
+What it does: Names the spouse, partner, or second decision-maker if present.
+How we’d do it: Look for another name in the lead name, email handle, comms, event context, or public search results.
+
+04.04 Search primary person phone number
+What it does: Finds obvious public phone information where available.
+How we’d do it: Search the primary person’s name with known city, business, email, or Close phone number.
+
+04.05 Search secondary person phone number
+What it does: Finds obvious public phone information where available.
+How we’d do it: Search the second person’s name with the same location, business, or shared household clues.
+
+04.06 Search primary person email
+What it does: Finds obvious public email information where available.
+How we’d do it: Search the primary person’s name with business name, domain, social profiles, and public directories.
+
+04.07 Search secondary person email
+What it does: Finds obvious public email information where available.
+How we’d do it: Search the second person’s name with business, city, shared last name, and public web references.
+
+04.08 Search primary person business
+What it does: Finds business or employer context.
+How we’d do it: Search the primary person’s name alongside city, email domain, LinkedIn, company pages, and public profiles.
+
+04.09 Search secondary person business
+What it does: Finds business or employer context.
+How we’d do it: Search the secondary person the same way, especially if the primary person looks thin.
+
+04.10 Search business location
+What it does: Finds where the business operates.
+How we’d do it: Use company websites, Google results, business directories, BBB, licensing pages, or public profile pages.
+
+04.11 Search public city/location signal
+What it does: Finds general location signals.
+How we’d do it: Cross-check Close data, area codes, public profiles, business locations, and search results.
+
+04.12 Search public address signal
+What it does: Captures only relevant public address information needed for identity matching.
+How we’d do it: Use public-facing records only when they help confirm the correct person or household.
+
+04.13 Search spouse/partner confirmation
+What it does: Confirms whether the lead is a couple or family decision unit.
+How we’d do it: Look for shared names in comms, wedding/event context, public profiles, obituaries, registries, household references, or business bios.
+
+04.14 Search close family public links
+What it does: Captures obvious public family/relative connections when relevant and publicly surfaced.
+How we’d do it: Record only visible, relevant family links that help understand the buyer or event context.
+
+04.15 Capture source URLs
+What it does: Records where each people-search finding came from.
+How we’d do it: Save the URL beside each discovered fact so later stages can verify it.
+
+04.16 Mark unknowns explicitly
+What it does: Records searched-but-not-found fields instead of leaving them blank.
+How we’d do it: Mark fields as Not found or Unknown after a real search attempt.
+
+04.17 Create people-search markdown
+What it does: Writes the pre-enrichment findings.
+How we’d do it: Create 02_people_search.md with sections for each person, each searched field, and each source.
+
+04.18 Save people-search markdown to lead folder
+What it does: Places the document in the correct client directory.
+How we’d do it: Save 02_people_search.md inside the lead’s folder.
+
+04.19 Update people-search checklist
+What it does: Marks each field found, not found, or out of bounds.
+How we’d do it: Update the client ledger with completion status for each searched item.
+
+04.20 Update master ledger people-search status
+What it does: Marks completion for this stage.
+How we’d do it: Update the master ledger row for the lead with people-search status and timestamp.
+
+Group 4 Output
+By the end of this group, each lead should have:
+
+1. People-search markdown
+A 02_people_search.md file with first-pass public identity findings.
+
+2. Primary person section
+Basic identifiers for the main person.
+
+3. Secondary person section
+Basic identifiers for the spouse, partner, or second decision-maker if present.
+
+4. Phone search results
+Known, unknown, or not-found phone information.
+
+5. Email search results
+Known, unknown, or not-found email information.
+
+6. Business/employer context
+Any obvious business or professional context found.
+
+7. Location context
+General city, business location, or identity-matching location signals.
+
+8. Partner/family context
+Relevant public relationship signals when they help understand the lead.
+
+9. Source URLs
+Links supporting each finding.
+
+10. Updated client ledger
+Proof that each people-search field was checked.
+
+11. Updated master ledger
+Proof that people-search pre-enrichment is complete.
+
+Simple Read
+This group does one job:
+
+Find the easy public identity anchors before doing the expensive deep dive.
+
+No deep profiling yet.
+No social media sweep yet.
+No strategy yet.
+No sales judgment yet.
+
+Just: find the obvious phone, email, business, location, partner, and family clues; write them down; source them; and update the ledgers.
+
+
+p
+
+05. Deep Dive Research
+Group Purpose
+Use the people-search findings to run a deeper public-footprint sweep across search engines, social platforms, business sources, media, and public web artifacts.
+
+05.01 Create deep-dive checklist
+What it does: Defines every platform and source category to sweep.
+How we’d do it: Create checklist fields for social media, public media, business presence, reviews, licensing, images, video, and source capture.
+
+05.02 Build search key inventory
+What it does: Collects the best search inputs for this person.
+How we’d do it: Pull names, partner names, emails, phones, businesses, cities, relatives, event context, and Close details from earlier files.
+
+05.03 Run broad web identity search
+What it does: Finds general public web references.
+How we’d do it: Search the person’s name with business, city, partner, email, phone, and event-related clues.
+
+05.04 Run Sonar/Perplexity deep search
+What it does: Finds cited, synthesized public information.
+How we’d do it: Ask for a sourced public profile using the search key inventory, then save raw results separately.
+
+05.05 Run Grok/X-oriented search
+What it does: Finds public X/Twitter and real-time social signal where available.
+How we’d do it: Search for current public posts, accounts, mentions, and social signals tied to the person or business.
+
+05.06 Search LinkedIn
+What it does: Looks for public professional identity, title, company, tenure, education, and posts.
+How we’d do it: Search by name, employer, city, email domain, and known business connections.
+
+05.07 Search Facebook
+What it does: Looks for public profile, family, event, and community signals.
+How we’d do it: Search public Facebook results for the person, spouse/partner, business, and location.
+
+05.08 Search Instagram
+What it does: Looks for public lifestyle, family, event, and visual signals.
+How we’d do it: Search public Instagram profiles, business pages, tagged names, handles, and visible bio clues.
+
+05.09 Search TikTok
+What it does: Looks for public short-form content or visible public presence.
+How we’d do it: Search name, handle variations, business name, and public cross-links from other profiles.
+
+05.10 Search YouTube owned channels
+What it does: Looks for channels owned by the person or business.
+How we’d do it: Search the person’s name, business name, email handle, and known aliases.
+
+05.11 Search YouTube appearances
+What it does: Looks for interviews, podcasts, event videos, or public appearances.
+How we’d do it: Search the person’s name with terms like interview, podcast, speaker, wedding, business, and company name.
+
+05.12 Search podcasts
+What it does: Looks for audio appearances, interviews, transcripts, or episode pages.
+How we’d do it: Search podcast platforms and web results using name, business, title, and topic keywords.
+
+05.13 Search press mentions
+What it does: Looks for news, articles, features, quotes, and public references.
+How we’d do it: Search the person and business across news results, local publications, trade sites, and press pages.
+
+05.14 Search public writing
+What it does: Looks for blogs, Medium, Substack, company posts, or authored articles.
+How we’d do it: Search for the person’s name as an author, contributor, speaker, or company blog participant.
+
+05.15 Search business websites
+What it does: Finds company bios, About pages, team pages, or business descriptions.
+How we’d do it: Search known businesses and inspect public About, Team, Leadership, Contact, and News pages.
+
+05.16 Search BBB/business profiles
+What it does: Finds public business credibility, longevity, complaint history, and operating footprint.
+How we’d do it: Search BBB and similar public business directories for the person’s company or related entities.
+
+05.17 Search licensing or professional registries
+What it does: Finds public credential verification where relevant.
+How we’d do it: Check public registries based on profession, such as medical, legal, real estate, contractor, or franchise records.
+
+05.18 Search public business filings
+What it does: Finds public business registrations and corporate footprint.
+How we’d do it: Search state business databases and public corporate records for names, companies, and related addresses.
+
+05.19 Search public reviews
+What it does: Finds customer-facing reputation for any owned business.
+How we’d do it: Search Google reviews, Yelp, industry directories, Facebook pages, and other public review surfaces.
+
+05.20 Capture profile images
+What it does: Stores public profile photos when available.
+How we’d do it: Save screenshots or links to publicly visible profile images with source and timestamp.
+
+05.21 Capture business images
+What it does: Stores company logos, storefronts, public business visuals, or related assets.
+How we’d do it: Capture public images from business websites, Google results, social pages, and media mentions.
+
+05.22 Capture relevant screenshots
+What it does: Stores screenshots of important public pages.
+How we’d do it: Screenshot key public sources like LinkedIn, business bios, articles, BBB pages, and major social profiles.
+
+05.23 Capture video references
+What it does: Stores YouTube, podcast, or video appearance links.
+How we’d do it: Save links, titles, dates, channels, and timestamps for any relevant public video or audio appearance.
+
+05.24 Capture voice/video notes
+What it does: Marks whether the person’s voice or public speaking style is available.
+How we’d do it: Note which public videos or podcasts reveal how they speak, present, or describe themselves.
+
+05.25 Create raw deep-dive folder
+What it does: Stores raw engine output separately from synthesis.
+How we’d do it: Create a 03_deep_dive_raw/ folder inside the lead directory.
+
+05.26 Create search log
+What it does: Records what was searched and what came back.
+How we’d do it: Save queries, tools used, timestamps, links found, and dead ends in search_log.md.
+
+05.27 Create source index updates
+What it does: Adds every deep-dive source to the source index.
+How we’d do it: Append each source URL, source type, capture time, and relevance note to source_index.md.
+
+05.28 Create asset index
+What it does: Lists every image, screenshot, video, or media artifact captured.
+How we’d do it: Create or update asset_index.md with file names, source URLs, and what each asset shows.
+
+05.29 Create deep-dive markdown
+What it does: Writes the organized deep-dive findings.
+How we’d do it: Create 03_deep_dive.md with sections for identity, social media, media, business footprint, visuals, and sources.
+
+05.30 Save deep-dive markdown to lead folder
+What it does: Places the document in the correct client directory.
+How we’d do it: Save 03_deep_dive.md inside the lead’s folder.
+
+05.31 Update deep-dive checklist
+What it does: Marks each source/platform searched, found, not found, or out of bounds.
+How we’d do it: Update the client ledger with status for every sweep category.
+
+05.32 Update master ledger deep-dive status
+What it does: Marks completion for this stage.
+How we’d do it: Update the master ledger row for the lead with deep-dive status, timestamp, and any major missing pieces.
+
+Group 5 Output
+By the end of this group, each lead should have:
+
+1. Deep-dive markdown
+A 03_deep_dive.md file with organized public-footprint findings.
+
+2. Raw deep-dive folder
+A 03_deep_dive_raw/ folder containing raw Sonar, Grok, Perplexity, or browser-agent outputs.
+
+3. Search log
+A record of what was searched, what worked, and what came back empty.
+
+4. Social media sweep results
+LinkedIn, Facebook, Instagram, TikTok, X/Twitter, YouTube, and other public-platform findings.
+
+5. Public media results
+Podcasts, interviews, videos, articles, press mentions, and public appearances.
+
+6. Business footprint results
+Company websites, BBB, filings, licenses, professional registries, and reviews.
+
+7. Visual/media assets
+Screenshots, profile photos, business images, video links, and public media references.
+
+8. Source index updates
+Every source URL recorded with context.
+
+9. Asset index
+Every captured image, screenshot, or media reference listed.
+
+10. Updated client ledger
+Proof that each deep-dive surface was checked.
+
+11. Updated master ledger
+Proof that the deep-dive stage is complete.
+
+Simple Read
+This group does one job:
+
+Take the basic people-search clues and use them to find the person’s real public footprint.
+
+No profile judgment yet.
+No seven-day plan yet.
+No sales strategy yet.
+No message writing yet.
+
+Just: search deeply, capture public sources, save the raw outputs, organize the findings, and update the ledgers.
+
+
+p
+
+06. Profile Synthesis
+Group Purpose
+Turn the raw comms, people-search findings, and deep-dive research into a useful buyer profile that explains who this lead is, what matters, how they likely think, and how Comeketo should understand them.
+
+06.01 Create profile checklist
+What it does: Defines the judgment categories to assess.
+How we’d do it: Create checklist fields for identity, altitude, decision-maker, life stage, income signal, interests, communication style, risk flags, and strategic value.
+
+06.02 Assess identity confidence
+What it does: Determines whether the system found the correct person.
+How we’d do it: Compare name, location, business, phone, email, spouse/partner, and public sources to make sure the profile matches the actual lead.
+
+06.03 Assess primary person role
+What it does: Summarizes who the main person is.
+How we’d do it: Use comms, public search, business context, and social profiles to describe their role in the event and decision.
+
+06.04 Assess secondary person role
+What it does: Summarizes who the partner, spouse, or second decision-maker is.
+How we’d do it: Use comms, public records, social signals, and event context to decide how the second person fits into the buying process.
+
+06.05 Assess buyer altitude
+What it does: Classifies the lead as whale, strong, standard, soft, or unknown.
+How we’d do it: Judge based on event size, business ownership, income signals, urgency, referral potential, public footprint, and seriousness in comms.
+
+06.06 Assess profession altitude
+What it does: Determines whether they are owner, executive, professional buyer, operator, industry insider, standard consumer, or unknown.
+How we’d do it: Use LinkedIn, company pages, business filings, professional profiles, and comms tone.
+
+06.07 Assess likely decision-maker
+What it does: Identifies who probably controls the final yes.
+How we’d do it: Look at who is communicating, who is paying, who has business/financial authority, and who seems to be evaluating the service.
+
+06.08 Assess likely gatekeeper
+What it does: Identifies who manages communication or access.
+How we’d do it: Look at who sends messages, schedules calls, answers questions, or filters information for the other person.
+
+06.09 Assess relationship dynamic
+What it does: Summarizes how the pair or family decision unit appears to operate.
+How we’d do it: Compare the roles of each person: communicator, financial decider, emotional driver, planner, host, parent, partner, or validator.
+
+06.10 Assess age/life-stage signal
+What it does: Captures broad life-stage context with confidence labels.
+How we’d do it: Use public career timeline, family/event context, photos, public bios, and comms clues to estimate general life stage without overclaiming.
+
+06.11 Assess family-stage signal
+What it does: Captures relevant family or event context that affects the sale.
+How we’d do it: Look for whether this is their own wedding, child’s wedding, family gathering, corporate event, retirement-era hosting, or another life-stage marker.
+
+06.12 Assess income/affluence signal
+What it does: Classifies visible buying-power signal without pretending it is exact.
+How we’d do it: Use profession, business ownership, event size, venue, location, property clues, and public lifestyle/business indicators.
+
+06.13 Assess geography story
+What it does: Summarizes local, transplant, regional, or mobility context.
+How we’d do it: Use home area, business area, event location, public bios, education history, and work history.
+
+06.14 Assess cultural context
+What it does: Captures publicly visible cultural context only when relevant and responsibly sourced.
+How we’d do it: Use language, public bios, event clues, community ties, cuisine relevance, and explicitly public signals without forcing assumptions.
+
+06.15 Assess public interests
+What it does: Summarizes visible interests, hobbies, causes, or preferences.
+How we’d do it: Use public social posts, bios, photos, videos, podcast appearances, business pages, and public writing.
+
+06.16 Assess public taste signals
+What it does: Captures aesthetic, lifestyle, food, hospitality, or event-style clues.
+How we’d do it: Look at public images, event references, restaurants, travel, home/venue visuals, social media, and style of communication.
+
+06.17 Assess communication style
+What it does: Determines whether they seem formal, warm, concise, analytical, casual, direct, slow-moving, or high-context.
+How we’d do it: Use their actual Close messages first, then public writing and social content as secondary evidence.
+
+06.18 Assess decision-making style
+What it does: Classifies whether they seem fast-moving, consensus-based, detail-heavy, price-sensitive, reputation-driven, relationship-driven, or operationally minded.
+How we’d do it: Use comms behavior, questions asked, timing, role, profession, public personality, and buying context.
+
+06.19 Assess risk/sensitivity flags
+What it does: Captures only publicly volunteered sensitivities that affect respectful communication.
+How we’d do it: Note things like recent loss, divorce, illness, family complexity, dietary needs, or emotional event context only when clearly public or directly shared.
+
+06.20 Assess strategic value beyond transaction
+What it does: Estimates future referral, network, corporate, or repeat-event potential.
+How we’d do it: Look at their profession, business network, social reach, community role, event type, family network, and likely future hosting opportunities.
+
+06.21 Mark verified facts
+What it does: Labels facts that are directly sourced.
+How we’d do it: Mark items as verified when they come directly from Close, a public profile, a company page, a registry, or another saved source.
+
+06.22 Mark reasonable inferences
+What it does: Labels interpretations that are plausible but not proven.
+How we’d do it: Mark judgment calls as inferred and include the signals that led to the read.
+
+06.23 Mark unknowns
+What it does: Labels items the system searched for but could not determine.
+How we’d do it: Write Unknown instead of guessing when the evidence is not strong enough.
+
+06.24 Mark out-of-bounds items
+What it does: Labels things the system should not infer or use.
+How we’d do it: Mark anything too private, unsupported, irrelevant, or inappropriate as out of bounds.
+
+06.25 Create profile markdown
+What it does: Writes the actual profile kit.
+How we’d do it: Create 04_profile.md with sections for identity, buyer altitude, decision dynamics, personality read, strategic value, confidence notes, and sources.
+
+06.26 Save profile markdown to lead folder
+What it does: Places the profile in the correct client directory.
+How we’d do it: Save 04_profile.md inside the lead’s folder.
+
+06.27 Update profile checklist
+What it does: Marks each profile category complete.
+How we’d do it: Update the client ledger with verified, inferred, unknown, or out-of-bounds status for every profile field.
+
+06.28 Update master ledger profile status
+What it does: Marks completion for this stage.
+How we’d do it: Update the master ledger row for the lead with profile status, buyer altitude, confidence level, and timestamp.
+
+Group 6 Output
+By the end of this group, each lead should have:
+
+1. Profile markdown
+A 04_profile.md file that turns the research into a useful buyer briefing.
+
+2. Identity confidence read
+A clear statement of whether we found the right person.
+
+3. Primary person profile
+A concise read on who the main person is.
+
+4. Secondary person profile
+A concise read on the spouse, partner, parent, or second decision-maker if present.
+
+5. Buyer altitude
+A whale, strong, standard, soft, or unknown classification.
+
+6. Decision-maker read
+A practical read on who likely controls the sale.
+
+7. Gatekeeper read
+A practical read on who controls communication or access.
+
+8. Relationship dynamic note
+A short explanation of how the decision unit appears to work.
+
+9. Life-stage and context read
+Relevant age, family, event, and hosting context.
+
+10. Communication and decision style
+A usable read on how to speak to them and how they likely decide.
+
+11. Strategic value note
+A read on what this lead could be worth beyond the immediate event.
+
+12. Confidence labels
+Verified, inferred, unknown, and out-of-bounds markers.
+
+13. Updated client ledger
+Proof that every profile category was assessed.
+
+14. Updated master ledger
+Proof that profile synthesis is complete.
+
+Simple Read
+This group does one job:
+
+Turn all the raw information into a sharp buyer profile that helps the team understand the person.
+
+No seven-day plan yet.
+No message writing yet.
+No automation yet.
+No agent config yet.
+
+Just: read the evidence, make honest judgments, label confidence, write the profile, and update the ledgers.
+
+
+P
+
+07. Seven-Day Plan
+Group Purpose
+Turn the profile into a custom seven-day action plan that tells the system and Andre what to do, when to do it, and what path to take depending on how the lead responds.
+
+07.01 Create plan kickoff state
+What it does: Records what is true before Day 1 begins.
+How we’d do it: Pull the latest Close status, last inbound, last outbound, scheduled events, current urgency, and any open tasks.
+
+07.02 Capture last lead message
+What it does: Stores the most recent inbound communication.
+How we’d do it: Read 01_comms.md and identify the latest message from the lead.
+
+07.03 Capture last Comeketo message
+What it does: Stores the most recent outbound communication.
+How we’d do it: Read 01_comms.md and identify the latest message from Andre, the system, or another Comeketo team member.
+
+07.04 Capture current Close status
+What it does: Records where the lead currently sits in the pipeline.
+How we’d do it: Pull the current status from Close or the latest raw comms capture.
+
+07.05 Capture current scheduled events
+What it does: Records calls, tastings, deadlines, or known event dates.
+How we’d do it: Pull scheduled items from Close tasks, notes, activity history, and comms.
+
+07.06 Define primary objective
+What it does: States the main desired outcome of the seven-day plan.
+How we’d do it: Decide whether the goal is booking a call, securing a tasting, getting a quote approved, reviving the lead, or closing the event.
+
+07.07 Define secondary objective
+What it does: States the backup desired outcome.
+How we’d do it: Define the next-best win if the main goal does not happen, like getting a reply, confirming timing, or moving to nurture.
+
+07.08 Define lead altitude
+What it does: Carries forward whale, strong, standard, soft, or unknown classification.
+How we’d do it: Use the buyer altitude from 04_profile.md.
+
+07.09 Define voice strategy
+What it does: Determines whose voice should be used and how.
+How we’d do it: Choose Andre, Andre-at-ceiling, Rhonna, Toni, or another voice based on profile, relationship, and plan objective.
+
+07.10 Define channel strategy
+What it does: Determines SMS-led, email-led, call-led, mixed, or wait-first approach.
+How we’d do it: Use comms history and profile style to decide which channel is most likely to land.
+
+07.11 Define active days
+What it does: Marks which days include outbound action.
+How we’d do it: Pick the days where the plan should actually send, call, prompt, or move.
+
+07.12 Define passive days
+What it does: Marks which days are intentional hold/watch days.
+How we’d do it: Choose days where silence, patience, or waiting is strategically better than another touch.
+
+07.13 Create Day 1 move
+What it does: Defines the first action or intentional hold.
+How we’d do it: Write the first move based on the current state, lead altitude, last message, and primary objective.
+
+07.14 Create Day 1 off-ramps
+What it does: Defines follow-up, close, hold, and block branches.
+How we’d do it: Add simple branches for reply, close-ready signal, silence, objection, or hard no.
+
+07.15 Create Day 2 move
+What it does: Defines the second-day action or intentional hold.
+How we’d do it: Build from Day 1’s expected outcome and decide whether to follow up, wait, call, or shift channel.
+
+07.16 Create Day 2 off-ramps
+What it does: Defines follow-up, close, hold, and block branches.
+How we’d do it: Add the likely branches for what could happen after Day 2’s move.
+
+07.17 Create Day 3 move
+What it does: Defines the third-day action or intentional hold.
+How we’d do it: Use the plan rhythm to decide whether this is a value-add, check-in, phone call, rest day, or escalation.
+
+07.18 Create Day 3 off-ramps
+What it does: Defines follow-up, close, hold, and block branches.
+How we’d do it: Add flexible guidance for reply, silence, objection, booking signal, or pause signal.
+
+07.19 Create Day 4 move
+What it does: Defines the fourth-day action or intentional hold.
+How we’d do it: Decide whether the midpoint needs a stronger CTA, softer check-in, or intentional hold.
+
+07.20 Create Day 4 off-ramps
+What it does: Defines follow-up, close, hold, and block branches.
+How we’d do it: Add branches that help the agent continue without over-texting or panicking at silence.
+
+07.21 Create Day 5 move
+What it does: Defines the fifth-day action or intentional hold.
+How we’d do it: Use the profile and prior touches to determine whether to increase clarity, offer a next step, or back off.
+
+07.22 Create Day 5 off-ramps
+What it does: Defines follow-up, close, hold, and block branches.
+How we’d do it: Add response paths for serious interest, soft interest, silence, price concern, or rejection.
+
+07.23 Create Day 6 move
+What it does: Defines the sixth-day action or intentional hold.
+How we’d do it: Decide whether this is a final active nudge, a strategic rest day, or an Andre-required move.
+
+07.24 Create Day 6 off-ramps
+What it does: Defines follow-up, close, hold, and block branches.
+How we’d do it: Add branches for late-stage replies, close signals, silence tolerance, and stop conditions.
+
+07.25 Create Day 7 move
+What it does: Defines the seventh-day action or intentional hold.
+How we’d do it: Write the final move of the active plan window, either closing, resetting, pausing, or moving to nurture.
+
+07.26 Create Day 7 off-ramps
+What it does: Defines follow-up, close, hold, and block branches.
+How we’d do it: Add the final decision paths for close, continue, pause, block, or long-term nurture.
+
+07.27 Define close branch
+What it does: States what happens when the lead is ready to commit.
+How we’d do it: Define the next step: contract, invoice, tasting confirmation, call, agreement, deposit, or handoff.
+
+07.28 Define follow-up branch
+What it does: States what happens when the lead responds but is not closed yet.
+How we’d do it: Give the agent guidance on how to continue the conversation without forcing a premature close.
+
+07.29 Define hold branch
+What it does: States what happens when silence is expected or tolerable.
+How we’d do it: Define when to wait, how long to wait, and what signal would restart action.
+
+07.30 Define block branch
+What it does: States what happens after a hard no, objection, ghosting, or bad signal.
+How we’d do it: Define whether to pause, kill, hand off, nurture, or ask a human to review.
+
+07.31 Define replan triggers
+What it does: Lists the signals that should cause the agent to rewrite the plan.
+How we’d do it: Mark major changes like new decision-maker, event date shift, pricing objection, tasting booked, competitor mention, or strong inbound.
+
+07.32 Define Andre-required actions
+What it does: Lists the specific moments where Andre must personally act.
+How we’d do it: Identify calls, tastings, personal follow-ups, closing moments, high-stakes texts, and relationship-sensitive moments.
+
+07.33 Define system-autonomous actions
+What it does: Lists the actions the agent can handle without Andre.
+How we’d do it: Mark low-risk follow-ups, reminders, ledger updates, comms appends, and routine nudges as autonomous.
+
+07.34 Define review-required actions
+What it does: Lists actions that need approval before sending.
+How we’d do it: Mark high-value, emotionally sensitive, price-related, or unusual messages as review-required.
+
+07.35 Define winning unlocks
+What it does: States what converting this lead may create beyond the immediate deal.
+How we’d do it: Note referral value, corporate potential, repeat events, family network, business network, or community influence.
+
+07.36 Create seven-day plan markdown
+What it does: Writes the full plan.
+How we’d do it: Create 05_seven_day_plan.md with kickoff state, objective, seven daily moves, off-ramps, Andre actions, and winning unlocks.
+
+07.37 Save seven-day plan to lead folder
+What it does: Places the plan in the correct directory.
+How we’d do it: Save 05_seven_day_plan.md inside the lead’s folder.
+
+07.38 Update plan checklist
+What it does: Marks the seven-day plan complete.
+How we’d do it: Update the client ledger with completed plan sections and any missing pieces.
+
+07.39 Update master ledger plan status
+What it does: Marks completion for this stage.
+How we’d do it: Update the master ledger row with plan status, plan date, current Day 1 start, and next action.
+
+Group 7 Output
+By the end of this group, each lead should have:
+
+1. Seven-day plan markdown
+A 05_seven_day_plan.md file customized to that specific lead.
+
+2. Kickoff state
+A clear snapshot of where the lead stands before the plan starts.
+
+3. Primary objective
+The main outcome the plan is trying to drive.
+
+4. Secondary objective
+The backup win if the main goal does not happen.
+
+5. Lead altitude
+The whale, strong, standard, soft, or unknown classification carried forward.
+
+6. Voice strategy
+Who should speak and how the message should feel.
+
+7. Channel strategy
+Whether the plan uses SMS, email, call, mixed touch, or intentional waiting.
+
+8. Seven daily moves
+One planned action or hold state for each day.
+
+9. Daily off-ramps
+Follow-up, close, hold, block, and replan guidance for each day.
+
+10. Andre-required actions
+A list of moments where Andre needs to personally act.
+
+11. System-autonomous actions
+A list of moves the agent can handle by itself.
+
+12. Review-required actions
+A list of messages or decisions that need human approval.
+
+13. Winning unlocks
+The bigger opportunity if this lead converts.
+
+14. Updated client ledger
+Proof that the plan was written and checked.
+
+15. Updated master ledger
+Proof that the seven-day plan stage is complete.
+
+Simple Read
+This group does one job:
+
+Turn the profile into a seven-day operating plan with clear moves and flexible exit paths.
+
+No skill writing yet.
+No automation yet.
+No Slack alerts yet.
+No agent config yet.
+
+Just: define the objective, map the seven days, add off-ramps, mark Andre’s responsibilities, save the plan, and update the ledgers.
+
+
+P
+
+08. If/Then Logic Layer
+Group Purpose
+Create the flexible decision logic that helps the agent react to what actually happens without needing a rigid script for every possible scenario.
+
+08.01 Create logic file
+What it does: Creates a dedicated logic document for the lead.
+How we’d do it: Create 06_logic.md inside the lead folder.
+
+08.02 Define response categories
+What it does: Defines the main possible states the lead can move into.
+How we’d do it: Use simple categories like follow-up, close, hold, block, and replan.
+
+08.03 Define positive reply handling
+What it does: States what the agent should do when the lead responds warmly.
+How we’d do it: Tell the agent to continue the conversation, answer directly, preserve momentum, and move toward the next concrete step.
+
+08.04 Define question handling
+What it does: States what the agent should do when the lead asks a question.
+How we’d do it: Tell the agent to answer the actual question first, avoid over-selling, and then offer the next useful step.
+
+08.05 Define price objection handling
+What it does: States what the agent should do when price comes up.
+How we’d do it: Tell the agent whether to clarify value, simplify options, involve Andre, adjust scope, or move toward a quote conversation.
+
+08.06 Define scheduling objection handling
+What it does: States what the agent should do when timing is the issue.
+How we’d do it: Tell the agent to offer flexible next steps, reduce friction, and avoid making the lead feel trapped.
+
+08.07 Define partner involvement handling
+What it does: States what happens when a spouse, planner, parent, or second decision-maker enters.
+How we’d do it: Tell the agent to update the decision-unit read, include the new person respectfully, and avoid treating the original contact as the only buyer.
+
+08.08 Define silence handling
+What it does: States when silence is normal versus concerning.
+How we’d do it: Tell the agent how long to wait, when to follow up, when to hold, and when silence becomes a block signal.
+
+08.09 Define hard-no handling
+What it does: States what happens when the lead clearly declines.
+How we’d do it: Tell the agent to stop active pursuit, respond respectfully if needed, update the ledger, and move the lead to block, pause, or nurture.
+
+08.10 Define hostile-response handling
+What it does: States what happens when the lead reacts negatively.
+How we’d do it: Tell the agent to avoid arguing, apologize if appropriate, stop escalation, and notify a human before any further action.
+
+08.11 Define close-ready handling
+What it does: States what happens when the lead asks for contract, invoice, tasting, agreement, or next step.
+How we’d do it: Tell the agent to move immediately into close support, alert Andre, preserve momentum, and avoid unnecessary extra selling.
+
+08.12 Define replan handling
+What it does: States what signals require rewriting the plan.
+How we’d do it: Tell the agent to trigger a replan when the event changes, a new decider appears, a major objection appears, or the lead’s behavior no longer matches the original strategy.
+
+08.13 Define human-escalation handling
+What it does: States when Andre, Rhonna, Toni, or another human must be pulled in.
+How we’d do it: Define escalation moments like whale close signals, emotional sensitivity, pricing complexity, operational risk, angry replies, or high-value opportunities.
+
+08.14 Save logic markdown to lead folder
+What it does: Places the logic file in the correct directory.
+How we’d do it: Save the completed logic document as 06_logic.md.
+
+08.15 Update logic checklist
+What it does: Marks logic complete.
+How we’d do it: Update the client ledger with each logic category marked complete, missing, or not applicable.
+
+08.16 Update master ledger logic status
+What it does: Marks completion for this stage.
+How we’d do it: Update the master ledger row with logic status, completion time, and any required human-review notes.
+
+Group 8 Output
+By the end of this group, each lead should have:
+
+1. Logic markdown
+A 06_logic.md file that tells the agent how to react to common lead behaviors.
+
+2. Response categories
+A simple state model: follow-up, close, hold, block, and replan.
+
+3. Positive reply handling
+Guidance for warm or interested responses.
+
+4. Question handling
+Guidance for direct questions from the lead.
+
+5. Price objection handling
+Guidance for budget, quote, or value concerns.
+
+6. Scheduling objection handling
+Guidance for timing, availability, and delay issues.
+
+7. Partner involvement handling
+Guidance for new decision-makers entering the conversation.
+
+8. Silence handling
+Guidance for when to wait, when to follow up, and when to pause.
+
+9. Hard-no handling
+Guidance for clear rejection or opt-out moments.
+
+10. Hostile-response handling
+Guidance for angry, uncomfortable, or negative replies.
+
+11. Close-ready handling
+Guidance for contract, invoice, tasting, agreement, or booking signals.
+
+12. Replan handling
+Guidance for when the original plan no longer fits.
+
+13. Human-escalation handling
+Guidance for when Andre or another human needs to step in.
+
+14. Updated client ledger
+Proof that the logic layer was created and checked.
+
+15. Updated master ledger
+Proof that the logic stage is complete.
+
+Simple Read
+This group does one job:
+
+Give the agent flexible reaction rules so it can handle reality without needing a giant rigid script.
+
+No skill writing yet.
+No automation yet.
+No Slack alerts yet.
+No agent config yet.
+
+Just: define the response states, write the reaction guidance, save the logic file, and update the ledgers.
+
+
+P
+
+Thought for a second
+09. Skill Library Creation
+Group Purpose
+Create the reusable skills that let the system execute the same kinds of work across many leads without rebuilding everything from scratch every time.
+
+09A. System Skills
+09A.01 Lead harvest skill
+What it does: Handles smart view intake and lead URL extraction.
+How we’d do it: Create a reusable skill that loads the active Close smart view, extracts lead names, URLs, IDs, and updates the harvest files.
+
+09A.02 Folder creation skill
+What it does: Creates and seeds client folders.
+How we’d do it: Create a skill that takes the harvested lead list and builds the correct folder structure for every lead.
+
+09A.03 Raw comms pull skill
+What it does: Retrieves and saves raw Close communication history.
+How we’d do it: Create a skill that opens each lead URL, pulls the visible comms/activity history, and writes 01_comms.md.
+
+09A.04 People-search skill
+What it does: Runs first-pass public identifier enrichment.
+How we’d do it: Create a skill that searches for basic phone, email, business, location, partner, and family clues.
+
+09A.05 Deep-dive research skill
+What it does: Runs deeper public-footprint research.
+How we’d do it: Create a skill that uses the people-search findings to sweep social, business, media, review, and public web sources.
+
+09A.06 Profile synthesis skill
+What it does: Turns research into a buyer profile.
+How we’d do it: Create a skill that reads comms, people-search, and deep-dive files, then writes 04_profile.md.
+
+09A.07 Seven-day plan skill
+What it does: Creates the strategic seven-day plan.
+How we’d do it: Create a skill that reads the profile and comms, then writes the custom seven-day plan with off-ramps.
+
+09A.08 Logic-writing skill
+What it does: Creates the if/then branch logic.
+How we’d do it: Create a skill that turns the seven-day plan into flexible reaction guidance.
+
+09A.09 Ledger update skill
+What it does: Updates step checklists and run states.
+How we’d do it: Create a shared skill that can mark master ledger and client ledger fields complete, missing, blocked, or needs-review.
+
+09A.10 Source indexing skill
+What it does: Records sources and artifacts.
+How we’d do it: Create a skill that appends source URLs, source types, capture timestamps, and relevance notes to source_index.md.
+
+09A.11 Asset capture skill
+What it does: Stores images, screenshots, media, and visual artifacts.
+How we’d do it: Create a skill that captures public screenshots, profile images, video links, podcast links, and asset metadata.
+
+09B. Move Skills
+09B.01 NEPQ follow-up skill
+What it does: Creates consultative follow-up messages.
+How we’d do it: Create a reusable message-writing skill for soft, question-led follow-ups based on the lead profile and current comms.
+
+09B.02 Ballpark quote email skill
+What it does: Creates quote-oriented emails.
+How we’d do it: Create a skill that turns event details, buyer type, and Comeketo pricing logic into a clean ballpark quote email.
+
+09B.03 Tasting invite skill
+What it does: Creates tasting invitation messages.
+How we’d do it: Create a skill that writes tasting invites based on the lead’s stage, urgency, and tone.
+
+09B.04 Tasting confirmation skill
+What it does: Creates pre-tasting confirmation messages.
+How we’d do it: Create a skill that confirms time, expectations, people attending, and any important prep details.
+
+09B.05 Post-call follow-up skill
+What it does: Creates recap and next-step messages after calls.
+How we’d do it: Create a skill that summarizes what happened, confirms next steps, and keeps momentum clean.
+
+09B.06 Quote cover email skill
+What it does: Creates the email that introduces a formal quote.
+How we’d do it: Create a skill that frames the quote, highlights fit, reduces friction, and points to the next action.
+
+09B.07 Recovery message skill
+What it does: Creates reset messages when a lead has gone cold.
+How we’d do it: Create a skill that writes respectful re-entry messages without sounding needy or automated.
+
+09B.08 Handoff message skill
+What it does: Creates messages when another team member takes over.
+How we’d do it: Create a skill that introduces the new person, preserves trust, and explains why the handoff helps.
+
+09B.09 Objection response skill
+What it does: Creates replies to hesitation, price, timing, or uncertainty.
+How we’d do it: Create a skill that reads the objection, classifies it, and writes a grounded response.
+
+09B.10 Close push skill
+What it does: Creates careful messages that move a ready lead toward commitment.
+How we’d do it: Create a skill that recognizes close-ready moments and writes clear next-step language without over-selling.
+
+09B.11 Long-term nurture skill
+What it does: Creates messages for leads not ready now.
+How we’d do it: Create a skill that moves the lead into a longer-term relationship path instead of forcing the sale.
+
+09B.12 Pause cadence skill
+What it does: Handles pausing or switching a lead out of active automation.
+How we’d do it: Create a skill that marks the lead as paused, updates the ledger, and prevents inappropriate follow-up.
+
+09C. Profile Calibration Skills
+09C.01 Whale operator profile skill
+What it does: Calibrates language for owner/operator/high-status practical buyers.
+How we’d do it: Create a profile skill that emphasizes operational competence, respect, clarity, and no fluff.
+
+09C.02 Professional buyer whale skill
+What it does: Calibrates language for people who evaluate vendors professionally.
+How we’d do it: Create a profile skill that avoids template language and speaks to process, confidence, and fit.
+
+09C.03 Industry insider skill
+What it does: Calibrates language for event, catering, hospitality, or vendor-aware leads.
+How we’d do it: Create a profile skill that assumes they know the industry and need competence demonstrated, not explained.
+
+09C.04 Long-runway wedding skill
+What it does: Calibrates language for longer wedding planning arcs.
+How we’d do it: Create a profile skill that supports relationship-building, patience, and spaced follow-up over time.
+
+09C.05 Standard event buyer skill
+What it does: Calibrates language for normal private event buyers.
+How we’d do it: Create a profile skill that is warm, clear, helpful, and lightly guiding.
+
+09C.06 Soft recovery lead skill
+What it does: Calibrates language for low-signal or previously cold leads.
+How we’d do it: Create a profile skill that resets gently, lowers pressure, and tries to reopen the door.
+
+09C.07 Pair decision-maker skill
+What it does: Calibrates language when two people are involved.
+How we’d do it: Create a profile skill that respects both people and avoids speaking as if only one person matters.
+
+09C.08 Parent-of-bride/groom skill
+What it does: Calibrates language when the buyer is funding or hosting for a child.
+How we’d do it: Create a profile skill that respects pride, responsibility, family stakes, and trust.
+
+09C.09 Corporate/event professional skill
+What it does: Calibrates language for business or repeat-event potential.
+How we’d do it: Create a profile skill that emphasizes reliability, repeatability, polish, and long-term relationship value.
+
+09D. Voice Skills
+09D.01 Andre voice skill
+What it does: Defines Andre’s normal voice.
+How we’d do it: Create a reusable voice file with Andre’s natural phrasing, tone, boundaries, and message examples.
+
+09D.02 Andre at ceiling voice skill
+What it does: Defines Andre’s strongest, cleanest, most polished version.
+How we’d do it: Create a voice file that sounds like Andre, but sharper, warmer, clearer, and more controlled.
+
+09D.03 Rhonna voice skill
+What it does: Defines Rhonna’s communication style.
+How we’d do it: Create a voice file with Rhonna’s tone, typical phrasing, and appropriate use cases.
+
+09D.04 Toni voice skill
+What it does: Defines Toni’s communication style.
+How we’d do it: Create a voice file with Toni’s tone, strengths, and best-fit message types.
+
+09D.05 Bibi voice skill
+What it does: Defines Bibi’s communication style.
+How we’d do it: Create a voice file with Bibi’s style, examples, and boundaries.
+
+09D.06 Rodrigo voice skill
+What it does: Defines Rodrigo’s communication style.
+How we’d do it: Create a voice file with Rodrigo’s style, examples, and appropriate scenarios.
+
+09D.07 Eduarda voice skill
+What it does: Defines Eduarda’s communication style.
+How we’d do it: Create a voice file with Eduarda’s style, examples, and appropriate scenarios.
+
+09E. Skill Governance Deliverables
+09E.01 Skills index
+What it does: Lists every skill, category, purpose, and dependency.
+How we’d do it: Create skills_index.md as the system’s map of all available skills.
+
+09E.02 Skill dependency map
+What it does: Shows which skills rely on which files or other skills.
+How we’d do it: Track whether each skill needs comms, profile, plan, logic, voice, pricing, calendar, or Close data.
+
+09E.03 Skill version history
+What it does: Tracks changes to skills over time.
+How we’d do it: Add a version log for every skill so changes can be audited and improved.
+
+09E.04 Skill test examples
+What it does: Stores examples of good outputs for each skill.
+How we’d do it: Add sample inputs and sample outputs so each skill has a quality standard.
+
+09E.05 Skill routing map
+What it does: Tells the agent which skills apply to which profile types.
+How we’d do it: Map profile classifications to the right move skills, voice skills, and calibration skills.
+
+09E.06 Missing skills list
+What it does: Tracks skills that still need to be created.
+How we’d do it: Keep a running list of repeated needs that do not yet have a reusable skill.
+
+09E.07 Retired skills list
+What it does: Tracks skills that should no longer be used.
+How we’d do it: Move outdated, weak, or replaced skills into a retired list so the system stops calling them.
+
+Group 9 Output
+By the end of this group, the system should have:
+
+1. System skills
+Reusable skills for harvesting, folders, comms, people search, deep dive, profile, plan, logic, ledgers, sources, and assets.
+
+2. Move skills
+Reusable skills for follow-ups, quotes, tasting invites, confirmations, objections, closing, handoffs, recovery, nurture, and cadence pauses.
+
+3. Profile calibration skills
+Reusable strategy layers for different buyer types.
+
+4. Voice skills
+Reusable voice files for Andre and other Comeketo team members.
+
+5. Skills index
+A master list of every available skill.
+
+6. Dependency map
+A clear view of what each skill needs before it can run.
+
+7. Version history
+A record of how skills improve over time.
+
+8. Test examples
+Quality examples that define what good skill output looks like.
+
+9. Routing map
+A guide that tells the agent which skills to use for which lead type.
+
+10. Missing skills list
+A backlog of skills that still need to be built.
+
+11. Retired skills list
+A list of skills that should no longer be used.
+
+Simple Read
+This group does one job:
+
+Build the reusable skill library that lets the whole system execute without reinventing the process for every lead.
+
+No automations yet.
+No Slack alerts yet.
+No live comms updates yet.
+No per-client agent config yet.
+
+Just: create the reusable skills, organize them by type, track dependencies, version them, test them, and make them easy for the agent to choose.
+
+
+P
+
+10. Comms Update Automations
+Group Purpose
+Keep each lead’s comms file alive after the original pull by automatically appending new Close activity as it happens.
+
+10.01 New Close activity watcher
+What it does: Detects new emails, SMS, calls, notes, or tasks.
+How we’d do it: Watch active leads for new Close activity after the original 01_comms.md file has been created.
+
+10.02 New SMS append automation
+What it does: Appends new SMS activity to the comms file.
+How we’d do it: When a new text appears, add it to the bottom of 01_comms.md with timestamp, sender, recipient, and message body.
+
+10.03 New email append automation
+What it does: Appends new email activity to the comms file.
+How we’d do it: When a new email appears, add the subject, sender, recipient, timestamp, and body to the comms file.
+
+10.04 New call append automation
+What it does: Appends new call records to the comms file.
+How we’d do it: When a call is logged, append the call time, direction, outcome, recording/notes if available, and any follow-up details.
+
+10.05 New note append automation
+What it does: Appends new Close notes to the comms file.
+How we’d do it: When a team member adds a Close note, append it as a note entry with author and timestamp.
+
+10.06 New task append automation
+What it does: Appends new task changes to the comms file.
+How we’d do it: When a task is created, completed, changed, or overdue, append the task update to the comms timeline.
+
+10.07 Activity deduplication record
+What it does: Prevents the same Close activity from being appended twice.
+How we’d do it: Store activity IDs or timestamps already captured and skip anything already written.
+
+10.08 Last activity timestamp record
+What it does: Tracks the most recent activity already captured.
+How we’d do it: Save the latest captured activity timestamp in the client ledger or a small state file.
+
+10.09 Comms append marker
+What it does: Adds timestamped update headers inside the comms document.
+How we’d do it: Insert clear headers like ## Comms Update — 2026-04-25 3:42 PM before each new append batch.
+
+10.10 Updated comms markdown
+What it does: Maintains the living comms source of truth.
+How we’d do it: Keep 01_comms.md as the single running file that contains both original comms and all future updates.
+
+10.11 Comms update log
+What it does: Records every append operation.
+How we’d do it: Write a small log entry each time new activity is checked, found, skipped, or appended.
+
+10.12 Update client ledger last-comms timestamp
+What it does: Shows the latest comms refresh time.
+How we’d do it: Update the lead’s client_ledger.md with the most recent successful comms check and append.
+
+10.13 Update master ledger live state
+What it does: Shows which leads have fresh activity.
+How we’d do it: Update the master ledger with last activity time, last append time, and whether the lead needs agent review.
+
+10.14 Trigger Lead Liaison wake-up
+What it does: Signals the per-client agent that something changed.
+How we’d do it: When new comms are appended, flag the lead so the Lead Liaison Agent reviews the latest activity against the plan.
+
+Group 10 Output
+By the end of this group, each active lead should have:
+
+1. Living comms file
+A 01_comms.md file that keeps growing as new Close activity happens.
+
+2. SMS append flow
+New texts automatically added to the comms timeline.
+
+3. Email append flow
+New emails automatically added to the comms timeline.
+
+4. Call append flow
+New calls, missed calls, voicemails, and call notes added to the comms timeline.
+
+5. Notes append flow
+New internal Close notes added to the comms timeline.
+
+6. Tasks append flow
+New task activity added to the comms timeline.
+
+7. Deduplication record
+A record that prevents duplicate activity from being written.
+
+8. Last activity timestamp
+A marker showing the newest activity already captured.
+
+9. Comms update log
+A log of each comms check and append operation.
+
+10. Updated client ledger
+Proof that the lead’s comms were checked and refreshed.
+
+11. Updated master ledger
+A live view showing which leads have new activity.
+
+12. Lead Liaison wake-up trigger
+A signal that tells the client agent to review the newest comms.
+
+Simple Read
+This group does one job:
+
+Keep the comms file current so the agent always knows what just happened.
+
+No new profile yet.
+No new seven-day plan yet.
+No Slack notification layer yet.
+No full agent config yet.
+
+Just: watch Close, append new activity, avoid duplicates, update the ledgers, and wake the client agent when something changes.
+
+
+P
+
+11. Outbound Action Notifications
+Group Purpose
+Make sure Andre is notified whenever the system sends something, changes something, or takes an action in Close on his behalf.
+
+11.01 Outbound SMS notification
+What it does: Notifies Andre when the system sends an SMS.
+How we’d do it: Send a Slack notification immediately after any system-generated text message is sent through Close.
+
+11.02 Outbound email notification
+What it does: Notifies Andre when the system sends an email.
+How we’d do it: Send a Slack notification immediately after any system-generated email is sent through Close.
+
+11.03 Close task update notification
+What it does: Notifies Andre when the system creates or changes a task.
+How we’d do it: Send a Slack notification when the system creates, completes, reschedules, or modifies a Close task.
+
+11.04 Close status update notification
+What it does: Notifies Andre when the system changes a lead status.
+How we’d do it: Send a Slack notification when the system moves a lead to a new status, stage, pause state, nurture state, or block state.
+
+11.05 Close note update notification
+What it does: Notifies Andre when the system adds an internal note.
+How we’d do it: Send a Slack notification when the system writes a note into Close explaining an action, decision, or lead state.
+
+11.06 Notification lead link
+What it does: Includes the Close lead link.
+How we’d do it: Add the lead’s Close URL to every notification so Andre can jump straight into the record.
+
+11.07 Notification message copy
+What it does: Includes the exact message sent.
+How we’d do it: Paste the full SMS or email body into the Slack notification so Andre sees exactly what went out.
+
+11.08 Notification reason
+What it does: Explains which plan step or off-ramp caused the action.
+How we’d do it: Include a short “why this happened” line tied to the seven-day plan, logic file, or Lead Liaison decision.
+
+11.09 Notification voice label
+What it does: States which voice/persona was used.
+How we’d do it: Label the message as Andre, Andre-at-ceiling, Rhonna, Toni, system voice, or another selected voice.
+
+11.10 Notification expected outcome
+What it does: States what the system expects might happen next.
+How we’d do it: Add a short prediction like “expect reply,” “expect silence,” “watch for price objection,” or “close-ready signal possible.”
+
+11.11 Andre feedback capture
+What it does: Stores Andre’s reaction or correction.
+How we’d do it: Let Andre reply or react in Slack, then capture that feedback as part of the lead’s history.
+
+11.12 Andre feedback markdown
+What it does: Writes feedback into the lead folder.
+How we’d do it: Save Andre’s reactions, corrections, approvals, and overrides into 10_andre_feedback.md.
+
+11.13 Notification log
+What it does: Records every notification sent.
+How we’d do it: Keep a log of notification time, lead, action type, Slack destination, and whether Andre responded.
+
+Group 11 Output
+By the end of this group, the system should have:
+
+1. SMS action notifications
+Andre gets notified when the system sends texts.
+
+2. Email action notifications
+Andre gets notified when the system sends emails.
+
+3. Task update notifications
+Andre gets notified when the system changes Close tasks.
+
+4. Status update notifications
+Andre gets notified when the system changes lead status.
+
+5. Note update notifications
+Andre gets notified when the system writes internal notes.
+
+6. Lead links in notifications
+Every notification includes the Close record link.
+
+7. Message copy in notifications
+Every outbound message is visible to Andre.
+
+8. Reason line in notifications
+Every notification explains why the action happened.
+
+9. Voice label in notifications
+Every notification shows which voice was used.
+
+10. Expected outcome line
+Every notification tells Andre what the system is watching for next.
+
+11. Andre feedback capture
+Andre can approve, correct, override, or comment.
+
+12. Andre feedback markdown
+Andre’s feedback gets saved into the lead folder.
+
+13. Notification log
+Every alert is recorded for audit and debugging.
+
+Simple Read
+This group does one job:
+
+Make system actions visible to Andre so nothing happens silently in his name.
+
+No action reminders yet.
+No blowout prevention yet.
+No agent configuration yet.
+No dashboard yet.
+
+Just: notify Andre when the system acts, show him what happened, explain why, capture his feedback, and log the notification.
+
+
+P
+
+12. Andre Timely Action Alerts
+Group Purpose
+Make sure Andre gets timely, useful reminders for the specific actions he personally needs to take so important lead moments do not get missed.
+
+12.01 Andre action extractor
+What it does: Finds all Andre-required actions inside the seven-day plan.
+How we’d do it: Read 05_seven_day_plan.md and pull every action marked as requiring Andre personally.
+
+12.02 Andre action calendar
+What it does: Stores when each action needs to happen.
+How we’d do it: Turn Andre-required actions into dated or timed reminders connected to the lead’s plan.
+
+12.03 Critical action alert
+What it does: Sends urgent reminders for high-stakes actions.
+How we’d do it: Trigger immediate alerts for whale leads, close-ready signals, same-day tastings, urgent calls, or agreement moments.
+
+12.04 Same-day action alert
+What it does: Sends morning reminders for actions due that day.
+How we’d do it: Send Andre a short daily alert with the lead name, action needed, timing, and context.
+
+12.05 Pre-call alert
+What it does: Prepares Andre before a scheduled call.
+How we’d do it: Send a reminder before the call with the lead link, profile read, recent comms, and what to lead with.
+
+12.06 Pre-tasting alert
+What it does: Prepares Andre before a tasting.
+How we’d do it: Send a tasting briefing with buyer profile, decision dynamics, event context, risk flags, and the desired outcome.
+
+12.07 Agreement-ready alert
+What it does: Alerts Andre when the lead is ready to close.
+How we’d do it: Trigger an urgent alert when the lead asks for a contract, invoice, quote approval, deposit, or final next step.
+
+12.08 Whale lead escalation alert
+What it does: Creates stronger notification rules for high-value leads.
+How we’d do it: Give whale leads tighter alert timing, stronger reminders, and faster escalation if Andre does not acknowledge.
+
+12.09 Alert context card
+What it does: Summarizes what Andre needs to know.
+How we’d do it: Include lead name, altitude, current state, action needed, why now, and the recommended approach.
+
+12.10 Alert links
+What it does: Links to profile, plan, comms, and Close record.
+How we’d do it: Include quick links to 01_comms.md, 04_profile.md, 05_seven_day_plan.md, and the Close lead page.
+
+12.11 Alert acknowledgement status
+What it does: Tracks whether Andre acknowledged the alert.
+How we’d do it: Let Andre mark the alert as seen, then record that status in the ledger or action log.
+
+12.12 Alert snooze status
+What it does: Tracks whether Andre delayed the alert.
+How we’d do it: Let Andre snooze the action and store the new reminder time.
+
+12.13 Alert done status
+What it does: Tracks whether Andre completed the action.
+How we’d do it: Let Andre mark the action done, then update the lead state and action log.
+
+12.14 Alert blocked status
+What it does: Tracks whether Andre could not complete the action.
+How we’d do it: Let Andre mark the action blocked and briefly capture why.
+
+12.15 Blowout-prevention escalation
+What it does: Escalates when critical actions are not acknowledged.
+How we’d do it: If Andre misses a high-stakes alert, notify again or escalate to another responsible person.
+
+12.16 Andre action log
+What it does: Records all action alerts and outcomes.
+How we’d do it: Save every alert, acknowledgement, snooze, completion, block, and escalation in 09_andre_alerts.md.
+
+Group 12 Output
+By the end of this group, the system should have:
+
+1. Andre action list
+A clear list of every action Andre personally needs to take.
+
+2. Andre action calendar
+A scheduled view of when those actions need to happen.
+
+3. Critical action alerts
+Urgent notifications for high-stakes lead moments.
+
+4. Same-day action alerts
+Daily reminders for actions due today.
+
+5. Pre-call alerts
+Briefings before important calls.
+
+6. Pre-tasting alerts
+Briefings before tastings.
+
+7. Agreement-ready alerts
+Immediate alerts when the lead is ready to close.
+
+8. Whale escalation rules
+Stronger alert behavior for high-value leads.
+
+9. Alert context cards
+Short, useful summaries Andre can act from immediately.
+
+10. Alert links
+Quick access to comms, profile, plan, and Close.
+
+11. Alert statuses
+Acknowledged, snoozed, done, or blocked states.
+
+12. Blowout-prevention escalation
+Backup alerting when critical actions are missed.
+
+13. Andre action log
+A full record of all alerts and outcomes.
+
+14. Updated client ledger
+Proof that Andre action alerts are configured.
+
+15. Updated master ledger
+Proof that the lead has active human-action monitoring.
+
+Simple Read
+This group does one job:
+
+Make sure Andre knows exactly what he needs to do, when he needs to do it, and what happens if he misses it.
+
+No outbound action notification setup here.
+No comms append setup here.
+No agent config yet.
+No dashboard yet.
+
+Just: extract Andre’s required actions, schedule alerts, give him useful context, track his response, and escalate important missed moments.
+
+
+P
+
+13. Lead Liaison Agent Configuration
+Group Purpose
+Create the per-client agent setup that tells the system how to run this specific lead using the correct files, rules, plan, voice, and escalation boundaries.
+
+13.01 Create AGENTS.md
+What it does: Defines the lead-specific agent role, context, rules, and sources of truth.
+How we’d do it: Create an AGENTS.md file inside the lead folder that explains what this lead’s agent is responsible for.
+
+13.02 Create CLAUDE.md
+What it does: Defines Claude/Cowork-specific operating instructions for the lead.
+How we’d do it: Create a CLAUDE.md file with instructions for how Claude/Cowork should read the folder, use the files, and act on the plan.
+
+13.03 Define agent mission
+What it does: States what the agent is trying to accomplish for this lead.
+How we’d do it: Write a short mission statement based on the seven-day plan, lead altitude, and current Close state.
+
+13.04 Define source-of-truth hierarchy
+What it does: Tells the agent which files to trust first.
+How we’d do it: Rank the files so the agent knows that latest comms beat old assumptions, profile informs strategy, and the plan guides execution.
+
+13.05 Define comms file as live truth
+What it does: Marks the comms file as the current-state heartbeat.
+How we’d do it: Tell the agent to always read 01_comms.md first before making decisions.
+
+13.06 Define profile file as identity truth
+What it does: Marks the profile as the buyer-understanding document.
+How we’d do it: Tell the agent to use 04_profile.md to understand who the lead is, how they think, and what matters.
+
+13.07 Define seven-day plan as strategy truth
+What it does: Marks the plan as the execution guide.
+How we’d do it: Tell the agent to use 05_seven_day_plan.md as the main strategic path unless new comms require a replan.
+
+13.08 Define logic file as branch guide
+What it does: Marks the if/then file as the reaction guide.
+How we’d do it: Tell the agent to use 06_logic.md when deciding how to respond to replies, silence, objections, close signals, or blocks.
+
+13.09 Define allowed autonomous actions
+What it does: States what the agent may do without approval.
+How we’d do it: List safe actions like reading files, updating ledgers, drafting routine follow-ups, appending notes, and flagging state changes.
+
+13.10 Define approval-required actions
+What it does: States what the agent must ask before doing.
+How we’d do it: List actions like sending high-stakes messages, changing pricing language, escalating a whale lead, or making sensitive judgment calls.
+
+13.11 Define forbidden actions
+What it does: States what the agent must not do.
+How we’d do it: Clearly define boundaries, such as no unsupported claims, no private-data assumptions, no off-plan sending, and no silent high-stakes action.
+
+13.12 Define Slack notification requirements
+What it does: States when Andre must be notified.
+How we’d do it: List notification triggers like outbound sends, close-ready signals, whale lead movement, missed actions, major objections, or plan changes.
+
+13.13 Define wake-up triggers
+What it does: States what events cause the agent to act.
+How we’d do it: Trigger the agent when comms update, a plan checkpoint arrives, Andre gives feedback, a close signal appears, or a scheduled action comes due.
+
+13.14 Define sleep conditions
+What it does: States when the agent should not act.
+How we’d do it: Tell the agent to stay inactive during intentional holds, after hard blocks, during human-review waits, or when required files are missing.
+
+13.15 Define replan conditions
+What it does: States when the agent should rewrite the plan.
+How we’d do it: Define major triggers like new decision-maker, event change, strong inbound, pricing objection, tasting booked, competitor mention, or profile mismatch.
+
+13.16 Define escalation conditions
+What it does: States when a human must take over.
+How we’d do it: Define escalation for angry replies, emotional sensitivity, whale close moments, operational complexity, legal/payment issues, or risky ambiguity.
+
+13.17 Save agent files to lead folder
+What it does: Places AGENTS.md and CLAUDE.md in the client directory.
+How we’d do it: Save both files inside the lead folder alongside comms, profile, plan, and logic.
+
+13.18 Update agent checklist
+What it does: Marks agent configuration complete.
+How we’d do it: Update the client ledger with completed AGENTS.md, CLAUDE.md, mission, rules, triggers, and escalation fields.
+
+13.19 Update master ledger agent status
+What it does: Marks the lead as agent-ready.
+How we’d do it: Update the master ledger row with agent config status, readiness state, and timestamp.
+
+Group 13 Output
+By the end of this group, each lead should have:
+
+1. AGENTS.md
+A lead-specific agent configuration file.
+
+2. CLAUDE.md
+A lead-specific Claude/Cowork instruction file.
+
+3. Agent mission
+A clear statement of what the agent is trying to accomplish.
+
+4. Source-of-truth hierarchy
+A clear ranking of which files the agent should trust first.
+
+5. Live comms rule
+A rule that the agent always checks the newest 01_comms.md.
+
+6. Profile usage rule
+A rule that the agent uses 04_profile.md to understand the buyer.
+
+7. Plan usage rule
+A rule that the agent uses 05_seven_day_plan.md as the strategy guide.
+
+8. Logic usage rule
+A rule that the agent uses 06_logic.md for branching decisions.
+
+9. Autonomous action rules
+A list of what the agent can safely do on its own.
+
+10. Approval-required rules
+A list of actions that need human approval first.
+
+11. Forbidden action rules
+A list of boundaries the agent must not cross.
+
+12. Slack notification rules
+A list of moments where Andre must be notified.
+
+13. Wake-up triggers
+A list of events that cause the agent to act.
+
+14. Sleep conditions
+A list of states where the agent should wait.
+
+15. Replan conditions
+A list of signals that require a new plan.
+
+16. Escalation conditions
+A list of moments where a human must take over.
+
+17. Updated client ledger
+Proof that the agent configuration was created and checked.
+
+18. Updated master ledger
+Proof that the lead is agent-ready.
+
+Simple Read
+This group does one job:
+
+Give each lead its own custom agent brain so the system knows how to run that client correctly.
+
+No new research here.
+No new profile here.
+No new seven-day plan here.
+No new comms pull here.
+
+Just: create the agent files, define what they trust, define what they can do, define when they wake up, define when they escalate, and mark the lead agent-ready.
+
+
+P
+
+14. Execution State / Live Dashboard
+Group Purpose
+Create a clean live view of every active lead so the system, Andre, and the operator can see what is happening without opening every folder one by one.
+
+14.01 Current lead state field
+What it does: Shows each lead’s current pipeline state.
+How we’d do it: Pull the latest state from the master ledger, client ledger, comms file, and plan status.
+
+14.02 Current plan day field
+What it does: Shows which day of the seven-day plan the lead is on.
+How we’d do it: Compare the plan start date against today and mark the lead as Day 1 through Day 7, paused, complete, or replanning.
+
+14.03 Current off-ramp field
+What it does: Shows whether the lead is in follow-up, close, hold, block, or replan.
+How we’d do it: Read the latest comms and Lead Liaison state, then classify the current branch.
+
+14.04 Last inbound field
+What it does: Shows the latest message from the lead.
+How we’d do it: Pull the most recent lead-side communication from 01_comms.md.
+
+14.05 Last outbound field
+What it does: Shows the latest system or Comeketo message.
+How we’d do it: Pull the most recent outbound message from 01_comms.md or the outbound notification log.
+
+14.06 Next planned move field
+What it does: Shows the next expected action.
+How we’d do it: Read the seven-day plan, logic file, and current off-ramp to determine the next move.
+
+14.07 Next Andre action field
+What it does: Shows what Andre personally needs to do next.
+How we’d do it: Pull upcoming Andre-required actions from 09_andre_alerts.md and the seven-day plan.
+
+14.08 Next automation action field
+What it does: Shows what the system is expected to do next.
+How we’d do it: Pull the next scheduled automation, comms check, follow-up, notification, or Lead Liaison wake-up.
+
+14.09 Current risk field
+What it does: Flags whether the lead is at risk of being blown.
+How we’d do it: Mark risk when a whale lead is waiting, Andre missed an alert, a close-ready signal is aging, or the lead has gone silent past tolerance.
+
+14.10 Current value field
+What it does: Shows whale, strong, standard, soft, or unknown.
+How we’d do it: Pull buyer altitude from 04_profile.md and the master ledger.
+
+14.11 Current freshness field
+What it does: Shows whether comms are up to date.
+How we’d do it: Compare last Close activity time, last comms append time, and last agent review time.
+
+14.12 Current blocker field
+What it does: Shows what is preventing progress.
+How we’d do it: Pull missing files, failed steps, waiting-on-Andre states, unanswered lead states, approval holds, or automation errors.
+
+14.13 Live dashboard markdown
+What it does: Creates a readable status board.
+How we’d do it: Generate a markdown dashboard showing each active lead, current state, next action, risk, and blocker.
+
+14.14 Live dashboard data file
+What it does: Creates a structured version for automation.
+How we’d do it: Generate a JSON, CSV, or spreadsheet-style data file that the system can use for filtering, sorting, and automation triggers.
+
+Group 14 Output
+By the end of this group, the system should have:
+
+1. Live dashboard markdown
+A readable board showing what is happening across all active leads.
+
+2. Live dashboard data file
+A structured file that automations and agents can read.
+
+3. Current lead state
+A clear status for each lead.
+
+4. Current plan day
+A clear marker showing where each lead is in the seven-day plan.
+
+5. Current off-ramp
+Follow-up, close, hold, block, or replan state for each lead.
+
+6. Last inbound
+The most recent message or activity from the lead.
+
+7. Last outbound
+The most recent message or action from Comeketo or the system.
+
+8. Next planned move
+The next expected action for each lead.
+
+9. Next Andre action
+The next human action Andre needs to take.
+
+10. Next automation action
+The next system action expected to run.
+
+11. Risk flag
+A clear warning when a lead needs attention.
+
+12. Value flag
+Whale, strong, standard, soft, or unknown classification.
+
+13. Freshness flag
+A marker showing whether comms are current.
+
+14. Blocker flag
+A marker showing what is stuck or missing.
+
+Simple Read
+This group does one job:
+
+Turn the whole lead system into a live dashboard so nobody has to guess what is happening.
+
+No new research here.
+No new profile here.
+No new messages here.
+No new agent setup here.
+
+Just: read the ledgers and live files, summarize each lead’s current state, show the next action, flag risk, and keep the whole system visible.
+
+
+P
+
+15. Close / Follow-Up / Block Outcomes
+Group Purpose
+Give every lead a clean outcome state after the active plan window so the system knows whether to close, continue, pause, block, or move the lead into long-term nurture.
+
+15.01 Close outcome file
+What it does: Records when the lead moves toward agreement, contract, invoice, deposit, tasting, or booked event.
+How we’d do it: Create an outcome note when the lead shows a clear close-ready signal or completes the desired conversion step.
+
+15.02 Follow-up outcome file
+What it does: Records when the lead is active but not closed yet.
+How we’d do it: Mark the lead as still alive when they are replying, asking questions, considering options, or needing another touch.
+
+15.03 Hold outcome file
+What it does: Records when the lead is quiet but not dead.
+How we’d do it: Mark the lead as hold when silence is expected, timing is not urgent, or the plan says to wait before another move.
+
+15.04 Block outcome file
+What it does: Records when the lead is stopped, paused, rejected, or no longer worth active pursuit.
+How we’d do it: Mark the lead as blocked after a hard no, opt-out, bad fit, hostile reply, expired opportunity, or repeated silence past tolerance.
+
+15.05 Long-term nurture file
+What it does: Records leads that should be reactivated later.
+How we’d do it: Move the lead into a future nurture path when they are not ready now but still have possible future value.
+
+15.06 Referral opportunity file
+What it does: Records possible future network or referral opportunities.
+How we’d do it: Capture any family, business, corporate, social, or community connections that could matter after this event.
+
+15.07 Post-close handoff file
+What it does: Records what operations needs after a successful sale.
+How we’d do it: Create a handoff note with event details, buyer expectations, sensitivities, promises made, and next operational steps.
+
+15.08 Outcome ledger update
+What it does: Marks the final or next state in the master ledger.
+How we’d do it: Update the master ledger with close, follow-up, hold, block, nurture, referral, or post-close status.
+
+Group 15 Output
+By the end of this group, each lead should have:
+
+1. Outcome state
+A clear final or next state for the lead.
+
+2. Close outcome
+A record if the lead moved toward booking, agreement, deposit, or tasting.
+
+3. Follow-up outcome
+A record if the lead is still active and needs continued attention.
+
+4. Hold outcome
+A record if the lead is quiet but still worth keeping alive.
+
+5. Block outcome
+A record if the lead should stop receiving active pursuit.
+
+6. Long-term nurture record
+A record if the lead should be revisited later.
+
+7. Referral opportunity record
+A record of any network or future-business potential.
+
+8. Post-close handoff
+A clean operational handoff if the lead converts.
+
+9. Updated client ledger
+Proof that the lead outcome was recorded.
+
+10. Updated master ledger
+Proof that the lead has a clear current state.
+
+Simple Read
+This group does one job:
+
+Decide where the lead goes after the active plan window.
+
+No new research here.
+No new profile here.
+No new seven-day plan here.
+No new agent setup here.
+
+Just: classify the lead’s outcome, write the right outcome file, preserve future value, hand off closed deals, and update the ledgers.
+
+
+P
+
+16. Full Per-Lead Folder Deliverables
+Group Purpose
+Define the complete file package that each lead folder should contain once the Client Intelligence Agent has fully processed that lead.
+
+16.01 lead_url.md
+What it does: Stores the original Close lead URL.
+How we’d do it: Write the lead’s Close URL into a simple seed file so every later step knows where the lead record lives.
+
+16.02 01_comms.md
+What it does: Stores the raw and continuously appended communication history.
+How we’d do it: Create it during raw comms retrieval, then keep appending new Close activity through the comms automation layer.
+
+16.03 02_people_search.md
+What it does: Stores the basic pre-enrichment identity findings.
+How we’d do it: Write the first-pass phone, email, business, location, partner, and public identity clues into this file.
+
+16.04 03_deep_dive.md
+What it does: Stores the organized deep public-footprint research.
+How we’d do it: Write the social, media, business, visual, and public-source findings into a readable research document.
+
+16.05 03_deep_dive_raw/
+What it does: Stores raw search and research outputs.
+How we’d do it: Save raw Sonar, Grok, Perplexity, browser-agent, screenshot, and search-log outputs here before synthesis.
+
+16.06 04_profile.md
+What it does: Stores the synthesized buyer profile.
+How we’d do it: Write the identity read, buyer altitude, decision dynamics, communication style, and strategic value into one profile file.
+
+16.07 05_seven_day_plan.md
+What it does: Stores the custom seven-day action plan.
+How we’d do it: Write the daily moves, off-ramps, Andre actions, autonomous actions, and winning unlocks into this plan file.
+
+16.08 06_logic.md
+What it does: Stores the flexible if/then reaction rules.
+How we’d do it: Write response handling for follow-up, close, hold, block, objections, silence, and replan triggers.
+
+16.09 07_skills_used.md
+What it does: Lists the skills selected for this lead.
+How we’d do it: Record which system skills, move skills, profile calibration skills, and voice skills apply to this lead.
+
+16.10 08_automations.md
+What it does: Lists the automations active for this lead.
+How we’d do it: Record comms append automation, outbound notifications, Andre alerts, dashboard updates, and Lead Liaison triggers.
+
+16.11 09_andre_alerts.md
+What it does: Stores Andre action alerts and alert history.
+How we’d do it: Log every alert sent to Andre, including acknowledged, snoozed, done, blocked, or escalated states.
+
+16.12 10_andre_feedback.md
+What it does: Stores Andre’s approvals, corrections, reactions, and overrides.
+How we’d do it: Append Andre’s Slack reactions, comments, corrections, and manual instructions into this file.
+
+16.13 AGENTS.md
+What it does: Stores the per-client Lead Liaison Agent configuration.
+How we’d do it: Write the agent mission, sources of truth, allowed actions, forbidden actions, triggers, sleep states, and escalation rules.
+
+16.14 CLAUDE.md
+What it does: Stores the per-client Claude/Cowork operating instructions.
+How we’d do it: Write the instructions Claude/Cowork should follow when reading the folder and operating on the lead.
+
+16.15 source_index.md
+What it does: Lists every source used for the lead.
+How we’d do it: Add every Close URL, public source, search result, profile page, article, registry, screenshot source, and capture timestamp.
+
+16.16 asset_index.md
+What it does: Lists every image, screenshot, video, and media artifact.
+How we’d do it: Record each asset name, where it came from, what it shows, and why it matters.
+
+16.17 run_log.md
+What it does: Stores the operational log for this lead.
+How we’d do it: Record every major run, error, retry, success, timestamp, and automation event.
+
+16.18 client_ledger.md
+What it does: Stores the per-lead checklist and status tracker.
+How we’d do it: Track every stage for this specific lead: folders, comms, people search, deep dive, profile, plan, logic, skills, automations, alerts, and agent readiness.
+
+Group 16 Output
+By the end of this group, each lead folder should have:
+
+1. Close URL seed file
+The lead’s original Close link.
+
+2. Living comms file
+The raw and continuously updated communication history.
+
+3. People-search file
+The first-pass identity enrichment.
+
+4. Deep-dive file
+The organized public research findings.
+
+5. Raw deep-dive folder
+The unsynthesized research outputs and captures.
+
+6. Profile file
+The synthesized buyer briefing.
+
+7. Seven-day plan file
+The tactical plan for the active sales window.
+
+8. Logic file
+The flexible reaction rules.
+
+9. Skills-used file
+The selected skills for this lead.
+
+10. Automations file
+The active automations tied to this lead.
+
+11. Andre alerts file
+The history of human-action reminders.
+
+12. Andre feedback file
+Andre’s corrections, approvals, and overrides.
+
+13. AGENTS.md
+The lead-specific agent brain.
+
+14. CLAUDE.md
+The lead-specific Claude/Cowork operating instructions.
+
+15. Source index
+The complete source trail.
+
+16. Asset index
+The complete media/artifact trail.
+
+17. Run log
+The operational history.
+
+18. Client ledger
+The per-lead checklist and state tracker.
+
+Simple Read
+This group does one job:
+
+Define the complete package every lead folder needs so the system can understand, run, audit, and update that lead.
+
+No new research here.
+No new messages here.
+No new automations here.
+No new plan here.
+
+Just: make sure each lead folder contains the full set of files that let the Client Intelligence Agent operate cleanly and traceably.
+
+
+P
+
+17. Master Ledger Checklist Columns
+Group Purpose
+Define the master tracking columns that show exactly where every lead stands across the entire Client Intelligence Agent pipeline.
+
+17.01 Smart view found
+What it does: Confirms the source view exists.
+How we’d do it: Mark complete once the correct Close smart view has been loaded and verified.
+
+17.02 Lead URL extracted
+What it does: Confirms the Close lead link exists.
+How we’d do it: Mark complete once the lead’s individual Close URL has been captured.
+
+17.03 Lead ID extracted
+What it does: Confirms the unique ID exists.
+How we’d do it: Mark complete once the lead_... identifier has been parsed from the URL.
+
+17.04 Lead folder created
+What it does: Confirms the folder exists.
+How we’d do it: Mark complete once the client folder has been created or confirmed.
+
+17.05 Lead URL file created
+What it does: Confirms the seed URL file exists.
+How we’d do it: Mark complete once lead_url.md exists inside the lead folder.
+
+17.06 Raw comms pulled
+What it does: Confirms comms were retrieved.
+How we’d do it: Mark complete once Close communication history has been successfully pulled.
+
+17.07 Raw comms markdown written
+What it does: Confirms the comms file exists.
+How we’d do it: Mark complete once 01_comms.md has been created.
+
+17.08 People search completed
+What it does: Confirms pre-enrichment was run.
+How we’d do it: Mark complete once the first-pass people-search sweep is finished.
+
+17.09 Phone searched
+What it does: Confirms phone search was completed.
+How we’d do it: Mark complete once phone fields have been searched and marked found, unknown, or not found.
+
+17.10 Email searched
+What it does: Confirms email search was completed.
+How we’d do it: Mark complete once email fields have been searched and marked found, unknown, or not found.
+
+17.11 Business searched
+What it does: Confirms business context was searched.
+How we’d do it: Mark complete once employer, company, or business-owner context has been checked.
+
+17.12 Location searched
+What it does: Confirms location context was searched.
+How we’d do it: Mark complete once city, business location, event location, or public location signals have been checked.
+
+17.13 Family/partner searched
+What it does: Confirms pair/family context was searched.
+How we’d do it: Mark complete once spouse, partner, household, parent, or close-family clues have been checked.
+
+17.14 Deep dive completed
+What it does: Confirms full research sweep was run.
+How we’d do it: Mark complete once the deeper public-footprint research has been finished.
+
+17.15 Social media searched
+What it does: Confirms social platforms were searched.
+How we’d do it: Mark complete once LinkedIn, Facebook, Instagram, TikTok, X/Twitter, YouTube, and other relevant platforms have been checked.
+
+17.16 Public media searched
+What it does: Confirms podcasts, YouTube, news, and appearances were searched.
+How we’d do it: Mark complete once public interviews, press, articles, podcasts, video appearances, and public writing have been checked.
+
+17.17 Business footprint searched
+What it does: Confirms business and professional public sources were searched.
+How we’d do it: Mark complete once company pages, BBB, filings, licensing, reviews, and registries have been checked.
+
+17.18 Assets captured
+What it does: Confirms relevant public visual/media assets were stored.
+How we’d do it: Mark complete once screenshots, images, profile photos, video links, or media references have been captured or marked not found.
+
+17.19 Profile written
+What it does: Confirms the profile exists.
+How we’d do it: Mark complete once 04_profile.md has been written.
+
+17.20 Seven-day plan written
+What it does: Confirms the plan exists.
+How we’d do it: Mark complete once 05_seven_day_plan.md has been written.
+
+17.21 Logic file written
+What it does: Confirms if/then logic exists.
+How we’d do it: Mark complete once 06_logic.md has been written.
+
+17.22 Skills selected
+What it does: Confirms execution skills were assigned.
+How we’d do it: Mark complete once the correct system, move, profile, and voice skills have been selected for the lead.
+
+17.23 Automations configured
+What it does: Confirms live automations were assigned.
+How we’d do it: Mark complete once comms updates, notifications, alerts, and dashboard updates are tied to the lead.
+
+17.24 Comms append active
+What it does: Confirms future comms updates will be appended.
+How we’d do it: Mark complete once the lead is being watched for new Close activity.
+
+17.25 Slack notifications active
+What it does: Confirms Andre notification rules are active.
+How we’d do it: Mark complete once outbound action notifications are turned on for the lead.
+
+17.26 Andre alerts active
+What it does: Confirms timely action alerts are active.
+How we’d do it: Mark complete once Andre-required actions are scheduled and monitored.
+
+17.27 AGENTS.md created
+What it does: Confirms the Lead Liaison Agent file exists.
+How we’d do it: Mark complete once AGENTS.md has been created inside the lead folder.
+
+17.28 CLAUDE.md created
+What it does: Confirms the Claude/Cowork instruction file exists.
+How we’d do it: Mark complete once CLAUDE.md has been created inside the lead folder.
+
+17.29 Agent ready
+What it does: Confirms the lead can be run by the system.
+How we’d do it: Mark complete once the required files, skills, automations, and agent instructions are in place.
+
+17.30 Current live state
+What it does: Shows active, hold, close, block, nurture, or complete.
+How we’d do it: Update this continuously from comms, plan status, outcome files, and Lead Liaison decisions.
+
+Group 17 Output
+By the end of this group, the master ledger should have:
+
+1. Intake status columns
+Smart view found, lead URL extracted, and lead ID extracted.
+
+2. Folder setup columns
+Lead folder created and lead URL file created.
+
+3. Comms columns
+Raw comms pulled and raw comms markdown written.
+
+4. People-search columns
+People search completed, phone searched, email searched, business searched, location searched, and family/partner searched.
+
+5. Deep-dive columns
+Deep dive completed, social media searched, public media searched, business footprint searched, and assets captured.
+
+6. Profile and plan columns
+Profile written, seven-day plan written, and logic file written.
+
+7. Skills and automation columns
+Skills selected, automations configured, comms append active, Slack notifications active, and Andre alerts active.
+
+8. Agent readiness columns
+AGENTS.md created, CLAUDE.md created, and agent ready.
+
+9. Live state column
+The current real-time state of the lead.
+
+Simple Read
+This group does one job:
+
+Give the whole system one master checklist so every lead’s progress is visible at a glance.
+
+No new research here.
+No new messaging here.
+No new folder creation here.
+No new agent behavior here.
+
+Just: track every stage, every key checkbox, every readiness marker, and every lead’s current live state.
+
+
+
+

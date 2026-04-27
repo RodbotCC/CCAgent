@@ -1,0 +1,291 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CIA Runtime</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
+
+:root {
+  --bg: #EBE8E0;
+  --bg-2: #f5f3ec;
+  --bg-3: #faf8f1;
+  --bg-4: #ffffff;
+  --ink: #1f1d1a;
+  --ink-2: #4a4640;
+  --ink-3: #8a8478;
+  --line: #d8d3c6;
+  --line-2: #e3ddd0;
+  --sage: #d6e3cc;
+  --sage-ink: #3d5a2c;
+  --amber: #ead6b3;
+  --amber-ink: #7a5a1e;
+  --coral: #f0c9c2;
+  --coral-ink: #8a3a2a;
+  --slate: #cdd5db;
+  --slate-ink: #2f4654;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { background: var(--bg); }
+
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  padding: 0 0 80px;
+}
+
+a { color: var(--ink); text-decoration: underline; text-underline-offset: 3px; text-decoration-color: var(--ink-3); text-decoration-thickness: 1px; }
+a:hover { text-decoration-color: var(--ink); }
+
+.tabular { font-family: 'JetBrains Mono', ui-monospace, monospace; font-feature-settings: "tnum"; }
+
+.page { max-width: 760px; margin: 0 auto; padding: 0 20px; }
+.page.wide { max-width: 1080px; }
+
+/* ================================================================ NAV BAR */
+nav.topnav {
+  border-bottom: 1px solid var(--line);
+  background: var(--bg-2);
+  padding: 14px 28px;
+  position: sticky; top: 0; z-index: 10;
+}
+nav.topnav .inner {
+  max-width: 1080px; margin: 0 auto;
+  display: flex; gap: 22px; align-items: center;
+}
+nav.topnav .brand {
+  font-family: 'Fraunces', serif; font-style: italic;
+  font-size: 16px; color: var(--ink); letter-spacing: -0.005em;
+  margin-right: auto;
+}
+nav.topnav a {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; letter-spacing: 0.10em; text-transform: uppercase;
+  color: var(--ink-2); text-decoration: none; padding-bottom: 2px; border-bottom: 1px solid transparent;
+}
+nav.topnav a:hover { color: var(--ink); border-bottom-color: var(--ink); }
+nav.topnav a.active { color: var(--ink); border-bottom-color: var(--ink); }
+
+/* ================================================================ MASTHEAD */
+.masthead {
+  display: flex; justify-content: space-between; align-items: baseline;
+  padding: 28px 0 18px;
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 32px;
+}
+.masthead .eyebrow {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; letter-spacing: 0.14em; color: var(--ink-3); text-transform: uppercase;
+}
+.masthead .ts { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--ink-3); }
+
+/* ================================================================ SECTION */
+section { background: var(--bg-2); border: 1px solid var(--line); margin-bottom: 28px; }
+section.bare { background: transparent; border: 0; }
+.sec-head {
+  display: flex; justify-content: space-between; align-items: baseline;
+  padding: 18px 28px 14px; border-bottom: 1px solid var(--line-2);
+}
+.sec-eyebrow {
+  font-family: 'JetBrains Mono', monospace; font-size: 10px;
+  letter-spacing: 0.16em; color: var(--ink-3); text-transform: uppercase;
+}
+.sec-title { font-family: 'Fraunces', serif; font-size: 22px; font-weight: 500; letter-spacing: -0.01em; }
+.sec-meta { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--ink-3); }
+.sec-body { padding: 22px 28px 26px; }
+
+/* ================================================================ COMMON BITS */
+.lede {
+  font-family: 'Fraunces', serif; font-size: 17px; line-height: 1.5; color: var(--ink);
+  max-width: 60ch; margin-bottom: 22px;
+}
+.muted { color: var(--ink-3); }
+.divider { border-top: 1px dashed var(--line); margin: 18px 0; }
+
+.badge {
+  display: inline-block; font-family: 'JetBrains Mono', monospace; font-size: 10px;
+  letter-spacing: 0.10em; text-transform: uppercase; padding: 3px 8px;
+  background: var(--amber); color: var(--amber-ink); border-radius: 2px;
+}
+.badge.sage { background: var(--sage); color: var(--sage-ink); }
+.badge.coral { background: var(--coral); color: var(--coral-ink); }
+.badge.slate { background: var(--slate); color: var(--slate-ink); }
+.badge.outline { background: transparent; color: var(--ink-3); border: 1px solid var(--line); }
+
+.stat-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 0;
+  border: 1px solid var(--line); border-bottom-color: var(--line-2);
+}
+.stat-grid .cell {
+  padding: 14px 16px; border-right: 1px solid var(--line-2); border-bottom: 1px solid var(--line-2);
+  background: var(--bg-3);
+}
+.stat-grid .cell:nth-child(4n) { border-right: 0; }
+.stat-grid .cell .k { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.10em; color: var(--ink-3); text-transform: uppercase; margin-bottom: 4px; }
+.stat-grid .cell .v { font-family: 'Fraunces', serif; font-size: 24px; line-height: 1.1; color: var(--ink); }
+.stat-grid .cell .v.small { font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 500; }
+
+footer.colophon {
+  text-align: center; font-family: 'JetBrains Mono', monospace; font-size: 10px;
+  color: var(--ink-3); letter-spacing: 0.10em; margin-top: 32px; text-transform: uppercase;
+}
+</style>
+</head>
+<body>
+
+<nav class="topnav">
+  <div class="inner">
+    <a href="index.html" class="brand">CIA Runtime</a>
+    <a href="today.html">Today</a><a href="dashboard.html">Dashboard</a><a href="leads/hugo.html">Leads</a><a href="voice/andre-at-ceiling.html">Voices</a><a href="../wiring/00_overview.md">Wiring</a>
+  </div>
+</nav>
+
+<div class="page">
+<style>
+.hero {
+  padding: 60px 48px 50px; margin-bottom: 32px;
+  background: var(--bg-2); border: 1px solid var(--line);
+}
+.hero .eyebrow {
+  font-family: 'JetBrains Mono', monospace; font-size: 12px;
+  letter-spacing: 0.18em; color: var(--ink-3); text-transform: uppercase; margin-bottom: 16px;
+}
+.hero h1 {
+  font-family: 'Fraunces', serif; font-size: 56px; line-height: 1.02;
+  letter-spacing: -0.025em; font-weight: 500; margin-bottom: 16px;
+}
+.hero h1 .italic { font-style: italic; color: var(--ink-2); font-weight: 400; }
+.hero .stand {
+  font-family: 'Fraunces', serif; font-size: 19px; color: var(--ink-2);
+  max-width: 60ch; line-height: 1.5; margin-bottom: 22px;
+}
+.hero .stat-row {
+  display: flex; gap: 28px; flex-wrap: wrap;
+  font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--ink-3);
+  letter-spacing: 0.04em; padding-top: 18px; border-top: 1px solid var(--line);
+}
+.hero .stat-row .stat strong { color: var(--ink); font-weight: 500; }
+
+.tile-grid {
+  display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-bottom: 32px;
+}
+.tile {
+  background: var(--bg-2); border: 1px solid var(--line);
+  padding: 26px 28px 24px; display: flex; flex-direction: column; min-height: 180px;
+  text-decoration: none; color: var(--ink);
+  transition: background 0.15s, border-color 0.15s;
+}
+.tile:hover { background: var(--bg-3); border-color: var(--ink-3); }
+.tile .eyebrow {
+  font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.16em;
+  color: var(--ink-3); text-transform: uppercase; margin-bottom: 10px;
+}
+.tile h3 {
+  font-family: 'Fraunces', serif; font-size: 24px; font-weight: 500; margin-bottom: 10px;
+  letter-spacing: -0.01em;
+}
+.tile p { font-size: 13.5px; color: var(--ink-2); margin-bottom: 14px; line-height: 1.5; }
+.tile .arrow { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.10em; color: var(--ink-3); text-transform: uppercase; margin-top: auto; }
+.tile.primary { border-left: 4px solid var(--sage-ink); }
+.tile.primary .arrow { color: var(--sage-ink); }
+
+.section-block { background: var(--bg-2); border: 1px solid var(--line); margin-bottom: 28px; }
+.section-block .head { padding: 16px 28px 12px; border-bottom: 1px solid var(--line-2); }
+.section-block .head .eyebrow { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.16em; color: var(--ink-3); text-transform: uppercase; }
+.section-block .head h3 { font-family: 'Fraunces', serif; font-size: 22px; font-weight: 500; }
+.section-block .body { padding: 18px 28px 22px; }
+
+.lead-link {
+  display: flex; padding: 10px 0; border-bottom: 1px solid var(--line-2); align-items: baseline; gap: 18px;
+  text-decoration: none; color: var(--ink);
+}
+.lead-link:last-child { border-bottom: 0; }
+.lead-link:hover { background: var(--bg-3); }
+.lead-link .name { font-family: 'Fraunces', serif; font-size: 16px; font-weight: 500; flex: 1; }
+.lead-link .meta { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--ink-3); }
+.lead-link .arrow { color: var(--ink-3); font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.10em; text-transform: uppercase; }
+</style>
+
+<section class="hero">
+  <div class="eyebrow">CIA Runtime · file-tree orchestrator</div>
+  <h1>The system that runs <span class="italic">with</span> Andre, not for him.</h1>
+  <div class="stand">Per-lead intelligence becomes a daily prompt with a pre-written draft. The plan stays specialized; the automation stays cheap. Open Today every morning. Open the Lead Box when you need depth.</div>
+  <div class="stat-row">
+    <div class="stat"><strong>28</strong> total leads</div>
+    <div class="stat"><strong>2</strong> active</div>
+    <div class="stat"><strong>26</strong> intake enriched</div>
+    <div class="stat"><strong>0</strong> intake raw</div>
+    <div class="stat">refreshed <strong>2026-04-25T21:30:00Z</strong></div>
+  </div>
+</section>
+
+
+<div class="tile-grid">
+  <a class="tile primary" href="today.html">
+    <div class="eyebrow">Today</div>
+    <h3>The morning open</h3>
+    <p>Andre's first stop. Today's plan day, the pre-written draft, today's alerts. One page, one decision per active lead.</p>
+    <div class="arrow">Open Today →</div>
+  </a>
+  <a class="tile" href="dashboard.html">
+    <div class="eyebrow">Dashboard</div>
+    <h3>Pipeline overview</h3>
+    <p>Every lead, rolled up. Active, enriched intake, raw intake. Andre's queue. System queue. Pipeline health.</p>
+    <div class="arrow">Open Dashboard →</div>
+  </a>
+  <a class="tile" href="leads/hugo.html">
+    <div class="eyebrow">Lead Box · whale</div>
+    <h3>Hugo Casillas</h3>
+    <p>SaaS Account Executive at ZoomInfo. Reads templates for breakfast. Day 1 = the Highland-Orchard / walkthrough-video / weekday-call email. Quote expires May 1.</p>
+    <div class="arrow">Open Lead Box →</div>
+  </a>
+  <a class="tile" href="leads/brenda-steve.html">
+    <div class="eyebrow">Lead Box · whale</div>
+    <h3>Brenda &amp; Steve Catalano</h3>
+    <p>40-year franchise empire. Pair lead — Brenda the comms hub, Steve the validator. Day 1 = STOP the tasting-fee chase, waive the fee, frame operator-to-operator. Tasting May 3.</p>
+    <div class="arrow">Open Lead Box →</div>
+  </a>
+  <a class="tile" href="voice/andre-at-ceiling.html">
+    <div class="eyebrow">Voice · Tier 3</div>
+    <h3>Andre at ceiling</h3>
+    <p>Voice profile — the calibration the agent applies when it composes a move. Pulled from Slack signal, sample-grounded.</p>
+    <div class="arrow">Open Voice →</div>
+  </a>
+</div>
+
+
+<section class="section-block">
+  <div class="head">
+    <div class="eyebrow">Active</div>
+    <h3>Running 7-day plan</h3>
+  </div>
+  <div class="body"><a class="lead-link" href="leads/brenda-steve.html"><div class="name">Brenda &amp; Steve</div><div class="meta">🐋 whale · Day 1 · follow-up</div><div class="arrow">Lead Box →</div></a><a class="lead-link" href="leads/hugo.html"><div class="name">Hugo Casillas</div><div class="meta">🐋 whale · Day 1 · follow-up</div><div class="arrow">Lead Box →</div></a></div>
+</section>
+
+
+<section class="section-block">
+  <div class="head">
+    <div class="eyebrow">Docs · the architecture</div>
+    <h3>How this is wired</h3>
+  </div>
+  <div class="body">
+    <a class="lead-link" href="../wiring/00_overview.md"><div class="name">00 · Overview</div><div class="meta">file tree → orchestrator → page</div><div class="arrow">Open ↗</div></a>
+    <a class="lead-link" href="../wiring/lead_box.md"><div class="name">Lead Box wiring</div><div class="meta">every widget · file in → render → action out</div><div class="arrow">Open ↗</div></a>
+    <a class="lead-link" href="../wiring/dashboard.md"><div class="name">Dashboard wiring</div><div class="meta">AUTO.10 + AUTO.11 pipeline</div><div class="arrow">Open ↗</div></a>
+    <a class="lead-link" href="../wiring/today.md"><div class="name">Today wiring</div><div class="meta">AUTO.06 surface — the morning open</div><div class="arrow">Open ↗</div></a>
+    <a class="lead-link" href="../wiring/automations.md"><div class="name">Automations index</div><div class="meta">AUTO.01–AUTO.11 status + plug-points</div><div class="arrow">Open ↗</div></a>
+    <a class="lead-link" href="../README.md"><div class="name">README</div><div class="meta">what this is, how to run it</div><div class="arrow">Open ↗</div></a>
+    <a class="lead-link" href="../PLAN.md"><div class="name">PLAN</div><div class="meta">build order across waves</div><div class="arrow">Open ↗</div></a>
+  </div>
+</section>
+
+<footer class='colophon'>CIA Runtime · Index · Hugo lab build</footer>
+</div>
+</body>
+</html>

@@ -1,0 +1,336 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Today · CIA Runtime</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
+
+:root {
+  --bg: #EBE8E0;
+  --bg-2: #f5f3ec;
+  --bg-3: #faf8f1;
+  --bg-4: #ffffff;
+  --ink: #1f1d1a;
+  --ink-2: #4a4640;
+  --ink-3: #8a8478;
+  --line: #d8d3c6;
+  --line-2: #e3ddd0;
+  --sage: #d6e3cc;
+  --sage-ink: #3d5a2c;
+  --amber: #ead6b3;
+  --amber-ink: #7a5a1e;
+  --coral: #f0c9c2;
+  --coral-ink: #8a3a2a;
+  --slate: #cdd5db;
+  --slate-ink: #2f4654;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { background: var(--bg); }
+
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  padding: 0 0 80px;
+}
+
+a { color: var(--ink); text-decoration: underline; text-underline-offset: 3px; text-decoration-color: var(--ink-3); text-decoration-thickness: 1px; }
+a:hover { text-decoration-color: var(--ink); }
+
+.tabular { font-family: 'JetBrains Mono', ui-monospace, monospace; font-feature-settings: "tnum"; }
+
+.page { max-width: 760px; margin: 0 auto; padding: 0 20px; }
+.page.wide { max-width: 1080px; }
+
+/* ================================================================ NAV BAR */
+nav.topnav {
+  border-bottom: 1px solid var(--line);
+  background: var(--bg-2);
+  padding: 14px 28px;
+  position: sticky; top: 0; z-index: 10;
+}
+nav.topnav .inner {
+  max-width: 1080px; margin: 0 auto;
+  display: flex; gap: 22px; align-items: center;
+}
+nav.topnav .brand {
+  font-family: 'Fraunces', serif; font-style: italic;
+  font-size: 16px; color: var(--ink); letter-spacing: -0.005em;
+  margin-right: auto;
+}
+nav.topnav a {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; letter-spacing: 0.10em; text-transform: uppercase;
+  color: var(--ink-2); text-decoration: none; padding-bottom: 2px; border-bottom: 1px solid transparent;
+}
+nav.topnav a:hover { color: var(--ink); border-bottom-color: var(--ink); }
+nav.topnav a.active { color: var(--ink); border-bottom-color: var(--ink); }
+
+/* ================================================================ MASTHEAD */
+.masthead {
+  display: flex; justify-content: space-between; align-items: baseline;
+  padding: 28px 0 18px;
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 32px;
+}
+.masthead .eyebrow {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; letter-spacing: 0.14em; color: var(--ink-3); text-transform: uppercase;
+}
+.masthead .ts { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--ink-3); }
+
+/* ================================================================ SECTION */
+section { background: var(--bg-2); border: 1px solid var(--line); margin-bottom: 28px; }
+section.bare { background: transparent; border: 0; }
+.sec-head {
+  display: flex; justify-content: space-between; align-items: baseline;
+  padding: 18px 28px 14px; border-bottom: 1px solid var(--line-2);
+}
+.sec-eyebrow {
+  font-family: 'JetBrains Mono', monospace; font-size: 10px;
+  letter-spacing: 0.16em; color: var(--ink-3); text-transform: uppercase;
+}
+.sec-title { font-family: 'Fraunces', serif; font-size: 22px; font-weight: 500; letter-spacing: -0.01em; }
+.sec-meta { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--ink-3); }
+.sec-body { padding: 22px 28px 26px; }
+
+/* ================================================================ COMMON BITS */
+.lede {
+  font-family: 'Fraunces', serif; font-size: 17px; line-height: 1.5; color: var(--ink);
+  max-width: 60ch; margin-bottom: 22px;
+}
+.muted { color: var(--ink-3); }
+.divider { border-top: 1px dashed var(--line); margin: 18px 0; }
+
+.badge {
+  display: inline-block; font-family: 'JetBrains Mono', monospace; font-size: 10px;
+  letter-spacing: 0.10em; text-transform: uppercase; padding: 3px 8px;
+  background: var(--amber); color: var(--amber-ink); border-radius: 2px;
+}
+.badge.sage { background: var(--sage); color: var(--sage-ink); }
+.badge.coral { background: var(--coral); color: var(--coral-ink); }
+.badge.slate { background: var(--slate); color: var(--slate-ink); }
+.badge.outline { background: transparent; color: var(--ink-3); border: 1px solid var(--line); }
+
+.stat-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 0;
+  border: 1px solid var(--line); border-bottom-color: var(--line-2);
+}
+.stat-grid .cell {
+  padding: 14px 16px; border-right: 1px solid var(--line-2); border-bottom: 1px solid var(--line-2);
+  background: var(--bg-3);
+}
+.stat-grid .cell:nth-child(4n) { border-right: 0; }
+.stat-grid .cell .k { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.10em; color: var(--ink-3); text-transform: uppercase; margin-bottom: 4px; }
+.stat-grid .cell .v { font-family: 'Fraunces', serif; font-size: 24px; line-height: 1.1; color: var(--ink); }
+.stat-grid .cell .v.small { font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 500; }
+
+footer.colophon {
+  text-align: center; font-family: 'JetBrains Mono', monospace; font-size: 10px;
+  color: var(--ink-3); letter-spacing: 0.10em; margin-top: 32px; text-transform: uppercase;
+}
+</style>
+</head>
+<body>
+
+<nav class="topnav">
+  <div class="inner">
+    <a href="index.html" class="brand">CIA Runtime</a>
+    <a href="today.html" class="active">Today</a><a href="dashboard.html">Dashboard</a><a href="leads/hugo.html">Leads</a><a href="voice/andre-at-ceiling.html">Voices</a><a href="../wiring/00_overview.md">Wiring</a>
+  </div>
+</nav>
+
+<div class="page">
+<style>
+.hero {
+  background: var(--bg-3); border: 1px solid var(--line);
+  padding: 48px 48px 40px; margin-bottom: 28px;
+  border-left: 4px solid var(--sage-ink);
+}
+.hero .eyebrow {
+  font-family: 'JetBrains Mono', monospace; font-size: 11px;
+  letter-spacing: 0.16em; color: var(--ink-3); text-transform: uppercase;
+  margin-bottom: 14px;
+}
+.hero h1 {
+  font-family: 'Fraunces', serif; font-size: 48px; line-height: 1.05;
+  letter-spacing: -0.02em; font-weight: 500; margin-bottom: 14px;
+}
+.hero .stand {
+  font-family: 'Fraunces', serif; font-style: italic; font-size: 18px;
+  color: var(--ink-2); max-width: 60ch; line-height: 1.45;
+}
+
+.lead-card {
+  background: var(--bg-2); border: 1px solid var(--line); margin-bottom: 28px;
+}
+.lead-card .lead-head {
+  padding: 20px 28px; border-bottom: 1px solid var(--line-2);
+  display: flex; align-items: baseline; justify-content: space-between;
+}
+.lead-card .lead-head .name {
+  font-family: 'Fraunces', serif; font-size: 26px; font-weight: 500;
+}
+.lead-card .lead-head .name .alt { color: var(--ink-2); font-style: italic; font-size: 0.7em; margin-left: 10px; }
+.lead-card .lead-head .meta { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--ink-3); }
+.lead-card .lede-band {
+  background: var(--bg-3); padding: 14px 28px; border-bottom: 1px solid var(--line-2);
+  font-size: 13.5px; color: var(--ink-2);
+}
+.lead-card .draft-block {
+  padding: 24px 28px;
+}
+.lead-card .draft {
+  background: #fff; border: 1px solid var(--line-2);
+  padding: 26px 30px; border-radius: 2px;
+}
+.lead-card .draft .channel-line {
+  font-family: 'JetBrains Mono', monospace; font-size: 11px;
+  letter-spacing: 0.10em; color: var(--ink-3); text-transform: uppercase; margin-bottom: 14px;
+}
+.lead-card .draft .subj {
+  font-family: 'Fraunces', serif; font-size: 18px; font-weight: 500;
+  border-bottom: 1px solid var(--line-2); padding-bottom: 12px; margin-bottom: 16px;
+}
+.lead-card .draft p { font-size: 14.5px; color: var(--ink); margin-bottom: 12px; max-width: 60ch; }
+.lead-card .draft .signoff { color: var(--ink-2); margin-top: 14px; }
+.lead-card .actions {
+  display: flex; gap: 10px; margin-top: 18px;
+}
+.lead-card .actions button {
+  font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.10em;
+  text-transform: uppercase; padding: 10px 18px; cursor: not-allowed;
+  border: 1px solid var(--line); background: var(--bg-3); color: var(--ink-3);
+}
+.lead-card .actions button.primary { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.lead-card .actions button.primary:hover { background: var(--ink-2); }
+.lead-card .actions .hint { font-size: 11px; color: var(--ink-3); margin-left: auto; align-self: center; font-family: 'JetBrains Mono', monospace; letter-spacing: 0.06em; text-transform: uppercase; }
+
+.alerts-band {
+  padding: 18px 28px; background: var(--bg-3); border-top: 1px solid var(--line-2);
+}
+.alerts-band .sec-eyebrow { margin-bottom: 8px; }
+.alerts-band ul { list-style: none; padding: 0; }
+.alerts-band li { display: grid; grid-template-columns: 110px 1fr 90px; gap: 12px; padding: 8px 0; border-bottom: 1px solid var(--line-2); font-size: 13px; align-items: baseline; }
+.alerts-band li:last-child { border-bottom: 0; }
+.alerts-band .when { font-family: 'JetBrains Mono', monospace; font-size: 10.5px; color: var(--ink-3); text-transform: uppercase; letter-spacing: 0.06em; }
+
+.passive-card {
+  padding: 36px 48px; text-align: center;
+  background: var(--bg-3); border: 1px dashed var(--line);
+  margin-bottom: 28px;
+}
+.passive-card .label {
+  font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.16em; color: var(--ink-3); text-transform: uppercase; margin-bottom: 12px;
+}
+.passive-card .msg {
+  font-family: 'Fraunces', serif; font-style: italic; font-size: 22px; color: var(--ink-2);
+}
+</style>
+
+<section class="hero">
+  <div class="eyebrow">Today · Friday · April 25, 2026</div>
+  <h1>Today's first 2 moves</h1>
+  <div class="stand">Two whale leads, two different shapes. Hugo: a single Day-1 email to a SaaS AE who reads templates for breakfast. Brenda &amp; Steve: an SMS-then-email reframe that drops the tasting-fee chase and treats a 40-year franchise operator like the peer he is. Each draft is calibrated to who they actually are.</div>
+</section>
+
+
+<div class="lead-card">
+  <div class="lead-head">
+    <div class="name">Hugo Casillas <span class="alt">🐋 whale</span></div>
+    <div class="meta">Day 1 · EMAIL · <a href="leads/hugo.html">open Lead Box →</a></div>
+  </div>
+  
+<div class="lede-band">Plan paused all auto-cadence on this lead. Hugo Casillas is manual-only — your hand on every send.</div>
+<div class="draft-block">
+  
+<div class="draft">
+  
+  <div class="channel-line">📧 Email · Andre → Hugo Casillas</div>
+  <div class="subj">Following up — and a different approach for your tasting</div>
+  <p>Hugo,</p>
+<p>I want to step back for a second. You came to us through Highland Orchard's recommended list — they sent you to us because they know how we run a wedding day. That's not a marketing line, it's the actual reason you're in my inbox.</p>
+<p>I also know you said you'd circle back after getting competing quotes. I respect that. You're doing exactly what I'd do.</p>
+<p>Two things I want to put in front of you while you evaluate:</p>
+<p>The Sunday tasting doesn't work for you, and I should have offered an alternative earlier. I'd like to send you a short walkthrough video of the deluxe buffet setup — the picanha, the bacon-wrapped chicken, and the cauliflower steak — so you and your fiancée can watch it together on your time. No logistics, no Sunday.</p>
+<p>Then, when you're ready, I'd like 30 minutes with both of you on a weekday evening or early morning to walk through the vegetarian and gluten-free side specifically. Your fiancée hasn't been part of the conversation yet, and the dietary execution is where most caterers fall short. I want her to hear directly how we'd handle it.</p>
+<p>The $11,595 number is good for 14 days from when I sent it, and the price-lock is good for two years once you're committed. No urgency on my end — but if the competing quotes come back wildly different, I want to make sure you're comparing apples to apples. Happy to walk through any of them with you.</p>
+  <p class="signoff">Andre</p>
+</div>
+
+  <div class="actions">
+    <button class="primary">Send via Close</button>
+    <button>Edit & Send</button>
+    <button>Skip today</button>
+    <span class="hint">Buttons inert · AUTO.06 delivery is W3.2</span>
+  </div>
+</div>
+
+  
+<div class="alerts-band">
+  <div class="sec-eyebrow">Today's alerts</div>
+  <ul><li><div class="when">Day 0 — System actions BEFORE Day 1</div><div>🚨 Pause auto-cadence on this lead.</div><div><span class="badge coral"></span></div></li><li><div class="when">Day 0 — System actions BEFORE Day 1</div><div>🚨 Stop Rhonna drip emails.</div><div><span class="badge coral"></span></div></li><li><div class="when">Day 0 — System actions BEFORE Day 1</div><div>🚨 Confirm Andre's voice profile loaded for outbound composition.</div><div><span class="badge coral"></span></div></li><li><div class="when">Day 1 — Friday — early afternoon</div><div>"Send the Day 1 email to Hugo. Here's the draft. Highland Orchard reference, walkthrough-video offer, weekday call ask. Review and ship."</div><div><span class="badge coral">Critical alert</span></div></li><li><div class="when">Day 1 — Friday — early afternoon</div><div>Escalate at +30min if no ack.</div><div><span class="badge amber"></span></div></li></ul>
+</div>
+
+</div>
+
+<div class="lead-card">
+  <div class="lead-head">
+    <div class="name">Brenda &amp; Steve Catalano <span class="alt">🐋 whale</span></div>
+    <div class="meta">Day 1 · SMS + EMAIL · <a href="leads/brenda-steve.html">open Lead Box →</a></div>
+  </div>
+  
+<div class="lede-band">Plan paused all auto-cadence on this lead. Brenda is manual-only — your hand on every send.</div>
+<div class="draft-block">
+  
+<div class="draft">
+  <div class="channel-line" style="margin-bottom:6px">First send · Day 1 — Today (Friday) — SMS to Brenda — early afternoon</div>
+  <div class="channel-line">📱 SMS · Andre → Brenda · 978-885-9800</div>
+  
+  <p>hey brenda — wanted to reach out personally. dropping the tasting fee for you and Steve. just bring whoever you want and we'll take care of it. May 3 at 5:30, 199 Main St Fitchburg. you and Steve plus whoever's helping you plan — up to 10 people, no charge.</p>
+<p>can you send me the venue name when you get a chance? want to make sure I have everything lined up before we sit down.</p>
+  
+</div>
+
+<div class="draft">
+  <div class="channel-line" style="margin-bottom:6px">Second send · Day 1 — Same day, ~2 hours after SMS — Email to both Brenda AND Steve</div>
+  <div class="channel-line">📧 Email · Andre → Brenda & Steve Catalano · bcatalano85@comcast.net</div>
+  <div class="subj">Confirming May 3rd — and dropping the tasting fee</div>
+  <p>Brenda and Steve,</p>
+<p>Following up on my text — wanted this in writing. The tasting fee is on us. May 3rd at 5:30, 199 Main St Fitchburg. Bring up to 10 people. No fee, no credit-toward-booking math, just come and let us cook for you.</p>
+<p>Steve, I know you've been in food service a long time. I'd rather you walk into our kitchen and watch how we run a service than read another email about it. The 45-day planner coordination, allergen labeling, setup timing — all of that runs the same way you'd want it to run. May 3rd is the chance to see it firsthand.</p>
+<p>A couple of operational notes for your planning:</p>
+<p>We start setup at 4:30 PM for a 6:00 PM dinner. That's our standard, fits a typical backyard timeline.</p>
+<p>Allergen-free options will be on the tasting table. Brenda asked — we listened.</p>
+<p>Once we know the venue, I'll walk through electrical, water, and load-in needs with you in person at the tasting so we don't waste a phone call on it later.</p>
+<p>Looking forward to having you in.</p>
+<p>Andre</p>
+  <p class="signoff">Comeketo Catering</p>
+</div>
+
+  <div class="actions">
+    <button class="primary">Send via Close</button>
+    <button>Edit & Send</button>
+    <button>Skip today</button>
+    <span class="hint">Buttons inert · AUTO.06 delivery is W3.2</span>
+  </div>
+</div>
+
+  
+<div class="alerts-band">
+  <div class="sec-eyebrow">Today's alerts</div>
+  <ul><li><div class="when">Day 0 — System actions BEFORE Day 1</div><div>🚨 Pause auto-cadence on this lead.</div><div><span class="badge coral"></span></div></li><li><div class="when">Day 0 — System actions BEFORE Day 1</div><div>🚨 Stop all "Understanding Our Catering Service Types" + "Churrasco/Rodizio" drip emails.</div><div><span class="badge coral"></span></div></li><li><div class="when">Day 0 — System actions BEFORE Day 1</div><div>🚨 Confirm tasting-fee waiver decision is locked in writing (this is the strategic reframe).</div><div><span class="badge coral"></span></div></li><li><div class="when">Day 0 — System actions BEFORE Day 1</div><div>🚨 Confirm Andre's voice profile loaded for outbound composition.</div><div><span class="badge coral"></span></div></li><li><div class="when">Day 1 — Friday — early afternoon</div><div>"Send the Day 1 SMS to Brenda. Drop the tasting fee. Personal voice. Ask for venue name. Lowercase, conversational."</div><div><span class="badge coral">Critical alert</span></div></li><li><div class="when">Day 1 — Friday — early afternoon</div><div>Critical alert (~2 hours later): "Send the Day 1 email to both Brenda AND Steve. 'Confirming May 3rd — and dropping the tasting fee.' Operator-to-operator framing. Mention 'I know you've been in food service a long time' to Steve."</div><div><span class="badge amber"></span></div></li><li><div class="when">Day 1 — Friday — early afternoon</div><div>Escalate at +30min if either send not ack'd.</div><div><span class="badge amber"></span></div></li></ul>
+</div>
+
+</div>
+
+<footer class='colophon'>CIA Runtime · Today · AUTO.06 surface</footer>
+</div>
+</body>
+</html>

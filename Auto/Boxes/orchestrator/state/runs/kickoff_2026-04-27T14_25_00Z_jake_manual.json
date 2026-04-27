@@ -1,0 +1,111 @@
+{
+  "run_type": "kickoff",
+  "run_id": "kickoff_2026-04-27T14:25:00Z_jake_manual",
+  "operator": "Jake (manual greenlight in conversation)",
+  "started_at": "2026-04-27T14:25:00Z",
+  "ended_at": "2026-04-27T14:44:43Z",
+  "leads_kicked_off": 2,
+  "fires_executed": 3,
+  "fires_failed": 0,
+  "audit_skips": 0,
+  "scheduled_tasks_registered": 7,
+  "leads": [
+    {
+      "name": "Hugo Casillas",
+      "lead_id": "lead_g4AZCOW7Kpc3tithNBrr9aXPbDHsZ72KJUR55Qjzd6f",
+      "altitude": "whale",
+      "plan_day_1_date": "2026-04-27",
+      "today_fired": [
+        {
+          "channel": "email",
+          "activity_id": "acti_ql0f9y4hYScijeDjtqNkABg60Ii4YRCWvBGIEHWIzIk",
+          "status": "sent",
+          "to": "hugocasillas2@gmail.com",
+          "subject": "Following up — and a different approach for your tasting",
+          "sent_at": "2026-04-27T14:27:48Z"
+        }
+      ],
+      "scheduled_future": [
+        {
+          "task_id": "hugo-day4-sms",
+          "fire_at": "2026-04-30T14:30:00-04:00"
+        },
+        {
+          "task_id": "hugo-quote-expiry-may1",
+          "fire_at": "2026-05-01T13:00:00-04:00"
+        },
+        {
+          "task_id": "hugo-day6-email",
+          "fire_at": "2026-05-02T13:00:00-04:00"
+        },
+        {
+          "task_id": "hugo-may17-tasting-prep",
+          "fire_at": "2026-05-16T18:00:00-04:00"
+        }
+      ]
+    },
+    {
+      "name": "Brenda & Steve Catalano",
+      "lead_id": "lead_Kl4wMKxr025rCsIoaJewk0E4KJZ9wZHU9VdiTRZnEh3",
+      "altitude": "whale",
+      "plan_day_1_date": "2026-04-27",
+      "today_fired": [
+        {
+          "channel": "sms",
+          "activity_id": "acti_hIyBN3w2wydWTdXNUXgl5y719Zi38sfUWCIhvH68vXc",
+          "status": "sent",
+          "remote_phone": "+19788859800",
+          "local_phone": "+19783811212",
+          "sent_at": "2026-04-27T14:29:27Z"
+        },
+        {
+          "channel": "email",
+          "activity_id": "acti_MMtcVWIviivgi1IUeTuPOmyJ3uGiQ6w7BuvxHwdFJVB",
+          "status": "sent",
+          "to": "bcatalano85@comcast.net",
+          "subject": "Confirming May 3rd — and dropping the tasting fee",
+          "sent_at": "2026-04-27T14:30:39Z"
+        }
+      ],
+      "scheduled_future": [
+        {
+          "task_id": "steve-day4-sms",
+          "fire_at": "2026-04-30T10:30:00-04:00"
+        },
+        {
+          "task_id": "steve-day6-pretasting-email",
+          "fire_at": "2026-04-30T12:00:00-04:00"
+        },
+        {
+          "task_id": "steve-may2-saturday-backup",
+          "fire_at": "2026-05-02T09:00:00-04:00"
+        },
+        {
+          "task_id": "steve-tasting-day-may3-briefing",
+          "fire_at": "2026-05-03T08:00:00-04:00"
+        }
+      ]
+    }
+  ],
+  "slack_posts": {
+    "kickoff_team": "1777300025.289019",
+    "hugo_surface_dm": "1777300047.347269",
+    "hugo_fired_thread": "1777300089.501749",
+    "hugo_team_mirror": "1777300101.114889",
+    "steve_sms_surface_dm": "1777300129.008289",
+    "steve_sms_fired_thread": "1777300184.481779",
+    "steve_email_surface_dm": "1777300206.735039",
+    "steve_email_fired_thread": "1777300267.061579",
+    "steve_team_mirror": "1777300287.465969"
+  },
+  "notes": [
+    "First live kickoff fire under the new Auto/orchestrator architecture.",
+    "Both leads pre-acked by Jake (operator) in conversation — surface-with-30s-window pattern used since explicit ack from operator was already given.",
+    "Plan_day_1_date set to today (2026-04-27 Mon) for both leads — re-anchored from the originally-implicit Friday Apr 24.",
+    "All 3 sends confirmed delivered (status: sent). 0 audit fails. 0 send fails.",
+    "7 future scheduled tasks registered as one-time fireAt jobs. Each will surface to Andre's DM for ack on its trigger date.",
+    "Steve's May 4 no-show recovery is intentionally NOT pre-scheduled — the May 3 tasting-day briefing task will register it conditionally if Steve doesn't book/confirm by EOD May 3.",
+    "Cowork sweep + batch_fire + lead-enrichment scheduled tasks remain disabled (legacy from andre-lead-coverage) — Auto/orchestrator is canonical now."
+  ],
+  "errors": []
+}

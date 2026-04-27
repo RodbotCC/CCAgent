@@ -1,0 +1,393 @@
+{
+  "generated_at": "2026-04-27T15:01:01Z",
+  "total_leads": 28,
+  "ready_count": 7,
+  "not_ready_count": 21,
+  "ready": [
+    {
+      "name": "Brenda & Steve",
+      "path": "/sessions/eloquent-kind-euler/mnt/Auto/Client Boxes/Brenda & Steve",
+      "ready": true,
+      "missing": [],
+      "has_optional": [],
+      "lead_id": "lead_Kl4wMKxr025rCsIoaJewk0E4KJZ9wZHU9VdiTRZnEh3",
+      "altitude": "whale",
+      "active_cadence": true,
+      "plan_day_1_date": "2026-04-27",
+      "primary_phone": "978-885-9800",
+      "primary_email": "bcatalano85@comcast.net",
+      "event_date": "2026-09-05",
+      "tasting_date": "2026-05-03"
+    },
+    {
+      "name": "Daphney & Frankie",
+      "path": "/sessions/eloquent-kind-euler/mnt/Auto/Client Boxes/Daphney & Frankie",
+      "ready": true,
+      "missing": [],
+      "has_optional": [],
+      "lead_id": "lead_xiZ16Z1q6n39AFBnm6iitKHrpCb28Y7mt5gjWBjCQkA",
+      "altitude": "mid",
+      "active_cadence": false,
+      "plan_day_1_date": "2026-04-27",
+      "primary_phone": "+12038235228",
+      "primary_email": "daphneypate@gmail.com",
+      "event_date": "2026-12-12",
+      "tasting_date": null
+    },
+    {
+      "name": "Dawn M Denton",
+      "path": "/sessions/eloquent-kind-euler/mnt/Auto/Client Boxes/Dawn M Denton",
+      "ready": true,
+      "missing": [],
+      "has_optional": [],
+      "lead_id": "lead_TRiz0DiM3BJOgEKf5YXF2gzoK3r7u5R2lSbBAHi0rek",
+      "altitude": "mid",
+      "active_cadence": false,
+      "plan_day_1_date": "2026-04-27",
+      "primary_phone": "+14013660100",
+      "primary_email": "chevychick00769@yahoo.com",
+      "event_date": "2026-08-16",
+      "tasting_date": null
+    },
+    {
+      "name": "Eliana Lopes",
+      "path": "/sessions/eloquent-kind-euler/mnt/Auto/Client Boxes/Eliana Lopes",
+      "ready": true,
+      "missing": [],
+      "has_optional": [],
+      "lead_id": "lead_uePfZil6QF7XOYTzqMc90u6SRtXlyZEBZRjOgjaqAOT",
+      "altitude": "mid",
+      "active_cadence": false,
+      "plan_day_1_date": "2026-04-27",
+      "primary_phone": "+15089678185",
+      "primary_email": "eliana.lopes8@icloud.com",
+      "event_date": "2026-06-20",
+      "tasting_date": null
+    },
+    {
+      "name": "Elizabeth & Peter",
+      "path": "/sessions/eloquent-kind-euler/mnt/Auto/Client Boxes/Elizabeth & Peter",
+      "ready": true,
+      "missing": [],
+      "has_optional": [],
+      "lead_id": "lead_ucDkgKZ7Eyyyb4nZvw66ruME6oA2jEmiJEwNCjU2A8D",
+      "altitude": "whale",
+      "active_cadence": false,
+      "plan_day_1_date": "2026-04-27",
+      "primary_phone": "+19785787436",
+      "primary_email": "epshelton2024@gmail.com",
+      "event_date": "2027-09-04",
+      "tasting_date": null
+    },
+    {
+      "name": "Emanuella Andrade",
+      "path": "/sessions/eloquent-kind-euler/mnt/Auto/Client Boxes/Emanuella Andrade",
+      "ready": true,
+      "missing": [],
+      "has_optional": [],
+      "lead_id": "lead_bzFJpQXqKXY5sjse7q5e61zZyh64cugZTjncvVYC6O6",
+      "altitude": "mid",
+      "active_cadence": false,
+      "plan_day_1_date": "2026-04-27",
+      "primary_phone": null,
+      "primary_email": "emanuellaandrade06@gmail.com",
+      "event_date": null,
+      "tasting_date": null
+    },
+    {
+      "name": "Hugo Casillas",
+      "path": "/sessions/eloquent-kind-euler/mnt/Auto/Client Boxes/Hugo Casillas",
+      "ready": true,
+      "missing": [],
+      "has_optional": [
+        "08_automations.md",
+        "10_andre_feedback.md",
+        "AGENTS.md",
+        "CLAUDE.md"
+      ],
+      "lead_id": "lead_g4AZCOW7Kpc3tithNBrr9aXPbDHsZ72KJUR55Qjzd6f",
+      "altitude": "whale",
+      "active_cadence": true,
+      "plan_day_1_date": "2026-04-27",
+      "primary_phone": null,
+      "primary_email": null,
+      "event_date": null,
+      "tasting_date": null
+    }
+  ],
+  "not_ready": [
+    {
+      "name": "Danielle Paulson",
+      "path": "/sessions/eloquent-kind-euler/mnt/Auto/Client Boxes/Danielle Paulson",
+      "ready": false,
+      "missing": [
+        "00_meta.json",
+        "01_comms.md",
+        "04_profile.md",
+        "05_seven_day_plan.md",
+        "09_andre_alerts.md"
+      ],
+      "has_optional": []
+    },
+    {
+      "name": "Esther Manu",
+      "path": "/sessions/eloquent-kind-euler/mnt/Auto/Client Boxes/Esther Manu",
+      "ready": false,
+      "missing": [
+        "00_meta.json",
+        "01_comms.md",
+        "04_profile.md",
+        "05_seven_day_plan.md",
+        "09_andre_alerts.md"
+      ],
+      "has_optional": []
+    },
+    {
+      "name": "Flaviane Mesquita",
+      "path": "/sessions/eloquent-kind-euler/mnt/Auto/Client Boxes/Flaviane Mesquita",
+      "ready": false,
+      "missing": [
+        "00_meta.json",
+        "01_comms.md",
+        "04_profile.md",
+        "05_seven_day_plan.md",
+        "09_andre_alerts.md"
+      ],
+      "has_optional": []
+    },
+    {
+      "name": "Flávia Benson",
+      "path": "/sessions/eloquent-kind-euler/mnt/Auto/Client Boxes/Flávia Benson",
+      "ready": false,
+      "missing": [
+        "00_meta.json",
+        "01_comms.md",
+        "04_profile.md",
+        "05_seven_day_plan.md",
+        "09_andre_alerts.md"
+      ],
+      "has_optional": []
+    },
+    {
+      "name": "Holley Michelizza",
+      "path": "/sessions/eloquent-kind-euler/mnt/Auto/Client Boxes/Holley Michelizza",
+      "ready": false,
+      "missing": [
+        "00_meta.json",
+        "01_comms.md",
+        "04_profile.md",
+        "05_seven_day_plan.md",
+        "09_andre_alerts.md"
+      ],
+      "has_optional": []
+    },
+    {
+      "name": "Joel Dy",
+      "path": "/sessions/eloquent-kind-euler/mnt/Auto/Client Boxes/Joel Dy",
+      "ready": false,
+      "missing": [
+        "00_meta.json",
+        "01_comms.md",
+        "04_profile.md",
+        "05_seven_day_plan.md",
+        "09_andre_alerts.md"
+      ],
+      "has_optional": []
+    },
+    {
+      "name": "Joseph Jones",
+      "path": "/sessions/eloquent-kind-euler/mnt/Auto/Client Boxes/Joseph Jones",
+      "ready": false,
+      "missing": [
+        "00_meta.json",
+        "01_comms.md",
+        "04_profile.md",
+        "05_seven_day_plan.md",
+        "09_andre_alerts.md"
+      ],
+      "has_optional": []
+    },
+    {
+      "name": "Kesia De Assis Lira",
+      "path": "/sessions/eloquent-kind-euler/mnt/Auto/Client Boxes/Kesia De Assis Lira",
+      "ready": false,
+      "missing": [
+        "00_meta.json",
+        "01_comms.md",
+        "04_profile.md",
+        "05_seven_day_plan.md",
+        "09_andre_alerts.md"
+      ],
+      "has_optional": []
+    },
+    {
+      "name": "Krista Garcia",
+      "path": "/sessions/eloquent-kind-euler/mnt/Auto/Client Boxes/Krista Garcia",
+      "ready": false,
+      "missing": [
+        "00_meta.json",
+        "01_comms.md",
+        "04_profile.md",
+        "05_seven_day_plan.md",
+        "09_andre_alerts.md"
+      ],
+      "has_optional": []
+    },
+    {
+      "name": "Madame Badose",
+      "path": "/sessions/eloquent-kind-euler/mnt/Auto/Client Boxes/Madame Badose",
+      "ready": false,
+      "missing": [
+        "00_meta.json",
+        "01_comms.md",
+        "04_profile.md",
+        "05_seven_day_plan.md",
+        "09_andre_alerts.md"
+      ],
+      "has_optional": []
+    },
+    {
+      "name": "Michelle Levesque",
+      "path": "/sessions/eloquent-kind-euler/mnt/Auto/Client Boxes/Michelle Levesque",
+      "ready": false,
+      "missing": [
+        "00_meta.json",
+        "01_comms.md",
+        "04_profile.md",
+        "05_seven_day_plan.md",
+        "09_andre_alerts.md"
+      ],
+      "has_optional": []
+    },
+    {
+      "name": "Monica Quindley",
+      "path": "/sessions/eloquent-kind-euler/mnt/Auto/Client Boxes/Monica Quindley",
+      "ready": false,
+      "missing": [
+        "00_meta.json",
+        "01_comms.md",
+        "04_profile.md",
+        "05_seven_day_plan.md",
+        "09_andre_alerts.md"
+      ],
+      "has_optional": []
+    },
+    {
+      "name": "Natália Angulo",
+      "path": "/sessions/eloquent-kind-euler/mnt/Auto/Client Boxes/Natália Angulo",
+      "ready": false,
+      "missing": [
+        "00_meta.json",
+        "01_comms.md",
+        "04_profile.md",
+        "05_seven_day_plan.md",
+        "09_andre_alerts.md"
+      ],
+      "has_optional": []
+    },
+    {
+      "name": "Nicole McNeil",
+      "path": "/sessions/eloquent-kind-euler/mnt/Auto/Client Boxes/Nicole McNeil",
+      "ready": false,
+      "missing": [
+        "00_meta.json",
+        "01_comms.md",
+        "04_profile.md",
+        "05_seven_day_plan.md",
+        "09_andre_alerts.md"
+      ],
+      "has_optional": []
+    },
+    {
+      "name": "Rosa Morales",
+      "path": "/sessions/eloquent-kind-euler/mnt/Auto/Client Boxes/Rosa Morales",
+      "ready": false,
+      "missing": [
+        "00_meta.json",
+        "01_comms.md",
+        "04_profile.md",
+        "05_seven_day_plan.md",
+        "09_andre_alerts.md"
+      ],
+      "has_optional": []
+    },
+    {
+      "name": "Rox",
+      "path": "/sessions/eloquent-kind-euler/mnt/Auto/Client Boxes/Rox",
+      "ready": false,
+      "missing": [
+        "00_meta.json",
+        "01_comms.md",
+        "04_profile.md",
+        "05_seven_day_plan.md",
+        "09_andre_alerts.md"
+      ],
+      "has_optional": []
+    },
+    {
+      "name": "Sandra Neguinha De Pina",
+      "path": "/sessions/eloquent-kind-euler/mnt/Auto/Client Boxes/Sandra Neguinha De Pina",
+      "ready": false,
+      "missing": [
+        "00_meta.json",
+        "01_comms.md",
+        "04_profile.md",
+        "05_seven_day_plan.md",
+        "09_andre_alerts.md"
+      ],
+      "has_optional": []
+    },
+    {
+      "name": "Shakeema Washington",
+      "path": "/sessions/eloquent-kind-euler/mnt/Auto/Client Boxes/Shakeema Washington",
+      "ready": false,
+      "missing": [
+        "00_meta.json",
+        "01_comms.md",
+        "04_profile.md",
+        "05_seven_day_plan.md",
+        "09_andre_alerts.md"
+      ],
+      "has_optional": []
+    },
+    {
+      "name": "Tania Sofia",
+      "path": "/sessions/eloquent-kind-euler/mnt/Auto/Client Boxes/Tania Sofia",
+      "ready": false,
+      "missing": [
+        "00_meta.json",
+        "01_comms.md",
+        "04_profile.md",
+        "05_seven_day_plan.md",
+        "09_andre_alerts.md"
+      ],
+      "has_optional": []
+    },
+    {
+      "name": "Tatiana",
+      "path": "/sessions/eloquent-kind-euler/mnt/Auto/Client Boxes/Tatiana",
+      "ready": false,
+      "missing": [
+        "00_meta.json",
+        "01_comms.md",
+        "04_profile.md",
+        "05_seven_day_plan.md",
+        "09_andre_alerts.md"
+      ],
+      "has_optional": []
+    },
+    {
+      "name": "Tessy",
+      "path": "/sessions/eloquent-kind-euler/mnt/Auto/Client Boxes/Tessy",
+      "ready": false,
+      "missing": [
+        "00_meta.json",
+        "01_comms.md",
+        "04_profile.md",
+        "05_seven_day_plan.md",
+        "09_andre_alerts.md"
+      ],
+      "has_optional": []
+    }
+  ]
+}

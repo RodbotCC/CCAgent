@@ -1,0 +1,159 @@
+
+🔍 Hugo Casillas — Real Enrichment (SaaS Sales Professional at ZoomInfo + Fiancée Vegetarian)
+✅ HUGO CASILLAS: Mid-Market Account Executive at ZoomInfo
+Professional Profile:
+
+Hugo Casillas - Mid-Market Account Executive
+ — ZoomInfo, Waltham MA
+
+Background:
+
+Current Role: Mid-Market Account Executive (since January 2026)
+
+Previous Role: Mid-Market Sales Development Representative (May 2025–December 2025 — 6 months)
+
+Company: ZoomInfo (leading B2B data platform, publicly traded)
+
+Education: Texas A&M University
+
+Location: Waltham, Massachusetts (Transplant from Houston, TX)
+
+Network: 2,260 LinkedIn followers, 500+ connections
+
+Career Timeline: Recently promoted from SDR to Account Executive (natural progression in SaaS sales)
+
+ZoomInfo Context:
+
+Fortune 500 company in the data/intelligence space
+
+High-pressure, high-reward SaaS sales culture
+
+Typical AE compensation: $100K–$200K+ base + significant variable
+
+Sales cycle expertise: Hugo understands consultative selling, ROI conversations, value demonstration
+
+🎯 Strategic Reframe (This Changes Everything):
+Current profile: "Hugo, Mexican-American transplant, 110-guest August wedding, vegetarian fiancée, shopping for quotes"
+
+Real profile: "Hugo Casillas, SaaS Account Executive at ZoomInfo (high-income, sophisticated buyer, understands sales processes intimately), Texas transplant to Boston (1–2 years ago), marrying a vegetarian (meaning she likely has strong values/priorities), and is comparison shopping by asking competitors for quotes — he KNOWS the process of evaluating vendors because he does it professionally every day"
+
+💡 Why This Matters for Comeketo:
+1. Hugo is a Professional Salesperson
+
+He does ROI conversations for a living
+
+He evaluates value propositions constantly
+
+He's NOT going to commit without understanding the full picture — he's asking good questions (pricing flexibility, competing quotes, etc.)
+
+He respects consultative selling — which is exactly what Andre has been doing
+
+He's asking for a tasting, and he's comparing. Standard B2B buyer behavior.
+
+2. He Recently Got Promoted (January 2026)
+
+Just moved into AE role = busier, higher stakes, possibly some travel
+
+This explains why he's being deliberate about the wedding planning — life is hectic
+
+May 17 tasting may genuinely not work for him (busy season in SaaS sales is Jan-Jun)
+
+3. He's Managing Complex Stakeholders
+
+Fiancée is vegetarian (different preferences from his, which he mentioned explicitly)
+
+He's planning an 110-125 person wedding with mixed dietary needs
+
+He's comfortable with complexity and managing different priorities
+
+This is actually a GREEN FLAG for execution — he'll work with Comeketo on the nuances
+
+4. He's Already Deep in the Process
+
+30-minute discovery call (April 17) = real engagement
+
+Got the full quote ($11,595) with detailed breakdown
+
+Asking about competitive positioning = he's serious
+
+Decline to tasting ≠ disinterest; it's just "too many moving parts right now"
+
+5. He's Texas Transplant (Recent)
+
+Likely moved to Boston for the ZoomInfo job (Waltham office is a hub)
+
+Probably 1–2 years in Boston, not deeply rooted
+
+Fiancée may also be newer to area
+
+This is a relationship-building opportunity, not transactional
+
+⚠️ Why He's Not Responding to the Generic Re-engagement Texts:
+The April 23 and 24 messages are generic templates that don't account for his actual situation:
+
+"Would it make more sense to lock a quick call first, or should I save you a spot for one of our tastings on May 3 at 5:30 PM or May 17 at 2:00 PM?"
+
+Hugo already said he declined tastings on Sundays (he's busy)
+
+Andre offered exact times (10 AM, 11 AM, 1 PM) — Hugo is a professional who respects specificity
+
+But then Andre sent a generic re-engagement text anyway instead of targeting those specific times
+
+Hugo is NOT ghosting — he's a salesperson being professional. He said "I'll get competing quotes and reach out." That's his response timeline. He's not ignoring you; he's respecting his own process.
+
+💬 The RIGHT Next Message (Professional, Respectful, Sales-to-Sales):
+Email (send TODAY):
+
+Subject: "Quick thought on your August wedding — and the Highland Orchard advantage"
+
+"Hugo — I know you're evaluating options, and that's smart. Rather than push, I wanted to flag something: Highland Orchard recommended us specifically to them for a reason. They know our work. That matters for your day.
+
+Here's what I'd suggest: instead of a Sunday tasting, how about I send you a video walkthrough of the deluxe buffet setup + the three mains (picanha, chicken, cauliflower steak)? You and your fiancée can watch it together, no logistics required. Then, if you want to chat through the vegetarian/vegan details specifically with her involved, I'm available evenings or early mornings on a weekday.
+
+The $11,595 quote holds for 14 days. No pressure on the timeline — but I do want to make sure you're making an apples-to-apples comparison if you're getting competing quotes.
+
+Best,
+Andre"
+
+Why this works:
+
+Acknowledges he's comparing (respects his process)
+
+References Highland Orchard advantage (pure social proof)
+
+Offers a LOW-friction alternative to a tasting (video walkthrough)
+
+Accommodates his actual schedule (weekday, not Sunday)
+
+Brings fiancée into the conversation (she's the vegetarian stakeholder)
+
+Professional tone (matches his world)
+
+No pressure, but clear next step
+
+📊 Reframed Opportunity:
+Original Frame	Real Frame
+Hugo, comparison shopping, slow to respond	SaaS Account Executive (understands sales process), busy with new promotion, being professional about evaluation
+Won't commit to tasting	May 17 Sunday timing doesn't work; needs weekday flexibility
+Generic re-engagement texts haven't landed	Templates don't account for his actual constraints; needs professional-to-professional approach
+$11,595 quote sitting	Quote is good; he just needs a lower-friction path to decision + fiancée engagement
+Status: "Probably"	Status: Should stay "Probably" but with urgency in next 7 days
+🎯 Strategic Play:
+Send the professional email TODAY (video walkthrough offer)
+
+If he responds: Schedule a brief call (30 min max) with both Hugo AND his fiancée, focused on vegetarian/vegan/dietary execution
+
+During call: Emphasize:
+
+Dedicated vegetarian prep station (she'll feel taken seriously)
+
+Three-main option (picanah + chicken + cauliflower steak) shows you GET the mixed-diet requirement
+
+Highland Orchard's endorsement = proven venue fit
+
+Close with: "I'll send the catering agreement by end of week. 20% deposit locks the date, full quote valid 2 years. When do you want to finalize?"
+
+Key Insight: Hugo isn't a cold lead or a slow lead — he's a professional buyer following a professional process. He respects competence, values efficiency, and understands complex stakeholder management. Meet him at that level, and this deal closes.
+
+The bigger win: If you execute well on this wedding, Hugo will likely refer you to his ZoomInfo network (tech companies throw lots of corporate events). This is not just $11.6K; it's a potential relationship into a B2B corporate events pipeline.
+

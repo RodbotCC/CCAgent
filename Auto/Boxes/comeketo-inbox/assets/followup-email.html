@@ -1,0 +1,287 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{subject}} · Comeketo Catering</title>
+<!--
+  COMEKETO CATERING — FOLLOW-UP / NON-BALLPARK EMAIL TEMPLATE
+  ==========================================================
+  Use this for any email that ISN'T a precise two-option ballpark
+  quote: resets, soft follow-ups, tasting confirmations, mid-cadence
+  nudges, post-call wrap-ups. Same brand DNA as the ballpark template
+  (Fraunces / Inter / parchment) — minus the quote table.
+
+  Required merge fields:
+    {{subject}}                  — also goes in the email subject line
+    {{client_first_name}}        — "Brenda" (or "Brenda and Steve")
+    {{body_paragraphs}}          — pre-rendered HTML body content
+                                   (the renderer wraps each paragraph
+                                   in <p>; honors blank-line breaks)
+
+  Optional (if missing, sections silently omit):
+    {{cta_block}}                — "Two clean next steps... call slots,
+                                   or come to the tasting"
+    {{tasting_block_visible}}    — "true" / "false" — controls tasting card
+    {{tasting_dates_html}}       — list of upcoming tasting dates
+    {{tasting_location}}, {{tasting_register_url}}, {{tasting_code}}
+
+  Signature:
+    {{rep_name}}                 — "Andre Raw"
+    {{rep_title}}                — "Catering Event Coordinator"
+    {{rep_cell}}                 — "(978) 235-3791"
+    {{rep_office}}               — "(978) 381-1212"
+    {{rep_email}}                — "team@comeketocatering.com"
+    {{rep_facebook_url}}, {{rep_instagram_url}}, {{rep_website_url}}
+    {{menu_calculator_url}}      — calculator link (always shown)
+-->
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
+
+  :root {
+    --bg: #EBE8E0;
+    --bg-2: #f5f3ec;
+    --bg-3: #faf8f1;
+    --ink: #1f1d1a;
+    --ink-2: #4a4640;
+    --ink-3: #8a8478;
+    --line: #d8d3c6;
+    --line-2: #e3ddd0;
+    --sage: #d6e3cc;
+    --sage-ink: #3d5a2c;
+    --amber: #ead6b3;
+    --amber-ink: #7a5a1e;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 15px;
+    line-height: 1.6;
+    padding: 24px 16px;
+  }
+
+  .wrapper {
+    max-width: 620px;
+    margin: 0 auto;
+    background: var(--bg-2);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .header {
+    padding: 24px 32px 18px 32px;
+    border-bottom: 1px solid var(--line-2);
+    background: var(--bg-3);
+  }
+
+  .header .brand {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--ink-3);
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+  }
+
+  .header h1 {
+    font-family: 'Fraunces', Georgia, serif;
+    font-weight: 500;
+    font-size: 22px;
+    line-height: 1.25;
+    color: var(--ink);
+    margin-top: 6px;
+  }
+
+  .body {
+    padding: 28px 32px 22px 32px;
+  }
+
+  .body p {
+    margin: 0 0 14px 0;
+    color: var(--ink-2);
+  }
+
+  .body p:last-child {
+    margin-bottom: 0;
+  }
+
+  .body strong { color: var(--ink); }
+
+  .body em { font-style: italic; }
+
+  .body a {
+    color: var(--sage-ink);
+    text-decoration: underline;
+    text-decoration-color: var(--line);
+    text-underline-offset: 2px;
+  }
+
+  .cta-band {
+    margin: 22px 32px;
+    padding: 18px 22px;
+    background: var(--sage);
+    border-radius: 6px;
+    color: var(--sage-ink);
+    font-size: 14px;
+    line-height: 1.55;
+  }
+
+  .cta-band strong {
+    color: var(--sage-ink);
+  }
+
+  .tasting-card {
+    margin: 22px 32px;
+    padding: 22px 24px;
+    background: var(--amber);
+    border-radius: 6px;
+    color: var(--amber-ink);
+  }
+
+  .tasting-card .label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 1.3px;
+    color: var(--amber-ink);
+    opacity: 0.78;
+  }
+
+  .tasting-card h3 {
+    font-family: 'Fraunces', Georgia, serif;
+    font-weight: 500;
+    font-size: 18px;
+    margin: 4px 0 10px 0;
+    color: var(--amber-ink);
+  }
+
+  .tasting-card .dates {
+    font-size: 14px;
+    line-height: 1.7;
+    margin-bottom: 8px;
+  }
+
+  .tasting-card .meta {
+    font-size: 12px;
+    color: var(--amber-ink);
+    opacity: 0.78;
+    margin-top: 10px;
+  }
+
+  .tasting-card a {
+    color: var(--amber-ink);
+    font-weight: 500;
+  }
+
+  .calculator-band {
+    margin: 22px 32px 4px 32px;
+    padding: 14px 18px;
+    background: var(--bg-3);
+    border: 1px solid var(--line-2);
+    border-radius: 6px;
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--ink-2);
+  }
+
+  .calculator-band a {
+    color: var(--sage-ink);
+    font-weight: 500;
+  }
+
+  .signature {
+    padding: 24px 32px 28px 32px;
+    border-top: 1px solid var(--line-2);
+    background: var(--bg-3);
+  }
+
+  .signature .rep-name {
+    font-family: 'Fraunces', Georgia, serif;
+    font-weight: 500;
+    font-size: 16px;
+    color: var(--ink);
+  }
+
+  .signature .rep-title {
+    font-size: 12px;
+    color: var(--ink-3);
+    margin-top: 2px;
+  }
+
+  .signature .contact {
+    margin-top: 12px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--ink-2);
+    line-height: 1.7;
+  }
+
+  .signature .contact a {
+    color: var(--ink-2);
+    text-decoration: none;
+  }
+
+  .signature .social {
+    margin-top: 12px;
+    font-size: 12px;
+    color: var(--ink-3);
+  }
+
+  .signature .social a {
+    color: var(--ink-3);
+    text-decoration: none;
+    margin-right: 12px;
+  }
+
+  @media (max-width: 620px) {
+    .header, .body, .signature { padding-left: 22px; padding-right: 22px; }
+    .cta-band, .tasting-card, .calculator-band { margin-left: 22px; margin-right: 22px; }
+  }
+</style>
+</head>
+<body>
+  <div class="wrapper">
+
+    <div class="header">
+      <div class="brand">Comeketo Catering · {{rep_name}}</div>
+      <h1>{{subject}}</h1>
+    </div>
+
+    <div class="body">
+      {{body_paragraphs}}
+    </div>
+
+    <!-- CTA band: shown only if cta_block is provided -->
+    {{cta_band_html}}
+
+    <!-- Tasting card: shown only if tasting_block_visible is true -->
+    {{tasting_card_html}}
+
+    <div class="calculator-band">
+      Want to play with menu options and per-person pricing on your own time? <a href="{{menu_calculator_url}}">Open the menu calculator →</a>
+    </div>
+
+    <div class="signature">
+      <div class="rep-name">{{rep_name}}</div>
+      <div class="rep-title">{{rep_title}}</div>
+      <div class="contact">
+        Cell: <a href="tel:{{rep_cell}}">{{rep_cell}}</a><br>
+        Office: <a href="tel:{{rep_office}}">{{rep_office}}</a><br>
+        Email: <a href="mailto:{{rep_email}}">{{rep_email}}</a>
+      </div>
+      <div class="social">
+        <a href="{{rep_website_url}}">comeketocatering.com</a>
+        <a href="{{rep_facebook_url}}">Facebook</a>
+        <a href="{{rep_instagram_url}}">Instagram</a>
+      </div>
+    </div>
+
+  </div>
+</body>
+</html>
