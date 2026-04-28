@@ -1,33 +1,79 @@
 # 09_andre_alerts.md — Brenda & Steve Catalano — Timed Andre-Action Prompts
 
+Audit-cleaned: 2026-04-28 01:40 AM ET
+Plan anchor: Day 1 = Monday, 2026-04-27
+
+## Guardrail reminder for every future move
+
+- Run Calendar Reality Check: use explicit dates, not bare weekday labels.
+- Run Reply Gate: any inbound after cadence start pauses all queued outbound until Andre clears it.
+- Run Frequency Cap: no more than 1 outbound per rolling 24 hours unless explicitly packaged as one move.
+- Run Commitment Gate: fee waiver, no-charge language, guest-count promises, discounts, or scope promises require explicit Andre/Jake clearance before sending.
+- Run Enrichment Boundary: do not surface enrichment-only facts about Steve or Brenda in customer-facing copy unless traceable to comms or explicitly approved.
+- Email must pass HTML-template validation.
+
 ## Day 0 — System actions BEFORE Day 1
-- 🚨 Pause auto-cadence on this lead.
-- 🚨 Stop all "Understanding Our Catering Service Types" + "Churrasco/Rodizio" drip emails.
-- 🚨 Confirm tasting-fee waiver decision is locked in writing (this is the strategic reframe).
-- 🚨 Confirm Andre's voice profile loaded for outbound composition.
 
-## Day 1 — Friday — early afternoon
-- Critical alert: "Send the Day 1 SMS to Brenda. Drop the tasting fee. Personal voice. Ask for venue name. Lowercase, conversational."
-- Critical alert (~2 hours later): "Send the Day 1 email to both Brenda AND Steve. 'Confirming May 3rd — and dropping the tasting fee.' Operator-to-operator framing. Mention 'I know you've been in food service a long time' to Steve."
-- Escalate at +30min if either send not ack'd.
+- Pause old generic drip cadence on this lead.
+- Stop all "Understanding Our Catering Service Types" + "Churrasco/Rodizio" drip emails.
+- Confirm Andre's voice profile loaded for outbound composition.
+- Confirm any tasting-fee waiver/no-charge wording is explicitly cleared before being repeated.
 
-## Day 4 — Monday — late morning (~10:30am)
-- Same-day alert (only if no reply yet): "Send the Day 4 SMS to Brenda. 'just bumping this up' framing. Single ask for confirmation."
-- Escalate at +30min if no ack.
+## Day 1 — Monday, April 27, 2026 — completed
 
-## Day 6 — Wednesday — pre-tasting confirmation (~3 days before tasting)
-- Critical alert: "Send the Day 6 email to both. 'Sunday at 5:30 — quick prep before you come in.' Three-item operational checklist. Invites planner / daughter / fiancé. Sends regardless of reply status."
-- Escalate at +30min if no ack.
+- Completed paired move: SMS to Brenda + email to Brenda/Steve.
+- Day 1 contained tasting-fee/no-charge language. Do not repeat that commitment language in future sends unless Andre/Jake explicitly clears it.
+- Escalation now only matters if a reply came in after cadence start.
 
-## Day 7 — Thursday — Internal prep day
-- Same-day alert: "Internal prep for Sunday's tasting. (1) Kitchen knows: allergen-free items VISIBLY labeled. (2) Print menus — 3 copies. (3) Pre-brief whoever's running the tasting: this is a multimillion-dollar franchise operator — operator-grade respect. (4) Have catering agreement ready to sign at the table. (5) Confirm venue name from Brenda."
-- No outbound.
+## Day 2 — Tuesday, April 28, 2026 — no outbound
 
-## May 2 (Saturday before tasting) — IF no reply through Day 7
-- Same-day alert: "Saturday morning single SMS to Brenda: 'see you tomorrow at 5:30 — we're set up for you.' Confidence, not chasing."
+- Hold.
 
-## May 3 (Sunday) — TASTING DAY
-- Critical alert (whale tier): "Tasting today at 5:30 PM. Walk in knowing: this is the close event. Greet at the door personally, escort to table. Opener line: 'Steve, Brenda — glad you came. Before we eat, I want you to do one thing for me. Look at how we run this tasting like you'd evaluate a new vendor for your stores. That's the level I want to be held to. Then we'll talk about your daughter's wedding.' Allergen-free items visibly on the table. Catering agreement ready. Don't quote price unless they ask. Close question at the end: 'What would you need to see from us to feel confident this is the right fit for the wedding?'"
+## Day 3 — Wednesday, April 29, 2026 — no outbound
 
-## May 4 (Monday after tasting) — if no-show on May 3
-- Critical alert: "Brenda did NOT show for the tasting. CALL Brenda — do not text. Warm, no-blame. Find out what happened. Offer private weekday tasting if life intervened."
+- Hold.
+
+## Day 4 — Thursday, April 30, 2026 — conditional SMS to Brenda, late morning
+
+Only if no reply has paused the cadence and Andre clears any commitment-language re-use.
+
+Recommended alert:
+
+"Send a light confirmation SMS to Brenda. Confirm Sunday May 3 at 5:30 PM and ask for the venue name. Do not repeat fee-waiver/no-charge/up-to-10 language unless explicitly cleared."
+
+Escalate at +30 min if no ack.
+
+## Day 5 — Friday, May 1, 2026 — no outbound
+
+- Hold unless replying to inbound or Andre directs a one-off.
+
+## Day 6 — Saturday, May 2, 2026 — conditional pre-tasting email
+
+Only if no reply has paused the cadence and Andre confirms the tasting is still being held.
+
+Recommended alert:
+
+"Send the pre-tasting email for Sunday May 3 at 5:30 PM. Use explicit date/time. Include practical prep, visible gluten-free/dairy-free handling, and venue-name request. Do not surface enrichment-only facts or repeat fee/no-charge/up-to-10 commitments unless explicitly cleared. Email must render through the approved HTML follow-up template."
+
+Escalate at +30 min if no ack.
+
+## Saturday, May 2, 2026 — optional fallback SMS if still silent
+
+Only if Andre wants a final reminder and all gates pass.
+
+Recommended alert:
+
+"Optional single SMS reminder: Sunday May 3 at 5:30 PM, 199 Main St, Fitchburg. Ask for venue name if still missing. Do not add fee/no-charge/up-to-10 wording unless cleared."
+
+## Day 7 — Sunday, May 3, 2026 — internal prep + tasting day
+
+No outbound unless Andre explicitly directs it.
+
+Internal alert:
+
+"Tasting today at 5:30 PM. Kitchen: gluten-free and dairy-free options visibly labeled. Print menus. Pre-brief staff. Have agreement ready but do not push. Confirm venue name if still missing. Keep posture calm and operational. Ask: 'What would you need to see from us to feel confident this is the right fit for the wedding?'"
+
+## Monday, May 4, 2026 — no-show recovery, if applicable
+
+- If they did not show for the tasting: CALL Brenda first. Do not text first.
+- Tone: warm, no blame. Find out what happened. Offer private weekday tasting if appropriate.
