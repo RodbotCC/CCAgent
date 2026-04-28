@@ -5576,9 +5576,16 @@ class Handler(SimpleHTTPRequestHandler):
 
 
 def main():
-    port = int(sys.argv[1]) if len(sys.argv) > 1 else 3422
+    # Render (and similar hosts) provide PORT via environment; keep argv/local fallback.
+    port_env = os.environ.get("PORT", "").strip()
+    if port_env:
+        port = int(port_env)
+    else:
+        port = int(sys.argv[1]) if len(sys.argv) > 1 else 3422
+    host = os.environ.get("HOST", "0.0.0.0").strip() or "0.0.0.0"
     os.chdir(HERE)
-    print(f"[secretary] serving {HERE} on http://127.0.0.1:{port}", flush=True)
+    display_host = "localhost" if host == "127.0.0.1" else host
+    print(f"[secretary] serving {HERE} on http://{display_host}:{port}", flush=True)
     print(f"[secretary] env: openai={bool(ENV.get('OPENAI_API_KEY'))} "
           f"close={bool(ENV.get('CLOSE_API_KEY'))} "
           f"clickup={bool(ENV.get('CLICKUP_API_TOKEN'))} "
@@ -5681,7 +5688,7 @@ def main():
     t.start()
     print("[secretary] pieces background sweeper started (hourly)", flush=True)
 
-    ThreadingHTTPServer(("127.0.0.1", port), Handler).serve_forever()
+    ThreadingHTTPServer((host, port), Handler).serve_forever()
 
 
 if __name__ == "__main__":
