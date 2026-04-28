@@ -749,6 +749,8 @@ class Handler(SimpleHTTPRequestHandler):
         self.end_headers()
 
     def do_GET(self):
+        if self.path in ("", "/", "/?"):
+            self.path = "/Secretary.html"
         p = self._api_path()
         if p == "/api/status":
             github_mcp = _github_mcp_status()
