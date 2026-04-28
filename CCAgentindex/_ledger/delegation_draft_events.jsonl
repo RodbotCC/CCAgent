@@ -1,0 +1,15 @@
+{"ts": "2026-04-27T23:10:10.978740+00:00", "kind": "delegation_draft_created", "draft_id": "dd_1740085770", "label": "From chat rail: Here's where they sit:\n\n**Status:** tast", "policy": {"target": "github", "intent": "read", "approval_required": false}}
+{"ts": "2026-04-28T00:59:32.404212+00:00", "kind": "delegation_draft_rewritten", "draft_id": "dd_1740085770", "route": "openai-server-proxy"}
+{"ts": "2026-04-28T01:06:58.488189+00:00", "kind": "delegation_draft_created", "draft_id": "dd_fee9f692ab", "label": "From chat rail: Yep. But tiny snag: I can’t actually sen", "policy": {"target": "github", "intent": "read", "approval_required": false}}
+{"ts": "2026-04-28T01:10:47.796441+00:00", "kind": "delegation_draft_updated", "draft_id": "dd_fee9f692ab", "patch_keys": ["payload", "policy", "status"]}
+{"ts": "2026-04-28T01:10:47.830409+00:00", "kind": "delegation_draft_submitted", "draft_id": "dd_fee9f692ab", "request_id": "dl_dd_fee9f692ab", "policy": {"target": "github", "intent": "write", "approval_required": true}}
+{"ts": "2026-04-28T01:10:49.985411+00:00", "kind": "delegation_draft_updated", "draft_id": "dd_fee9f692ab", "patch_keys": ["policy", "status"]}
+{"ts": "2026-04-28T01:11:02.710729+00:00", "kind": "delegation_draft_updated", "draft_id": "dd_fee9f692ab", "patch_keys": ["policy", "status"]}
+{"ts": "2026-04-28T01:11:03.574540+00:00", "kind": "delegation_draft_updated", "draft_id": "dd_fee9f692ab", "patch_keys": ["payload", "policy"]}
+{"ts": "2026-04-28T01:11:03.595960+00:00", "kind": "delegation_draft_submitted", "draft_id": "dd_fee9f692ab", "request_id": "dl_dd_fee9f692ab", "policy": {"target": "github", "intent": "read", "approval_required": false}}
+{"ts": "2026-04-28T01:44:53.575824+00:00", "kind": "delegation_draft_updated", "draft_id": "dd_fee9f692ab", "patch_keys": ["payload", "policy"]}
+{"ts": "2026-04-28T01:44:54.687956+00:00", "kind": "delegation_draft_undone", "draft_id": "dd_fee9f692ab"}
+{"ts": "2026-04-28T01:44:55.368202+00:00", "kind": "delegation_draft_updated", "draft_id": "dd_fee9f692ab", "patch_keys": ["policy", "status"]}
+{"ts": "2026-04-28T01:44:56.542118+00:00", "kind": "delegation_draft_updated", "draft_id": "dd_fee9f692ab", "patch_keys": ["status"]}
+{"ts": "2026-04-28T02:43:35.348552+00:00", "kind": "delegation_draft_deleted", "draft_id": "dd_fee9f692ab", "label": "From chat rail: Yep. But tiny snag: I can’t actually sen"}
+{"ts": "2026-04-28T02:43:39.526142+00:00", "kind": "delegation_draft_deleted", "draft_id": "dd_1740085770", "label": "From chat rail: Here's where they sit:\n\n**Status:** tast"}

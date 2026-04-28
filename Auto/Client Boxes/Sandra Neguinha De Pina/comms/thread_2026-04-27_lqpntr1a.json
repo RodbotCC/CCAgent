@@ -1,0 +1,67 @@
+{
+  "_type": "EmailThread",
+  "activity_at": "2026-04-27T23:16:41.015000+00:00",
+  "contact_id": null,
+  "created_by": "user_bnfoZDGbTqBZ4wcDGqRqTwjRKiwLnQ4mpV3i2enPkMt",
+  "created_by_name": "Andre Raw",
+  "date_created": "2026-04-27T23:16:41.015000+00:00",
+  "date_updated": "2026-04-27T23:20:45.047000+00:00",
+  "id": "acti_n403vzc4erVOIshhZV2vMLoQKZzSzF2ow8YLqPNTr1A",
+  "importance": {
+    "reason": "automated-outbound",
+    "type": "not_important"
+  },
+  "latest_emails": [
+    {
+      "bcc": [],
+      "body_preview": "Comeketo Catering Follow-Up  Hi Sandra,  Quick question on the graduation for June 10, 2026 .  At this point, are you still trying to get clear on whether the food and service fit what you want for th",
+      "cc": [],
+      "date_created": "2026-04-27T23:16:41.014000+00:00",
+      "date_sent": null,
+      "date_updated": "2026-04-27T23:20:45.008000+00:00",
+      "direction": "outgoing",
+      "envelope": {
+        "bcc": [],
+        "cc": [],
+        "date": "Mon, 27 Apr 2026 23:16:41 -0000",
+        "from": [],
+        "in_reply_to": null,
+        "is_autoreply": false,
+        "message_id": null,
+        "reply_to": [],
+        "sender": [],
+        "subject": "Quick question about your graduation event",
+        "to": [
+          {
+            "email": "sandradepina15@hotmail.com",
+            "name": ""
+          }
+        ]
+      },
+      "has_attachments": false,
+      "id": "acti_oD8SPyRHQyz1vK7PJIpALbSO3c9lf1BJAPDVMXgHxQ4",
+      "opens_summary": null,
+      "send_as_id": null,
+      "sender": null,
+      "status": "draft",
+      "subject": "Quick question about your graduation event",
+      "to": [
+        "sandradepina15@hotmail.com"
+      ],
+      "user_id": "user_bnfoZDGbTqBZ4wcDGqRqTwjRKiwLnQ4mpV3i2enPkMt"
+    }
+  ],
+  "latest_normalized_subject": "Quick question about your graduation event",
+  "lead_id": "lead_GwpQCIMO7oEjQYdeZlmtV6TpEdS0EpTDniBguHsEMWi",
+  "n_emails": 1,
+  "organization_id": "orga_pOyYOigKEELdmODukgjigCD5pTRewtmBW1yq6YXkskq",
+  "participants": [],
+  "summary": null,
+  "updated_by": "user_bnfoZDGbTqBZ4wcDGqRqTwjRKiwLnQ4mpV3i2enPkMt",
+  "updated_by_name": "Andre Raw",
+  "user_id": "user_bnfoZDGbTqBZ4wcDGqRqTwjRKiwLnQ4mpV3i2enPkMt",
+  "user_name": "Andre Raw",
+  "users": [
+    "user_bnfoZDGbTqBZ4wcDGqRqTwjRKiwLnQ4mpV3i2enPkMt"
+  ]
+}

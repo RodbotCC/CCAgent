@@ -163,9 +163,13 @@ window.SecretaryChat = (() => {
     // in the chat (we don't rewrite the displayed turn). The thinking
     // trace is broadcast on a window event for ChatScreen to render.
     let promptEnhance = false;
+    let preprocessModel = "gpt-5.4-mini";
     try {
       const t = JSON.parse(localStorage.getItem("secretary.tweaks") || "{}");
       promptEnhance = !!t.promptEnhance;
+      if (t && typeof t.openaiModel === "string" && /^(gpt-5\.4|gpt-5\.4-mini|gpt-5\.4-nano)$/.test(t.openaiModel)) {
+        preprocessModel = t.openaiModel;
+      }
     } catch {}
 
     const userTextForPreprocess = (text && text.trim()) || "";
@@ -176,6 +180,7 @@ window.SecretaryChat = (() => {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
               message: userTextForPreprocess,
+              model: preprocessModel,
               attachments: (attachments || []).map(a => ({
                 original_filename: a.original_filename || a.filename || null,
                 mime: a.mime || null,
@@ -226,13 +231,13 @@ window.SecretaryChat = (() => {
                 content: c.map(p => p && p.type === "text" ? { ...p, text: pp.enhanced_prompt } : p),
               };
             }
-            enhancedModel = pp.model || "gpt-5.4-mini";
+            enhancedModel = pp.model || preprocessModel;
           }
           // Broadcast the trace so the UI can animate it while Claude works.
           if (Array.isArray(pp.thinking_trace) && pp.thinking_trace.length) {
             try {
               window.dispatchEvent(new CustomEvent("comeketoagent:thinking-trace", {
-                detail: { chatId, trace: pp.thinking_trace, model: pp.model || "gpt-5.4-mini" },
+                detail: { chatId, trace: pp.thinking_trace, model: pp.model || preprocessModel },
               }));
             } catch {}
           }
@@ -404,10 +409,27 @@ window.SecretaryChat = (() => {
     return appendTurn(cid, "system", String(text));
   }
 
+  async function sendToDelegations(chatId, turn, opts = {}) {
+    if (!(window.SecretaryDelegationsBridge && window.SecretaryDelegationsBridge.sendToDraft)) {
+      throw new Error("Delegations bridge unavailable");
+    }
+    const body = textOf(turn && turn.content);
+    if (!body) throw new Error("Turn has no text to delegate");
+    const label = (opts.label || ("From chat: " + body.slice(0, 40))).trim();
+    return window.SecretaryDelegationsBridge.sendToDraft({
+      text: body,
+      label,
+      source: { surface: "chat", route: "chat", entity: { type: "turn", chat_id: chatId || null } },
+      policy: opts.policy || { target: "github", intent: "read", approval_required: false },
+      mode: opts.mode || "safe",
+      context: { chat_id: chatId || null },
+    });
+  }
+
   return {
     all, get, activeId, setActiveId,
     newChat, archive, updateChat, appendTurn, appendSystem, textOf, buildContent, uploadFile,
-    send, reflect,
+    send, reflect, sendToDelegations,
     subscribe,
   };
 })();

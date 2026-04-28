@@ -1,0 +1,82 @@
+{
+  "_type": "EmailThread",
+  "activity_at": "2026-04-22T16:55:59.219000+00:00",
+  "contact_id": null,
+  "created_by": "user_bnfoZDGbTqBZ4wcDGqRqTwjRKiwLnQ4mpV3i2enPkMt",
+  "created_by_name": "Andre Raw",
+  "date_created": "2026-04-22T16:55:59.219000+00:00",
+  "date_updated": "2026-04-23T02:00:35.627000+00:00",
+  "id": "acti_DQTmREWJeoq7NG9Vo90jggSgkRCuIiiN2a8jxmirgbg",
+  "importance": {
+    "reason": "automated-outbound",
+    "type": "not_important"
+  },
+  "latest_emails": [
+    {
+      "bcc": [],
+      "body_preview": "Olá Flaviane, Obrigado pela sua mensagem. Pelo que vi até agora, você está olhando algo para julho ou agosto, na região de Ludlow, MA, então eu montei uma cotação inicial para você ter uma noção de in",
+      "cc": [],
+      "date_created": "2026-04-22T16:55:58.772000+00:00",
+      "date_sent": "2026-04-22T16:55:59.218000+00:00",
+      "date_updated": "2026-04-23T02:00:35.519000+00:00",
+      "direction": "outgoing",
+      "envelope": {
+        "bcc": [],
+        "cc": [],
+        "date": "Wed, 22 Apr 2026 16:55:59 +0000",
+        "from": [
+          {
+            "email": "team@comeketocatering.com",
+            "name": "Andre Raw"
+          }
+        ],
+        "in_reply_to": null,
+        "is_autoreply": false,
+        "message_id": "<177687695924.7.10008547422646015115@smtpgw.close.com>",
+        "reply_to": [],
+        "sender": [
+          {
+            "email": "team@comeketocatering.com",
+            "name": "Andre Raw"
+          }
+        ],
+        "subject": "Cotação inicial e convite para degustação",
+        "to": [
+          {
+            "email": "flavianemesquita27@icloud.com",
+            "name": ""
+          }
+        ]
+      },
+      "has_attachments": false,
+      "id": "acti_6Qwf49H2CAvqoIteUSK0eh13CRrLVMmpE4z2SYZ6IB6",
+      "opens_summary": "Opened by flavianemesquita27@icloud.com (2026-04-23)",
+      "send_as_id": null,
+      "sender": "Andre Raw <team@comeketocatering.com>",
+      "status": "sent",
+      "subject": "Cotação inicial e convite para degustação",
+      "to": [
+        "flavianemesquita27@icloud.com"
+      ],
+      "user_id": "user_bnfoZDGbTqBZ4wcDGqRqTwjRKiwLnQ4mpV3i2enPkMt"
+    }
+  ],
+  "latest_normalized_subject": "Cotação inicial e convite para degustação",
+  "lead_id": "lead_YwGtwp1OrziFJuo5ctAGvCglMUY5XRzJVPGhLrzLfn0",
+  "n_emails": 1,
+  "organization_id": "orga_pOyYOigKEELdmODukgjigCD5pTRewtmBW1yq6YXkskq",
+  "participants": [
+    {
+      "email": "team@comeketocatering.com",
+      "name": "Andre Raw"
+    }
+  ],
+  "summary": null,
+  "updated_by": "user_bnfoZDGbTqBZ4wcDGqRqTwjRKiwLnQ4mpV3i2enPkMt",
+  "updated_by_name": "Andre Raw",
+  "user_id": "user_bnfoZDGbTqBZ4wcDGqRqTwjRKiwLnQ4mpV3i2enPkMt",
+  "user_name": "Andre Raw",
+  "users": [
+    "user_bnfoZDGbTqBZ4wcDGqRqTwjRKiwLnQ4mpV3i2enPkMt"
+  ]
+}

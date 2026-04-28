@@ -16,6 +16,8 @@ Usage:
   python3 server.py [port]        # default 3422
 """
 import base64
+import html
+import io
 import json
 import os
 import re
@@ -23,19 +25,70 @@ import shutil
 import subprocess
 import sys
 import threading
+import time
+import unicodedata
 import urllib.error
 import urllib.parse
 import urllib.request
 import uuid
+import zipfile
 from datetime import datetime, timezone, timedelta
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
+from xml.etree import ElementTree as ET
 
 HERE = Path(__file__).resolve().parent
+AUTO_ROOT = HERE / "Auto"
+AUTO_CLIENT_BOXES = AUTO_ROOT / "Client Boxes"
+AUTO_STAFF_BOXES = AUTO_ROOT / "Staff Boxes"
+AUTO_ORCH_STATE = AUTO_ROOT / "orchestrator" / "state"
 
 
 def _iso_now():
     return datetime.now(timezone.utc).isoformat()
+
+
+def _slug_norm(text):
+    raw = str(text or "")
+    decomp = unicodedata.normalize("NFKD", raw)
+    ascii_only = "".join(ch for ch in decomp if ord(ch) < 128)
+    low = ascii_only.lower()
+    low = re.sub(r"[^a-z0-9]+", "_", low)
+    low = re.sub(r"_+", "_", low).strip("_")
+    return low or "box"
+
+
+def _safe_text_read(path, max_chars=400000):
+    try:
+        txt = path.read_text(encoding="utf-8", errors="replace")
+    except Exception:
+        return ""
+    if len(txt) > max_chars:
+        return txt[:max_chars] + "\n\n...[truncated]..."
+    return txt
+
+
+def _extract_last_touches(markdown_text, limit=5):
+    txt = str(markdown_text or "")
+    lines = []
+    for raw in txt.splitlines():
+        line = raw.strip()
+        if not line:
+            continue
+        if re.match(r"^[-*]\s+", line):
+            line = re.sub(r"^[-*]\s+", "", line).strip()
+            if line:
+                lines.append(line)
+    if not lines:
+        for raw in txt.splitlines():
+            line = raw.strip()
+            if not line:
+                continue
+            if len(line) < 240:
+                lines.append(line)
+            if len(lines) >= limit:
+                break
+    return lines[:max(1, int(limit or 5))]
 
 
 # Locate the `claude` binary. Server's PATH is minimal; the login shell has
@@ -65,6 +118,11 @@ def _find_claude_binary():
 
 
 CLAUDE_BIN = _find_claude_binary()
+
+_REPORT_LOCKS = {}
+_REPORT_LOCKS_GUARD = threading.Lock()
+_DELEGATION_DRAFTS_LOCK = threading.Lock()
+_GITHUB_MCP_STATUS_CACHE = {"checked_at": 0.0, "status": {"available": False, "detail": "not checked"}}
 
 # MCP tools Comeketo Agent's delegations must never reach for. Claude Code inherits
 # the user's global MCP config; this list is passed as --disallowedTools on
@@ -111,7 +169,37 @@ def _delegation_timing(spawn_dt, first_token_dt, done_dt):
     }
 
 
-def _run_delegation(request_id, prompt, mode, cwd, result_path, timeout_s):
+def _github_mcp_status(force=False):
+    now = time.time()
+    cached = _GITHUB_MCP_STATUS_CACHE.get("status") or {}
+    checked = float(_GITHUB_MCP_STATUS_CACHE.get("checked_at") or 0.0)
+    if not force and (now - checked) < 30 and cached:
+        return cached
+    if not CLAUDE_BIN:
+        status = {"available": False, "detail": "claude binary not available"}
+        _GITHUB_MCP_STATUS_CACHE["checked_at"] = now
+        _GITHUB_MCP_STATUS_CACHE["status"] = status
+        return status
+    try:
+        proc = subprocess.run(
+            [CLAUDE_BIN, "mcp", "list"],
+            capture_output=True, text=True, timeout=8,
+        )
+        out = ((proc.stdout or "") + "\n" + (proc.stderr or "")).lower()
+        ok = ("github" in out)
+        status = {
+            "available": bool(ok and proc.returncode == 0),
+            "detail": "github mcp configured" if ok and proc.returncode == 0 else "github mcp not detected",
+            "raw_head": out[:240],
+        }
+    except Exception as e:
+        status = {"available": False, "detail": f"mcp check failed: {type(e).__name__}: {e}"}
+    _GITHUB_MCP_STATUS_CACHE["checked_at"] = now
+    _GITHUB_MCP_STATUS_CACHE["status"] = status
+    return status
+
+
+def _run_delegation(request_id, prompt, mode, cwd, result_path, timeout_s, extra_claude_args=None):
     """Background worker: run `claude -p` and write the final result atomically.
 
     Called from the request handler in a daemon thread so the POST returns
@@ -154,6 +242,8 @@ def _run_delegation(request_id, prompt, mode, cwd, result_path, timeout_s):
     # Build the command. `-p` = print mode (one-shot, non-interactive).
     # --output-format json returns a single structured blob for easy parsing.
     cmd = [CLAUDE_BIN, "-p", "--output-format", "json"]
+    if isinstance(extra_claude_args, list):
+        cmd.extend([str(x) for x in extra_claude_args if x is not None])
     if mode == "trusted":
         # Trusted mode — Claude Code runs tools without prompting. Use only
         # when the prompt is scoped and the caller has confirmed intent.
@@ -332,6 +422,68 @@ def load_env():
 
 
 ENV = load_env()
+_MCP_CREDENTIAL_KEYS = {
+    "OPENAI_API_KEY": "OpenAI API key",
+    "GITHUB_TOKEN": "GitHub token",
+    "CLICKUP_API_TOKEN": "ClickUp API token",
+    "CLOSE_API_KEY": "Close API key",
+}
+
+
+def _mask_secret(v):
+    s = str(v or "").strip()
+    if not s:
+        return ""
+    if len(s) <= 8:
+        return "*" * len(s)
+    return f"{s[:4]}…{s[-4:]}"
+
+
+def _save_env_updates(updates):
+    p = HERE / ".env"
+    current_lines = p.read_text(encoding="utf-8").splitlines() if p.exists() else []
+    clean_updates = {}
+    for key, val in (updates or {}).items():
+        if key not in _MCP_CREDENTIAL_KEYS:
+            continue
+        sval = str(val or "").replace("\n", "").replace("\r", "").strip()
+        clean_updates[key] = sval
+
+    seen = set()
+    out_lines = []
+    for line in current_lines:
+        raw = line.rstrip("\n")
+        stripped = raw.strip()
+        if not stripped or stripped.startswith("#") or "=" not in raw:
+            out_lines.append(raw)
+            continue
+        key, _ = raw.split("=", 1)
+        key = key.strip()
+        if key in clean_updates:
+            seen.add(key)
+            if clean_updates[key]:
+                out_lines.append(f"{key}={clean_updates[key]}")
+            continue
+        out_lines.append(raw)
+
+    for key, val in clean_updates.items():
+        if key in seen:
+            continue
+        if val:
+            out_lines.append(f"{key}={val}")
+
+    text = "\n".join(out_lines).rstrip()
+    p.write_text((text + "\n") if text else "", encoding="utf-8")
+
+    for key, val in clean_updates.items():
+        if val:
+            ENV[key] = val
+        else:
+            ENV.pop(key, None)
+            os.environ.pop(key, None)
+    for key, val in clean_updates.items():
+        if val:
+            os.environ[key] = val
 
 
 def _clickup_get(path):
@@ -546,6 +698,7 @@ class Handler(SimpleHTTPRequestHandler):
     def do_GET(self):
         p = self._api_path()
         if p == "/api/status":
+            github_mcp = _github_mcp_status()
             return self._json({
                 "openai":  bool(ENV.get("OPENAI_API_KEY")),
                 "close":   bool(ENV.get("CLOSE_API_KEY")),
@@ -564,10 +717,56 @@ class Handler(SimpleHTTPRequestHandler):
                 "clickup_list_source": _CLICKUP_DEFAULT["source"],
                 "claude_code_available": bool(CLAUDE_BIN),
                 "claude_code_path": CLAUDE_BIN,
+                "github_mcp": github_mcp,
+                "delegation_targets": {
+                    "general": {
+                        "available": True,
+                        "detail": "General Claude Code delegation (no connector gate).",
+                        "requires_approval_for_write": False,
+                    },
+                    "github": {
+                        "available": bool(github_mcp.get("available")),
+                        "detail": github_mcp.get("detail") or "",
+                        "requires_approval_for_write": True,
+                    },
+                    "clickup": {
+                        "available": bool(ENV.get("CLICKUP_API_TOKEN")),
+                        "detail": ("Connected via CLICKUP_API_TOKEN." if ENV.get("CLICKUP_API_TOKEN") else "Missing CLICKUP_API_TOKEN."),
+                        "requires_approval_for_write": True,
+                    },
+                    "close": {
+                        "available": bool(ENV.get("CLOSE_API_KEY")),
+                        "detail": ("Connected via CLOSE_API_KEY." if ENV.get("CLOSE_API_KEY") else "Missing CLOSE_API_KEY."),
+                        "requires_approval_for_write": True,
+                    },
+                    "claude_code": {
+                        "available": bool(CLAUDE_BIN),
+                        "detail": (f"Binary at {CLAUDE_BIN}" if CLAUDE_BIN else "Claude Code binary not found on PATH."),
+                        "requires_approval_for_write": True,
+                    },
+                    "cursor": {
+                        "available": bool(CLAUDE_BIN),
+                        "detail": "Routes through the Claude Code subprocess with cursor-oriented prompt instructions.",
+                        "requires_approval_for_write": True,
+                    },
+                },
                 # Absolute paths so the browser-side AI can't hallucinate write targets.
                 "workspace_root": str(HERE),
                 "bedrock_root":   str(HERE / "CCAgentindex"),
             })
+        if p == "/api/settings/mcp_credentials":
+            return self._settings_mcp_credentials()
+        if p == "/api/boxes/list":
+            return self._boxes_list()
+        m_box = re.fullmatch(r"/api/boxes/([A-Za-z0-9_\-]+)", p or "")
+        if m_box:
+            return self._boxes_get(m_box.group(1))
+        m_box_html = re.fullmatch(r"/api/boxes/([A-Za-z0-9_\-]+)/html", p or "")
+        if m_box_html:
+            return self._boxes_html(m_box_html.group(1))
+        m_box_template = re.fullmatch(r"/api/boxes/([A-Za-z0-9_\-]+)/template/([A-Za-z0-9_\-]+)", p or "")
+        if m_box_template:
+            return self._boxes_template_html(m_box_template.group(1), m_box_template.group(2))
         if p == "/api/clickup/rescan":
             # Re-resolve on demand (e.g. after user renames a list in ClickUp).
             result = resolve_and_cache_clickup()
@@ -577,6 +776,8 @@ class Handler(SimpleHTTPRequestHandler):
         if p.startswith("/api/briefings/"):
             slug = p[len("/api/briefings/"):]
             return self._briefing_read(slug)
+        if p == "/api/intelligence/conversation/latest":
+            return self._conversation_intelligence_latest()
         if p == "/api/agents":
             return self._agents_list()
         if p == "/api/pieces/status":
@@ -589,6 +790,8 @@ class Handler(SimpleHTTPRequestHandler):
             return self._pieces_sweeps_list()
         if p == "/api/delegate":
             return self._delegate_list()
+        if p == "/api/delegations/drafts":
+            return self._delegation_drafts_list()
         if p.startswith("/api/delegate/"):
             rid = p[len("/api/delegate/"):]
             return self._delegate_read(rid)
@@ -695,6 +898,37 @@ class Handler(SimpleHTTPRequestHandler):
             "slug":  slug,
             "body":  p.read_text(encoding="utf-8"),
             "mtime": stat.st_mtime,
+        })
+
+    # ────── Conversation Intelligence — Analytics page feed ──────────────
+    # Reads the newest YYYY-MM-DD.json under
+    # CCAgentindex/intelligence/sales/conversation/ (written by
+    # build_conversation_intelligence.py) and returns its parsed payload.
+    # Sibling .md is fetched directly by the static file server.
+    def _conversation_intelligence_dir(self):
+        return HERE / "CCAgentindex" / "intelligence" / "sales" / "conversation"
+
+    def _conversation_intelligence_latest(self):
+        d = self._conversation_intelligence_dir()
+        if not d.exists():
+            return self._json({"ok": False, "error": "directory missing", "slug": None})
+        files = sorted(
+            [p for p in d.glob("*.json") if not p.name.startswith(".")],
+            key=lambda p: p.name,
+            reverse=True,
+        )
+        if not files:
+            return self._json({"ok": False, "error": "no conversation intelligence runs yet", "slug": None})
+        latest = files[0]
+        try:
+            payload = json.loads(latest.read_text(encoding="utf-8"))
+        except Exception as e:
+            return self._json({"ok": False, "error": f"parse error: {e}", "slug": latest.stem}, code=500)
+        return self._json({
+            "ok":      True,
+            "slug":    latest.stem,
+            "mtime":   latest.stat().st_mtime,
+            "payload": payload,
         })
 
     # ────── Accomplishments: daily rollups for the calendar/streak UI ─────
@@ -2574,6 +2808,14 @@ class Handler(SimpleHTTPRequestHandler):
     def _reports_root(self):
         return HERE / "CCAgentindex" / "reports"
 
+    def _reports_lock(self, slug):
+        with _REPORT_LOCKS_GUARD:
+            lock = _REPORT_LOCKS.get(slug)
+            if lock is None:
+                lock = threading.Lock()
+                _REPORT_LOCKS[slug] = lock
+            return lock
+
     def _reports_slug_ok(self, s):
         if not s or not isinstance(s, str): return False
         if "/" in s or "\\" in s or ".." in s: return False
@@ -2599,9 +2841,14 @@ class Handler(SimpleHTTPRequestHandler):
         if m.startswith("image/"): return "image"
         if m == "application/pdf" or ext == "pdf": return "pdf"
         if m == "text/csv" or ext in ("csv", "tsv"): return "csv"
+        if ext in ("xlsx", "xls"): return "sheet"
+        if ext in ("docx", "doc"): return "doc"
         if m == "application/json" or ext in ("json", "jsonl"): return "json"
         if m in ("text/markdown",) or ext in ("md", "markdown"): return "md"
-        if m.startswith("text/") or ext in ("txt", "log", "yaml", "yml", "xml", "html", "htm"): return "txt"
+        if ext in ("js", "jsx", "ts", "tsx", "py", "rb", "go", "rs", "java", "kt", "swift", "c", "cpp", "h", "hpp", "cs", "php", "sh", "sql"):
+            return "code"
+        if m.startswith("text/") or ext in ("txt", "log", "yaml", "yml", "xml", "html", "htm", "toml", "ini", "env"):
+            return "txt"
         return "unknown"
 
     def _reports_ext_from(self, mime, filename):
@@ -2612,6 +2859,10 @@ class Handler(SimpleHTTPRequestHandler):
             "application/pdf": "pdf",
             "application/json": "json", "text/csv": "csv",
             "text/markdown": "md", "text/plain": "txt", "text/html": "html",
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": "xlsx",
+            "application/vnd.ms-excel": "xls",
+            "application/vnd.openxmlformats-officedocument.wordprocessingml.document": "docx",
+            "application/msword": "doc",
         }
         e = ext_map.get((mime or "").lower())
         if e: return e
@@ -2619,25 +2870,173 @@ class Handler(SimpleHTTPRequestHandler):
             return filename.rsplit(".", 1)[-1].lower()[:8]
         return "bin"
 
-    def _reports_extract_text(self, raw_bytes, mime, filename):
+    def _reports_extract_xlsx_text(self, raw_bytes):
+        """Best-effort XLSX extraction without third-party deps."""
+        try:
+            zf = zipfile.ZipFile(io.BytesIO(raw_bytes))
+        except Exception as e:
+            return ("", f"xlsx open failed: {e}")
+
+        def _tag_name(tag):
+            return tag.rsplit("}", 1)[-1] if "}" in tag else tag
+
+        shared = []
+        try:
+            with zf.open("xl/sharedStrings.xml") as fh:
+                root = ET.parse(fh).getroot()
+                for si in root.iter():
+                    if _tag_name(si.tag) != "si":
+                        continue
+                    parts = []
+                    for node in si.iter():
+                        if _tag_name(node.tag) == "t":
+                            parts.append(node.text or "")
+                    shared.append("".join(parts))
+        except KeyError:
+            shared = []
+        except Exception:
+            shared = []
+
+        sheet_names = sorted([n for n in zf.namelist() if n.startswith("xl/worksheets/sheet") and n.endswith(".xml")])
+        if not sheet_names:
+            return ("", "xlsx has no worksheets")
+
+        out = []
+        for idx, sheet in enumerate(sheet_names, start=1):
+            try:
+                with zf.open(sheet) as fh:
+                    root = ET.parse(fh).getroot()
+            except Exception:
+                continue
+            out.append(f"[Sheet {idx}]")
+            row_count = 0
+            for row in root.iter():
+                if _tag_name(row.tag) != "row":
+                    continue
+                vals = []
+                for cell in row:
+                    if _tag_name(cell.tag) != "c":
+                        continue
+                    ctype = cell.attrib.get("t")
+                    if ctype == "inlineStr":
+                        tnode = next((n for n in cell.iter() if _tag_name(n.tag) == "t"), None)
+                        vals.append((tnode.text or "") if tnode is not None else "")
+                        continue
+                    vnode = next((n for n in cell.iter() if _tag_name(n.tag) == "v"), None)
+                    if vnode is None:
+                        vals.append("")
+                        continue
+                    raw_val = vnode.text or ""
+                    if ctype == "s":
+                        try:
+                            sval = shared[int(raw_val)]
+                        except Exception:
+                            sval = raw_val
+                        vals.append(sval)
+                    else:
+                        vals.append(raw_val)
+                if vals and any(v.strip() for v in vals):
+                    out.append("\t".join(vals))
+                    row_count += 1
+                if row_count >= 200:
+                    out.append("[... sheet truncated at 200 rows ...]")
+                    break
+            out.append("")
+        return ("\n".join(out).strip(), None)
+
+    def _reports_extract_docx_text(self, raw_bytes):
+        """Best-effort DOCX extraction without third-party deps."""
+        try:
+            zf = zipfile.ZipFile(io.BytesIO(raw_bytes))
+            with zf.open("word/document.xml") as fh:
+                root = ET.parse(fh).getroot()
+        except Exception as e:
+            return ("", f"docx parse failed: {e}")
+
+        def _tag_name(tag):
+            return tag.rsplit("}", 1)[-1] if "}" in tag else tag
+
+        paragraphs = []
+        for p in root.iter():
+            if _tag_name(p.tag) != "p":
+                continue
+            parts = []
+            for node in p.iter():
+                if _tag_name(node.tag) == "t":
+                    parts.append(node.text or "")
+            line = "".join(parts).strip()
+            if line:
+                paragraphs.append(line)
+            if len(paragraphs) >= 400:
+                paragraphs.append("[... document truncated at 400 paragraphs ...]")
+                break
+        return ("\n".join(paragraphs).strip(), None)
+
+    def _reports_ocr_image(self, image_path, mime, filename):
+        if not image_path or not Path(image_path).exists():
+            return ("", "image not found for OCR")
+        provider = "openai" if ENV.get("OPENAI_API_KEY") else "claude_code"
+        payload = {
+            "provider": provider,
+            "timeout": 120,
+            "system": (
+                "You are an OCR engine. Transcribe all visible text exactly, "
+                "including handwritten notes when legible. Preserve line breaks. "
+                "If text is unclear, mark with [unclear]. Return plain text only."
+            ),
+            "messages": [{
+                "role": "user",
+                "content": [
+                    {"type": "text", "text": f"OCR this image ({filename}). Return only transcription text."},
+                    {"type": "image", "path": str(image_path), "mime": mime or "image/png"},
+                ],
+            }],
+        }
+        text, route, err = self._intake_dispatch_chat(payload)
+        if err:
+            return ("", f"ocr failed: {err}")
+        text = (text or "").strip()
+        if not text:
+            return ("", f"ocr returned empty text via {route or provider}")
+        return (text, None)
+
+    def _reports_extract_text(self, raw_bytes, mime, filename, stored_path=None):
         """Return (extracted_text, error_or_none). Best-effort text extraction
         for the universal-intake reports flow. Heavy lifting:
-          text/* → decode as utf-8 (replace errors)
+          text/* + code-ish files → decode as utf-8 (replace errors)
           application/pdf → pypdf if available
-          image/* → placeholder
+          image/* → OCR through current chat provider
+          xlsx/docx → zip/xml extraction without third-party deps
           else → binary placeholder
         """
         m = (mime or "").lower()
+        ext = (filename.rsplit(".", 1)[-1].lower() if "." in (filename or "") else "")
         size = len(raw_bytes)
         try:
-            if m.startswith("text/") or m in ("application/json",) \
-               or (filename and filename.rsplit(".", 1)[-1].lower() in
-                   ("md", "markdown", "txt", "csv", "tsv", "json", "jsonl",
-                    "log", "yaml", "yml", "xml", "html", "htm")):
+            textish_ext = {
+                "md", "markdown", "txt", "csv", "tsv", "json", "jsonl",
+                "log", "yaml", "yml", "xml", "html", "htm", "toml", "ini", "env",
+                "js", "jsx", "ts", "tsx", "py", "rb", "go", "rs", "java", "kt",
+                "swift", "c", "cpp", "h", "hpp", "cs", "php", "sh", "sql",
+            }
+            if m.startswith("text/") or m in ("application/json", "application/javascript", "text/javascript") or ext in textish_ext:
                 return (raw_bytes.decode("utf-8", "replace"), None)
+            if ext in ("xlsx",) or m == "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet":
+                text, xerr = self._reports_extract_xlsx_text(raw_bytes)
+                if text:
+                    return (text, None)
+                return (f"[xlsx: {filename}, {size} bytes] — {xerr or 'could not parse workbook'}", None)
+            if ext in ("docx",) or m == "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
+                text, derr = self._reports_extract_docx_text(raw_bytes)
+                if text:
+                    return (text, None)
+                return (f"[docx: {filename}, {size} bytes] — {derr or 'could not parse document'}", None)
+            if ext in ("xls",) or m == "application/vnd.ms-excel":
+                return (f"[xls: {filename}, {size} bytes] — binary .xls is not directly parseable here; export as .xlsx or .csv for full extraction.", None)
+            if ext in ("doc",) or m == "application/msword":
+                return (f"[doc: {filename}, {size} bytes] — binary .doc is not directly parseable here; export as .docx for full extraction.", None)
             if m == "application/pdf" or (filename or "").lower().endswith(".pdf"):
                 try:
-                    import io
                     try:
                         import pypdf
                     except ImportError:
@@ -2657,7 +3056,10 @@ class Handler(SimpleHTTPRequestHandler):
                 except Exception as e:
                     return (f"[pdf: {filename}, {size} bytes] — extraction failed: {e}", None)
             if m.startswith("image/"):
-                return (f"[image: {filename}] — visual content, no text extraction", None)
+                ocr_text, ocr_err = self._reports_ocr_image(stored_path, m, filename)
+                if ocr_text:
+                    return (ocr_text, None)
+                return (f"[image: {filename}, {size} bytes] — {ocr_err or 'OCR unavailable'}", None)
             return (f"[binary: {filename}, {mime}, {size} bytes]", None)
         except Exception as e:
             return (f"[extract failed: {e}]", str(e))
@@ -2807,47 +3209,48 @@ class Handler(SimpleHTTPRequestHandler):
         if not src.exists():
             return self._json({"ok": False, "error": f"upload not found at {upload_path}"}, code=404)
 
-        report, d, err = self._reports_load(slug)
-        if err:
-            return self._json({"ok": False, "error": err}, code=404)
+        with self._reports_lock(slug):
+            report, d, err = self._reports_load(slug)
+            if err:
+                return self._json({"ok": False, "error": err}, code=404)
 
-        try:
-            raw = src.read_bytes()
-        except Exception as e:
-            return self._json({"ok": False, "error": f"read upload failed: {e}"}, code=500)
+            try:
+                raw = src.read_bytes()
+            except Exception as e:
+                return self._json({"ok": False, "error": f"read upload failed: {e}"}, code=500)
 
-        doc_id = f"d_{uuid.uuid4().hex[:10]}"
-        ext = self._reports_ext_from(mime, filename)
-        docs_dir = d / "documents"
-        docs_dir.mkdir(parents=True, exist_ok=True)
-        doc_path = docs_dir / f"{doc_id}.{ext}"
-        try:
-            doc_path.write_bytes(raw)
-        except Exception as e:
-            return self._json({"ok": False, "error": f"write failed: {e}"}, code=500)
+            doc_id = f"d_{uuid.uuid4().hex[:10]}"
+            ext = self._reports_ext_from(mime, filename)
+            docs_dir = d / "documents"
+            docs_dir.mkdir(parents=True, exist_ok=True)
+            doc_path = docs_dir / f"{doc_id}.{ext}"
+            try:
+                doc_path.write_bytes(raw)
+            except Exception as e:
+                return self._json({"ok": False, "error": f"write failed: {e}"}, code=500)
 
-        extracted, _err = self._reports_extract_text(raw, mime, filename)
-        # Cap stored extracted_text per-document to keep report.json sane.
-        if extracted and len(extracted) > 200_000:
-            extracted = extracted[:200_000] + "\n\n[... truncated ...]"
+            extracted, _err = self._reports_extract_text(raw, mime, filename, stored_path=doc_path)
+            # Cap stored extracted_text per-document to keep report.json sane.
+            if extracted and len(extracted) > 200_000:
+                extracted = extracted[:200_000] + "\n\n[... truncated ...]"
 
-        now = _iso_now()
-        doc_entry = {
-            "id":             doc_id,
-            "filename":       filename,
-            "mime":           mime,
-            "type":           self._reports_doc_type_from_mime(mime, filename),
-            "size":           len(raw),
-            "uploaded_at":    now,
-            "extracted_text": extracted or "",
-            "summary":        (extracted or "")[:200].strip().replace("\n", " ") if extracted else "",
-            "stored_path":    str(doc_path.relative_to(HERE)),
-        }
-        documents = report.get("documents") or []
-        documents.append(doc_entry)
-        report["documents"] = documents
-        report["last_modified"] = now
-        self._reports_save(slug, report)
+            now = _iso_now()
+            doc_entry = {
+                "id":             doc_id,
+                "filename":       filename,
+                "mime":           mime,
+                "type":           self._reports_doc_type_from_mime(mime, filename),
+                "size":           len(raw),
+                "uploaded_at":    now,
+                "extracted_text": extracted or "",
+                "summary":        (extracted or "")[:200].strip().replace("\n", " ") if extracted else "",
+                "stored_path":    str(doc_path.relative_to(HERE)),
+            }
+            documents = report.get("documents") or []
+            documents.append(doc_entry)
+            report["documents"] = documents
+            report["last_modified"] = now
+            self._reports_save(slug, report)
 
         self._activity_ledger_write({
             "ts": now,
@@ -3037,6 +3440,31 @@ class Handler(SimpleHTTPRequestHandler):
         if p == "/api/delegate":
             length = int(self.headers.get("Content-Length") or 0)
             return self._delegate_dispatch(self.rfile.read(length) if length else b"")
+        if p == "/api/settings/mcp_credentials/save":
+            length = int(self.headers.get("Content-Length") or 0)
+            return self._settings_mcp_credentials_save(self.rfile.read(length) if length else b"")
+        if p in (
+            "/api/delegations/drafts/create",
+            "/api/delegations/drafts/update",
+            "/api/delegations/drafts/delete",
+            "/api/delegations/drafts/submit",
+            "/api/delegations/drafts/rewrite",
+            "/api/delegations/drafts/undo",
+        ):
+            length = int(self.headers.get("Content-Length") or 0)
+            raw = self.rfile.read(length) if length else b""
+            if p.endswith("/create"):
+                return self._delegation_draft_create(raw)
+            if p.endswith("/update"):
+                return self._delegation_draft_update(raw)
+            if p.endswith("/delete"):
+                return self._delegation_draft_delete(raw)
+            if p.endswith("/submit"):
+                return self._delegation_draft_submit(raw)
+            if p.endswith("/rewrite"):
+                return self._delegation_draft_rewrite(raw)
+            if p.endswith("/undo"):
+                return self._delegation_draft_undo(raw)
         if p == "/api/send/whatsapp":
             length = int(self.headers.get("Content-Length") or 0)
             return self._send_whatsapp(self.rfile.read(length) if length else b"")
@@ -3829,6 +4257,900 @@ class Handler(SimpleHTTPRequestHandler):
     def _delegations_dir(self):
         return HERE / "CCAgentindex" / "_ledger" / "delegations"
 
+    def _delegation_drafts_path(self):
+        return HERE / "CCAgentindex" / "_ledger" / "delegation_drafts.json"
+
+    def _delegation_draft_events_path(self):
+        return HERE / "CCAgentindex" / "_ledger" / "delegation_draft_events.jsonl"
+
+    def _delegation_drafts_load(self):
+        p = self._delegation_drafts_path()
+        if not p.exists():
+            return {"drafts": []}
+        try:
+            data = json.loads(p.read_text(encoding="utf-8"))
+            if isinstance(data, dict) and isinstance(data.get("drafts"), list):
+                return data
+            if isinstance(data, list):
+                return {"drafts": data}
+        except Exception:
+            pass
+        return {"drafts": []}
+
+    def _delegation_drafts_save(self, data):
+        p = self._delegation_drafts_path()
+        p.parent.mkdir(parents=True, exist_ok=True)
+        tmp = p.with_suffix(".json.tmp")
+        tmp.write_text(json.dumps(data, indent=2, ensure_ascii=False), encoding="utf-8")
+        tmp.replace(p)
+
+    def _delegation_draft_event(self, event):
+        p = self._delegation_draft_events_path()
+        p.parent.mkdir(parents=True, exist_ok=True)
+        with p.open("a", encoding="utf-8") as fh:
+            fh.write(json.dumps(event, ensure_ascii=False) + "\n")
+
+    def _delegation_draft_find(self, drafts, draft_id):
+        for i, d in enumerate(drafts):
+            if d.get("id") == draft_id:
+                return i, d
+        return -1, None
+
+    def _settings_mcp_credentials(self):
+        keys = {}
+        for key, label in _MCP_CREDENTIAL_KEYS.items():
+            v = (ENV.get(key) or "").strip()
+            keys[key] = {
+                "label": label,
+                "configured": bool(v),
+                "masked": _mask_secret(v),
+            }
+        return self._json({"ok": True, "keys": keys})
+
+    def _settings_mcp_credentials_save(self, body):
+        try:
+            payload = json.loads(body.decode("utf-8")) if body else {}
+        except Exception as e:
+            return self._json({"ok": False, "error": f"bad json: {e}"}, code=400)
+        updates = payload.get("updates") or {}
+        if not isinstance(updates, dict) or not updates:
+            return self._json({"ok": False, "error": "missing updates"}, code=400)
+        unknown = [k for k in updates.keys() if k not in _MCP_CREDENTIAL_KEYS]
+        if unknown:
+            return self._json({"ok": False, "error": f"unsupported credential keys: {', '.join(sorted(unknown))}"}, code=400)
+
+        _save_env_updates(updates)
+        if "CLICKUP_API_TOKEN" in updates:
+            resolve_and_cache_clickup()
+
+        self._activity_ledger_write({
+            "ts": _iso_now(),
+            "kind": "settings_mcp_credentials_save",
+            "actor": "ui",
+            "keys": sorted(list(updates.keys())),
+        })
+        return self._settings_mcp_credentials()
+
+    def _boxes_people_lookup(self):
+        base = HERE / "CCAgentindex" / "people"
+        rows = []
+        if not base.exists():
+            return rows
+        for p in sorted(base.glob("*.json")):
+            if p.name.startswith("."):
+                continue
+            try:
+                obj = json.loads(p.read_text(encoding="utf-8"))
+            except Exception:
+                continue
+            rows.append({
+                "id": (obj.get("id") or p.stem).strip(),
+                "name": (obj.get("name") or p.stem).strip(),
+                "kind": (obj.get("kind") or "coworker").strip(),
+                "path": p,
+            })
+        return rows
+
+    def _boxes_catalog(self):
+        people = self._boxes_people_lookup()
+        by_id = {r["id"]: r for r in people if r.get("id")}
+        by_name = {_slug_norm(r["name"]): r for r in people if r.get("name")}
+        staff_norm_to_path = {}
+        client_norm_to_path = {}
+        boxes = []
+
+        def _gather_dirs(base):
+            if not base.exists():
+                return []
+            out = []
+            for p in sorted(base.iterdir()):
+                if p.name.startswith("."):
+                    continue
+                if p.is_dir():
+                    out.append(p)
+            return out
+
+        def _box_from(folder, source_kind):
+            norm = _slug_norm(folder.name)
+            person = by_name.get(norm)
+            if not person and norm in by_id:
+                person = by_id.get(norm)
+            person_id = person.get("id") if person else None
+            kind = "coworker" if source_kind == "staff_box" else ((person or {}).get("kind") or "lead")
+            files = []
+            newest = 0.0
+            for child in folder.iterdir():
+                if child.name.startswith(".") or not child.is_file():
+                    continue
+                try:
+                    stat = child.stat()
+                    newest = max(newest, stat.st_mtime)
+                    files.append({
+                        "name": child.name,
+                        "ext": child.suffix.lower().lstrip("."),
+                        "size": int(stat.st_size),
+                        "mtime": stat.st_mtime,
+                    })
+                except Exception:
+                    continue
+            meta = {}
+            meta_path = folder / "00_meta.json"
+            if meta_path.exists():
+                try:
+                    meta = json.loads(meta_path.read_text(encoding="utf-8"))
+                except Exception:
+                    meta = {}
+            rid = person_id or (f"staff_{norm}" if source_kind == "staff_box" else f"box_{norm}")
+            rel = folder.relative_to(HERE).as_posix()
+            box = {
+                "id": rid,
+                "name": (meta.get("name") or (person or {}).get("name") or folder.name),
+                "kind": kind,
+                "source_kind": source_kind,
+                "person_id": person_id,
+                "folder_name": folder.name,
+                "folder_rel": rel,
+                "folder_abs": str(folder),
+                "mtime": newest or 0.0,
+                "meta": {
+                    "lead_id": meta.get("lead_id"),
+                    "smart_view_label": meta.get("smart_view_label"),
+                    "altitude": meta.get("altitude"),
+                    "last_sweep_at": meta.get("last_sweep_at"),
+                    "comms_dirty": meta.get("comms_dirty"),
+                    "active_cadence": meta.get("active_cadence"),
+                },
+                "files": sorted(files, key=lambda x: x.get("name") or ""),
+                "available_sections": {
+                    "meta": (folder / "00_meta.json").exists(),
+                    "comms": (folder / "01_comms.md").exists(),
+                    "profile": (folder / "04_profile.md").exists(),
+                    "seven_day_plan": (folder / "05_seven_day_plan.md").exists(),
+                    "logic": (folder / "06_logic.md").exists(),
+                    "skills_used": (folder / "07_skills_used.md").exists(),
+                    "alerts": (folder / "09_andre_alerts.md").exists(),
+                    "ledger": (folder / "client_ledger.md").exists(),
+                },
+            }
+            boxes.append(box)
+            if source_kind == "staff_box":
+                staff_norm_to_path[norm] = folder
+            else:
+                client_norm_to_path[norm] = folder
+
+        for d in _gather_dirs(AUTO_CLIENT_BOXES):
+            _box_from(d, "client_box")
+        for d in _gather_dirs(AUTO_STAFF_BOXES):
+            _box_from(d, "staff_box")
+
+        unmatched_boxes = [b["id"] for b in boxes if not b.get("person_id")]
+        matched_person_ids = {b.get("person_id") for b in boxes if b.get("person_id")}
+        unmatched_people = []
+        for p in people:
+            kind = p.get("kind") or "coworker"
+            pid = p.get("id")
+            if kind in ("lead", "client", "coworker") and pid not in matched_person_ids:
+                unmatched_people.append({"person_id": pid, "kind": kind, "name": p.get("name")})
+
+        boxes.sort(key=lambda b: ((b.get("kind") or "lead"), -(b.get("mtime") or 0), _slug_norm(b.get("name"))))
+        by_box_id = {b["id"]: b for b in boxes}
+        return {
+            "boxes": boxes,
+            "by_id": by_box_id,
+            "mismatch": {
+                "unmatched_box_ids": unmatched_boxes,
+                "unmatched_people": unmatched_people,
+            },
+        }
+
+    def _boxes_pick_orchestrator_html(self, box):
+        out = []
+        # Always include the key orchestrator pages as demos.
+        for fixed in ("today.html", "dashboard.html", "index.html"):
+            p = AUTO_ORCH_STATE / fixed
+            if p.exists():
+                out.append({
+                    "label": fixed,
+                    "path_rel": p.relative_to(HERE).as_posix(),
+                    "url": "/" + urllib.parse.quote(p.relative_to(HERE).as_posix(), safe="/"),
+                    "source": "orchestrator_state",
+                })
+        # For lead/client boxes, match state/leads/*.html by name tokens.
+        if (box.get("source_kind") or "") == "client_box":
+            leads_dir = AUTO_ORCH_STATE / "leads"
+            if leads_dir.exists():
+                name_tokens = set(_slug_norm(box.get("name")).split("_"))
+                for hp in sorted(leads_dir.glob("*.html")):
+                    stem_tokens = set(_slug_norm(hp.stem).split("_"))
+                    if not stem_tokens:
+                        continue
+                    if stem_tokens.issubset(name_tokens) or name_tokens.issubset(stem_tokens):
+                        rel = hp.relative_to(HERE).as_posix()
+                        out.append({
+                            "label": f"lead/{hp.name}",
+                            "path_rel": rel,
+                            "url": "/" + urllib.parse.quote(rel, safe="/"),
+                            "source": "orchestrator_lead",
+                        })
+        if (box.get("source_kind") or "") == "staff_box":
+            voice_dir = AUTO_ORCH_STATE / "voice"
+            if voice_dir.exists():
+                norm = _slug_norm(box.get("name"))
+                for hp in sorted(voice_dir.glob("*.html")):
+                    stem = _slug_norm(hp.stem)
+                    if stem and (stem.startswith(norm.split("_")[0]) or norm.startswith(stem)):
+                        rel = hp.relative_to(HERE).as_posix()
+                        out.append({
+                            "label": f"voice/{hp.name}",
+                            "path_rel": rel,
+                            "url": "/" + urllib.parse.quote(rel, safe="/"),
+                            "source": "orchestrator_voice",
+                        })
+        # Include local box-level html demos if present.
+        folder = Path(box.get("folder_abs") or "")
+        if folder.exists():
+            for hp in sorted(folder.glob("*.html")):
+                rel = hp.relative_to(HERE).as_posix()
+                out.append({
+                    "label": f"box/{hp.name}",
+                    "path_rel": rel,
+                    "url": "/" + urllib.parse.quote(rel, safe="/"),
+                    "source": "box_html",
+                })
+        # Keep unique by path.
+        uniq = {}
+        for item in out:
+            uniq[item["path_rel"]] = item
+        return list(uniq.values())
+
+    def _boxes_template_pages(self, box):
+        box_id = (box.get("id") or "").strip()
+        if not box_id:
+            return []
+        items = []
+        for slug, title in [
+            ("overview", "template/overview.html"),
+            ("checklist", "template/checklist.html"),
+            ("action_board", "template/action_board.html"),
+        ]:
+            items.append({
+                "label": title,
+                "path_rel": f"virtual/boxes/{box_id}/{slug}.html",
+                "url": f"/api/boxes/{urllib.parse.quote(box_id, safe='')}/template/{slug}",
+                "source": "generated_template",
+            })
+        return items
+
+    def _boxes_template_items(self, box, sections, html_items):
+        avail = box.get("available_sections") or {}
+        core = [
+            ("meta", "Meta", "00_meta.json", bool((sections.get("meta") or {}))),
+            ("state", "State (Last 5 Touches)", "derived from comms", bool(sections.get("state_touches"))),
+            ("comms", "Comms", "01_comms.md", bool((sections.get("comms_markdown") or "").strip())),
+            ("profile", "Profile", "04_profile.md", bool((sections.get("profile_markdown") or "").strip())),
+            ("enrichment", "Enrichment", "*_enrichment.md", bool((sections.get("enrichment_markdown") or "").strip())),
+            ("seven_day_plan", "7-Day Plan", "05_seven_day_plan.md", bool((sections.get("seven_day_plan_markdown") or "").strip())),
+            ("agents", "Agents Config", "AGENTS.md", bool((sections.get("agents_markdown") or "").strip())),
+            ("logic", "Logic", "06_logic.md", bool((sections.get("logic_markdown") or "").strip() or avail.get("logic"))),
+        ]
+        support = [
+            ("skills_used", "Skills Used", "07_skills_used.md", bool((sections.get("skills_used_markdown") or "").strip() or avail.get("skills_used"))),
+            ("alerts", "Andre Alerts", "09_andre_alerts.md", bool((sections.get("alerts_markdown") or "").strip() or avail.get("alerts"))),
+            ("ledger", "Ledger", "client_ledger.md", bool((sections.get("ledger_markdown") or "").strip() or avail.get("ledger"))),
+        ]
+        page_count = len(html_items or [])
+        page_ready = page_count > 0
+        has_templates = any((i.get("source") == "generated_template") for i in (html_items or []))
+        support.extend([
+            ("pages", "HTML Pages", "orchestrator + box html", page_ready),
+            ("templates", "Generated Templates", "virtual templates", has_templates),
+        ])
+        items = []
+        for key, label, hint, present in core:
+            items.append({"key": key, "label": label, "hint": hint, "present": bool(present), "tier": "core"})
+        for key, label, hint, present in support:
+            items.append({"key": key, "label": label, "hint": hint, "present": bool(present), "tier": "support"})
+
+        core_total = max(1, len(core))
+        core_present = sum(1 for i in items if i["tier"] == "core" and i["present"])
+        total = max(1, len(items))
+        present = sum(1 for i in items if i["present"])
+        score = round((present / total) * 100)
+        core_score = round((core_present / core_total) * 100)
+        status = "strong" if score >= 80 else ("partial" if score >= 45 else "thin")
+        return {
+            "items": items,
+            "summary": {
+                "present_count": present,
+                "total_count": total,
+                "score_pct": score,
+                "core_score_pct": core_score,
+                "status": status,
+            },
+        }
+
+    def _boxes_template_html(self, box_id, template_slug):
+        cat = self._boxes_catalog()
+        b = (cat.get("by_id") or {}).get(box_id)
+        if not b:
+            return self._json({"ok": False, "error": "box not found", "id": box_id}, code=404)
+
+        payload = self._boxes_get_payload(cat, b)
+        if not payload:
+            return self._json({"ok": False, "error": "box payload unavailable", "id": box_id}, code=404)
+
+        checklist = payload.get("checklist") or {"items": [], "summary": {}}
+        summary = checklist.get("summary") or {}
+        items = checklist.get("items") or []
+        rows = []
+        for it in items:
+            mark = "✅" if it.get("present") else "⬜"
+            rows.append(
+                f"<li><span class='mark'>{mark}</span>"
+                f"<span class='label'>{html.escape(it.get('label') or '')}</span>"
+                f"<span class='hint'>{html.escape(it.get('hint') or '')}</span></li>"
+            )
+        list_html = "\n".join(rows) if rows else "<li>No checklist items.</li>"
+
+        section_map = payload.get("sections") or {}
+        profile_snip = html.escape((section_map.get("profile_markdown") or "").strip()[:1500] or "No profile yet.")
+        comms_snip = html.escape((section_map.get("comms_markdown") or "").strip()[:1500] or "No comms yet.")
+        plan_snip = html.escape((section_map.get("seven_day_plan_markdown") or "").strip()[:1500] or "No seven-day plan yet.")
+
+        title = f"{payload.get('name') or payload.get('id')} · {template_slug}"
+        body_main = ""
+        if template_slug == "checklist":
+            body_main = f"""
+            <section class="card">
+              <h2>Coverage Checklist</h2>
+              <p class="lede">Score {summary.get('score_pct', 0)}% · Core {summary.get('core_score_pct', 0)}%</p>
+              <ul class="checklist">{list_html}</ul>
+            </section>
+            """
+        elif template_slug == "action_board":
+            body_main = f"""
+            <section class="grid3">
+              <article class="card"><h2>Profile Snapshot</h2><pre>{profile_snip}</pre></article>
+              <article class="card"><h2>Comms Snapshot</h2><pre>{comms_snip}</pre></article>
+              <article class="card"><h2>7-Day Plan Snapshot</h2><pre>{plan_snip}</pre></article>
+            </section>
+            """
+        else:
+            body_main = f"""
+            <section class="card">
+              <h2>Box Overview</h2>
+              <p class="lede">{html.escape(payload.get('kind') or 'lead')} · {html.escape(payload.get('source_kind') or 'box')} · {html.escape(payload.get('folder_rel') or '')}</p>
+              <p>Information coverage is <strong>{summary.get('score_pct', 0)}%</strong>. Use the checklist page to complete missing sections, then run the action board for operator handoff.</p>
+            </section>
+            <section class="card">
+              <h2>Current Readiness</h2>
+              <ul class="checklist">{list_html}</ul>
+            </section>
+            """
+
+        page = f"""<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>{html.escape(title)}</title>
+<style>
+  :root {{ --bg:#f8f6ef; --ink:#1f1f1a; --rule:#d9d4c8; --card:#fffdf7; --muted:#6b685e; }}
+  * {{ box-sizing: border-box; }}
+  body {{ margin:0; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; color:var(--ink); background:var(--bg); }}
+  .wrap {{ padding:20px; display:grid; gap:14px; }}
+  .head {{ display:flex; justify-content:space-between; align-items:flex-end; gap:12px; border-bottom:1px solid var(--rule); padding-bottom:10px; }}
+  h1 {{ margin:0; font-size:22px; }}
+  .meta {{ color:var(--muted); font-size:12px; }}
+  .card {{ border:1px solid var(--rule); background:var(--card); border-radius:12px; padding:14px; }}
+  h2 {{ margin:0 0 8px 0; font-size:16px; }}
+  .lede {{ margin:0; color:var(--muted); }}
+  ul.checklist {{ list-style:none; padding:0; margin:0; display:grid; gap:6px; }}
+  ul.checklist li {{ display:grid; grid-template-columns:22px minmax(120px, 180px) 1fr; gap:10px; font-size:13px; align-items:center; }}
+  .hint {{ color:var(--muted); font-size:12px; }}
+  pre {{ white-space:pre-wrap; margin:0; font-size:12px; line-height:1.45; max-height:420px; overflow:auto; }}
+  .grid3 {{ display:grid; gap:12px; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); }}
+</style>
+</head>
+<body>
+  <main class="wrap">
+    <header class="head">
+      <div>
+        <h1>{html.escape(payload.get('name') or payload.get('id') or 'Box')}</h1>
+        <div class="meta">{html.escape(payload.get('id') or '')} · {html.escape(template_slug)}</div>
+      </div>
+      <div class="meta">score {summary.get('score_pct', 0)}%</div>
+    </header>
+    {body_main}
+  </main>
+</body>
+</html>
+"""
+        return self._html(page, code=200)
+
+    def _boxes_get_payload(self, catalog, box_row):
+        folder = Path(box_row.get("folder_abs") or "")
+        if not folder.exists():
+            return None
+        payload = dict(box_row)
+        payload.pop("folder_abs", None)
+        payload["sections"] = {
+            "meta": {},
+            "comms_markdown": "",
+            "profile_markdown": "",
+            "seven_day_plan_markdown": "",
+            "logic_markdown": "",
+            "enrichment_markdown": "",
+            "agents_markdown": "",
+            "skills_used_markdown": "",
+            "alerts_markdown": "",
+            "ledger_markdown": "",
+            "state_touches": [],
+        }
+        meta_path = folder / "00_meta.json"
+        if meta_path.exists():
+            try:
+                payload["sections"]["meta"] = json.loads(meta_path.read_text(encoding="utf-8"))
+            except Exception:
+                payload["sections"]["meta"] = {}
+        md_map = {
+            "comms_markdown": "01_comms.md",
+            "profile_markdown": "04_profile.md",
+            "seven_day_plan_markdown": "05_seven_day_plan.md",
+            "logic_markdown": "06_logic.md",
+            "skills_used_markdown": "07_skills_used.md",
+            "alerts_markdown": "09_andre_alerts.md",
+            "ledger_markdown": "client_ledger.md",
+        }
+        for key, fn in md_map.items():
+            p = folder / fn
+            if p.exists():
+                payload["sections"][key] = _safe_text_read(p)
+
+        # Flexible enrichment + agents discovery because naming varies by box.
+        enrichment_candidates = []
+        for child in sorted(folder.glob("*.md")):
+            nm = child.name.lower()
+            if "enrichment" in nm:
+                enrichment_candidates.append(child)
+        if enrichment_candidates:
+            payload["sections"]["enrichment_markdown"] = _safe_text_read(enrichment_candidates[0])
+
+        agents_path = folder / "AGENTS.md"
+        if agents_path.exists():
+            payload["sections"]["agents_markdown"] = _safe_text_read(agents_path)
+
+        payload["sections"]["state_touches"] = _extract_last_touches(payload["sections"].get("comms_markdown"), limit=5)
+        html_items = self._boxes_pick_orchestrator_html(box_row) + self._boxes_template_pages(box_row)
+        uniq = {}
+        for it in html_items:
+            uniq[it.get("path_rel") or it.get("url")] = it
+        payload["html"] = list(uniq.values())
+        payload["checklist"] = self._boxes_template_items(payload, payload["sections"], payload["html"])
+        payload["completeness"] = payload["checklist"].get("summary") or {}
+        payload["mismatch"] = catalog.get("mismatch") or {}
+        return payload
+
+    def _boxes_list(self):
+        cat = self._boxes_catalog()
+        boxes = cat["boxes"]
+        grouped = {"lead": [], "client": [], "coworker": [], "contact": [], "other": []}
+        box_rows = []
+        for b in boxes:
+            k = b.get("kind") or "other"
+            if k not in grouped:
+                k = "other"
+            html_items = self._boxes_pick_orchestrator_html(b) + self._boxes_template_pages(b)
+            checklist = self._boxes_template_items(b, {}, html_items)
+            row = {
+                "id": b.get("id"),
+                "name": b.get("name"),
+                "kind": b.get("kind"),
+                "source_kind": b.get("source_kind"),
+                "person_id": b.get("person_id"),
+                "folder_rel": b.get("folder_rel"),
+                "mtime": b.get("mtime"),
+                "meta": b.get("meta") or {},
+                "available_sections": b.get("available_sections") or {},
+                "completeness": checklist.get("summary") or {},
+                "html_count": len(html_items),
+            }
+            grouped[k].append(row)
+            box_rows.append(row)
+        return self._json({
+            "ok": True,
+            "count": len(boxes),
+            "grouped": grouped,
+            "boxes": box_rows,
+            "mismatch": cat.get("mismatch") or {},
+            "auto_root": str(AUTO_ROOT),
+        })
+
+    def _boxes_get(self, box_id):
+        cat = self._boxes_catalog()
+        b = (cat.get("by_id") or {}).get(box_id)
+        if not b:
+            return self._json({"ok": False, "error": "box not found", "id": box_id}, code=404)
+        payload = self._boxes_get_payload(cat, b)
+        if not payload:
+            return self._json({"ok": False, "error": "box folder missing", "id": box_id}, code=404)
+        return self._json({"ok": True, "box": payload})
+
+    def _boxes_html(self, box_id):
+        cat = self._boxes_catalog()
+        b = (cat.get("by_id") or {}).get(box_id)
+        if not b:
+            return self._json({"ok": False, "error": "box not found", "id": box_id}, code=404)
+        items = self._boxes_pick_orchestrator_html(b) + self._boxes_template_pages(b)
+        uniq = {}
+        for it in items:
+            uniq[it.get("path_rel") or it.get("url")] = it
+        return self._json({
+            "ok": True,
+            "id": box_id,
+            "name": b.get("name"),
+            "kind": b.get("kind"),
+            "items": list(uniq.values()),
+        })
+
+    def _delegation_policy_error(self, draft):
+        pol = draft.get("policy") or {}
+        target = (pol.get("target") or "general").strip().lower()
+        intent = (pol.get("intent") or "read").strip().lower()
+        approval_required = bool(pol.get("approval_required"))
+        valid_targets = {"general", "github", "clickup", "close", "claude_code", "cursor"}
+        valid_intents = {"read", "write", "run"}
+        if target not in valid_targets:
+            return f"Unsupported delegation target: {target or '(empty)'}."
+        if intent not in valid_intents:
+            return f"Unsupported delegation intent: {intent or '(empty)'}."
+        if target == "github":
+            gh = _github_mcp_status()
+            if not gh.get("available"):
+                return "GitHub MCP is not available. Connect GitHub MCP before running GitHub delegations."
+        if target == "clickup" and not ENV.get("CLICKUP_API_TOKEN"):
+            return "ClickUp is not connected. Add CLICKUP_API_TOKEN in settings/.env first."
+        if target == "close" and not ENV.get("CLOSE_API_KEY"):
+            return "Close is not connected. Add CLOSE_API_KEY in settings/.env first."
+        if target in ("claude_code", "cursor") and not CLAUDE_BIN:
+            return "Claude Code binary is unavailable, so this target cannot execute."
+        if intent == "write" and target != "general":
+            if not approval_required:
+                return f"{target} write drafts must set approval_required=true."
+            appr = draft.get("approval") or {}
+            if not appr.get("approved_at"):
+                return f"{target} write draft is not approved yet."
+        return None
+
+    def _delegation_draft_capture_state(self, draft):
+        return {
+            "status": draft.get("status") or "draft",
+            "payload": json.loads(json.dumps(draft.get("payload") or {})),
+            "policy": json.loads(json.dumps(draft.get("policy") or {})),
+            "approval": json.loads(json.dumps(draft.get("approval") or {})),
+            "source": json.loads(json.dumps(draft.get("source") or {})),
+            "context": json.loads(json.dumps(draft.get("context") or {})),
+        }
+
+    def _delegation_draft_snapshot_append(self, draft, ts, reason):
+        snaps = draft.get("snapshots") or []
+        snaps.append({"ts": ts, "reason": reason, "state": self._delegation_draft_capture_state(draft)})
+        draft["snapshots"] = snaps[-40:]
+
+    def _delegation_draft_apply_state(self, draft, state):
+        draft["status"] = (state.get("status") if isinstance(state, dict) else None) or "draft"
+        draft["payload"] = json.loads(json.dumps((state or {}).get("payload") or {}))
+        draft["policy"] = json.loads(json.dumps((state or {}).get("policy") or {}))
+        draft["approval"] = json.loads(json.dumps((state or {}).get("approval") or {}))
+        draft["source"] = json.loads(json.dumps((state or {}).get("source") or {}))
+        draft["context"] = json.loads(json.dumps((state or {}).get("context") or {}))
+
+    def _delegation_drafts_list(self):
+        with _DELEGATION_DRAFTS_LOCK:
+            data = self._delegation_drafts_load()
+            drafts = data.get("drafts") or []
+            drafts = sorted(drafts, key=lambda d: d.get("updated_at") or d.get("created_at") or "", reverse=True)
+        return self._json({"ok": True, "drafts": drafts, "count": len(drafts)})
+
+    def _delegation_draft_create(self, body):
+        try:
+            payload = json.loads(body.decode("utf-8")) if body else {}
+        except Exception as e:
+            return self._json({"ok": False, "error": f"bad json: {e}"}, code=400)
+        now = _iso_now()
+        draft = {
+            "id": payload.get("id") or f"dd_{uuid.uuid4().hex[:10]}",
+            "status": payload.get("status") or "draft",
+            "created_at": now,
+            "updated_at": now,
+            "source": payload.get("source") or {},
+            "payload": {
+                "label": ((payload.get("payload") or {}).get("label") or payload.get("label") or "Draft delegation").strip(),
+                "prompt": ((payload.get("payload") or {}).get("prompt") or payload.get("prompt") or "").strip(),
+                "mode": ((payload.get("payload") or {}).get("mode") or payload.get("mode") or "safe").strip(),
+                "timeout_s": int((payload.get("payload") or {}).get("timeout_s") or payload.get("timeout") or 300),
+                "cwd": (payload.get("payload") or {}).get("cwd") or payload.get("cwd"),
+            },
+            "policy": payload.get("policy") or {"target": "general", "intent": "read", "approval_required": False},
+            "context": payload.get("context") or {},
+            "approval": payload.get("approval") or {},
+            "history": [{
+                "ts": now,
+                "kind": "created",
+                "actor": "ui",
+            }],
+        }
+        self._delegation_draft_snapshot_append(draft, now, "created")
+        if not draft["payload"]["prompt"]:
+            return self._json({"ok": False, "error": "missing payload.prompt"}, code=400)
+
+        with _DELEGATION_DRAFTS_LOCK:
+            data = self._delegation_drafts_load()
+            drafts = data.get("drafts") or []
+            ix, _existing = self._delegation_draft_find(drafts, draft["id"])
+            if ix >= 0:
+                return self._json({"ok": False, "error": "draft id already exists"}, code=409)
+            drafts.append(draft)
+            data["drafts"] = drafts
+            self._delegation_drafts_save(data)
+        self._delegation_draft_event({
+            "ts": now, "kind": "delegation_draft_created", "draft_id": draft["id"],
+            "label": draft["payload"]["label"], "policy": draft["policy"],
+        })
+        return self._json({"ok": True, "draft": draft})
+
+    def _delegation_draft_update(self, body):
+        try:
+            payload = json.loads(body.decode("utf-8")) if body else {}
+        except Exception as e:
+            return self._json({"ok": False, "error": f"bad json: {e}"}, code=400)
+        draft_id = (payload.get("id") or "").strip()
+        patch = payload.get("patch") or {}
+        if not draft_id:
+            return self._json({"ok": False, "error": "missing id"}, code=400)
+        now = _iso_now()
+        updated = None
+        with _DELEGATION_DRAFTS_LOCK:
+            data = self._delegation_drafts_load()
+            drafts = data.get("drafts") or []
+            ix, d = self._delegation_draft_find(drafts, draft_id)
+            if ix < 0:
+                return self._json({"ok": False, "error": "draft not found"}, code=404)
+            if isinstance(patch.get("source"), dict):
+                d["source"] = {**(d.get("source") or {}), **patch["source"]}
+            if isinstance(patch.get("payload"), dict):
+                d["payload"] = {**(d.get("payload") or {}), **patch["payload"]}
+            if isinstance(patch.get("policy"), dict):
+                d["policy"] = {**(d.get("policy") or {}), **patch["policy"]}
+            if isinstance(patch.get("context"), dict):
+                d["context"] = {**(d.get("context") or {}), **patch["context"]}
+            if isinstance(patch.get("approval"), dict):
+                d["approval"] = {**(d.get("approval") or {}), **patch["approval"]}
+            if patch.get("status"):
+                d["status"] = str(patch["status"])
+            d["updated_at"] = now
+            hist = d.get("history") or []
+            hist.append({"ts": now, "kind": "updated", "actor": "ui", "patch_keys": sorted(list(patch.keys()))})
+            d["history"] = hist[-120:]
+            self._delegation_draft_snapshot_append(d, now, "updated")
+            drafts[ix] = d
+            data["drafts"] = drafts
+            self._delegation_drafts_save(data)
+            updated = d
+        self._delegation_draft_event({
+            "ts": now, "kind": "delegation_draft_updated", "draft_id": draft_id,
+            "patch_keys": sorted(list((patch or {}).keys())),
+        })
+        return self._json({"ok": True, "draft": updated})
+
+    def _delegation_draft_delete(self, body):
+        try:
+            payload = json.loads(body.decode("utf-8")) if body else {}
+        except Exception as e:
+            return self._json({"ok": False, "error": f"bad json: {e}"}, code=400)
+        draft_id = (payload.get("id") or "").strip()
+        if not draft_id:
+            return self._json({"ok": False, "error": "missing id"}, code=400)
+        now = _iso_now()
+        removed = None
+        with _DELEGATION_DRAFTS_LOCK:
+            data = self._delegation_drafts_load()
+            drafts = data.get("drafts") or []
+            keep = []
+            for d in drafts:
+                if d.get("id") == draft_id:
+                    removed = d
+                    continue
+                keep.append(d)
+            if removed is None:
+                return self._json({"ok": False, "error": "draft not found"}, code=404)
+            data["drafts"] = keep
+            self._delegation_drafts_save(data)
+        self._delegation_draft_event({
+            "ts": now, "kind": "delegation_draft_deleted", "draft_id": draft_id,
+            "label": ((removed.get("payload") or {}).get("label") or ""),
+        })
+        return self._json({"ok": True, "id": draft_id})
+
+    def _delegation_draft_rewrite(self, body):
+        try:
+            payload = json.loads(body.decode("utf-8")) if body else {}
+        except Exception as e:
+            return self._json({"ok": False, "error": f"bad json: {e}"}, code=400)
+        draft_id = (payload.get("id") or "").strip()
+        instruction = (payload.get("instruction") or "").strip()
+        if not draft_id:
+            return self._json({"ok": False, "error": "missing id"}, code=400)
+        now = _iso_now()
+        with _DELEGATION_DRAFTS_LOCK:
+            data = self._delegation_drafts_load()
+            drafts = data.get("drafts") or []
+            ix, d = self._delegation_draft_find(drafts, draft_id)
+            if ix < 0:
+                return self._json({"ok": False, "error": "draft not found"}, code=404)
+            current = ((d.get("payload") or {}).get("prompt") or "").strip()
+            if not current:
+                return self._json({"ok": False, "error": "draft prompt is empty"}, code=400)
+
+        rewrite_prompt = "\n".join([
+            "Rewrite the delegation prompt below for clarity and execution quality.",
+            "Keep the same objective and constraints unless explicitly changed.",
+            "Return only the rewritten prompt body, no commentary.",
+            f"Operator instruction: {instruction or 'Improve structure, precision, and expected output format.'}",
+            "",
+            "Original prompt:",
+            current,
+        ])
+        provider = "openai" if ENV.get("OPENAI_API_KEY") else "claude_code"
+        chat_payload = {
+            "provider": provider,
+            "timeout": 90,
+            "system": "You are an expert prompt editor for operational delegations.",
+            "messages": [{"role": "user", "content": [{"type": "text", "text": rewrite_prompt}]}],
+        }
+        out, route, err = self._intake_dispatch_chat(chat_payload)
+        if err or not out:
+            return self._json({"ok": False, "error": err or "rewrite failed"}, code=502)
+        rewritten = out.strip()
+        if len(rewritten) < 12:
+            return self._json({"ok": False, "error": "rewrite result too short"}, code=502)
+
+        with _DELEGATION_DRAFTS_LOCK:
+            data = self._delegation_drafts_load()
+            drafts = data.get("drafts") or []
+            ix, d = self._delegation_draft_find(drafts, draft_id)
+            if ix < 0:
+                return self._json({"ok": False, "error": "draft not found"}, code=404)
+            p = d.get("payload") or {}
+            p["prompt_original"] = p.get("prompt_original") or p.get("prompt") or ""
+            p["prompt"] = rewritten
+            d["payload"] = p
+            d["updated_at"] = now
+            hist = d.get("history") or []
+            hist.append({"ts": now, "kind": "rewritten", "actor": "ui", "route": route or provider})
+            d["history"] = hist[-120:]
+            self._delegation_draft_snapshot_append(d, now, "rewritten")
+            drafts[ix] = d
+            data["drafts"] = drafts
+            self._delegation_drafts_save(data)
+        self._delegation_draft_event({
+            "ts": now, "kind": "delegation_draft_rewritten", "draft_id": draft_id, "route": route or provider,
+        })
+        return self._json({"ok": True, "draft": d, "route": route or provider})
+
+    def _delegation_draft_submit(self, body):
+        try:
+            payload = json.loads(body.decode("utf-8")) if body else {}
+        except Exception as e:
+            return self._json({"ok": False, "error": f"bad json: {e}"}, code=400)
+        draft_id = (payload.get("id") or "").strip()
+        if not draft_id:
+            return self._json({"ok": False, "error": "missing id"}, code=400)
+
+        now = _iso_now()
+        with _DELEGATION_DRAFTS_LOCK:
+            data = self._delegation_drafts_load()
+            drafts = data.get("drafts") or []
+            ix, d = self._delegation_draft_find(drafts, draft_id)
+            if ix < 0:
+                return self._json({"ok": False, "error": "draft not found"}, code=404)
+            policy = d.get("policy") or {}
+            if (policy.get("intent") or "").strip().lower() == "write":
+                if payload.get("approve_write"):
+                    appr = d.get("approval") or {}
+                    appr["approved_at"] = now
+                    appr["approved_by"] = (payload.get("approved_by") or "operator").strip()
+                    d["approval"] = appr
+                    d["status"] = "approved"
+            perr = self._delegation_policy_error(d)
+            if perr:
+                return self._json({"ok": False, "error": perr}, code=403)
+
+            d["status"] = "running"
+            d["updated_at"] = now
+            req_id = f"dl_{draft_id}"
+            d["last_request_id"] = req_id
+            hist = d.get("history") or []
+            hist.append({"ts": now, "kind": "submitted", "actor": "ui", "request_id": req_id})
+            d["history"] = hist[-120:]
+            self._delegation_draft_snapshot_append(d, now, "submitted")
+            drafts[ix] = d
+            data["drafts"] = drafts
+            self._delegation_drafts_save(data)
+
+        delegate_body = json.dumps({
+            "request_id": req_id,
+            "prompt": ((d.get("payload") or {}).get("prompt") or "").strip(),
+            "mode": ((d.get("payload") or {}).get("mode") or "safe").strip(),
+            "label": ((d.get("payload") or {}).get("label") or f"Draft {draft_id}").strip(),
+            "timeout": int((d.get("payload") or {}).get("timeout_s") or 300),
+            "cwd": (d.get("payload") or {}).get("cwd"),
+            "policy": d.get("policy") or {},
+            "approval": d.get("approval") or {},
+            "source": d.get("source") or {},
+            "draft_id": draft_id,
+        }).encode("utf-8")
+
+        self._delegation_draft_event({
+            "ts": now, "kind": "delegation_draft_submitted", "draft_id": draft_id, "request_id": req_id,
+            "policy": d.get("policy") or {},
+        })
+        return self._delegate_dispatch(delegate_body)
+
+    def _delegation_draft_undo(self, body):
+        try:
+            payload = json.loads(body.decode("utf-8")) if body else {}
+        except Exception as e:
+            return self._json({"ok": False, "error": f"bad json: {e}"}, code=400)
+        draft_id = (payload.get("id") or "").strip()
+        if not draft_id:
+            return self._json({"ok": False, "error": "missing id"}, code=400)
+        now = _iso_now()
+        with _DELEGATION_DRAFTS_LOCK:
+            data = self._delegation_drafts_load()
+            drafts = data.get("drafts") or []
+            ix, d = self._delegation_draft_find(drafts, draft_id)
+            if ix < 0:
+                return self._json({"ok": False, "error": "draft not found"}, code=404)
+            snaps = d.get("snapshots") or []
+            if len(snaps) < 2:
+                return self._json({"ok": False, "error": "nothing to undo yet"}, code=409)
+            snaps = snaps[:-1]
+            prev = snaps[-1].get("state") or {}
+            self._delegation_draft_apply_state(d, prev)
+            d["snapshots"] = snaps
+            d["updated_at"] = now
+            hist = d.get("history") or []
+            hist.append({"ts": now, "kind": "undone", "actor": "ui"})
+            d["history"] = hist[-120:]
+            drafts[ix] = d
+            data["drafts"] = drafts
+            self._delegation_drafts_save(data)
+        self._delegation_draft_event({
+            "ts": now, "kind": "delegation_draft_undone", "draft_id": draft_id,
+        })
+        return self._json({"ok": True, "draft": d})
+
     def _delegate_dispatch(self, body):
         if not CLAUDE_BIN:
             return self._json({
@@ -3848,6 +5170,33 @@ class Handler(SimpleHTTPRequestHandler):
         cwd_override = payload.get("cwd")
         cwd = Path(cwd_override) if cwd_override else (HERE / "CCAgentindex")
         timeout_s = int(payload.get("timeout") or 300)
+        policy = payload.get("policy") or {}
+        approval = payload.get("approval") or {}
+        source = payload.get("source") or {}
+        draft_id = (payload.get("draft_id") or "").strip() or None
+
+        # Server-enforced target and write-approval policy gate.
+        target = (policy.get("target") or "").strip().lower()
+        intent = (policy.get("intent") or "").strip().lower()
+        if target == "clickup" and not ENV.get("CLICKUP_API_TOKEN"):
+            return self._json({"ok": False, "error": "clickup target unavailable (missing CLICKUP_API_TOKEN)"}, code=409)
+        if target == "close" and not ENV.get("CLOSE_API_KEY"):
+            return self._json({"ok": False, "error": "close target unavailable (missing CLOSE_API_KEY)"}, code=409)
+        if target in ("claude_code", "cursor") and not CLAUDE_BIN:
+            return self._json({"ok": False, "error": "claude_code target unavailable (binary missing)"}, code=409)
+        if target == "github":
+            gh = _github_mcp_status()
+            if not gh.get("available"):
+                return self._json({"ok": False, "error": "github mcp unavailable", "github_mcp": gh}, code=409)
+        if intent == "read":
+            mode = "safe"
+        if intent == "write":
+            if target != "general":
+                if not policy.get("approval_required"):
+                    return self._json({"ok": False, "error": f"{target or 'target'} write requires approval_required=true"}, code=403)
+                if not (approval or {}).get("approved_at"):
+                    return self._json({"ok": False, "error": f"{target or 'target'} write requires explicit approval"}, code=403)
+            mode = "trusted"
 
         request_id = payload.get("request_id") or f"dl_{uuid.uuid4().hex[:10]}"
         result_dir = self._delegations_dir()
@@ -3863,15 +5212,31 @@ class Handler(SimpleHTTPRequestHandler):
             "cwd": str(cwd),
             "started_at": _iso_now(),
             "claude_bin": CLAUDE_BIN,
+            "policy": policy,
+            "approval": approval,
+            "source": source,
+            "draft_id": draft_id,
         }
         result_path.write_text(json.dumps(initial, ensure_ascii=False, indent=2))
 
         t = threading.Thread(
             target=_run_delegation,
-            args=(request_id, prompt, mode, cwd, result_path, timeout_s),
+            args=(request_id, prompt, mode, cwd, result_path, timeout_s, payload.get("claude_args") or []),
             daemon=True,
         )
         t.start()
+
+        self._activity_ledger_write({
+            "ts": _iso_now(),
+            "kind": "delegation_dispatch",
+            "actor": "ui",
+            "request_id": request_id,
+            "label": label,
+            "mode": mode,
+            "target": target or "general",
+            "intent": intent or "run",
+            "draft_id": draft_id,
+        })
 
         return self._json({"ok": True, "request_id": request_id, "status": "running"})
 
@@ -3883,7 +5248,30 @@ class Handler(SimpleHTTPRequestHandler):
         if not p.exists():
             return self._json({"ok": False, "error": "not found"}, code=404)
         try:
-            return self._json(json.loads(p.read_text()))
+            data = json.loads(p.read_text())
+            draft_id = data.get("draft_id")
+            status = (data.get("status") or "").strip().lower()
+            if draft_id and status in ("done", "failed", "timeout", "killed"):
+                with _DELEGATION_DRAFTS_LOCK:
+                    store = self._delegation_drafts_load()
+                    drafts = store.get("drafts") or []
+                    ix, d = self._delegation_draft_find(drafts, draft_id)
+                    if ix >= 0 and (d.get("status") not in ("done", "failed")):
+                        d["status"] = "done" if status == "done" else "failed"
+                        d["updated_at"] = _iso_now()
+                        hist = d.get("history") or []
+                        hist.append({
+                            "ts": _iso_now(),
+                            "kind": "run_finished",
+                            "actor": "system",
+                            "request_id": rid,
+                            "status": status,
+                        })
+                        d["history"] = hist[-120:]
+                        drafts[ix] = d
+                        store["drafts"] = drafts
+                        self._delegation_drafts_save(store)
+            return self._json(data)
         except Exception as e:
             return self._json({"ok": False, "error": f"parse: {e}"}, code=500)
 
@@ -4007,6 +5395,15 @@ class Handler(SimpleHTTPRequestHandler):
         body = json.dumps(obj).encode()
         self.send_response(code)
         self.send_header("Content-Type", "application/json")
+        self.send_header("Content-Length", str(len(body)))
+        self._cors()
+        self.end_headers()
+        self.wfile.write(body)
+
+    def _html(self, text, code=200):
+        body = (text or "").encode("utf-8", errors="replace")
+        self.send_response(code)
+        self.send_header("Content-Type", "text/html; charset=utf-8")
         self.send_header("Content-Length", str(len(body)))
         self._cors()
         self.end_headers()

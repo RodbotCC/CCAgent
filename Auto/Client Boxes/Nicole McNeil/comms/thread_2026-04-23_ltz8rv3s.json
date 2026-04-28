@@ -1,0 +1,82 @@
+{
+  "_type": "EmailThread",
+  "activity_at": "2026-04-23T13:04:23.399000+00:00",
+  "contact_id": null,
+  "created_by": null,
+  "created_by_name": null,
+  "date_created": "2026-04-23T13:04:23.399000+00:00",
+  "date_updated": "2026-04-23T13:04:43.919000+00:00",
+  "id": "acti_OiWHVR7VB1eRHF2IOA7rlvHZygODZdWL46WLtz8Rv3s",
+  "importance": {
+    "reason": "automated-outbound",
+    "type": "not_important"
+  },
+  "latest_emails": [
+    {
+      "bcc": [],
+      "body_preview": "Hey Nicole, Just shooting you this quick email, we got your request for more catering info, and our event planner will connect shortly. ❤️ - Comeketo Catering p.s. check out [this quick video](https:/",
+      "cc": [],
+      "date_created": "2026-04-23T13:04:23.398000+00:00",
+      "date_sent": "2026-04-23T13:04:23.398000+00:00",
+      "date_updated": "2026-04-23T13:04:43.854000+00:00",
+      "direction": "outgoing",
+      "envelope": {
+        "bcc": [],
+        "cc": [],
+        "date": "Thu, 23 Apr 2026 13:04:24 +0000",
+        "from": [
+          {
+            "email": "contact@comeketocatering.com",
+            "name": "Rhonna Ricafort"
+          }
+        ],
+        "in_reply_to": null,
+        "is_autoreply": false,
+        "message_id": "<177694946378.7.3324395319844662802@smtpgw.close.com>",
+        "reply_to": [],
+        "sender": [
+          {
+            "email": "contact@comeketocatering.com",
+            "name": "Rhonna Ricafort"
+          }
+        ],
+        "subject": "[✅ CATERING] You're in Nicole! ",
+        "to": [
+          {
+            "email": "jaydenjackson3636@gmail.com",
+            "name": "Nicole Mcneil"
+          }
+        ]
+      },
+      "has_attachments": true,
+      "id": "acti_qXJdgsRLb2XY1N4BeYTjo5X4gxD4NFgKlMmrqKfeV4A",
+      "opens_summary": "Opened by Nicole Mcneil <jaydenjackson3636@gmail.com> (2 times, latest 2026-04-23)",
+      "send_as_id": null,
+      "sender": "Rhonna Ricafort <contact@comeketocatering.com>",
+      "status": "sent",
+      "subject": "[✅ CATERING] You're in Nicole! ",
+      "to": [
+        "Nicole Mcneil <jaydenjackson3636@gmail.com>"
+      ],
+      "user_id": "user_CUH7ddlLe50fkckpnBqndk8HYyEfGpa0ldxggccxqPo"
+    }
+  ],
+  "latest_normalized_subject": "[✅ CATERING] You're in Nicole!",
+  "lead_id": "lead_yNoVzUNRjZToEcXNy1bZn5LVCfLu58b8z5npdcWtM5z",
+  "n_emails": 1,
+  "organization_id": "orga_pOyYOigKEELdmODukgjigCD5pTRewtmBW1yq6YXkskq",
+  "participants": [
+    {
+      "email": "contact@comeketocatering.com",
+      "name": "Rhonna Ricafort"
+    }
+  ],
+  "summary": null,
+  "updated_by": "user_CUH7ddlLe50fkckpnBqndk8HYyEfGpa0ldxggccxqPo",
+  "updated_by_name": "Rhonna Ricafort",
+  "user_id": "user_CUH7ddlLe50fkckpnBqndk8HYyEfGpa0ldxggccxqPo",
+  "user_name": "Rhonna Ricafort",
+  "users": [
+    "user_CUH7ddlLe50fkckpnBqndk8HYyEfGpa0ldxggccxqPo"
+  ]
+}

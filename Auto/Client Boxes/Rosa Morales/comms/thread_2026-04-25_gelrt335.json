@@ -1,0 +1,82 @@
+{
+  "_type": "EmailThread",
+  "activity_at": "2026-04-25T15:17:32.795000+00:00",
+  "contact_id": null,
+  "created_by": "user_bnfoZDGbTqBZ4wcDGqRqTwjRKiwLnQ4mpV3i2enPkMt",
+  "created_by_name": "Andre Raw",
+  "date_created": "2026-04-25T15:17:32.795000+00:00",
+  "date_updated": "2026-04-26T17:02:21.453000+00:00",
+  "id": "acti_XawMYNIGxxnV9ficYWXaLsSivqt9vo4XeAZGELRt335",
+  "importance": {
+    "reason": "automated-outbound",
+    "type": "not_important"
+  },
+  "latest_emails": [
+    {
+      "bcc": [],
+      "body_preview": "Hi Rosa, Happy to walk you through it. For your 21st birthday on 6/6 with around 30 guests, here's the quick framework: We offer a few service styles — buffet, drop-off, and full-service with our team",
+      "cc": [],
+      "date_created": "2026-04-25T15:17:30.758000+00:00",
+      "date_sent": "2026-04-25T15:17:32.794000+00:00",
+      "date_updated": "2026-04-26T17:02:21.325000+00:00",
+      "direction": "outgoing",
+      "envelope": {
+        "bcc": [],
+        "cc": [],
+        "date": "Sat, 25 Apr 2026 15:17:33 +0000",
+        "from": [
+          {
+            "email": "team@comeketocatering.com",
+            "name": "Andre Raw"
+          }
+        ],
+        "in_reply_to": null,
+        "is_autoreply": false,
+        "message_id": "<177713025281.7.16121843150142968263@smtpgw.close.com>",
+        "reply_to": [],
+        "sender": [
+          {
+            "email": "team@comeketocatering.com",
+            "name": "Andre Raw"
+          }
+        ],
+        "subject": "Re: Catering details for your 21st birthday",
+        "to": [
+          {
+            "email": "kollitarmp@msn.com",
+            "name": ""
+          }
+        ]
+      },
+      "has_attachments": false,
+      "id": "acti_Q59qnR7wAjdQSIYmRibmOm6LAWMPnBt9DS2xeGD3UdJ",
+      "opens_summary": "Opened by kollitarmp@msn.com (2026-04-26)",
+      "send_as_id": null,
+      "sender": "Andre Raw <team@comeketocatering.com>",
+      "status": "sent",
+      "subject": "Re: Catering details for your 21st birthday",
+      "to": [
+        "kollitarmp@msn.com"
+      ],
+      "user_id": "user_bnfoZDGbTqBZ4wcDGqRqTwjRKiwLnQ4mpV3i2enPkMt"
+    }
+  ],
+  "latest_normalized_subject": "Catering details for your 21st birthday",
+  "lead_id": "lead_kQRxOxttsBIC90dIXlB2EIvZkaYlmcS5SS3MmtCqDaE",
+  "n_emails": 1,
+  "organization_id": "orga_pOyYOigKEELdmODukgjigCD5pTRewtmBW1yq6YXkskq",
+  "participants": [
+    {
+      "email": "team@comeketocatering.com",
+      "name": "Andre Raw"
+    }
+  ],
+  "summary": null,
+  "updated_by": "user_bnfoZDGbTqBZ4wcDGqRqTwjRKiwLnQ4mpV3i2enPkMt",
+  "updated_by_name": "Andre Raw",
+  "user_id": "user_bnfoZDGbTqBZ4wcDGqRqTwjRKiwLnQ4mpV3i2enPkMt",
+  "user_name": "Andre Raw",
+  "users": [
+    "user_bnfoZDGbTqBZ4wcDGqRqTwjRKiwLnQ4mpV3i2enPkMt"
+  ]
+}

@@ -1,0 +1,855 @@
+{
+  "_type": "Call",
+  "activity_at": "2026-04-24T17:01:41.074000+00:00",
+  "agent_config_id": null,
+  "call_method": "regular",
+  "coach_legs": [],
+  "contact_id": "cont_FoIbi7voXUscbm5EC7NczjvpfugiWGdWjgePjXi0ovL",
+  "conversation_type_id": null,
+  "conversation_type_reason": null,
+  "cost": "2",
+  "created_by": "user_bnfoZDGbTqBZ4wcDGqRqTwjRKiwLnQ4mpV3i2enPkMt",
+  "created_by_name": "Andre Raw",
+  "date_answered": "2026-04-24T17:01:59.055000+00:00",
+  "date_created": "2026-04-24T17:01:41.074000+00:00",
+  "date_updated": "2026-04-24T17:04:15.076000+00:00",
+  "dialer_id": null,
+  "dialer_saved_search_id": null,
+  "direction": "outbound",
+  "disposition": "answered",
+  "duration": 47,
+  "forwarded_to": null,
+  "has_recording": true,
+  "id": "acti_7prqtL6f69UjgFjrbnQcZHi35f5AGZRAe60H030bYAA",
+  "is_forwarded": false,
+  "is_joinable": false,
+  "is_to_group_number": false,
+  "lead_id": "lead_TRiz0DiM3BJOgEKf5YXF2gzoK3r7u5R2lSbBAHi0rek",
+  "local_country_iso": "US",
+  "local_phone": "+19783811212",
+  "local_phone_formatted": "+1 978-381-1212",
+  "note": "",
+  "note_date_updated": "2026-04-24T17:01:41.073000+00:00",
+  "note_html": "<body><p></p></body>",
+  "note_mentions": [],
+  "notetaker_id": "user_bnfoZDGbTqBZ4wcDGqRqTwjRKiwLnQ4mpV3i2enPkMt",
+  "organization_id": "orga_pOyYOigKEELdmODukgjigCD5pTRewtmBW1yq6YXkskq",
+  "outcome_autofill_confidence": "high",
+  "outcome_autofill_reasoning": "The call connected with the intended contact (Dawn M Denton) who confirmed she is planning a wedding and needs catering for 125 people — meeting qualification criteria. However, she was at work and not available to have a full conversation. The agent did not book a formal meeting but agreed to call back the next day (Saturday) after noon. No meeting was explicitly scheduled, but the prospect is confirmed qualified and a follow-up is planned. This fits \"Qualified – Needs Next Step.\"",
+  "outcome_id": "outcome_032ywLO9o3m7eiz43B1FdO",
+  "outcome_reason": "autofilled",
+  "parent_meeting_id": null,
+  "phone": "+14013660100",
+  "playbook_id": null,
+  "playbook_reason": null,
+  "recording_duration": 46,
+  "recording_expires_at": "2026-05-24T17:01:41.074000+00:00",
+  "recording_history": [
+    {
+      "action": "auto-start-initializing",
+      "timestamp": "2026-04-24T17:01:42.731000+00:00"
+    },
+    {
+      "action": "auto-started",
+      "timestamp": "2026-04-24T17:01:58+00:00"
+    }
+  ],
+  "recording_transcript": {
+    "has_speaker_labels": true,
+    "id": "transcript_0335H0v0DFdk6HCAzl25Nl",
+    "speakers": [
+      {
+        "speaker_label": "Andre Raw",
+        "speaker_side": "close-user",
+        "talk_percentage": 0.6692913385826773,
+        "talk_time": 25.5
+      },
+      {
+        "speaker_label": "Dawn M Denton",
+        "speaker_side": "contact",
+        "talk_percentage": 0.3307086614173228,
+        "talk_time": 12.599999999999996
+      }
+    ],
+    "summary_html": "<ul>\n<li>Andre Raw called Dawn M Denton to discuss catering services for her wedding planning needs.</li>\n<li>The client requires food catering for 125 people at her wedding event.</li>\n<li>Andre scheduled a follow-up call for Saturday afternoon after noon to discuss catering details and pricing.</li>\n</ul>",
+    "summary_text": "- Andre Raw called Dawn M Denton to discuss catering services for her wedding planning needs.\n- The client requires food catering for 125 people at her wedding event.\n- Andre scheduled a follow-up call for Saturday afternoon after noon to discuss catering details and pricing.",
+    "utterances": [
+      {
+        "end": 1.2,
+        "speaker_label": "Dawn M Denton",
+        "speaker_side": "contact",
+        "start": 0.9,
+        "text": "Hello?",
+        "words": [
+          {
+            "end": 1.2,
+            "start": 0.9,
+            "text": "Hello?"
+          }
+        ]
+      },
+      {
+        "end": 6.9,
+        "speaker_label": "Andre Raw",
+        "speaker_side": "close-user",
+        "start": 2.6,
+        "text": "Hey, Don. This is Andre from Conquito Catering. Did I catch you at a bed.",
+        "words": [
+          {
+            "end": 2.9,
+            "start": 2.6,
+            "text": "Hey,"
+          },
+          {
+            "end": 3.2,
+            "start": 2.9,
+            "text": "Don."
+          },
+          {
+            "end": 3.7,
+            "start": 3.4,
+            "text": "This"
+          },
+          {
+            "end": 3.9,
+            "start": 3.7,
+            "text": "is"
+          },
+          {
+            "end": 4.3,
+            "start": 3.9,
+            "text": "Andre"
+          },
+          {
+            "end": 4.5,
+            "start": 4.3,
+            "text": "from"
+          },
+          {
+            "end": 5.2,
+            "start": 4.5,
+            "text": "Conquito"
+          },
+          {
+            "end": 5.6,
+            "start": 5.2,
+            "text": "Catering."
+          },
+          {
+            "end": 5.8,
+            "start": 5.6,
+            "text": "Did"
+          },
+          {
+            "end": 6.0,
+            "start": 5.8,
+            "text": "I"
+          },
+          {
+            "end": 6.2,
+            "start": 6.0,
+            "text": "catch"
+          },
+          {
+            "end": 6.3,
+            "start": 6.2,
+            "text": "you"
+          },
+          {
+            "end": 6.4,
+            "start": 6.3,
+            "text": "at"
+          },
+          {
+            "end": 6.6,
+            "start": 6.4,
+            "text": "a"
+          },
+          {
+            "end": 6.9,
+            "start": 6.6,
+            "text": "bed."
+          }
+        ]
+      },
+      {
+        "end": 9.8,
+        "speaker_label": "Dawn M Denton",
+        "speaker_side": "contact",
+        "start": 8.4,
+        "text": "Yeah, I'm at work.",
+        "words": [
+          {
+            "end": 8.9,
+            "start": 8.4,
+            "text": "Yeah,"
+          },
+          {
+            "end": 9.2,
+            "start": 8.9,
+            "text": "I'm"
+          },
+          {
+            "end": 9.4,
+            "start": 9.2,
+            "text": "at"
+          },
+          {
+            "end": 9.8,
+            "start": 9.4,
+            "text": "work."
+          }
+        ]
+      },
+      {
+        "end": 12.7,
+        "speaker_label": "Andre Raw",
+        "speaker_side": "close-user",
+        "start": 10.6,
+        "text": "At work? What's the best time.",
+        "words": [
+          {
+            "end": 11.0,
+            "start": 10.6,
+            "text": "At"
+          },
+          {
+            "end": 11.4,
+            "start": 11.0,
+            "text": "work?"
+          },
+          {
+            "end": 12.1,
+            "start": 11.7,
+            "text": "What's"
+          },
+          {
+            "end": 12.2,
+            "start": 12.1,
+            "text": "the"
+          },
+          {
+            "end": 12.4,
+            "start": 12.2,
+            "text": "best"
+          },
+          {
+            "end": 12.7,
+            "start": 12.4,
+            "text": "time."
+          }
+        ]
+      },
+      {
+        "end": 13.7,
+        "speaker_label": "Dawn M Denton",
+        "speaker_side": "contact",
+        "start": 12.0,
+        "text": "We all work on Fridays.",
+        "words": [
+          {
+            "end": 12.3,
+            "start": 12.0,
+            "text": "We"
+          },
+          {
+            "end": 12.5,
+            "start": 12.3,
+            "text": "all"
+          },
+          {
+            "end": 12.7,
+            "start": 12.5,
+            "text": "work"
+          },
+          {
+            "end": 13.0,
+            "start": 12.7,
+            "text": "on"
+          },
+          {
+            "end": 13.7,
+            "start": 13.0,
+            "text": "Fridays."
+          }
+        ]
+      },
+      {
+        "end": 21.1,
+        "speaker_label": "Andre Raw",
+        "speaker_side": "close-user",
+        "start": 14.4,
+        "text": "Friday? Me too. I'm here on the grind, John. I understand. If I call you tomorrow. Is that a good time?",
+        "words": [
+          {
+            "end": 14.8,
+            "start": 14.4,
+            "text": "Friday?"
+          },
+          {
+            "end": 15.8,
+            "start": 15.5,
+            "text": "Me"
+          },
+          {
+            "end": 16.0,
+            "start": 15.8,
+            "text": "too."
+          },
+          {
+            "end": 16.2,
+            "start": 16.0,
+            "text": "I'm"
+          },
+          {
+            "end": 16.4,
+            "start": 16.2,
+            "text": "here"
+          },
+          {
+            "end": 16.5,
+            "start": 16.4,
+            "text": "on"
+          },
+          {
+            "end": 16.7,
+            "start": 16.5,
+            "text": "the"
+          },
+          {
+            "end": 17.1,
+            "start": 16.7,
+            "text": "grind,"
+          },
+          {
+            "end": 17.5,
+            "start": 17.1,
+            "text": "John."
+          },
+          {
+            "end": 17.7,
+            "start": 17.5,
+            "text": "I"
+          },
+          {
+            "end": 18.0,
+            "start": 17.7,
+            "text": "understand."
+          },
+          {
+            "end": 18.9,
+            "start": 18.6,
+            "text": "If"
+          },
+          {
+            "end": 19.1,
+            "start": 18.9,
+            "text": "I"
+          },
+          {
+            "end": 19.2,
+            "start": 19.1,
+            "text": "call"
+          },
+          {
+            "end": 19.5,
+            "start": 19.2,
+            "text": "you"
+          },
+          {
+            "end": 20.1,
+            "start": 19.5,
+            "text": "tomorrow."
+          },
+          {
+            "end": 20.4,
+            "start": 20.1,
+            "text": "Is"
+          },
+          {
+            "end": 20.5,
+            "start": 20.4,
+            "text": "that"
+          },
+          {
+            "end": 20.6,
+            "start": 20.5,
+            "text": "a"
+          },
+          {
+            "end": 20.8,
+            "start": 20.6,
+            "text": "good"
+          },
+          {
+            "end": 21.1,
+            "start": 20.8,
+            "text": "time?"
+          }
+        ]
+      },
+      {
+        "end": 27.8,
+        "speaker_label": "Dawn M Denton",
+        "speaker_side": "contact",
+        "start": 21.7,
+        "text": "Yeah, like after the noon. Because I. I work in the morning on Saturdays, but I'm out by noon.",
+        "words": [
+          {
+            "end": 22.0,
+            "start": 21.7,
+            "text": "Yeah,"
+          },
+          {
+            "end": 22.3,
+            "start": 22.0,
+            "text": "like"
+          },
+          {
+            "end": 22.7,
+            "start": 22.3,
+            "text": "after"
+          },
+          {
+            "end": 23.0,
+            "start": 22.7,
+            "text": "the"
+          },
+          {
+            "end": 23.4,
+            "start": 23.0,
+            "text": "noon."
+          },
+          {
+            "end": 24.3,
+            "start": 24.0,
+            "text": "Because"
+          },
+          {
+            "end": 24.5,
+            "start": 24.3,
+            "text": "I."
+          },
+          {
+            "end": 24.9,
+            "start": 24.5,
+            "text": "I"
+          },
+          {
+            "end": 25.3,
+            "start": 25.0,
+            "text": "work"
+          },
+          {
+            "end": 25.4,
+            "start": 25.3,
+            "text": "in"
+          },
+          {
+            "end": 25.6,
+            "start": 25.4,
+            "text": "the"
+          },
+          {
+            "end": 25.8,
+            "start": 25.6,
+            "text": "morning"
+          },
+          {
+            "end": 26.1,
+            "start": 25.8,
+            "text": "on"
+          },
+          {
+            "end": 26.7,
+            "start": 26.1,
+            "text": "Saturdays,"
+          },
+          {
+            "end": 26.8,
+            "start": 26.7,
+            "text": "but"
+          },
+          {
+            "end": 27.0,
+            "start": 26.8,
+            "text": "I'm"
+          },
+          {
+            "end": 27.2,
+            "start": 27.0,
+            "text": "out"
+          },
+          {
+            "end": 27.4,
+            "start": 27.2,
+            "text": "by"
+          },
+          {
+            "end": 27.8,
+            "start": 27.4,
+            "text": "noon."
+          }
+        ]
+      },
+      {
+        "end": 33.2,
+        "speaker_label": "Andre Raw",
+        "speaker_side": "close-user",
+        "start": 28.5,
+        "text": "All right. You do have a wedding you're planning and you need the food for 125 people, right?",
+        "words": [
+          {
+            "end": 28.6,
+            "start": 28.5,
+            "text": "All"
+          },
+          {
+            "end": 28.8,
+            "start": 28.6,
+            "text": "right."
+          },
+          {
+            "end": 29.0,
+            "start": 28.8,
+            "text": "You"
+          },
+          {
+            "end": 29.2,
+            "start": 29.0,
+            "text": "do"
+          },
+          {
+            "end": 29.4,
+            "start": 29.2,
+            "text": "have"
+          },
+          {
+            "end": 29.5,
+            "start": 29.4,
+            "text": "a"
+          },
+          {
+            "end": 29.9,
+            "start": 29.5,
+            "text": "wedding"
+          },
+          {
+            "end": 30.1,
+            "start": 29.9,
+            "text": "you're"
+          },
+          {
+            "end": 30.5,
+            "start": 30.1,
+            "text": "planning"
+          },
+          {
+            "end": 30.6,
+            "start": 30.5,
+            "text": "and"
+          },
+          {
+            "end": 30.8,
+            "start": 30.6,
+            "text": "you"
+          },
+          {
+            "end": 30.9,
+            "start": 30.8,
+            "text": "need"
+          },
+          {
+            "end": 31.2,
+            "start": 30.9,
+            "text": "the"
+          },
+          {
+            "end": 31.4,
+            "start": 31.2,
+            "text": "food"
+          },
+          {
+            "end": 31.6,
+            "start": 31.4,
+            "text": "for"
+          },
+          {
+            "end": 32.5,
+            "start": 31.6,
+            "text": "125"
+          },
+          {
+            "end": 32.8,
+            "start": 32.5,
+            "text": "people,"
+          },
+          {
+            "end": 33.2,
+            "start": 32.8,
+            "text": "right?"
+          }
+        ]
+      },
+      {
+        "end": 32.4,
+        "speaker_label": "Dawn M Denton",
+        "speaker_side": "contact",
+        "start": 32.0,
+        "text": "Yes.",
+        "words": [
+          {
+            "end": 32.4,
+            "start": 32.0,
+            "text": "Yes."
+          }
+        ]
+      },
+      {
+        "end": 41.0,
+        "speaker_label": "Andre Raw",
+        "speaker_side": "close-user",
+        "start": 34.7,
+        "text": "All right, Don, I'm gonna give you a call tomorrow afternoon and we'll talk that you have yourself a great Friday.",
+        "words": [
+          {
+            "end": 35.0,
+            "start": 34.7,
+            "text": "All"
+          },
+          {
+            "end": 35.2,
+            "start": 35.0,
+            "text": "right,"
+          },
+          {
+            "end": 35.5,
+            "start": 35.2,
+            "text": "Don,"
+          },
+          {
+            "end": 36.2,
+            "start": 35.9,
+            "text": "I'm"
+          },
+          {
+            "end": 36.4,
+            "start": 36.2,
+            "text": "gonna"
+          },
+          {
+            "end": 36.5,
+            "start": 36.4,
+            "text": "give"
+          },
+          {
+            "end": 36.7,
+            "start": 36.5,
+            "text": "you"
+          },
+          {
+            "end": 36.8,
+            "start": 36.7,
+            "text": "a"
+          },
+          {
+            "end": 37.0,
+            "start": 36.8,
+            "text": "call"
+          },
+          {
+            "end": 37.5,
+            "start": 37.0,
+            "text": "tomorrow"
+          },
+          {
+            "end": 38.2,
+            "start": 37.5,
+            "text": "afternoon"
+          },
+          {
+            "end": 38.6,
+            "start": 38.2,
+            "text": "and"
+          },
+          {
+            "end": 38.9,
+            "start": 38.6,
+            "text": "we'll"
+          },
+          {
+            "end": 39.1,
+            "start": 38.9,
+            "text": "talk"
+          },
+          {
+            "end": 39.4,
+            "start": 39.1,
+            "text": "that"
+          },
+          {
+            "end": 39.6,
+            "start": 39.4,
+            "text": "you"
+          },
+          {
+            "end": 39.7,
+            "start": 39.6,
+            "text": "have"
+          },
+          {
+            "end": 40.1,
+            "start": 39.7,
+            "text": "yourself"
+          },
+          {
+            "end": 40.3,
+            "start": 40.1,
+            "text": "a"
+          },
+          {
+            "end": 40.6,
+            "start": 40.3,
+            "text": "great"
+          },
+          {
+            "end": 41.0,
+            "start": 40.6,
+            "text": "Friday."
+          }
+        ]
+      },
+      {
+        "end": 39.8,
+        "speaker_label": "Dawn M Denton",
+        "speaker_side": "contact",
+        "start": 39.1,
+        "text": "Okay.",
+        "words": [
+          {
+            "end": 39.8,
+            "start": 39.1,
+            "text": "Okay."
+          }
+        ]
+      },
+      {
+        "end": 42.7,
+        "speaker_label": "Dawn M Denton",
+        "speaker_side": "contact",
+        "start": 42.0,
+        "text": "Thank you.",
+        "words": [
+          {
+            "end": 42.4,
+            "start": 42.0,
+            "text": "Thank"
+          },
+          {
+            "end": 42.7,
+            "start": 42.4,
+            "text": "you."
+          }
+        ]
+      },
+      {
+        "end": 44.0,
+        "speaker_label": "Andre Raw",
+        "speaker_side": "close-user",
+        "start": 43.4,
+        "text": "Bye. Bye.",
+        "words": [
+          {
+            "end": 43.7,
+            "start": 43.4,
+            "text": "Bye."
+          },
+          {
+            "end": 44.0,
+            "start": 43.7,
+            "text": "Bye."
+          }
+        ]
+      },
+      {
+        "end": 44.9,
+        "speaker_label": "Dawn M Denton",
+        "speaker_side": "contact",
+        "start": 43.6,
+        "text": "Have a good day. Bye.",
+        "words": [
+          {
+            "end": 43.9,
+            "start": 43.6,
+            "text": "Have"
+          },
+          {
+            "end": 44.1,
+            "start": 43.9,
+            "text": "a"
+          },
+          {
+            "end": 44.2,
+            "start": 44.1,
+            "text": "good"
+          },
+          {
+            "end": 44.4,
+            "start": 44.2,
+            "text": "day."
+          },
+          {
+            "end": 44.9,
+            "start": 44.4,
+            "text": "Bye."
+          }
+        ]
+      },
+      {
+        "end": 45.9,
+        "speaker_label": "Andre Raw",
+        "speaker_side": "close-user",
+        "start": 45.1,
+        "text": "Thank you. Bye.",
+        "words": [
+          {
+            "end": 45.5,
+            "start": 45.1,
+            "text": "Thank"
+          },
+          {
+            "end": 45.6,
+            "start": 45.5,
+            "text": "you."
+          },
+          {
+            "end": 45.9,
+            "start": 45.6,
+            "text": "Bye."
+          }
+        ]
+      }
+    ]
+  },
+  "recording_url": "https://api.close.com/call/acti_7prqtL6f69UjgFjrbnQcZHi35f5AGZRAe60H030bYAA/recording/",
+  "remote_country_iso": "US",
+  "remote_phone": "+14013660100",
+  "remote_phone_formatted": "+1 401-366-0100",
+  "sequence_id": null,
+  "sequence_name": null,
+  "sequence_subscription_id": null,
+  "source": "Close.io",
+  "status": "completed",
+  "transferred_from": null,
+  "transferred_from_user_id": null,
+  "transferred_to": null,
+  "transferred_to_user_id": null,
+  "updated_by": "user_bnfoZDGbTqBZ4wcDGqRqTwjRKiwLnQ4mpV3i2enPkMt",
+  "updated_by_name": "Andre Raw",
+  "user_id": "user_bnfoZDGbTqBZ4wcDGqRqTwjRKiwLnQ4mpV3i2enPkMt",
+  "user_name": "Andre Raw",
+  "users": [],
+  "voicemail_duration": 0,
+  "voicemail_transcript": null,
+  "voicemail_url": null
+}

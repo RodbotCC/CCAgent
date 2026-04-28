@@ -425,7 +425,35 @@ the WORLD section below is the normalized shape:
       `Boolean toggles for system + AUTO.* automations. ✓ live, ✗ off.`,
       ``,
       hooks,
+      ``,
+      `── CONVERSATION INTELLIGENCE (rolling window) ──────────────────────────`,
+      fmtConversationIntelligence(mc.conversationIntelligence),
     ].join("\n");
+  }
+
+  // Renders a tight ~6-8 line summary of the latest conversation_intelligence
+  // run so the chat agent can answer "how many comms this week?" / "who's most
+  // active?" without us hand-piping the JSON each time.
+  function fmtConversationIntelligence(ci) {
+    if (!ci || !ci.payload) return "  (no conversation intelligence runs yet — script: Onboard Scripts/build_conversation_intelligence.py)";
+    const p = ci.payload;
+    const t = p.totals || {};
+    const b = p.buckets || {};
+    const top = (Array.isArray(p.top_leads) ? p.top_leads : []).slice(0, 3);
+    const rs = p.response_signal || {};
+    const lines = [
+      `  Window: last ${p.window_days || 30} days · ${p.window_start ? p.window_start.slice(0,10) : "?"} → ${p.window_end ? p.window_end.slice(0,10) : "?"}`,
+      `  Totals: ${t.comms || 0} comms · ${t.in || 0} in / ${t.out || 0} out · ratio ${p.ratio || "—"}`,
+      `  Active: ${t.leads_with_activity || 0} leads · Silent: ${t.silent_leads || 0} leads`,
+      `  Peak day: ${b.peak_day || "—"} (${b.peak_count || 0} comms) · Busiest channel: ${b.busiest_channel || "—"}`,
+    ];
+    if (top.length) {
+      lines.push(`  Top leads: ${top.map(r => `${r.name} (${r.count})`).join(" · ")}`);
+    }
+    if (rs.n_pairs) {
+      lines.push(`  Response: median ${rs.median_hours}h · mean ${rs.mean_hours}h · ${rs.n_pairs} inbound→outbound pairs <24h`);
+    }
+    return lines.join("\n");
   }
 
   function salesBlock(mc) {

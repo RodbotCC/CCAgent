@@ -624,7 +624,7 @@ function GraphCanvas({
 // NodeLibrary — left panel
 // ═══════════════════════════════════════════════════════════════════════════
 function NodeLibrary({
-  onAddNode, onStartDrag, workflow, onExport, onRename, onSave, onOpenLoad, saving,
+  onAddNode, onStartDrag, workflow, onExport, onRename, onSave, onOpenLoad, onNew, onSaveAsNew, saving,
   catalogEdges, catalogLoading, onStartCatalogDrag, onApplyCatalogToEdge, onDeleteCatalogEntry,
   selectedEdgeId, onClose,
 }) {
@@ -659,14 +659,24 @@ function NodeLibrary({
         />
         <div className="meta">
           <span>{workflow.nodes.length} nodes · {workflow.connections.length} links</span>
-          <div style={{display:"flex", gap:6}}>
+          <div className="ag-wf-actions">
             {onSave && (
               <button className="export-btn" onClick={onSave} disabled={saving} title="Save workflow to disk">
                 {saving ? "Saving…" : "Save"}
               </button>
             )}
+            {onSaveAsNew && (
+              <button className="export-btn" onClick={onSaveAsNew} disabled={saving} title="Save as a new workflow copy">
+                Save As
+              </button>
+            )}
             {onOpenLoad && (
               <button className="export-btn" onClick={onOpenLoad} title="Load saved workflow">Load</button>
+            )}
+            {onNew && (
+              <button className="export-btn" onClick={onNew} disabled={saving} title="Start a brand-new workflow">
+                New
+              </button>
             )}
             <button className="export-btn" onClick={onExport}>Export</button>
           </div>
@@ -1652,8 +1662,9 @@ What does this edge DO? What moves across it, when, and why?`;
 // ═══════════════════════════════════════════════════════════════════════════
 function tryKeywordParse(text, workflow) {
   const t = text.toLowerCase().trim();
-  // "add <role>" / "add <kind>"
-  const roleMatch = t.match(/^\s*(?:add|create|insert|new)\s+(trigger|actor|transform|sink|state|rodbot|inbox|ledger|slack|slack_post|webhook|cron|reflect|llm_call|human|memory)\b/);
+  // Fast-path only for terse add commands like "add trigger". Longer asks
+  // should flow to LLM parsing so Rodbot can plan multi-step graph edits.
+  const roleMatch = t.match(/^\s*(?:add|create|insert|new)\s+(trigger|actor|transform|sink|state|rodbot|inbox|ledger|slack|slack_post|webhook|cron|reflect|llm_call|human|memory)\s*(?:node)?\s*$/);
   if (roleMatch) {
     const token = roleMatch[1];
     const byKind = KIND_TABLE[token];
@@ -1713,7 +1724,7 @@ function buildRodbotSystemPrompt(workflow) {
     "",
     "The workflow has a strict schema:",
     "- Nodes have: id, role (actor|trigger|transform|sink|state), kind, label",
-    "- Connections have: id, src (node id), dst (node id), kind (data|observe|live)",
+    "- Connections have: id, src (node id), dst (node id), kind (data|reference|trigger|conditional)",
     "",
     "Available kinds per role:",
     allKinds,
@@ -1733,14 +1744,18 @@ function buildRodbotSystemPrompt(workflow) {
     "",
     "Valid ops (pick from these verbs — nothing else):",
     '  {"verb":"add_node","role":"<role>","kind":"<kind>","label":"<optional label>"}',
+    '  {"verb":"update_node","id":"<node_id>","patch":{"label":"...","notes":"...","x":123,"y":456,"config":{"k":"v"}}}',
     '  {"verb":"delete_node","id":"<node_id>"}',
-    '  {"verb":"add_connection","src":"<node_id>","dst":"<node_id>","kind":"data|observe|live"}',
+    '  {"verb":"add_connection","src":"<node_id>","dst":"<node_id>","kind":"data|reference|trigger|conditional"}',
+    '  {"verb":"update_connection","id":"<edge_id>","patch":{"kind":"data|reference|trigger|conditional","label":"...","condition":"..."}}',
+    '  {"verb":"delete_connection","id":"<edge_id>"}',
     "",
     "Rules:",
     "- For pure analysis/explanation requests, set ops to [].",
     "- Only reference existing node ids in delete_node / add_connection src/dst.",
     "- Be conservative: if the ask is ambiguous, set ops to [] and explain in text.",
     "- If the user asks to connect two nodes, emit add_connection(src, dst, 'data').",
+    "- Only use kinds listed above; do not emit observe/live (legacy aliases).",
   ].join("\n");
 }
 
@@ -1794,7 +1809,10 @@ async function dispatchRodbot(text, workflow) {
 // ═══════════════════════════════════════════════════════════════════════════
 // RodbotGraphRail — collapsible chat (real dispatch + fast-path)
 // ═══════════════════════════════════════════════════════════════════════════
-function RodbotGraphRail({ workflow, onAddNode, onDeleteNode, onAddConnection, onClose, selectedEdge, onSaveAsPattern }) {
+function RodbotGraphRail({
+  workflow, onAddNode, onUpdateNode, onDeleteNode, onAddConnection,
+  onUpdateConnection, onDeleteConnection, onApplyOps, onClose, selectedEdge, onSaveAsPattern,
+}) {
   const [turns, setTurns] = ag_useState([
     { role: "sys", text: "Rodbot ready. Try 'add trigger', 'explain this workflow', or ask me anything about the graph." },
   ]);
@@ -1808,6 +1826,10 @@ function RodbotGraphRail({ workflow, onAddNode, onDeleteNode, onAddConnection, o
 
   const applyOps = ag_useCallback((ops) => {
     if (!Array.isArray(ops)) return;
+    if (typeof onApplyOps === "function") {
+      onApplyOps(ops);
+      return;
+    }
     for (const op of ops) {
       if (!op || typeof op !== "object") continue;
       if (op.verb === "add_node" && op.role && op.kind) {
@@ -1815,13 +1837,29 @@ function RodbotGraphRail({ workflow, onAddNode, onDeleteNode, onAddConnection, o
         if (!tmpl) continue;
         const withLabel = op.label ? { ...tmpl, label: op.label } : tmpl;
         onAddNode(op.role, withLabel);
+      } else if (op.verb === "update_node" && op.id && op.patch && typeof op.patch === "object") {
+        if (!onUpdateNode) continue;
+        const patch = {};
+        ["label", "notes", "x", "y", "config"].forEach((k) => {
+          if (op.patch[k] !== undefined) patch[k] = op.patch[k];
+        });
+        if (Object.keys(patch).length) onUpdateNode(op.id, patch);
       } else if (op.verb === "delete_node" && op.id) {
         onDeleteNode(op.id);
       } else if (op.verb === "add_connection" && op.src && op.dst) {
         onAddConnection(op.src, op.dst, op.kind || "data");
+      } else if (op.verb === "update_connection" && op.id && op.patch && typeof op.patch === "object") {
+        if (!onUpdateConnection) continue;
+        const patch = {};
+        ["kind", "label", "description", "transform", "filter", "readPattern", "rateLimit", "debounce", "condition", "falsePathTarget", "eventName"].forEach((k) => {
+          if (op.patch[k] !== undefined) patch[k] = op.patch[k];
+        });
+        if (Object.keys(patch).length) onUpdateConnection(op.id, patch);
+      } else if (op.verb === "delete_connection" && op.id) {
+        if (onDeleteConnection) onDeleteConnection(op.id);
       }
     }
-  }, [onAddNode, onDeleteNode, onAddConnection]);
+  }, [onAddNode, onUpdateNode, onDeleteNode, onAddConnection, onUpdateConnection, onDeleteConnection, onApplyOps]);
 
   const send = async (text) => {
     if (!text || !text.trim() || busy) return;
@@ -2115,6 +2153,23 @@ async function copyToClipboard(text) {
 }
 
 function genId(prefix) { return `${prefix}_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 6)}`; }
+
+function createEmptyWorkflow(name = "Untitled workflow") {
+  const nowIso = new Date().toISOString();
+  return {
+    schema: "comeketo.automation_graph.v1",
+    id: genId("wf"),
+    slug: slugify(name),
+    name,
+    nodes: [],
+    connections: [],
+    metadata: {
+      created_at: nowIso,
+      last_modified: nowIso,
+      version: 1,
+    },
+  };
+}
 
 // ═══════════════════════════════════════════════════════════════════════════
 // AutomationGraphScreen — top-level composition with undo stack
@@ -2702,6 +2757,100 @@ function AutomationGraphScreen({ go, loadSlug }) {
     logLedger("automation_connections_delete", { conn_ids: Array.from(set), count: set.size, workflow_id: present.id });
   }, [present, commit]);
 
+  // Apply a whole Rodbot op batch against one snapshot of state so multi-op
+  // replies don't collapse into only the last mutation.
+  const applyRodbotOps = ag_useCallback((ops) => {
+    if (!Array.isArray(ops) || !ops.length) return;
+    const validRoles = new Set(["trigger", "actor", "transform", "sink", "state"]);
+    let nextNodes = [...present.nodes];
+    let nextConnections = [...present.connections];
+    let changed = false;
+
+    const addNodeInline = (role, template, labelOverride) => {
+      if (!template || !template.kind || !validRoles.has(role)) return;
+      const id = genId(`n_${role.slice(0, 3)}`);
+      const n = nextNodes.length;
+      nextNodes.push({
+        id,
+        role,
+        kind: template.kind,
+        label: (labelOverride && String(labelOverride).trim()) || template.label,
+        config: {},
+        notes: "",
+        x: 220 + (n % 4) * 200,
+        y: 120 + Math.floor(n / 4) * 140,
+      });
+      changed = true;
+    };
+
+    for (const op of ops) {
+      if (!op || typeof op !== "object") continue;
+      if (op.verb === "add_node" && op.kind) {
+        const tmpl = KIND_TABLE[op.kind];
+        const role = op.role || (tmpl && tmpl.role);
+        if (!tmpl || !validRoles.has(role)) continue;
+        addNodeInline(role, tmpl, op.label);
+      } else if (op.verb === "update_node" && op.id && op.patch && typeof op.patch === "object") {
+        const idx = nextNodes.findIndex((n) => n.id === op.id);
+        if (idx < 0) continue;
+        const patch = {};
+        ["label", "notes", "x", "y", "config"].forEach((k) => {
+          if (op.patch[k] !== undefined) patch[k] = op.patch[k];
+        });
+        if (!Object.keys(patch).length) continue;
+        nextNodes[idx] = { ...nextNodes[idx], ...patch };
+        changed = true;
+      } else if (op.verb === "delete_node" && op.id) {
+        const hadNode = nextNodes.some((n) => n.id === op.id);
+        if (!hadNode) continue;
+        nextNodes = nextNodes.filter((n) => n.id !== op.id);
+        nextConnections = nextConnections.filter((c) => c.src !== op.id && c.dst !== op.id);
+        changed = true;
+      } else if (op.verb === "add_connection" && op.src && op.dst && op.src !== op.dst) {
+        const hasSrc = nextNodes.some((n) => n.id === op.src);
+        const hasDst = nextNodes.some((n) => n.id === op.dst);
+        if (!hasSrc || !hasDst) continue;
+        const exists = nextConnections.some((c) => c.src === op.src && c.dst === op.dst);
+        if (exists) continue;
+        const nowIso = new Date().toISOString();
+        nextConnections.push({
+          id: genId("c"),
+          src: op.src,
+          dst: op.dst,
+          kind: normalizeEdgeKind(op.kind || "data"),
+          label: "",
+          annotations: [],
+          narration: "",
+          created_at: nowIso,
+        });
+        changed = true;
+      } else if (op.verb === "update_connection" && op.id && op.patch && typeof op.patch === "object") {
+        const idx = nextConnections.findIndex((c) => c.id === op.id);
+        if (idx < 0) continue;
+        const patch = {};
+        ["kind", "label", "description", "transform", "filter", "readPattern", "rateLimit", "debounce", "condition", "falsePathTarget", "eventName"].forEach((k) => {
+          if (op.patch[k] !== undefined) patch[k] = op.patch[k];
+        });
+        if (patch.kind !== undefined) patch.kind = normalizeEdgeKind(patch.kind);
+        if (!Object.keys(patch).length) continue;
+        nextConnections[idx] = { ...nextConnections[idx], ...patch, last_modified: new Date().toISOString() };
+        changed = true;
+      } else if (op.verb === "delete_connection" && op.id) {
+        const before = nextConnections.length;
+        nextConnections = nextConnections.filter((c) => c.id !== op.id);
+        if (nextConnections.length !== before) changed = true;
+      }
+    }
+
+    if (!changed) return;
+    commit({
+      ...present,
+      nodes: nextNodes,
+      connections: nextConnections,
+      metadata: { ...(present.metadata || {}), last_modified: new Date().toISOString() },
+    });
+  }, [present, commit]);
+
   // Duplicate a node — places a copy near the original, clones config /
   // notes / annotations but generates a fresh id and doesn't copy edges.
   const duplicateNode = ag_useCallback((id) => {
@@ -3137,6 +3286,30 @@ function AutomationGraphScreen({ go, loadSlug }) {
   const [saving, setSaving] = ag_useState(false);
   const [loadOpen, setLoadOpen] = ag_useState(false);
   const [savedList, setSavedList] = ag_useState([]);
+  const saveWorkflow = ag_useCallback(async (wf, opts = {}) => {
+    const text = serializeWorkflow(wf);
+    const desiredSlug = slugify(opts.slug || wf.name);
+    let slug = desiredSlug;
+    if (opts.ensureUnique) {
+      try {
+        const r = await fetch("/api/workflows/list");
+        const j = await r.json().catch(() => ({ items: [] }));
+        const taken = new Set(((j && j.items) || []).map((it) => String(it.slug || "")));
+        if (taken.has(slug)) {
+          let n = 2;
+          while (taken.has(`${desiredSlug}-${n}`)) n += 1;
+          slug = `${desiredSlug}-${n}`;
+        }
+      } catch {}
+    }
+    const r = await fetch("/api/workflows/save", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ slug, json: text, name: wf.name, workflow_id: wf.id }),
+    });
+    const j = await r.json().catch(() => ({ ok: false }));
+    return { ok: !!(j && j.ok), slug, response: j };
+  }, []);
 
   const onExport = ag_useCallback(async () => {
     const text = serializeWorkflow(present);
@@ -3150,19 +3323,13 @@ function AutomationGraphScreen({ go, loadSlug }) {
   }, [present]);
 
   const onSave = ag_useCallback(async () => {
-    const text = serializeWorkflow(present);
-    const slug = slugify(present.name);
     setSaving(true);
     try {
-      const r = await fetch("/api/workflows/save", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ slug, json: text, name: present.name, workflow_id: present.id }),
-      });
-      const j = await r.json().catch(() => ({ ok: false }));
-      if (j && j.ok) {
-        logLedger("automation_workflow_save", { workflow_id: present.id, slug, path: j.path, nodes: present.nodes.length });
-        setToast(`Saved · ${j.path || slug}`);
+      const result = await saveWorkflow(present);
+      const j = result.response;
+      if (result.ok) {
+        logLedger("automation_workflow_save", { workflow_id: present.id, slug: result.slug, path: j.path, nodes: present.nodes.length });
+        setToast(`Saved · ${j.path || result.slug}`);
       } else {
         setToast("Save failed");
       }
@@ -3172,7 +3339,60 @@ function AutomationGraphScreen({ go, loadSlug }) {
       setSaving(false);
       setTimeout(() => setToast(null), 2400);
     }
-  }, [present]);
+  }, [present, saveWorkflow]);
+
+  const onSaveAsNew = ag_useCallback(async () => {
+    const seed = (present && present.name ? present.name : "Untitled workflow").trim();
+    const suggested = seed.toLowerCase().includes("copy") ? seed : `${seed} copy`;
+    const name = (window.prompt("Save as new workflow name:", suggested) || "").trim();
+    if (!name) return;
+    const nowIso = new Date().toISOString();
+    const next = {
+      ...present,
+      id: genId("wf"),
+      name,
+      slug: slugify(name),
+      metadata: {
+        ...(present.metadata || {}),
+        created_at: nowIso,
+        last_modified: nowIso,
+        version: 1,
+      },
+    };
+    commit(next);
+    clearSelection();
+    setSaving(true);
+    try {
+      const result = await saveWorkflow(next, { ensureUnique: true });
+      const j = result.response;
+      if (result.ok) {
+        logLedger("automation_workflow_save_as_new", { workflow_id: next.id, slug: result.slug, path: j.path, nodes: next.nodes.length });
+        setToast(`Saved new workflow · ${j.path || result.slug}`);
+      } else {
+        setToast("Save-as-new failed");
+      }
+    } catch (e) {
+      setToast("Save-as-new failed: " + (e && e.message ? e.message : "network"));
+    } finally {
+      setSaving(false);
+      setTimeout(() => setToast(null), 2400);
+    }
+  }, [present, commit, clearSelection, saveWorkflow]);
+
+  const onNewWorkflow = ag_useCallback(() => {
+    const hasContent = (present.nodes && present.nodes.length) || (present.connections && present.connections.length);
+    if (hasContent) {
+      const ok = window.confirm("Start a new blank workflow? Unsaved changes in this canvas can be lost.");
+      if (!ok) return;
+    }
+    const fresh = createEmptyWorkflow("Untitled workflow");
+    setPast([]);
+    setFuture([]);
+    setPresent(fresh);
+    clearSelection();
+    setToast("New workflow ready");
+    setTimeout(() => setToast(null), 1400);
+  }, [present, clearSelection]);
 
   const openLoad = ag_useCallback(async () => {
     try {
@@ -3474,6 +3694,8 @@ function AutomationGraphScreen({ go, loadSlug }) {
           workflow={workflow}
           onExport={onExport}
           onSave={onSave}
+          onSaveAsNew={onSaveAsNew}
+          onNew={onNewWorkflow}
           onOpenLoad={openLoad}
           saving={saving}
           onRename={renameWorkflow}
@@ -3730,8 +3952,12 @@ function AutomationGraphScreen({ go, loadSlug }) {
         <RodbotGraphRail
           workflow={workflow}
           onAddNode={addNodeFromTemplate}
+          onUpdateNode={updateNode}
           onDeleteNode={deleteNode}
           onAddConnection={addConnection}
+          onUpdateConnection={updateConnection}
+          onDeleteConnection={(id) => deleteConnections(new Set([id]))}
+          onApplyOps={applyRodbotOps}
           onClose={() => setRailOpen(false)}
           selectedEdge={selectedEdgeId ? workflow.connections.find(c => c.id === selectedEdgeId) : null}
           onSaveAsPattern={saveEdgeAsPattern}

@@ -11,7 +11,7 @@ const SCREEN_LABELS = {
   inbox: "inbox",
   contacts: "contacts",
   briefing: "briefing",
-  delegations: "delegate",
+  delegations: "delegations",
   chat: "chat",
   calendar: "calendar",
   rodbot: "Rodbot",
@@ -19,6 +19,7 @@ const SCREEN_LABELS = {
   activity: "activity",
   analytics: "analytics",
   automation: "automation",
+  boxes: "boxes",
 };
 
 // i18n stub — i18n.js was retired (Apr 2026 trim). Any straggler `t("key")`
@@ -141,7 +142,7 @@ function Breadcrumb({ history, go }) {
 }
 window.Breadcrumb = Breadcrumb;
 
-function Topbar({ route, history, go, stateSig, onOpenSettings, onOpenLeads, onOpenClients, onOpenCoworkers, onOpenContacts, onOpenVenues, onOpenBriefing, onOpenActivity, onOpenAutomation, onOpenIntake, onHome }) {
+function Topbar({ route, history, go, stateSig, onOpenSettings, onOpenLeads, onOpenClients, onOpenCoworkers, onOpenContacts, onOpenVenues, onOpenBriefing, onOpenActivity, onOpenAutomation, onOpenIntake, onOpenAnalytics, onOpenDelegations, onOpenBoxes, onHome }) {
   return (
     <div className="topbar">
       {/* ── Row 0: brand (quiet letterhead) + context strip (quiet meta) ── */}
@@ -191,8 +192,17 @@ function Topbar({ route, history, go, stateSig, onOpenSettings, onOpenLeads, onO
         <button className={"chip" + (route.name === "intake" ? " active" : "")} onClick={onOpenIntake} title="Intake — drop receipts, invoices, notes">
           <Icon name="inbox" size={14}/>intake
         </button>
+        <button className={"chip" + (route.name === "analytics" ? " active" : "")} onClick={onOpenAnalytics} title="Analytics">
+          <Icon name="bar-chart-2" size={14}/>analytics
+        </button>
+        <button className={"chip" + (route.name === "boxes" ? " active" : "")} onClick={onOpenBoxes} title="Auto boxes runtime">
+          <Icon name="layers" size={14}/>boxes
+        </button>
         <button className={"chip" + (route.name === "automation" ? " active" : "")} onClick={onOpenAutomation} title="Automation graph">
           <Icon name="git-branch" size={14}/>automation
+        </button>
+        <button className={"chip" + (route.name === "delegations" ? " active" : "")} onClick={onOpenDelegations} title="Delegations action zone">
+          <Icon name="terminal" size={14}/>delegations
         </button>
       </div>
       {/* Row 2 (breadcrumb) moved to BottomStrip — Apr 2026 no-page-scroll pass */}
@@ -786,6 +796,28 @@ function ChatRail({ go, gridGenerate, aiBusy }) {
   };
   const removeAttachment = (idx) => setAttachments(a => a.filter((_, i) => i !== idx));
 
+  const sendToDelegations = async (text) => {
+    const body = String(text || "").trim();
+    if (!body) return;
+    if (!(window.SecretaryDelegationsBridge && window.SecretaryDelegationsBridge.sendToDraft)) {
+      alert("Delegations bridge unavailable.");
+      return;
+    }
+    try {
+      await window.SecretaryDelegationsBridge.sendToDraft({
+        text: body,
+        label: "From chat rail: " + body.slice(0, 40),
+        source: { surface: "chat_rail", route: "grid", entity: { type: "assistant_turn", chat_id: activeId } },
+        policy: { target: "github", intent: "read", approval_required: false },
+        mode: "safe",
+        context: { chat_id: activeId, from: "assistant-turn" },
+      });
+      if (go && go.push) go.push("delegations");
+    } catch (e) {
+      alert("Delegation draft failed: " + (e.message || e));
+    }
+  };
+
   // Detect regen/regenerate-style intent. If the user asks for a new grid,
   // pipe the rest of the message (everything after the directive word) into
   // onGenerate as the intent, and echo a system turn instead of calling the
@@ -901,6 +933,18 @@ function ChatRail({ go, gridGenerate, aiBusy }) {
                     mine || sys
                       ? <div className="chat-rail-bubble">{text}</div>
                       : <Markdown text={text} className="chat-rail-bubble chat-md"/>
+                  )}
+                  {!mine && !sys && text && (
+                    <button
+                      className="chat-footnote"
+                      onClick={() => sendToDelegations(text)}
+                      title="Send this response to Delegations"
+                      style={{alignSelf:"flex-start"}}
+                    >
+                      <span className="marker">·</span>
+                      <Icon name="terminal" size={11}/>
+                      <span>send to delegations</span>
+                    </button>
                   )}
                 </div>
               </div>

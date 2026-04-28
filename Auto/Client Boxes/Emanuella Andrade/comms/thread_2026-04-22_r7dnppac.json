@@ -1,0 +1,178 @@
+{
+  "_type": "EmailThread",
+  "activity_at": "2026-04-22T15:36:15.824000+00:00",
+  "contact_id": null,
+  "created_by": "user_bnfoZDGbTqBZ4wcDGqRqTwjRKiwLnQ4mpV3i2enPkMt",
+  "created_by_name": "Andre Raw",
+  "date_created": "2026-04-22T15:36:15.824000+00:00",
+  "date_updated": "2026-04-22T15:36:16.767000+00:00",
+  "id": "acti_XGbo89BtSTeG2VOQEFgTOJYOLS3NaLwinhzr7dNppaC",
+  "importance": {
+    "reason": "contains-manual-message",
+    "type": "important"
+  },
+  "latest_emails": [
+    {
+      "bcc": [],
+      "body_preview": "The number I have for you is invalid. Let me know how to best assist you :) \\----- Regards, **Andre Raw** _​​_ Catering Event Coordinator 📲 C: [(978) 235-3791](tel:19782353791) 📲 W: [(978) 381-1212](t",
+      "cc": [],
+      "date_created": "2026-04-22T15:35:35.885000+00:00",
+      "date_sent": "2026-04-22T15:36:15.823000+00:00",
+      "date_updated": "2026-04-22T15:36:16.713000+00:00",
+      "direction": "outgoing",
+      "envelope": {
+        "bcc": [],
+        "cc": [],
+        "date": "Wed, 22 Apr 2026 15:36:16 +0000",
+        "from": [
+          {
+            "email": "team@comeketocatering.com",
+            "name": "Andre Raw"
+          }
+        ],
+        "in_reply_to": "<177626812733.7.215667346416762925@smtpgw.close.com>",
+        "is_autoreply": false,
+        "message_id": "<177687217586.6.5416016226215413942@smtpgw.close.com>",
+        "reply_to": [],
+        "sender": [
+          {
+            "email": "team@comeketocatering.com",
+            "name": "Andre Raw"
+          }
+        ],
+        "subject": "Re: Number to call",
+        "to": [
+          {
+            "email": "emanuellaandrade06@gmail.com",
+            "name": ""
+          }
+        ]
+      },
+      "has_attachments": false,
+      "id": "acti_8Og6q9ydLLzqVri5ZySzkVgqAl0nG3SPQ8WfYRcoHHY",
+      "opens_summary": null,
+      "send_as_id": null,
+      "sender": "Andre Raw <team@comeketocatering.com>",
+      "status": "sent",
+      "subject": "Re: Number to call",
+      "to": [
+        "emanuellaandrade06@gmail.com"
+      ],
+      "user_id": "user_bnfoZDGbTqBZ4wcDGqRqTwjRKiwLnQ4mpV3i2enPkMt"
+    },
+    {
+      "bcc": [],
+      "body_preview": "I meant great time to call 😊 I have your number \\----- Regards, **Andre Raw** _​​_ Catering Event Coordinator 📲 C: [(978) 235-3791](tel:19782353791) 📲 W: [(978) 381-1212](tel:9783811212) [Facebook](ht",
+      "cc": [],
+      "date_created": "2026-04-15T15:48:04.517000+00:00",
+      "date_sent": "2026-04-15T15:48:47.272000+00:00",
+      "date_updated": "2026-04-15T15:48:48.210000+00:00",
+      "direction": "outgoing",
+      "envelope": {
+        "bcc": [],
+        "cc": [],
+        "date": "Wed, 15 Apr 2026 15:48:47 +0000",
+        "from": [
+          {
+            "email": "team@comeketocatering.com",
+            "name": "Andre Raw"
+          }
+        ],
+        "in_reply_to": "<177626797673.7.5812332119131005346@smtpgw.close.com>",
+        "is_autoreply": false,
+        "message_id": "<177626812733.7.215667346416762925@smtpgw.close.com>",
+        "reply_to": [],
+        "sender": [
+          {
+            "email": "team@comeketocatering.com",
+            "name": "Andre Raw"
+          }
+        ],
+        "subject": "Re: Number to call",
+        "to": [
+          {
+            "email": "emanuellaandrade06@gmail.com",
+            "name": ""
+          }
+        ]
+      },
+      "has_attachments": false,
+      "id": "acti_giRUw7uN06u3f1aaC7IgB58CXlwloOBYXojS5SzM35e",
+      "opens_summary": null,
+      "send_as_id": null,
+      "sender": "Andre Raw <team@comeketocatering.com>",
+      "status": "sent",
+      "subject": "Re: Number to call",
+      "to": [
+        "emanuellaandrade06@gmail.com"
+      ],
+      "user_id": "user_bnfoZDGbTqBZ4wcDGqRqTwjRKiwLnQ4mpV3i2enPkMt"
+    },
+    {
+      "bcc": [],
+      "body_preview": "Hey Emmanuella I will help you every step of the way and would love to make\nsure I can be of great assistance. What's a good number to call so you can tell me all about your big day? \\----- Regards, *",
+      "cc": [],
+      "date_created": "2026-04-15T15:44:17.495000+00:00",
+      "date_sent": "2026-04-15T15:46:16.686000+00:00",
+      "date_updated": "2026-04-15T15:48:56.849000+00:00",
+      "direction": "outgoing",
+      "envelope": {
+        "bcc": [],
+        "cc": [],
+        "date": "Wed, 15 Apr 2026 15:46:17 +0000",
+        "from": [
+          {
+            "email": "team@comeketocatering.com",
+            "name": "Andre Raw"
+          }
+        ],
+        "in_reply_to": null,
+        "is_autoreply": false,
+        "message_id": "<177626797673.7.5812332119131005346@smtpgw.close.com>",
+        "reply_to": [],
+        "sender": [
+          {
+            "email": "team@comeketocatering.com",
+            "name": "Andre Raw"
+          }
+        ],
+        "subject": "Number to call",
+        "to": [
+          {
+            "email": "emanuellaandrade06@gmail.com",
+            "name": ""
+          }
+        ]
+      },
+      "has_attachments": false,
+      "id": "acti_dKNGHNL23L1GQijXao24fUmMU4S3ZMmba77UaSSWbE5",
+      "opens_summary": "Opened by emanuellaandrade06@gmail.com (2 times, latest 2026-04-15)",
+      "send_as_id": null,
+      "sender": "Andre Raw <team@comeketocatering.com>",
+      "status": "sent",
+      "subject": "Number to call",
+      "to": [
+        "emanuellaandrade06@gmail.com"
+      ],
+      "user_id": "user_bnfoZDGbTqBZ4wcDGqRqTwjRKiwLnQ4mpV3i2enPkMt"
+    }
+  ],
+  "latest_normalized_subject": "Number to call",
+  "lead_id": "lead_bzFJpQXqKXY5sjse7q5e61zZyh64cugZTjncvVYC6O6",
+  "n_emails": 3,
+  "organization_id": "orga_pOyYOigKEELdmODukgjigCD5pTRewtmBW1yq6YXkskq",
+  "participants": [
+    {
+      "email": "team@comeketocatering.com",
+      "name": "Andre Raw"
+    }
+  ],
+  "summary": null,
+  "updated_by": "user_bnfoZDGbTqBZ4wcDGqRqTwjRKiwLnQ4mpV3i2enPkMt",
+  "updated_by_name": "Andre Raw",
+  "user_id": "user_bnfoZDGbTqBZ4wcDGqRqTwjRKiwLnQ4mpV3i2enPkMt",
+  "user_name": "Andre Raw",
+  "users": [
+    "user_bnfoZDGbTqBZ4wcDGqRqTwjRKiwLnQ4mpV3i2enPkMt"
+  ]
+}

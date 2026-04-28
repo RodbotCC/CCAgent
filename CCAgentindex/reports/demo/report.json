@@ -1,0 +1,53 @@
+{
+  "slug": "demo",
+  "name": "Demo",
+  "description": null,
+  "created_at": "2026-04-27T22:57:58.266147+00:00",
+  "last_modified": "2026-04-27T22:59:38.473201+00:00",
+  "documents": [
+    {
+      "id": "d_9d151345a9",
+      "filename": "CleanShot 2026-04-27 at 14.19.06@2x.png",
+      "mime": "image/png",
+      "type": "image",
+      "size": 150632,
+      "uploaded_at": "2026-04-27T22:58:21.348691+00:00",
+      "extracted_text": "Chat intelligence\n\nPre-process prompts with gpt-5.4-\nmini ON\nWhen on, every chat message you send is first run\nthrough gpt-5.4-mini. The mini model rewrites your\nprompt as a clearer, more directed instruction for\nClaude (you still see your original message in the\nchat) and emits a contextual thinking trace the UI\nanimates while Claude works. Adds ~1s of latency,\ngenerally improves output quality, and replaces the\nstatic \"thinking\" box with something alive.\n\nPieces · temporal continuity\n\nPieces chat LLM\nPieces fronts the inference cost for whichever model\nis named here. gpt-4o and gpt-4.1 route through\nPieces' included LLM credit (no Anthropic spend).\nclaude-sonnet-4-5 routes through your Anthropic\nkey. Affects every Activity sweep + every Ask in Mind\n→ Activity, plus the Briefing ribbon's hourly\nbackground sweep.\n\nclaude sonnet 4.5\ngpt-4o · free\ngpt-4.1 · free\nclaude opus 4\n\nOpen Pieces Activity\nJump to Mind → Activity to see live sweeps, all 39\nMCP tools, and the connection panel.\n\nOPEN ↗",
+      "summary": "Chat intelligence  Pre-process prompts with gpt-5.4- mini ON When on, every chat message you send is first run through gpt-5.4-mini. The mini model rewrites your prompt as a clearer, more directed ins",
+      "stored_path": "CCAgentindex/reports/demo/documents/d_9d151345a9.png"
+    },
+    {
+      "id": "d_c1155a5ca0",
+      "filename": "CleanShot 2026-04-27 at 14.19.02@2x.png",
+      "mime": "image/png",
+      "type": "image",
+      "size": 193680,
+      "uploaded_at": "2026-04-27T22:58:24.555676+00:00",
+      "extracted_text": "Appearance\n\nTheme\nPaper is the default. Ink is for late sessions.\n\npaper  ink\n\nIntelligence\n\nAI provider\nClaude Code (default) uses your Max-plan auth via\nlocal claude -p — no API key, no per-token cost.\nOpenAI is an optional fallback via Responses API\n(server proxy or browser BYOK).\n\n>_ Claude Code  ✨ OpenAI\n\nClaude Code binary\nResolved from server PATH at startup. Prompts pipe\nthrough stdin with --max-turns 1 --output-\nformat text for one-shot speed.\n\n/usr/local/bin/claude\n\nTEST\n\nOpenAI API key (fallback only)\nBring-your-own-key. Calls go straight from your\nbrowser to OpenAI via the Responses API, using\nbrowser key · stored in localStorage only.\n\n•••••••••• (replace)   ...   SHOW   SAVE   CLEAR\n\nModel\nSelected model for Responses API calls. Nano is\nfastest, 5.4 is the ceiling.\n\ngpt-5.4  gpt-5.4-mini  gpt-5.4-nano\n\nTest connection (OpenAI)\nProbe the OpenAI path. Use only when the OpenAI\nprovider is selected above.\n\nidle\n\nTEST\n\nDemo mode\nWhen on, the app still reads from\nClose/ClickUp/Slack/Gmail and still reasons with AI,\nbut writes (send email, post Slack, create ClickUp\ntask, update Close) are blocked at the proxy. Reads\nare always allowed. Turn off when you want real\nwrites to go through.\n\nON",
+      "summary": "Appearance  Theme Paper is the default. Ink is for late sessions.  paper  ink  Intelligence  AI provider Claude Code (default) uses your Max-plan auth via local claude -p — no API key, no per-token co",
+      "stored_path": "CCAgentindex/reports/demo/documents/d_c1155a5ca0.png"
+    },
+    {
+      "id": "d_8c7a6fc216",
+      "filename": "CleanShot 2026-04-27 at 18.58.39@2x.png",
+      "mime": "image/png",
+      "type": "image",
+      "size": 1099034,
+      "uploaded_at": "2026-04-27T22:58:56.786551+00:00",
+      "extracted_text": "great\n\nnow do this adjustment for the messages to be sent:\n\nI want you to send NEPQ-style messages probing these people into phone calls. First,\nsecond: tasting available for this month is May 3rd, May 17th, and May 31st. That's the second probing\nwe should always do: number one, get these people on the phone.\n\nGot it!\n\nRead the communication before sending text messages and emails. When you send email it has to be\nrich email style with the Food calculator and the tasting invitations.\n\nfor the bot\n\ntake it easy with info... cap at automations Beta test now\n\nMeet\nReal-time meetings by Google. Using your browser, share your video, desktop, and presentations with\nteammates and customers.\n\nmeet.google.com",
+      "summary": "great  now do this adjustment for the messages to be sent:  I want you to send NEPQ-style messages probing these people into phone calls. First, second: tasting available for this month is May 3rd, Ma",
+      "stored_path": "CCAgentindex/reports/demo/documents/d_8c7a6fc216.png"
+    },
+    {
+      "id": "d_32450ada20",
+      "filename": "CleanShot 2026-04-27 at 18.58.46@2x.png",
+      "mime": "image/png",
+      "type": "image",
+      "size": 1372792,
+      "uploaded_at": "2026-04-27T22:59:03.519698+00:00",
+      "extracted_text": "📹 This is a rough take at this but the idea is here and it's pretty sweet already\n\napp.close.com\nhttps://app.close.com/lead/lead_Kl4wMKxr025rCsloaJewk0E4KJZ9wZHU9VdiTRZnEh3/\n#contactId=cont_2nPhzvTlq0o4ZuvwZYfo8OlvmZCypid98ZF6Eh0kKgQ\napp.close.com\n\nhttps://app.close.com/lead/lead_Kl4wMKxr025rCsloaJewk0E4KJZ9wZHU9VdiTRZnEh3/\n#contactId=cont_2nPhzvTlq0o4ZuvwZYfo8OlvmZCypid98ZF6Eh0kKgQ\n1:45 PM\n\n0:04\n2:19 PM\n\nSent.\n\nLead:\n• Monica Quindley\n• recipient: quindley95@gmail.com\n• activity id: acti_mb2FgrtM4N3IktEa5hvGIyMEIXpnZrbKF0JsVBy1T5d\n\nWhat I used from the 16-minute call:\n• waterfront venue\n• not a traditional plated setup\n• leaning more toward a free-flow / hand-held food direction\n• electricity and water available\n\nWhat went out:\n• one combined rich HTML email\n• ballpark quote for 150 guests\n• NEPQ-style probe pushing toward a quick call\n• tasting options:\n- Sunday, May 3 at 5:30 PM\n- Sunday, May 17 at 2:00 PM\n- Sunday, May 31 at 2:00 PM\n• Tasting Preview\n• Tasting Registration\n\nAngle used:\n• anchored to the real call, not a generic follow-up\n• pushed the next step as:",
+      "summary": "📹 This is a rough take at this but the idea is here and it's pretty sweet already  app.close.com https://app.close.com/lead/lead_Kl4wMKxr025rCsloaJewk0E4KJZ9wZHU9VdiTRZnEh3/ #contactId=cont_2nPhzvTlq0",
+      "stored_path": "CCAgentindex/reports/demo/documents/d_32450ada20.png"
+    }
+  ]
+}

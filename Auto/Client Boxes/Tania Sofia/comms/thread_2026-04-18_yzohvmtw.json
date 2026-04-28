@@ -1,0 +1,82 @@
+{
+  "_type": "EmailThread",
+  "activity_at": "2026-04-18T14:00:23.740000+00:00",
+  "contact_id": null,
+  "created_by": "user_bnfoZDGbTqBZ4wcDGqRqTwjRKiwLnQ4mpV3i2enPkMt",
+  "created_by_name": "Andre Raw",
+  "date_created": "2026-04-18T14:00:23.740000+00:00",
+  "date_updated": "2026-04-20T05:58:02.114000+00:00",
+  "id": "acti_McJLIcrzE0SbrIpxXUg2J2gLuxyovx0Y7GTYzOhvmtW",
+  "importance": {
+    "reason": "most-recent-communication",
+    "type": "important"
+  },
+  "latest_emails": [
+    {
+      "bcc": [],
+      "body_preview": "Pro bartenders & craft cocktails for your event. ![Comeketo Catering Logo](https://comeketocatering.com/wp-\ncontent/uploads/2025/01/LOGO_WEB.png) ![Bar Service](https://comeketocatering.com/wp-\nconten",
+      "cc": [],
+      "date_created": "2026-04-17T17:40:58.114000+00:00",
+      "date_sent": "2026-04-18T14:00:23.739000+00:00",
+      "date_updated": "2026-04-20T05:58:02.044000+00:00",
+      "direction": "outgoing",
+      "envelope": {
+        "bcc": [],
+        "cc": [],
+        "date": "Sat, 18 Apr 2026 14:00:24 +0000",
+        "from": [
+          {
+            "email": "team@comeketocatering.com",
+            "name": "Andre Raw"
+          }
+        ],
+        "in_reply_to": null,
+        "is_autoreply": false,
+        "message_id": "<177652082376.7.2412526382423436754@smtpgw.close.com>",
+        "reply_to": [],
+        "sender": [
+          {
+            "email": "team@comeketocatering.com",
+            "name": "Andre Raw"
+          }
+        ],
+        "subject": "Raise a Glass to Perfect Events! 🍹",
+        "to": [
+          {
+            "email": "taniasofia030@gmail.com",
+            "name": ""
+          }
+        ]
+      },
+      "has_attachments": false,
+      "id": "acti_pses6Jdfoys0RcpaEQUtOmd5TQxhBY1ydei4gEyKsWb",
+      "opens_summary": "Opened by taniasofia030@gmail.com (2026-04-20)",
+      "send_as_id": null,
+      "sender": "Andre Raw <team@comeketocatering.com>",
+      "status": "sent",
+      "subject": "Raise a Glass to Perfect Events! 🍹",
+      "to": [
+        "taniasofia030@gmail.com"
+      ],
+      "user_id": "user_bnfoZDGbTqBZ4wcDGqRqTwjRKiwLnQ4mpV3i2enPkMt"
+    }
+  ],
+  "latest_normalized_subject": "Raise a Glass to Perfect Events! 🍹",
+  "lead_id": "lead_V6iNS8uF7obgLFIycq52IbrnpZUynnsUwniSqJNscUD",
+  "n_emails": 1,
+  "organization_id": "orga_pOyYOigKEELdmODukgjigCD5pTRewtmBW1yq6YXkskq",
+  "participants": [
+    {
+      "email": "team@comeketocatering.com",
+      "name": "Andre Raw"
+    }
+  ],
+  "summary": null,
+  "updated_by": "user_bnfoZDGbTqBZ4wcDGqRqTwjRKiwLnQ4mpV3i2enPkMt",
+  "updated_by_name": "Andre Raw",
+  "user_id": "user_bnfoZDGbTqBZ4wcDGqRqTwjRKiwLnQ4mpV3i2enPkMt",
+  "user_name": "Andre Raw",
+  "users": [
+    "user_bnfoZDGbTqBZ4wcDGqRqTwjRKiwLnQ4mpV3i2enPkMt"
+  ]
+}

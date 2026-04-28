@@ -1,0 +1,1412 @@
+{
+  "_type": "Call",
+  "activity_at": "2026-04-15T18:58:44.137000+00:00",
+  "agent_config_id": null,
+  "call_method": "regular",
+  "coach_legs": [],
+  "contact_id": "cont_BgP4JUBoZLSdOtZjL9eJM6mxhwFr8z1C9MCMpnp8cBA",
+  "conversation_type_id": null,
+  "conversation_type_reason": null,
+  "cost": "3",
+  "created_by": "user_bnfoZDGbTqBZ4wcDGqRqTwjRKiwLnQ4mpV3i2enPkMt",
+  "created_by_name": "Andre Raw",
+  "date_answered": "2026-04-15T18:58:51.817000+00:00",
+  "date_created": "2026-04-15T18:58:44.137000+00:00",
+  "date_updated": "2026-04-15T19:01:32.035000+00:00",
+  "dialer_id": null,
+  "dialer_saved_search_id": null,
+  "direction": "outbound",
+  "disposition": "answered",
+  "duration": 77,
+  "forwarded_to": null,
+  "has_recording": true,
+  "id": "acti_QR5XVuytFyw4I3cYZQFrwSyHnohQp2jyoVrvFoOewFE",
+  "is_forwarded": false,
+  "is_joinable": false,
+  "is_to_group_number": false,
+  "lead_id": "lead_YwGtwp1OrziFJuo5ctAGvCglMUY5XRzJVPGhLrzLfn0",
+  "local_country_iso": "US",
+  "local_phone": "+19783811212",
+  "local_phone_formatted": "+1 978-381-1212",
+  "note": "",
+  "note_date_updated": "2026-04-15T18:58:44.137000+00:00",
+  "note_html": "<body><p></p></body>",
+  "note_mentions": [],
+  "notetaker_id": "user_bnfoZDGbTqBZ4wcDGqRqTwjRKiwLnQ4mpV3i2enPkMt",
+  "organization_id": "orga_pOyYOigKEELdmODukgjigCD5pTRewtmBW1yq6YXkskq",
+  "outcome_autofill_confidence": "medium",
+  "outcome_autofill_reasoning": "The call was a live conversation between the agent (Andre) and the intended contact (Flaviane). Andre sent materials and requested confirmation for a Sunday event, asking Flaviane to confirm by the next day and complete payment via a link. Flaviane agreed to check the link and said \"ok.\" No meeting was explicitly booked, but the prospect engaged and showed interest — she didn't decline, and a clear next step (reviewing the link and making a reservation payment) was discussed. However, the outcome is somewhat inconclusive: Flaviane didn't commit firmly, only saying she'd look at the link. There's no explicit qualification confirmation or meeting booking. The conversation ended cordially but without a locked-in commitment. This best fits \"No Clear Outcome\" — the call ran its course with some engagement but no confirmed next step or qualification determination.",
+  "outcome_id": "outcome_032ywLOAIT3LhuTX4zdPuE",
+  "outcome_reason": "autofilled",
+  "parent_meeting_id": null,
+  "phone": "+16173209961",
+  "playbook_id": null,
+  "playbook_reason": null,
+  "recording_duration": 76,
+  "recording_expires_at": "2026-05-15T18:58:44.137000+00:00",
+  "recording_history": [
+    {
+      "action": "auto-start-initializing",
+      "timestamp": "2026-04-15T18:58:45.703000+00:00"
+    },
+    {
+      "action": "auto-started",
+      "timestamp": "2026-04-15T18:58:51+00:00"
+    }
+  ],
+  "recording_transcript": {
+    "has_speaker_labels": true,
+    "id": "transcript_0330BqL5abT7zOjR5bcqL6",
+    "speakers": [
+      {
+        "speaker_label": "Andre Raw",
+        "speaker_side": "close-user",
+        "talk_percentage": 0.5704295704295704,
+        "talk_time": 57.10000000000002
+      },
+      {
+        "speaker_label": "Flaviane Mesquita",
+        "speaker_side": "contact",
+        "talk_percentage": 0.42957042957042957,
+        "talk_time": 43.000000000000014
+      }
+    ],
+    "summary_html": "<ul>\n<li>André solicitou confirmação de presença para domingo até amanhã e informou que há muitos participantes agendados.</li>\n<li>Flaviane receberá materiais para análise via email (FlavianeMesquita27@iCloud.com) e informações de pagamento por mensagem de texto.</li>\n<li>André ofereceu suporte contínuo e se comprometeu a fazer a reserva da mesa conforme confirmação de presença.</li>\n</ul>",
+    "summary_text": "- André solicitou confirmação de presença para domingo até amanhã e informou que há muitos participantes agendados.\n- Flaviane receberá materiais para análise via email (FlavianeMesquita27@iCloud.com) e informações de pagamento por mensagem de texto.\n- André ofereceu suporte contínuo e se comprometeu a fazer a reserva da mesa conforme confirmação de presença.",
+    "utterances": [
+      {
+        "end": 0.9,
+        "speaker_label": "Flaviane Mesquita",
+        "speaker_side": "contact",
+        "start": 0.0,
+        "text": "Oi, André.",
+        "words": [
+          {
+            "end": 0.6,
+            "start": 0.0,
+            "text": "Oi,"
+          },
+          {
+            "end": 0.9,
+            "start": 0.8,
+            "text": "André."
+          }
+        ]
+      },
+      {
+        "end": 5.7,
+        "speaker_label": "Andre Raw",
+        "speaker_side": "close-user",
+        "start": 1.7,
+        "text": "Oi, Flaviane, eu fiquei sem internet uns segundinhos aqui, desculpa.",
+        "words": [
+          {
+            "end": 1.9,
+            "start": 1.7,
+            "text": "Oi,"
+          },
+          {
+            "end": 2.3,
+            "start": 2.0,
+            "text": "Flaviane,"
+          },
+          {
+            "end": 2.4,
+            "start": 2.4,
+            "text": "eu"
+          },
+          {
+            "end": 2.6,
+            "start": 2.4,
+            "text": "fiquei"
+          },
+          {
+            "end": 2.9,
+            "start": 2.6,
+            "text": "sem"
+          },
+          {
+            "end": 3.3,
+            "start": 2.9,
+            "text": "internet"
+          },
+          {
+            "end": 3.5,
+            "start": 3.3,
+            "text": "uns"
+          },
+          {
+            "end": 4.7,
+            "start": 3.5,
+            "text": "segundinhos"
+          },
+          {
+            "end": 5.0,
+            "start": 4.7,
+            "text": "aqui,"
+          },
+          {
+            "end": 5.7,
+            "start": 5.2,
+            "text": "desculpa."
+          }
+        ]
+      },
+      {
+        "end": 9.9,
+        "speaker_label": "Flaviane Mesquita",
+        "speaker_side": "contact",
+        "start": 4.5,
+        "text": "Tá, e é, o telefone ficou mudo. Mas eu respondi lá no texto, tá?",
+        "words": [
+          {
+            "end": 4.7,
+            "start": 4.5,
+            "text": "Tá,"
+          },
+          {
+            "end": 6.1,
+            "start": 6.1,
+            "text": "e"
+          },
+          {
+            "end": 6.2,
+            "start": 6.1,
+            "text": "é,"
+          },
+          {
+            "end": 6.4,
+            "start": 6.3,
+            "text": "o"
+          },
+          {
+            "end": 6.8,
+            "start": 6.4,
+            "text": "telefone"
+          },
+          {
+            "end": 7.0,
+            "start": 6.8,
+            "text": "ficou"
+          },
+          {
+            "end": 7.3,
+            "start": 7.0,
+            "text": "mudo."
+          },
+          {
+            "end": 7.9,
+            "start": 7.7,
+            "text": "Mas"
+          },
+          {
+            "end": 8.4,
+            "start": 7.9,
+            "text": "eu"
+          },
+          {
+            "end": 9.0,
+            "start": 8.4,
+            "text": "respondi"
+          },
+          {
+            "end": 9.2,
+            "start": 9.0,
+            "text": "lá"
+          },
+          {
+            "end": 9.4,
+            "start": 9.2,
+            "text": "no"
+          },
+          {
+            "end": 9.7,
+            "start": 9.4,
+            "text": "texto,"
+          },
+          {
+            "end": 9.9,
+            "start": 9.8,
+            "text": "tá?"
+          }
+        ]
+      },
+      {
+        "end": 30.5,
+        "speaker_label": "Andre Raw",
+        "speaker_side": "close-user",
+        "start": 9.2,
+        "text": "Vi aqui, FlavianeMesquita27, arroba iCloud.com. Beleza, eu vou te encaminhar alguns materiais pra você ir dando uma olhada. Sobre domingo, eu preciso que, se desse pra vocês virem, eu preciso de uma confirmação até amanhã, que a gente tá com bastante pessoas já, tá bom?",
+        "words": [
+          {
+            "end": 11.1,
+            "start": 9.2,
+            "text": "Vi"
+          },
+          {
+            "end": 11.3,
+            "start": 11.1,
+            "text": "aqui,"
+          },
+          {
+            "end": 12.8,
+            "start": 11.4,
+            "text": "FlavianeMesquita27,"
+          },
+          {
+            "end": 13.2,
+            "start": 12.8,
+            "text": "arroba"
+          },
+          {
+            "end": 14.5,
+            "start": 13.2,
+            "text": "iCloud.com."
+          },
+          {
+            "end": 16.6,
+            "start": 14.8,
+            "text": "Beleza,"
+          },
+          {
+            "end": 16.7,
+            "start": 16.6,
+            "text": "eu"
+          },
+          {
+            "end": 16.8,
+            "start": 16.7,
+            "text": "vou"
+          },
+          {
+            "end": 17.0,
+            "start": 16.8,
+            "text": "te"
+          },
+          {
+            "end": 17.5,
+            "start": 17.0,
+            "text": "encaminhar"
+          },
+          {
+            "end": 18.5,
+            "start": 17.5,
+            "text": "alguns"
+          },
+          {
+            "end": 19.1,
+            "start": 18.5,
+            "text": "materiais"
+          },
+          {
+            "end": 19.3,
+            "start": 19.1,
+            "text": "pra"
+          },
+          {
+            "end": 19.5,
+            "start": 19.3,
+            "text": "você"
+          },
+          {
+            "end": 19.6,
+            "start": 19.5,
+            "text": "ir"
+          },
+          {
+            "end": 19.8,
+            "start": 19.6,
+            "text": "dando"
+          },
+          {
+            "end": 19.9,
+            "start": 19.8,
+            "text": "uma"
+          },
+          {
+            "end": 20.4,
+            "start": 19.9,
+            "text": "olhada."
+          },
+          {
+            "end": 21.6,
+            "start": 21.3,
+            "text": "Sobre"
+          },
+          {
+            "end": 22.2,
+            "start": 21.6,
+            "text": "domingo,"
+          },
+          {
+            "end": 22.5,
+            "start": 22.4,
+            "text": "eu"
+          },
+          {
+            "end": 22.9,
+            "start": 22.5,
+            "text": "preciso"
+          },
+          {
+            "end": 23.2,
+            "start": 22.9,
+            "text": "que,"
+          },
+          {
+            "end": 23.7,
+            "start": 23.5,
+            "text": "se"
+          },
+          {
+            "end": 24.0,
+            "start": 23.7,
+            "text": "desse"
+          },
+          {
+            "end": 24.3,
+            "start": 24.0,
+            "text": "pra"
+          },
+          {
+            "end": 24.6,
+            "start": 24.3,
+            "text": "vocês"
+          },
+          {
+            "end": 25.1,
+            "start": 24.6,
+            "text": "virem,"
+          },
+          {
+            "end": 25.3,
+            "start": 25.2,
+            "text": "eu"
+          },
+          {
+            "end": 25.7,
+            "start": 25.3,
+            "text": "preciso"
+          },
+          {
+            "end": 25.9,
+            "start": 25.7,
+            "text": "de"
+          },
+          {
+            "end": 26.0,
+            "start": 25.9,
+            "text": "uma"
+          },
+          {
+            "end": 26.5,
+            "start": 26.0,
+            "text": "confirmação"
+          },
+          {
+            "end": 26.7,
+            "start": 26.5,
+            "text": "até"
+          },
+          {
+            "end": 27.3,
+            "start": 26.7,
+            "text": "amanhã,"
+          },
+          {
+            "end": 27.5,
+            "start": 27.4,
+            "text": "que"
+          },
+          {
+            "end": 27.7,
+            "start": 27.5,
+            "text": "a"
+          },
+          {
+            "end": 27.8,
+            "start": 27.7,
+            "text": "gente"
+          },
+          {
+            "end": 27.9,
+            "start": 27.8,
+            "text": "tá"
+          },
+          {
+            "end": 28.2,
+            "start": 27.9,
+            "text": "com"
+          },
+          {
+            "end": 29.2,
+            "start": 28.2,
+            "text": "bastante"
+          },
+          {
+            "end": 29.7,
+            "start": 29.2,
+            "text": "pessoas"
+          },
+          {
+            "end": 30.0,
+            "start": 29.7,
+            "text": "já,"
+          },
+          {
+            "end": 30.3,
+            "start": 30.1,
+            "text": "tá"
+          },
+          {
+            "end": 30.5,
+            "start": 30.3,
+            "text": "bom?"
+          }
+        ]
+      },
+      {
+        "end": 37.3,
+        "speaker_label": "Flaviane Mesquita",
+        "speaker_side": "contact",
+        "start": 22.7,
+        "text": "E a relação entre você e a Jordana sempre foi esse tapa de dedo. Ontem, inclusive, vocês já acabaram de discutir a sua resposta com notícias.",
+        "words": [
+          {
+            "end": 25.7,
+            "start": 22.7,
+            "text": "E"
+          },
+          {
+            "end": 27.5,
+            "start": 26.5,
+            "text": "a"
+          },
+          {
+            "end": 28.0,
+            "start": 27.5,
+            "text": "relação"
+          },
+          {
+            "end": 28.3,
+            "start": 28.0,
+            "text": "entre"
+          },
+          {
+            "end": 28.7,
+            "start": 28.3,
+            "text": "você"
+          },
+          {
+            "end": 28.8,
+            "start": 28.7,
+            "text": "e"
+          },
+          {
+            "end": 28.9,
+            "start": 28.8,
+            "text": "a"
+          },
+          {
+            "end": 29.4,
+            "start": 28.9,
+            "text": "Jordana"
+          },
+          {
+            "end": 29.8,
+            "start": 29.4,
+            "text": "sempre"
+          },
+          {
+            "end": 29.9,
+            "start": 29.8,
+            "text": "foi"
+          },
+          {
+            "end": 30.2,
+            "start": 29.9,
+            "text": "esse"
+          },
+          {
+            "end": 30.5,
+            "start": 30.2,
+            "text": "tapa"
+          },
+          {
+            "end": 30.8,
+            "start": 30.5,
+            "text": "de"
+          },
+          {
+            "end": 31.2,
+            "start": 30.8,
+            "text": "dedo."
+          },
+          {
+            "end": 32.3,
+            "start": 31.3,
+            "text": "Ontem,"
+          },
+          {
+            "end": 32.7,
+            "start": 32.4,
+            "text": "inclusive,"
+          },
+          {
+            "end": 33.1,
+            "start": 32.9,
+            "text": "vocês"
+          },
+          {
+            "end": 33.2,
+            "start": 33.1,
+            "text": "já"
+          },
+          {
+            "end": 33.6,
+            "start": 33.2,
+            "text": "acabaram"
+          },
+          {
+            "end": 33.8,
+            "start": 33.6,
+            "text": "de"
+          },
+          {
+            "end": 34.0,
+            "start": 33.8,
+            "text": "discutir"
+          },
+          {
+            "end": 34.4,
+            "start": 34.0,
+            "text": "a"
+          },
+          {
+            "end": 35.5,
+            "start": 34.4,
+            "text": "sua"
+          },
+          {
+            "end": 36.2,
+            "start": 35.5,
+            "text": "resposta"
+          },
+          {
+            "end": 36.9,
+            "start": 36.2,
+            "text": "com"
+          },
+          {
+            "end": 37.3,
+            "start": 36.9,
+            "text": "notícias."
+          }
+        ]
+      },
+      {
+        "end": 47.9,
+        "speaker_label": "Andre Raw",
+        "speaker_side": "close-user",
+        "start": 33.6,
+        "text": "Aí se você gostaria de vir você só no text message que eu te passei tem toda a informação que você precisa para fazer o efetuar o pagamento de quantas pessoas você precisar.",
+        "words": [
+          {
+            "end": 33.8,
+            "start": 33.6,
+            "text": "Aí"
+          },
+          {
+            "end": 34.0,
+            "start": 33.8,
+            "text": "se"
+          },
+          {
+            "end": 34.4,
+            "start": 34.0,
+            "text": "você"
+          },
+          {
+            "end": 36.1,
+            "start": 34.4,
+            "text": "gostaria"
+          },
+          {
+            "end": 36.4,
+            "start": 36.1,
+            "text": "de"
+          },
+          {
+            "end": 36.7,
+            "start": 36.4,
+            "text": "vir"
+          },
+          {
+            "end": 37.9,
+            "start": 36.7,
+            "text": "você"
+          },
+          {
+            "end": 38.2,
+            "start": 37.9,
+            "text": "só"
+          },
+          {
+            "end": 38.8,
+            "start": 38.2,
+            "text": "no"
+          },
+          {
+            "end": 39.1,
+            "start": 38.8,
+            "text": "text"
+          },
+          {
+            "end": 39.5,
+            "start": 39.1,
+            "text": "message"
+          },
+          {
+            "end": 39.7,
+            "start": 39.5,
+            "text": "que"
+          },
+          {
+            "end": 39.8,
+            "start": 39.7,
+            "text": "eu"
+          },
+          {
+            "end": 39.9,
+            "start": 39.8,
+            "text": "te"
+          },
+          {
+            "end": 40.4,
+            "start": 39.9,
+            "text": "passei"
+          },
+          {
+            "end": 41.3,
+            "start": 40.4,
+            "text": "tem"
+          },
+          {
+            "end": 41.6,
+            "start": 41.3,
+            "text": "toda"
+          },
+          {
+            "end": 41.7,
+            "start": 41.6,
+            "text": "a"
+          },
+          {
+            "end": 42.1,
+            "start": 41.7,
+            "text": "informação"
+          },
+          {
+            "end": 42.4,
+            "start": 42.1,
+            "text": "que"
+          },
+          {
+            "end": 42.6,
+            "start": 42.4,
+            "text": "você"
+          },
+          {
+            "end": 43.0,
+            "start": 42.6,
+            "text": "precisa"
+          },
+          {
+            "end": 43.3,
+            "start": 43.0,
+            "text": "para"
+          },
+          {
+            "end": 44.0,
+            "start": 43.3,
+            "text": "fazer"
+          },
+          {
+            "end": 45.0,
+            "start": 44.0,
+            "text": "o"
+          },
+          {
+            "end": 45.5,
+            "start": 45.0,
+            "text": "efetuar"
+          },
+          {
+            "end": 45.7,
+            "start": 45.5,
+            "text": "o"
+          },
+          {
+            "end": 46.1,
+            "start": 45.7,
+            "text": "pagamento"
+          },
+          {
+            "end": 46.3,
+            "start": 46.1,
+            "text": "de"
+          },
+          {
+            "end": 46.6,
+            "start": 46.3,
+            "text": "quantas"
+          },
+          {
+            "end": 46.9,
+            "start": 46.6,
+            "text": "pessoas"
+          },
+          {
+            "end": 47.2,
+            "start": 46.9,
+            "text": "você"
+          },
+          {
+            "end": 47.9,
+            "start": 47.2,
+            "text": "precisar."
+          }
+        ]
+      },
+      {
+        "end": 47.2,
+        "speaker_label": "Flaviane Mesquita",
+        "speaker_side": "contact",
+        "start": 38.5,
+        "text": "Mas, na última semana, vocês tentaram evitar que a vida fosse pior, mas saíram de casa tendo a tanta calor que custou tanto.",
+        "words": [
+          {
+            "end": 39.3,
+            "start": 38.5,
+            "text": "Mas,"
+          },
+          {
+            "end": 39.5,
+            "start": 39.4,
+            "text": "na"
+          },
+          {
+            "end": 39.8,
+            "start": 39.5,
+            "text": "última"
+          },
+          {
+            "end": 40.4,
+            "start": 39.8,
+            "text": "semana,"
+          },
+          {
+            "end": 40.6,
+            "start": 40.4,
+            "text": "vocês"
+          },
+          {
+            "end": 40.9,
+            "start": 40.6,
+            "text": "tentaram"
+          },
+          {
+            "end": 41.4,
+            "start": 40.9,
+            "text": "evitar"
+          },
+          {
+            "end": 41.7,
+            "start": 41.4,
+            "text": "que"
+          },
+          {
+            "end": 41.9,
+            "start": 41.7,
+            "text": "a"
+          },
+          {
+            "end": 42.1,
+            "start": 41.9,
+            "text": "vida"
+          },
+          {
+            "end": 42.4,
+            "start": 42.1,
+            "text": "fosse"
+          },
+          {
+            "end": 42.9,
+            "start": 42.4,
+            "text": "pior,"
+          },
+          {
+            "end": 43.2,
+            "start": 43.0,
+            "text": "mas"
+          },
+          {
+            "end": 43.8,
+            "start": 43.2,
+            "text": "saíram"
+          },
+          {
+            "end": 43.9,
+            "start": 43.8,
+            "text": "de"
+          },
+          {
+            "end": 44.3,
+            "start": 43.9,
+            "text": "casa"
+          },
+          {
+            "end": 44.7,
+            "start": 44.3,
+            "text": "tendo"
+          },
+          {
+            "end": 45.6,
+            "start": 44.7,
+            "text": "a"
+          },
+          {
+            "end": 45.9,
+            "start": 45.6,
+            "text": "tanta"
+          },
+          {
+            "end": 46.4,
+            "start": 45.9,
+            "text": "calor"
+          },
+          {
+            "end": 46.6,
+            "start": 46.4,
+            "text": "que"
+          },
+          {
+            "end": 46.9,
+            "start": 46.6,
+            "text": "custou"
+          },
+          {
+            "end": 47.2,
+            "start": 46.9,
+            "text": "tanto."
+          }
+        ]
+      },
+      {
+        "end": 53.8,
+        "speaker_label": "Andre Raw",
+        "speaker_side": "close-user",
+        "start": 49.1,
+        "text": "E assim eu já vejo aqui do meu lado e já faço a reserva da mesa de vocês.",
+        "words": [
+          {
+            "end": 49.6,
+            "start": 49.1,
+            "text": "E"
+          },
+          {
+            "end": 50.6,
+            "start": 49.6,
+            "text": "assim"
+          },
+          {
+            "end": 50.8,
+            "start": 50.6,
+            "text": "eu"
+          },
+          {
+            "end": 51.0,
+            "start": 50.8,
+            "text": "já"
+          },
+          {
+            "end": 51.3,
+            "start": 51.0,
+            "text": "vejo"
+          },
+          {
+            "end": 51.5,
+            "start": 51.3,
+            "text": "aqui"
+          },
+          {
+            "end": 51.6,
+            "start": 51.5,
+            "text": "do"
+          },
+          {
+            "end": 51.8,
+            "start": 51.6,
+            "text": "meu"
+          },
+          {
+            "end": 52.0,
+            "start": 51.8,
+            "text": "lado"
+          },
+          {
+            "end": 52.1,
+            "start": 52.0,
+            "text": "e"
+          },
+          {
+            "end": 52.2,
+            "start": 52.1,
+            "text": "já"
+          },
+          {
+            "end": 52.4,
+            "start": 52.2,
+            "text": "faço"
+          },
+          {
+            "end": 52.5,
+            "start": 52.4,
+            "text": "a"
+          },
+          {
+            "end": 52.9,
+            "start": 52.5,
+            "text": "reserva"
+          },
+          {
+            "end": 53.0,
+            "start": 52.9,
+            "text": "da"
+          },
+          {
+            "end": 53.2,
+            "start": 53.0,
+            "text": "mesa"
+          },
+          {
+            "end": 53.3,
+            "start": 53.2,
+            "text": "de"
+          },
+          {
+            "end": 53.8,
+            "start": 53.3,
+            "text": "vocês."
+          }
+        ]
+      },
+      {
+        "end": 56.6,
+        "speaker_label": "Flaviane Mesquita",
+        "speaker_side": "contact",
+        "start": 51.8,
+        "text": "Ah, ok. Eu vou entrar no link, então, para ver.",
+        "words": [
+          {
+            "end": 54.6,
+            "start": 51.8,
+            "text": "Ah,"
+          },
+          {
+            "end": 54.8,
+            "start": 54.7,
+            "text": "ok."
+          },
+          {
+            "end": 55.0,
+            "start": 54.9,
+            "text": "Eu"
+          },
+          {
+            "end": 55.2,
+            "start": 55.0,
+            "text": "vou"
+          },
+          {
+            "end": 55.4,
+            "start": 55.2,
+            "text": "entrar"
+          },
+          {
+            "end": 55.6,
+            "start": 55.4,
+            "text": "no"
+          },
+          {
+            "end": 55.9,
+            "start": 55.6,
+            "text": "link,"
+          },
+          {
+            "end": 56.2,
+            "start": 56.1,
+            "text": "então,"
+          },
+          {
+            "end": 56.4,
+            "start": 56.3,
+            "text": "para"
+          },
+          {
+            "end": 56.6,
+            "start": 56.4,
+            "text": "ver."
+          }
+        ]
+      },
+      {
+        "end": 61.7,
+        "speaker_label": "Andre Raw",
+        "speaker_side": "close-user",
+        "start": 57.7,
+        "text": "Qualquer coisa que você precisar isso aqui é meu número de contato.",
+        "words": [
+          {
+            "end": 58.5,
+            "start": 57.7,
+            "text": "Qualquer"
+          },
+          {
+            "end": 58.9,
+            "start": 58.5,
+            "text": "coisa"
+          },
+          {
+            "end": 59.1,
+            "start": 58.9,
+            "text": "que"
+          },
+          {
+            "end": 59.3,
+            "start": 59.1,
+            "text": "você"
+          },
+          {
+            "end": 59.9,
+            "start": 59.3,
+            "text": "precisar"
+          },
+          {
+            "end": 60.2,
+            "start": 59.9,
+            "text": "isso"
+          },
+          {
+            "end": 60.3,
+            "start": 60.2,
+            "text": "aqui"
+          },
+          {
+            "end": 60.4,
+            "start": 60.3,
+            "text": "é"
+          },
+          {
+            "end": 60.6,
+            "start": 60.4,
+            "text": "meu"
+          },
+          {
+            "end": 60.9,
+            "start": 60.6,
+            "text": "número"
+          },
+          {
+            "end": 61.2,
+            "start": 60.9,
+            "text": "de"
+          },
+          {
+            "end": 61.7,
+            "start": 61.2,
+            "text": "contato."
+          }
+        ]
+      },
+      {
+        "end": 64.3,
+        "speaker_label": "Flaviane Mesquita",
+        "speaker_side": "contact",
+        "start": 60.5,
+        "text": "Tá bom.",
+        "words": [
+          {
+            "end": 61.3,
+            "start": 60.5,
+            "text": "Tá"
+          },
+          {
+            "end": 64.3,
+            "start": 61.3,
+            "text": "bom."
+          }
+        ]
+      },
+      {
+        "end": 66.2,
+        "speaker_label": "Andre Raw",
+        "speaker_side": "close-user",
+        "start": 62.3,
+        "text": "E aí a gente vai conversando pra poder ajudar vocês da melhor forma possível.",
+        "words": [
+          {
+            "end": 62.4,
+            "start": 62.3,
+            "text": "E"
+          },
+          {
+            "end": 62.6,
+            "start": 62.4,
+            "text": "aí"
+          },
+          {
+            "end": 62.7,
+            "start": 62.6,
+            "text": "a"
+          },
+          {
+            "end": 62.8,
+            "start": 62.7,
+            "text": "gente"
+          },
+          {
+            "end": 63.0,
+            "start": 62.8,
+            "text": "vai"
+          },
+          {
+            "end": 63.6,
+            "start": 63.0,
+            "text": "conversando"
+          },
+          {
+            "end": 63.7,
+            "start": 63.6,
+            "text": "pra"
+          },
+          {
+            "end": 64.0,
+            "start": 63.7,
+            "text": "poder"
+          },
+          {
+            "end": 64.8,
+            "start": 64.0,
+            "text": "ajudar"
+          },
+          {
+            "end": 65.1,
+            "start": 64.8,
+            "text": "vocês"
+          },
+          {
+            "end": 65.2,
+            "start": 65.1,
+            "text": "da"
+          },
+          {
+            "end": 65.4,
+            "start": 65.2,
+            "text": "melhor"
+          },
+          {
+            "end": 65.7,
+            "start": 65.4,
+            "text": "forma"
+          },
+          {
+            "end": 66.2,
+            "start": 65.7,
+            "text": "possível."
+          }
+        ]
+      },
+      {
+        "end": 68.2,
+        "speaker_label": "Flaviane Mesquita",
+        "speaker_side": "contact",
+        "start": 67.3,
+        "text": "Muito obrigada, viu?",
+        "words": [
+          {
+            "end": 67.5,
+            "start": 67.3,
+            "text": "Muito"
+          },
+          {
+            "end": 68.0,
+            "start": 67.5,
+            "text": "obrigada,"
+          },
+          {
+            "end": 68.2,
+            "start": 68.1,
+            "text": "viu?"
+          }
+        ]
+      },
+      {
+        "end": 71.9,
+        "speaker_label": "Andre Raw",
+        "speaker_side": "close-user",
+        "start": 68.7,
+        "text": "Nada, Flavione, uma ótima tarde pra vocês. Qualquer coisa,",
+        "words": [
+          {
+            "end": 69.5,
+            "start": 68.7,
+            "text": "Nada,"
+          },
+          {
+            "end": 70.0,
+            "start": 69.6,
+            "text": "Flavione,"
+          },
+          {
+            "end": 70.2,
+            "start": 70.0,
+            "text": "uma"
+          },
+          {
+            "end": 70.5,
+            "start": 70.2,
+            "text": "ótima"
+          },
+          {
+            "end": 70.8,
+            "start": 70.5,
+            "text": "tarde"
+          },
+          {
+            "end": 71.0,
+            "start": 70.8,
+            "text": "pra"
+          },
+          {
+            "end": 71.3,
+            "start": 71.0,
+            "text": "vocês."
+          },
+          {
+            "end": 71.6,
+            "start": 71.4,
+            "text": "Qualquer"
+          },
+          {
+            "end": 71.9,
+            "start": 71.6,
+            "text": "coisa,"
+          }
+        ]
+      },
+      {
+        "end": 72.2,
+        "speaker_label": "Flaviane Mesquita",
+        "speaker_side": "contact",
+        "start": 69.8,
+        "text": "Igualmente.",
+        "words": [
+          {
+            "end": 72.2,
+            "start": 69.8,
+            "text": "Igualmente."
+          }
+        ]
+      },
+      {
+        "end": 73.9,
+        "speaker_label": "Andre Raw",
+        "speaker_side": "close-user",
+        "start": 72.5,
+        "text": "é só chamar. Até mais.",
+        "words": [
+          {
+            "end": 72.6,
+            "start": 72.5,
+            "text": "é"
+          },
+          {
+            "end": 72.7,
+            "start": 72.6,
+            "text": "só"
+          },
+          {
+            "end": 73.1,
+            "start": 72.7,
+            "text": "chamar."
+          },
+          {
+            "end": 73.6,
+            "start": 73.4,
+            "text": "Até"
+          },
+          {
+            "end": 73.9,
+            "start": 73.6,
+            "text": "mais."
+          }
+        ]
+      },
+      {
+        "end": 74.7,
+        "speaker_label": "Flaviane Mesquita",
+        "speaker_side": "contact",
+        "start": 73.2,
+        "text": "Obrigada. Tchau.",
+        "words": [
+          {
+            "end": 74.4,
+            "start": 73.2,
+            "text": "Obrigada."
+          },
+          {
+            "end": 74.7,
+            "start": 74.6,
+            "text": "Tchau."
+          }
+        ]
+      },
+      {
+        "end": 75.4,
+        "speaker_label": "Andre Raw",
+        "speaker_side": "close-user",
+        "start": 75.1,
+        "text": "Tchau.",
+        "words": [
+          {
+            "end": 75.4,
+            "start": 75.1,
+            "text": "Tchau."
+          }
+        ]
+      }
+    ]
+  },
+  "recording_url": "https://api.close.com/call/acti_QR5XVuytFyw4I3cYZQFrwSyHnohQp2jyoVrvFoOewFE/recording/",
+  "remote_country_iso": "US",
+  "remote_phone": "+16173209961",
+  "remote_phone_formatted": "+1 617-320-9961",
+  "sequence_id": null,
+  "sequence_name": null,
+  "sequence_subscription_id": null,
+  "source": "Close.io",
+  "status": "completed",
+  "transferred_from": null,
+  "transferred_from_user_id": null,
+  "transferred_to": null,
+  "transferred_to_user_id": null,
+  "updated_by": "user_bnfoZDGbTqBZ4wcDGqRqTwjRKiwLnQ4mpV3i2enPkMt",
+  "updated_by_name": "Andre Raw",
+  "user_id": "user_bnfoZDGbTqBZ4wcDGqRqTwjRKiwLnQ4mpV3i2enPkMt",
+  "user_name": "Andre Raw",
+  "users": [],
+  "voicemail_duration": 0,
+  "voicemail_transcript": null,
+  "voicemail_url": null
+}

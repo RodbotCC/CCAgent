@@ -1,0 +1,111 @@
+{
+  "_type": "Email",
+  "activity_at": "2026-04-27T14:27:48.313000+00:00",
+  "agent_action_reason": null,
+  "agent_config_id": null,
+  "ai_draft": null,
+  "attachments": [],
+  "bcc": [],
+  "body_html": "<p>Hugo,</p><p>I want to step back for a second. You came to us through Highland Orchard's recommended list — they sent you to us because they know how we run a wedding day. That's not a marketing line, it's the actual reason you're in my inbox.</p><p>I also know you said you'd circle back after getting competing quotes. I respect that. You're doing exactly what I'd do.</p><p>Two things I want to put in front of you while you evaluate:</p><p>The Sunday tasting doesn't work for you, and I should have offered an alternative earlier. I'd like to send you a short walkthrough video of the deluxe buffet setup — the picanha, the bacon-wrapped chicken, and the cauliflower steak — so you and your fiancée can watch it together on your time. No logistics, no Sunday.</p><p>Then, when you're ready, I'd like 30 minutes with both of you on a weekday evening or early morning to walk through the vegetarian and gluten-free side specifically. Your fiancée hasn't been part of the conversation yet, and the dietary execution is where most caterers fall short. I want her to hear directly how we'd handle it.</p><p>The $11,595 number is good for 14 days from when I sent it, and the price-lock is good for two years once you're committed. No urgency on my end — but if the competing quotes come back wildly different, I want to make sure you're comparing apples to apples. Happy to walk through any of them with you.</p><p>Andre</p>",
+  "body_html_quoted": [
+    {
+      "expand": true,
+      "html": "<p>Hugo,</p><p>I want to step back for a second. You came to us through Highland Orchard's recommended list — they sent you to us because they know how we run a wedding day. That's not a marketing line, it's the actual reason you're in my inbox.</p><p>I also know you said you'd circle back after getting competing quotes. I respect that. You're doing exactly what I'd do.</p><p>Two things I want to put in front of you while you evaluate:</p><p>The Sunday tasting doesn't work for you, and I should have offered an alternative earlier. I'd like to send you a short walkthrough video of the deluxe buffet setup — the picanha, the bacon-wrapped chicken, and the cauliflower steak — so you and your fiancée can watch it together on your time. No logistics, no Sunday.</p><p>Then, when you're ready, I'd like 30 minutes with both of you on a weekday evening or early morning to walk through the vegetarian and gluten-free side specifically. Your fiancée hasn't been part of the conversation yet, and the dietary execution is where most caterers fall short. I want her to hear directly how we'd handle it.</p><p>The $11,595 number is good for 14 days from when I sent it, and the price-lock is good for two years once you're committed. No urgency on my end — but if the competing quotes come back wildly different, I want to make sure you're comparing apples to apples. Happy to walk through any of them with you.</p><p>Andre</p>"
+    }
+  ],
+  "body_preview": "Hugo, I want to step back for a second. You came to us through Highland Orchard's recommended list — they sent you to us because they know how we run a wedding day. That's not a marketing line, it's t",
+  "body_text": "Hugo,\n\nI want to step back for a second. You came to us through Highland Orchard's recommended list — they sent you to us because they know how we run a wedding day. That's not a marketing line, it's the actual reason you're in my inbox.\n\nI also know you said you'd circle back after getting competing quotes. I respect that. You're doing exactly what I'd do.\n\nTwo things I want to put in front of you while you evaluate:\n\nThe Sunday tasting doesn't work for you, and I should have offered an alternative earlier. I'd like to send you a short walkthrough video of the deluxe buffet setup — the picanha, the bacon-wrapped chicken, and the cauliflower steak — so you and your fiancée can watch it together on your time. No logistics, no Sunday.\n\nThen, when you're ready, I'd like 30 minutes with both of you on a weekday evening or early morning to walk through the vegetarian and gluten-free side specifically. Your fiancée hasn't been part of the conversation yet, and the dietary execution is where most caterers fall short. I want her to hear directly how we'd handle it.\n\nThe $11,595 number is good for 14 days from when I sent it, and the price-lock is good for two years once you're committed. No urgency on my end — but if the competing quotes come back wildly different, I want to make sure you're comparing apples to apples. Happy to walk through any of them with you.\n\nAndre",
+  "body_text_quoted": [
+    {
+      "expand": true,
+      "text": "Hugo,\n\nI want to step back for a second. You came to us through Highland Orchard's recommended list — they sent you to us because they know how we run a wedding day. That's not a marketing line, it's the actual reason you're in my inbox.\n\nI also know you said you'd circle back after getting competing quotes. I respect that. You're doing exactly what I'd do.\n\nTwo things I want to put in front of you while you evaluate:\n\nThe Sunday tasting doesn't work for you, and I should have offered an alternative earlier. I'd like to send you a short walkthrough video of the deluxe buffet setup — the picanha, the bacon-wrapped chicken, and the cauliflower steak — so you and your fiancée can watch it together on your time. No logistics, no Sunday.\n\nThen, when you're ready, I'd like 30 minutes with both of you on a weekday evening or early morning to walk through the vegetarian and gluten-free side specifically. Your fiancée hasn't been part of the conversation yet, and the dietary execution is where most caterers fall short. I want her to hear directly how we'd handle it.\n\nThe $11,595 number is good for 14 days from when I sent it, and the price-lock is good for two years once you're committed. No urgency on my end — but if the competing quotes come back wildly different, I want to make sure you're comparing apples to apples. Happy to walk through any of them with you.\n\nAndre"
+    }
+  ],
+  "bulk_email_action_id": null,
+  "cc": [],
+  "contact_id": "cont_aMLzoFWK5qcAttyQ47TpMBKHclK5ARHTtwK8ZChYKTb",
+  "created_by": "user_bnfoZDGbTqBZ4wcDGqRqTwjRKiwLnQ4mpV3i2enPkMt",
+  "created_by_name": "Andre Raw",
+  "date_created": "2026-04-27T14:27:47.746000+00:00",
+  "date_scheduled": null,
+  "date_sent": "2026-04-27T14:27:48.313000+00:00",
+  "date_updated": "2026-04-27T14:55:38.718000+00:00",
+  "direction": "outgoing",
+  "email_account_id": "emailacct_V698oi1uFg2nnhvbdLhaItEGsTdNCmlQUEla8QF32rZ",
+  "envelope": {
+    "bcc": [],
+    "cc": [],
+    "date": "Mon, 27 Apr 2026 14:27:48 +0000",
+    "from": [
+      {
+        "email": "team@comeketocatering.com",
+        "name": "Andre Raw"
+      }
+    ],
+    "in_reply_to": null,
+    "is_autoreply": false,
+    "message_id": "<177730006833.7.3081865080777848823@smtpgw.close.com>",
+    "reply_to": [],
+    "sender": [
+      {
+        "email": "team@comeketocatering.com",
+        "name": "Andre Raw"
+      }
+    ],
+    "subject": "Following up — and a different approach for your tasting",
+    "to": [
+      {
+        "email": "hugocasillas2@gmail.com",
+        "name": ""
+      }
+    ]
+  },
+  "followup_sequence_add_cc_bcc": false,
+  "followup_sequence_delay": null,
+  "followup_sequence_id": null,
+  "has_reply": false,
+  "id": "acti_ql0f9y4hYScijeDjtqNkABg60Ii4YRCWvBGIEHWIzIk",
+  "in_reply_to_id": null,
+  "lead_id": "lead_g4AZCOW7Kpc3tithNBrr9aXPbDHsZ72KJUR55Qjzd6f",
+  "message_ids": [
+    "<177730006833.7.5155006327139036834@smtpgw.close.com>",
+    "<177730006833.7.3081865080777848823@smtpgw.close.com>"
+  ],
+  "need_smtp_credentials": false,
+  "opens": [
+    {
+      "ip_address": "146.75.252.0",
+      "opened_at": "2026-04-27T14:33:14.752000+00:00",
+      "opened_by": "hugocasillas2@gmail.com",
+      "user_agent": "Mozilla/5.0"
+    },
+    {
+      "ip_address": "146.75.252.0",
+      "opened_at": "2026-04-27T14:55:38.718000+00:00",
+      "opened_by": "hugocasillas2@gmail.com",
+      "user_agent": "Mozilla/5.0"
+    }
+  ],
+  "opens_summary": "Opened by hugocasillas2@gmail.com (2 times, latest 2026-04-27)",
+  "organization_id": "orga_pOyYOigKEELdmODukgjigCD5pTRewtmBW1yq6YXkskq",
+  "references": [],
+  "send_as_id": null,
+  "send_attempts": [],
+  "sender": "Andre Raw <team@comeketocatering.com>",
+  "sequence_id": null,
+  "sequence_name": null,
+  "sequence_subscription_id": null,
+  "status": "sent",
+  "subject": "Following up — and a different approach for your tasting",
+  "template_id": null,
+  "template_name": null,
+  "thread_id": "acti_dlY6voYtCqBY3h9ysv3yroBimUJlJvQia64TOsigB1q",
+  "to": [
+    "hugocasillas2@gmail.com"
+  ],
+  "updated_by": "user_bnfoZDGbTqBZ4wcDGqRqTwjRKiwLnQ4mpV3i2enPkMt",
+  "updated_by_name": "Andre Raw",
+  "user_id": "user_bnfoZDGbTqBZ4wcDGqRqTwjRKiwLnQ4mpV3i2enPkMt",
+  "user_name": "Andre Raw",
+  "users": []
+}

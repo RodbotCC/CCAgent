@@ -1,0 +1,19 @@
+
+substrate,c_sound_m_s,f_resonant_Hz,zeta,Q_factor,pattern_type,notes,f_vacuum_equivalent_Hz,scale_factor_vs_electron,closest_ratio,ratio_difference
+Aluminum plate (Chladni P1),5000.0,19.7,0.118,4.237,Chladni – early mode,Aluminum plate (P1) studied 10–210 Hz; first resonant peak 19.7 Hz; pattern transitions across frequency domains.,1182000.0,9.57085020242915e-15,1.0,0.9999999999999905
+Aluminum plate (Chladni P4),5000.0,12.9,0.097,5.16,Chladni – circular/elliptical,Square aluminum/steel plate; resonant peak 12.9 Hz and Q 5.160; multiple mode patterns.,774000.0,6.2672064777327934e-15,1.0,0.9999999999999938
+BEC quadrupole mode,0.0172,282.0,,,BEC – quadrupole mode,Collective quadrupole oscillation in BEC; dimensionless frequency 1.41 and radial trap freq 200 Hz giving 282 Hz.,4918604651162.791,3.9826758309010456e-08,1.0,0.9999999601732417
+BEC breathing mode,0.0172,448.0,,,BEC – breathing mode,Collective breathing oscillation; dimensionless frequency 2.24 leads to 448 Hz.,7813953488372.094,6.327087844835703e-08,1.0,0.9999999367291216
+Faraday wave natural mode 3.822 Hz,1400.0,3.822,,,Faraday interface mode,Natural frequency for bilayer fluid (FC‑70 and silicone oil) from Table 2; approximate c_sound used.,819000.0,6.631578947368421e-15,1.0,0.9999999999999933
+Kelvin wave on vortex line (superfluid He),230.0,23000.0,,,Superfluid Kelvin wave,Fundamental frequency of standing Kelvin waves matching MEMS shear mode (22.9–27.3 kHz).,30000000000.0,2.42914979757085e-10,1.0,0.999999999757085
+Vibrating wire in superfluid ^3He-B (47 Hz),180.0,47.0,,,Vortex emission via vibrating wire,Vibrating wire used to generate vortices; resonant frequency 47 Hz.,78333333.33333334,6.342780026990555e-13,1.0,0.9999999999993657
+Vibrating wire in superfluid ^3He-B (183 Hz),180.0,183.0,,,Vortex emission via vibrating wire,Second mode of vibrating wire; frequency 183 Hz.,305000000.0,2.4696356275303643e-12,1.0,0.9999999999975303
+Torsional oscillator in liquid helium,230.0,11000.0,,,Piezoelectric torsional crystal,Piezoelectric torsional crystal resonant frequency 11 kHz in liquid helium.,14347826086.956522,1.1617672944904067e-10,1.0,0.9999999998838233
+Tokamak plasma – WCM,100000.0,50000.0,,,Weak coherent mode (plasma oscillation),Tokamak plasma improved confinement; WCM frequency range 30–100 kHz; we use 50 kHz.,150000000.0,1.2145748987854252e-12,1.0,0.9999999999987854
+Tokamak plasma – ETRO,100000.0,14000.0,,,Electron temperature gradient oscillation,ETRO frequency ~14 kHz from spectrogram.,42000000.0,3.40080971659919e-13,1.0,0.9999999999996599
+Tokamak plasma – MHD core mode,100000.0,6000.0,,,MHD mode,Measured MHD frequency spectrum in plasma core 4–8 kHz; we use 6 kHz.,18000000.0,1.45748987854251e-13,1.0,0.9999999999998542
+Silicon (Brillouin),8433.0,131460000000.0,,,Phonon (Brillouin scattering),Brillouin shift of silicon measured at 131.46 ± 0.07 GHz; FWHM 0.9 GHz.,4676627534685166.0,3.7867429430649116e-05,1.0,0.9999621325705693
+Diamond (Raman peak),12000.0,39932355405600.0,,,Phonon (Raman scattering),Diamond Raman peak at 1332 cm^-1 (sp3 bonding).,9.9830888514e+17,0.00808347275417004,1.0,0.9919165272458299
+Living human cell (first flexural mode),1500.0,20000.0,,3.0,Cell mechanical resonance,Broad mechanical resonance of living breast epithelial cells measured at 10–30 kHz; low Q ~1–7.,4000000000.0,3.238866396761134e-11,1.0,0.9999999999676114
+Living human cell (third mode),1500.0,165000.0,,3.0,Cell mechanical resonance,Higher-order mechanical resonance of cells at 150–180 kHz.,33000000000.0,2.672064777327935e-10,1.0,0.9999999997327935
+Mitochondrial nanomotion band,1500.0,10.0,,,Mitochondrial nanomotion,Nanomotion signals limited to 0–10–15 Hz; no discrete peak but band used to represent general activity.,2000000.0,1.6194331983805668e-14,1.0,0.9999999999999838

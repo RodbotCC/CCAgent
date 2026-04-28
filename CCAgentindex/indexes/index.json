@@ -110,6 +110,15 @@
     "catalog/edges/trigger.json",
     "catalog/edges/workflow_to_lead.json"
   ],
+  "analytics": [
+    "analytics/booking_lead_time_snapshot.json",
+    "analytics/cohort_snapshot.json",
+    "analytics/revenue_trends_snapshot.json",
+    "analytics/seller_performance_snapshot.json",
+    "analytics/source_channel_snapshot.json",
+    "analytics/upcoming_events_snapshot.json",
+    "analytics/win_loss_snapshot.json"
+  ],
   "summaries": [],
   "base": [],
   "venues": [

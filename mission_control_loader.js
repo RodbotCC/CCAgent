@@ -72,6 +72,22 @@
   // This is the temporal foreground that sits on top of the static bedrock.
   // The AI prompt treats it as ahead-of-bedrock context — what moved
   // yesterday drives what matters today.
+  // Conversation intelligence — produced by build_conversation_intelligence.py.
+  // Mirrors the dailyBriefing pattern: fetch newest run, expose to MissionControl
+  // so the chat agent can answer "how many comms this week?" from bedrock truth.
+  async function fLatestConversationIntelligence() {
+    try {
+      const r = await fetch("/api/intelligence/conversation/latest", { cache: "no-cache" });
+      if (!r.ok) return null;
+      const j = await r.json();
+      if (!j || !j.ok) return null;
+      return { slug: j.slug, payload: j.payload, mtime: j.mtime };
+    } catch (e) {
+      status.warnings.push(`conversation intelligence fetch failed: ${e.message}`);
+      return null;
+    }
+  }
+
   async function fLatestBriefing() {
     try {
       const listRes = await fetch("/api/briefings", { cache: "no-cache" });
@@ -175,6 +191,19 @@
     return await fJSON("hooks/state.json", { optional: true });
   }
 
+  async function fBoxes() {
+    try {
+      const r = await fetch("/api/boxes/list", { cache: "no-cache" });
+      if (!r.ok) return null;
+      const j = await r.json();
+      if (!j || !j.ok) return null;
+      return j;
+    } catch (e) {
+      status.warnings.push(`boxes fetch failed: ${e.message}`);
+      return null;
+    }
+  }
+
   window.MissionControlReady = (async () => {
     try {
       // Apr 2026 trim + Apr 27 source-of-truth wire-up: bedrock now feeds the
@@ -183,7 +212,7 @@
       // "BEDROCK · STRUCTURED TRUTH" section (Pieces stays the temporal feed).
       const [people, base, dailyBriefing,
              workflows, triggers, agentPlans, catalogEdges, hooksState,
-             venues] = await Promise.all([
+             venues, conversationIntelligence, boxesBundle] = await Promise.all([
         fDomain("people"),
         fBase(),
         fLatestBriefing(),
@@ -193,6 +222,8 @@
         fDomain("catalog_edges"),
         fHooksState(),
         fDomain("venues"),
+        fLatestConversationIntelligence(),
+        fBoxes(),
       ]);
 
       // Split people by kind for the chat prompt (lead vs coworker vs client vs contact).
@@ -217,6 +248,7 @@
           triggers: triggers.length,
           agent_plans: agentPlans.length,
           catalog_edges: catalogEdges.length,
+          boxes: (boxesBundle && Array.isArray(boxesBundle.boxes)) ? boxesBundle.boxes.length : 0,
           // legacy surfaces kept so existing callers don't crash.
           closeReferenceRows: 0,
           clickupTasks: 0,
@@ -228,6 +260,10 @@
         venues,
         base,
         dailyBriefing,
+        conversationIntelligence,
+        boxes: (boxesBundle && Array.isArray(boxesBundle.boxes)) ? boxesBundle.boxes : [],
+        boxesMismatch: (boxesBundle && boxesBundle.mismatch) ? boxesBundle.mismatch : { unmatched_box_ids: [], unmatched_people: [] },
+        boxesGrouped: (boxesBundle && boxesBundle.grouped) ? boxesBundle.grouped : {},
         // Automation surfaces — the chat agent sees these as part of bedrock truth.
         workflows,
         triggers,
@@ -241,6 +277,22 @@
       normalized.workflowsBySlug = Object.fromEntries(workflows.map(w => [w.slug, w]).filter(([k]) => k));
       normalized.triggersBySlug = Object.fromEntries(triggers.map(t => [t.slug, t]).filter(([k]) => k));
       normalized.agentPlansBySlug = Object.fromEntries(agentPlans.map(a => [a.slug, a]).filter(([k]) => k));
+      normalized.boxesById = Object.fromEntries((normalized.boxes || []).map(b => [b.id, b]).filter(([k]) => k));
+
+      // Runtime helper for box freshness checks without full page reload.
+      window.MissionControlRefreshBoxes = async () => {
+        const fresh = await fBoxes();
+        if (!fresh || !fresh.ok) return window.MissionControl && window.MissionControl.boxes;
+        const mc = window.MissionControl || {};
+        mc.boxes = Array.isArray(fresh.boxes) ? fresh.boxes : [];
+        mc.boxesById = Object.fromEntries((mc.boxes || []).map(b => [b.id, b]).filter(([k]) => k));
+        mc.boxesGrouped = fresh.grouped || {};
+        mc.boxesMismatch = fresh.mismatch || { unmatched_box_ids: [], unmatched_people: [] };
+        if (mc.counts) mc.counts.boxes = mc.boxes.length;
+        window.MissionControl = mc;
+        window.dispatchEvent(new CustomEvent("missioncontrol:loaded", { detail: mc }));
+        return mc.boxes;
+      };
 
       window.MissionControl = normalized;
       status.state = "ok";

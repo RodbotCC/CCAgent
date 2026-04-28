@@ -1,0 +1,80 @@
+{
+  "_type": "Email",
+  "activity_at": "2026-04-27T23:16:41.014000+00:00",
+  "agent_action_reason": null,
+  "agent_config_id": null,
+  "ai_draft": null,
+  "attachments": [],
+  "bcc": [],
+  "body_html": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n  <meta charset=\"UTF-8\">\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n  <title>Comeketo Catering Follow-Up</title>\n</head>\n<body style=\"margin:0;padding:0;background-color:#f4f4f4;font-family:Arial,Helvetica,sans-serif;\">\n  <table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"background-color:#f4f4f4;padding:24px 0;\">\n    <tr><td align=\"center\">\n      <table width=\"620\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"max-width:620px;width:100%;background-color:#ffffff;border-radius:8px;overflow:hidden;\">\n        <tr>\n          <td bgcolor=\"#1a1a1a\" align=\"center\" style=\"background-color:#1a1a1a;padding:24px 32px;\">\n            <img src=\"https://comeketocatering.com/wp-content/uploads/2025/01/LOGO_WEB.png\" alt=\"Comeketo Catering\" width=\"160\" style=\"display:block;border:0;\">\n          </td>\n        </tr>\n        <tr>\n          <td style=\"padding:32px;color:#222222;\">\n            <p style=\"margin:0 0 16px;font-size:16px;line-height:1.6;color:#222222;\">Hi Sandra,</p>\n            <p style=\"margin:0 0 14px;font-size:15px;line-height:1.7;color:#444444;\">Quick question on the graduation for <strong>June 10, 2026</strong>.</p>\n            <p style=\"margin:0 0 14px;font-size:15px;line-height:1.7;color:#444444;\">At this point, are you still trying to get clear on whether the food and service fit what you want for the 20 guests, or did the plans shift on your end?</p>\n            <p style=\"margin:0 0 22px;font-size:15px;line-height:1.7;color:#444444;\">If it is still active, would a quick phone call make more sense first so I can understand what you need before pointing you toward a tasting?</p>\n\n            <table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"margin:0 0 24px;\">\n              <tr>\n                <td bgcolor=\"#fff8f0\" style=\"background-color:#fff8f0;border:1px solid #ffd8bd;border-radius:8px;padding:16px 20px;\">\n                  <p style=\"margin:0 0 8px;font-size:14px;font-weight:bold;color:#cc4400;\">Menu calculator</p>\n                  <p style=\"margin:0 0 12px;font-size:14px;line-height:1.6;color:#555555;\">If you want to look around before we talk, this gives you a better feel for the menu options.</p>\n                  <table cellpadding=\"0\" cellspacing=\"0\" border=\"0\">\n                    <tr>\n                      <td bgcolor=\"#ff4b00\" style=\"background-color:#ff4b00;border-radius:5px;padding:11px 20px;\">\n                        <a href=\"https://rawdre.github.io/comeketo-menu-landing/#packages\" style=\"color:#ffffff;font-size:14px;font-weight:bold;text-decoration:none;\">Open the menu calculator</a>\n                      </td>\n                    </tr>\n                  </table>\n                </td>\n              </tr>\n            </table>\n\n            <table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"margin:0 0 26px;\">\n              <tr>\n                <td bgcolor=\"#f9f9f9\" style=\"background-color:#f9f9f9;border:1px solid #e8e8e8;border-radius:8px;padding:18px 20px;\">\n                  <p style=\"margin:0 0 10px;font-size:15px;font-weight:bold;color:#1a1a1a;\">Current tasting options</p>\n                  <p style=\"margin:0 0 8px;font-size:14px;line-height:1.6;color:#444444;\">Sunday, May 3, 2026 at 5:30 PM</p>\n                  <p style=\"margin:0 0 8px;font-size:14px;line-height:1.6;color:#444444;\">Sunday, May 17, 2026 at 2:00 PM</p>\n                  <p style=\"margin:0 0 14px;font-size:14px;line-height:1.6;color:#444444;\">Sunday, May 31, 2026 at 2:00 PM</p>\n                  <p style=\"margin:0;font-size:14px;line-height:1.6;color:#444444;\">If one of those feels worth exploring, tell me which date is easiest. If not, a quick call may be the cleaner first step.</p>\n                </td>\n              </tr>\n            </table>\n\n            <p style=\"margin:0 0 4px;font-size:14px;color:#444444;\">Best,</p>\n            <p style=\"margin:0 0 4px;font-size:15px;font-weight:bold;color:#1a1a1a;\">Andre Raw</p>\n            <p style=\"margin:0 0 4px;font-size:14px;color:#444444;\">Comeketo Catering</p>\n            <p style=\"margin:0;font-size:13px;\">\n              <a href=\"https://www.facebook.com/comeketocatering\" style=\"color:#ff4b00;text-decoration:none;\">Facebook</a> &nbsp;|&nbsp;\n              <a href=\"https://instagram.com/comeketocatering\" style=\"color:#ff4b00;text-decoration:none;\">Instagram</a> &nbsp;|&nbsp;\n              <a href=\"https://comeketocatering.com\" style=\"color:#ff4b00;text-decoration:none;\">Website</a>\n            </p>\n          </td>\n        </tr>\n        <tr>\n          <td bgcolor=\"#1a1a1a\" align=\"center\" style=\"background-color:#1a1a1a;padding:14px 32px;\">\n            <p style=\"margin:0;font-size:12px;color:#888888;\">Comeketo Catering &nbsp;|&nbsp; 199 Main St, Fitchburg, MA 01420 &nbsp;|&nbsp; comeketocatering.com</p>\n          </td>\n        </tr>\n      </table>\n    </td></tr>\n  </table>\n</body>\n</html>",
+  "body_html_quoted": [
+    {
+      "expand": true,
+      "html": "<html lang=\"en\">\n<head>\n  <meta charset=\"UTF-8\">\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n  <title>Comeketo Catering Follow-Up</title>\n</head>\n<body style=\"margin:0;padding:0;background-color:#f4f4f4;font-family:Arial,Helvetica,sans-serif;\">\n  <table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"background-color:#f4f4f4;padding:24px 0;\">\n    <tr><td align=\"center\">\n      <table width=\"620\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"max-width:620px;width:100%;background-color:#ffffff;border-radius:8px;overflow:hidden;\">\n        <tr>\n          <td bgcolor=\"#1a1a1a\" align=\"center\" style=\"background-color:#1a1a1a;padding:24px 32px;\">\n            <img src=\"https://comeketocatering.com/wp-content/uploads/2025/01/LOGO_WEB.png\" alt=\"Comeketo Catering\" width=\"160\" style=\"display:block;border:0;\">\n          </td>\n        </tr>\n        <tr>\n          <td style=\"padding:32px;color:#222222;\">\n            <p style=\"margin:0 0 16px;font-size:16px;line-height:1.6;color:#222222;\">Hi Sandra,</p>\n            <p style=\"margin:0 0 14px;font-size:15px;line-height:1.7;color:#444444;\">Quick question on the graduation for <strong>June 10, 2026</strong>.</p>\n            <p style=\"margin:0 0 14px;font-size:15px;line-height:1.7;color:#444444;\">At this point, are you still trying to get clear on whether the food and service fit what you want for the 20 guests, or did the plans shift on your end?</p>\n            <p style=\"margin:0 0 22px;font-size:15px;line-height:1.7;color:#444444;\">If it is still active, would a quick phone call make more sense first so I can understand what you need before pointing you toward a tasting?</p>\n\n            <table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"margin:0 0 24px;\">\n              <tr>\n                <td bgcolor=\"#fff8f0\" style=\"background-color:#fff8f0;border:1px solid #ffd8bd;border-radius:8px;padding:16px 20px;\">\n                  <p style=\"margin:0 0 8px;font-size:14px;font-weight:bold;color:#cc4400;\">Menu calculator</p>\n                  <p style=\"margin:0 0 12px;font-size:14px;line-height:1.6;color:#555555;\">If you want to look around before we talk, this gives you a better feel for the menu options.</p>\n                  <table cellpadding=\"0\" cellspacing=\"0\" border=\"0\">\n                    <tr>\n                      <td bgcolor=\"#ff4b00\" style=\"background-color:#ff4b00;border-radius:5px;padding:11px 20px;\">\n                        <a href=\"https://rawdre.github.io/comeketo-menu-landing/#packages\" style=\"color:#ffffff;font-size:14px;font-weight:bold;text-decoration:none;\">Open the menu calculator</a>\n                      </td>\n                    </tr>\n                  </table>\n                </td>\n              </tr>\n            </table>\n\n            <table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"margin:0 0 26px;\">\n              <tr>\n                <td bgcolor=\"#f9f9f9\" style=\"background-color:#f9f9f9;border:1px solid #e8e8e8;border-radius:8px;padding:18px 20px;\">\n                  <p style=\"margin:0 0 10px;font-size:15px;font-weight:bold;color:#1a1a1a;\">Current tasting options</p>\n                  <p style=\"margin:0 0 8px;font-size:14px;line-height:1.6;color:#444444;\">Sunday, May 3, 2026 at 5:30 PM</p>\n                  <p style=\"margin:0 0 8px;font-size:14px;line-height:1.6;color:#444444;\">Sunday, May 17, 2026 at 2:00 PM</p>\n                  <p style=\"margin:0 0 14px;font-size:14px;line-height:1.6;color:#444444;\">Sunday, May 31, 2026 at 2:00 PM</p>\n                  <p style=\"margin:0;font-size:14px;line-height:1.6;color:#444444;\">If one of those feels worth exploring, tell me which date is easiest. If not, a quick call may be the cleaner first step.</p>\n                </td>\n              </tr>\n            </table>\n\n            <p style=\"margin:0 0 4px;font-size:14px;color:#444444;\">Best,</p>\n            <p style=\"margin:0 0 4px;font-size:15px;font-weight:bold;color:#1a1a1a;\">Andre Raw</p>\n            <p style=\"margin:0 0 4px;font-size:14px;color:#444444;\">Comeketo Catering</p>\n            <p style=\"margin:0;font-size:13px;\">\n              <a href=\"https://www.facebook.com/comeketocatering\" style=\"color:#ff4b00;text-decoration:none;\">Facebook</a>  | \n              <a href=\"https://instagram.com/comeketocatering\" style=\"color:#ff4b00;text-decoration:none;\">Instagram</a>  | \n              <a href=\"https://comeketocatering.com\" style=\"color:#ff4b00;text-decoration:none;\">Website</a>\n            </p>\n          </td>\n        </tr>\n        <tr>\n          <td bgcolor=\"#1a1a1a\" align=\"center\" style=\"background-color:#1a1a1a;padding:14px 32px;\">\n            <p style=\"margin:0;font-size:12px;color:#888888;\">Comeketo Catering  |  199 Main St, Fitchburg, MA 01420  |  comeketocatering.com</p>\n          </td>\n        </tr>\n      </table>\n    </td></tr>\n  </table>\n</body>\n</html>"
+    }
+  ],
+  "body_preview": "Comeketo Catering Follow-Up  Hi Sandra,  Quick question on the graduation for June 10, 2026 .  At this point, are you still trying to get clear on whether the food and service fit what you want for th",
+  "body_text": "",
+  "body_text_quoted": null,
+  "bulk_email_action_id": null,
+  "cc": [],
+  "contact_id": "cont_rZtf9hxRbW4qLkHDJ4fJVGWRcoOFg0dAT26X3MbIIuX",
+  "created_by": "user_bnfoZDGbTqBZ4wcDGqRqTwjRKiwLnQ4mpV3i2enPkMt",
+  "created_by_name": "Andre Raw",
+  "date_created": "2026-04-27T23:16:41.014000+00:00",
+  "date_scheduled": null,
+  "date_sent": null,
+  "date_updated": "2026-04-27T23:20:45.008000+00:00",
+  "direction": "outgoing",
+  "email_account_id": null,
+  "envelope": {
+    "bcc": [],
+    "cc": [],
+    "date": "Mon, 27 Apr 2026 23:16:41 -0000",
+    "from": [],
+    "in_reply_to": null,
+    "is_autoreply": false,
+    "message_id": null,
+    "reply_to": [],
+    "sender": [],
+    "subject": "Quick question about your graduation event",
+    "to": [
+      {
+        "email": "sandradepina15@hotmail.com",
+        "name": ""
+      }
+    ]
+  },
+  "followup_sequence_add_cc_bcc": false,
+  "followup_sequence_delay": null,
+  "followup_sequence_id": null,
+  "has_reply": false,
+  "id": "acti_oD8SPyRHQyz1vK7PJIpALbSO3c9lf1BJAPDVMXgHxQ4",
+  "in_reply_to_id": null,
+  "lead_id": "lead_GwpQCIMO7oEjQYdeZlmtV6TpEdS0EpTDniBguHsEMWi",
+  "message_ids": [],
+  "need_smtp_credentials": false,
+  "opens": [],
+  "opens_summary": null,
+  "organization_id": "orga_pOyYOigKEELdmODukgjigCD5pTRewtmBW1yq6YXkskq",
+  "references": [],
+  "send_as_id": null,
+  "send_attempts": [],
+  "sender": null,
+  "sequence_id": null,
+  "sequence_name": null,
+  "sequence_subscription_id": null,
+  "status": "draft",
+  "subject": "Quick question about your graduation event",
+  "template_id": null,
+  "template_name": null,
+  "thread_id": "acti_n403vzc4erVOIshhZV2vMLoQKZzSzF2ow8YLqPNTr1A",
+  "to": [
+    "sandradepina15@hotmail.com"
+  ],
+  "updated_by": "user_bnfoZDGbTqBZ4wcDGqRqTwjRKiwLnQ4mpV3i2enPkMt",
+  "updated_by_name": "Andre Raw",
+  "user_id": "user_bnfoZDGbTqBZ4wcDGqRqTwjRKiwLnQ4mpV3i2enPkMt",
+  "user_name": "Andre Raw",
+  "users": []
+}

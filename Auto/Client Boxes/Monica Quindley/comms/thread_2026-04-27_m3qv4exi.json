@@ -1,0 +1,92 @@
+{
+  "_type": "EmailThread",
+  "activity_at": "2026-04-27T21:39:12.001000+00:00",
+  "contact_id": null,
+  "created_by": null,
+  "created_by_name": null,
+  "date_created": "2026-04-27T21:39:12.001000+00:00",
+  "date_updated": "2026-04-27T21:39:21.593000+00:00",
+  "id": "acti_2H5VoVoaRH1vvJzKxFGFimq9lFhfclYWRG2m3Qv4eXI",
+  "importance": {
+    "reason": "scheduling-emails",
+    "type": "not_important"
+  },
+  "latest_emails": [
+    {
+      "bcc": [],
+      "body_preview": "Monica Quindley PAX 4 Tasting\nSunday May 17, 2026 ⋅ 2pm – 4pm\nEastern Time - New York Location\n199 Main St, Fitchburg, MA 01420, USA https://www.google.com/maps/search/199+Main+St,+Fitchburg,+MA+01420",
+      "cc": [],
+      "date_created": "2026-04-27T21:39:12+00:00",
+      "date_sent": "2026-04-27T21:39:12+00:00",
+      "date_updated": "2026-04-27T21:39:21.576000+00:00",
+      "direction": "outgoing",
+      "envelope": {
+        "bcc": [],
+        "cc": [],
+        "date": "Mon, 27 Apr 2026 21:39:12 +0000",
+        "from": [
+          {
+            "email": "team@comeketocatering.com",
+            "name": "Comeketo Catering"
+          }
+        ],
+        "in_reply_to": null,
+        "is_autoreply": false,
+        "message_id": "<calendar-a771ead3-c9e2-4441-af8a-ae35b6fad9f4@google.com>",
+        "reply_to": [
+          {
+            "email": "team@comeketocatering.com",
+            "name": "Comeketo Catering"
+          }
+        ],
+        "sender": [
+          {
+            "email": "calendar-notification@google.com",
+            "name": "Google Calendar"
+          }
+        ],
+        "subject": "Invitation: Monica Quindley PAX 4 Tasting @ Sun May 17, 2026 2pm - 4pm (EDT) (bibi@comeketo.com)",
+        "to": [
+          {
+            "email": "bibi@comeketo.com",
+            "name": ""
+          },
+          {
+            "email": "quindley95@gmail.com",
+            "name": ""
+          }
+        ]
+      },
+      "has_attachments": true,
+      "id": "acti_RRQbHKxt98cZvM3vNXnvcDo7SRWdAy8JMATkJU8y8yb",
+      "opens_summary": null,
+      "send_as_id": null,
+      "sender": "Comeketo Catering <team@comeketocatering.com>",
+      "status": "sent",
+      "subject": "Invitation: Monica Quindley PAX 4 Tasting @ Sun May 17, 2026 2pm - 4pm (EDT) (bibi@comeketo.com)",
+      "to": [
+        "bibi@comeketo.com",
+        "quindley95@gmail.com"
+      ],
+      "user_id": "user_bnfoZDGbTqBZ4wcDGqRqTwjRKiwLnQ4mpV3i2enPkMt"
+    }
+  ],
+  "latest_normalized_subject": "Invitation: Monica Quindley PAX 4 Tasting @ Sun May 17, 2026 2pm - 4pm (EDT) (bibi@comeketo.com)",
+  "lead_id": "lead_fYLRdg4Dkb0g7e3asZc4JrhI1hlgTWd4VWG4lwKPn9H",
+  "n_emails": 1,
+  "organization_id": "orga_pOyYOigKEELdmODukgjigCD5pTRewtmBW1yq6YXkskq",
+  "participants": [
+    {
+      "email": "team@comeketocatering.com",
+      "name": "Comeketo Catering"
+    }
+  ],
+  "summary": null,
+  "updated_by": null,
+  "updated_by_name": null,
+  "user_id": "user_bnfoZDGbTqBZ4wcDGqRqTwjRKiwLnQ4mpV3i2enPkMt",
+  "user_name": "Andre Raw",
+  "users": [
+    "user_bnfoZDGbTqBZ4wcDGqRqTwjRKiwLnQ4mpV3i2enPkMt"
+  ]
+}

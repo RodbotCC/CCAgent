@@ -1,0 +1,105 @@
+{
+  "_type": "Email",
+  "activity_at": "2026-04-27T20:19:33.024000+00:00",
+  "agent_action_reason": null,
+  "agent_config_id": null,
+  "ai_draft": null,
+  "attachments": [],
+  "bcc": [],
+  "body_html": "<p>Hi Tatiana,</p>\n<p>I went back through the last part of our conversation and I still do not have a clear read on what would make the next step feel easy enough for you.</p>\n<p>Are you still trying to figure out whether the food and service fit what you have in mind, or would it make more sense for us to get on a quick phone call and clear it up directly?</p>\n<p>If a call is the easier move, I can make time at 10:00 AM, 11:00 AM, or 1:00 PM.<br />If tasting helps more than more back-and-forth, I can also save you a spot for Sunday, May 3 at 5:30 PM.</p>\n<p>Andre</p>\n    <hr />\n    <p>Regards,</p>\n    <p>\n      Andre Raw<br />\n      Catering Event Coordinator<br />\n      📲 C: (978) 235-3791<br />\n      📲 W: (978) 381-1212<br />\n      Facebook | Instagram | Website\n    </p>",
+  "body_html_quoted": [
+    {
+      "expand": true,
+      "html": "<p>Hi Tatiana,</p>\n<p>I went back through the last part of our conversation and I still do not have a clear read on what would make the next step feel easy enough for you.</p>\n<p>Are you still trying to figure out whether the food and service fit what you have in mind, or would it make more sense for us to get on a quick phone call and clear it up directly?</p>\n<p>If a call is the easier move, I can make time at 10:00 AM, 11:00 AM, or 1:00 PM.<br>If tasting helps more than more back-and-forth, I can also save you a spot for Sunday, May 3 at 5:30 PM.</p>\n<p>Andre</p>\n    <hr>\n    <p>Regards,</p>\n    <p>\n      Andre Raw<br>\n      Catering Event Coordinator<br>\n      📲 C: (978) 235-3791<br>\n      📲 W: (978) 381-1212<br>\n      Facebook | Instagram | Website\n    </p>"
+    }
+  ],
+  "body_preview": "Hi Tatiana, I went back through the last part of our conversation and I still do not have a clear read on what would make the next step feel easy enough for you. Are you still trying to figure out whe",
+  "body_text": "Hi Tatiana,\n\nI went back through the last part of our conversation and I still do not have a clear read on what would make the next step feel easy enough for you.\n\nAre you still trying to figure out whether the food and service fit what you have in mind, or would it make more sense for us to get on a quick phone call and clear it up directly?\n\nIf a call is the easier move, I can make time at 10:00 AM, 11:00 AM, or 1:00 PM.\nIf tasting helps more than more back-and-forth, I can also save you a spot for Sunday, May 3 at 5:30 PM.\n\nAndre\n\n-----\nRegards,\nAndre Raw\n​​Catering Event Coordinator\n📲 C: (978) 235-3791\n📲 W: (978) 381-1212\nFacebook | Instagram | Website",
+  "body_text_quoted": [
+    {
+      "expand": true,
+      "text": "Hi Tatiana,\n\nI went back through the last part of our conversation and I still do not have a clear read on what would make the next step feel easy enough for you.\n\nAre you still trying to figure out whether the food and service fit what you have in mind, or would it make more sense for us to get on a quick phone call and clear it up directly?\n\nIf a call is the easier move, I can make time at 10:00 AM, 11:00 AM, or 1:00 PM.\nIf tasting helps more than more back-and-forth, I can also save you a spot for Sunday, May 3 at 5:30 PM.\n\nAndre\n\n-----\nRegards,\nAndre Raw\n​​Catering Event Coordinator\n📲 C: (978) 235-3791\n📲 W: (978) 381-1212\nFacebook | Instagram | Website"
+    }
+  ],
+  "bulk_email_action_id": null,
+  "cc": [],
+  "contact_id": "cont_Y99i1lHHztbY5TqKObtvtgR8lQaIttv7LwiBzqLki7R",
+  "created_by": "user_bnfoZDGbTqBZ4wcDGqRqTwjRKiwLnQ4mpV3i2enPkMt",
+  "created_by_name": "Andre Raw",
+  "date_created": "2026-04-27T20:19:32.358000+00:00",
+  "date_scheduled": null,
+  "date_sent": "2026-04-27T20:19:33.024000+00:00",
+  "date_updated": "2026-04-27T20:19:35.282000+00:00",
+  "direction": "outgoing",
+  "email_account_id": "emailacct_V698oi1uFg2nnhvbdLhaItEGsTdNCmlQUEla8QF32rZ",
+  "envelope": {
+    "bcc": [],
+    "cc": [],
+    "date": "Mon, 27 Apr 2026 20:19:33 +0000",
+    "from": [
+      {
+        "email": "team@comeketocatering.com",
+        "name": "Andre Raw"
+      }
+    ],
+    "in_reply_to": null,
+    "is_autoreply": false,
+    "message_id": "<177732117304.7.13224310353215751944@smtpgw.close.com>",
+    "reply_to": [],
+    "sender": [
+      {
+        "email": "team@comeketocatering.com",
+        "name": "Andre Raw"
+      }
+    ],
+    "subject": "Quick question about your event",
+    "to": [
+      {
+        "email": "tatianamoquete@gmail.com",
+        "name": ""
+      }
+    ]
+  },
+  "followup_sequence_add_cc_bcc": false,
+  "followup_sequence_delay": null,
+  "followup_sequence_id": null,
+  "has_reply": false,
+  "id": "acti_JdNiw0W01rvsTQGVE7J2Xc25T5ScaCpGIV4TjcnHytP",
+  "in_reply_to_id": null,
+  "lead_id": "lead_DG2S032loh5uLT4AuANJlabzJopJorUGb2vCO2sKvMC",
+  "message_ids": [
+    "<177732117304.7.1839859944689078794@smtpgw.close.com>",
+    "<177732117304.7.13224310353215751944@smtpgw.close.com>"
+  ],
+  "need_smtp_credentials": false,
+  "opens": [
+    {
+      "ip_address": "74.125.151.197",
+      "opened_at": "2026-04-27T20:19:35.281000+00:00",
+      "opened_by": "tatianamoquete@gmail.com",
+      "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.135 Safari/537.36 Edge/12.246 Mozilla/5.0"
+    }
+  ],
+  "opens_summary": "Opened by tatianamoquete@gmail.com (2026-04-27)",
+  "organization_id": "orga_pOyYOigKEELdmODukgjigCD5pTRewtmBW1yq6YXkskq",
+  "references": [],
+  "send_as_id": null,
+  "send_attempts": [],
+  "sender": "Andre Raw <team@comeketocatering.com>",
+  "sequence_id": null,
+  "sequence_name": null,
+  "sequence_subscription_id": null,
+  "status": "sent",
+  "subject": "Quick question about your event",
+  "template_id": null,
+  "template_name": null,
+  "thread_id": "acti_t1nyoCGQMD5TfxtziOJHHIuKYWqCIt3Ew8UIx4XGIBN",
+  "to": [
+    "tatianamoquete@gmail.com"
+  ],
+  "updated_by": "user_bnfoZDGbTqBZ4wcDGqRqTwjRKiwLnQ4mpV3i2enPkMt",
+  "updated_by_name": "Andre Raw",
+  "user_id": "user_bnfoZDGbTqBZ4wcDGqRqTwjRKiwLnQ4mpV3i2enPkMt",
+  "user_name": "Andre Raw",
+  "users": []
+}

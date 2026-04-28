@@ -133,7 +133,7 @@ The team maintains a single source of truth for which pages own which assets, co
 
 **Rule:** any task that changes a page, route behavior, or page data binding is **not complete** until that file is updated. Append to the relevant page section's `Asset Ownership`, `Change Checklist`, and `History` lines, and bump `Last Verified`. New pages get a fresh entry following the Mapping Template at the top of the file. Removed assets must be removed in the same change.
 
-Surviving routes after the Apr 2026 great trim (10 pages): `grid, settings, leads, clients, coworkers, contacts, briefing, activity, automation, intake`. The retired pages — `memory, prediction, commitments, commitment_detail, inbox, inbox_detail, calendar, Rodbot, projects, analytics, tables, table_new, table_detail, delegations, chat` — are gone from the sitemap and from `app.jsx`.
+Surviving routes after the Apr 2026 great trim (11 pages, after 2026-04-27 Analytics restoration): `grid, settings, leads, clients, coworkers, contacts, briefing, activity, automation, intake, analytics`. The retired pages — `memory, prediction, commitments, commitment_detail, inbox, inbox_detail, calendar, Rodbot, projects, tables, table_new, table_detail, delegations, chat` — are gone from the sitemap and from `app.jsx`. (Analytics returned 2026-04-27 as the Conversation Intelligence flag-bearer page.)
 
 This applies whether the work happens in the main session or a delegation — every Comeketo Agent change passes through this gate.
 

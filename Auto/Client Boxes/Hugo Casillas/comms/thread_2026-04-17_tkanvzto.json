@@ -1,0 +1,82 @@
+{
+  "_type": "EmailThread",
+  "activity_at": "2026-04-17T00:43:04.958000+00:00",
+  "contact_id": null,
+  "created_by": "user_bnfoZDGbTqBZ4wcDGqRqTwjRKiwLnQ4mpV3i2enPkMt",
+  "created_by_name": "Andre Raw",
+  "date_created": "2026-04-17T00:43:04.958000+00:00",
+  "date_updated": "2026-04-17T15:33:32.741000+00:00",
+  "id": "acti_IdC0VYiGm0890llKV1dlWOibayo3vlqCnq8tkANvZTo",
+  "importance": {
+    "reason": "by-default",
+    "type": "not_important"
+  },
+  "latest_emails": [
+    {
+      "bcc": [],
+      "body_preview": "Hi Hugo Casillas, Just to give you a quick idea — we offer a few different styles, including\ntraditional buffet, more formal plated or family-style meals, and also a fun churrasco (buffet option with ",
+      "cc": [],
+      "date_created": "2026-04-17T00:42:50.792000+00:00",
+      "date_sent": "2026-04-17T00:43:04.957000+00:00",
+      "date_updated": "2026-04-17T15:33:32.663000+00:00",
+      "direction": "outgoing",
+      "envelope": {
+        "bcc": [],
+        "cc": [],
+        "date": "Fri, 17 Apr 2026 00:43:05 +0000",
+        "from": [
+          {
+            "email": "team@comeketocatering.com",
+            "name": "Andre Raw"
+          }
+        ],
+        "in_reply_to": null,
+        "is_autoreply": false,
+        "message_id": "<177638658532.7.13056778194541646197@smtpgw.close.com>",
+        "reply_to": [],
+        "sender": [
+          {
+            "email": "team@comeketocatering.com",
+            "name": "Andre Raw"
+          }
+        ],
+        "subject": "Explore What Comeketo Catering Has to Offer! ✨",
+        "to": [
+          {
+            "email": "hugocasillas2@gmail.com",
+            "name": ""
+          }
+        ]
+      },
+      "has_attachments": true,
+      "id": "acti_ODHSAupg2sSYtOMxaGi1VCKRZe0NGgmDsPDSC9MtMdW",
+      "opens_summary": "Opened by hugocasillas2@gmail.com (3 times, latest 2026-04-17)",
+      "send_as_id": null,
+      "sender": "Andre Raw <team@comeketocatering.com>",
+      "status": "sent",
+      "subject": "Explore What Comeketo Catering Has to Offer! ✨",
+      "to": [
+        "hugocasillas2@gmail.com"
+      ],
+      "user_id": "user_bnfoZDGbTqBZ4wcDGqRqTwjRKiwLnQ4mpV3i2enPkMt"
+    }
+  ],
+  "latest_normalized_subject": "Explore What Comeketo Catering Has to Offer! ✨",
+  "lead_id": "lead_g4AZCOW7Kpc3tithNBrr9aXPbDHsZ72KJUR55Qjzd6f",
+  "n_emails": 1,
+  "organization_id": "orga_pOyYOigKEELdmODukgjigCD5pTRewtmBW1yq6YXkskq",
+  "participants": [
+    {
+      "email": "team@comeketocatering.com",
+      "name": "Andre Raw"
+    }
+  ],
+  "summary": null,
+  "updated_by": "user_bnfoZDGbTqBZ4wcDGqRqTwjRKiwLnQ4mpV3i2enPkMt",
+  "updated_by_name": "Andre Raw",
+  "user_id": "user_bnfoZDGbTqBZ4wcDGqRqTwjRKiwLnQ4mpV3i2enPkMt",
+  "user_name": "Andre Raw",
+  "users": [
+    "user_bnfoZDGbTqBZ4wcDGqRqTwjRKiwLnQ4mpV3i2enPkMt"
+  ]
+}

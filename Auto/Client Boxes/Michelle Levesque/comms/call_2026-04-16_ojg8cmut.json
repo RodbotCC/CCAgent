@@ -1,0 +1,390 @@
+{
+  "_type": "Call",
+  "activity_at": "2026-04-16T17:29:29.377000+00:00",
+  "agent_config_id": null,
+  "call_method": "regular",
+  "coach_legs": [],
+  "contact_id": "cont_THDS1GdDZUtMCyPsiyKmBVEHWFF1dRu7lSIVyG2j9eU",
+  "conversation_type_id": null,
+  "conversation_type_reason": null,
+  "cost": "2",
+  "created_by": "user_bnfoZDGbTqBZ4wcDGqRqTwjRKiwLnQ4mpV3i2enPkMt",
+  "created_by_name": "Andre Raw",
+  "date_answered": "2026-04-16T17:29:32.111000+00:00",
+  "date_created": "2026-04-16T17:29:29.377000+00:00",
+  "date_updated": "2026-04-16T17:31:41.570000+00:00",
+  "dialer_id": null,
+  "dialer_saved_search_id": null,
+  "direction": "outbound",
+  "disposition": "answered",
+  "duration": 45,
+  "forwarded_to": null,
+  "has_recording": true,
+  "id": "acti_IAVdQiL7M8ko51bTG70GKy0pVUYND5EiFynOJg8CMut",
+  "is_forwarded": false,
+  "is_joinable": false,
+  "is_to_group_number": false,
+  "lead_id": "lead_dJZGwtMFabQovxNIpS0XDSwFV7rw0fgyFNeQX6jYOxR",
+  "local_country_iso": "US",
+  "local_phone": "+19783811212",
+  "local_phone_formatted": "+1 978-381-1212",
+  "note": "",
+  "note_date_updated": "2026-04-16T17:29:29.377000+00:00",
+  "note_html": "<body><p></p></body>",
+  "note_mentions": [],
+  "notetaker_id": "user_bnfoZDGbTqBZ4wcDGqRqTwjRKiwLnQ4mpV3i2enPkMt",
+  "organization_id": "orga_pOyYOigKEELdmODukgjigCD5pTRewtmBW1yq6YXkskq",
+  "outcome_autofill_confidence": "high",
+  "outcome_autofill_reasoning": "The call connected and navigated through what appears to be a corporate/automated phone screening system (a gatekeeper prompt asking to record name and reason for calling, then relaying availability). The intended contact was never reached — the system indicated the person was \"not available\" and offered to leave a message after the tone. This fits the \"No Answer – Automated System\" outcome, as the call was handled entirely by an automated system (a phone menu/screening system) and no human contact engaged with the agent's purpose. The final voicemail prompt came after navigating the automated system, which per the guidelines maps to \"No Answer – Automated System\" rather than \"Left Voicemail.\"",
+  "outcome_id": "outcome_032ywLO9PmfKtCC3gxlxsW",
+  "outcome_reason": "autofilled",
+  "parent_meeting_id": null,
+  "phone": "+17744172309",
+  "playbook_id": null,
+  "playbook_reason": null,
+  "recording_duration": 44,
+  "recording_expires_at": "2026-05-16T17:29:29.377000+00:00",
+  "recording_history": [
+    {
+      "action": "auto-start-initializing",
+      "timestamp": "2026-04-16T17:29:30.510000+00:00"
+    },
+    {
+      "action": "auto-started",
+      "timestamp": "2026-04-16T17:29:31+00:00"
+    }
+  ],
+  "recording_transcript": {
+    "has_speaker_labels": true,
+    "id": "transcript_0330iydyQVy1RVHPDnyfji",
+    "speakers": [
+      {
+        "speaker_label": "Andre Raw",
+        "speaker_side": "close-user",
+        "talk_percentage": 0.1386861313868614,
+        "talk_time": 1.9000000000000004
+      },
+      {
+        "speaker_label": "Michelle Levesque",
+        "speaker_side": "contact",
+        "talk_percentage": 0.8613138686131387,
+        "talk_time": 11.799999999999997
+      }
+    ],
+    "summary_html": "<ul>\n<li>Andre Raw from Comeketo Catering called and identified himself with his company name.</li>\n<li>The recipient was not available to take the call at that time.</li>\n<li>No additional message was left on the voicemail.</li>\n</ul>",
+    "summary_text": "- Andre Raw from Comeketo Catering called and identified himself with his company name.\n- The recipient was not available to take the call at that time.\n- No additional message was left on the voicemail.",
+    "utterances": [
+      {
+        "end": 4.9,
+        "speaker_label": "Michelle Levesque",
+        "speaker_side": "contact",
+        "start": 0.2,
+        "text": "Hi. If you record your name and reason for calling, I'll see if this person is available.",
+        "words": [
+          {
+            "end": 0.4,
+            "start": 0.2,
+            "text": "Hi."
+          },
+          {
+            "end": 0.8,
+            "start": 0.4,
+            "text": "If"
+          },
+          {
+            "end": 1.0,
+            "start": 0.8,
+            "text": "you"
+          },
+          {
+            "end": 1.2,
+            "start": 1.0,
+            "text": "record"
+          },
+          {
+            "end": 1.5,
+            "start": 1.2,
+            "text": "your"
+          },
+          {
+            "end": 1.8,
+            "start": 1.5,
+            "text": "name"
+          },
+          {
+            "end": 2.2,
+            "start": 1.8,
+            "text": "and"
+          },
+          {
+            "end": 2.4,
+            "start": 2.2,
+            "text": "reason"
+          },
+          {
+            "end": 2.7,
+            "start": 2.4,
+            "text": "for"
+          },
+          {
+            "end": 3.1,
+            "start": 2.7,
+            "text": "calling,"
+          },
+          {
+            "end": 3.6,
+            "start": 3.3,
+            "text": "I'll"
+          },
+          {
+            "end": 3.8,
+            "start": 3.6,
+            "text": "see"
+          },
+          {
+            "end": 3.9,
+            "start": 3.8,
+            "text": "if"
+          },
+          {
+            "end": 4.1,
+            "start": 3.9,
+            "text": "this"
+          },
+          {
+            "end": 4.4,
+            "start": 4.1,
+            "text": "person"
+          },
+          {
+            "end": 4.6,
+            "start": 4.4,
+            "text": "is"
+          },
+          {
+            "end": 4.9,
+            "start": 4.6,
+            "text": "available."
+          }
+        ]
+      },
+      {
+        "end": 9.8,
+        "speaker_label": "Andre Raw",
+        "speaker_side": "close-user",
+        "start": 8.1,
+        "text": "Andre kong keto catering.",
+        "words": [
+          {
+            "end": 8.5,
+            "start": 8.1,
+            "text": "Andre"
+          },
+          {
+            "end": 8.8,
+            "start": 8.5,
+            "text": "kong"
+          },
+          {
+            "end": 9.2,
+            "start": 8.8,
+            "text": "keto"
+          },
+          {
+            "end": 9.8,
+            "start": 9.2,
+            "text": "catering."
+          }
+        ]
+      },
+      {
+        "end": 17.2,
+        "speaker_label": "Michelle Levesque",
+        "speaker_side": "contact",
+        "start": 15.4,
+        "text": "Thanks. Please stay on the line.",
+        "words": [
+          {
+            "end": 15.8,
+            "start": 15.4,
+            "text": "Thanks."
+          },
+          {
+            "end": 16.4,
+            "start": 16.1,
+            "text": "Please"
+          },
+          {
+            "end": 16.6,
+            "start": 16.4,
+            "text": "stay"
+          },
+          {
+            "end": 16.8,
+            "start": 16.6,
+            "text": "on"
+          },
+          {
+            "end": 16.9,
+            "start": 16.8,
+            "text": "the"
+          },
+          {
+            "end": 17.2,
+            "start": 16.9,
+            "text": "line."
+          }
+        ]
+      },
+      {
+        "end": 25.9,
+        "speaker_label": "Andre Raw",
+        "speaker_side": "close-user",
+        "start": 25.7,
+        "text": "It.",
+        "words": [
+          {
+            "end": 25.9,
+            "start": 25.7,
+            "text": "It."
+          }
+        ]
+      },
+      {
+        "end": 44.3,
+        "speaker_label": "Michelle Levesque",
+        "speaker_side": "contact",
+        "start": 39.0,
+        "text": "I'm sorry. This person is not available. If you would like to leave an additional message, please reply after the tone.",
+        "words": [
+          {
+            "end": 39.2,
+            "start": 39.0,
+            "text": "I'm"
+          },
+          {
+            "end": 39.5,
+            "start": 39.2,
+            "text": "sorry."
+          },
+          {
+            "end": 39.8,
+            "start": 39.5,
+            "text": "This"
+          },
+          {
+            "end": 40.0,
+            "start": 39.8,
+            "text": "person"
+          },
+          {
+            "end": 40.2,
+            "start": 40.0,
+            "text": "is"
+          },
+          {
+            "end": 40.4,
+            "start": 40.2,
+            "text": "not"
+          },
+          {
+            "end": 40.8,
+            "start": 40.4,
+            "text": "available."
+          },
+          {
+            "end": 41.3,
+            "start": 41.0,
+            "text": "If"
+          },
+          {
+            "end": 41.4,
+            "start": 41.3,
+            "text": "you"
+          },
+          {
+            "end": 41.6,
+            "start": 41.4,
+            "text": "would"
+          },
+          {
+            "end": 41.7,
+            "start": 41.6,
+            "text": "like"
+          },
+          {
+            "end": 41.8,
+            "start": 41.7,
+            "text": "to"
+          },
+          {
+            "end": 42.0,
+            "start": 41.8,
+            "text": "leave"
+          },
+          {
+            "end": 42.2,
+            "start": 42.0,
+            "text": "an"
+          },
+          {
+            "end": 42.6,
+            "start": 42.2,
+            "text": "additional"
+          },
+          {
+            "end": 43.1,
+            "start": 42.6,
+            "text": "message,"
+          },
+          {
+            "end": 43.4,
+            "start": 43.1,
+            "text": "please"
+          },
+          {
+            "end": 43.7,
+            "start": 43.4,
+            "text": "reply"
+          },
+          {
+            "end": 43.9,
+            "start": 43.7,
+            "text": "after"
+          },
+          {
+            "end": 44.1,
+            "start": 43.9,
+            "text": "the"
+          },
+          {
+            "end": 44.3,
+            "start": 44.1,
+            "text": "tone."
+          }
+        ]
+      }
+    ]
+  },
+  "recording_url": "https://api.close.com/call/acti_IAVdQiL7M8ko51bTG70GKy0pVUYND5EiFynOJg8CMut/recording/",
+  "remote_country_iso": "US",
+  "remote_phone": "+17744172309",
+  "remote_phone_formatted": "+1 774-417-2309",
+  "sequence_id": null,
+  "sequence_name": null,
+  "sequence_subscription_id": null,
+  "source": "Close.io",
+  "status": "completed",
+  "transferred_from": null,
+  "transferred_from_user_id": null,
+  "transferred_to": null,
+  "transferred_to_user_id": null,
+  "updated_by": "user_bnfoZDGbTqBZ4wcDGqRqTwjRKiwLnQ4mpV3i2enPkMt",
+  "updated_by_name": "Andre Raw",
+  "user_id": "user_bnfoZDGbTqBZ4wcDGqRqTwjRKiwLnQ4mpV3i2enPkMt",
+  "user_name": "Andre Raw",
+  "users": [],
+  "voicemail_duration": 0,
+  "voicemail_transcript": null,
+  "voicemail_url": null
+}

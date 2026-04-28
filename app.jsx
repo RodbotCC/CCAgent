@@ -131,7 +131,7 @@ function App() {
   const aiConfigured = !!(window.SecretaryAI && window.SecretaryAI.isConfigured());
 
   // --- Routing ---------------------------------------------------------------
-  const KNOWN_SCREENS = ["grid", "settings", "leads", "clients", "coworkers", "contacts", "venues", "briefing", "automation", "activity", "intake"];
+  const KNOWN_SCREENS = ["grid", "settings", "leads", "clients", "coworkers", "contacts", "venues", "briefing", "automation", "activity", "intake", "analytics", "delegations", "boxes"];
   const getGridFor = (id) => gridOverrides[id] || data.grids[id] || null;
   const validHistory = (h) => {
     if (!Array.isArray(h) || !h.length) return null;
@@ -472,6 +472,12 @@ function App() {
     screen = <AutomationShell go={go} tab={route.tab || "workflows"} loadSlug={route.load} />;
   } else if (route.name === "intake") {
     screen = <IntakeScreen go={go} />;
+  } else if (route.name === "analytics") {
+    screen = <AnalyticsScreen go={go} />;
+  } else if (route.name === "delegations") {
+    screen = <DelegationsScreen go={go} />;
+  } else if (route.name === "boxes") {
+    screen = <BoxesScreen go={go} />;
   } else {
     screen = null;
     setTimeout(() => setHistory([{ name: "grid", gridId: "morning" }]), 0);
@@ -497,6 +503,9 @@ function App() {
         onOpenActivity={() => go.push("activity")}
         onOpenAutomation={() => go.push("automation")}
         onOpenIntake={() => go.push("intake")}
+        onOpenAnalytics={() => go.push("analytics")}
+        onOpenDelegations={() => go.push("delegations")}
+        onOpenBoxes={() => go.push("boxes")}
         onHome={onHome}
       />
       <main className="main" data-screen-label={route.name + (route.gridId ? "·" + route.gridId : "")}>{screen}</main>

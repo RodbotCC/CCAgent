@@ -1,0 +1,448 @@
+{
+  "generated_at": "2026-04-27T21:45:42.095084Z",
+  "window_days": 30,
+  "window_start": "2026-03-28T21:45:42.095084Z",
+  "window_end": "2026-04-27T21:45:42.095084Z",
+  "auto_widened": false,
+  "synthesized_from_last_activity": false,
+  "totals": {
+    "comms": 141,
+    "in": 31,
+    "out": 110,
+    "leads_with_activity": 28,
+    "silent_leads": 0
+  },
+  "by_channel": {
+    "phone": 17,
+    "sms": 66,
+    "other": 12,
+    "email": 45,
+    "calendar": 1
+  },
+  "by_direction": {
+    "in": 31,
+    "out": 110
+  },
+  "ratio": "31:110",
+  "timeseries": [
+    {
+      "date": "2026-03-28",
+      "total": 0,
+      "in": 0,
+      "out": 0,
+      "by_channel": {}
+    },
+    {
+      "date": "2026-03-29",
+      "total": 0,
+      "in": 0,
+      "out": 0,
+      "by_channel": {}
+    },
+    {
+      "date": "2026-03-30",
+      "total": 0,
+      "in": 0,
+      "out": 0,
+      "by_channel": {}
+    },
+    {
+      "date": "2026-03-31",
+      "total": 0,
+      "in": 0,
+      "out": 0,
+      "by_channel": {}
+    },
+    {
+      "date": "2026-04-01",
+      "total": 0,
+      "in": 0,
+      "out": 0,
+      "by_channel": {}
+    },
+    {
+      "date": "2026-04-02",
+      "total": 0,
+      "in": 0,
+      "out": 0,
+      "by_channel": {}
+    },
+    {
+      "date": "2026-04-03",
+      "total": 0,
+      "in": 0,
+      "out": 0,
+      "by_channel": {}
+    },
+    {
+      "date": "2026-04-04",
+      "total": 0,
+      "in": 0,
+      "out": 0,
+      "by_channel": {}
+    },
+    {
+      "date": "2026-04-05",
+      "total": 0,
+      "in": 0,
+      "out": 0,
+      "by_channel": {}
+    },
+    {
+      "date": "2026-04-06",
+      "total": 0,
+      "in": 0,
+      "out": 0,
+      "by_channel": {}
+    },
+    {
+      "date": "2026-04-07",
+      "total": 0,
+      "in": 0,
+      "out": 0,
+      "by_channel": {}
+    },
+    {
+      "date": "2026-04-08",
+      "total": 0,
+      "in": 0,
+      "out": 0,
+      "by_channel": {}
+    },
+    {
+      "date": "2026-04-09",
+      "total": 0,
+      "in": 0,
+      "out": 0,
+      "by_channel": {}
+    },
+    {
+      "date": "2026-04-10",
+      "total": 0,
+      "in": 0,
+      "out": 0,
+      "by_channel": {}
+    },
+    {
+      "date": "2026-04-11",
+      "total": 0,
+      "in": 0,
+      "out": 0,
+      "by_channel": {}
+    },
+    {
+      "date": "2026-04-12",
+      "total": 0,
+      "in": 0,
+      "out": 0,
+      "by_channel": {}
+    },
+    {
+      "date": "2026-04-13",
+      "total": 0,
+      "in": 0,
+      "out": 0,
+      "by_channel": {}
+    },
+    {
+      "date": "2026-04-14",
+      "total": 0,
+      "in": 0,
+      "out": 0,
+      "by_channel": {}
+    },
+    {
+      "date": "2026-04-15",
+      "total": 18,
+      "in": 5,
+      "out": 13,
+      "by_channel": {
+        "sms": 6,
+        "email": 7,
+        "phone": 2,
+        "other": 3
+      }
+    },
+    {
+      "date": "2026-04-16",
+      "total": 7,
+      "in": 0,
+      "out": 7,
+      "by_channel": {
+        "phone": 2,
+        "sms": 3,
+        "email": 2
+      }
+    },
+    {
+      "date": "2026-04-17",
+      "total": 3,
+      "in": 0,
+      "out": 3,
+      "by_channel": {
+        "phone": 1,
+        "email": 1,
+        "sms": 1
+      }
+    },
+    {
+      "date": "2026-04-18",
+      "total": 4,
+      "in": 4,
+      "out": 0,
+      "by_channel": {
+        "other": 1,
+        "sms": 3
+      }
+    },
+    {
+      "date": "2026-04-19",
+      "total": 19,
+      "in": 5,
+      "out": 14,
+      "by_channel": {
+        "phone": 4,
+        "sms": 7,
+        "email": 7,
+        "calendar": 1
+      }
+    },
+    {
+      "date": "2026-04-20",
+      "total": 3,
+      "in": 1,
+      "out": 2,
+      "by_channel": {
+        "email": 2,
+        "other": 1
+      }
+    },
+    {
+      "date": "2026-04-21",
+      "total": 8,
+      "in": 1,
+      "out": 7,
+      "by_channel": {
+        "other": 1,
+        "email": 7
+      }
+    },
+    {
+      "date": "2026-04-22",
+      "total": 18,
+      "in": 4,
+      "out": 14,
+      "by_channel": {
+        "sms": 7,
+        "email": 9,
+        "phone": 1,
+        "other": 1
+      }
+    },
+    {
+      "date": "2026-04-23",
+      "total": 29,
+      "in": 5,
+      "out": 24,
+      "by_channel": {
+        "phone": 1,
+        "sms": 20,
+        "other": 4,
+        "email": 4
+      }
+    },
+    {
+      "date": "2026-04-24",
+      "total": 27,
+      "in": 6,
+      "out": 21,
+      "by_channel": {
+        "phone": 4,
+        "email": 4,
+        "sms": 18,
+        "other": 1
+      }
+    },
+    {
+      "date": "2026-04-25",
+      "total": 5,
+      "in": 0,
+      "out": 5,
+      "by_channel": {
+        "sms": 1,
+        "phone": 2,
+        "email": 2
+      }
+    },
+    {
+      "date": "2026-04-26",
+      "total": 0,
+      "in": 0,
+      "out": 0,
+      "by_channel": {}
+    }
+  ],
+  "top_leads": [
+    {
+      "id": "kesia_de_assis_lira",
+      "name": "Kesia De Assis Lira",
+      "count": 8,
+      "last_ts": "2026-04-24T13:00:00Z",
+      "channels": {
+        "other": 1,
+        "sms": 3,
+        "email": 4
+      },
+      "directions": {
+        "in": 1,
+        "out": 7
+      }
+    },
+    {
+      "id": "krista_garcia",
+      "name": "Krista Garcia",
+      "count": 7,
+      "last_ts": "2026-04-24T11:00:00Z",
+      "channels": {
+        "sms": 5,
+        "phone": 1,
+        "email": 1
+      },
+      "directions": {
+        "in": 2,
+        "out": 5
+      }
+    },
+    {
+      "id": "brenda_steve",
+      "name": "Brenda & Steve Catalano",
+      "count": 6,
+      "last_ts": "2026-04-22T11:00:00Z",
+      "channels": {
+        "phone": 2,
+        "sms": 4
+      },
+      "directions": {
+        "in": 3,
+        "out": 3
+      }
+    },
+    {
+      "id": "danielle_paulson",
+      "name": "Danielle Paulson",
+      "count": 6,
+      "last_ts": "2026-04-23T15:00:00Z",
+      "channels": {
+        "other": 1,
+        "sms": 3,
+        "email": 1,
+        "phone": 1
+      },
+      "directions": {
+        "in": 3,
+        "out": 3
+      }
+    },
+    {
+      "id": "tania_sofia",
+      "name": "Tania Sofia",
+      "count": 6,
+      "last_ts": "2026-04-24T11:00:00Z",
+      "channels": {
+        "other": 1,
+        "sms": 2,
+        "email": 3
+      },
+      "directions": {
+        "in": 1,
+        "out": 5
+      }
+    },
+    {
+      "id": "flaviane_mesquita",
+      "name": "Flaviane Mesquita",
+      "count": 6,
+      "last_ts": "2026-04-24T13:00:00Z",
+      "channels": {
+        "phone": 1,
+        "sms": 3,
+        "calendar": 1,
+        "email": 1
+      },
+      "directions": {
+        "out": 4,
+        "in": 2
+      }
+    },
+    {
+      "id": "monica_quindley",
+      "name": "Monica Quindley",
+      "count": 6,
+      "last_ts": "2026-04-24T13:00:00Z",
+      "channels": {
+        "other": 1,
+        "sms": 4,
+        "phone": 1
+      },
+      "directions": {
+        "in": 2,
+        "out": 4
+      }
+    },
+    {
+      "id": "madame_badose",
+      "name": "Madame Badose",
+      "count": 6,
+      "last_ts": "2026-04-24T14:00:00Z",
+      "channels": {
+        "other": 1,
+        "sms": 3,
+        "email": 2
+      },
+      "directions": {
+        "in": 1,
+        "out": 5
+      }
+    },
+    {
+      "id": "dawn_m_denton",
+      "name": "Dawn M Denton",
+      "count": 6,
+      "last_ts": "2026-04-25T13:00:00Z",
+      "channels": {
+        "sms": 2,
+        "email": 2,
+        "phone": 2
+      },
+      "directions": {
+        "out": 6
+      }
+    },
+    {
+      "id": "emanuella_andrade",
+      "name": "Emanuella Andrade",
+      "count": 5,
+      "last_ts": "2026-04-22T11:00:00Z",
+      "channels": {
+        "email": 4,
+        "phone": 1
+      },
+      "directions": {
+        "out": 5
+      }
+    }
+  ],
+  "silent_leads": [],
+  "response_signal": {
+    "median_hours": 0.82,
+    "mean_hours": 3.71,
+    "n_pairs": 21
+  },
+  "buckets": {
+    "peak_day": "2026-04-23",
+    "peak_count": 29,
+    "quietest_day": "2026-03-28",
+    "busiest_lead": "Kesia De Assis Lira",
+    "busiest_channel": "sms"
+  }
+}

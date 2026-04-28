@@ -1,0 +1,661 @@
+{
+  "_type": "Call",
+  "activity_at": "2026-04-24T14:20:35.768000+00:00",
+  "agent_config_id": null,
+  "call_method": "regular",
+  "coach_legs": [],
+  "contact_id": "cont_OuQLhEBhgQkUi6O0DzLmS6Gs4GdShLd5Y3KBpohgbBO",
+  "conversation_type_id": null,
+  "conversation_type_reason": null,
+  "cost": "2",
+  "created_by": "user_bnfoZDGbTqBZ4wcDGqRqTwjRKiwLnQ4mpV3i2enPkMt",
+  "created_by_name": "Andre Raw",
+  "date_answered": "2026-04-24T14:20:45.150000+00:00",
+  "date_created": "2026-04-24T14:20:35.768000+00:00",
+  "date_updated": "2026-04-24T14:22:46.568000+00:00",
+  "dialer_id": null,
+  "dialer_saved_search_id": null,
+  "direction": "outbound",
+  "disposition": "answered",
+  "duration": 40,
+  "forwarded_to": null,
+  "has_recording": true,
+  "id": "acti_qflQiIGYp1YKLQlEuF2nwlqvmHBEgMzPyu5hJSQ3Pra",
+  "is_forwarded": false,
+  "is_joinable": false,
+  "is_to_group_number": false,
+  "lead_id": "lead_YAmWzcUSNxlep7gdgBtn73MD3aYjsG2hJELksW5698t",
+  "local_country_iso": "US",
+  "local_phone": "+19783811212",
+  "local_phone_formatted": "+1 978-381-1212",
+  "note": "",
+  "note_date_updated": "2026-04-24T14:20:35.768000+00:00",
+  "note_html": "<body><p></p></body>",
+  "note_mentions": [],
+  "notetaker_id": "user_bnfoZDGbTqBZ4wcDGqRqTwjRKiwLnQ4mpV3i2enPkMt",
+  "organization_id": "orga_pOyYOigKEELdmODukgjigCD5pTRewtmBW1yq6YXkskq",
+  "outcome_autofill_confidence": "high",
+  "outcome_autofill_reasoning": "The call reached Flavia Benson's personal voicemail. Andre (the agent) left a detailed message including his name, phone number, an apology for being late to their scheduled call, and a request for a callback. This clearly matches the \"No Answer – Left Voicemail\" outcome — the call connected to a personal voicemail and a message was successfully left.",
+  "outcome_id": "outcome_032ywLO9DlbN6ZJYBAH3CW",
+  "outcome_reason": "autofilled",
+  "parent_meeting_id": null,
+  "phone": "+16172248277",
+  "playbook_id": null,
+  "playbook_reason": null,
+  "recording_duration": 38,
+  "recording_expires_at": "2026-05-24T14:20:35.768000+00:00",
+  "recording_history": [
+    {
+      "action": "auto-start-initializing",
+      "timestamp": "2026-04-24T14:20:37.015000+00:00"
+    },
+    {
+      "action": "auto-started",
+      "timestamp": "2026-04-24T14:20:44+00:00"
+    }
+  ],
+  "recording_transcript": {
+    "has_speaker_labels": true,
+    "id": "transcript_0335D3QQpI5BZXdeVAECA2",
+    "speakers": [
+      {
+        "speaker_label": "Andre Raw",
+        "speaker_side": "close-user",
+        "talk_percentage": 0.7603833865814696,
+        "talk_time": 23.800000000000004
+      },
+      {
+        "speaker_label": "Flávia Benson",
+        "speaker_side": "contact",
+        "talk_percentage": 0.23961661341853033,
+        "talk_time": 7.5
+      }
+    ],
+    "summary_html": "<ul>\n<li>Andre Raw from Comeketo Catering called Flávia Benson to apologize for being 20 minutes late to a scheduled 10 o'clock call.</li>\n<li>Andre left his contact number (9783) and indicated he is available all day to discuss Flávia's needs.</li>\n<li>Andre expressed his intent to understand Flávia's requirements and provide assistance.</li>\n</ul>",
+    "summary_text": "- Andre Raw from Comeketo Catering called Flávia Benson to apologize for being 20 minutes late to a scheduled 10 o'clock call.\n- Andre left his contact number (9783) and indicated he is available all day to discuss Flávia's needs.\n- Andre expressed his intent to understand Flávia's requirements and provide assistance.",
+    "utterances": [
+      {
+        "end": 7.9,
+        "speaker_label": "Flávia Benson",
+        "speaker_side": "contact",
+        "start": 0.6,
+        "text": "You have reached Flavia Benson. Please leave a detailed message with your name and phone number, and I will get back to you as soon as possible. Thank you.",
+        "words": [
+          {
+            "end": 0.7,
+            "start": 0.6,
+            "text": "You"
+          },
+          {
+            "end": 0.8,
+            "start": 0.7,
+            "text": "have"
+          },
+          {
+            "end": 1.1,
+            "start": 0.8,
+            "text": "reached"
+          },
+          {
+            "end": 1.8,
+            "start": 1.1,
+            "text": "Flavia"
+          },
+          {
+            "end": 2.2,
+            "start": 1.8,
+            "text": "Benson."
+          },
+          {
+            "end": 3.0,
+            "start": 2.7,
+            "text": "Please"
+          },
+          {
+            "end": 3.3,
+            "start": 3.0,
+            "text": "leave"
+          },
+          {
+            "end": 3.4,
+            "start": 3.3,
+            "text": "a"
+          },
+          {
+            "end": 3.8,
+            "start": 3.4,
+            "text": "detailed"
+          },
+          {
+            "end": 4.1,
+            "start": 3.8,
+            "text": "message"
+          },
+          {
+            "end": 4.3,
+            "start": 4.1,
+            "text": "with"
+          },
+          {
+            "end": 4.5,
+            "start": 4.3,
+            "text": "your"
+          },
+          {
+            "end": 4.7,
+            "start": 4.5,
+            "text": "name"
+          },
+          {
+            "end": 4.9,
+            "start": 4.7,
+            "text": "and"
+          },
+          {
+            "end": 5.2,
+            "start": 4.9,
+            "text": "phone"
+          },
+          {
+            "end": 5.4,
+            "start": 5.2,
+            "text": "number,"
+          },
+          {
+            "end": 5.6,
+            "start": 5.4,
+            "text": "and"
+          },
+          {
+            "end": 5.7,
+            "start": 5.6,
+            "text": "I"
+          },
+          {
+            "end": 5.8,
+            "start": 5.7,
+            "text": "will"
+          },
+          {
+            "end": 6.0,
+            "start": 5.8,
+            "text": "get"
+          },
+          {
+            "end": 6.1,
+            "start": 6.0,
+            "text": "back"
+          },
+          {
+            "end": 6.2,
+            "start": 6.1,
+            "text": "to"
+          },
+          {
+            "end": 6.4,
+            "start": 6.2,
+            "text": "you"
+          },
+          {
+            "end": 6.5,
+            "start": 6.4,
+            "text": "as"
+          },
+          {
+            "end": 6.6,
+            "start": 6.5,
+            "text": "soon"
+          },
+          {
+            "end": 6.8,
+            "start": 6.6,
+            "text": "as"
+          },
+          {
+            "end": 7.1,
+            "start": 6.8,
+            "text": "possible."
+          },
+          {
+            "end": 7.6,
+            "start": 7.3,
+            "text": "Thank"
+          },
+          {
+            "end": 7.9,
+            "start": 7.6,
+            "text": "you."
+          }
+        ]
+      },
+      {
+        "end": 26.1,
+        "speaker_label": "Andre Raw",
+        "speaker_side": "close-user",
+        "start": 11.9,
+        "text": "Hey Flavia, it's Andre here from Conquito Catering. We had a 10 o' clock scheduled call. I was on the phone with someone else, so. I'm so sorry I was 20 minutes late. If you could give me a call back over here. 9783.",
+        "words": [
+          {
+            "end": 12.2,
+            "start": 11.9,
+            "text": "Hey"
+          },
+          {
+            "end": 12.7,
+            "start": 12.2,
+            "text": "Flavia,"
+          },
+          {
+            "end": 13.0,
+            "start": 12.7,
+            "text": "it's"
+          },
+          {
+            "end": 13.4,
+            "start": 13.0,
+            "text": "Andre"
+          },
+          {
+            "end": 13.6,
+            "start": 13.4,
+            "text": "here"
+          },
+          {
+            "end": 13.7,
+            "start": 13.6,
+            "text": "from"
+          },
+          {
+            "end": 14.4,
+            "start": 13.7,
+            "text": "Conquito"
+          },
+          {
+            "end": 14.9,
+            "start": 14.4,
+            "text": "Catering."
+          },
+          {
+            "end": 15.2,
+            "start": 14.9,
+            "text": "We"
+          },
+          {
+            "end": 15.4,
+            "start": 15.2,
+            "text": "had"
+          },
+          {
+            "end": 15.6,
+            "start": 15.4,
+            "text": "a"
+          },
+          {
+            "end": 15.8,
+            "start": 15.6,
+            "text": "10"
+          },
+          {
+            "end": 16.0,
+            "start": 15.8,
+            "text": "o'"
+          },
+          {
+            "end": 16.3,
+            "start": 16.0,
+            "text": "clock"
+          },
+          {
+            "end": 18.1,
+            "start": 17.5,
+            "text": "scheduled"
+          },
+          {
+            "end": 18.4,
+            "start": 18.1,
+            "text": "call."
+          },
+          {
+            "end": 18.9,
+            "start": 18.6,
+            "text": "I"
+          },
+          {
+            "end": 19.1,
+            "start": 18.9,
+            "text": "was"
+          },
+          {
+            "end": 19.2,
+            "start": 19.1,
+            "text": "on"
+          },
+          {
+            "end": 19.4,
+            "start": 19.2,
+            "text": "the"
+          },
+          {
+            "end": 19.6,
+            "start": 19.4,
+            "text": "phone"
+          },
+          {
+            "end": 19.7,
+            "start": 19.6,
+            "text": "with"
+          },
+          {
+            "end": 20.0,
+            "start": 19.7,
+            "text": "someone"
+          },
+          {
+            "end": 20.3,
+            "start": 20.0,
+            "text": "else,"
+          },
+          {
+            "end": 20.4,
+            "start": 20.3,
+            "text": "so."
+          },
+          {
+            "end": 20.6,
+            "start": 20.4,
+            "text": "I'm"
+          },
+          {
+            "end": 20.7,
+            "start": 20.6,
+            "text": "so"
+          },
+          {
+            "end": 21.0,
+            "start": 20.7,
+            "text": "sorry"
+          },
+          {
+            "end": 21.1,
+            "start": 21.0,
+            "text": "I"
+          },
+          {
+            "end": 21.3,
+            "start": 21.1,
+            "text": "was"
+          },
+          {
+            "end": 21.5,
+            "start": 21.3,
+            "text": "20"
+          },
+          {
+            "end": 21.8,
+            "start": 21.5,
+            "text": "minutes"
+          },
+          {
+            "end": 22.2,
+            "start": 21.8,
+            "text": "late."
+          },
+          {
+            "end": 22.9,
+            "start": 22.6,
+            "text": "If"
+          },
+          {
+            "end": 23.1,
+            "start": 22.9,
+            "text": "you"
+          },
+          {
+            "end": 23.4,
+            "start": 23.1,
+            "text": "could"
+          },
+          {
+            "end": 23.6,
+            "start": 23.4,
+            "text": "give"
+          },
+          {
+            "end": 23.8,
+            "start": 23.6,
+            "text": "me"
+          },
+          {
+            "end": 24.0,
+            "start": 23.8,
+            "text": "a"
+          },
+          {
+            "end": 24.1,
+            "start": 24.0,
+            "text": "call"
+          },
+          {
+            "end": 24.3,
+            "start": 24.1,
+            "text": "back"
+          },
+          {
+            "end": 24.5,
+            "start": 24.3,
+            "text": "over"
+          },
+          {
+            "end": 24.8,
+            "start": 24.5,
+            "text": "here."
+          },
+          {
+            "end": 26.1,
+            "start": 25.0,
+            "text": "9783."
+          }
+        ]
+      },
+      {
+        "end": 25.9,
+        "speaker_label": "Flávia Benson",
+        "speaker_side": "contact",
+        "start": 25.7,
+        "text": "It.",
+        "words": [
+          {
+            "end": 25.9,
+            "start": 25.7,
+            "text": "It."
+          }
+        ]
+      },
+      {
+        "end": 37.6,
+        "speaker_label": "Andre Raw",
+        "speaker_side": "close-user",
+        "start": 28.0,
+        "text": "I'm on all day long. Okay. I'd love to talk to you, understand your needs and assist you the best way possible. Hope to talk to you soon. Bye bye now.",
+        "words": [
+          {
+            "end": 28.3,
+            "start": 28.0,
+            "text": "I'm"
+          },
+          {
+            "end": 28.6,
+            "start": 28.3,
+            "text": "on"
+          },
+          {
+            "end": 29.0,
+            "start": 28.6,
+            "text": "all"
+          },
+          {
+            "end": 29.2,
+            "start": 29.0,
+            "text": "day"
+          },
+          {
+            "end": 29.5,
+            "start": 29.2,
+            "text": "long."
+          },
+          {
+            "end": 30.1,
+            "start": 29.5,
+            "text": "Okay."
+          },
+          {
+            "end": 30.7,
+            "start": 30.2,
+            "text": "I'd"
+          },
+          {
+            "end": 30.8,
+            "start": 30.7,
+            "text": "love"
+          },
+          {
+            "end": 31.0,
+            "start": 30.8,
+            "text": "to"
+          },
+          {
+            "end": 31.1,
+            "start": 31.0,
+            "text": "talk"
+          },
+          {
+            "end": 31.3,
+            "start": 31.1,
+            "text": "to"
+          },
+          {
+            "end": 31.6,
+            "start": 31.3,
+            "text": "you,"
+          },
+          {
+            "end": 31.9,
+            "start": 31.6,
+            "text": "understand"
+          },
+          {
+            "end": 32.4,
+            "start": 32.1,
+            "text": "your"
+          },
+          {
+            "end": 32.6,
+            "start": 32.4,
+            "text": "needs"
+          },
+          {
+            "end": 33.0,
+            "start": 32.6,
+            "text": "and"
+          },
+          {
+            "end": 33.4,
+            "start": 33.0,
+            "text": "assist"
+          },
+          {
+            "end": 33.7,
+            "start": 33.4,
+            "text": "you"
+          },
+          {
+            "end": 33.9,
+            "start": 33.7,
+            "text": "the"
+          },
+          {
+            "end": 34.1,
+            "start": 33.9,
+            "text": "best"
+          },
+          {
+            "end": 34.4,
+            "start": 34.1,
+            "text": "way"
+          },
+          {
+            "end": 34.7,
+            "start": 34.4,
+            "text": "possible."
+          },
+          {
+            "end": 35.5,
+            "start": 35.2,
+            "text": "Hope"
+          },
+          {
+            "end": 35.7,
+            "start": 35.5,
+            "text": "to"
+          },
+          {
+            "end": 35.8,
+            "start": 35.7,
+            "text": "talk"
+          },
+          {
+            "end": 36.0,
+            "start": 35.8,
+            "text": "to"
+          },
+          {
+            "end": 36.1,
+            "start": 36.0,
+            "text": "you"
+          },
+          {
+            "end": 36.4,
+            "start": 36.1,
+            "text": "soon."
+          },
+          {
+            "end": 37.3,
+            "start": 37.0,
+            "text": "Bye"
+          },
+          {
+            "end": 37.5,
+            "start": 37.3,
+            "text": "bye"
+          },
+          {
+            "end": 37.6,
+            "start": 37.5,
+            "text": "now."
+          }
+        ]
+      }
+    ]
+  },
+  "recording_url": "https://api.close.com/call/acti_qflQiIGYp1YKLQlEuF2nwlqvmHBEgMzPyu5hJSQ3Pra/recording/",
+  "remote_country_iso": "US",
+  "remote_phone": "+16172248277",
+  "remote_phone_formatted": "+1 617-224-8277",
+  "sequence_id": null,
+  "sequence_name": null,
+  "sequence_subscription_id": null,
+  "source": "Close.io",
+  "status": "completed",
+  "transferred_from": null,
+  "transferred_from_user_id": null,
+  "transferred_to": null,
+  "transferred_to_user_id": null,
+  "updated_by": "user_bnfoZDGbTqBZ4wcDGqRqTwjRKiwLnQ4mpV3i2enPkMt",
+  "updated_by_name": "Andre Raw",
+  "user_id": "user_bnfoZDGbTqBZ4wcDGqRqTwjRKiwLnQ4mpV3i2enPkMt",
+  "user_name": "Andre Raw",
+  "users": [],
+  "voicemail_duration": 0,
+  "voicemail_transcript": null,
+  "voicemail_url": null
+}

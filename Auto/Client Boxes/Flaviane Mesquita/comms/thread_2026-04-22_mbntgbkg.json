@@ -1,0 +1,283 @@
+{
+  "_type": "EmailThread",
+  "activity_at": "2026-04-22T17:02:10.001000+00:00",
+  "contact_id": null,
+  "created_by": null,
+  "created_by_name": null,
+  "date_created": "2026-04-22T17:02:10.001000+00:00",
+  "date_updated": "2026-04-23T02:00:35.681000+00:00",
+  "id": "acti_DEW20MGi238XO3yAoREiKQu5vYx2TDstZ3omBNTgBkG",
+  "importance": {
+    "reason": "has-response",
+    "type": "important"
+  },
+  "latest_emails": [
+    {
+      "bcc": [],
+      "body_preview": "*** ENGLISH MESSAGE BELOW *** Mensagem do serviço de email no servidor mx3.bol.com.br Lamentamos informar que não foi possível entregar sua mensagem para um ou mais destinatários. --------------------",
+      "cc": [],
+      "date_created": "2026-04-22T17:02:10+00:00",
+      "date_sent": null,
+      "date_updated": "2026-04-22T17:02:56.039000+00:00",
+      "direction": "incoming",
+      "envelope": {
+        "bcc": [],
+        "cc": [],
+        "date": "Wed, 22 Apr 2026 14:02:10 -0300 (-03)",
+        "from": [
+          {
+            "email": "MAILER-DAEMON@mx3.bol.com.br",
+            "name": "Mail Delivery System"
+          }
+        ],
+        "in_reply_to": null,
+        "is_autoreply": true,
+        "message_id": "<4g159t12TCzGrrSd@a2-selva19.bol.com.br>",
+        "reply_to": [],
+        "sender": [
+          {
+            "email": "MAILER-DAEMON@mx3.bol.com.br",
+            "name": "Mail Delivery System"
+          }
+        ],
+        "subject": "Problema ao entregar o e-mail - retorno ao remetente / Undelivered Mail Returned to Sender",
+        "to": [
+          {
+            "email": "team@comeketocatering.com",
+            "name": ""
+          }
+        ]
+      },
+      "has_attachments": false,
+      "id": "acti_fJgxvMXHdlibtb2uQxx3gLfBZWN7TyQVY5cIfuLVoe5",
+      "opens_summary": null,
+      "send_as_id": null,
+      "sender": "Mail Delivery System <MAILER-DAEMON@mx3.bol.com.br>",
+      "status": "inbox",
+      "subject": "Problema ao entregar o e-mail - retorno ao remetente / Undelivered Mail Returned to Sender",
+      "to": [
+        "team@comeketocatering.com"
+      ],
+      "user_id": "user_bnfoZDGbTqBZ4wcDGqRqTwjRKiwLnQ4mpV3i2enPkMt"
+    },
+    {
+      "bcc": [],
+      "body_preview": "Discover these two legendary services. ![Comeketo Catering Logo](https://comeketocatering.com/wp-\ncontent/uploads/2025/01/LOGO_WEB.png) ![](https://comeketocatering.com/wp-content/uploads/2025/06/Head",
+      "cc": [],
+      "date_created": "2026-04-22T17:01:44.526000+00:00",
+      "date_sent": "2026-04-22T17:02:06.054000+00:00",
+      "date_updated": "2026-04-22T17:04:13.083000+00:00",
+      "direction": "outgoing",
+      "envelope": {
+        "bcc": [],
+        "cc": [],
+        "date": "Wed, 22 Apr 2026 17:02:06 +0000",
+        "from": [
+          {
+            "email": "team@comeketocatering.com",
+            "name": "Andre Raw"
+          }
+        ],
+        "in_reply_to": null,
+        "is_autoreply": false,
+        "message_id": "<177687732607.7.11982059459070953781@smtpgw.close.com>",
+        "reply_to": [],
+        "sender": [
+          {
+            "email": "team@comeketocatering.com",
+            "name": "Andre Raw"
+          }
+        ],
+        "subject": "Our Famous Churrasco & Rodizio",
+        "to": [
+          {
+            "email": "fcmesquita@bol.com.br",
+            "name": ""
+          }
+        ]
+      },
+      "has_attachments": false,
+      "id": "acti_c4fghRer80SWHhdRRlRKtHpeAj76ULtd3xVSmjMwHcJ",
+      "opens_summary": "Opened by fcmesquita@bol.com.br (2026-04-22)",
+      "send_as_id": null,
+      "sender": "Andre Raw <team@comeketocatering.com>",
+      "status": "sent",
+      "subject": "Our Famous Churrasco & Rodizio",
+      "to": [
+        "fcmesquita@bol.com.br"
+      ],
+      "user_id": "user_bnfoZDGbTqBZ4wcDGqRqTwjRKiwLnQ4mpV3i2enPkMt"
+    },
+    {
+      "bcc": [],
+      "body_preview": "![Comeketo Catering Logo](https://comeketocatering.com/wp-\ncontent/uploads/2025/01/LOGO_WEB.png) ![Catering Types](https://comeketocatering.com/wp-\ncontent/uploads/2025/06/Header_cateringTypes.jpg) # ",
+      "cc": [],
+      "date_created": "2026-04-22T16:56:17.928000+00:00",
+      "date_sent": "2026-04-22T16:56:24.996000+00:00",
+      "date_updated": "2026-04-23T02:00:35.536000+00:00",
+      "direction": "outgoing",
+      "envelope": {
+        "bcc": [],
+        "cc": [],
+        "date": "Wed, 22 Apr 2026 16:56:25 +0000",
+        "from": [
+          {
+            "email": "contact@comeketocatering.com",
+            "name": "Rhonna Ricafort"
+          }
+        ],
+        "in_reply_to": null,
+        "is_autoreply": false,
+        "message_id": "<177687698526.7.18172618469674737384@smtpgw.close.com>",
+        "reply_to": [],
+        "sender": [
+          {
+            "email": "contact@comeketocatering.com",
+            "name": "Rhonna Ricafort"
+          }
+        ],
+        "subject": "Understanding Our Catering Service Types",
+        "to": [
+          {
+            "email": "flavianemesquita27@icloud.com",
+            "name": "Flaviane Mesquita"
+          }
+        ]
+      },
+      "has_attachments": false,
+      "id": "acti_DqFXRogE6rViFIaoeINeLtoiUdAnT31T2FPDn8JpIxi",
+      "opens_summary": "Opened by Flaviane Mesquita <flavianemesquita27@icloud.com> (2026-04-23)",
+      "send_as_id": null,
+      "sender": "Rhonna Ricafort <contact@comeketocatering.com>",
+      "status": "sent",
+      "subject": "Understanding Our Catering Service Types",
+      "to": [
+        "Flaviane Mesquita <flavianemesquita27@icloud.com>"
+      ],
+      "user_id": "user_CUH7ddlLe50fkckpnBqndk8HYyEfGpa0ldxggccxqPo"
+    },
+    {
+      "bcc": [],
+      "body_preview": "*** ENGLISH MESSAGE BELOW *** Mensagem do serviço de email no servidor mx3.bol.com.br Lamentamos informar que não foi possível entregar sua mensagem para um ou mais destinatários. --------------------",
+      "cc": [],
+      "date_created": "2026-04-22T16:36:23+00:00",
+      "date_sent": null,
+      "date_updated": "2026-04-22T16:36:55.201000+00:00",
+      "direction": "incoming",
+      "envelope": {
+        "bcc": [],
+        "cc": [],
+        "date": "Wed, 22 Apr 2026 13:36:23 -0300 (-03)",
+        "from": [
+          {
+            "email": "MAILER-DAEMON@mx3.bol.com.br",
+            "name": "Mail Delivery System"
+          }
+        ],
+        "in_reply_to": null,
+        "is_autoreply": true,
+        "message_id": "<4g14c74kHDz8fkYf@a2-selva6.bol.com.br>",
+        "reply_to": [],
+        "sender": [
+          {
+            "email": "MAILER-DAEMON@mx3.bol.com.br",
+            "name": "Mail Delivery System"
+          }
+        ],
+        "subject": "Problema ao entregar o e-mail - retorno ao remetente / Undelivered Mail Returned to Sender",
+        "to": [
+          {
+            "email": "admin@comeketocatering.com",
+            "name": ""
+          }
+        ]
+      },
+      "has_attachments": false,
+      "id": "acti_qcOwZrzXaLyiWXh83vAufHPndWqepQ9fIVJBxQvEe5o",
+      "opens_summary": null,
+      "send_as_id": null,
+      "sender": "Mail Delivery System <MAILER-DAEMON@mx3.bol.com.br>",
+      "status": "inbox",
+      "subject": "Problema ao entregar o e-mail - retorno ao remetente / Undelivered Mail Returned to Sender",
+      "to": [
+        "admin@comeketocatering.com"
+      ],
+      "user_id": "user_CUH7ddlLe50fkckpnBqndk8HYyEfGpa0ldxggccxqPo"
+    },
+    {
+      "bcc": [],
+      "body_preview": "![Comeketo Catering Logo](https://comeketocatering.com/wp-\ncontent/uploads/2025/01/LOGO_WEB.png) ![Catering Types](https://comeketocatering.com/wp-\ncontent/uploads/2025/06/Header_cateringTypes.jpg) # ",
+      "cc": [],
+      "date_created": "2026-04-22T16:36:18.284000+00:00",
+      "date_sent": "2026-04-22T16:36:18.284000+00:00",
+      "date_updated": "2026-04-22T16:51:47.733000+00:00",
+      "direction": "outgoing",
+      "envelope": {
+        "bcc": [],
+        "cc": [],
+        "date": "Wed, 22 Apr 2026 16:36:18 +0000",
+        "from": [
+          {
+            "email": "contact@comeketocatering.com",
+            "name": "Rhonna Ricafort"
+          }
+        ],
+        "in_reply_to": null,
+        "is_autoreply": false,
+        "message_id": "<177687577855.7.10724891285234246005@smtpgw.close.com>",
+        "reply_to": [],
+        "sender": [
+          {
+            "email": "contact@comeketocatering.com",
+            "name": "Rhonna Ricafort"
+          }
+        ],
+        "subject": "Understanding Our Catering Service Types",
+        "to": [
+          {
+            "email": "fcmesquita@bol.com.br",
+            "name": "Flaviane Mesquita"
+          }
+        ]
+      },
+      "has_attachments": false,
+      "id": "acti_JUPZR7GVVZRKttAW5FjvypbIykDN3PjaKQ4ukcp225c",
+      "opens_summary": "Opened by Flaviane Mesquita <fcmesquita@bol.com.br> (2026-04-22)",
+      "send_as_id": null,
+      "sender": "Rhonna Ricafort <contact@comeketocatering.com>",
+      "status": "sent",
+      "subject": "Understanding Our Catering Service Types",
+      "to": [
+        "Flaviane Mesquita <fcmesquita@bol.com.br>"
+      ],
+      "user_id": "user_CUH7ddlLe50fkckpnBqndk8HYyEfGpa0ldxggccxqPo"
+    }
+  ],
+  "latest_normalized_subject": "Problema ao entregar o e-mail - retorno ao remetente / Undelivered Mail Returned to Sender",
+  "lead_id": "lead_YwGtwp1OrziFJuo5ctAGvCglMUY5XRzJVPGhLrzLfn0",
+  "n_emails": 5,
+  "organization_id": "orga_pOyYOigKEELdmODukgjigCD5pTRewtmBW1yq6YXkskq",
+  "participants": [
+    {
+      "email": "MAILER-DAEMON@mx3.bol.com.br",
+      "name": "Mail Delivery System"
+    },
+    {
+      "email": "team@comeketocatering.com",
+      "name": "Andre Raw"
+    },
+    {
+      "email": "contact@comeketocatering.com",
+      "name": "Rhonna Ricafort"
+    }
+  ],
+  "summary": null,
+  "updated_by": "user_CUH7ddlLe50fkckpnBqndk8HYyEfGpa0ldxggccxqPo",
+  "updated_by_name": "Rhonna Ricafort",
+  "user_id": "user_bnfoZDGbTqBZ4wcDGqRqTwjRKiwLnQ4mpV3i2enPkMt",
+  "user_name": "Andre Raw",
+  "users": [
+    "user_bnfoZDGbTqBZ4wcDGqRqTwjRKiwLnQ4mpV3i2enPkMt",
+    "user_CUH7ddlLe50fkckpnBqndk8HYyEfGpa0ldxggccxqPo"
+  ]
+}

@@ -1,0 +1,4340 @@
+{
+  "_type": "Call",
+  "activity_at": "2026-04-15T18:50:48.819000+00:00",
+  "agent_config_id": null,
+  "call_method": "regular",
+  "coach_legs": [],
+  "contact_id": "cont_BgP4JUBoZLSdOtZjL9eJM6mxhwFr8z1C9MCMpnp8cBA",
+  "conversation_type_id": null,
+  "conversation_type_reason": null,
+  "cost": "10",
+  "created_by": "user_bnfoZDGbTqBZ4wcDGqRqTwjRKiwLnQ4mpV3i2enPkMt",
+  "created_by_name": "Andre Raw",
+  "date_answered": "2026-04-15T18:51:04.556000+00:00",
+  "date_created": "2026-04-15T18:50:48.819000+00:00",
+  "date_updated": "2026-04-15T18:58:51.757000+00:00",
+  "dialer_id": null,
+  "dialer_saved_search_id": null,
+  "direction": "outbound",
+  "disposition": "answered",
+  "duration": 364,
+  "forwarded_to": null,
+  "has_recording": true,
+  "id": "acti_uKbfNAKB1F8LDgphIx7hPjb7JGRToZ1ff7eI8Yl9prk",
+  "is_forwarded": false,
+  "is_joinable": false,
+  "is_to_group_number": false,
+  "lead_id": "lead_YwGtwp1OrziFJuo5ctAGvCglMUY5XRzJVPGhLrzLfn0",
+  "local_country_iso": "US",
+  "local_phone": "+19783811212",
+  "local_phone_formatted": "+1 978-381-1212",
+  "note": "",
+  "note_date_updated": "2026-04-15T18:50:48.819000+00:00",
+  "note_html": "<body><p></p></body>",
+  "note_mentions": [],
+  "notetaker_id": "user_bnfoZDGbTqBZ4wcDGqRqTwjRKiwLnQ4mpV3i2enPkMt",
+  "organization_id": "orga_pOyYOigKEELdmODukgjigCD5pTRewtmBW1yq6YXkskq",
+  "outcome_autofill_confidence": "medium",
+  "outcome_autofill_reasoning": "The call connected with the intended contact (Flaviane Mesquita) and a real conversation took place. She inquired about catering services for an event in July, discussed menu options, number of guests, and was invited to a tasting event on the 19th. The agent sent a text message and requested her email to send over menus and packages. Flaviane confirmed receiving the text and seemed engaged and interested. However, near the end of the call the line appeared to go silent/muted (\"Está mudo o telefone. Alô?\"), suggesting the call was cut short before a clear next step (such as a booked meeting or confirmed email exchange) was fully locked in. No meeting was explicitly booked, and the call ended abruptly. However, the prospect was clearly interested and engaged, and the agent qualified the lead to the extent possible — she's looking for catering for July, is open to receiving a quote, and expressed interest in the tasting event. The call ending mid-exchange before resolution points to \"Conversation Incomplete,\" but given that a follow-up via SMS/email was agreed upon and the prospect was clearly interested and qualified, \"Qualified – Needs Next Step\" is the better fit, as the substance of the conversation established fit and intent to advance, with a follow-up plan in motion.",
+  "outcome_id": "outcome_032ywLO9o3m7eiz43B1FdO",
+  "outcome_reason": "autofilled",
+  "parent_meeting_id": null,
+  "phone": "+16173209961",
+  "playbook_id": null,
+  "playbook_reason": null,
+  "recording_duration": 361,
+  "recording_expires_at": "2026-05-15T18:50:48.819000+00:00",
+  "recording_history": [
+    {
+      "action": "auto-start-initializing",
+      "timestamp": "2026-04-15T18:50:50.749000+00:00"
+    },
+    {
+      "action": "auto-started",
+      "timestamp": "2026-04-15T18:51:04+00:00"
+    }
+  ],
+  "recording_transcript": {
+    "has_speaker_labels": true,
+    "id": "transcript_0330BlqidXSduHFFVcfPux",
+    "speakers": [
+      {
+        "speaker_label": "Andre Raw",
+        "speaker_side": "close-user",
+        "talk_percentage": 0.6851447296559257,
+        "talk_time": 250.89999999999995
+      },
+      {
+        "speaker_label": "Flaviane Mesquita",
+        "speaker_side": "contact",
+        "talk_percentage": 0.3148552703440744,
+        "talk_time": 115.30000000000004
+      }
+    ],
+    "summary_html": "<ul>\n<li>Contatou Flaviane sobre cotação de buffet para julho com flexibilidade em número de convidados.</li>\n<li>Apresentou opções de menu especializadas em churrasco e outros pratos como carne de panela e estrogonofe.</li>\n<li>Convidou para degustação no domingo em Fitchburg com aproximadamente 30 itens e bar completo por $35 por pessoa.</li>\n<li>Combinou enviar menu, packages e detalhes por e-mail após Flaviane informar o número aproximado de pessoas.</li>\n<li>Reembolsaria duas pessoas da degustação quando o contrato fosse fechado.</li>\n</ul>\n<h3>Apresentação e Contexto Inicial</h3>\n<ul>\n<li>André da Comiketo Catering entrou em contato com Flaviane Mesquita conforme solicitado anteriormente para cotação de julho.</li>\n<li>Comiketo Catering oferece buffet completo para eventos, especializado em churrasco.</li>\n<li>A empresa trabalha com eventos de diferentes tamanhos, desde 20 pessoas.</li>\n</ul>\n<h3>Opções de Serviços e Menu</h3>\n<ul>\n<li>Além de churrasco, a Comiketo oferece outras opções como carne ao molho madeira, carne de panela com batata e cenoura, mandioca e estrogonofe.</li>\n<li>A empresa também monta bar completo com bebidas como caipirinha e tropical punch conforme solicitado pelo cliente.</li>\n</ul>\n<h3>Próximos Passos e Comunicação</h3>\n<ul>\n<li>André enviaria SMS para Flaviane com um convite para a degustação do dia 19 em Fitchburg, Massachusetts.</li>\n<li>Flaviane se comprometeu a enviar o número de pessoas aproximado e seu e-mail para receber menu, packages e informações detalhadas da empresa.</li>\n</ul>\n<h3>Evento de Degustação</h3>\n<ul>\n<li>A degustação ocorreria no domingo às 14h no Origem, em Fitchburg, Massachusetts, com custo de $35 por pessoa.</li>\n<li>O evento apresentaria aproximadamente 30 itens diferentes incluindo carnes, entradas, acompanhamentos e aperitivos variados.</li>\n<li>Quando Flaviane fechasse uma negociação com a Comiketo, a empresa reembolsaria o valor correspondente a duas pessoas da degustação.</li>\n</ul>\n<h3>Confirmação de Recebimento</h3>\n<ul>\n<li>André confirmou ter enviado SMS com informações do evento.</li>\n<li>Flaviane confirmou o recebimento da mensagem e planejava enviar seu e-mail para receber o material detalhado.</li>\n</ul>",
+    "summary_text": "- Contatou Flaviane sobre cotação de buffet para julho com flexibilidade em número de convidados.\n- Apresentou opções de menu especializadas em churrasco e outros pratos como carne de panela e estrogonofe.\n- Convidou para degustação no domingo em Fitchburg com aproximadamente 30 itens e bar completo por $35 por pessoa.\n- Combinou enviar menu, packages e detalhes por e-mail após Flaviane informar o número aproximado de pessoas.\n- Reembolsaria duas pessoas da degustação quando o contrato fosse fechado.\n\n### Apresentação e Contexto Inicial\n- André da Comiketo Catering entrou em contato com Flaviane Mesquita conforme solicitado anteriormente para cotação de julho.\n- Comiketo Catering oferece buffet completo para eventos, especializado em churrasco.\n- A empresa trabalha com eventos de diferentes tamanhos, desde 20 pessoas.\n\n### Opções de Serviços e Menu\n- Além de churrasco, a Comiketo oferece outras opções como carne ao molho madeira, carne de panela com batata e cenoura, mandioca e estrogonofe.\n- A empresa também monta bar completo com bebidas como caipirinha e tropical punch conforme solicitado pelo cliente.\n\n### Próximos Passos e Comunicação\n- André enviaria SMS para Flaviane com um convite para a degustação do dia 19 em Fitchburg, Massachusetts.\n- Flaviane se comprometeu a enviar o número de pessoas aproximado e seu e-mail para receber menu, packages e informações detalhadas da empresa.\n\n### Evento de Degustação\n- A degustação ocorreria no domingo às 14h no Origem, em Fitchburg, Massachusetts, com custo de $35 por pessoa.\n- O evento apresentaria aproximadamente 30 itens diferentes incluindo carnes, entradas, acompanhamentos e aperitivos variados.\n- Quando Flaviane fechasse uma negociação com a Comiketo, a empresa reembolsaria o valor correspondente a duas pessoas da degustação.\n\n### Confirmação de Recebimento\n- André confirmou ter enviado SMS com informações do evento.\n- Flaviane confirmou o recebimento da mensagem e planejava enviar seu e-mail para receber o material detalhado.",
+    "utterances": [
+      {
+        "end": 3.3,
+        "speaker_label": "Flaviane Mesquita",
+        "speaker_side": "contact",
+        "start": 0.1,
+        "text": "Alô? Alô?",
+        "words": [
+          {
+            "end": 0.6,
+            "start": 0.1,
+            "text": "Alô?"
+          },
+          {
+            "end": 3.3,
+            "start": 1.6,
+            "text": "Alô?"
+          }
+        ]
+      },
+      {
+        "end": 4.5,
+        "speaker_label": "Andre Raw",
+        "speaker_side": "close-user",
+        "start": 3.0,
+        "text": "Alô, é a Flaviane, por favor?",
+        "words": [
+          {
+            "end": 3.3,
+            "start": 3.0,
+            "text": "Alô,"
+          },
+          {
+            "end": 3.5,
+            "start": 3.4,
+            "text": "é"
+          },
+          {
+            "end": 3.5,
+            "start": 3.5,
+            "text": "a"
+          },
+          {
+            "end": 4.0,
+            "start": 3.5,
+            "text": "Flaviane,"
+          },
+          {
+            "end": 4.2,
+            "start": 4.1,
+            "text": "por"
+          },
+          {
+            "end": 4.5,
+            "start": 4.2,
+            "text": "favor?"
+          }
+        ]
+      },
+      {
+        "end": 6.3,
+        "speaker_label": "Flaviane Mesquita",
+        "speaker_side": "contact",
+        "start": 4.8,
+        "text": "Quem fala?",
+        "words": [
+          {
+            "end": 6.0,
+            "start": 4.8,
+            "text": "Quem"
+          },
+          {
+            "end": 6.3,
+            "start": 6.0,
+            "text": "fala?"
+          }
+        ]
+      },
+      {
+        "end": 9.0,
+        "speaker_label": "Andre Raw",
+        "speaker_side": "close-user",
+        "start": 5.8,
+        "text": "É o André aqui da Comiketo?",
+        "words": [
+          {
+            "end": 7.7,
+            "start": 5.8,
+            "text": "É"
+          },
+          {
+            "end": 7.8,
+            "start": 7.7,
+            "text": "o"
+          },
+          {
+            "end": 8.1,
+            "start": 7.8,
+            "text": "André"
+          },
+          {
+            "end": 8.3,
+            "start": 8.1,
+            "text": "aqui"
+          },
+          {
+            "end": 8.4,
+            "start": 8.3,
+            "text": "da"
+          },
+          {
+            "end": 9.0,
+            "start": 8.4,
+            "text": "Comiketo?"
+          }
+        ]
+      },
+      {
+        "end": 11.7,
+        "speaker_label": "Flaviane Mesquita",
+        "speaker_side": "contact",
+        "start": 10.0,
+        "text": "O André do Londres?",
+        "words": [
+          {
+            "end": 11.0,
+            "start": 10.0,
+            "text": "O"
+          },
+          {
+            "end": 11.1,
+            "start": 11.0,
+            "text": "André"
+          },
+          {
+            "end": 11.3,
+            "start": 11.1,
+            "text": "do"
+          },
+          {
+            "end": 11.7,
+            "start": 11.3,
+            "text": "Londres?"
+          }
+        ]
+      },
+      {
+        "end": 15.5,
+        "speaker_label": "Andre Raw",
+        "speaker_side": "close-user",
+        "start": 10.7,
+        "text": "André da Comiketo Catering.",
+        "words": [
+          {
+            "end": 13.7,
+            "start": 10.7,
+            "text": "André"
+          },
+          {
+            "end": 14.0,
+            "start": 13.8,
+            "text": "da"
+          },
+          {
+            "end": 14.6,
+            "start": 14.0,
+            "text": "Comiketo"
+          },
+          {
+            "end": 15.5,
+            "start": 14.6,
+            "text": "Catering."
+          }
+        ]
+      },
+      {
+        "end": 19.2,
+        "speaker_label": "Flaviane Mesquita",
+        "speaker_side": "contact",
+        "start": 15.7,
+        "text": "O André do Comicato Catering?",
+        "words": [
+          {
+            "end": 17.9,
+            "start": 15.7,
+            "text": "O"
+          },
+          {
+            "end": 18.1,
+            "start": 17.9,
+            "text": "André"
+          },
+          {
+            "end": 18.2,
+            "start": 18.1,
+            "text": "do"
+          },
+          {
+            "end": 18.7,
+            "start": 18.2,
+            "text": "Comicato"
+          },
+          {
+            "end": 19.2,
+            "start": 18.7,
+            "text": "Catering?"
+          }
+        ]
+      },
+      {
+        "end": 20.1,
+        "speaker_label": "Andre Raw",
+        "speaker_side": "close-user",
+        "start": 17.1,
+        "text": "Isso.",
+        "words": [
+          {
+            "end": 20.1,
+            "start": 17.1,
+            "text": "Isso."
+          }
+        ]
+      },
+      {
+        "end": 22.7,
+        "speaker_label": "Flaviane Mesquita",
+        "speaker_side": "contact",
+        "start": 20.3,
+        "text": "Dá o controle. Oi?",
+        "words": [
+          {
+            "end": 21.3,
+            "start": 20.3,
+            "text": "Dá"
+          },
+          {
+            "end": 21.6,
+            "start": 21.3,
+            "text": "o"
+          },
+          {
+            "end": 22.3,
+            "start": 21.6,
+            "text": "controle."
+          },
+          {
+            "end": 22.7,
+            "start": 22.5,
+            "text": "Oi?"
+          }
+        ]
+      },
+      {
+        "end": 25.6,
+        "speaker_label": "Andre Raw",
+        "speaker_side": "close-user",
+        "start": 22.7,
+        "text": "Olá, Flaviane, tudo bem?",
+        "words": [
+          {
+            "end": 24.4,
+            "start": 22.7,
+            "text": "Olá,"
+          },
+          {
+            "end": 25.1,
+            "start": 24.6,
+            "text": "Flaviane,"
+          },
+          {
+            "end": 25.3,
+            "start": 25.2,
+            "text": "tudo"
+          },
+          {
+            "end": 25.6,
+            "start": 25.3,
+            "text": "bem?"
+          }
+        ]
+      },
+      {
+        "end": 26.6,
+        "speaker_label": "Flaviane Mesquita",
+        "speaker_side": "contact",
+        "start": 24.0,
+        "text": "Tudo bem.",
+        "words": [
+          {
+            "end": 26.3,
+            "start": 24.0,
+            "text": "Tudo"
+          },
+          {
+            "end": 26.6,
+            "start": 26.3,
+            "text": "bem."
+          }
+        ]
+      },
+      {
+        "end": 32.8,
+        "speaker_label": "Andre Raw",
+        "speaker_side": "close-user",
+        "start": 27.3,
+        "text": "É o André aqui da Comiketo. Você me passou seu telefone sobre a cotação para julho.",
+        "words": [
+          {
+            "end": 28.0,
+            "start": 27.3,
+            "text": "É"
+          },
+          {
+            "end": 28.1,
+            "start": 28.0,
+            "text": "o"
+          },
+          {
+            "end": 28.3,
+            "start": 28.1,
+            "text": "André"
+          },
+          {
+            "end": 28.5,
+            "start": 28.3,
+            "text": "aqui"
+          },
+          {
+            "end": 28.6,
+            "start": 28.5,
+            "text": "da"
+          },
+          {
+            "end": 29.3,
+            "start": 28.6,
+            "text": "Comiketo."
+          },
+          {
+            "end": 29.5,
+            "start": 29.4,
+            "text": "Você"
+          },
+          {
+            "end": 29.7,
+            "start": 29.5,
+            "text": "me"
+          },
+          {
+            "end": 29.9,
+            "start": 29.7,
+            "text": "passou"
+          },
+          {
+            "end": 30.1,
+            "start": 29.9,
+            "text": "seu"
+          },
+          {
+            "end": 30.6,
+            "start": 30.1,
+            "text": "telefone"
+          },
+          {
+            "end": 31.1,
+            "start": 30.6,
+            "text": "sobre"
+          },
+          {
+            "end": 31.5,
+            "start": 31.1,
+            "text": "a"
+          },
+          {
+            "end": 32.2,
+            "start": 31.5,
+            "text": "cotação"
+          },
+          {
+            "end": 32.4,
+            "start": 32.2,
+            "text": "para"
+          },
+          {
+            "end": 32.8,
+            "start": 32.4,
+            "text": "julho."
+          }
+        ]
+      },
+      {
+        "end": 37.2,
+        "speaker_label": "Flaviane Mesquita",
+        "speaker_side": "contact",
+        "start": 33.7,
+        "text": "Ah, sim. Vocês que fazem o buffet de tudo, né?",
+        "words": [
+          {
+            "end": 34.0,
+            "start": 33.7,
+            "text": "Ah,"
+          },
+          {
+            "end": 34.1,
+            "start": 34.0,
+            "text": "sim."
+          },
+          {
+            "end": 35.0,
+            "start": 34.2,
+            "text": "Vocês"
+          },
+          {
+            "end": 35.3,
+            "start": 35.0,
+            "text": "que"
+          },
+          {
+            "end": 35.7,
+            "start": 35.3,
+            "text": "fazem"
+          },
+          {
+            "end": 36.2,
+            "start": 35.7,
+            "text": "o"
+          },
+          {
+            "end": 36.5,
+            "start": 36.2,
+            "text": "buffet"
+          },
+          {
+            "end": 36.7,
+            "start": 36.5,
+            "text": "de"
+          },
+          {
+            "end": 37.0,
+            "start": 36.7,
+            "text": "tudo,"
+          },
+          {
+            "end": 37.2,
+            "start": 37.1,
+            "text": "né?"
+          }
+        ]
+      },
+      {
+        "end": 44.7,
+        "speaker_label": "Andre Raw",
+        "speaker_side": "close-user",
+        "start": 38.4,
+        "text": "Isso, exatamente. Podemos conversar? Eu te achei num momento que... Ok.",
+        "words": [
+          {
+            "end": 39.2,
+            "start": 38.4,
+            "text": "Isso,"
+          },
+          {
+            "end": 39.7,
+            "start": 39.2,
+            "text": "exatamente."
+          },
+          {
+            "end": 40.7,
+            "start": 40.4,
+            "text": "Podemos"
+          },
+          {
+            "end": 41.2,
+            "start": 40.7,
+            "text": "conversar?"
+          },
+          {
+            "end": 41.4,
+            "start": 41.4,
+            "text": "Eu"
+          },
+          {
+            "end": 41.5,
+            "start": 41.4,
+            "text": "te"
+          },
+          {
+            "end": 42.3,
+            "start": 41.5,
+            "text": "achei"
+          },
+          {
+            "end": 42.5,
+            "start": 42.3,
+            "text": "num"
+          },
+          {
+            "end": 42.9,
+            "start": 42.5,
+            "text": "momento"
+          },
+          {
+            "end": 44.2,
+            "start": 42.9,
+            "text": "que..."
+          },
+          {
+            "end": 44.7,
+            "start": 44.2,
+            "text": "Ok."
+          }
+        ]
+      },
+      {
+        "end": 42.5,
+        "speaker_label": "Flaviane Mesquita",
+        "speaker_side": "contact",
+        "start": 40.5,
+        "text": "Sim, sim.",
+        "words": [
+          {
+            "end": 42.1,
+            "start": 40.5,
+            "text": "Sim,"
+          },
+          {
+            "end": 42.5,
+            "start": 42.3,
+            "text": "sim."
+          }
+        ]
+      },
+      {
+        "end": 51.3,
+        "speaker_label": "Andre Raw",
+        "speaker_side": "close-user",
+        "start": 45.7,
+        "text": "Você perguntou aqui qual seria o mínimo de pessoas. A minha pergunta pra você, quantas pessoas?",
+        "words": [
+          {
+            "end": 46.0,
+            "start": 45.7,
+            "text": "Você"
+          },
+          {
+            "end": 46.5,
+            "start": 46.0,
+            "text": "perguntou"
+          },
+          {
+            "end": 46.8,
+            "start": 46.5,
+            "text": "aqui"
+          },
+          {
+            "end": 47.2,
+            "start": 46.8,
+            "text": "qual"
+          },
+          {
+            "end": 47.5,
+            "start": 47.2,
+            "text": "seria"
+          },
+          {
+            "end": 47.7,
+            "start": 47.5,
+            "text": "o"
+          },
+          {
+            "end": 47.9,
+            "start": 47.7,
+            "text": "mínimo"
+          },
+          {
+            "end": 48.2,
+            "start": 47.9,
+            "text": "de"
+          },
+          {
+            "end": 48.7,
+            "start": 48.2,
+            "text": "pessoas."
+          },
+          {
+            "end": 48.9,
+            "start": 48.8,
+            "text": "A"
+          },
+          {
+            "end": 49.0,
+            "start": 48.9,
+            "text": "minha"
+          },
+          {
+            "end": 49.3,
+            "start": 49.0,
+            "text": "pergunta"
+          },
+          {
+            "end": 49.5,
+            "start": 49.3,
+            "text": "pra"
+          },
+          {
+            "end": 49.8,
+            "start": 49.5,
+            "text": "você,"
+          },
+          {
+            "end": 50.7,
+            "start": 50.2,
+            "text": "quantas"
+          },
+          {
+            "end": 51.3,
+            "start": 50.7,
+            "text": "pessoas?"
+          }
+        ]
+      },
+      {
+        "end": 49.7,
+        "speaker_label": "Flaviane Mesquita",
+        "speaker_side": "contact",
+        "start": 48.3,
+        "text": "Isso.",
+        "words": [
+          {
+            "end": 49.7,
+            "start": 48.3,
+            "text": "Isso."
+          }
+        ]
+      },
+      {
+        "end": 54.9,
+        "speaker_label": "Flaviane Mesquita",
+        "speaker_side": "contact",
+        "start": 52.4,
+        "text": "Então, não sei. Não sei ainda.",
+        "words": [
+          {
+            "end": 53.1,
+            "start": 52.4,
+            "text": "Então,"
+          },
+          {
+            "end": 53.4,
+            "start": 53.2,
+            "text": "não"
+          },
+          {
+            "end": 53.7,
+            "start": 53.4,
+            "text": "sei."
+          },
+          {
+            "end": 54.2,
+            "start": 53.9,
+            "text": "Não"
+          },
+          {
+            "end": 54.4,
+            "start": 54.2,
+            "text": "sei"
+          },
+          {
+            "end": 54.9,
+            "start": 54.4,
+            "text": "ainda."
+          }
+        ]
+      },
+      {
+        "end": 56.8,
+        "speaker_label": "Andre Raw",
+        "speaker_side": "close-user",
+        "start": 53.8,
+        "text": "Um",
+        "words": [
+          {
+            "end": 56.8,
+            "start": 53.8,
+            "text": "Um"
+          }
+        ]
+      },
+      {
+        "end": 60.9,
+        "speaker_label": "Flaviane Mesquita",
+        "speaker_side": "contact",
+        "start": 57.5,
+        "text": "Mas o que que é? O mínimo é o quê? O mínimo é o quê? 50?",
+        "words": [
+          {
+            "end": 58.1,
+            "start": 57.5,
+            "text": "Mas"
+          },
+          {
+            "end": 58.2,
+            "start": 58.1,
+            "text": "o"
+          },
+          {
+            "end": 58.3,
+            "start": 58.2,
+            "text": "que"
+          },
+          {
+            "end": 58.5,
+            "start": 58.3,
+            "text": "que"
+          },
+          {
+            "end": 58.6,
+            "start": 58.5,
+            "text": "é?"
+          },
+          {
+            "end": 59.1,
+            "start": 58.7,
+            "text": "O"
+          },
+          {
+            "end": 59.4,
+            "start": 59.1,
+            "text": "mínimo"
+          },
+          {
+            "end": 59.5,
+            "start": 59.4,
+            "text": "é"
+          },
+          {
+            "end": 59.6,
+            "start": 59.5,
+            "text": "o"
+          },
+          {
+            "end": 59.8,
+            "start": 59.6,
+            "text": "quê?"
+          },
+          {
+            "end": 60.0,
+            "start": 59.9,
+            "text": "O"
+          },
+          {
+            "end": 60.3,
+            "start": 60.0,
+            "text": "mínimo"
+          },
+          {
+            "end": 60.4,
+            "start": 60.3,
+            "text": "é"
+          },
+          {
+            "end": 60.5,
+            "start": 60.4,
+            "text": "o"
+          },
+          {
+            "end": 60.6,
+            "start": 60.5,
+            "text": "quê?"
+          },
+          {
+            "end": 60.9,
+            "start": 60.8,
+            "text": "50?"
+          }
+        ]
+      },
+      {
+        "end": 59.3,
+        "speaker_label": "Andre Raw",
+        "speaker_side": "close-user",
+        "start": 58.0,
+        "text": "mínimo e um máximo.",
+        "words": [
+          {
+            "end": 58.4,
+            "start": 58.0,
+            "text": "mínimo"
+          },
+          {
+            "end": 58.6,
+            "start": 58.4,
+            "text": "e"
+          },
+          {
+            "end": 58.8,
+            "start": 58.6,
+            "text": "um"
+          },
+          {
+            "end": 59.3,
+            "start": 58.8,
+            "text": "máximo."
+          }
+        ]
+      },
+      {
+        "end": 80.0,
+        "speaker_label": "Andre Raw",
+        "speaker_side": "close-user",
+        "start": 61.6,
+        "text": "Não, não. A gente... dependendo da festa, a gente faz pra 20, 30, 40, isso é o de menos, é só a gente saber realmente pra poder eu conseguir fazer a cotação da melhor forma possível pra você, Flavio. Sim,",
+        "words": [
+          {
+            "end": 63.3,
+            "start": 61.6,
+            "text": "Não,"
+          },
+          {
+            "end": 63.6,
+            "start": 63.4,
+            "text": "não."
+          },
+          {
+            "end": 63.8,
+            "start": 63.7,
+            "text": "A"
+          },
+          {
+            "end": 64.3,
+            "start": 63.8,
+            "text": "gente..."
+          },
+          {
+            "end": 65.2,
+            "start": 64.7,
+            "text": "dependendo"
+          },
+          {
+            "end": 66.3,
+            "start": 65.2,
+            "text": "da"
+          },
+          {
+            "end": 66.6,
+            "start": 66.3,
+            "text": "festa,"
+          },
+          {
+            "end": 66.8,
+            "start": 66.7,
+            "text": "a"
+          },
+          {
+            "end": 66.9,
+            "start": 66.8,
+            "text": "gente"
+          },
+          {
+            "end": 67.0,
+            "start": 66.9,
+            "text": "faz"
+          },
+          {
+            "end": 67.2,
+            "start": 67.0,
+            "text": "pra"
+          },
+          {
+            "end": 67.5,
+            "start": 67.2,
+            "text": "20,"
+          },
+          {
+            "end": 68.1,
+            "start": 67.6,
+            "text": "30,"
+          },
+          {
+            "end": 68.8,
+            "start": 68.3,
+            "text": "40,"
+          },
+          {
+            "end": 69.3,
+            "start": 68.9,
+            "text": "isso"
+          },
+          {
+            "end": 70.1,
+            "start": 69.3,
+            "text": "é"
+          },
+          {
+            "end": 70.2,
+            "start": 70.1,
+            "text": "o"
+          },
+          {
+            "end": 70.3,
+            "start": 70.2,
+            "text": "de"
+          },
+          {
+            "end": 70.6,
+            "start": 70.3,
+            "text": "menos,"
+          },
+          {
+            "end": 70.9,
+            "start": 70.8,
+            "text": "é"
+          },
+          {
+            "end": 71.0,
+            "start": 70.9,
+            "text": "só"
+          },
+          {
+            "end": 71.1,
+            "start": 71.0,
+            "text": "a"
+          },
+          {
+            "end": 71.2,
+            "start": 71.1,
+            "text": "gente"
+          },
+          {
+            "end": 71.5,
+            "start": 71.2,
+            "text": "saber"
+          },
+          {
+            "end": 71.9,
+            "start": 71.5,
+            "text": "realmente"
+          },
+          {
+            "end": 72.1,
+            "start": 71.9,
+            "text": "pra"
+          },
+          {
+            "end": 72.4,
+            "start": 72.1,
+            "text": "poder"
+          },
+          {
+            "end": 73.1,
+            "start": 72.4,
+            "text": "eu"
+          },
+          {
+            "end": 73.5,
+            "start": 73.1,
+            "text": "conseguir"
+          },
+          {
+            "end": 73.7,
+            "start": 73.5,
+            "text": "fazer"
+          },
+          {
+            "end": 73.9,
+            "start": 73.7,
+            "text": "a"
+          },
+          {
+            "end": 74.2,
+            "start": 73.9,
+            "text": "cotação"
+          },
+          {
+            "end": 74.4,
+            "start": 74.2,
+            "text": "da"
+          },
+          {
+            "end": 74.5,
+            "start": 74.4,
+            "text": "melhor"
+          },
+          {
+            "end": 74.9,
+            "start": 74.5,
+            "text": "forma"
+          },
+          {
+            "end": 75.9,
+            "start": 74.9,
+            "text": "possível"
+          },
+          {
+            "end": 76.1,
+            "start": 75.9,
+            "text": "pra"
+          },
+          {
+            "end": 76.3,
+            "start": 76.1,
+            "text": "você,"
+          },
+          {
+            "end": 76.6,
+            "start": 76.4,
+            "text": "Flavio."
+          },
+          {
+            "end": 80.0,
+            "start": 77.0,
+            "text": "Sim,"
+          }
+        ]
+      },
+      {
+        "end": 72.2,
+        "speaker_label": "Flaviane Mesquita",
+        "speaker_side": "contact",
+        "start": 69.2,
+        "text": "Entendi.",
+        "words": [
+          {
+            "end": 72.2,
+            "start": 69.2,
+            "text": "Entendi."
+          }
+        ]
+      },
+      {
+        "end": 86.6,
+        "speaker_label": "Flaviane Mesquita",
+        "speaker_side": "contact",
+        "start": 80.2,
+        "text": "E quais são as opções que vocês têm? Eu vi lá que tem churrasco, tem jantar, né?",
+        "words": [
+          {
+            "end": 80.3,
+            "start": 80.2,
+            "text": "E"
+          },
+          {
+            "end": 80.5,
+            "start": 80.3,
+            "text": "quais"
+          },
+          {
+            "end": 80.9,
+            "start": 80.5,
+            "text": "são"
+          },
+          {
+            "end": 82.1,
+            "start": 80.9,
+            "text": "as"
+          },
+          {
+            "end": 82.5,
+            "start": 82.1,
+            "text": "opções"
+          },
+          {
+            "end": 82.7,
+            "start": 82.5,
+            "text": "que"
+          },
+          {
+            "end": 83.0,
+            "start": 82.7,
+            "text": "vocês"
+          },
+          {
+            "end": 83.2,
+            "start": 83.0,
+            "text": "têm?"
+          },
+          {
+            "end": 83.8,
+            "start": 83.6,
+            "text": "Eu"
+          },
+          {
+            "end": 83.9,
+            "start": 83.8,
+            "text": "vi"
+          },
+          {
+            "end": 84.1,
+            "start": 83.9,
+            "text": "lá"
+          },
+          {
+            "end": 84.3,
+            "start": 84.1,
+            "text": "que"
+          },
+          {
+            "end": 85.1,
+            "start": 84.3,
+            "text": "tem"
+          },
+          {
+            "end": 85.7,
+            "start": 85.1,
+            "text": "churrasco,"
+          },
+          {
+            "end": 85.9,
+            "start": 85.8,
+            "text": "tem"
+          },
+          {
+            "end": 86.4,
+            "start": 85.9,
+            "text": "jantar,"
+          },
+          {
+            "end": 86.6,
+            "start": 86.5,
+            "text": "né?"
+          }
+        ]
+      },
+      {
+        "end": 110.2,
+        "speaker_label": "Andre Raw",
+        "speaker_side": "close-user",
+        "start": 89.3,
+        "text": "nós somos especializados em churrasco, porém nós fazemos várias outras coisas também. Eu já fiz carne ao molho madeira, já fizemos carne de panela rica, já fizemos estrogonofe, tudo que um restaurante normal pode fazer, nós fazemos também.",
+        "words": [
+          {
+            "end": 89.4,
+            "start": 89.3,
+            "text": "nós"
+          },
+          {
+            "end": 89.6,
+            "start": 89.4,
+            "text": "somos"
+          },
+          {
+            "end": 90.5,
+            "start": 89.6,
+            "text": "especializados"
+          },
+          {
+            "end": 90.7,
+            "start": 90.5,
+            "text": "em"
+          },
+          {
+            "end": 91.4,
+            "start": 90.7,
+            "text": "churrasco,"
+          },
+          {
+            "end": 91.8,
+            "start": 91.5,
+            "text": "porém"
+          },
+          {
+            "end": 92.0,
+            "start": 91.8,
+            "text": "nós"
+          },
+          {
+            "end": 92.5,
+            "start": 92.0,
+            "text": "fazemos"
+          },
+          {
+            "end": 93.8,
+            "start": 93.3,
+            "text": "várias"
+          },
+          {
+            "end": 94.3,
+            "start": 93.8,
+            "text": "outras"
+          },
+          {
+            "end": 94.7,
+            "start": 94.3,
+            "text": "coisas"
+          },
+          {
+            "end": 95.1,
+            "start": 94.7,
+            "text": "também."
+          },
+          {
+            "end": 95.6,
+            "start": 95.6,
+            "text": "Eu"
+          },
+          {
+            "end": 96.1,
+            "start": 95.6,
+            "text": "já"
+          },
+          {
+            "end": 96.4,
+            "start": 96.1,
+            "text": "fiz"
+          },
+          {
+            "end": 97.9,
+            "start": 96.4,
+            "text": "carne"
+          },
+          {
+            "end": 98.1,
+            "start": 97.9,
+            "text": "ao"
+          },
+          {
+            "end": 98.3,
+            "start": 98.1,
+            "text": "molho"
+          },
+          {
+            "end": 98.9,
+            "start": 98.3,
+            "text": "madeira,"
+          },
+          {
+            "end": 99.2,
+            "start": 99.0,
+            "text": "já"
+          },
+          {
+            "end": 100.0,
+            "start": 99.2,
+            "text": "fizemos"
+          },
+          {
+            "end": 101.0,
+            "start": 100.0,
+            "text": "carne"
+          },
+          {
+            "end": 101.2,
+            "start": 101.0,
+            "text": "de"
+          },
+          {
+            "end": 101.5,
+            "start": 101.2,
+            "text": "panela"
+          },
+          {
+            "end": 102.1,
+            "start": 101.5,
+            "text": "rica,"
+          },
+          {
+            "end": 103.0,
+            "start": 102.9,
+            "text": "já"
+          },
+          {
+            "end": 103.5,
+            "start": 103.0,
+            "text": "fizemos"
+          },
+          {
+            "end": 104.7,
+            "start": 103.5,
+            "text": "estrogonofe,"
+          },
+          {
+            "end": 105.2,
+            "start": 105.0,
+            "text": "tudo"
+          },
+          {
+            "end": 105.4,
+            "start": 105.2,
+            "text": "que"
+          },
+          {
+            "end": 107.5,
+            "start": 105.4,
+            "text": "um"
+          },
+          {
+            "end": 108.1,
+            "start": 107.5,
+            "text": "restaurante"
+          },
+          {
+            "end": 108.5,
+            "start": 108.1,
+            "text": "normal"
+          },
+          {
+            "end": 108.8,
+            "start": 108.5,
+            "text": "pode"
+          },
+          {
+            "end": 109.2,
+            "start": 108.8,
+            "text": "fazer,"
+          },
+          {
+            "end": 109.5,
+            "start": 109.3,
+            "text": "nós"
+          },
+          {
+            "end": 109.8,
+            "start": 109.5,
+            "text": "fazemos"
+          },
+          {
+            "end": 110.2,
+            "start": 109.8,
+            "text": "também."
+          }
+        ]
+      },
+      {
+        "end": 104.6,
+        "speaker_label": "Flaviane Mesquita",
+        "speaker_side": "contact",
+        "start": 104.0,
+        "text": "Como é isso?",
+        "words": [
+          {
+            "end": 104.2,
+            "start": 104.0,
+            "text": "Como"
+          },
+          {
+            "end": 104.3,
+            "start": 104.2,
+            "text": "é"
+          },
+          {
+            "end": 104.6,
+            "start": 104.3,
+            "text": "isso?"
+          }
+        ]
+      },
+      {
+        "end": 112.5,
+        "speaker_label": "Flaviane Mesquita",
+        "speaker_side": "contact",
+        "start": 110.7,
+        "text": "O que é essa carne panela, Rita?",
+        "words": [
+          {
+            "end": 111.0,
+            "start": 110.7,
+            "text": "O"
+          },
+          {
+            "end": 111.2,
+            "start": 111.0,
+            "text": "que"
+          },
+          {
+            "end": 111.4,
+            "start": 111.2,
+            "text": "é"
+          },
+          {
+            "end": 111.6,
+            "start": 111.4,
+            "text": "essa"
+          },
+          {
+            "end": 111.8,
+            "start": 111.6,
+            "text": "carne"
+          },
+          {
+            "end": 112.2,
+            "start": 111.8,
+            "text": "panela,"
+          },
+          {
+            "end": 112.5,
+            "start": 112.3,
+            "text": "Rita?"
+          }
+        ]
+      },
+      {
+        "end": 118.0,
+        "speaker_label": "Andre Raw",
+        "speaker_side": "close-user",
+        "start": 111.3,
+        "text": "É carne de panela, com batata, cenoura,",
+        "words": [
+          {
+            "end": 114.3,
+            "start": 111.3,
+            "text": "É"
+          },
+          {
+            "end": 114.8,
+            "start": 114.6,
+            "text": "carne"
+          },
+          {
+            "end": 115.0,
+            "start": 114.8,
+            "text": "de"
+          },
+          {
+            "end": 115.3,
+            "start": 115.0,
+            "text": "panela,"
+          },
+          {
+            "end": 116.1,
+            "start": 115.6,
+            "text": "com"
+          },
+          {
+            "end": 116.8,
+            "start": 116.1,
+            "text": "batata,"
+          },
+          {
+            "end": 118.0,
+            "start": 117.3,
+            "text": "cenoura,"
+          }
+        ]
+      },
+      {
+        "end": 119.2,
+        "speaker_label": "Flaviane Mesquita",
+        "speaker_side": "contact",
+        "start": 115.1,
+        "text": "Ah, tá. Entendi.",
+        "words": [
+          {
+            "end": 118.1,
+            "start": 115.1,
+            "text": "Ah,"
+          },
+          {
+            "end": 119.0,
+            "start": 118.8,
+            "text": "tá."
+          },
+          {
+            "end": 119.2,
+            "start": 119.0,
+            "text": "Entendi."
+          }
+        ]
+      },
+      {
+        "end": 130.7,
+        "speaker_label": "Andre Raw",
+        "speaker_side": "close-user",
+        "start": 119.0,
+        "text": "mandioca, O que você estava pensando, primeiramente, mais uma vez, quantas pessoas, mais ou menos, para a gente ter um norte?",
+        "words": [
+          {
+            "end": 119.7,
+            "start": 119.0,
+            "text": "mandioca,"
+          },
+          {
+            "end": 124.0,
+            "start": 123.3,
+            "text": "O"
+          },
+          {
+            "end": 124.1,
+            "start": 124.0,
+            "text": "que"
+          },
+          {
+            "end": 124.4,
+            "start": 124.1,
+            "text": "você"
+          },
+          {
+            "end": 124.7,
+            "start": 124.4,
+            "text": "estava"
+          },
+          {
+            "end": 125.2,
+            "start": 124.7,
+            "text": "pensando,"
+          },
+          {
+            "end": 126.6,
+            "start": 125.9,
+            "text": "primeiramente,"
+          },
+          {
+            "end": 126.8,
+            "start": 126.7,
+            "text": "mais"
+          },
+          {
+            "end": 127.0,
+            "start": 126.8,
+            "text": "uma"
+          },
+          {
+            "end": 127.2,
+            "start": 127.0,
+            "text": "vez,"
+          },
+          {
+            "end": 127.6,
+            "start": 127.4,
+            "text": "quantas"
+          },
+          {
+            "end": 128.1,
+            "start": 127.6,
+            "text": "pessoas,"
+          },
+          {
+            "end": 129.0,
+            "start": 128.7,
+            "text": "mais"
+          },
+          {
+            "end": 129.1,
+            "start": 129.0,
+            "text": "ou"
+          },
+          {
+            "end": 129.5,
+            "start": 129.1,
+            "text": "menos,"
+          },
+          {
+            "end": 129.7,
+            "start": 129.5,
+            "text": "para"
+          },
+          {
+            "end": 129.8,
+            "start": 129.7,
+            "text": "a"
+          },
+          {
+            "end": 129.9,
+            "start": 129.8,
+            "text": "gente"
+          },
+          {
+            "end": 130.1,
+            "start": 129.9,
+            "text": "ter"
+          },
+          {
+            "end": 130.3,
+            "start": 130.1,
+            "text": "um"
+          },
+          {
+            "end": 130.7,
+            "start": 130.3,
+            "text": "norte?"
+          }
+        ]
+      },
+      {
+        "end": 134.8,
+        "speaker_label": "Flaviane Mesquita",
+        "speaker_side": "contact",
+        "start": 132.0,
+        "text": "Eu vou te mandar, então, pelo WhatsApp, então.",
+        "words": [
+          {
+            "end": 132.1,
+            "start": 132.0,
+            "text": "Eu"
+          },
+          {
+            "end": 132.5,
+            "start": 132.1,
+            "text": "vou"
+          },
+          {
+            "end": 132.6,
+            "start": 132.5,
+            "text": "te"
+          },
+          {
+            "end": 132.9,
+            "start": 132.6,
+            "text": "mandar,"
+          },
+          {
+            "end": 133.2,
+            "start": 133.1,
+            "text": "então,"
+          },
+          {
+            "end": 133.6,
+            "start": 133.4,
+            "text": "pelo"
+          },
+          {
+            "end": 134.5,
+            "start": 133.6,
+            "text": "WhatsApp,"
+          },
+          {
+            "end": 134.8,
+            "start": 134.6,
+            "text": "então."
+          }
+        ]
+      },
+      {
+        "end": 139.3,
+        "speaker_label": "Andre Raw",
+        "speaker_side": "close-user",
+        "start": 136.3,
+        "text": "E",
+        "words": [
+          {
+            "end": 139.3,
+            "start": 136.3,
+            "text": "E"
+          }
+        ]
+      },
+      {
+        "end": 138.8,
+        "speaker_label": "Flaviane Mesquita",
+        "speaker_side": "contact",
+        "start": 136.4,
+        "text": "Eu vou ver aqui um mais ou menos, aí eu te mando.",
+        "words": [
+          {
+            "end": 136.6,
+            "start": 136.4,
+            "text": "Eu"
+          },
+          {
+            "end": 136.8,
+            "start": 136.6,
+            "text": "vou"
+          },
+          {
+            "end": 136.9,
+            "start": 136.8,
+            "text": "ver"
+          },
+          {
+            "end": 137.1,
+            "start": 136.9,
+            "text": "aqui"
+          },
+          {
+            "end": 137.2,
+            "start": 137.1,
+            "text": "um"
+          },
+          {
+            "end": 137.4,
+            "start": 137.2,
+            "text": "mais"
+          },
+          {
+            "end": 137.5,
+            "start": 137.4,
+            "text": "ou"
+          },
+          {
+            "end": 137.8,
+            "start": 137.5,
+            "text": "menos,"
+          },
+          {
+            "end": 138.0,
+            "start": 138.0,
+            "text": "aí"
+          },
+          {
+            "end": 138.2,
+            "start": 138.0,
+            "text": "eu"
+          },
+          {
+            "end": 138.3,
+            "start": 138.2,
+            "text": "te"
+          },
+          {
+            "end": 138.8,
+            "start": 138.3,
+            "text": "mando."
+          }
+        ]
+      },
+      {
+        "end": 148.8,
+        "speaker_label": "Andre Raw",
+        "speaker_side": "close-user",
+        "start": 140.9,
+        "text": "se você puder me mandar o seu e-mail, fica fácil de eu mandar uma cotação para você entender, mais ou menos, como é que ficam os nossos serviços.",
+        "words": [
+          {
+            "end": 141.2,
+            "start": 140.9,
+            "text": "se"
+          },
+          {
+            "end": 141.4,
+            "start": 141.2,
+            "text": "você"
+          },
+          {
+            "end": 141.7,
+            "start": 141.4,
+            "text": "puder"
+          },
+          {
+            "end": 141.8,
+            "start": 141.7,
+            "text": "me"
+          },
+          {
+            "end": 142.2,
+            "start": 141.8,
+            "text": "mandar"
+          },
+          {
+            "end": 142.6,
+            "start": 142.2,
+            "text": "o"
+          },
+          {
+            "end": 142.8,
+            "start": 142.6,
+            "text": "seu"
+          },
+          {
+            "end": 143.4,
+            "start": 142.8,
+            "text": "e-mail,"
+          },
+          {
+            "end": 143.8,
+            "start": 143.7,
+            "text": "fica"
+          },
+          {
+            "end": 144.2,
+            "start": 143.8,
+            "text": "fácil"
+          },
+          {
+            "end": 144.3,
+            "start": 144.2,
+            "text": "de"
+          },
+          {
+            "end": 144.4,
+            "start": 144.3,
+            "text": "eu"
+          },
+          {
+            "end": 144.6,
+            "start": 144.4,
+            "text": "mandar"
+          },
+          {
+            "end": 144.8,
+            "start": 144.6,
+            "text": "uma"
+          },
+          {
+            "end": 145.3,
+            "start": 144.8,
+            "text": "cotação"
+          },
+          {
+            "end": 145.4,
+            "start": 145.3,
+            "text": "para"
+          },
+          {
+            "end": 145.6,
+            "start": 145.4,
+            "text": "você"
+          },
+          {
+            "end": 146.1,
+            "start": 145.6,
+            "text": "entender,"
+          },
+          {
+            "end": 146.3,
+            "start": 146.3,
+            "text": "mais"
+          },
+          {
+            "end": 146.4,
+            "start": 146.3,
+            "text": "ou"
+          },
+          {
+            "end": 146.6,
+            "start": 146.4,
+            "text": "menos,"
+          },
+          {
+            "end": 147.5,
+            "start": 147.3,
+            "text": "como"
+          },
+          {
+            "end": 147.6,
+            "start": 147.5,
+            "text": "é"
+          },
+          {
+            "end": 147.7,
+            "start": 147.6,
+            "text": "que"
+          },
+          {
+            "end": 147.9,
+            "start": 147.7,
+            "text": "ficam"
+          },
+          {
+            "end": 148.0,
+            "start": 147.9,
+            "text": "os"
+          },
+          {
+            "end": 148.2,
+            "start": 148.0,
+            "text": "nossos"
+          },
+          {
+            "end": 148.8,
+            "start": 148.2,
+            "text": "serviços."
+          }
+        ]
+      },
+      {
+        "end": 152.1,
+        "speaker_label": "Flaviane Mesquita",
+        "speaker_side": "contact",
+        "start": 148.4,
+        "text": "Uhum. Ok.",
+        "words": [
+          {
+            "end": 149.7,
+            "start": 148.4,
+            "text": "Uhum."
+          },
+          {
+            "end": 152.1,
+            "start": 150.5,
+            "text": "Ok."
+          }
+        ]
+      },
+      {
+        "end": 164.6,
+        "speaker_label": "Andre Raw",
+        "speaker_side": "close-user",
+        "start": 151.2,
+        "text": "Eu vou te mandar um alô aqui no text message, eu só vou mandar aqui, André da Comiqueto. Porque aí você me manda direitinho aqui o seu e-mail,",
+        "words": [
+          {
+            "end": 151.4,
+            "start": 151.2,
+            "text": "Eu"
+          },
+          {
+            "end": 151.5,
+            "start": 151.4,
+            "text": "vou"
+          },
+          {
+            "end": 151.6,
+            "start": 151.5,
+            "text": "te"
+          },
+          {
+            "end": 151.8,
+            "start": 151.6,
+            "text": "mandar"
+          },
+          {
+            "end": 152.0,
+            "start": 151.8,
+            "text": "um"
+          },
+          {
+            "end": 152.3,
+            "start": 152.0,
+            "text": "alô"
+          },
+          {
+            "end": 152.6,
+            "start": 152.3,
+            "text": "aqui"
+          },
+          {
+            "end": 153.3,
+            "start": 152.6,
+            "text": "no"
+          },
+          {
+            "end": 153.8,
+            "start": 153.3,
+            "text": "text"
+          },
+          {
+            "end": 154.3,
+            "start": 153.8,
+            "text": "message,"
+          },
+          {
+            "end": 154.6,
+            "start": 154.5,
+            "text": "eu"
+          },
+          {
+            "end": 154.7,
+            "start": 154.6,
+            "text": "só"
+          },
+          {
+            "end": 154.8,
+            "start": 154.7,
+            "text": "vou"
+          },
+          {
+            "end": 155.1,
+            "start": 154.8,
+            "text": "mandar"
+          },
+          {
+            "end": 155.3,
+            "start": 155.1,
+            "text": "aqui,"
+          },
+          {
+            "end": 155.8,
+            "start": 155.4,
+            "text": "André"
+          },
+          {
+            "end": 157.0,
+            "start": 155.8,
+            "text": "da"
+          },
+          {
+            "end": 158.3,
+            "start": 157.0,
+            "text": "Comiqueto."
+          },
+          {
+            "end": 161.8,
+            "start": 158.8,
+            "text": "Porque"
+          },
+          {
+            "end": 162.1,
+            "start": 162.0,
+            "text": "aí"
+          },
+          {
+            "end": 162.4,
+            "start": 162.1,
+            "text": "você"
+          },
+          {
+            "end": 162.6,
+            "start": 162.4,
+            "text": "me"
+          },
+          {
+            "end": 163.0,
+            "start": 162.6,
+            "text": "manda"
+          },
+          {
+            "end": 163.6,
+            "start": 163.0,
+            "text": "direitinho"
+          },
+          {
+            "end": 163.9,
+            "start": 163.6,
+            "text": "aqui"
+          },
+          {
+            "end": 164.1,
+            "start": 163.9,
+            "text": "o"
+          },
+          {
+            "end": 164.2,
+            "start": 164.1,
+            "text": "seu"
+          },
+          {
+            "end": 164.6,
+            "start": 164.2,
+            "text": "e-mail,"
+          }
+        ]
+      },
+      {
+        "end": 157.9,
+        "speaker_label": "Flaviane Mesquita",
+        "speaker_side": "contact",
+        "start": 154.9,
+        "text": "Ok.",
+        "words": [
+          {
+            "end": 157.9,
+            "start": 154.9,
+            "text": "Ok."
+          }
+        ]
+      },
+      {
+        "end": 177.5,
+        "speaker_label": "Andre Raw",
+        "speaker_side": "close-user",
+        "start": 165.2,
+        "text": "aí você me fala mais ou menos com as pessoas e eu te encaminho o nosso menu, os nossos packages, o que a gente tem, pra você entender exatamente como é que fica tudo.",
+        "words": [
+          {
+            "end": 165.3,
+            "start": 165.2,
+            "text": "aí"
+          },
+          {
+            "end": 165.5,
+            "start": 165.3,
+            "text": "você"
+          },
+          {
+            "end": 165.7,
+            "start": 165.5,
+            "text": "me"
+          },
+          {
+            "end": 166.0,
+            "start": 165.7,
+            "text": "fala"
+          },
+          {
+            "end": 166.2,
+            "start": 166.0,
+            "text": "mais"
+          },
+          {
+            "end": 166.3,
+            "start": 166.2,
+            "text": "ou"
+          },
+          {
+            "end": 166.5,
+            "start": 166.3,
+            "text": "menos"
+          },
+          {
+            "end": 166.7,
+            "start": 166.5,
+            "text": "com"
+          },
+          {
+            "end": 166.8,
+            "start": 166.7,
+            "text": "as"
+          },
+          {
+            "end": 167.3,
+            "start": 166.8,
+            "text": "pessoas"
+          },
+          {
+            "end": 168.2,
+            "start": 167.3,
+            "text": "e"
+          },
+          {
+            "end": 168.3,
+            "start": 168.2,
+            "text": "eu"
+          },
+          {
+            "end": 168.4,
+            "start": 168.3,
+            "text": "te"
+          },
+          {
+            "end": 169.0,
+            "start": 168.4,
+            "text": "encaminho"
+          },
+          {
+            "end": 169.1,
+            "start": 169.0,
+            "text": "o"
+          },
+          {
+            "end": 169.9,
+            "start": 169.1,
+            "text": "nosso"
+          },
+          {
+            "end": 171.4,
+            "start": 169.9,
+            "text": "menu,"
+          },
+          {
+            "end": 172.9,
+            "start": 172.4,
+            "text": "os"
+          },
+          {
+            "end": 173.1,
+            "start": 172.9,
+            "text": "nossos"
+          },
+          {
+            "end": 173.7,
+            "start": 173.1,
+            "text": "packages,"
+          },
+          {
+            "end": 173.9,
+            "start": 173.8,
+            "text": "o"
+          },
+          {
+            "end": 174.0,
+            "start": 173.9,
+            "text": "que"
+          },
+          {
+            "end": 174.2,
+            "start": 174.0,
+            "text": "a"
+          },
+          {
+            "end": 174.2,
+            "start": 174.2,
+            "text": "gente"
+          },
+          {
+            "end": 174.7,
+            "start": 174.2,
+            "text": "tem,"
+          },
+          {
+            "end": 175.0,
+            "start": 174.9,
+            "text": "pra"
+          },
+          {
+            "end": 175.3,
+            "start": 175.0,
+            "text": "você"
+          },
+          {
+            "end": 175.9,
+            "start": 175.3,
+            "text": "entender"
+          },
+          {
+            "end": 176.5,
+            "start": 175.9,
+            "text": "exatamente"
+          },
+          {
+            "end": 176.9,
+            "start": 176.5,
+            "text": "como"
+          },
+          {
+            "end": 177.0,
+            "start": 176.9,
+            "text": "é"
+          },
+          {
+            "end": 177.0,
+            "start": 177.0,
+            "text": "que"
+          },
+          {
+            "end": 177.2,
+            "start": 177.0,
+            "text": "fica"
+          },
+          {
+            "end": 177.5,
+            "start": 177.2,
+            "text": "tudo."
+          }
+        ]
+      },
+      {
+        "end": 179.8,
+        "speaker_label": "Flaviane Mesquita",
+        "speaker_side": "contact",
+        "start": 174.6,
+        "text": "Ótimo. Isso é legal. Eu queria também conhecer a empresa, entendeu? Saber tudo o que vocês têm.",
+        "words": [
+          {
+            "end": 175.1,
+            "start": 174.6,
+            "text": "Ótimo."
+          },
+          {
+            "end": 176.0,
+            "start": 175.6,
+            "text": "Isso"
+          },
+          {
+            "end": 176.1,
+            "start": 176.0,
+            "text": "é"
+          },
+          {
+            "end": 176.3,
+            "start": 176.1,
+            "text": "legal."
+          },
+          {
+            "end": 177.0,
+            "start": 176.5,
+            "text": "Eu"
+          },
+          {
+            "end": 177.1,
+            "start": 177.0,
+            "text": "queria"
+          },
+          {
+            "end": 177.4,
+            "start": 177.1,
+            "text": "também"
+          },
+          {
+            "end": 177.8,
+            "start": 177.4,
+            "text": "conhecer"
+          },
+          {
+            "end": 178.0,
+            "start": 177.8,
+            "text": "a"
+          },
+          {
+            "end": 178.3,
+            "start": 178.0,
+            "text": "empresa,"
+          },
+          {
+            "end": 178.7,
+            "start": 178.4,
+            "text": "entendeu?"
+          },
+          {
+            "end": 179.0,
+            "start": 178.8,
+            "text": "Saber"
+          },
+          {
+            "end": 179.2,
+            "start": 179.0,
+            "text": "tudo"
+          },
+          {
+            "end": 179.3,
+            "start": 179.2,
+            "text": "o"
+          },
+          {
+            "end": 179.3,
+            "start": 179.3,
+            "text": "que"
+          },
+          {
+            "end": 179.5,
+            "start": 179.3,
+            "text": "vocês"
+          },
+          {
+            "end": 179.8,
+            "start": 179.5,
+            "text": "têm."
+          }
+        ]
+      },
+      {
+        "end": 207.6,
+        "speaker_label": "Andre Raw",
+        "speaker_side": "close-user",
+        "start": 181.2,
+        "text": "Maravilha, o nosso website é uma forma muito boa de você entender e também nós temos uma degustação que vai rolar agora no final de semana, no domingo, duas horas da tarde, onde você consegue provar todas as nossas comidas, entender quem nós somos, entender como que nós trabalhamos, assim a gente entende o que você realmente está precisando para fazer a cotação da melhor forma possível.",
+        "words": [
+          {
+            "end": 181.9,
+            "start": 181.2,
+            "text": "Maravilha,"
+          },
+          {
+            "end": 182.2,
+            "start": 182.0,
+            "text": "o"
+          },
+          {
+            "end": 182.4,
+            "start": 182.2,
+            "text": "nosso"
+          },
+          {
+            "end": 183.1,
+            "start": 182.4,
+            "text": "website"
+          },
+          {
+            "end": 184.0,
+            "start": 183.1,
+            "text": "é"
+          },
+          {
+            "end": 184.2,
+            "start": 184.0,
+            "text": "uma"
+          },
+          {
+            "end": 184.7,
+            "start": 184.2,
+            "text": "forma"
+          },
+          {
+            "end": 185.2,
+            "start": 184.7,
+            "text": "muito"
+          },
+          {
+            "end": 185.5,
+            "start": 185.2,
+            "text": "boa"
+          },
+          {
+            "end": 185.6,
+            "start": 185.5,
+            "text": "de"
+          },
+          {
+            "end": 185.9,
+            "start": 185.6,
+            "text": "você"
+          },
+          {
+            "end": 186.4,
+            "start": 185.9,
+            "text": "entender"
+          },
+          {
+            "end": 187.2,
+            "start": 186.4,
+            "text": "e"
+          },
+          {
+            "end": 187.6,
+            "start": 187.2,
+            "text": "também"
+          },
+          {
+            "end": 187.8,
+            "start": 187.6,
+            "text": "nós"
+          },
+          {
+            "end": 188.0,
+            "start": 187.8,
+            "text": "temos"
+          },
+          {
+            "end": 188.3,
+            "start": 188.0,
+            "text": "uma"
+          },
+          {
+            "end": 189.0,
+            "start": 188.3,
+            "text": "degustação"
+          },
+          {
+            "end": 189.2,
+            "start": 189.0,
+            "text": "que"
+          },
+          {
+            "end": 189.3,
+            "start": 189.2,
+            "text": "vai"
+          },
+          {
+            "end": 189.6,
+            "start": 189.3,
+            "text": "rolar"
+          },
+          {
+            "end": 189.9,
+            "start": 189.6,
+            "text": "agora"
+          },
+          {
+            "end": 190.2,
+            "start": 189.9,
+            "text": "no"
+          },
+          {
+            "end": 190.4,
+            "start": 190.2,
+            "text": "final"
+          },
+          {
+            "end": 190.6,
+            "start": 190.4,
+            "text": "de"
+          },
+          {
+            "end": 190.9,
+            "start": 190.6,
+            "text": "semana,"
+          },
+          {
+            "end": 191.3,
+            "start": 191.1,
+            "text": "no"
+          },
+          {
+            "end": 191.8,
+            "start": 191.3,
+            "text": "domingo,"
+          },
+          {
+            "end": 192.8,
+            "start": 192.5,
+            "text": "duas"
+          },
+          {
+            "end": 193.1,
+            "start": 192.8,
+            "text": "horas"
+          },
+          {
+            "end": 193.3,
+            "start": 193.1,
+            "text": "da"
+          },
+          {
+            "end": 193.6,
+            "start": 193.3,
+            "text": "tarde,"
+          },
+          {
+            "end": 193.8,
+            "start": 193.7,
+            "text": "onde"
+          },
+          {
+            "end": 194.1,
+            "start": 193.8,
+            "text": "você"
+          },
+          {
+            "end": 194.6,
+            "start": 194.1,
+            "text": "consegue"
+          },
+          {
+            "end": 196.8,
+            "start": 194.6,
+            "text": "provar"
+          },
+          {
+            "end": 197.0,
+            "start": 196.8,
+            "text": "todas"
+          },
+          {
+            "end": 197.1,
+            "start": 197.0,
+            "text": "as"
+          },
+          {
+            "end": 197.3,
+            "start": 197.1,
+            "text": "nossas"
+          },
+          {
+            "end": 197.9,
+            "start": 197.3,
+            "text": "comidas,"
+          },
+          {
+            "end": 198.4,
+            "start": 198.2,
+            "text": "entender"
+          },
+          {
+            "end": 198.7,
+            "start": 198.4,
+            "text": "quem"
+          },
+          {
+            "end": 198.9,
+            "start": 198.7,
+            "text": "nós"
+          },
+          {
+            "end": 199.4,
+            "start": 198.9,
+            "text": "somos,"
+          },
+          {
+            "end": 199.9,
+            "start": 199.6,
+            "text": "entender"
+          },
+          {
+            "end": 200.3,
+            "start": 199.9,
+            "text": "como"
+          },
+          {
+            "end": 200.4,
+            "start": 200.3,
+            "text": "que"
+          },
+          {
+            "end": 200.6,
+            "start": 200.4,
+            "text": "nós"
+          },
+          {
+            "end": 201.3,
+            "start": 200.6,
+            "text": "trabalhamos,"
+          },
+          {
+            "end": 201.6,
+            "start": 201.4,
+            "text": "assim"
+          },
+          {
+            "end": 201.8,
+            "start": 201.6,
+            "text": "a"
+          },
+          {
+            "end": 201.9,
+            "start": 201.8,
+            "text": "gente"
+          },
+          {
+            "end": 202.4,
+            "start": 201.9,
+            "text": "entende"
+          },
+          {
+            "end": 203.1,
+            "start": 202.4,
+            "text": "o"
+          },
+          {
+            "end": 203.2,
+            "start": 203.1,
+            "text": "que"
+          },
+          {
+            "end": 203.5,
+            "start": 203.2,
+            "text": "você"
+          },
+          {
+            "end": 203.9,
+            "start": 203.5,
+            "text": "realmente"
+          },
+          {
+            "end": 204.2,
+            "start": 203.9,
+            "text": "está"
+          },
+          {
+            "end": 204.9,
+            "start": 204.2,
+            "text": "precisando"
+          },
+          {
+            "end": 205.5,
+            "start": 204.9,
+            "text": "para"
+          },
+          {
+            "end": 205.9,
+            "start": 205.5,
+            "text": "fazer"
+          },
+          {
+            "end": 206.0,
+            "start": 205.9,
+            "text": "a"
+          },
+          {
+            "end": 206.4,
+            "start": 206.0,
+            "text": "cotação"
+          },
+          {
+            "end": 206.5,
+            "start": 206.4,
+            "text": "da"
+          },
+          {
+            "end": 206.8,
+            "start": 206.5,
+            "text": "melhor"
+          },
+          {
+            "end": 207.1,
+            "start": 206.8,
+            "text": "forma"
+          },
+          {
+            "end": 207.6,
+            "start": 207.1,
+            "text": "possível."
+          }
+        ]
+      },
+      {
+        "end": 210.1,
+        "speaker_label": "Flaviane Mesquita",
+        "speaker_side": "contact",
+        "start": 205.4,
+        "text": "Sim, vai ser a Origem.",
+        "words": [
+          {
+            "end": 206.7,
+            "start": 205.4,
+            "text": "Sim,"
+          },
+          {
+            "end": 209.4,
+            "start": 208.9,
+            "text": "vai"
+          },
+          {
+            "end": 209.5,
+            "start": 209.4,
+            "text": "ser"
+          },
+          {
+            "end": 209.6,
+            "start": 209.5,
+            "text": "a"
+          },
+          {
+            "end": 210.1,
+            "start": 209.6,
+            "text": "Origem."
+          }
+        ]
+      },
+      {
+        "end": 245.8,
+        "speaker_label": "Andre Raw",
+        "speaker_side": "close-user",
+        "start": 211.7,
+        "text": "é em Fitchburg, Mass. Eu vou encaminhar para você um SMS agora com a invitation para esse dia do dia 19. Tem todas as informações que você precisa. 35 dólares por pessoa. Quando você falar sim para uma cotação nossa, nós te devolvemos duas pessoas. Então você pode vir com quantas pessoas você quiser. Cinco, seis pessoas. Cada um é 35 dólares. Quando você fecha uma negociação com a gente, a gente te devolve dois.",
+        "words": [
+          {
+            "end": 211.9,
+            "start": 211.7,
+            "text": "é"
+          },
+          {
+            "end": 212.4,
+            "start": 211.9,
+            "text": "em"
+          },
+          {
+            "end": 213.8,
+            "start": 212.4,
+            "text": "Fitchburg,"
+          },
+          {
+            "end": 214.3,
+            "start": 214.0,
+            "text": "Mass."
+          },
+          {
+            "end": 215.1,
+            "start": 214.9,
+            "text": "Eu"
+          },
+          {
+            "end": 215.3,
+            "start": 215.1,
+            "text": "vou"
+          },
+          {
+            "end": 215.7,
+            "start": 215.3,
+            "text": "encaminhar"
+          },
+          {
+            "end": 215.9,
+            "start": 215.7,
+            "text": "para"
+          },
+          {
+            "end": 216.3,
+            "start": 215.9,
+            "text": "você"
+          },
+          {
+            "end": 217.8,
+            "start": 216.3,
+            "text": "um"
+          },
+          {
+            "end": 218.5,
+            "start": 217.8,
+            "text": "SMS"
+          },
+          {
+            "end": 219.1,
+            "start": 218.5,
+            "text": "agora"
+          },
+          {
+            "end": 219.4,
+            "start": 219.1,
+            "text": "com"
+          },
+          {
+            "end": 220.0,
+            "start": 219.4,
+            "text": "a"
+          },
+          {
+            "end": 220.7,
+            "start": 220.0,
+            "text": "invitation"
+          },
+          {
+            "end": 221.7,
+            "start": 220.7,
+            "text": "para"
+          },
+          {
+            "end": 222.0,
+            "start": 221.7,
+            "text": "esse"
+          },
+          {
+            "end": 222.5,
+            "start": 222.0,
+            "text": "dia"
+          },
+          {
+            "end": 223.0,
+            "start": 222.5,
+            "text": "do"
+          },
+          {
+            "end": 223.6,
+            "start": 223.0,
+            "text": "dia"
+          },
+          {
+            "end": 224.5,
+            "start": 223.6,
+            "text": "19."
+          },
+          {
+            "end": 224.7,
+            "start": 224.6,
+            "text": "Tem"
+          },
+          {
+            "end": 225.0,
+            "start": 224.7,
+            "text": "todas"
+          },
+          {
+            "end": 225.2,
+            "start": 225.0,
+            "text": "as"
+          },
+          {
+            "end": 225.7,
+            "start": 225.2,
+            "text": "informações"
+          },
+          {
+            "end": 226.0,
+            "start": 225.7,
+            "text": "que"
+          },
+          {
+            "end": 226.3,
+            "start": 226.0,
+            "text": "você"
+          },
+          {
+            "end": 226.8,
+            "start": 226.3,
+            "text": "precisa."
+          },
+          {
+            "end": 228.8,
+            "start": 228.0,
+            "text": "35"
+          },
+          {
+            "end": 229.3,
+            "start": 228.8,
+            "text": "dólares"
+          },
+          {
+            "end": 229.7,
+            "start": 229.3,
+            "text": "por"
+          },
+          {
+            "end": 230.2,
+            "start": 229.7,
+            "text": "pessoa."
+          },
+          {
+            "end": 231.2,
+            "start": 231.0,
+            "text": "Quando"
+          },
+          {
+            "end": 231.5,
+            "start": 231.2,
+            "text": "você"
+          },
+          {
+            "end": 231.8,
+            "start": 231.5,
+            "text": "falar"
+          },
+          {
+            "end": 232.4,
+            "start": 231.8,
+            "text": "sim"
+          },
+          {
+            "end": 232.6,
+            "start": 232.4,
+            "text": "para"
+          },
+          {
+            "end": 232.8,
+            "start": 232.6,
+            "text": "uma"
+          },
+          {
+            "end": 233.3,
+            "start": 232.8,
+            "text": "cotação"
+          },
+          {
+            "end": 233.7,
+            "start": 233.3,
+            "text": "nossa,"
+          },
+          {
+            "end": 234.0,
+            "start": 233.9,
+            "text": "nós"
+          },
+          {
+            "end": 234.2,
+            "start": 234.0,
+            "text": "te"
+          },
+          {
+            "end": 234.8,
+            "start": 234.2,
+            "text": "devolvemos"
+          },
+          {
+            "end": 235.7,
+            "start": 234.8,
+            "text": "duas"
+          },
+          {
+            "end": 237.2,
+            "start": 235.7,
+            "text": "pessoas."
+          },
+          {
+            "end": 237.5,
+            "start": 237.4,
+            "text": "Então"
+          },
+          {
+            "end": 237.6,
+            "start": 237.5,
+            "text": "você"
+          },
+          {
+            "end": 237.8,
+            "start": 237.6,
+            "text": "pode"
+          },
+          {
+            "end": 238.0,
+            "start": 237.8,
+            "text": "vir"
+          },
+          {
+            "end": 238.1,
+            "start": 238.0,
+            "text": "com"
+          },
+          {
+            "end": 238.4,
+            "start": 238.1,
+            "text": "quantas"
+          },
+          {
+            "end": 238.6,
+            "start": 238.4,
+            "text": "pessoas"
+          },
+          {
+            "end": 238.8,
+            "start": 238.6,
+            "text": "você"
+          },
+          {
+            "end": 239.1,
+            "start": 238.8,
+            "text": "quiser."
+          },
+          {
+            "end": 239.6,
+            "start": 239.3,
+            "text": "Cinco,"
+          },
+          {
+            "end": 239.8,
+            "start": 239.7,
+            "text": "seis"
+          },
+          {
+            "end": 240.2,
+            "start": 239.8,
+            "text": "pessoas."
+          },
+          {
+            "end": 241.0,
+            "start": 240.8,
+            "text": "Cada"
+          },
+          {
+            "end": 241.2,
+            "start": 241.0,
+            "text": "um"
+          },
+          {
+            "end": 241.3,
+            "start": 241.2,
+            "text": "é"
+          },
+          {
+            "end": 241.8,
+            "start": 241.3,
+            "text": "35"
+          },
+          {
+            "end": 242.2,
+            "start": 241.8,
+            "text": "dólares."
+          },
+          {
+            "end": 242.8,
+            "start": 242.7,
+            "text": "Quando"
+          },
+          {
+            "end": 243.1,
+            "start": 242.8,
+            "text": "você"
+          },
+          {
+            "end": 243.3,
+            "start": 243.1,
+            "text": "fecha"
+          },
+          {
+            "end": 243.5,
+            "start": 243.3,
+            "text": "uma"
+          },
+          {
+            "end": 244.0,
+            "start": 243.5,
+            "text": "negociação"
+          },
+          {
+            "end": 244.2,
+            "start": 244.0,
+            "text": "com"
+          },
+          {
+            "end": 244.2,
+            "start": 244.2,
+            "text": "a"
+          },
+          {
+            "end": 244.4,
+            "start": 244.2,
+            "text": "gente,"
+          },
+          {
+            "end": 244.6,
+            "start": 244.5,
+            "text": "a"
+          },
+          {
+            "end": 244.7,
+            "start": 244.6,
+            "text": "gente"
+          },
+          {
+            "end": 245.0,
+            "start": 244.7,
+            "text": "te"
+          },
+          {
+            "end": 245.4,
+            "start": 245.0,
+            "text": "devolve"
+          },
+          {
+            "end": 245.8,
+            "start": 245.4,
+            "text": "dois."
+          }
+        ]
+      },
+      {
+        "end": 253.0,
+        "speaker_label": "Flaviane Mesquita",
+        "speaker_side": "contact",
+        "start": 243.1,
+        "text": "Sim, essa degustação que vocês vão fazer, vocês vão fazer de todos os pratos que vocês vendem, né?",
+        "words": [
+          {
+            "end": 246.1,
+            "start": 243.1,
+            "text": "Sim,"
+          },
+          {
+            "end": 247.0,
+            "start": 246.7,
+            "text": "essa"
+          },
+          {
+            "end": 247.9,
+            "start": 247.0,
+            "text": "degustação"
+          },
+          {
+            "end": 248.1,
+            "start": 247.9,
+            "text": "que"
+          },
+          {
+            "end": 248.5,
+            "start": 248.1,
+            "text": "vocês"
+          },
+          {
+            "end": 248.6,
+            "start": 248.5,
+            "text": "vão"
+          },
+          {
+            "end": 248.9,
+            "start": 248.6,
+            "text": "fazer,"
+          },
+          {
+            "end": 249.1,
+            "start": 249.0,
+            "text": "vocês"
+          },
+          {
+            "end": 249.2,
+            "start": 249.1,
+            "text": "vão"
+          },
+          {
+            "end": 249.4,
+            "start": 249.2,
+            "text": "fazer"
+          },
+          {
+            "end": 249.7,
+            "start": 249.4,
+            "text": "de"
+          },
+          {
+            "end": 250.3,
+            "start": 249.7,
+            "text": "todos"
+          },
+          {
+            "end": 251.5,
+            "start": 250.3,
+            "text": "os"
+          },
+          {
+            "end": 251.9,
+            "start": 251.5,
+            "text": "pratos"
+          },
+          {
+            "end": 252.0,
+            "start": 251.9,
+            "text": "que"
+          },
+          {
+            "end": 252.4,
+            "start": 252.0,
+            "text": "vocês"
+          },
+          {
+            "end": 252.8,
+            "start": 252.4,
+            "text": "vendem,"
+          },
+          {
+            "end": 253.0,
+            "start": 252.9,
+            "text": "né?"
+          }
+        ]
+      },
+      {
+        "end": 252.7,
+        "speaker_label": "Andre Raw",
+        "speaker_side": "close-user",
+        "start": 249.7,
+        "text": "Não",
+        "words": [
+          {
+            "end": 252.7,
+            "start": 249.7,
+            "text": "Não"
+          }
+        ]
+      },
+      {
+        "end": 256.5,
+        "speaker_label": "Flaviane Mesquita",
+        "speaker_side": "contact",
+        "start": 254.6,
+        "text": "Ah, sim.",
+        "words": [
+          {
+            "end": 256.3,
+            "start": 254.6,
+            "text": "Ah,"
+          },
+          {
+            "end": 256.5,
+            "start": 256.4,
+            "text": "sim."
+          }
+        ]
+      },
+      {
+        "end": 275.9,
+        "speaker_label": "Andre Raw",
+        "speaker_side": "close-user",
+        "start": 255.1,
+        "text": "todos, mas vamos dizer assim, uns 30 itens diferentes. Vocês vão comer carnes diferentes, entradas, arroz, feijão, feijão tropeiro, banana, yuca, diferentes tipos de saladas diferentes tipos de aperitivos é bastante comida.",
+        "words": [
+          {
+            "end": 255.8,
+            "start": 255.1,
+            "text": "todos,"
+          },
+          {
+            "end": 256.4,
+            "start": 256.0,
+            "text": "mas"
+          },
+          {
+            "end": 256.7,
+            "start": 256.4,
+            "text": "vamos"
+          },
+          {
+            "end": 257.0,
+            "start": 256.7,
+            "text": "dizer"
+          },
+          {
+            "end": 257.3,
+            "start": 257.0,
+            "text": "assim,"
+          },
+          {
+            "end": 257.6,
+            "start": 257.4,
+            "text": "uns"
+          },
+          {
+            "end": 258.0,
+            "start": 257.6,
+            "text": "30"
+          },
+          {
+            "end": 259.5,
+            "start": 258.0,
+            "text": "itens"
+          },
+          {
+            "end": 260.1,
+            "start": 259.5,
+            "text": "diferentes."
+          },
+          {
+            "end": 260.6,
+            "start": 260.4,
+            "text": "Vocês"
+          },
+          {
+            "end": 260.7,
+            "start": 260.6,
+            "text": "vão"
+          },
+          {
+            "end": 261.2,
+            "start": 260.7,
+            "text": "comer"
+          },
+          {
+            "end": 262.8,
+            "start": 261.2,
+            "text": "carnes"
+          },
+          {
+            "end": 263.4,
+            "start": 262.8,
+            "text": "diferentes,"
+          },
+          {
+            "end": 264.2,
+            "start": 263.7,
+            "text": "entradas,"
+          },
+          {
+            "end": 264.7,
+            "start": 264.3,
+            "text": "arroz,"
+          },
+          {
+            "end": 265.5,
+            "start": 264.9,
+            "text": "feijão,"
+          },
+          {
+            "end": 265.9,
+            "start": 265.6,
+            "text": "feijão"
+          },
+          {
+            "end": 266.6,
+            "start": 265.9,
+            "text": "tropeiro,"
+          },
+          {
+            "end": 268.3,
+            "start": 267.4,
+            "text": "banana,"
+          },
+          {
+            "end": 269.3,
+            "start": 268.8,
+            "text": "yuca,"
+          },
+          {
+            "end": 271.4,
+            "start": 270.8,
+            "text": "diferentes"
+          },
+          {
+            "end": 271.8,
+            "start": 271.4,
+            "text": "tipos"
+          },
+          {
+            "end": 272.0,
+            "start": 271.8,
+            "text": "de"
+          },
+          {
+            "end": 272.6,
+            "start": 272.0,
+            "text": "saladas"
+          },
+          {
+            "end": 273.2,
+            "start": 272.6,
+            "text": "diferentes"
+          },
+          {
+            "end": 273.6,
+            "start": 273.2,
+            "text": "tipos"
+          },
+          {
+            "end": 273.7,
+            "start": 273.6,
+            "text": "de"
+          },
+          {
+            "end": 274.5,
+            "start": 273.7,
+            "text": "aperitivos"
+          },
+          {
+            "end": 274.8,
+            "start": 274.5,
+            "text": "é"
+          },
+          {
+            "end": 275.4,
+            "start": 274.8,
+            "text": "bastante"
+          },
+          {
+            "end": 275.9,
+            "start": 275.4,
+            "text": "comida."
+          }
+        ]
+      },
+      {
+        "end": 276.6,
+        "speaker_label": "Flaviane Mesquita",
+        "speaker_side": "contact",
+        "start": 273.3,
+        "text": "O cuida de vocês é com bebida?",
+        "words": [
+          {
+            "end": 275.2,
+            "start": 273.3,
+            "text": "O"
+          },
+          {
+            "end": 275.4,
+            "start": 275.2,
+            "text": "cuida"
+          },
+          {
+            "end": 275.6,
+            "start": 275.4,
+            "text": "de"
+          },
+          {
+            "end": 275.9,
+            "start": 275.6,
+            "text": "vocês"
+          },
+          {
+            "end": 276.0,
+            "start": 275.9,
+            "text": "é"
+          },
+          {
+            "end": 276.2,
+            "start": 276.0,
+            "text": "com"
+          },
+          {
+            "end": 276.6,
+            "start": 276.2,
+            "text": "bebida?"
+          }
+        ]
+      },
+      {
+        "end": 292.7,
+        "speaker_label": "Andre Raw",
+        "speaker_side": "close-user",
+        "start": 278.5,
+        "text": "Nós fazemos a bebida também. Se você precisar a gente monta o bar completo para você com caipirinha com tropical punch. Aí você fala já eu queria essa bebida aqui. Nós vamos fazer ela para você também.",
+        "words": [
+          {
+            "end": 278.7,
+            "start": 278.5,
+            "text": "Nós"
+          },
+          {
+            "end": 279.1,
+            "start": 278.7,
+            "text": "fazemos"
+          },
+          {
+            "end": 279.2,
+            "start": 279.1,
+            "text": "a"
+          },
+          {
+            "end": 279.5,
+            "start": 279.2,
+            "text": "bebida"
+          },
+          {
+            "end": 279.9,
+            "start": 279.5,
+            "text": "também."
+          },
+          {
+            "end": 281.2,
+            "start": 281.0,
+            "text": "Se"
+          },
+          {
+            "end": 281.3,
+            "start": 281.2,
+            "text": "você"
+          },
+          {
+            "end": 281.7,
+            "start": 281.3,
+            "text": "precisar"
+          },
+          {
+            "end": 282.0,
+            "start": 281.7,
+            "text": "a"
+          },
+          {
+            "end": 282.1,
+            "start": 282.0,
+            "text": "gente"
+          },
+          {
+            "end": 282.3,
+            "start": 282.1,
+            "text": "monta"
+          },
+          {
+            "end": 282.4,
+            "start": 282.3,
+            "text": "o"
+          },
+          {
+            "end": 282.6,
+            "start": 282.4,
+            "text": "bar"
+          },
+          {
+            "end": 283.1,
+            "start": 282.6,
+            "text": "completo"
+          },
+          {
+            "end": 283.3,
+            "start": 283.1,
+            "text": "para"
+          },
+          {
+            "end": 283.5,
+            "start": 283.3,
+            "text": "você"
+          },
+          {
+            "end": 283.8,
+            "start": 283.5,
+            "text": "com"
+          },
+          {
+            "end": 284.6,
+            "start": 283.8,
+            "text": "caipirinha"
+          },
+          {
+            "end": 285.6,
+            "start": 284.6,
+            "text": "com"
+          },
+          {
+            "end": 286.4,
+            "start": 285.6,
+            "text": "tropical"
+          },
+          {
+            "end": 287.1,
+            "start": 286.4,
+            "text": "punch."
+          },
+          {
+            "end": 287.9,
+            "start": 287.8,
+            "text": "Aí"
+          },
+          {
+            "end": 288.0,
+            "start": 287.9,
+            "text": "você"
+          },
+          {
+            "end": 288.2,
+            "start": 288.0,
+            "text": "fala"
+          },
+          {
+            "end": 288.4,
+            "start": 288.2,
+            "text": "já"
+          },
+          {
+            "end": 288.6,
+            "start": 288.4,
+            "text": "eu"
+          },
+          {
+            "end": 288.9,
+            "start": 288.6,
+            "text": "queria"
+          },
+          {
+            "end": 290.1,
+            "start": 288.9,
+            "text": "essa"
+          },
+          {
+            "end": 290.7,
+            "start": 290.1,
+            "text": "bebida"
+          },
+          {
+            "end": 291.0,
+            "start": 290.7,
+            "text": "aqui."
+          },
+          {
+            "end": 291.3,
+            "start": 291.2,
+            "text": "Nós"
+          },
+          {
+            "end": 291.6,
+            "start": 291.3,
+            "text": "vamos"
+          },
+          {
+            "end": 291.9,
+            "start": 291.6,
+            "text": "fazer"
+          },
+          {
+            "end": 292.0,
+            "start": 291.9,
+            "text": "ela"
+          },
+          {
+            "end": 292.2,
+            "start": 292.0,
+            "text": "para"
+          },
+          {
+            "end": 292.4,
+            "start": 292.2,
+            "text": "você"
+          },
+          {
+            "end": 292.7,
+            "start": 292.4,
+            "text": "também."
+          }
+        ]
+      },
+      {
+        "end": 291.2,
+        "speaker_label": "Flaviane Mesquita",
+        "speaker_side": "contact",
+        "start": 288.2,
+        "text": "Entendi.",
+        "words": [
+          {
+            "end": 291.2,
+            "start": 288.2,
+            "text": "Entendi."
+          }
+        ]
+      },
+      {
+        "end": 303.9,
+        "speaker_label": "Flaviane Mesquita",
+        "speaker_side": "contact",
+        "start": 296.3,
+        "text": "Então, tá bom. Eu vou aguardar. Então, eu vou te mandar. Assim que você me mandar, eu entro e já te mando e me manda todo o material para eu dar uma olhada.",
+        "words": [
+          {
+            "end": 296.6,
+            "start": 296.3,
+            "text": "Então,"
+          },
+          {
+            "end": 296.8,
+            "start": 296.7,
+            "text": "tá"
+          },
+          {
+            "end": 297.0,
+            "start": 296.8,
+            "text": "bom."
+          },
+          {
+            "end": 297.2,
+            "start": 297.1,
+            "text": "Eu"
+          },
+          {
+            "end": 297.3,
+            "start": 297.2,
+            "text": "vou"
+          },
+          {
+            "end": 297.8,
+            "start": 297.3,
+            "text": "aguardar."
+          },
+          {
+            "end": 298.0,
+            "start": 297.9,
+            "text": "Então,"
+          },
+          {
+            "end": 298.1,
+            "start": 298.0,
+            "text": "eu"
+          },
+          {
+            "end": 298.2,
+            "start": 298.1,
+            "text": "vou"
+          },
+          {
+            "end": 298.4,
+            "start": 298.2,
+            "text": "te"
+          },
+          {
+            "end": 298.6,
+            "start": 298.4,
+            "text": "mandar."
+          },
+          {
+            "end": 299.0,
+            "start": 298.8,
+            "text": "Assim"
+          },
+          {
+            "end": 299.1,
+            "start": 299.0,
+            "text": "que"
+          },
+          {
+            "end": 299.2,
+            "start": 299.1,
+            "text": "você"
+          },
+          {
+            "end": 299.4,
+            "start": 299.2,
+            "text": "me"
+          },
+          {
+            "end": 299.6,
+            "start": 299.4,
+            "text": "mandar,"
+          },
+          {
+            "end": 300.2,
+            "start": 299.8,
+            "text": "eu"
+          },
+          {
+            "end": 300.6,
+            "start": 300.2,
+            "text": "entro"
+          },
+          {
+            "end": 300.7,
+            "start": 300.6,
+            "text": "e"
+          },
+          {
+            "end": 300.9,
+            "start": 300.7,
+            "text": "já"
+          },
+          {
+            "end": 301.1,
+            "start": 300.9,
+            "text": "te"
+          },
+          {
+            "end": 301.4,
+            "start": 301.1,
+            "text": "mando"
+          },
+          {
+            "end": 301.7,
+            "start": 301.4,
+            "text": "e"
+          },
+          {
+            "end": 301.9,
+            "start": 301.7,
+            "text": "me"
+          },
+          {
+            "end": 302.2,
+            "start": 301.9,
+            "text": "manda"
+          },
+          {
+            "end": 302.4,
+            "start": 302.2,
+            "text": "todo"
+          },
+          {
+            "end": 302.5,
+            "start": 302.4,
+            "text": "o"
+          },
+          {
+            "end": 302.9,
+            "start": 302.5,
+            "text": "material"
+          },
+          {
+            "end": 303.1,
+            "start": 302.9,
+            "text": "para"
+          },
+          {
+            "end": 303.2,
+            "start": 303.1,
+            "text": "eu"
+          },
+          {
+            "end": 303.3,
+            "start": 303.2,
+            "text": "dar"
+          },
+          {
+            "end": 303.5,
+            "start": 303.3,
+            "text": "uma"
+          },
+          {
+            "end": 303.9,
+            "start": 303.5,
+            "text": "olhada."
+          }
+        ]
+      },
+      {
+        "end": 318.0,
+        "speaker_label": "Andre Raw",
+        "speaker_side": "close-user",
+        "start": 301.8,
+        "text": "Tá, eu te mandei agora, uns dois minutinhos atrás, um text message. Se você puder só me confirmar que você recebeu e me mandar de volta o seu e-mail, eu já consigo te enviar essas coisas sim.",
+        "words": [
+          {
+            "end": 304.8,
+            "start": 301.8,
+            "text": "Tá,"
+          },
+          {
+            "end": 305.8,
+            "start": 305.6,
+            "text": "eu"
+          },
+          {
+            "end": 305.9,
+            "start": 305.8,
+            "text": "te"
+          },
+          {
+            "end": 306.2,
+            "start": 305.9,
+            "text": "mandei"
+          },
+          {
+            "end": 306.7,
+            "start": 306.2,
+            "text": "agora,"
+          },
+          {
+            "end": 307.2,
+            "start": 306.9,
+            "text": "uns"
+          },
+          {
+            "end": 307.5,
+            "start": 307.2,
+            "text": "dois"
+          },
+          {
+            "end": 307.9,
+            "start": 307.5,
+            "text": "minutinhos"
+          },
+          {
+            "end": 308.2,
+            "start": 307.9,
+            "text": "atrás,"
+          },
+          {
+            "end": 308.5,
+            "start": 308.3,
+            "text": "um"
+          },
+          {
+            "end": 308.7,
+            "start": 308.5,
+            "text": "text"
+          },
+          {
+            "end": 309.3,
+            "start": 308.7,
+            "text": "message."
+          },
+          {
+            "end": 309.5,
+            "start": 309.4,
+            "text": "Se"
+          },
+          {
+            "end": 309.7,
+            "start": 309.5,
+            "text": "você"
+          },
+          {
+            "end": 310.0,
+            "start": 309.7,
+            "text": "puder"
+          },
+          {
+            "end": 310.1,
+            "start": 310.0,
+            "text": "só"
+          },
+          {
+            "end": 310.3,
+            "start": 310.1,
+            "text": "me"
+          },
+          {
+            "end": 310.8,
+            "start": 310.3,
+            "text": "confirmar"
+          },
+          {
+            "end": 310.9,
+            "start": 310.8,
+            "text": "que"
+          },
+          {
+            "end": 311.1,
+            "start": 310.9,
+            "text": "você"
+          },
+          {
+            "end": 311.7,
+            "start": 311.1,
+            "text": "recebeu"
+          },
+          {
+            "end": 312.3,
+            "start": 311.7,
+            "text": "e"
+          },
+          {
+            "end": 312.8,
+            "start": 312.3,
+            "text": "me"
+          },
+          {
+            "end": 313.1,
+            "start": 312.8,
+            "text": "mandar"
+          },
+          {
+            "end": 313.4,
+            "start": 313.1,
+            "text": "de"
+          },
+          {
+            "end": 313.9,
+            "start": 313.4,
+            "text": "volta"
+          },
+          {
+            "end": 314.6,
+            "start": 313.9,
+            "text": "o"
+          },
+          {
+            "end": 314.9,
+            "start": 314.6,
+            "text": "seu"
+          },
+          {
+            "end": 315.4,
+            "start": 314.9,
+            "text": "e-mail,"
+          },
+          {
+            "end": 315.8,
+            "start": 315.7,
+            "text": "eu"
+          },
+          {
+            "end": 315.9,
+            "start": 315.8,
+            "text": "já"
+          },
+          {
+            "end": 316.4,
+            "start": 315.9,
+            "text": "consigo"
+          },
+          {
+            "end": 316.6,
+            "start": 316.4,
+            "text": "te"
+          },
+          {
+            "end": 317.2,
+            "start": 316.6,
+            "text": "enviar"
+          },
+          {
+            "end": 317.4,
+            "start": 317.2,
+            "text": "essas"
+          },
+          {
+            "end": 317.6,
+            "start": 317.4,
+            "text": "coisas"
+          },
+          {
+            "end": 318.0,
+            "start": 317.6,
+            "text": "sim."
+          }
+        ]
+      },
+      {
+        "end": 316.4,
+        "speaker_label": "Flaviane Mesquita",
+        "speaker_side": "contact",
+        "start": 309.8,
+        "text": "Só um minuto. Só um minuto.",
+        "words": [
+          {
+            "end": 312.8,
+            "start": 309.8,
+            "text": "Só"
+          },
+          {
+            "end": 315.0,
+            "start": 314.9,
+            "text": "um"
+          },
+          {
+            "end": 315.2,
+            "start": 315.0,
+            "text": "minuto."
+          },
+          {
+            "end": 316.2,
+            "start": 315.7,
+            "text": "Só"
+          },
+          {
+            "end": 316.2,
+            "start": 316.2,
+            "text": "um"
+          },
+          {
+            "end": 316.4,
+            "start": 316.2,
+            "text": "minuto."
+          }
+        ]
+      },
+      {
+        "end": 332.2,
+        "speaker_label": "Flaviane Mesquita",
+        "speaker_side": "contact",
+        "start": 328.3,
+        "text": "Sim, visitei.",
+        "words": [
+          {
+            "end": 331.3,
+            "start": 328.3,
+            "text": "Sim,"
+          },
+          {
+            "end": 332.2,
+            "start": 331.7,
+            "text": "visitei."
+          }
+        ]
+      },
+      {
+        "end": 335.4,
+        "speaker_label": "Andre Raw",
+        "speaker_side": "close-user",
+        "start": 334.7,
+        "text": "maravilha.",
+        "words": [
+          {
+            "end": 335.4,
+            "start": 334.7,
+            "text": "maravilha."
+          }
+        ]
+      },
+      {
+        "end": 339.6,
+        "speaker_label": "Flaviane Mesquita",
+        "speaker_side": "contact",
+        "start": 335.4,
+        "text": "Essa cidade é onde vocês têm o escritório?",
+        "words": [
+          {
+            "end": 336.7,
+            "start": 335.4,
+            "text": "Essa"
+          },
+          {
+            "end": 337.3,
+            "start": 336.7,
+            "text": "cidade"
+          },
+          {
+            "end": 337.6,
+            "start": 337.3,
+            "text": "é"
+          },
+          {
+            "end": 338.5,
+            "start": 337.6,
+            "text": "onde"
+          },
+          {
+            "end": 338.8,
+            "start": 338.5,
+            "text": "vocês"
+          },
+          {
+            "end": 338.9,
+            "start": 338.8,
+            "text": "têm"
+          },
+          {
+            "end": 339.0,
+            "start": 338.9,
+            "text": "o"
+          },
+          {
+            "end": 339.6,
+            "start": 339.0,
+            "text": "escritório?"
+          }
+        ]
+      },
+      {
+        "end": 337.4,
+        "speaker_label": "Andre Raw",
+        "speaker_side": "close-user",
+        "start": 336.7,
+        "text": "Estou vendo aqui.",
+        "words": [
+          {
+            "end": 337.0,
+            "start": 336.7,
+            "text": "Estou"
+          },
+          {
+            "end": 337.2,
+            "start": 337.0,
+            "text": "vendo"
+          },
+          {
+            "end": 337.4,
+            "start": 337.2,
+            "text": "aqui."
+          }
+        ]
+      },
+      {
+        "end": 342.4,
+        "speaker_label": "Andre Raw",
+        "speaker_side": "close-user",
+        "start": 339.0,
+        "text": "Essa é a nossa cidade.",
+        "words": [
+          {
+            "end": 341.8,
+            "start": 339.0,
+            "text": "Essa"
+          },
+          {
+            "end": 341.9,
+            "start": 341.8,
+            "text": "é"
+          },
+          {
+            "end": 342.0,
+            "start": 341.9,
+            "text": "a"
+          },
+          {
+            "end": 342.0,
+            "start": 342.0,
+            "text": "nossa"
+          },
+          {
+            "end": 342.4,
+            "start": 342.0,
+            "text": "cidade."
+          }
+        ]
+      },
+      {
+        "end": 349.2,
+        "speaker_label": "Flaviane Mesquita",
+        "speaker_side": "contact",
+        "start": 342.9,
+        "text": "Oi? Alô? Oi?",
+        "words": [
+          {
+            "end": 344.9,
+            "start": 342.9,
+            "text": "Oi?"
+          },
+          {
+            "end": 346.2,
+            "start": 345.8,
+            "text": "Alô?"
+          },
+          {
+            "end": 349.2,
+            "start": 347.6,
+            "text": "Oi?"
+          }
+        ]
+      },
+      {
+        "end": 354.1,
+        "speaker_label": "Flaviane Mesquita",
+        "speaker_side": "contact",
+        "start": 351.3,
+        "text": "Alô? Está mudo o telefone.",
+        "words": [
+          {
+            "end": 352.3,
+            "start": 351.3,
+            "text": "Alô?"
+          },
+          {
+            "end": 353.2,
+            "start": 353.0,
+            "text": "Está"
+          },
+          {
+            "end": 353.4,
+            "start": 353.2,
+            "text": "mudo"
+          },
+          {
+            "end": 353.6,
+            "start": 353.4,
+            "text": "o"
+          },
+          {
+            "end": 354.1,
+            "start": 353.6,
+            "text": "telefone."
+          }
+        ]
+      },
+      {
+        "end": 360.6,
+        "speaker_label": "Flaviane Mesquita",
+        "speaker_side": "contact",
+        "start": 360.2,
+        "text": "Alô?",
+        "words": [
+          {
+            "end": 360.6,
+            "start": 360.2,
+            "text": "Alô?"
+          }
+        ]
+      }
+    ]
+  },
+  "recording_url": "https://api.close.com/call/acti_uKbfNAKB1F8LDgphIx7hPjb7JGRToZ1ff7eI8Yl9prk/recording/",
+  "remote_country_iso": "US",
+  "remote_phone": "+16173209961",
+  "remote_phone_formatted": "+1 617-320-9961",
+  "sequence_id": null,
+  "sequence_name": null,
+  "sequence_subscription_id": null,
+  "source": "Close.io",
+  "status": "completed",
+  "transferred_from": null,
+  "transferred_from_user_id": null,
+  "transferred_to": null,
+  "transferred_to_user_id": null,
+  "updated_by": "user_bnfoZDGbTqBZ4wcDGqRqTwjRKiwLnQ4mpV3i2enPkMt",
+  "updated_by_name": "Andre Raw",
+  "user_id": "user_bnfoZDGbTqBZ4wcDGqRqTwjRKiwLnQ4mpV3i2enPkMt",
+  "user_name": "Andre Raw",
+  "users": [],
+  "voicemail_duration": 0,
+  "voicemail_transcript": null,
+  "voicemail_url": null
+}

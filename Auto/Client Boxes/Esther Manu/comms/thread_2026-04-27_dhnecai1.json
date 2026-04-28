@@ -1,0 +1,82 @@
+{
+  "_type": "EmailThread",
+  "activity_at": "2026-04-27T20:27:36.542000+00:00",
+  "contact_id": null,
+  "created_by": "user_bnfoZDGbTqBZ4wcDGqRqTwjRKiwLnQ4mpV3i2enPkMt",
+  "created_by_name": "Andre Raw",
+  "date_created": "2026-04-27T20:27:36.542000+00:00",
+  "date_updated": "2026-04-27T21:09:06.146000+00:00",
+  "id": "acti_cWYeBJ2CGiAsqtYXTUwPtTCn857nrWhlQCKdhNeCAi1",
+  "importance": {
+    "reason": "most-recent-communication",
+    "type": "important"
+  },
+  "latest_emails": [
+    {
+      "bcc": [],
+      "body_preview": "Hi Esther, Thanks again for reaching out about your birthday party on your event.\nBased on the details I have so far, here are a few ballpark options from Comeketo Catering.\nI used our Comeketo food c",
+      "cc": [],
+      "date_created": "2026-04-27T20:27:35.984000+00:00",
+      "date_sent": "2026-04-27T20:27:36.541000+00:00",
+      "date_updated": "2026-04-27T21:09:06.069000+00:00",
+      "direction": "outgoing",
+      "envelope": {
+        "bcc": [],
+        "cc": [],
+        "date": "Mon, 27 Apr 2026 20:27:36 +0000",
+        "from": [
+          {
+            "email": "team@comeketocatering.com",
+            "name": "Andre Raw"
+          }
+        ],
+        "in_reply_to": null,
+        "is_autoreply": false,
+        "message_id": "<177732165656.7.15300191566570294309@smtpgw.close.com>",
+        "reply_to": [],
+        "sender": [
+          {
+            "email": "team@comeketocatering.com",
+            "name": "Andre Raw"
+          }
+        ],
+        "subject": "Ballpark quote for your event",
+        "to": [
+          {
+            "email": "adwoafremah@gmail.com",
+            "name": ""
+          }
+        ]
+      },
+      "has_attachments": false,
+      "id": "acti_Re9HHx86zh5ghYgtt45n0ZBQuYOUujWQZ3GePmemqBf",
+      "opens_summary": "Opened by adwoafremah@gmail.com (3 times, latest 2026-04-27)",
+      "send_as_id": null,
+      "sender": "Andre Raw <team@comeketocatering.com>",
+      "status": "sent",
+      "subject": "Ballpark quote for your event",
+      "to": [
+        "adwoafremah@gmail.com"
+      ],
+      "user_id": "user_bnfoZDGbTqBZ4wcDGqRqTwjRKiwLnQ4mpV3i2enPkMt"
+    }
+  ],
+  "latest_normalized_subject": "Ballpark quote for your event",
+  "lead_id": "lead_tmpw6jG2WtIUzcZKNbWX7xUVujXmfRDDWzOqGv5MOV1",
+  "n_emails": 1,
+  "organization_id": "orga_pOyYOigKEELdmODukgjigCD5pTRewtmBW1yq6YXkskq",
+  "participants": [
+    {
+      "email": "team@comeketocatering.com",
+      "name": "Andre Raw"
+    }
+  ],
+  "summary": null,
+  "updated_by": "user_bnfoZDGbTqBZ4wcDGqRqTwjRKiwLnQ4mpV3i2enPkMt",
+  "updated_by_name": "Andre Raw",
+  "user_id": "user_bnfoZDGbTqBZ4wcDGqRqTwjRKiwLnQ4mpV3i2enPkMt",
+  "user_name": "Andre Raw",
+  "users": [
+    "user_bnfoZDGbTqBZ4wcDGqRqTwjRKiwLnQ4mpV3i2enPkMt"
+  ]
+}

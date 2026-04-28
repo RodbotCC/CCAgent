@@ -1,0 +1,25 @@
+{
+  "slug": "hugo",
+  "name": "Hugo",
+  "description": null,
+  "created_at": "2026-04-27T22:10:27.005156+00:00",
+  "last_modified": "2026-04-27T22:10:42.431904+00:00",
+  "documents": [
+    {
+      "id": "d_8c1d67740a",
+      "filename": "stage-2-comms.md",
+      "mime": "text/markdown",
+      "type": "md",
+      "size": 3233,
+      "uploaded_at": "2026-04-27T22:10:42.431904+00:00",
+      "extracted_text": "---\nname: stage-2-comms\ndescription: Stage 2 of the Comeketo Client Intelligence Agent. For each lead URL in the latest harvest manifest, load the Close lead page, extract the raw correspondence history (emails, SMS, calls, notes, tasks, opportunities) and write it as a markdown file inside the lead's per-client folder. No editorializing — raw capture only. Use when Stage 1 has produced a manifest and the system needs to populate every lead folder with its current Close-side communication history.\n---\n\n# Stage 2 — Comms Capture\n\nStage 1 produced the lead URLs. This stage retrieves what Close actually\nshows when you load each lead — the full rendered detail page including all\nthe cross-endpoint data Close composes for human view: snapshot, activity\nstream, opportunities, custom fields, contacts, tasks, notes.\n\n## Inputs\n\n- Latest manifest from `state/harvest/<ts>.json` (Stage 1 output).\n\n## What to do (per lead)\n\n1. Ensure `clients/<lead_id>/` exists.\n2. Drop a stub `clients/<lead_id>/01_comms_url.md` containing only the\n   Close URL — this is the seed.\n3. Hand the lead URL to the browser agent. Capture rendered content into\n   a markdown document with this shape:\n\n   ```markdown\n   # <Name>\n\n   **Close URL:** <url>\n   **Captured:** <UTC ISO>\n\n   ## 🪪 Lead Snapshot\n   | Field | Value |\n   |---|---|\n   | Name | ... |\n   | Status | ... |\n   | Owner | ... |\n   | Phone | ... |\n   | Email | ... |\n   | City / Zip | ... |\n   | Event | ... |\n   | Event Date | ... |\n   | Guest Count | ... |\n   | Venue | ... |\n   | Source | ... |\n   | Score Tags | ... |\n   | Opportunity Value | ... |\n   | Open Task | ... |\n   | Last Activity | ... |\n\n   ## 📜 Full Correspondence History\n   <dated entries — emails, SMS, calls, notes, task completions — verbatim>\n   ```\n\n   This format is established in the Hugo example\n   (`Hugo Casillas.md` in the workspace root).\n\n4. Write to `clients/<lead_id>/01_comms.md`. If the file already exists\n   (a prior run captured an earlier snapshot), do NOT overwrite — append\n   a new section under a `### Update — <UTC>` header with new activity\n   only. The original capture remains as the historical anchor.\n\n5. Update the ledger: `comms_url_dropped=true`, `comms_md_written=true`,\n   `last_comms_append_utc=<now>`.\n\n## Discipline\n\n- No editorial layer. Don't summarize. Don't infer. Don't classify.\n  Stages 3–5 do those jobs against the clean raw input.\n- Don't truncate long threads. Hugo's discovery-call notes alone fill 30+\n  bullets; capture them all.\n- Pair leads (lead under one name with partner mentioned in fields/comms):\n  capture under the master `lead_id`. Both partners surface in the same\n  comms file because that's how Close stores it.\n\n## Failure modes\n\n- Lead URL 404s / page won't load → log to ledger as `comms_md_written=false`\n  with reason; surface to operator.\n- Non-Andre-owned lead → still capture comms (these inform routing) but mark\n  with a `_skip_outbound: true` flag in the meta file. Guardrails apply at\n  Stage 6 (composition), not at Stage 2 (capture).\n\n## What this skill does NOT do\n\n- Does not call Sonar, Grok, web_search, or any external profile engine.\n- Does not synthesize. Does not classify. Does not write messages.\n",
+      "summary": "--- name: stage-2-comms description: Stage 2 of the Comeketo Client Intelligence Agent. For each lead URL in the latest harvest manifest, load the Close lead page, extract the raw correspondence histo",
+      "stored_path": "CCAgentindex/reports/hugo/documents/d_8c1d67740a.md"
+    }
+  ]
+}artner A>: ...\n- <Partner B>: ...\n- Who's the closer? Who's the gatekeeper? Who's the financial decider?\n\n## What this means for the conversation (1 paragraph)\n...\n```\n\n## Pair leads: profile both, then write a relationship-dynamic note\n\nThe wife-as-texter / husband-as-validator pattern is itself a profile\noutput. Who's the closer, who's the gatekeeper, who's the financial\ndecider — these are decisions that change the rep's approach.\n\n## Tone\n\nSharp peer briefing another sharp peer about a person they're about to\nmeet. Confident but honest, observational but caring, useful but not\nreductive. Write the human, not the row.\n",
+      "summary": "--- name: stage-4-profile description: Stage 4 of the Comeketo Client Intelligence Agent. Synthesize the profile. Make honest value judgments from the deep dive — altitude, age range, life stage, inco",
+      "stored_path": "CCAgentindex/reports/hugo/documents/d_cbeb8f197a.md"
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 # Comeketo Page-Asset Source Of Truth
 
-Last updated: 2026-04-25 (great trim — 15 pages retired, bedrock data gutted, Pieces-only memory)
+Last updated: 2026-04-28 (verbatim comms backfill across all 28 client boxes)
 Owner: Comeketo app team
 Canonical source: this file is the operational truth for page/asset ownership.
 Policy hook: see `CLAUDE.md` § 5.5 ("Page-asset sitemap — the Done Gate").
@@ -24,6 +24,9 @@ Source: `app.jsx` (`KNOWN_SCREENS` and route switch)
 - `activity`
 - `automation`
 - `intake`
+- `analytics`
+- `delegations`
+- `boxes`
 
 ## Mapping Template (Use For New Sections)
 
@@ -72,7 +75,7 @@ Source: `app.jsx` (`KNOWN_SCREENS` and route switch)
   - `inbox.js` (SecretaryInbox.append — QuickCapture writes go through here)
   - `mission_control_loader.js` (briefing payload — IdeasTray reads `MissionControl.dailyBriefing`)
   - `server.py` (`/api/cells/*`, `/api/claude_code/generate`, `/api/grid_affinity` if behavior changed; `/api/inbox/append` for QuickCapture writes)
-- Last Verified: 2026-04-25
+- Last Verified: 2026-04-27
 - History:
   - 2026-04-25 initial mapping.
   - 2026-04-25 IdeasTray rewrite: replaced the dense ChoiceBlock cards (kind eyebrow + chip + serif headline + subtitle + refine button) with quiet `BriefingIdea` rows (7px accent dot + sans-serif title only, max 5 items). Source moved from grid.cells/chat-extracted bullets to the daily briefing markdown via `extractBriefingIdeas` (regex fast path) and `curateBriefingIdeasViaAI` (AI-curated short titles, cached in localStorage by briefing slug). Click sends "Let's talk about: {title}" to chat. Removed the auto-extract-bullets-from-chat-replies effect that was creating noise. Sweep button forces a fresh AI curation pass.
@@ -107,7 +110,7 @@ Source: `app.jsx` (`KNOWN_SCREENS` and route switch)
   - `automation.jsx` — sub-tab strip + all four sub-screens + supporting components
   - `styles.css` — `auto-*` shell, `tg-*` Triggers, `sap-*` Sub-agent planner
   - `server.py` — workflows/catalog/triggers/agent_plans endpoints
-- Last Verified: 2026-04-25
+- Last Verified: 2026-04-27
 - History:
   - 2026-04-25 initial mapping.
   - 2026-04-25 sub-tab strip pass: routing wrapper (`AutomationShell` + `AutomationSubTabStrip`) under the automation tab, with secondary nav for Workflows · Sub-agents · State · Hooks · Triggers. Workflows preserved unchanged. Triggers screen built end-to-end (daily clock + type cards + cron composer + configured list backed by `CCAgentindex/triggers/*.json`).
@@ -118,6 +121,8 @@ Source: `app.jsx` (`KNOWN_SCREENS` and route switch)
   - 2026-04-25 triggers polish (no-forms pass): retired the raw 5-field cron input as the only composer. Type cards became `<button>` elements that switch the active composer. Each kind got its own composer (`TgComposerCron` w/ presets — Every weekday / Every day / Every hour at :MM / Every N minutes / Fridays only / Custom; `TgComposerWatch` w/ bedrock-path picker + debounce chips + recursive flag; `TgComposerWebhook` w/ service dropdown + auto-generated endpoint URL + auth chips; `TgComposerRule` w/ pattern-type→filter cascade; `TgComposerRibbon` w/ source→pattern cascade). Every composer carries a workflow-target picker fed by `/api/workflows/list`. Auto-suggested labels (typed label optional). Configured rows show the linked workflow as a clickable mint pill that calls `go.replace("automation", { tab: "workflows", load: <slug> })`. `AutomationShell` forwards a new `loadSlug` prop to `AutomationGraphScreen`, which loads that workflow on mount/change via the existing `loadWorkflow` function (idempotent via `lastLoadedSlugRef`). Backend `_trigger_save` extended to accept `workflow_slug` + per-kind extras (`preset`, `recursive`, `service`, `auth`, `pattern_type`, `filter`, `source`); `_triggers_list` now surfaces them.
   - 2026-04-25 André Lead Coverage workflow authored: wrote `CCAgentindex/workflows/andre-lead-coverage.json` (55 nodes, 110 connections, 2220×2400px canvas) and registered under `indexes/index.json[workflows]` with an `automation_workflow_create` ledger line. Spec: 13 triggers (4 lead-source events + 4 maintenance crons + 4 report crons + 1 night safety sweep), 5 reference state stores (André identity / NEPQ playbook / Slack channel map / lead pipeline / activity ledger), 3 Rodbot actors (intake classifier, owner watcher, response classifier), 4 chained eligibility filters (owner / contact / status / not-already-active), 3 setup actions (Close tag / cadence-started note / report tracking register), 9-node cadence engine (sequencer + Day 1 / Day 1+3h / Day 2 / Day 3 / Day 4 / Day 5 / Day 6 / Day 7 / cadence-complete), 6 response branches (call-time→calendar+confirm SMS, pricing reply, tasting reply, send-info reply, not-interested stop), 4 delivery sinks (Twilio SMS, Gmail send, #andre-leads Slack, Close note writer), 4 report builders (morning 8:30 AM / midday 1:00 PM / night 8:30 PM / safety 8:45 PM) plus snapshot store and #andre-daily-report Slack sink. Loadable via the workflow picker on the Workflows sub-tab.
   - 2026-04-25 André workflow v2 — full-spec rebuild against 11 reference docs: replaced v1 with a 106-node / 232-connection workflow grounded in `SKILL.md`, `eace-loop.md`, `post-processing.md`, `safety-rules.md`, `smart-view-map.md`, `cadence-playbook.md`, `response-classification.md`, `state-schema.md`, `reporting-playbook.md`, `scheduled_task_prompts.md`, `dry_run_test_plan.md`. Architecture: 9 blue diamond Smart Views as state nodes (the operating surface), 8 reference state files (`state/leads/`, `state/snapshots/`, `state/errors/`, `state/runs/`, `.env`, `diamond_views.json`, `cadence-playbook.md`, `response-classification.md`), 9 scheduled job triggers (intake 5m / ownership-sync 10m / response-sync 10m / cadence-sender 15m / call-time-reminder 15m + morning 8:30 / midday 1:00 / night 8:30 / safety 8:45), per-job EACE loop columns (Explore → Audit → Connect → Execute → Post-EACE = 5 nodes × 9 jobs = 45 nodes), 3 kill switches (`DRY_RUN`, `AUTOMATION_PAUSED`, per-lead `cadence_status: paused`), triple anti-duplicate defense (ledger / Close-activity / idempotency-key), 11-day cadence flow (Day 1 / Day 1+3-4h / Day 2-10 + cadence-complete), 7 response classification branches in priority order (not_interested → unclear_response → call_time_given → tasting_interest → pricing_question → send_info → needs_manual_review), risk-flag bank (9 canonical flags), 6 delivery sinks (Close API SMS activity / Close API email activity / Close API note / Slack DM `D0AMX3BV64T` / Slack team `C0AV913L1LJ` / `slack_schedule_message` for T-5 reminders). Every node carries the source-spec citation in its `description`. Canvas: 2540×2120px. metadata.version = 2; spec_files lists all 11 references for export traceability.
+  - 2026-04-27 Rodbot graph recovery pass: restored authoring controls for net-new graphs (`New`) and branch-save workflow cloning (`Save As`) in the Workflows left rail; `Save As` now forks a new workflow id/name and persists with unique slug generation to avoid overwrite collisions. Rodbot dispatcher upgraded so fast-path only triggers on terse one-shot add commands, while longer prompts route through LLM planning. Expanded Rodbot op surface in graph rail to accept `update_node`, `update_connection`, and `delete_connection` in addition to add/delete node + add connection, enabling deeper AI-driven automation edits rather than preset-only inserts. Prompt schema updated to canonical edge kinds (`data/reference/trigger/conditional`). Cache-bust: `automation` 16→17.
+  - 2026-04-27 automation polish + Rodbot batch-op fix: fixed multi-op apply race by batching Rodbot ops into a single graph commit (`onApplyOps`) so replies that contain multiple node/edge mutations no longer collapse to one visible change. Refined workflow header controls to wrap cleanly within the left rail and switched button styling to deck-compatible paper/lavender chip tone (no overflow into panel chrome). Updated Rodbot chat rail bubbles to the intake-style lavender panel feel for AI turns. Cache-busts: `automation` 17→18, `styles` 90→91.
   - 2026-04-25 great trim: untouched. Workflows / sub-agents / state / hooks / triggers sub-tabs all preserved.
 
 ## Page: `activity`
@@ -154,17 +159,23 @@ Source: `app.jsx` (`KNOWN_SCREENS` and route switch)
   - AI provider/key/model controls
   - Demo mode and chat enhancement toggles
   - Pieces model selector
+  - MCP server / delegation target status registry (GitHub, ClickUp, Close, Claude Code, Cursor)
+  - Credential editor for MCP/connector keys (masked save/clear flow to `.env`)
 - Asset Ownership:
   - Render: `screens.jsx` `SettingsScreen`, `IntelligencePanel`.
   - Data: `tweaks` state in `app.jsx` persisted to localStorage `secretary.tweaks`.
+  - API: `GET /api/status`, `GET /api/settings/mcp_credentials`, `POST /api/settings/mcp_credentials/save`.
   - Integrations: `window.SecretaryAI`, `window.Comeketoi18n`.
   - Styles: settings classes in `styles.css`.
   - Side effects: writes localStorage values; no direct destructive server write from toggles.
-- Change Checklist: `app.jsx`, `screens.jsx`, `ai.js`, `i18n.js`, `styles.css`.
-- Last Verified: 2026-04-25
+- Change Checklist: `app.jsx`, `screens.jsx`, `server.py` (`/api/status`), `ai.js`, `i18n.js`, `styles.css`.
+- Last Verified: 2026-04-27
 - History:
   - 2026-04-25 initial mapping.
   - 2026-04-25 great trim: stripped density/frames/gestures/prediction/auto-commit/memory rows from `SettingsScreen` + `TweaksPanel`. Remaining knobs: theme, demo mode, language, intelligence panel (api key + provider + model), prompt-enhance, pieces model, reset.
+  - 2026-04-27 MCP control layer: added a dedicated "MCP servers + delegation targets" section with live status refresh from `/api/status`. Surfaces per-target availability + connector detail + write-approval policy for GitHub/ClickUp/Close/Claude/Cursor and links directly into the Delegations action zone.
+  - 2026-04-27 credential wiring: added masked token inputs in Settings for `OPENAI_API_KEY`, `GITHUB_TOKEN`, `CLICKUP_API_TOKEN`, and `CLOSE_API_KEY` (save/clear). Backend now supports `/api/settings/mcp_credentials` + `/api/settings/mcp_credentials/save`, writes allowed keys into local `.env`, updates in-memory env map, and logs `settings_mcp_credentials_save` to activity ledger.
+  - 2026-04-27 model-default alignment: preprocess/reflection passes now inherit the active Settings model (`tweaks.openaiModel`) instead of hard-defaulting to `gpt-5.4-mini`, so operators can run GPT-5.4 end-to-end when selected.
 
 ## Page: `leads`
 
@@ -297,11 +308,131 @@ Source: `app.jsx` (`KNOWN_SCREENS` and route switch)
     - document delete: `/api/reports/<slug>/documents/<id>/delete`
   - Styles: `ix-*` classes in `styles.css`.
   - Side effects: report/document persistence and Q&A history updates.
-- Change Checklist: `screens.jsx`, `chat.js` attachment helpers (if shared), `server.py` (`/api/reports/*`, `/api/attachments/upload`), `styles.css`.
-- Last Verified: 2026-04-25
+- Change Checklist: `screens.jsx`, `chat.js` attachment helpers (if shared), `server.py` (`/api/reports/*`, `/api/attachments/upload`), `styles.css`, `Secretary.html` (cache-bust when JS/CSS changes).
+- Last Verified: 2026-04-27
 - History:
   - 2026-04-25 initial mapping.
   - 2026-04-25 great trim: removed `onAddCommitment` prop and any commitment-creation code paths; main intake import flow intact.
+  - 2026-04-27 ingestion hardening + format expansion: `IntakeReportDetail` now queues multi-file drops/picker uploads sequentially to prevent threaded write races, quick-prompt templates expanded for OCR/totals/consistency/deadline asks, dropzone copy and picker accept list broadened (`xlsx/xls`, `docx/doc`, `html`, `js/ts`, `yaml/xml/jsonl`). Backend (`server.py`) added per-report ingest locks, image OCR via provider vision path, and extraction support for code/text variants plus `xlsx`/`docx` parsing (with graceful `.xls`/`.doc` guidance fallbacks). Cache-bust: `screens.jsx` 71→72 in `Secretary.html`.
+  - 2026-04-27 right-click polish pass: added context menus across intake surfaces using shared `useContextMenu`/`ContextMenu` primitives. `IntakeReportsList` cards now expose open/copy/delete actions; `IntakeReportDetail` document cards now expose ask-from-doc/open-source/copy/remove actions; Q&A entries now expose re-ask/copy actions. Cache-bust: `screens.jsx` 72→73 in `Secretary.html`.
+  - 2026-04-27 delegations handoff wiring: intake right-click menus now include `Send ... to delegations` actions for report documents and Q&A turns, creating editable delegation drafts before execution. Cache-bust: `screens.jsx` 75→76.
+  - 2026-04-27 preprocess model sync: report Q&A preprocessor (`/api/chat/preprocess`) now receives the selected Settings model and carries that model through thinking-trace metadata, removing hardcoded mini defaults in intake ask flow. Cache-bust: `screens.jsx` 92→93.
+
+## Page: `delegations`
+
+- Entry Points: topbar `delegations` chip; chat and context-menu handoff actions route here.
+- Primary Screen Component: `DelegationsScreen` in `screens.jsx`.
+- Assets On Page:
+  - Draft queue columns (draft / pending approval / running+history states)
+  - Visual channel picker cards (Claude Code/GitHub/ClickUp/Close/Cursor) with readiness indicators and one-click target assignment
+  - Final-edit panel (label, prompt, policy target/intent, timeout, cwd)
+  - Markdown-first final-edit preview (prompt always rendered as markdown while editing)
+  - Rewrite-with-AI helper for prompt edits
+  - Explicit action CTAs: save / undo / run read / request write approval / approve+execute write / reject / delete
+  - Right-click menus on draft cards + run timeline rows + channel cards
+  - Inline action feedback strip (`ok/error/neutral`) after every critical interaction
+  - Execution timeline of delegation runs
+- Asset Ownership:
+  - Render: `screens.jsx` (`DelegationsScreen`, `sendToDelegationsDraft` bridge).
+  - Router/nav: `app.jsx` route wiring (`KNOWN_SCREENS` + `route.name === "delegations"`), `components.jsx` topbar chip + breadcrumb label.
+  - Client API layer: `delegator.js` draft lifecycle methods (`drafts`, `createDraft`, `updateDraft`, `deleteDraft`, `submitDraft`, `rewriteDraft`) alongside run polling.
+  - API:
+    - runs: `GET/POST /api/delegate`, `GET /api/delegate/<id>`
+    - drafts: `GET /api/delegations/drafts`, `POST /api/delegations/drafts/{create|update|delete|submit|rewrite|undo}`
+    - status: `GET /api/status` includes `github_mcp` and `delegation_targets` availability details.
+  - Policy/security: `server.py` enforces target-aware delegation policy (read routes safe; writes for connector targets require explicit approval; GitHub additionally blocked when MCP unavailable).
+  - Storage/audit:
+    - run files: `CCAgentindex/_ledger/delegations/<request_id>.json`
+    - draft store: `CCAgentindex/_ledger/delegation_drafts.json`
+    - draft events: `CCAgentindex/_ledger/delegation_draft_events.jsonl`
+    - activity stream mirrors dispatch events in `CCAgentindex/_ledger/activity.jsonl`.
+  - Styles: reuses `ix-*` intake card/editor primitives + selected-card enhancement in `styles.css`.
+  - Side effects: draft persistence, approval-state transitions, dispatch execution via Claude subprocess.
+- Change Checklist: `app.jsx`, `components.jsx`, `screens.jsx`, `delegator.js`, `server.py`, `styles.css`, `Secretary.html` (cache-bust), `page_asset_sitemap.md`.
+- Last Verified: 2026-04-27
+- History:
+  - 2026-04-27 page restored as standalone route and promoted to action-zone workflow. Added universal draft-first handoff bridge, final-edit UI, write-approval controls, server-side GitHub policy gate, and draft/run audit ledgers. Connected first send-points: chat rail, fullscreen chat, people context menu, intake doc/Q&A menus. Cache-busts: `styles` 78→79, `delegator` 2→3, `chat` 7→8, `components` 61→62, `screens` 75→76, `app` 49→50.
+  - 2026-04-27 action-zone polish: target picker expanded to `general/github/clickup/close/claude_code/cursor`, write approval flow generalized per target, markdown preview added in final edit (prevents raw-asterisk/janky rendering), draft undo endpoint + UI control added, and right-click menus now cover both draft cards (open/undo/duplicate/copy/delete) and run timeline rows (copy/open-linked-draft).
+  - 2026-04-27 clarity/feedback pass: reintroduced a prominent channel-picker surface with color-coded target cards, restored “where is this going?” clarity via one-click target binding + right-click target actions, added action feedback strip for immediate interaction confirmation, and removed nested-scroll behavior in markdown preview to keep the page on a single reading surface. Cache-busts: `styles` 88→89, `screens` 90→91.
+
+## Page: `boxes`
+
+- Entry Points: topbar `boxes` chip; direct route navigation via app history stack.
+- Primary Screen Component: `BoxesScreen` in `screens.jsx`.
+- Assets On Page:
+  - Roster/detail mode scoped to the focused pair (`hugo_casillas`, `brenda_steve*`) with explicit back-to-roster action
+  - Search + refresh/poll controls with pair-focused rendering while design system hardening is in progress
+  - Unified section nav (`state/profile/comms/enrichment/7-day plan/agents/logic`) inside one panel
+  - In-site dossier reader transforms section text into styled narrative cards (no iframe or legacy html embed surface)
+  - Lead-specific renderer slots: `hugo_casillas` + `brenda_steve` with custom layouts
+  - Markdown-first rich renderer (`boxes-md-rich`) with styled admonition blockquotes, panelized section cards, and design-kit text rhythm
+  - Right-click actions on dossier section panels (copy section text/name, send section to delegations)
+  - Per-box checklist rail + completeness scoring (`thin/partial/strong`) with panel and card color-coding
+  - Horizontal rails used only for compact checklist navigation; primary reading is vertical single-surface flow
+  - Mismatch diagnostics (unlinked box folders + people missing canonical boxes)
+  - Right-click actions on box cards and page cards
+  - Per-box verbatim communications: `01b_comms_verbatim.md` (chronological, full email bodies + speaker-labeled call/voicemail transcripts) plus `comms/<type>_<YYYY-MM-DD>_<id>.json` raw Close payloads (one file per call/meeting/email/sms/whatsapp/thread). Sits alongside the curated `01_comms.md` exec summary; not yet bound to a UI section but available for future renderer hookup.
+- Asset Ownership:
+  - Render: `screens.jsx` (`BoxesScreen` + context-menu wiring + delegation handoff).
+  - Router/nav: `app.jsx` (`KNOWN_SCREENS` + route switch), `components.jsx` topbar chip (`layers` icon).
+  - Data source: direct server API reads from `Auto/Client Boxes`, `Auto/Staff Boxes`, and `Auto/orchestrator/state/*.html`.
+  - API:
+    - `GET /api/boxes/list`
+    - `GET /api/boxes/<id>`
+    - `GET /api/boxes/<id>/html`
+    - `GET /api/boxes/<id>/template/<slug>` (virtual html templates)
+    - `GET /api/boxes/<id>` now includes `sections.state_touches`, `sections.enrichment_markdown`, `sections.agents_markdown`
+  - Loader binding: `mission_control_loader.js` (`fBoxes`) hydrates `MissionControl.boxes`, `boxesById`, `boxesGrouped`, `boxesMismatch`, and exposes `window.MissionControlRefreshBoxes()`.
+  - Styles: `.boxes-*` classes in `styles.css` plus existing `ix-*` primitives.
+  - Side effects: read-only filesystem discovery of `Auto` directory; optional delegation draft creation via `sendToDelegationsDraft` from box menu actions.
+- Change Checklist: `server.py`, `mission_control_loader.js`, `app.jsx`, `components.jsx`, `screens.jsx`, `styles.css`, `Secretary.html`, `page_asset_sitemap.md`.
+- Last Verified: 2026-04-28
+- History:
+  - 2026-04-28 verbatim comms backfill: pulled full Close.com conversation history for all 28 client boxes via direct `api.close.com/api/v1` access (calls with `recording_transcript`/`voicemail_transcript`, meetings with `transcripts`, emails with `body_text`/`body_html`, sms, whatsapp, email_threads). Per-box outputs: `01b_comms_verbatim.md` (chronological narrative, ~10–62KB per lead) and `comms/<type>_<YYYY-MM-DD>_<id>.json` raw payloads (8–43 files per lead). Existing `01_comms.md` summaries left untouched. Closes the gap where André's call content was previously summary-only — speaker-labeled transcripts now ground every assertion. Pull script lives at `outputs/pull_full_comms.py` (one-shot; not yet promoted into the bedrock). Total: 582 raw activity payloads pulled across 28 leads; 0 boxes missing.
+  - 2026-04-27 initial boxes runtime pass: introduced direct Auto-source APIs and a new top-level Boxes page. Server now parses canonical stage files (`00_meta`, `01_comms`, `04_profile`, `05_seven_day_plan`, optional logic/skills/alerts/ledger), resolves html demos (orchestrator + per-box), and reports mismatch diagnostics. Frontend adds topbar route, MissionControl boxes hydration, right-click actions, and live preview iframe. Cache-busts: `styles` 80→81, `mission_control_loader` 8→9, `components` 62→63, `screens` 81→82, `app` 50→51.
+  - 2026-04-27 boxes layout simplification pass: removed the separate html side panel and merged navigation/content into one main panel. Added page-card launcher mode (`pages`) so html files open in-panel as native pages, with quick back-to-cards flow and no extra split panes. Cache-busts: `styles` 81→82, `screens` 82→83.
+  - 2026-04-27 completeness workspace pass: each box now gets generated virtual template pages (`overview`, `checklist`, `action_board`) from server-side `/api/boxes/<id>/template/<slug>`, plus checklist scoring in list/detail APIs. Frontend adds health color-coding, checklist rail, horizontal card rails, and auto-reset scroll-to-top on box/section changes so operators do not lose context in deep-scroll states.
+  - 2026-04-27 lead-dossier mode pass: client boxes now support focused navigation where roster is hidden after selection and restored via explicit back action. Added starter-workset filter for the first 10 target leads and expanded section model to `state/comms/profile/enrichment/7-day plan/agents/logic`, with state auto-derived as last five touch bullets from comms and enrichment phrased as "operationally usable context vs protected/off-limits context."
+  - 2026-04-27 renderer pass: removed pages/html embed tab from boxes UI and replaced markdown-dump output with a native dossier renderer that turns section text into styled narrative cards and bullet blocks. Top metadata converted from dense card grid to compact fact pills + readiness bar to reduce visual clutter.
+  - 2026-04-27 specialization pass: added first per-lead dossier template for Hugo Casillas (`screens.jsx`), including markdown-table extraction, Close-link banner, structured snapshot table, and narrative/action split cards. This creates the pattern to roll out bespoke renderers across the remaining starter leads one-by-one.
+  - 2026-04-27 markdown/design-kit pass: switched dossier body rendering to markdown-first cards with custom admonition styling (`NOTE/WARN/TODO` → visual callouts), and added section-level context menu actions so operators can right-click any section to copy or hand off to delegations.
+  - 2026-04-27 specialized template #2: `brenda_steve` now renders as a pair-decision dossier with primary/secondary decision strip, Close-link banner, comms timeline cards (from `###` blocks), day-plan execution cards (from `Day n` blocks), and logic/action rule cards. This is built as a dedicated renderer in `screens.jsx` and uses `.brenda-*` style ownership in `styles.css`.
+  - 2026-04-27 boxes design-kit convergence pass: applied the new `/Downloads/Boxes` visual language to in-app dossier pages (tone-coded section admonition headers, receipt-style state feed, enrichment split into operational vs protected lanes, and tokenized panel styling) while keeping right-click delegation actions and markdown-native rendering. Scope remains Hugo + Brenda/Steve only. Cache-busts: `styles` 89→90, `screens` 91→92.
+
+## Page: `analytics`
+
+- Entry Points: topbar `analytics` chip (between intake and automation, `bar-chart-2` icon).
+- Primary Screen Component: `AnalyticsScreen` in `screens.jsx`; first panel `ConversationIntelligencePanel`. Helpers: `Sparkline`, `ChannelBars`.
+- Assets On Page:
+  - Header: ANALYTICS · CONVERSATION INTELLIGENCE eyebrow, h1 title, generated-at relative + window dates, refresh button.
+  - 4-tile KPI grid: TOTALS (mint), DIRECTION (sky, in/out split), ACTIVE (peach), SILENT (blush). Design-deck tile: eyebrow + serif num + body + bar.
+  - Daily Pulse: SVG sparkline across `timeseries[].total` with hover tooltips and date axis labels.
+  - Channel Mix: horizontal bars per channel (8-tone palette), with count + share %.
+  - Most Active Leads: top 5 rows with rank, name, count, last-touched relative, top channels.
+  - Response Patterns: lavender card with median/mean hours + n_pairs.
+  - Full Narrative: collapsible markdown render of the sibling .md file.
+- Asset Ownership:
+  - Render: `screens.jsx` (`AnalyticsScreen`, `ConversationIntelligencePanel`, `Sparkline`, `ChannelBars`).
+  - Routing: `app.jsx` `KNOWN_SCREENS` includes `"analytics"`; route handler renders `<AnalyticsScreen go={go} />`. Topbar prop: `onOpenAnalytics`.
+  - Topbar: `components.jsx` Topbar accepts `onOpenAnalytics`; chip placed between `intake` and `automation` with `bar-chart-2` icon.
+  - API: `/api/intelligence/conversation/latest` in `server.py` returns the newest `CCAgentindex/intelligence/sales/conversation/*.json` payload. Sibling `.md` is fetched directly via the static file server at `CCAgentindex/intelligence/sales/conversation/<slug>.md`.
+  - Data: `mission_control_loader.js` loads latest run via `fLatestConversationIntelligence()`, exposes as `MissionControl.conversationIntelligence` (`{slug, payload, mtime}`); also fed into `ai_instructions.js` BEDROCK STRUCTURED TRUTH section so chat agent can answer comms-volume questions.
+  - Source data: `Onboard Scripts/build_conversation_intelligence.py` (rewritten 2026-04-27 — 30-day rolling window aggregation over `CCAgentindex/people/*.json` with `kind:"lead"`).
+  - Output: `CCAgentindex/intelligence/sales/conversation/YYYY-MM-DD.{md,json}` — paired files; the JSON is the Analytics page payload, the markdown is the human narrative.
+  - Icons: `lucide.js` adds `bar-chart-2` (topbar chip) and `refresh-cw` (refresh button).
+  - Styles: `.analytics-screen`, `.ci-panel`, `.ci-head`, `.ci-eyebrow`, `.ci-title`, `.ci-sub`, `.ci-refresh`, `.ci-kpis`, `.ci-tile`, `.ci-tile-{mint,sky,peach,blush}`, `.ci-tile-eyebrow`, `.ci-tile-num`, `.ci-num-{in,out,slash}`, `.ci-tile-body`, `.ci-tile-bar`, `.ci-section`, `.ci-section-head{,-toggle}`, `.ci-section-title`, `.ci-section-sub`, `.ci-empty`, `.ci-spark`, `.ci-spark-svg`, `.ci-spark-line`, `.ci-spark-fill`, `.ci-spark-dot`, `.ci-spark-labels`, `.ci-channels`, `.ci-chan{,-label,-track,-bar,-num,-share}`, `.ci-chan-{mint,sky,peach,lemon,sage,blush,lav}`, `.ci-leads`, `.ci-lead-{row,rank,name,count,meta,channels}`, `.ci-response{,-row,-stat,-num,-label}`, `.ci-narrative`. Tokens: 8-tone tile palette per design deck.
+- Change Checklist: `screens.jsx`, `components.jsx` (Topbar prop + chip), `app.jsx` (KNOWN_SCREENS + route + Topbar wiring), `mission_control_loader.js`, `ai_instructions.js` (CI summary block), `server.py` (`/api/intelligence/conversation/latest`), `lucide.js` (icons), `styles.css` (`.ci-*`), `Secretary.html` cache-busts, `CCAgentindex/intelligence/MANIFEST.md` (script status), `Onboard Scripts/build_conversation_intelligence.py`.
+- Last Verified: 2026-04-27
+- History:
+  - 2026-04-27 page restored as Conversation Intelligence flag-bearer. Script rewritten: paths rebased on `CCAgentindex/people` (not legacy `phone_call_transcript_library/`), 30-day rolling window with `--days` CLI override, dual `.md` + `.json` output. First sweep: 141 comms across 28 leads (31 in / 110 out, peak day 2026-04-23 with 29 comms, busiest channel sms, busiest lead Kesia De Assis Lira). Median response 0.82h across 21 inbound→outbound pairs <24h. AnalyticsScreen + ConversationIntelligencePanel + Sparkline + ChannelBars new in `screens.jsx`. New endpoint `/api/intelligence/conversation/latest` in `server.py`. New mission control loader fetcher `fLatestConversationIntelligence()`. Icons added: `bar-chart-2`, `refresh-cw`. Cache-busts: styles 77→78, lucide 8→9, components 60→61, screens 67→68, app 48→49, mission_control_loader 7→8, ai_instructions 10→11. Manifest row flipped to **operational**.
+  - 2026-04-27 Source Channel Intelligence panel added as primary analytics view. Old `AnalyticsScreen` renamed to `ConversationIntelligenceTab` (still accessible as 4th tab). New `AnalyticsScreen` loads `CCAgentindex/analytics/source_channel_snapshot.json` (opportunity-based, generated by `analytics_source_channels.py`). Tabs: Source Channels (bar chart + donut + source table), Owner Performance (table + per-owner bar cards), Lead Profiles (filterable/sortable table, 30/page), Conversation Intel (existing CI panel). First sweep: 621 leads · 666 opps · 35 sources · 6 owners · top source Facebook Paid (295 leads, 4.4% win) · top win-rate ComeketoCatering.com (24.4%). Bedrock: `CCAgentindex/analytics/source_channel_snapshot.json` registered in `indexes/index.json` under key `"analytics"`. New helpers: `AnalyticsDonut`, `AnalyticsLeadTable`. Cache-bust: screens 68→69.
+  - 2026-04-27 Upcoming Events Registry added. New script `Onboard Scripts/analytics_upcoming_events.py` fetches 4,569 opportunities across 365d lookback with 4 event custom fields (event_datetime, event_type, guest_count, venue_type). Filters to 180d lookahead window. First sweep: 409 upcoming events · 25,696 total guests · $737.8k booked · next event in 4 days. Monthly peak: June 2026 (102 events, $203k). Event type breakdown: 236 weddings, 27 graduations, 20 birthdays, 11 baby showers, 5 quinceañeras. AnalyticsScreen: stat strip expanded 5→6 tiles (added "Events booked" peach tile); tabs expanded 5→6 (added "Upcoming Events" between Pipeline and Leads); Events tab shows 4-tile header stats, dual-overlay monthly bar chart (volume + revenue), event type breakdown, monthly-grouped event timeline with date/type chip/guest count/venue/owner/value/status per row, urgent countdown for events ≤14 days out. All 3 snapshots loaded in parallel via Promise.all. Bedrock: `CCAgentindex/analytics/upcoming_events_snapshot.json` registered in `indexes/index.json`. Cache-bust: screens 70→71.
+  - 2026-04-27 Seller Performance & Pipeline Funnel added. New script `Onboard Scripts/analytics_seller_performance.py` fetches 666 opportunities (extended fields: `date_won`, `value`, `pipeline_name`) and computes per-owner pipeline_value, avg_won_value, median_days_to_close, top_active_stages, plus global pipeline funnel by status_label. First sweep: 666 opps · 79 won · 273 active · pipeline $496.5k · won value $241.2k · median close 27.3d · 6 owners · 27 stages. AnalyticsScreen: stat strip expanded 4→5 tiles (added "Active pipeline" sky tile); tabs expanded 4→5 (added "Pipeline Funnel" between owners and leads); owners tab enriched with pipeline $, avg deal, median close, top stages when perf data available; new Pipeline Funnel tab shows global stats (4 tiles) + active-stages bar chart + won-stages bar chart. Both snapshots loaded in parallel with Promise.all; perf failure degrades gracefully. Bedrock: `CCAgentindex/analytics/seller_performance_snapshot.json` registered in `indexes/index.json` under `"analytics"`. Cache-bust: screens 69→70.
+  - 2026-04-27 Analytics interactivity layer added. New components: `AnalyticsContextMenu` (dark floating menu, positioned at cursor, escape/outside-click dismissal, dividers, icon+label+sub rows) and `AnalyticsToast` (fixed bottom-right, auto-dismisses 2.4s, mint ✓ icon). New AnalyticsScreen state: `ctxMenu`, `spotlight`, `toastMsg`, `viewModes`. Helpers: `openCtx`, `closeCtx`, `showToast`, `copyText`, `spotlightToggle`, `spotDim`, `openInClose`, `setViewMode`, `ViewToggle` component. Right-click menus wired on: source chart bars (spotlight/copy/Close search/switch to table), source table rows (spotlight/copy/Close search), owner table rows (spotlight/copy/Close search/go to Win-Loss), win-loss event-type rows (spotlight/copy/Close search/go to Revenue), win-loss guest-bucket rows (spotlight/copy), stage-of-death rows (spotlight/copy/Close search), revenue monthly bars (copy/go to Events). View toggles: sources (Chart▬|Table≡), winloss (Rates↗|Counts#), revenue (Monthly▬|Cumulative∑). Spotlight badge: fixed top-right, lemon color, shows spotlighted segment name, dismiss X. Cumulative revenue mode: running total shown in lavender. Counts mode on Win/Loss: shows W/L absolute counts instead of %. Cache-bust: screens 74→75.
+  - 2026-04-27 Revenue & Growth Intelligence added. New script `Onboard Scripts/analytics_revenue_trends.py` fetches 8,514 opportunities (730d / 24-month window) and computes: monthly won revenue trend (18-month chart), YoY comparison (revenue +3.3%, avg deal +5.1%, lead volume -17.9% — quality-over-quantity shift), deal size distribution histogram + percentiles (median $2.0k · P75 $4.1k · max $25.6k), revenue concentration Pareto (top 20% of deals = 52.4% of revenue), source revenue share (other/marketplace/website_direct/social_media top 4), event type revenue share (weddings dominate), peak booking months heatmap (March peak at $195.8k). AnalyticsScreen: stat strip expanded 7→8 tiles (added "YoY revenue" mint/rose growth tile); tabs expanded 7→8 (added "Revenue & Growth" between Win/Loss and Leads); Revenue tab shows YoY 4-tile comparison with growth badges, 18-month revenue bar chart, deal size histogram, Pareto concentration bars, source revenue bars, peak booking month heatmap, event type revenue bars, summary banner. GrowthBadge helper renders ↑/↓ arrow with color. Bedrock: `CCAgentindex/analytics/revenue_trends_snapshot.json` registered in `indexes/index.json` under `"analytics"`. Cache-bust: screens 73→74.
+  - 2026-04-27 Win/Loss Conversion Intelligence added. New script `Onboard Scripts/analytics_win_loss.py` fetches 4,569 opportunities (365d window) and computes conversion rates across 10 dimensions: event type, guest bucket, value bucket, source family, source channel, customer type, owner, stage-of-death, owner×source, etype×source, and time patterns. First sweep: 553 won · 3437 lost · 12.1% overall win rate · won value $1.4M · lost pipeline $4.5M · median close 25.1d. Top performers: corporate (48.6% win) and phone_inbound (39.2%). Weddings lead volume at 19.6% win. Stage of death: 71.1% archive, 10.2% lost-customer. AnalyticsScreen: stat strip expanded 6→7 tiles (added "365d Win rate" lavender tile); tabs expanded 6→7 (added "Win / Loss" between Events and Leads); Win/Loss tab shows funnel overview (5 tiles), event-type win-rate bars, guest-bucket win-rate bars, stage-of-death waterfall, days-to-close histogram, won-events-by-month bars, owner win-rate bars, source-family win-rate bars, and summary banner. WinBar helper renders stacked won/active/lost segments. Bedrock: `CCAgentindex/analytics/win_loss_snapshot.json` registered in `indexes/index.json` under `"analytics"`. Cache-bust: screens 72→73.
+  - 2026-04-27 Analytics styling overhaul + icon system migration. Removed all emojis site-wide (screens.jsx): analytics and venue enrich badge (`🔥 ENRICH NOW` → text). Added `AIcon` React component (inline SVG from `window.icon()` design-deck system) before `AnalyticsContextMenu` in screens.jsx. Updated `AnalyticsContextMenu` item icons and font (`var(--mono)` → `var(--sans)`, font-size 11→12px, icon span now uses AIcon). Updated `AnalyticsToast` font and replaced `✓` text with `<AIcon name="check">`. Replaced all emoji `icon:` values in context menu items and insight pushes with design-deck icon names (eye/write/link/chart/diff/cal/fire/warn/clock/sparkles/wave/bolt). Replaced inline `{isSpot && "🔦 "}` indicators with `<AIcon name="eye">`. Updated urgency tile definition and render to use AIcon. Fixed Intel Signals header `✦` → `<AIcon name="sparkles">`. Fixed cohort Top-5 header emoji → `<AIcon name="sparkles">`. Fixed spotlight badge emoji → `<AIcon name="eye">`. Fixed revenue insight to use `revIcon` instead of `dir` arrow as icon name. Font fix: added `"--mono": "var(--font-body)"` CSS custom property override at analytics outer wrapper div so all `var(--mono)` labels resolve to IBM Plex Sans (matching rest of site). New interactivity: added `onContextMenu` to all 8 stat strip tiles (copy value + go-to-tab actions); added `onContextMenu` to compact "All sources" list items (copy stats / search Close / spotlight). Cache-bust: screens 84→85.
+  - 2026-04-27 Booking Lead Time + Cohort Analysis + Auto-Insights panel added. New scripts: `Onboard Scripts/analytics_booking_lead_time.py` (525 future bookings, median 51d, fixed EVENT_DT_F field ID to `cf_FV2xBkviv7BAQZkkjUf8NUOc3fOpPTObMy5lVxZbyiP`, weddings 168d median / corporate 4d, 38.3% last-minute) and `Onboard Scripts/analytics_cohort_analysis.py` (32 monthly cohorts, 4.9% avg 90d, 5.6% avg 1yr, expo_event 0% conversion on 484 leads, best cohort 2024-02 at 21.4% 90d). AnalyticsScreen: bookingLT + cohortData state + 7-fetch Promise.all; tab strip expanded 8→10 (added "Lead Time" and "Cohort Analysis"); Lead Time tab shows urgency segments 3-tile header, global stats row, histogram, event-type median bars, source-family bars, seasonal 4×3 month heatmap, summary banner; Cohort tab shows conversion curve 6-tile header, best cohorts panel, source cohort conversion table (90d/6mo/1yr columns colored by rate), full monthly heatmap matrix (32 rows × 6 windows), recent-cohort health cards, summary banner. Auto-Insights panel inserted above tabs: derives 6-8 bullet intel signals dynamically from all loaded JSON state (YoY trend, lead volume warning, top win-rate event type/source, stage-of-death hotspot, last-minute booking share, advance-booking type, best/worst-converting cohort source). Right-click copy on all new chart elements. Bedrock: `booking_lead_time_snapshot.json` + `cohort_snapshot.json` registered in `indexes/index.json`. Cache-bust: screens 75→76→77→78.
 
 ---
 
@@ -312,7 +443,7 @@ Source: `app.jsx` (`KNOWN_SCREENS` and route switch)
   - Route switch and history stack: `app.jsx`.
 - Shared overlays:
   - `FullscreenCell`, `TweaksPanel`, `EditWithRodbotOverlay`, `AIBanner`.
-- Shared right-click primitive: `components.jsx` `useContextMenu` hook + `ContextMenu` component. Items: `[{ label, icon, onClick, danger, disabled, shortcut, divider, keepOpen }]`. Hook returns `{ onContextMenu, close, render, open }`. Currently wired on `grid` (CellContextMenu) and on all four People pages (list rows + profile pane). Pattern is reusable on any future page — `useContextMenu()` + `onContextMenu={...}` + `menu.render(buildItemsFor(target), title)`.
+- Shared right-click primitive: `components.jsx` `useContextMenu` hook + `ContextMenu` component. Items: `[{ label, icon, onClick, danger, disabled, shortcut, divider, keepOpen }]`. Hook returns `{ onContextMenu, close, render, open }`. Currently wired on `grid` (CellContextMenu), all People pages (list rows + profile pane), `intake` (report/doc/Q&A cards), `delegations` (draft cards + run timeline rows), and `boxes` (box list + html demo list). Pattern is reusable on any future page — `useContextMenu()` + `onContextMenu={...}` + `menu.render(buildItemsFor(target), title)`.
 - Shared icon set (`lucide.js`): topbar uses `users`, `trending-up`, `briefcase`, `phone` for the four People items. Profile contact rows use `mail`, `phone`, `message-circle`, `hash`, `check-square`, `link`. Other available icons include: `sun`, `inbox`, `target`, `terminal`, `send`, `pencil`, `rotate-ccw`, `plus`, `x`, `chevron-{down,right,left}`, `zap`, `activity`, `search`, `circle`, `file-text`, `message-square`, `alert-triangle`, `plug`, `layers`, `slack`, `calendar`, `external-link`, `clipboard-list`, `sticky-note`, `circle-dot`, `sparkles`, `flame`, `award`, `maximize-2`, `git-branch`, `table`, `clock`, `info`, `alert`, `user-plus`, `copy`. **Bump `lucide.js?v=N` cache buster when adding icons.**
 - Global data/state stores to account for on any page change:
   - localStorage keys: `secretary.tweaks` (includes `piecesModel`, `promptEnhance`), `secretary.gridHistory`, `secretary.gridOverrides`, `secretary.commitments`, `secretary.history.v2`, `secretary.refineStack`, `comeketo.briefingIdeas.<slug>` (AI-curated ideas cache per briefing slug — IdeasTray on grid).

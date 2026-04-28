@@ -1,0 +1,82 @@
+{
+  "_type": "EmailThread",
+  "activity_at": "2026-04-28T04:15:01.482000+00:00",
+  "contact_id": null,
+  "created_by": null,
+  "created_by_name": null,
+  "date_created": "2026-04-28T04:15:01.482000+00:00",
+  "date_updated": "2026-04-28T04:15:02.959000+00:00",
+  "id": "acti_EHiu0KP0lVtg6TvuQ26uxQq2XBYnqcxZUyTxsSr2NXG",
+  "importance": {
+    "reason": "most-recent-communication",
+    "type": "important"
+  },
+  "latest_emails": [
+    {
+      "bcc": [],
+      "body_preview": "Experience 30+ menu items at our exclusive catering tasting - completely free\nwhen you book 🍽️ ![Comeketo Catering Logo](https://comeketocatering.com/wp-\ncontent/uploads/2025/01/LOGO_WEB.png) [ ![Cate",
+      "cc": [],
+      "date_created": "2026-04-28T03:27:54.563000+00:00",
+      "date_sent": "2026-04-28T04:15:01.481000+00:00",
+      "date_updated": "2026-04-28T04:15:02.911000+00:00",
+      "direction": "outgoing",
+      "envelope": {
+        "bcc": [],
+        "cc": [],
+        "date": "Tue, 28 Apr 2026 04:15:01 +0000",
+        "from": [
+          {
+            "email": "contact@comeketocatering.com",
+            "name": "Rhonna Ricafort"
+          }
+        ],
+        "in_reply_to": null,
+        "is_autoreply": false,
+        "message_id": "<177734970160.7.14189261311831696287@smtpgw.close.com>",
+        "reply_to": [],
+        "sender": [
+          {
+            "email": "contact@comeketocatering.com",
+            "name": "Rhonna Ricafort"
+          }
+        ],
+        "subject": "[EXCLUSIVE] About Our Tastings",
+        "to": [
+          {
+            "email": "levesquem875@gmail.com",
+            "name": "Michelle Levesque"
+          }
+        ]
+      },
+      "has_attachments": false,
+      "id": "acti_BZPSDJW88b6eiWf5sWUbXGbpC9kOIEhRX3LnQT2ynM8",
+      "opens_summary": null,
+      "send_as_id": null,
+      "sender": "Rhonna Ricafort <contact@comeketocatering.com>",
+      "status": "sent",
+      "subject": "[EXCLUSIVE] About Our Tastings",
+      "to": [
+        "Michelle Levesque <levesquem875@gmail.com>"
+      ],
+      "user_id": "user_CUH7ddlLe50fkckpnBqndk8HYyEfGpa0ldxggccxqPo"
+    }
+  ],
+  "latest_normalized_subject": "[EXCLUSIVE] About Our Tastings",
+  "lead_id": "lead_dJZGwtMFabQovxNIpS0XDSwFV7rw0fgyFNeQX6jYOxR",
+  "n_emails": 1,
+  "organization_id": "orga_pOyYOigKEELdmODukgjigCD5pTRewtmBW1yq6YXkskq",
+  "participants": [
+    {
+      "email": "contact@comeketocatering.com",
+      "name": "Rhonna Ricafort"
+    }
+  ],
+  "summary": null,
+  "updated_by": "user_CUH7ddlLe50fkckpnBqndk8HYyEfGpa0ldxggccxqPo",
+  "updated_by_name": "Rhonna Ricafort",
+  "user_id": "user_CUH7ddlLe50fkckpnBqndk8HYyEfGpa0ldxggccxqPo",
+  "user_name": "Rhonna Ricafort",
+  "users": [
+    "user_CUH7ddlLe50fkckpnBqndk8HYyEfGpa0ldxggccxqPo"
+  ]
+}

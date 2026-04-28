@@ -1,0 +1,950 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Comeketo Inbox Guardrails — Andre's Reference</title>
+<style>
+  :root {
+    --bg: #f6f4ee;
+    --paper: #fdfbf5;
+    --ink: #1d1d1b;
+    --ink-soft: #4a4a48;
+    --ink-faint: #8a8884;
+    --accent: #c4541f;
+    --rule-line: #d8d4c8;
+    --hard-gate: #c0392b;
+    --hard-gate-bg: #fdeeec;
+    --hard-gate-border: #e8b6af;
+    --auto-block: #b8860b;
+    --auto-block-bg: #fdf6e3;
+    --auto-block-border: #e0cd8a;
+    --workflow: #2c5d4f;
+    --workflow-bg: #ecf3ef;
+    --workflow-border: #b9cfc4;
+    --info: #3a4a5c;
+    --info-bg: #eff2f6;
+    --info-border: #c2cdd9;
+    --code-bg: #f0ede4;
+  }
+  
+  * { box-sizing: border-box; }
+  
+  body {
+    font-family: 'Iowan Old Style', 'Palatino Linotype', Palatino, 'Book Antiqua', Georgia, serif;
+    background: var(--bg);
+    color: var(--ink);
+    margin: 0;
+    padding: 40px 24px;
+    line-height: 1.55;
+  }
+  
+  .container {
+    max-width: 780px;
+    margin: 0 auto;
+  }
+  
+  header {
+    border-bottom: 2px solid var(--ink);
+    padding-bottom: 20px;
+    margin-bottom: 32px;
+  }
+  
+  .eyebrow {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin-bottom: 8px;
+  }
+  
+  h1 {
+    font-size: 38px;
+    font-weight: 600;
+    margin: 0 0 12px 0;
+    letter-spacing: -0.5px;
+  }
+  
+  .subtitle {
+    font-size: 16px;
+    font-style: italic;
+    color: var(--ink-soft);
+    margin: 0;
+  }
+  
+  .meta {
+    margin-top: 16px;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 12px;
+    color: var(--ink-faint);
+    letter-spacing: 0.5px;
+  }
+  
+  .toc {
+    background: var(--paper);
+    border: 1px solid var(--rule-line);
+    border-radius: 4px;
+    padding: 20px 24px;
+    margin-bottom: 40px;
+  }
+  
+  .toc-title {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin-bottom: 12px;
+  }
+  
+  .toc ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px 24px;
+  }
+  
+  .toc li {
+    font-size: 14px;
+  }
+  
+  .toc a {
+    color: var(--ink);
+    text-decoration: none;
+    border-bottom: 1px dotted var(--ink-faint);
+  }
+  
+  .toc a:hover {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+  }
+  
+  section {
+    margin-bottom: 36px;
+  }
+  
+  h2 {
+    font-size: 26px;
+    font-weight: 600;
+    margin: 0 0 6px 0;
+    letter-spacing: -0.3px;
+    border-bottom: 1px solid var(--rule-line);
+    padding-bottom: 8px;
+  }
+  
+  .section-tag {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 4px;
+    font-weight: 600;
+  }
+  
+  h3 {
+    font-size: 17px;
+    font-weight: 600;
+    margin: 22px 0 6px 0;
+  }
+  
+  p { margin: 8px 0; }
+  
+  ul, ol {
+    padding-left: 22px;
+    margin: 8px 0;
+  }
+  
+  li { margin: 4px 0; }
+  
+  .panel {
+    border-left: 4px solid;
+    padding: 14px 18px;
+    margin: 14px 0;
+    border-radius: 0 4px 4px 0;
+  }
+  
+  .panel-label {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  .panel-label-tag {
+    background: rgba(0,0,0,0.06);
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-size: 9px;
+  }
+  
+  .panel-title {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+  
+  .panel-body {
+    font-size: 14.5px;
+    line-height: 1.6;
+  }
+  
+  .panel.hard-gate {
+    background: var(--hard-gate-bg);
+    border-left-color: var(--hard-gate);
+    border-top: 1px solid var(--hard-gate-border);
+    border-right: 1px solid var(--hard-gate-border);
+    border-bottom: 1px solid var(--hard-gate-border);
+  }
+  
+  .panel.hard-gate .panel-label { color: var(--hard-gate); }
+  
+  .panel.auto-block {
+    background: var(--auto-block-bg);
+    border-left-color: var(--auto-block);
+    border-top: 1px solid var(--auto-block-border);
+    border-right: 1px solid var(--auto-block-border);
+    border-bottom: 1px solid var(--auto-block-border);
+  }
+  
+  .panel.auto-block .panel-label { color: var(--auto-block); }
+  
+  .panel.workflow {
+    background: var(--workflow-bg);
+    border-left-color: var(--workflow);
+    border-top: 1px solid var(--workflow-border);
+    border-right: 1px solid var(--workflow-border);
+    border-bottom: 1px solid var(--workflow-border);
+  }
+  
+  .panel.workflow .panel-label { color: var(--workflow); }
+  
+  .panel.info {
+    background: var(--info-bg);
+    border-left-color: var(--info);
+    border-top: 1px solid var(--info-border);
+    border-right: 1px solid var(--info-border);
+    border-bottom: 1px solid var(--info-border);
+  }
+  
+  .panel.info .panel-label { color: var(--info); }
+  
+  code, .mono {
+    font-family: 'SF Mono', Menlo, Monaco, Consolas, monospace;
+    background: var(--code-bg);
+    padding: 1px 6px;
+    border-radius: 3px;
+    font-size: 0.88em;
+    color: var(--ink);
+  }
+  
+  .yes-no {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin: 14px 0;
+  }
+  
+  .yes-no-card {
+    padding: 14px 16px;
+    border-radius: 4px;
+    font-size: 14px;
+  }
+  
+  .yes-no-card.yes {
+    background: var(--workflow-bg);
+    border: 1px solid var(--workflow-border);
+  }
+  
+  .yes-no-card.no {
+    background: var(--hard-gate-bg);
+    border: 1px solid var(--hard-gate-border);
+  }
+  
+  .yes-no-label {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+  
+  .yes-no-card.yes .yes-no-label { color: var(--workflow); }
+  .yes-no-card.no .yes-no-label { color: var(--hard-gate); }
+  
+  .decision-tree {
+    background: var(--paper);
+    border: 1px solid var(--rule-line);
+    border-radius: 4px;
+    padding: 22px 26px;
+    margin: 16px 0;
+    counter-reset: step;
+  }
+  
+  .decision-tree ol {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .decision-tree li {
+    counter-increment: step;
+    position: relative;
+    padding: 10px 0 10px 44px;
+    border-bottom: 1px solid var(--rule-line);
+    font-size: 15px;
+  }
+  
+  .decision-tree li:last-child { border-bottom: none; }
+  
+  .decision-tree li::before {
+    content: counter(step);
+    position: absolute;
+    left: 0;
+    top: 9px;
+    width: 28px;
+    height: 28px;
+    background: var(--ink);
+    color: var(--paper);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+  }
+  
+  .decision-tree .stop {
+    color: var(--hard-gate);
+    font-weight: 600;
+  }
+  
+  .quick-ref {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 24px 28px;
+    border-radius: 4px;
+    margin: 24px 0;
+  }
+  
+  .quick-ref-title {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin-bottom: 14px;
+  }
+  
+  .quick-ref h4 {
+    margin: 14px 0 4px 0;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--paper);
+  }
+  
+  .quick-ref-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px 24px;
+    font-size: 13.5px;
+  }
+  
+  .quick-ref code {
+    background: rgba(255,255,255,0.1);
+    color: var(--paper);
+  }
+  
+  .trigger-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin: 10px 0;
+  }
+  
+  .trigger-list span {
+    background: var(--code-bg);
+    padding: 3px 9px;
+    border-radius: 3px;
+    font-family: 'SF Mono', Menlo, Monaco, monospace;
+    font-size: 12px;
+    color: var(--hard-gate);
+  }
+  
+  .footnote {
+    font-size: 13px;
+    color: var(--ink-soft);
+    font-style: italic;
+    border-top: 1px solid var(--rule-line);
+    padding-top: 12px;
+    margin-top: 18px;
+  }
+  
+  .examples {
+    margin: 12px 0;
+  }
+  
+  .example {
+    padding: 10px 14px;
+    margin: 6px 0;
+    border-radius: 3px;
+    font-size: 14px;
+  }
+  
+  .example.good {
+    background: var(--workflow-bg);
+    border-left: 3px solid var(--workflow);
+  }
+  
+  .example.bad {
+    background: var(--hard-gate-bg);
+    border-left: 3px solid var(--hard-gate);
+  }
+  
+  .example-tag {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-right: 8px;
+  }
+  
+  .example.good .example-tag { color: var(--workflow); }
+  .example.bad .example-tag { color: var(--hard-gate); }
+  
+  hr.section-break {
+    border: none;
+    border-top: 2px solid var(--ink);
+    margin: 50px 0;
+  }
+  
+  .legend {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin-bottom: 32px;
+    font-size: 12px;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+  }
+  
+  .legend-item {
+    padding: 10px 12px;
+    border-left: 4px solid;
+    border-radius: 0 3px 3px 0;
+  }
+  
+  .legend-item.hard-gate {
+    background: var(--hard-gate-bg);
+    border-left-color: var(--hard-gate);
+    color: var(--hard-gate);
+  }
+  
+  .legend-item.auto-block {
+    background: var(--auto-block-bg);
+    border-left-color: var(--auto-block);
+    color: var(--auto-block);
+  }
+  
+  .legend-item.workflow {
+    background: var(--workflow-bg);
+    border-left-color: var(--workflow);
+    color: var(--workflow);
+  }
+  
+  .legend-item.info {
+    background: var(--info-bg);
+    border-left-color: var(--info);
+    color: var(--info);
+  }
+  
+  .legend-label {
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    font-size: 10px;
+    margin-bottom: 3px;
+  }
+  
+  .legend-desc {
+    color: var(--ink-soft);
+    font-size: 11.5px;
+    line-height: 1.4;
+  }
+  
+  @media (max-width: 700px) {
+    body { padding: 24px 16px; }
+    h1 { font-size: 28px; }
+    .toc ul { grid-template-columns: 1fr; }
+    .yes-no { grid-template-columns: 1fr; }
+    .quick-ref-grid { grid-template-columns: 1fr; }
+    .legend { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+<header>
+  <div class="eyebrow">Comeketo Catering · Inbox Operations</div>
+  <h1>Inbox Guardrails</h1>
+  <p class="subtitle">The rules the system follows when working leads in your inbox.</p>
+  <div class="meta">v2.0 · Updated April 27, 2026 · For Andre</div>
+</header>
+
+<div class="legend">
+  <div class="legend-item hard-gate">
+    <div class="legend-label">Hard Gate</div>
+    <div class="legend-desc">System will not fire. Pings you, waits.</div>
+  </div>
+  <div class="legend-item auto-block">
+    <div class="legend-label">Auto-Pause</div>
+    <div class="legend-desc">System pauses on trigger, surfaces for review.</div>
+  </div>
+  <div class="legend-item workflow">
+    <div class="legend-label">Standard</div>
+    <div class="legend-desc">How outbound is composed and sent.</div>
+  </div>
+  <div class="legend-item info">
+    <div class="legend-label">Reference</div>
+    <div class="legend-desc">Operator-fed data — current cycle.</div>
+  </div>
+</div>
+
+<div class="toc">
+  <div class="toc-title">Quick Navigation</div>
+  <ul>
+    <li><a href="#hard-gates">A. Hard Gates</a></li>
+    <li><a href="#commitments">B. Commitment & Voice</a></li>
+    <li><a href="#cadence">C. Cadence & Reply</a></li>
+    <li><a href="#channel">D. Channel & Send Window</a></li>
+    <li><a href="#tasting">E. Tasting Cycle</a></li>
+    <li><a href="#email">F. Email Standard</a></li>
+    <li><a href="#voice">G. Voice & Style</a></li>
+    <li><a href="#decision">H. Decision Tree</a></li>
+  </ul>
+</div>
+
+<section id="hard-gates">
+  <div class="section-tag">A · The non-negotiables</div>
+  <h2>Hard Gates</h2>
+  <p>If any of these is violated, the system <strong>does not send</strong>. It surfaces the issue in your DM and waits for you (Andre) or Jake to clear it.</p>
+
+  <div class="panel hard-gate">
+    <div class="panel-label"><span>Hard Gate</span><span class="panel-label-tag">A1</span></div>
+    <div class="panel-title">Ownership — only Andre's leads</div>
+    <div class="panel-body">
+      Source of truth: the LEAD OWNER field in Close = <code>01. 😎 Andre</code>.<br>
+      If anyone else owns the lead, no email, no SMS, no quote, no tasting invite. Even if the lead came in through Andre's phone number.
+    </div>
+  </div>
+
+  <div class="panel hard-gate">
+    <div class="panel-label"><span>Hard Gate</span><span class="panel-label-tag">A2</span></div>
+    <div class="panel-title">Status — Won and Lost are no-touch</div>
+    <div class="panel-body">
+      No outbound on Won or Lost leads, ever, for any reason. Inbox tasks can still be moved on a Won/Lost lead, but no message goes out.
+      <br><br>
+      <strong>"Probably Not" is NOT a no-touch status.</strong> If a "Probably Not" lead has had inbound activity in the last 14 days, surface it for re-evaluation rather than treating it as deprioritized. (This is the lesson from the Daphney/Frankie + Elizabeth/Peter misclassifications.)
+    </div>
+  </div>
+
+  <div class="panel hard-gate">
+    <div class="panel-label"><span>Hard Gate</span><span class="panel-label-tag">A3</span></div>
+    <div class="panel-title">Calendar reality — explicit dates only</div>
+    <div class="panel-body">
+      Before any send, every relative date in the message ("Sunday," "tomorrow," "this afternoon," "next week") gets re-anchored against today's actual calendar.
+      <br><br>
+      Bare day-of-week labels get replaced with explicit dates: <code>Sunday May 3</code>, not <code>Sunday</code>. Never claim an action that didn't happen on the date the message implies.
+      <div class="footnote">Origin: the Flávia "Sunday at 11 AM" recovery on April 27.</div>
+    </div>
+  </div>
+
+  <div class="panel hard-gate">
+    <div class="panel-label"><span>Hard Gate</span><span class="panel-label-tag">A6</span></div>
+    <div class="panel-title">Hard-blocked tasting date</div>
+    <div class="panel-body">
+      <code>Sunday, April 19</code> is permanently off the map. Don't send that date again, ever, under any circumstance.
+    </div>
+  </div>
+</section>
+
+<section id="commitments">
+  <div class="section-tag">B · Things that pause and ask</div>
+  <h2>Commitment & Enrichment</h2>
+
+  <div class="panel auto-block">
+    <div class="panel-label"><span>Auto-Pause</span><span class="panel-label-tag">B1</span></div>
+    <div class="panel-title">Contractual commitments — never silently fire</div>
+    <div class="panel-body">
+      No outbound message can contain fee waivers, free services, price guarantees, scope expansions, or any commitment that touches money / headcount / terms — <strong>unless Andre or Jake explicitly approved it at plan-write time.</strong>
+      
+      <h4 style="margin-top:14px; margin-bottom:6px; font-size:13px; font-family:'Helvetica Neue', Arial, sans-serif; letter-spacing:1.5px; text-transform:uppercase; color:var(--ink-soft);">Trigger phrases that freeze a send</h4>
+      <div class="trigger-list">
+        <span>free</span><span>waive</span><span>no charge</span><span>complimentary</span><span>on us</span><span>won't charge</span><span>cover the</span><span>throwing in</span><span>up to N people</span><span>guaranteed</span><span>lock in</span><span>discount</span><span>% off</span>
+      </div>
+      
+      On a hit, the message freezes in your DM as <code>[COMMITMENT FLAG]</code> and waits for your YES, a rewrite, or a kill.
+      <div class="footnote">Origin: the Brenda &amp; Steve fee-waiver fire on April 27.</div>
+    </div>
+  </div>
+
+  <div class="panel auto-block">
+    <div class="panel-label"><span>Auto-Pause</span><span class="panel-label-tag">B2</span></div>
+    <div class="panel-title">Enrichment use boundary — steer, don't surface</div>
+    <div class="panel-body">
+      Specific facts about a lead — their industry, employer, role, business, family details, school, history — <strong>cannot appear in customer-facing copy</strong> unless that fact has been shared with us in actual comms.
+      
+      <p style="margin-top:10px;">Enrichment guides tone and steers the conversation. It cannot be quoted at the lead.</p>
+
+      <div class="examples">
+        <div class="example good">
+          <span class="example-tag">Allowed (steering)</span>
+          "Since you mentioned the tasting on Saturday…"
+        </div>
+        <div class="example bad">
+          <span class="example-tag">Not allowed (surfacing)</span>
+          "I know you've been in food service a long time…"
+        </div>
+      </div>
+      
+      <p>If a draft surfaces a fact not in comms, the system freezes as <code>[ENRICHMENT BOUNDARY]</code> and waits.</p>
+      
+      <h4 style="margin-top:14px; margin-bottom:6px; font-size:13px; font-family:'Helvetica Neue', Arial, sans-serif; letter-spacing:1.5px; text-transform:uppercase; color:var(--ink-soft);">What counts as "they shared this with us"</h4>
+      <ul style="margin-top:4px;">
+        <li>Inbound messages from the lead (SMS, email, chat)</li>
+        <li>Phone-call notes from a real conversation</li>
+        <li>Intake-form data the lead self-entered (their name, event date, guest count, venue, dietary notes, budget if typed)</li>
+        <li>Prior outbound the lead actively engaged with</li>
+      </ul>
+      <div class="footnote">Origin: the Brenda &amp; Steve enrichment-quote fire on April 27.</div>
+    </div>
+  </div>
+
+  <div class="panel auto-block">
+    <div class="panel-label"><span>Auto-Pause</span><span class="panel-label-tag">B3</span></div>
+    <div class="panel-title">Co-decider handling</div>
+    <div class="panel-body">
+      When a lead has multiple named contacts (Brenda &amp; Steve, Daphney &amp; Frankie, Elizabeth &amp; Peter, etc.), address whoever last replied. Reference the other partner only by the role they've established in the thread ("your fiancée," "Steve" if he's been mentioned in their replies). Don't introduce the partner into the message if the lead hasn't.
+    </div>
+  </div>
+</section>
+
+<section id="cadence">
+  <div class="section-tag">C · Frequency, replies, and missed commitments</div>
+  <h2>Cadence & Reply</h2>
+
+  <div class="panel hard-gate">
+    <div class="panel-label"><span>Hard Gate</span><span class="panel-label-tag">C1</span></div>
+    <div class="panel-title">Reply gate — inbound pauses cadence</div>
+    <div class="panel-body">
+      Any inbound from the lead (SMS, email, or call answered) <strong>immediately pauses all queued outbound on that lead.</strong> The system surfaces a "lead replied — review next move" alert in your DM. The next scheduled message does not fire until you clear it.
+      <div class="footnote">Why: prevents Day-4 SMS firing after a Day-3 reply that changed the picture.</div>
+    </div>
+  </div>
+
+  <div class="panel hard-gate">
+    <div class="panel-label"><span>Hard Gate</span><span class="panel-label-tag">C2</span></div>
+    <div class="panel-title">Frequency cap per lead</div>
+    <div class="panel-body">
+      <ul style="margin-top:4px;">
+        <li><strong>Maximum 1 outbound per lead per 24 hours</strong> — unless the plan explicitly schedules a same-day combined SMS+email packet (counts as 1 move).</li>
+        <li><strong>Maximum 4 outbound per lead per rolling 7-day window</strong> — without Andre's explicit re-authorization.</li>
+      </ul>
+      Hard cap. No system-level overrides.
+      <div class="footnote">Origin: the Eliana Lopes 9-contacts-in-4-hours over-eagerness on Day 1.</div>
+    </div>
+  </div>
+
+  <div class="panel auto-block">
+    <div class="panel-label"><span>Auto-Pause</span><span class="panel-label-tag">C3</span></div>
+    <div class="panel-title">Stop signal — opt-out language ends the cadence</div>
+    <div class="panel-body">
+      If the lead's message contains opt-out language, all queued outbound is <strong>canceled</strong>, lead status updates to Lost (reason: "opt-out"), and a log entry is created.
+      
+      <h4 style="margin-top:14px; margin-bottom:6px; font-size:13px; font-family:'Helvetica Neue', Arial, sans-serif; letter-spacing:1.5px; text-transform:uppercase; color:var(--ink-soft);">Opt-out triggers</h4>
+      <div class="trigger-list">
+        <span>stop</span><span>unsubscribe</span><span>remove me</span><span>don't contact</span><span>going with someone else</span><span>no longer interested</span><span>please stop</span><span>take me off</span><span>do not text</span>
+      </div>
+      
+      The system never sends a "sorry to hear that" or "please reconsider" follow-up. <strong>Silence is the response.</strong>
+    </div>
+  </div>
+
+  <div class="panel hard-gate">
+    <div class="panel-label"><span>Hard Gate</span><span class="panel-label-tag">C4</span></div>
+    <div class="panel-title">Commitment tracker — your time-locked promises</div>
+    <div class="panel-body">
+      When a plan contains a time-locked commitment Andre made to a lead ("I'll call you at 11 AM Sunday," "I'll send the proposal by Tuesday at noon"), the system tracks that commitment as a separate object.
+
+      <ul style="margin-top:10px;">
+        <li><strong>T-minus 30 minutes:</strong> reminder ping in your DM</li>
+        <li><strong>T-plus 5 minutes after:</strong> if no completion logged, system surfaces <code>MISSED COMMITMENT</code> as a critical alert</li>
+      </ul>
+      <div class="footnote">Origin: the Flávia missed-call recovery. The system didn't catch it; you did. Now it catches it.</div>
+    </div>
+  </div>
+</section>
+
+<section id="channel">
+  <div class="section-tag">D · How and when we send</div>
+  <h2>Channel & Send Window</h2>
+
+  <div class="panel workflow">
+    <div class="panel-label"><span>Standard</span><span class="panel-label-tag">D1</span></div>
+    <div class="panel-title">Language — English by default</div>
+    <div class="panel-body">
+      Customer-facing language is English unless you explicitly say switch to Portuguese or Spanish for a specific lead.
+      <br><br>
+      <strong>Never assume a language switch</strong> just because the lead has a Brazilian, Portuguese, or Spanish name. The Esther Manu Portuguese-text fire on April 24 was the structural origin of this rule.
+    </div>
+  </div>
+
+  <div class="panel workflow">
+    <div class="panel-label"><span>Standard</span><span class="panel-label-tag">D2</span></div>
+    <div class="panel-title">SMS vs Email routing</div>
+    <div class="panel-body">
+      <ul style="margin-top:4px;">
+        <li>If you say "send a text message," <strong>SMS only.</strong> If there's no valid SMS route on that lead, surface it and ask. Don't silently fall back to email.</li>
+        <li>Otherwise: SMS when there's a number, email when there isn't.</li>
+        <li>Combined SMS + email packets when the plan calls for it (one acknowledgment, both fire after).</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="panel hard-gate">
+    <div class="panel-label"><span>Hard Gate</span><span class="panel-label-tag">D3</span></div>
+    <div class="panel-title">Outbound send window</div>
+    <div class="panel-body">
+      <ul style="margin-top:4px;">
+        <li><strong>SMS:</strong> 9:00 AM – 7:00 PM lead's local time</li>
+        <li><strong>Email:</strong> 7:00 AM – 9:00 PM lead's local time</li>
+        <li><strong>Sunday SMS:</strong> allowed only after 11:00 AM lead-local</li>
+      </ul>
+      Outside the window: queue, don't send.
+    </div>
+  </div>
+</section>
+
+<section id="tasting">
+  <div class="section-tag">E · Operator-fed, current cycle only</div>
+  <h2>Tasting Cycle</h2>
+
+  <div class="panel info">
+    <div class="panel-label"><span>Reference</span><span class="panel-label-tag">E1</span></div>
+    <div class="panel-title">Current tasting dates</div>
+    <div class="panel-body">
+      <ul style="margin-top:4px; list-style:none; padding-left:0;">
+        <li style="padding:6px 0;"><strong>Sunday, May 3, 2026</strong> at 5:30 PM</li>
+        <li style="padding:6px 0;"><strong>Sunday, May 17, 2026</strong> at 2:00 PM</li>
+        <li style="padding:6px 0;"><strong>Sunday, May 31, 2026</strong> at 2:00 PM</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="panel workflow">
+    <div class="panel-label"><span>Standard</span><span class="panel-label-tag">E2</span></div>
+    <div class="panel-title">Push order &amp; cycle rules</div>
+    <div class="panel-body">
+      <ul style="margin-top:4px;">
+        <li><strong>Push order:</strong> May 3 first, then May 17, then May 31.</li>
+        <li>The system <strong>does not invent or guess</strong> dates. When the cycle rolls over, you give the new dates.</li>
+        <li>If the time isn't known, the system asks before sending.</li>
+        <li>If tasting was already invited on a thread, don't repeat the same line. Pivot the angle: "what are they still trying to get clear on," "what changed," "would a quick call make more sense first."</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section id="email">
+  <div class="section-tag">F · No plain-text emails, ever</div>
+  <h2>Email Standard</h2>
+
+  <div class="panel hard-gate">
+    <div class="panel-label"><span>Hard Gate</span><span class="panel-label-tag">F1</span></div>
+    <div class="panel-title">HTML rich-template is mandatory</div>
+    <div class="panel-body">
+      Plain text and plain-paragraph emails are <strong>forbidden.</strong> Every email goes through one of two bundled renderers:
+      <ul style="margin-top:8px;">
+        <li><strong>Ballpark quotes</strong> (precise two-option pricing) → quote-table template</li>
+        <li><strong>Everything else</strong> (resets, follow-ups, tasting confirmations, mid-cadence nudges, post-call wrap-ups) → follow-up template</li>
+      </ul>
+      <p style="margin-top:10px;"><strong>Pre-send check:</strong> the email body must validate against template structure. If the body is plain text or partial HTML, the send is <strong>blocked</strong> and surfaces in your DM as <code>[HTML_FAIL]</code> with the un-rendered body for review.</p>
+      <div class="footnote">Origin: Andre's WhatsApp screenshot on April 27 showing a plain-text Gabriela quote that should have been HTML.</div>
+    </div>
+  </div>
+
+  <div class="panel workflow">
+    <div class="panel-label"><span>Standard</span><span class="panel-label-tag">F2</span></div>
+    <div class="panel-title">Auto-included blocks</div>
+    <div class="panel-body">
+      Every email auto-includes:
+      <ul style="margin-top:4px;">
+        <li>The calculator-link band</li>
+        <li>The current-cycle tasting card with all three Sundays</li>
+      </ul>
+      Unless explicitly suppressed (e.g. when one specific tasting is already locked in).
+    </div>
+  </div>
+
+  <div class="panel workflow">
+    <div class="panel-label"><span>Standard</span><span class="panel-label-tag">F3</span></div>
+    <div class="panel-title">One email, not two</div>
+    <div class="panel-body">
+      If the move includes both a quote and a tasting invite, that's <strong>one email.</strong> No splitting into a quote email then a separate tasting-only email unless you explicitly say so.
+    </div>
+  </div>
+
+  <div class="panel workflow">
+    <div class="panel-label"><span>Standard</span><span class="panel-label-tag">F4</span></div>
+    <div class="panel-title">Ballpark guest count fallback</div>
+    <div class="panel-body">
+      If guest count is missing and a working base is on file, use it. Current fallback: <strong>50 guests.</strong>
+    </div>
+  </div>
+</section>
+
+<section id="voice">
+  <div class="section-tag">G · The Andre filter</div>
+  <h2>Voice & Style</h2>
+
+  <div class="panel workflow">
+    <div class="panel-label"><span>Standard</span><span class="panel-label-tag">G1</span></div>
+    <div class="panel-title">NEPQ-style — ask, don't pitch</div>
+    <div class="panel-body">
+      Calm, grounded curiosity. Pull for clarity instead of pushing hard. Reads like Andre at ceiling, or it doesn't go.
+    </div>
+  </div>
+
+  <div class="panel workflow">
+    <div class="panel-label"><span>Standard</span><span class="panel-label-tag">G2</span></div>
+    <div class="panel-title">Two-step probe</div>
+    <div class="panel-body">
+      Every outbound message tries to move the lead toward, in this order:
+      <ol style="margin-top:4px;">
+        <li>A phone call with you</li>
+        <li>The next tasting</li>
+      </ol>
+      Even soft-out / silence-only / acknowledgment messages leave one of those doors open.
+    </div>
+  </div>
+
+  <div class="panel workflow">
+    <div class="panel-label"><span>Standard</span><span class="panel-label-tag">G3</span></div>
+    <div class="panel-title">Default email structure</div>
+    <div class="panel-body">
+      Phone-call ask in the body. Tasting card with the three current Sundays at the bottom. Plans can override this if there's a reason.
+    </div>
+  </div>
+
+  <div class="panel auto-block">
+    <div class="panel-label"><span>Auto-Pause</span><span class="panel-label-tag">G4</span></div>
+    <div class="panel-title">Voice profile pre-send check</div>
+    <div class="panel-body">
+      Every system-composed message is checked against Andre's voice profile before send.
+      
+      <div class="yes-no">
+        <div class="yes-no-card yes">
+          <div class="yes-no-label">Pass</div>
+          Capitalized opener. Max 1 exclamation per message. Specific over generic. Reads like Andre at ceiling.
+        </div>
+        <div class="yes-no-card no">
+          <div class="yes-no-label">Fail (rewrite or hold)</div>
+          AI-tells: "I hope this email finds you well." "Please don't hesitate." "I wanted to reach out to let you know." Multiple exclamations. Generic filler.
+        </div>
+      </div>
+      
+      On fail: rewrite or hold. <strong>No template smell.</strong>
+    </div>
+  </div>
+
+  <div class="panel workflow">
+    <div class="panel-label"><span>Standard</span><span class="panel-label-tag">G5</span></div>
+    <div class="panel-title">We want a response</div>
+    <div class="panel-body">
+      Even if the response is "yes call," "yes tasting," "no thanks," or "stop contacting me." A non-response message is a missed move.
+    </div>
+  </div>
+</section>
+
+<hr class="section-break">
+
+<section id="decision">
+  <div class="section-tag">H · The flow per inbox task</div>
+  <h2>Decision Tree</h2>
+  <p>This is the order the system runs, every time.</p>
+
+  <div class="decision-tree">
+    <ol>
+      <li><strong>Owner = Andre?</strong> If no, <span class="stop">stop.</span></li>
+      <li><strong>Status = Won or Lost?</strong> If yes, <span class="stop">stop.</span></li>
+      <li><strong>Lead replied since last outbound?</strong> If yes, <span class="stop">pause cadence, surface for review.</span></li>
+      <li><strong>Read recent thread context.</strong></li>
+      <li><strong>Channel choice:</strong> SMS-only if you said text-only; otherwise SMS-or-email by route.</li>
+      <li><strong>Send-window check:</strong> if outside hours, queue, don't send.</li>
+      <li><strong>Compose:</strong> one NEPQ-style message in English, two-step probe toward call + tasting.</li>
+      <li><strong>Tasting block:</strong> use only the current cycle's dates if tasting is in the move.</li>
+      <li><strong>Calendar reality check:</strong> replace bare day-of-week with explicit date.</li>
+      <li><strong>Frequency cap check:</strong> 1/24h, 4/7d. If over, hold and surface.</li>
+      <li><strong>Commitment scan:</strong> trigger-phrase hit → freeze as <code>[COMMITMENT FLAG]</code>, wait for your call.</li>
+      <li><strong>Enrichment boundary check:</strong> every lead-fact must trace to comms. Hit → freeze as <code>[ENRICHMENT BOUNDARY]</code>.</li>
+      <li><strong>HTML check (email only):</strong> body must validate against template. Fail → freeze as <code>[HTML_FAIL]</code>.</li>
+      <li><strong>Voice check:</strong> capitalized opener, no AI-tells, ≤1 exclamation. Fail → rewrite or hold.</li>
+      <li><strong>Send.</strong></li>
+      <li><strong>Move the task</strong> per your instruction.</li>
+      <li><strong>Log it:</strong> what was sent, what was skipped, what failed, which tasks moved. If the run isn't reported, the run is incomplete.</li>
+    </ol>
+  </div>
+</section>
+
+<div class="quick-ref">
+  <div class="quick-ref-title">One-page reference for the inbox</div>
+  
+  <h4>If anything in here happens, the system holds and pings you:</h4>
+  <div class="quick-ref-grid" style="margin-top:8px;">
+    <div><code>[COMMITMENT FLAG]</code> &nbsp; fee waiver / free / waive</div>
+    <div><code>[ENRICHMENT BOUNDARY]</code> &nbsp; fact not in comms</div>
+    <div><code>[HTML_FAIL]</code> &nbsp; plain-text email blocked</div>
+    <div><code>MISSED COMMITMENT</code> &nbsp; you didn't honor a time-lock</div>
+  </div>
+  
+  <h4>What the system never does on its own:</h4>
+  <ul>
+    <li>Touch a non-Andre lead</li>
+    <li>Message Won or Lost</li>
+    <li>Send Portuguese or Spanish without your say-so</li>
+    <li>Send plain-text email</li>
+    <li>Surface enrichment as if the lead told us</li>
+    <li>Send after a stop signal</li>
+    <li>Fire more than 1 message per lead per 24 hours</li>
+    <li>Send outside the 9–7 SMS / 7–9 email window</li>
+  </ul>
+  
+  <h4>What you (Andre) own:</h4>
+  <ul>
+    <li>Approving fee waivers, free services, scope expansions</li>
+    <li>Honoring time-locked call commitments</li>
+    <li>Telling the system the current tasting dates each cycle</li>
+    <li>Switching language from English on a specific lead</li>
+    <li>Clearing held messages from your DM queue</li>
+  </ul>
+</div>
+
+<footer style="text-align:center; color:var(--ink-faint); font-size:13px; padding-top:32px; border-top:1px solid var(--rule-line); margin-top:50px;">
+  <p style="font-style:italic;">When in doubt — surface to Andre, don't fire.</p>
+  <p style="font-family:'Helvetica Neue', Arial, sans-serif; font-size:11px; letter-spacing:1.5px;">COMEKETO INBOX GUARDRAILS · v2.0 · 2026-04-27</p>
+</footer>
+
+</div>
+</body>
+</html>

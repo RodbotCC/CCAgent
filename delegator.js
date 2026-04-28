@@ -13,11 +13,14 @@
 */
 window.SecretaryDelegator = (() => {
   const LIST_CACHE = { items: [], loaded: false };
+  const DRAFT_CACHE = { items: [], loaded: false };
   const listeners = new Set();
   const pollers = new Map(); // request_id → interval handle
 
   function notify() {
-    listeners.forEach(fn => { try { fn(LIST_CACHE.items); } catch {} });
+    listeners.forEach(fn => {
+      try { fn({ runs: LIST_CACHE.items, drafts: DRAFT_CACHE.items }); } catch {}
+    });
   }
 
   async function reload() {
@@ -30,6 +33,91 @@ window.SecretaryDelegator = (() => {
       notify();
       return LIST_CACHE.items;
     } catch { return LIST_CACHE.items; }
+  }
+
+  async function drafts() {
+    try {
+      const res = await fetch("/api/delegations/drafts", { cache: "no-cache" });
+      if (!res.ok) return DRAFT_CACHE.items;
+      const data = await res.json();
+      DRAFT_CACHE.items = Array.isArray(data.drafts) ? data.drafts : [];
+      DRAFT_CACHE.loaded = true;
+      notify();
+      return DRAFT_CACHE.items;
+    } catch { return DRAFT_CACHE.items; }
+  }
+
+  async function createDraft(payload = {}) {
+    const res = await fetch("/api/delegations/drafts/create", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload || {}),
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok || !data.ok) throw new Error(data.error || `create draft ${res.status}`);
+    await drafts();
+    return data.draft;
+  }
+
+  async function updateDraft(id, patch = {}) {
+    const res = await fetch("/api/delegations/drafts/update", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id, patch: patch || {} }),
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok || !data.ok) throw new Error(data.error || `update draft ${res.status}`);
+    await drafts();
+    return data.draft;
+  }
+
+  async function deleteDraft(id) {
+    const res = await fetch("/api/delegations/drafts/delete", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id }),
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok || !data.ok) throw new Error(data.error || `delete draft ${res.status}`);
+    await drafts();
+    return true;
+  }
+
+  async function submitDraft(id, opts = {}) {
+    const res = await fetch("/api/delegations/drafts/submit", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id, ...(opts || {}) }),
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok || !data.ok) throw new Error(data.error || `submit draft ${res.status}`);
+    await Promise.all([drafts(), reload()]);
+    if (data.request_id) startPoll(data.request_id);
+    return data;
+  }
+
+  async function rewriteDraft(id, instruction) {
+    const res = await fetch("/api/delegations/drafts/rewrite", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id, instruction: instruction || "" }),
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok || !data.ok) throw new Error(data.error || `rewrite draft ${res.status}`);
+    await drafts();
+    return data;
+  }
+
+  async function undoDraft(id) {
+    const res = await fetch("/api/delegations/drafts/undo", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id }),
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok || !data.ok) throw new Error(data.error || `undo draft ${res.status}`);
+    await drafts();
+    return data.draft;
   }
 
   async function available() {
@@ -174,12 +262,18 @@ window.SecretaryDelegator = (() => {
   };
 
   return {
-    reload, available, dispatch, fetchOne, subscribe,
+    reload, drafts, available, dispatch, fetchOne, subscribe,
+    createDraft, updateDraft, deleteDraft, submitDraft, rewriteDraft, undoDraft,
     runningCount,
     entries: () => LIST_CACHE.items.slice(),
+    draftEntries: () => DRAFT_CACHE.items.slice(),
     PROMPTS,
   };
 })();
 
 // Reload once on boot to warm the cache.
-setTimeout(() => window.SecretaryDelegator && window.SecretaryDelegator.reload(), 250);
+setTimeout(() => {
+  if (!window.SecretaryDelegator) return;
+  window.SecretaryDelegator.reload();
+  window.SecretaryDelegator.drafts();
+}, 250);

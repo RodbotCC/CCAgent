@@ -1,0 +1,82 @@
+{
+  "_type": "EmailThread",
+  "activity_at": "2026-04-27T04:35:46.262000+00:00",
+  "contact_id": null,
+  "created_by": null,
+  "created_by_name": null,
+  "date_created": "2026-04-27T04:35:46.262000+00:00",
+  "date_updated": "2026-04-27T04:35:47.700000+00:00",
+  "id": "acti_pcHroE49vdiO9limltDOcBqWPMxqT9MgTvwEn9AOjsC",
+  "importance": {
+    "reason": "automated-outbound",
+    "type": "not_important"
+  },
+  "latest_emails": [
+    {
+      "bcc": [],
+      "body_preview": "Experience 30+ menu items at our exclusive catering tasting - completely free\nwhen you book 🍽️ ![Comeketo Catering Logo](https://comeketocatering.com/wp-\ncontent/uploads/2025/01/LOGO_WEB.png) [ ![Cate",
+      "cc": [],
+      "date_created": "2026-04-27T04:34:43.130000+00:00",
+      "date_sent": "2026-04-27T04:35:46.261000+00:00",
+      "date_updated": "2026-04-27T04:35:47.654000+00:00",
+      "direction": "outgoing",
+      "envelope": {
+        "bcc": [],
+        "cc": [],
+        "date": "Mon, 27 Apr 2026 04:35:46 +0000",
+        "from": [
+          {
+            "email": "contact@comeketocatering.com",
+            "name": "Rhonna Ricafort"
+          }
+        ],
+        "in_reply_to": null,
+        "is_autoreply": false,
+        "message_id": "<177726454638.7.14355945138400203820@smtpgw.close.com>",
+        "reply_to": [],
+        "sender": [
+          {
+            "email": "contact@comeketocatering.com",
+            "name": "Rhonna Ricafort"
+          }
+        ],
+        "subject": "[EXCLUSIVE] About Our Tastings",
+        "to": [
+          {
+            "email": "taniasofia030@gmail.com",
+            "name": "Tania Sofia"
+          }
+        ]
+      },
+      "has_attachments": false,
+      "id": "acti_Qepb6kNrWAj01R5gD1ICkHSIaZX7kG0OXFZwX6Cr2pb",
+      "opens_summary": null,
+      "send_as_id": null,
+      "sender": "Rhonna Ricafort <contact@comeketocatering.com>",
+      "status": "sent",
+      "subject": "[EXCLUSIVE] About Our Tastings",
+      "to": [
+        "Tania Sofia <taniasofia030@gmail.com>"
+      ],
+      "user_id": "user_CUH7ddlLe50fkckpnBqndk8HYyEfGpa0ldxggccxqPo"
+    }
+  ],
+  "latest_normalized_subject": "[EXCLUSIVE] About Our Tastings",
+  "lead_id": "lead_V6iNS8uF7obgLFIycq52IbrnpZUynnsUwniSqJNscUD",
+  "n_emails": 1,
+  "organization_id": "orga_pOyYOigKEELdmODukgjigCD5pTRewtmBW1yq6YXkskq",
+  "participants": [
+    {
+      "email": "contact@comeketocatering.com",
+      "name": "Rhonna Ricafort"
+    }
+  ],
+  "summary": null,
+  "updated_by": "user_CUH7ddlLe50fkckpnBqndk8HYyEfGpa0ldxggccxqPo",
+  "updated_by_name": "Rhonna Ricafort",
+  "user_id": "user_CUH7ddlLe50fkckpnBqndk8HYyEfGpa0ldxggccxqPo",
+  "user_name": "Rhonna Ricafort",
+  "users": [
+    "user_CUH7ddlLe50fkckpnBqndk8HYyEfGpa0ldxggccxqPo"
+  ]
+}

@@ -1,0 +1,531 @@
+{
+  "_type": "Call",
+  "activity_at": "2026-04-19T17:38:29.966000+00:00",
+  "agent_config_id": null,
+  "call_method": "regular",
+  "coach_legs": [],
+  "contact_id": "cont_2nPhzvTIq0o4ZuvwZYfo80IvmZCypid98ZF6Eh0kKgQ",
+  "conversation_type_id": null,
+  "conversation_type_reason": null,
+  "cost": "1",
+  "created_by": null,
+  "created_by_name": null,
+  "date_answered": "2026-04-19T17:38:35.250000+00:00",
+  "date_created": "2026-04-19T17:38:29.966000+00:00",
+  "date_updated": "2026-04-19T17:45:57.937000+00:00",
+  "dialer_id": null,
+  "dialer_saved_search_id": null,
+  "direction": "inbound",
+  "disposition": "answered",
+  "duration": 35,
+  "forwarded_to": null,
+  "has_recording": true,
+  "id": "acti_oRx3JO4NLGgQq44yNAg6YvG1SYc8yzZEAgAR8sipKZe",
+  "is_forwarded": false,
+  "is_joinable": false,
+  "is_to_group_number": true,
+  "lead_id": "lead_Kl4wMKxr025rCsIoaJewk0E4KJZ9wZHU9VdiTRZnEh3",
+  "local_country_iso": "US",
+  "local_phone": "+19783811212",
+  "local_phone_formatted": "+1 978-381-1212",
+  "note": null,
+  "note_date_updated": null,
+  "note_html": null,
+  "note_mentions": [],
+  "notetaker_id": null,
+  "organization_id": "orga_pOyYOigKEELdmODukgjigCD5pTRewtmBW1yq6YXkskq",
+  "outcome_autofill_confidence": "medium",
+  "outcome_autofill_reasoning": "An inbound call was received from a prospect named Brenda inquiring about catering services. A real conversation took place — the agent collected her name and confirmed her phone number, then indicated a team member would follow up shortly. No qualification criteria were assessed, no meeting was booked, and no disqualification occurred. The call ended without a resolved outcome — it was essentially a brief intake/routing call. Since the conversation ran its course but ended without determining qualification status or agreeing to a concrete next step (the agent just said someone would reach out), this best fits \"No Clear Outcome.\" However, there is a nuance: the agent explicitly said someone would reach out, which is more of a warm handoff than a booked meeting. The conversation was complete but inconclusive in terms of qualification or commitment.",
+  "outcome_id": "outcome_032ywLOAIT3LhuTX4zdPuE",
+  "outcome_reason": "autofilled",
+  "parent_meeting_id": null,
+  "phone": "+19788859800",
+  "playbook_id": null,
+  "playbook_reason": null,
+  "recording_duration": 35,
+  "recording_expires_at": "2026-05-19T17:38:29.966000+00:00",
+  "recording_history": [
+    {
+      "action": "auto-start-initializing",
+      "timestamp": "2026-04-19T17:38:29.893000+00:00"
+    },
+    {
+      "action": "auto-started",
+      "timestamp": "2026-04-19T17:38:35+00:00"
+    }
+  ],
+  "recording_transcript": {
+    "has_speaker_labels": true,
+    "id": "transcript_0332RDhIjTK61QJagwCoqn",
+    "speakers": [
+      {
+        "speaker_label": "Rhonna Ricafort",
+        "speaker_side": "close-user",
+        "talk_percentage": 0.7785977859778598,
+        "talk_time": 21.099999999999998
+      },
+      {
+        "speaker_label": "Unknown",
+        "speaker_side": "contact",
+        "talk_percentage": 0.2214022140221402,
+        "talk_time": 5.999999999999999
+      }
+    ],
+    "summary_html": "<ul>\n<li>Brenda called Comeketo Catering inquiring about catering services.</li>\n<li>Rhonna Ricafort confirmed Brenda's contact number as 978-885-9800.</li>\n<li>Rhonna indicated that someone from the team would reach out to Brenda shortly.</li>\n</ul>",
+    "summary_text": "- Brenda called Comeketo Catering inquiring about catering services.\n- Rhonna Ricafort confirmed Brenda's contact number as 978-885-9800.\n- Rhonna indicated that someone from the team would reach out to Brenda shortly.",
+    "utterances": [
+      {
+        "end": 3.2,
+        "speaker_label": "Rhonna Ricafort",
+        "speaker_side": "close-user",
+        "start": 1.3,
+        "text": "Thanks for calling. Come, keto. How can I help you?",
+        "words": [
+          {
+            "end": 1.5,
+            "start": 1.3,
+            "text": "Thanks"
+          },
+          {
+            "end": 1.6,
+            "start": 1.5,
+            "text": "for"
+          },
+          {
+            "end": 1.8,
+            "start": 1.6,
+            "text": "calling."
+          },
+          {
+            "end": 2.1,
+            "start": 1.8,
+            "text": "Come,"
+          },
+          {
+            "end": 2.5,
+            "start": 2.1,
+            "text": "keto."
+          },
+          {
+            "end": 2.6,
+            "start": 2.5,
+            "text": "How"
+          },
+          {
+            "end": 2.7,
+            "start": 2.6,
+            "text": "can"
+          },
+          {
+            "end": 2.8,
+            "start": 2.7,
+            "text": "I"
+          },
+          {
+            "end": 2.9,
+            "start": 2.8,
+            "text": "help"
+          },
+          {
+            "end": 3.2,
+            "start": 2.9,
+            "text": "you?"
+          }
+        ]
+      },
+      {
+        "end": 7.2,
+        "speaker_label": "Unknown",
+        "speaker_side": "contact",
+        "start": 4.6,
+        "text": "Yes, I was calling about your catering services.",
+        "words": [
+          {
+            "end": 4.7,
+            "start": 4.6,
+            "text": "Yes,"
+          },
+          {
+            "end": 4.8,
+            "start": 4.7,
+            "text": "I"
+          },
+          {
+            "end": 5.0,
+            "start": 4.8,
+            "text": "was"
+          },
+          {
+            "end": 5.4,
+            "start": 5.0,
+            "text": "calling"
+          },
+          {
+            "end": 5.6,
+            "start": 5.4,
+            "text": "about"
+          },
+          {
+            "end": 6.0,
+            "start": 5.6,
+            "text": "your"
+          },
+          {
+            "end": 6.8,
+            "start": 6.2,
+            "text": "catering"
+          },
+          {
+            "end": 7.2,
+            "start": 6.8,
+            "text": "services."
+          }
+        ]
+      },
+      {
+        "end": 11.8,
+        "speaker_label": "Rhonna Ricafort",
+        "speaker_side": "close-user",
+        "start": 8.1,
+        "text": "Sure. Absolutely. May, please have your name.",
+        "words": [
+          {
+            "end": 8.5,
+            "start": 8.1,
+            "text": "Sure."
+          },
+          {
+            "end": 9.5,
+            "start": 8.6,
+            "text": "Absolutely."
+          },
+          {
+            "end": 11.0,
+            "start": 10.6,
+            "text": "May,"
+          },
+          {
+            "end": 11.2,
+            "start": 11.0,
+            "text": "please"
+          },
+          {
+            "end": 11.3,
+            "start": 11.2,
+            "text": "have"
+          },
+          {
+            "end": 11.5,
+            "start": 11.3,
+            "text": "your"
+          },
+          {
+            "end": 11.8,
+            "start": 11.5,
+            "text": "name."
+          }
+        ]
+      },
+      {
+        "end": 14.3,
+        "speaker_label": "Unknown",
+        "speaker_side": "contact",
+        "start": 12.7,
+        "text": "Yes, my name is Brenda.",
+        "words": [
+          {
+            "end": 13.1,
+            "start": 12.7,
+            "text": "Yes,"
+          },
+          {
+            "end": 13.3,
+            "start": 13.1,
+            "text": "my"
+          },
+          {
+            "end": 13.5,
+            "start": 13.3,
+            "text": "name"
+          },
+          {
+            "end": 13.7,
+            "start": 13.5,
+            "text": "is"
+          },
+          {
+            "end": 14.3,
+            "start": 13.7,
+            "text": "Brenda."
+          }
+        ]
+      },
+      {
+        "end": 21.8,
+        "speaker_label": "Rhonna Ricafort",
+        "speaker_side": "close-user",
+        "start": 14.8,
+        "text": "Brenda. Brenda. Okay, Brenda. Is that your number? Here. 978-885-9800.",
+        "words": [
+          {
+            "end": 15.5,
+            "start": 14.8,
+            "text": "Brenda."
+          },
+          {
+            "end": 16.0,
+            "start": 15.5,
+            "text": "Brenda."
+          },
+          {
+            "end": 16.4,
+            "start": 16.0,
+            "text": "Okay,"
+          },
+          {
+            "end": 17.0,
+            "start": 16.4,
+            "text": "Brenda."
+          },
+          {
+            "end": 17.2,
+            "start": 17.0,
+            "text": "Is"
+          },
+          {
+            "end": 17.5,
+            "start": 17.2,
+            "text": "that"
+          },
+          {
+            "end": 18.0,
+            "start": 17.8,
+            "text": "your"
+          },
+          {
+            "end": 18.3,
+            "start": 18.0,
+            "text": "number?"
+          },
+          {
+            "end": 18.6,
+            "start": 18.3,
+            "text": "Here."
+          },
+          {
+            "end": 21.8,
+            "start": 18.6,
+            "text": "978-885-9800."
+          }
+        ]
+      },
+      {
+        "end": 23.4,
+        "speaker_label": "Unknown",
+        "speaker_side": "contact",
+        "start": 22.6,
+        "text": "Yes, it is.",
+        "words": [
+          {
+            "end": 22.9,
+            "start": 22.6,
+            "text": "Yes,"
+          },
+          {
+            "end": 23.1,
+            "start": 22.9,
+            "text": "it"
+          },
+          {
+            "end": 23.4,
+            "start": 23.1,
+            "text": "is."
+          }
+        ]
+      },
+      {
+        "end": 30.6,
+        "speaker_label": "Rhonna Ricafort",
+        "speaker_side": "close-user",
+        "start": 23.8,
+        "text": "Okay, give me one second. I'm gonna have somebody from our team reach out to you right now, okay?",
+        "words": [
+          {
+            "end": 24.5,
+            "start": 23.8,
+            "text": "Okay,"
+          },
+          {
+            "end": 24.8,
+            "start": 24.5,
+            "text": "give"
+          },
+          {
+            "end": 25.1,
+            "start": 24.8,
+            "text": "me"
+          },
+          {
+            "end": 25.5,
+            "start": 25.1,
+            "text": "one"
+          },
+          {
+            "end": 25.9,
+            "start": 25.5,
+            "text": "second."
+          },
+          {
+            "end": 26.6,
+            "start": 26.3,
+            "text": "I'm"
+          },
+          {
+            "end": 26.9,
+            "start": 26.6,
+            "text": "gonna"
+          },
+          {
+            "end": 27.1,
+            "start": 26.9,
+            "text": "have"
+          },
+          {
+            "end": 27.6,
+            "start": 27.1,
+            "text": "somebody"
+          },
+          {
+            "end": 27.8,
+            "start": 27.6,
+            "text": "from"
+          },
+          {
+            "end": 28.4,
+            "start": 28.1,
+            "text": "our"
+          },
+          {
+            "end": 28.6,
+            "start": 28.4,
+            "text": "team"
+          },
+          {
+            "end": 29.1,
+            "start": 28.8,
+            "text": "reach"
+          },
+          {
+            "end": 29.3,
+            "start": 29.1,
+            "text": "out"
+          },
+          {
+            "end": 29.5,
+            "start": 29.3,
+            "text": "to"
+          },
+          {
+            "end": 29.6,
+            "start": 29.5,
+            "text": "you"
+          },
+          {
+            "end": 29.8,
+            "start": 29.6,
+            "text": "right"
+          },
+          {
+            "end": 30.1,
+            "start": 29.8,
+            "text": "now,"
+          },
+          {
+            "end": 30.6,
+            "start": 30.1,
+            "text": "okay?"
+          }
+        ]
+      },
+      {
+        "end": 32.4,
+        "speaker_label": "Unknown",
+        "speaker_side": "contact",
+        "start": 31.4,
+        "text": "Sure. Thank you.",
+        "words": [
+          {
+            "end": 31.7,
+            "start": 31.4,
+            "text": "Sure."
+          },
+          {
+            "end": 32.1,
+            "start": 31.8,
+            "text": "Thank"
+          },
+          {
+            "end": 32.4,
+            "start": 32.1,
+            "text": "you."
+          }
+        ]
+      },
+      {
+        "end": 33.9,
+        "speaker_label": "Rhonna Ricafort",
+        "speaker_side": "close-user",
+        "start": 32.2,
+        "text": "Okay. One second. Thank you.",
+        "words": [
+          {
+            "end": 32.7,
+            "start": 32.2,
+            "text": "Okay."
+          },
+          {
+            "end": 33.0,
+            "start": 32.7,
+            "text": "One"
+          },
+          {
+            "end": 33.3,
+            "start": 33.0,
+            "text": "second."
+          },
+          {
+            "end": 33.6,
+            "start": 33.3,
+            "text": "Thank"
+          },
+          {
+            "end": 33.9,
+            "start": 33.6,
+            "text": "you."
+          }
+        ]
+      }
+    ]
+  },
+  "recording_url": "https://api.close.com/call/acti_oRx3JO4NLGgQq44yNAg6YvG1SYc8yzZEAgAR8sipKZe/recording/",
+  "remote_country_iso": "US",
+  "remote_phone": "+19788859800",
+  "remote_phone_formatted": "+1 978-885-9800",
+  "sequence_id": null,
+  "sequence_name": null,
+  "sequence_subscription_id": null,
+  "source": "Close.io",
+  "status": "completed",
+  "transferred_from": null,
+  "transferred_from_user_id": null,
+  "transferred_to": null,
+  "transferred_to_user_id": null,
+  "updated_by": "user_bnfoZDGbTqBZ4wcDGqRqTwjRKiwLnQ4mpV3i2enPkMt",
+  "updated_by_name": "Andre Raw",
+  "user_id": "user_CUH7ddlLe50fkckpnBqndk8HYyEfGpa0ldxggccxqPo",
+  "user_name": "Rhonna Ricafort",
+  "users": [],
+  "voicemail_duration": 0,
+  "voicemail_transcript": null,
+  "voicemail_url": null
+}

@@ -1,0 +1,82 @@
+{
+  "_type": "EmailThread",
+  "activity_at": "2026-04-27T19:43:34.492000+00:00",
+  "contact_id": null,
+  "created_by": "user_bnfoZDGbTqBZ4wcDGqRqTwjRKiwLnQ4mpV3i2enPkMt",
+  "created_by_name": "Andre Raw",
+  "date_created": "2026-04-27T19:43:34.492000+00:00",
+  "date_updated": "2026-04-27T19:43:35.405000+00:00",
+  "id": "acti_aSbuHUzJpWu4wzCCgVGNrJRvRPEvuUe7DSjak2YF1LB",
+  "importance": {
+    "reason": "most-recent-communication",
+    "type": "important"
+  },
+  "latest_emails": [
+    {
+      "bcc": [],
+      "body_preview": "Hi Madame, Thanks again for reaching out about bar service for the birthday on May 19. Since this is a bar-service-only request, I wanted to make this easy to review\nand give you a few real ballpark d",
+      "cc": [],
+      "date_created": "2026-04-27T19:35:40.128000+00:00",
+      "date_sent": "2026-04-27T19:43:34.491000+00:00",
+      "date_updated": "2026-04-27T19:43:35.351000+00:00",
+      "direction": "outgoing",
+      "envelope": {
+        "bcc": [],
+        "cc": [],
+        "date": "Mon, 27 Apr 2026 19:43:34 +0000",
+        "from": [
+          {
+            "email": "team@comeketocatering.com",
+            "name": "Andre Raw"
+          }
+        ],
+        "in_reply_to": null,
+        "is_autoreply": false,
+        "message_id": "<177731901451.8.14782258954746018822@smtpgw.close.com>",
+        "reply_to": [],
+        "sender": [
+          {
+            "email": "team@comeketocatering.com",
+            "name": "Andre Raw"
+          }
+        ],
+        "subject": "Draft bar-only ballpark for your birthday event",
+        "to": [
+          {
+            "email": "mervybayi@gmail.com",
+            "name": ""
+          }
+        ]
+      },
+      "has_attachments": false,
+      "id": "acti_E1TwOGUTnDfnfknrjNNAZNm81TGYv1Vf8bwaWQqA4tR",
+      "opens_summary": null,
+      "send_as_id": null,
+      "sender": "Andre Raw <team@comeketocatering.com>",
+      "status": "sent",
+      "subject": "Draft bar-only ballpark for your birthday event",
+      "to": [
+        "mervybayi@gmail.com"
+      ],
+      "user_id": "user_bnfoZDGbTqBZ4wcDGqRqTwjRKiwLnQ4mpV3i2enPkMt"
+    }
+  ],
+  "latest_normalized_subject": "Draft bar-only ballpark for your birthday event",
+  "lead_id": "lead_uvHwQGB9050x70vPs7lgzApJttD7VqtZ4FvoyC1tWqE",
+  "n_emails": 1,
+  "organization_id": "orga_pOyYOigKEELdmODukgjigCD5pTRewtmBW1yq6YXkskq",
+  "participants": [
+    {
+      "email": "team@comeketocatering.com",
+      "name": "Andre Raw"
+    }
+  ],
+  "summary": null,
+  "updated_by": "user_bnfoZDGbTqBZ4wcDGqRqTwjRKiwLnQ4mpV3i2enPkMt",
+  "updated_by_name": "Andre Raw",
+  "user_id": "user_bnfoZDGbTqBZ4wcDGqRqTwjRKiwLnQ4mpV3i2enPkMt",
+  "user_name": "Andre Raw",
+  "users": [
+    "user_bnfoZDGbTqBZ4wcDGqRqTwjRKiwLnQ4mpV3i2enPkMt"
+  ]
+}
