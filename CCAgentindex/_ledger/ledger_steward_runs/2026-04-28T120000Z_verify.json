@@ -1,0 +1,52 @@
+{
+  "ts": "2026-04-28T12:00:00Z",
+  "actor": "global_ledger_steward",
+  "mode": "local_write",
+  "classification": "no_global_update",
+  "claim": "Verified Global Ledger and JSON mirror align with actual LEDGERS/ contents and recent bootstrap; no drift requiring edits.",
+  "files_read": [
+    "../LEDGERS/GLOBAL_LEDGER.md",
+    "../LEDGERS/GLOBAL_LEDGER.json",
+    "../LEDGERS/INDEX.md",
+    "../LEDGERS/TEMPORAL_CONTINUITY.md",
+    "../LEDGERS/TEMPORAL_CONTINUITY.json",
+    "../LEDGERS/NORTH_STAR.md",
+    "../LEDGERS/FILE_DIRECTORY_LEDGER.md",
+    "../LEDGERS/OPEN_PROBLEMS_LEDGER.md",
+    "_ledger/activity.jsonl"
+  ],
+  "files_written": [
+    "_ledger/ledger_steward_runs/2026-04-28T120000Z_verify.json",
+    "_ledger/activity.jsonl"
+  ],
+  "ledger_roster": {
+    "actual_ledgers": [
+      "LEDGERS/GLOBAL_LEDGER.md",
+      "LEDGERS/GLOBAL_LEDGER.json",
+      "LEDGERS/INDEX.md",
+      "LEDGERS/TEMPORAL_CONTINUITY.md",
+      "LEDGERS/TEMPORAL_CONTINUITY.json",
+      "LEDGERS/NORTH_STAR.md",
+      "LEDGERS/NORTH_STAR.json",
+      "LEDGERS/FILE_DIRECTORY_LEDGER.md",
+      "LEDGERS/FILE_DIRECTORY_LEDGER.json",
+      "LEDGERS/OPEN_PROBLEMS_LEDGER.md",
+      "LEDGERS/OPEN_PROBLEMS_LEDGER.json",
+      "LEDGERS/AGENTS/global_ledger_steward/",
+      "LEDGERS/LOCAL_TEMPLATE/",
+      "LEDGERS/VISUALS/"
+    ],
+    "index_mismatches": [],
+    "json_mirror_mismatches": []
+  },
+  "activity_appended": true,
+  "abstention": false,
+  "risks": [
+    "Working tree remains dirty across many files (CLAUDE.md, AGENT.md, README.md, deletions in Auto/, new bedrock symlinks). Coordinate before any GitHub push.",
+    "Bootstrap receipt at 2026-04-28T114913Z already recorded the steward promotion; this verify run is the first scheduled post-bootstrap sweep."
+  ],
+  "next_recommended_read": [
+    "../LEDGERS/GLOBAL_LEDGER.md",
+    "../LEDGERS/TEMPORAL_CONTINUITY.md"
+  ]
+}

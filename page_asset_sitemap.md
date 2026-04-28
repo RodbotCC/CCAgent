@@ -1,6 +1,6 @@
 # Comeketo Page-Asset Source Of Truth
 
-Last updated: 2026-04-28 (verbatim comms backfill across all 28 client boxes)
+Last updated: 2026-04-28 (settings: Codex CLI provider added)
 Owner: Comeketo app team
 Canonical source: this file is the operational truth for page/asset ownership.
 Policy hook: see `CLAUDE.md` § 5.5 ("Page-asset sitemap — the Done Gate").
@@ -57,7 +57,7 @@ Source: `app.jsx` (`KNOWN_SCREENS` and route switch)
   - AI status banner
   - **IdeasTray** (left column — 4–5 briefing-sourced ideas, click-to-discuss → chat)
   - **QuickCapture** (compact "drop an idea" widget below IdeasTray, ⌘/Ctrl+Enter → inbox; optional voice via Web Speech API)
-  - **ChatRail** (right pane — uplifted with attachments, dropzone, animated thinking trace)
+  - **ChatRail** (right pane — uplifted with attachments, dropzone, animated thinking trace, **+ connector quick-tag row** for Slack/GitHub/Close/ClickUp routing)
 - Asset Ownership:
   - Grid cards + frame: render in `components.jsx` (`Grid`, `FrontPage`), routed in `app.jsx`.
   - Grid content data: `window.SECRETARY_DATA.grids`, `gridHistory` in localStorage (`secretary.gridHistory`), `window.SecretaryActions.generateGrid/refineCell/regenerateFromSweep/regenerateFromFrameReject`.
@@ -73,10 +73,13 @@ Source: `app.jsx` (`KNOWN_SCREENS` and route switch)
   - `components.jsx` (FrontPage, ChatRail, IdeasTray, BriefingIdea, QuickCapture, extractBriefingIdeas, curateBriefingIdeasViaAI, readCachedIdeas/writeCachedIdeas)
   - `styles.css` (grid classes + ideas-tray + briefing-idea + quick-capture + front-viewport.ideas-mode height/min-height/sticky overrides)
   - `inbox.js` (SecretaryInbox.append — QuickCapture writes go through here)
-  - `mission_control_loader.js` (briefing payload — IdeasTray reads `MissionControl.dailyBriefing`)
+  - `mission_control_loader.js` (briefing payload — IdeasTray reads `MissionControl.dailyBriefing`; Pieces fetches gated 2026-04-28)
   - `server.py` (`/api/cells/*`, `/api/claude_code/generate`, `/api/grid_affinity` if behavior changed; `/api/inbox/append` for QuickCapture writes)
-- Last Verified: 2026-04-27
+  - `ai_instructions.js` (chat prompt assembler — `piecesBlock()` returns null 2026-04-28)
+  - `Secretary.html` (cache-busters)
+- Last Verified: 2026-04-28
 - History:
+  - 2026-04-28 chat context cleanup + connector quick-tags: (a) Removed Pieces from chat context window — `piecesBlock()` in `ai_instructions.js` returns null; `primePiecesFromLedger()` and `sweepPieces()` in `mission_control_loader.js` no-op. Pieces UI on Activity page untouched. Saves chat context budget; chat now grounds entirely in CCAgentindex bedrock (which now includes the 6 Auto/ symlinks made earlier today: Boxes, Client Boxes, comeketo-inbox, Onboard Scripts, orchestrator, Staff Boxes). (b) Added connector quick-tag row above ChatRail input on FrontPage. Four round icon buttons: Slack (`slack`), GitHub (`git-branch`), Close (`target`), ClickUp (`clipboard-list`). Click toggles `@<connector>` tag in/out of draft; active tags show with filled background. Phase 1 = visual + intent-tagging. Phase 2 (deferred): wire to MCP server for actual sends. Cache-busts: `mission_control_loader.js` 9→10, `ai_instructions.js` 11→12, `components.jsx` 63→64.
   - 2026-04-25 initial mapping.
   - 2026-04-25 IdeasTray rewrite: replaced the dense ChoiceBlock cards (kind eyebrow + chip + serif headline + subtitle + refine button) with quiet `BriefingIdea` rows (7px accent dot + sans-serif title only, max 5 items). Source moved from grid.cells/chat-extracted bullets to the daily briefing markdown via `extractBriefingIdeas` (regex fast path) and `curateBriefingIdeasViaAI` (AI-curated short titles, cached in localStorage by briefing slug). Click sends "Let's talk about: {title}" to chat. Removed the auto-extract-bullets-from-chat-replies effect that was creating noise. Sweep button forces a fresh AI curation pass.
   - 2026-04-25 QuickCapture widget added below IdeasTray: structured to mirror the chat composer (header bar + hairline + textarea). Saves to `_inbox/inbox.jsonl` as `kind:"note"`. ⌘/Ctrl+Enter submits. Optional Web Speech API voice input. Dispatches via `SecretaryInbox.append` so the bedrock sweep folds it later.
@@ -159,18 +162,19 @@ Source: `app.jsx` (`KNOWN_SCREENS` and route switch)
   - AI provider/key/model controls
   - Demo mode and chat enhancement toggles
   - Pieces model selector
-  - MCP server / delegation target status registry (GitHub, ClickUp, Close, Claude Code, Cursor)
+  - MCP server / delegation target status registry (GitHub, ClickUp, Close, Claude Code, Codex CLI, Cursor)
   - Credential editor for MCP/connector keys (masked save/clear flow to `.env`)
 - Asset Ownership:
   - Render: `screens.jsx` `SettingsScreen`, `IntelligencePanel`.
   - Data: `tweaks` state in `app.jsx` persisted to localStorage `secretary.tweaks`.
-  - API: `GET /api/status`, `GET /api/settings/mcp_credentials`, `POST /api/settings/mcp_credentials/save`.
+  - API: `GET /api/status`, `POST /api/claude_code/generate`, `POST /api/codex_cli/generate`, `GET /api/settings/mcp_credentials`, `POST /api/settings/mcp_credentials/save`.
   - Integrations: `window.SecretaryAI`, `window.Comeketoi18n`.
   - Styles: settings classes in `styles.css`.
   - Side effects: writes localStorage values; no direct destructive server write from toggles.
-- Change Checklist: `app.jsx`, `screens.jsx`, `server.py` (`/api/status`), `ai.js`, `i18n.js`, `styles.css`.
-- Last Verified: 2026-04-27
+- Change Checklist: `app.jsx`, `screens.jsx`, `server.py` (`/api/status`, `/api/claude_code/generate`, `/api/codex_cli/generate`, `/api/chat/send` provider routing), `ai.js`, `chat.js`, `i18n.js`, `styles.css`, `Secretary.html` cache-busters.
+- Last Verified: 2026-04-28
 - History:
+  - 2026-04-28 Codex CLI provider: added `codex_cli` as a third Intelligence provider beside Claude Code and OpenAI. Settings now shows a three-way selector and a selected-CLI binary row; choosing Codex uses local `codex exec` with the selected GPT model and read-only sandbox, while choosing Claude uses local `claude -p`. The single `tweaks.aiProvider` value makes the routes mutually exclusive: only the selected provider receives chat/test/generate prompts. `/api/status` now reports `codex_cli_available` + `codex_cli_path`; `/api/codex_cli/generate` was added; `/api/chat/send` accepts `provider:"codex_cli"` and `chat.js` forwards the selected model. Cache-busts: `ai.js` 5→6, `chat.js` 9→10, `screens.jsx` 93→94, `app.jsx` 51→52.
   - 2026-04-25 initial mapping.
   - 2026-04-25 great trim: stripped density/frames/gestures/prediction/auto-commit/memory rows from `SettingsScreen` + `TweaksPanel`. Remaining knobs: theme, demo mode, language, intelligence panel (api key + provider + model), prompt-enhance, pieces model, reset.
   - 2026-04-27 MCP control layer: added a dedicated "MCP servers + delegation targets" section with live status refresh from `/api/status`. Surfaces per-target availability + connector detail + write-approval policy for GitHub/ClickUp/Close/Claude/Cursor and links directly into the Delegations action zone.

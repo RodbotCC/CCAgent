@@ -2,6 +2,12 @@
 
 Administrative app for Comeketo's internal operations. A local web app + reflective intelligence layer (Rodbot) that watches what the team does, distills patterns into structured memories, and surfaces them through a 3×3 decision grid, a chat interface, and a memory view.
 
+## Project memory
+
+Before non-trivial edits, read [`LEDGERS/GLOBAL_LEDGER.md`](LEDGERS/GLOBAL_LEDGER.md) — the project's top-level memory spine. It covers current world state, major systems, source-of-truth rules, active risks, agent work protocol, and the Done Gate. The structured mirror lives at [`LEDGERS/GLOBAL_LEDGER.json`](LEDGERS/GLOBAL_LEDGER.json) and the full ledger roster at [`LEDGERS/INDEX.md`](LEDGERS/INDEX.md).
+
+> The repo is not just code. The repo is the memory of the build.
+
 ## Running it
 
 ```

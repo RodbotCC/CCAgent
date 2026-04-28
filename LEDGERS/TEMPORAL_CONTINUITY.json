@@ -1,0 +1,216 @@
+{
+  "ledger_type": "temporal_continuity",
+  "version": "0.1.0",
+  "last_updated": "2026-04-28T11:40:00Z",
+  "last_updated_local_approx": "2026-04-28 ~07:40 AM ET",
+  "updated_by": "Jake (orchestrator) + Claude (Cowork)",
+  "current_project_moment": "Ledger system buildout Phase 5 is complete and the first runnable ledger steward (global_ledger_steward) has landed. Open Problems joins Global (P1), Temporal Continuity (P2), North Star (P3), and File Directory (P4); 13 active problems + 1 closed. The Global Ledger Steward now runs through POST /api/agents/global_ledger_steward/run with scoped local write authority, receipt output, and activity logging.",
+  "current_phase": "Early automation proof with safety cleanup",
+  "continuity_status": "active",
+  "next_recommended_read": [
+    "LEDGERS/GLOBAL_LEDGER.md",
+    "Auto/Client Boxes/Brenda & Steve/2026-04-28_audit_marker.md (the only box with explicit audit so far)"
+  ],
+  "rule_when_global_and_temporal_conflict": "Global Ledger wins for permanent project identity and rules. Temporal Continuity wins for current working state.",
+  "active_workstreams": [
+    {
+      "id": "ledger_system_buildout",
+      "status": "active",
+      "current_step": "Phase 5 Open Problems Ledger landed; first steward automation active",
+      "last_completed": "Phases 1-5 — Global + Temporal Continuity + North Star + File Directory + Open Problems — plus global_ledger_steward app agent",
+      "next_step_candidates": ["source_of_truth", "definition_of_done", "decisions", "audit"],
+      "workflow": "user types P (or uploads next ledger spec) to proceed; use global_ledger_steward for global-memory maintenance sweeps",
+      "build_order_authority": "LEDGERS/INDEX.md"
+    },
+    {
+      "id": "client_box_audit_cleanup",
+      "status": "active",
+      "current_method": "one box at a time. read, audit, clean if approved, leave audit marker, stamp BOX_LEDGER_TEMPLATE if graduating to full Box",
+      "completed": ["Brenda & Steve"],
+      "next_likely_candidates": ["Hugo Casillas", "Daphney & Frankie", "Dawn M Denton", "Eliana Lopes", "Elizabeth & Peter", "Emanuella Andrade", "Esther Manu", "Flávia Benson", "Flaviane Mesquita"]
+    },
+    {
+      "id": "verbatim_comms_coverage",
+      "status": "structurally_complete_not_yet_ui_bound",
+      "summary": "All 28 client boxes carry 01b_comms_verbatim.md + comms/*.json (582 raw payloads). Boxes UI page renders 01_comms.md only — verbatim file not yet bound.",
+      "open": "Wire 01b_comms_verbatim.md as a second comms tab in BoxesScreen when ready"
+    },
+    {
+      "id": "allowed_to_know_constraints",
+      "status": "conceptual_but_urgent",
+      "summary": "Separate comms-confirmed facts from enrichment-only/internal/protected facts. Customer-facing copy must ground in comms or explicit operator approval.",
+      "owner_assigned": false
+    },
+    {
+      "id": "github_local_drift_safety",
+      "status": "active_caution",
+      "summary": "Working tree dirty with this session's writes (LEDGERS/, CLAUDE.md, AGENT.md, README.md, activity.jsonl). Direct GitHub writes need Jake's go-ahead."
+    },
+    {
+      "id": "inbox_guardrail_enforcement",
+      "status": "partially_active",
+      "summary": "Hard gates exist in Auto/comeketo-inbox/. Missing: automation-page surfacing of guardrail check as explicit approval card rather than batched approval."
+    }
+  ],
+  "active_assumptions": [
+    "GitHub is the durable source of truth.",
+    "Local working copy may contain unpushed work — direct GitHub writes require caution.",
+    "File-tree orchestration is preferred over RAG-style memory.",
+    "Boxes are the preferred local memory structure.",
+    "Plans are subordinate to comms, state, guardrails, and approvals.",
+    "Client replies invalidate or pause existing plans.",
+    "Enrichment is internal-only — not customer-facing copy.",
+    "Comeketo wants visible automation movement, but Jake wants safer/controlled.",
+    "Verbatim comms (01b_comms_verbatim.md) is now the highest-fidelity client truth in each box.",
+    "Pieces.app at localhost:39300 is the memory backend.",
+    "The Auto/ alias is read-mostly; writes need explicit team authorization."
+  ],
+  "active_risks": [
+    {
+      "id": "plan_guardrail_contradiction",
+      "severity": "high",
+      "summary": "Some plans may contain unsafe executable copy written before guardrails were enforced. Brenda was the first to receive an explicit audit; the other 27 plans have not been re-validated."
+    },
+    {
+      "id": "batch_approval_risk",
+      "severity": "high",
+      "summary": "Risky moves (fee waivers, discounts, pricing claims, enrichment-based personalization) can be missed during rushed batch approval. They should require isolated approval cards."
+    },
+    {
+      "id": "reply_invalidates_plan",
+      "severity": "medium",
+      "summary": "Reply → plan is stale rule is documented but not yet automation-enforced."
+    },
+    {
+      "id": "enrichment_boundary",
+      "severity": "medium",
+      "summary": "Manual discipline only until allowed-to-know layer is built."
+    },
+    {
+      "id": "github_local_drift",
+      "severity": "medium",
+      "summary": "Direct GitHub commits can conflict with local unpushed work. Pre-existing dirty files (pieces_sweeps.jsonl, Flávia Benson.txt) should not be bundled with this session's commits without confirming."
+    },
+    {
+      "id": "ui_canonical_drift",
+      "severity": "low",
+      "summary": "Boxes UI page is slightly behind disk reality — verbatim comms exists in every box but is not yet UI-bound."
+    },
+    {
+      "id": "auto_alias_write_transparency",
+      "severity": "low",
+      "summary": "Verbatim backfill wrote through Auto/ symlink to /Users/jakeaaron/Desktop/Auto/. Those writes don't appear in main repo git status. If standalone Auto/ has its own git scope, track separately."
+    }
+  ],
+  "human_preferences": [
+    "One ledger at a time. Wait for Jake's signal (typically 'P' or next spec upload).",
+    "Outlines should be implementation-ready but not overfit to a single implementation.",
+    "Markdown + JSON + visual maps are the preferred ledger shape.",
+    "GitHub-backed continuity over local-only memory.",
+    "Client Box work is one box at a time.",
+    "No risky writes without awareness — leave a handoff note if a change would surprise a future agent.",
+    "Safe movement over aggressive cleverness for early Comeketo automation.",
+    "Energy-driven collaboration: Jake orchestrates, Claude does fine details. Don't ask 4 clarifying questions on well-specified tasks.",
+    "No commit/push without explicit go-ahead when there's risk of stepping on local unpushed work.",
+    "Hercules mode signals trust — execute the spec rigorously without permission checks."
+  ],
+  "next_handoff": {
+    "if_user_signals_next_ledger": "Wait for spec. Build same way as Phases 1-2: tasks → artifacts → wire into Global + INDEX → ledger-log → return clean summary. Don't jump ahead. Use global_ledger_steward in audit-only mode for global-memory drift checks.",
+    "if_user_says_commit_or_push": "Run git status first. This session adds: LEDGERS/ (new), CCAgentindex/agents/global_ledger_steward/, CCAgentindex/_ledger/ledger_steward_runs/, CLAUDE.md, AGENT.md, README.md, CCAgentindex/_ledger/activity.jsonl. Don't bundle pre-existing dirty files (pieces_sweeps.jsonl, Flávia Benson.txt) without confirming. Don't push without explicit go-ahead.",
+    "if_continuing_client_box_audit": "Use Brenda & Steve as the template. Read both 01_comms.md AND 01b_comms_verbatim.md before changing. Leave YYYY-MM-DD_audit_marker.md and prepend Audit-cleaned line to plan/alerts.",
+    "if_continuing_verbatim_comms": "Pull script at outputs/pull_full_comms.py is one-shot. Promote to Auto/Onboard Scripts/ if recurring. Close API key was env-only — Jake re-supplies for refresh."
+  },
+  "recently_touched": [
+    {
+      "path": "Auto/Client Boxes/ (all 28)",
+      "summary": "Added 01b_comms_verbatim.md + comms/*.json to every box (582 raw payloads). Existing 01_comms.md summaries untouched.",
+      "session": "2026-04-28 (this session, earlier)"
+    },
+    {
+      "path": "Auto/Client Boxes/Brenda & Steve",
+      "summary": "Audit-cleaned 05_seven_day_plan.md (01:40 AM ET) and 09_andre_alerts.md. Added 2026-04-28_audit_marker.md. Two commits: bec920d, 0a46a3b.",
+      "session": "2026-04-28 (Jake solo, before this session)"
+    },
+    {
+      "path": "LEDGERS/ (entire directory)",
+      "summary": "Created from scratch this session. Phase 1 (Global Ledger + INDEX + 3 visuals + 2 templates), Phase 2 (Temporal Continuity Ledger + .json + 2 visuals), Phase 3 (North Star Ledger + .json + 2 visuals), Phase 4 (File Directory Ledger + .json + 2 visuals + 5 open problems surfaced), Phase 5 (Open Problems Ledger + .json + 3 visuals; 13 active + 1 closed), plus canonical Global Ledger Steward package under LEDGERS/AGENTS/.",
+      "session": "2026-04-28 (this session)"
+    },
+    {
+      "path": "CCAgentindex/agents/global_ledger_steward",
+      "summary": "Runnable app-agent spec and prompt for Global Ledger Steward. Dispatch path: POST /api/agents/global_ledger_steward/run.",
+      "session": "2026-04-28 (this session)"
+    },
+    {
+      "path": "CCAgentindex/_ledger/ledger_steward_runs",
+      "summary": "Receipt directory for Global Ledger Steward runs.",
+      "session": "2026-04-28 (this session)"
+    },
+    {
+      "path": "CLAUDE.md, AGENT.md, README.md",
+      "summary": "Read-first pointers wired into all three top-level meta files.",
+      "session": "2026-04-28 (this session)"
+    },
+    {
+      "path": "page_asset_sitemap.md",
+      "summary": "Boxes-page section: new Assets line for verbatim comms + 2026-04-28 history entry. Top-level Last updated bumped.",
+      "session": "2026-04-28 (this session)"
+    },
+    {
+      "path": "CCAgentindex/_ledger/activity.jsonl",
+      "summary": "Six entries appended this session: verbatim backfill, Global Ledger Phase 1, Temporal Continuity Phase 2, North Star Phase 3, File Directory Phase 4, Open Problems Phase 5.",
+      "session": "2026-04-28 (this session)"
+    }
+  ],
+  "current_git_posture": {
+    "branch": "main",
+    "last_3_commits": [
+      {"sha": "8461f5d", "subject": "April 28 sync — verbatim comms, intelligence layer, draft delegations"},
+      {"sha": "0a46a3b", "subject": "Add Brenda & Steve audit marker"},
+      {"sha": "bec920d", "subject": "Clean Brenda & Steve alert schedule after audit"}
+    ],
+    "uncommitted_this_session": ["LEDGERS/", "CCAgentindex/agents/global_ledger_steward/", "CCAgentindex/_ledger/ledger_steward_runs/", "CLAUDE.md", "AGENT.md", "README.md", "CCAgentindex/_ledger/activity.jsonl"],
+    "uncommitted_pre_existing": ["CCAgentindex/_ledger/pieces_sweeps.jsonl", "Auto/Client Boxes/Flávia Benson/Flávia Benson.txt"],
+    "auto_alias_writes_scope": "Today's verbatim backfill wrote through Auto/ symlink to /Users/jakeaaron/Desktop/Auto/ — outside this repo's filesystem scope.",
+    "rule": "Jake controls commit and push timing. Local commits are fine if requested; push only with go-ahead. Don't bundle pre-existing dirty files with this session's commits without confirming."
+  },
+  "inactivity_as_state": [
+    {"id": "verbatim_ui_binding", "waiting_on": "renderer work after design system finalizes"},
+    {"id": "allowed_to_know_layer", "waiting_on": "design assignment"},
+    {"id": "client_box_audits", "waiting_on": "one-at-a-time queue progression (27 boxes remaining)"},
+    {"id": "next_ledger_phase", "waiting_on": "Jake's signal"},
+    {"id": "session_commit_push", "waiting_on": "Jake's go-ahead"},
+    {"id": "close_api_key_refresh", "waiting_on": "Not currently scheduled — Jake re-supplies if needed"}
+  ],
+  "plan_aging_rules": {
+    "no_reply": "Plan may remain valid if dates and guardrails still pass.",
+    "reply_received": "Plan is stale until reviewed. New 01b_comms_verbatim.md makes reply detection auditable; no automation enforces this yet.",
+    "new_transcript_imported": "Plan may need rewrite. Today's verbatim backfill imported full transcript history into all 28 boxes — plans authored before today should be re-checked against the verbatim file.",
+    "guardrails_changed": "Plan must be re-audited. Brenda is the only box with an explicit re-audit so far.",
+    "approval_status_changed": "Future risky moves must be rechecked."
+  },
+  "session_log": [
+    {
+      "session_id": "2026-04-28_late-night-early-am",
+      "summary": "Verbatim comms backfill across all 28 client boxes, ledger system Phases 1-5, then first steward automation (global_ledger_steward).",
+      "outcomes": [
+        "All 28 client boxes carry full Close.com transcripts + raw payloads (582 activities)",
+        "LEDGERS/ exists at project root with Global, Temporal, North Star, File Directory, and Open Problems ledgers plus canonical Global Ledger Steward package",
+        "CCAgentindex/agents/global_ledger_steward/ is runnable through the app agent endpoint",
+        "Read-first wiring in CLAUDE.md, AGENT.md, README.md",
+        "page_asset_sitemap.md updated for verbatim comms",
+        "activity.jsonl appended (3 entries this session)"
+      ],
+      "carry_forward": "Wait for Jake's signal on next ledger (likely North Star or Source-of-Truth). Don't push without explicit go-ahead. Brenda audit pattern is the template for future client-box audits."
+    },
+    {
+      "session_id": "2026-04-28_earlier_jake_solo",
+      "summary": "Brenda & Steve client box audit and cleanup before this session.",
+      "outcomes": [
+        "Commit bec920d: Clean Brenda & Steve alert schedule after audit",
+        "Commit 0a46a3b: Add Brenda & Steve audit marker",
+        "Commit 8461f5d: April 28 sync (verbatim comms, intelligence layer, draft delegations) — predates this session's Close API backfill"
+      ]
+    }
+  ]
+}

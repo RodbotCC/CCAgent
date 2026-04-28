@@ -1,0 +1,38 @@
+%% Temporal Continuity Flow — Comeketo Agent
+%% Two flows: (A) Session-start protocol w/ end-of-session memory update
+%% (B) Client-state temporal flow — how plans, comms, and approvals interact
+
+%% ---------------------------------------------------------------
+%% (A) Session protocol — what every meaningful session looks like
+%% ---------------------------------------------------------------
+
+flowchart TD
+    S([Session Starts]):::start --> G["Read GLOBAL_LEDGER.md<br/>(world state)"]:::ledger
+    G --> T["Read TEMPORAL_CONTINUITY.md<br/>(current moment)"]:::ledger
+    T --> B["Read relevant Box / local ledger<br/>(neighborhood context)"]:::box
+    B --> W["Do the work"]:::work
+    W --> C{Did meaningful<br/>state change?}:::decision
+
+    C -->|No| E([End session]):::done
+    C -->|Yes| U["Update Temporal Continuity<br/>· §1 Snapshot<br/>· §2 Workstreams<br/>· §3 Recent Changes<br/>· §10 Next Handoff<br/>· §11 Session Log"]:::update
+    U --> L["Update local ledgers if needed<br/>(client_ledger.md, audit marker,<br/>page_asset_sitemap.md)"]:::update
+    L --> A["Append to<br/>activity.jsonl"]:::audit
+    A --> H["Leave Next Agent Handoff<br/>(§10 of Temporal)"]:::handoff
+    H --> Git{"Commit / push?<br/>(per Jake's go-ahead)"}:::decision
+    Git -->|local commit| LC["git commit<br/>(narrow, descriptive)"]:::work
+    Git -->|push| GH["git push<br/>(only with go-ahead)"]:::work
+    Git -->|wait| WAIT["Carry forward<br/>uncommitted state in §13"]:::wait
+    LC --> E
+    GH --> E
+    WAIT --> E
+
+    classDef start fill:#10b981,stroke:#047857,color:#fff
+    classDef ledger fill:#7c3aed,stroke:#5b21b6,color:#fff
+    classDef box fill:#0ea5e9,stroke:#0369a1,color:#fff
+    classDef work fill:#22c55e,stroke:#15803d,color:#052e16
+    classDef decision fill:#f8fafc,stroke:#64748b,color:#0f172a
+    classDef update fill:#a78bfa,stroke:#7c3aed,color:#1e1b4b
+    classDef audit fill:#fcd34d,stroke:#b45309,color:#451a03
+    classDef handoff fill:#f59e0b,stroke:#92400e,color:#1c1917
+    classDef wait fill:#cbd5e1,stroke:#64748b,color:#0f172a,stroke-dasharray: 4 3
+    classDef done fill:#94a3b8,stroke:#475569,color:#fff

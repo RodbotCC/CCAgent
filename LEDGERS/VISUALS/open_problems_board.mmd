@@ -1,0 +1,54 @@
+%% Open Problems Board — Comeketo Agent
+%% Active problems grouped by urgency × severity. As of 2026-04-28.
+%% 13 active + 1 closed (PROB-008 ledger system).
+
+flowchart LR
+    subgraph NOW["NOW · Critical"]
+        direction TB
+        P1["PROB-001<br/>Allowed-To-Know<br/>Constraint Not Implemented<br/>· open · blocks NS-04 enforcement"]:::critical
+    end
+
+    subgraph SOON_CRIT["SOON · Critical"]
+        direction TB
+        P3["PROB-003<br/>Approval Flow Does Not<br/>Isolate Risky Moves<br/>· open · blocks NS-05 enforcement"]:::critical
+    end
+
+    subgraph SOON_HIGH["SOON · High"]
+        direction TB
+        P2["PROB-002<br/>Active Client Boxes<br/>Need Guardrail Audit<br/>· in-progress · 1/28 done"]:::high
+        P6["PROB-006<br/>Plan Rewrite Trigger<br/>After Inbound<br/>· open · couples PROB-007"]:::high
+        P10["PROB-010<br/>CLAUDE.md Domains<br/>Out of Date<br/>· needs-decision"]:::high
+    end
+
+    subgraph SOON_MED["SOON · Medium"]
+        direction TB
+        P5["PROB-005<br/>Full Phone Transcripts<br/>Integration<br/>· PARTIAL · infra ✓ UI ⏳"]:::partial
+        P4["PROB-004<br/>GitHub Direct Writes<br/>vs Local Unpushed<br/>· open"]:::medium
+        P7["PROB-007<br/>Historical Inbound<br/>Detection May Be Noisy<br/>· needs-audit"]:::medium
+        P12["PROB-012<br/>Auto/Boxes/ Mirror<br/>Purpose Unclear<br/>· needs-verification"]:::medium
+    end
+
+    subgraph LATER_MED["LATER · Medium"]
+        direction TB
+        P13["PROB-013<br/>Two Onboard Scripts/<br/>Folders<br/>· needs-decision"]:::medium
+    end
+
+    subgraph LATER_LOW["LATER · Low"]
+        direction TB
+        P9["PROB-009<br/>Optional Connections<br/>Need Verification<br/>· needs-verification"]:::low
+        P11["PROB-011<br/>docs/page_asset_sitemap<br/>Is Stale<br/>· needs-decision"]:::low
+        P14["PROB-014<br/>Two Comeketo Agent/<br/>Folders<br/>· needs-decision"]:::low
+    end
+
+    subgraph CLOSED["RECENTLY CLOSED"]
+        direction TB
+        P8["✓ PROB-008<br/>Ledger System<br/>Not Yet Implemented<br/>· closed 2026-04-28<br/>· Phases 1–4 landed"]:::closed
+    end
+
+    %% Severity classes
+    classDef critical fill:#dc2626,stroke:#7f1d1d,color:#fff,stroke-width:3px
+    classDef high fill:#f59e0b,stroke:#92400e,color:#1c1917,stroke-width:2px
+    classDef medium fill:#fcd34d,stroke:#b45309,color:#451a03
+    classDef partial fill:#facc15,stroke:#a16207,color:#451a03,stroke-dasharray: 4 3
+    classDef low fill:#fde68a,stroke:#d97706,color:#451a03
+    classDef closed fill:#22c55e,stroke:#15803d,color:#052e16

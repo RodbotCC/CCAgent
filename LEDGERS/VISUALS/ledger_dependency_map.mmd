@@ -1,0 +1,46 @@
+%% Ledger Dependency Map — Comeketo Agent
+%% Global Ledger as the hub. Solid lines = ledger exists.
+%% Dashed lines = planned. Square boxes = ledger files. Rounded = active surface.
+
+flowchart LR
+    GL["Global Ledger<br/>(LEDGERS/GLOBAL_LEDGER.md)"]:::active
+
+    GL --> JSON["GLOBAL_LEDGER.json<br/>(structured mirror)"]:::active
+    GL --> IDX["INDEX.md<br/>(roster)"]:::active
+
+    GL --> SOT["Source-of-Truth Ledger"]:::planned
+    GL --> DOD["Definition of Done Ledger"]:::planned
+    GL --> TC["Temporal Continuity Ledger"]:::planned
+    GL --> NS["North Star Ledger"]:::planned
+    GL --> PH["Phase Ledger"]:::planned
+
+    GL --> DIR["Directory Ledger"]:::planned
+    GL --> FC["File Contents Ledger"]:::planned
+    GL --> AWM["Asset / Widget Map"]:::planned
+    GL --> CONN["Connections Ledger"]:::planned
+    GL --> SET["Settings Ledger"]:::planned
+
+    GL --> DEC["Decisions Ledger"]:::planned
+    GL --> COMM["Communications Ledger"]:::planned
+    GL --> OP["Open Problems Ledger"]:::planned
+    GL --> AUD["Audit Ledger"]:::planned
+    GL --> PR["Prompt / Reconstruction Ledger"]:::planned
+    GL --> SCT["Scout Ledger"]:::planned
+
+    GL --> PAGES["Page Ledgers (per route)"]:::planned
+    GL --> WIDG["Widget Ledgers"]:::planned
+
+    GL --> SITEMAP(["page_asset_sitemap.md<br/>(live UI Done Gate)"]):::live
+    GL --> ACT(["activity.jsonl<br/>(append-only audit trail)"]):::live
+    GL --> META(["CLAUDE.md / AGENT.md<br/>(meta harness)"]):::live
+
+    SOT -.->|expands rules in| GL
+    DOD -.->|expands gates in| GL
+    OP -.->|fed by| AUD
+    DEC -.->|cross-references| OP
+    PAGES -.->|register with| AWM
+    PAGES -.->|register with| SITEMAP
+
+    classDef active fill:#7c3aed,stroke:#5b21b6,color:#fff,stroke-width:2px
+    classDef planned fill:#e0e7ff,stroke:#6366f1,color:#1e1b4b,stroke-dasharray: 4 3
+    classDef live fill:#10b981,stroke:#047857,color:#fff

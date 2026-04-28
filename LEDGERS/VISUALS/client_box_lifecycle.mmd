@@ -1,0 +1,56 @@
+%% Client Box Lifecycle — Comeketo Agent
+%% One box at a time. Audit, clean, leave marker, proceed.
+
+flowchart TD
+    START([Lead enters CRM<br/>Close.com lead created]) --> CREATE["Create client box<br/>Auto/Client Boxes/&lt;Name&gt;/"]
+    CREATE --> META["00_meta.json<br/>identity + lead_id + status"]
+    CREATE --> COMMS_SUMMARY["01_comms.md<br/>(curated exec summary)"]
+    CREATE --> COMMS_VERBATIM["01b_comms_verbatim.md +<br/>comms/*.json<br/>(full Close transcripts/bodies)"]
+    CREATE --> PROFILE["04_profile.md<br/>(internal strategy)"]
+    CREATE --> PLAN["05_seven_day_plan.md<br/>(draft strategy)"]
+
+    META --> READY{Ready for work?}
+    COMMS_SUMMARY --> READY
+    COMMS_VERBATIM --> READY
+    PROFILE --> READY
+    PLAN --> READY
+
+    READY -->|yes| AUDIT["Audit pass<br/>(check plan vs comms vs guardrails)"]
+    READY -->|no — gaps| FILL["Fill gaps<br/>append to client_ledger.md"]
+    FILL --> READY
+
+    AUDIT --> CONFLICT{Plan conflicts<br/>with comms or<br/>guardrails?}
+
+    CONFLICT -->|yes| CLEAN["Clean unsafe copy<br/>(strip enrichment-based claims,<br/>fee waivers, scope promises)"]
+    CONFLICT -->|no| MARKER["Leave audit marker<br/>(date · scope · operator)"]
+    CLEAN --> MARKER
+
+    MARKER --> ACTIVE["Box is operationally safe<br/>· Plan suggests<br/>· Guardrails gate<br/>· Comms ground<br/>· Operator approves"]
+
+    ACTIVE --> EVENT{Event}
+    EVENT -->|client replies| STALE["Plan is stale<br/>re-validate before next send"]
+    EVENT -->|operator approves move| SEND["Send via comeketo-inbox skill<br/>(NEPQ + ballpark calc + email template)"]
+    EVENT -->|risky move detected| GATE["Stop · Approval card<br/>(NOT batched)"]
+
+    STALE --> AUDIT
+    SEND --> LOG["Append to<br/>client_ledger.md +<br/>CCAgentindex/_ledger/activity.jsonl"]
+    GATE --> APPROVED{Operator<br/>approves?}
+    APPROVED -->|yes| SEND
+    APPROVED -->|no| HOLD["Hold · Annotate plan ·<br/>Open Problems Ledger entry"]
+    HOLD --> AUDIT
+
+    LOG --> ACTIVE
+
+    classDef start fill:#10b981,stroke:#047857,color:#fff
+    classDef active fill:#0ea5e9,stroke:#0369a1,color:#fff
+    classDef plan fill:#fcd34d,stroke:#b45309,color:#451a03
+    classDef guard fill:#ef4444,stroke:#991b1b,color:#fff
+    classDef safe fill:#22c55e,stroke:#15803d,color:#052e16
+    classDef decision fill:#f8fafc,stroke:#64748b,color:#0f172a
+
+    class START,CREATE start
+    class META,COMMS_SUMMARY,COMMS_VERBATIM,PROFILE active
+    class PLAN plan
+    class CLEAN,GATE,HOLD,STALE guard
+    class ACTIVE,SEND,LOG,MARKER safe
+    class READY,CONFLICT,EVENT,APPROVED decision

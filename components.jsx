@@ -1029,6 +1029,48 @@ function ChatRail({ go, gridGenerate, aiBusy }) {
           </div>
         )}
 
+        {/* Connector quick-tags — 2026-04-28 Phase 1.
+            Click inserts an @<connector> token at the end of the draft so the
+            chat agent (and the future MCP routing layer) knows the user wants
+            this turn's intent routed to that surface. Phase 2 will wire these
+            to actual MCP send actions. */}
+        <div className="chat-rail-connectors" style={{
+          display:"flex", gap:6, padding:"8px 12px 0", alignItems:"center",
+          fontSize:11, color:"var(--ink-3)", letterSpacing:"0.02em",
+        }}>
+          <span style={{fontFamily:"var(--font-mono)", textTransform:"uppercase", fontSize:9, opacity:0.7}}>route via</span>
+          {[
+            { tag: "@slack",   icon: "slack",          title: "Slack — tag this turn for Slack routing" },
+            { tag: "@github",  icon: "git-branch",     title: "GitHub — tag this turn for repo work" },
+            { tag: "@close",   icon: "target",         title: "Close — tag this turn for CRM action" },
+            { tag: "@clickup", icon: "clipboard-list", title: "ClickUp — tag this turn for task creation" },
+          ].map(c => {
+            const active = draft.includes(c.tag);
+            return (
+              <button
+                key={c.tag}
+                onClick={() => {
+                  setDraft(d => {
+                    if (d.includes(c.tag)) return d.replace(new RegExp("\\s*" + c.tag + "\\s*", "g"), " ").trim();
+                    return (d ? d.trimEnd() + " " : "") + c.tag + " ";
+                  });
+                }}
+                title={c.title}
+                style={{
+                  background: active ? "var(--paper-2)" : "transparent",
+                  border: "1px solid " + (active ? "var(--ink-3)" : "var(--rule)"),
+                  borderRadius:"50%", width:26, height:26, cursor:"pointer",
+                  display:"inline-flex", alignItems:"center", justifyContent:"center",
+                  color: active ? "var(--ink-1)" : "var(--ink-3)", padding:0,
+                  transition:"all 120ms ease",
+                }}
+              >
+                <Icon name={c.icon} size={11}/>
+              </button>
+            );
+          })}
+        </div>
+
         <div className="chat-rail-input">
           <button
             onClick={() => fileInputRef.current && fileInputRef.current.click()}

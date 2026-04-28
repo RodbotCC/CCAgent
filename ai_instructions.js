@@ -469,6 +469,17 @@ the WORLD section below is the normalized shape:
   }
 
   function piecesBlock() {
+    // 2026-04-28 — Pieces removed from chat context window per Jake.
+    // Pieces remains accessible separately on the Activity page; pumping
+    // it into every chat prompt is redundant and burns context budget.
+    // All chat context should come from CCAgentindex/ bedrock (the new
+    // symlinks under CCAgentindex/ — Boxes, Client Boxes, comeketo-inbox,
+    // Onboard Scripts, orchestrator, Staff Boxes — are the agent's memory
+    // surface; they reach the chat via /api/boxes/list and friends).
+    return null;
+
+    // ── (disabled below — preserved for reference) ──
+    // eslint-disable-next-line no-unreachable
     const p = window.PiecesContext;
     if (!p || !p.raw) return null;
     // Keep it bounded — the raw blob can be huge. Trim to ~6000 chars and

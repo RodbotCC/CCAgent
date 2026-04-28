@@ -1,0 +1,58 @@
+%% Directory Ownership Map — Comeketo Agent
+%% How directories cooperate. Two flows:
+%% (A) Canonical → Runtime → UI (top half)
+%% (B) Inbox/Send loop (bottom half)
+
+flowchart LR
+    subgraph FLOW_A["A · Canonical → Runtime → UI"]
+        direction LR
+        CB["Auto/Client Boxes/<br/>(canonical · 28 boxes)"]:::canonical --> Bin["Auto/orchestrator/bin/<br/>(comms_state_sweep,<br/>ready_check, refresh)"]:::canonical
+        Bin --> State["Auto/orchestrator/state/<br/>(generated · do NOT hand-edit)"]:::generated
+        State --> SrvBoxes["server.py<br/>/api/boxes/* endpoints"]:::canonical
+        SrvBoxes --> Loader["mission_control_loader.js<br/>fBoxes()"]:::canonical
+        Loader --> Screen["screens.jsx BoxesScreen<br/>+ specialized renderers<br/>(hugo, brenda_steve)"]:::canonical
+    end
+
+    subgraph FLOW_B["B · Inbox / Send Loop"]
+        direction LR
+        CB2["Auto/Client Boxes/<Name>/<br/>+ 01b_comms_verbatim.md"]:::canonical --> Skill["Auto/comeketo-inbox/<br/>SKILL.md +<br/>references/guardrails.md"]:::guard
+        Skill --> Scripts["Auto/comeketo-inbox/scripts/<br/>render_email · price_ballpark"]:::canonical
+        Scripts --> Triggers["CCAgentindex/triggers/<br/>auto_*.json +<br/>scheduled_tasks/"]:::canonical
+        Triggers --> Approve{"Risky move?<br/>(fee waiver · discount ·<br/>scope promise · pricing claim)"}:::decision
+        Approve -->|no — boring-safe| Send["Send to Close.com<br/>(API or operator)"]:::send
+        Approve -->|yes — high risk| Card["Isolated approval card<br/>(NOT batched)"]:::guardstrong
+        Card --> Send
+        Send --> CloseAct["Close.com activity<br/>(call · email · sms ·<br/>whatsapp · meeting)"]:::external
+        CloseAct -.-> Backfill["Auto/Client Boxes/<Name>/<br/>01b_comms_verbatim.md +<br/>comms/*.json updated<br/>(via outputs/pull_full_comms.py)"]:::canonical
+        Backfill -.-> CB2
+    end
+
+    subgraph FLOW_C["C · Intelligence / Analytics"]
+        direction LR
+        CB3["Auto/Client Boxes/<br/>+ Close exports +<br/>CCAgentindex/people, venues"]:::canonical --> Build["Onboard Scripts/<br/>build_*.py<br/>(top-level superset)"]:::canonical
+        Build --> Intel["CCAgentindex/intelligence/<br/>(cashflow · channels · leads ·<br/>libraries · ops · sales)"]:::generated
+        Intel --> SrvIntel["server.py<br/>/api/intelligence/*"]:::canonical
+        SrvIntel --> Analytics["screens.jsx<br/>AnalyticsScreen"]:::canonical
+    end
+
+    subgraph FLOW_D["D · Memory / Continuity (Done Gate)"]
+        direction LR
+        Work["Meaningful work<br/>happens"]:::work --> TempC["LEDGERS/<br/>TEMPORAL_CONTINUITY"]:::canonical
+        TempC --> ActLog["CCAgentindex/_ledger/<br/>activity.jsonl<br/>(append-only)"]:::canonical
+        ActLog --> SitemapCheck{"UI/page binding<br/>changed?"}:::decision
+        SitemapCheck -->|yes| Sitemap["page_asset_sitemap.md<br/>(root · UI Done Gate)"]:::canonical
+        SitemapCheck -->|no| GlobalCheck{"Global state /<br/>major system<br/>changed?"}:::decision
+        Sitemap --> GlobalCheck
+        GlobalCheck -->|yes| Global["LEDGERS/<br/>GLOBAL_LEDGER"]:::canonical
+        GlobalCheck -->|no| Commit["git commit · push"]:::canonical
+        Global --> Commit
+    end
+
+    classDef canonical fill:#22c55e,stroke:#15803d,color:#052e16
+    classDef generated fill:#94a3b8,stroke:#475569,color:#fff,stroke-dasharray: 4 3
+    classDef guard fill:#ef4444,stroke:#991b1b,color:#fff
+    classDef guardstrong fill:#dc2626,stroke:#7f1d1d,color:#fff,stroke-width:3px
+    classDef send fill:#10b981,stroke:#047857,color:#fff
+    classDef external fill:#0ea5e9,stroke:#0369a1,color:#fff
+    classDef decision fill:#f8fafc,stroke:#64748b,color:#0f172a
+    classDef work fill:#a78bfa,stroke:#7c3aed,color:#1e1b4b

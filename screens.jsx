@@ -188,8 +188,9 @@ function IntelligencePanel({ tweaks, setTweaks }) {
     return () => { mounted = false; };
   }, []);
 
+  const selectedProvider = tweaks.aiProvider || (AI && AI.getProvider ? AI.getProvider() : "openai");
   const route = AI && AI.getRoute ? AI.getRoute() : null;
-  const maskedHint = route === "server-proxy"
+  const maskedHint = route === "openai-server-proxy"
     ? "using server.py proxy · key loaded from .env · no key in browser"
     : hasKey
       ? "using browser key · stored in localStorage only"
@@ -208,20 +209,34 @@ function IntelligencePanel({ tweaks, setTweaks }) {
     setHasKey(false);
     setTestState({ state: "idle", msg: "" });
   };
-  const pickModel = (m) => setTweaks({ ...tweaks, openaiModel: m });
+  const persistTweaks = (next) => {
+    try { localStorage.setItem("secretary.tweaks", JSON.stringify(next)); } catch {}
+    setTweaks(next);
+  };
+  const pickModel = (m) => persistTweaks({ ...tweaks, openaiModel: m });
   const test = async () => {
     if (!AI) { setTestState({ state: "err", msg: "ai.js not loaded" }); return; }
-    const p = AI.getProvider();
-    setTestState({ state: "running", msg: p === "claude_code" ? "running claude -p probe…" : "calling OpenAI Responses API…" });
+    const p = selectedProvider;
+    const runningMsg = p === "claude_code"
+      ? "running claude -p probe..."
+      : p === "codex_cli"
+        ? "running codex exec probe..."
+        : "calling OpenAI Responses API...";
+    setTestState({ state: "running", msg: runningMsg });
     const r = await AI.testConnection();
     if (r.ok) setTestState({ state: "ok", msg: `ok · ${r.route} · reply: ${r.text}` });
     else setTestState({ state: "err", msg: r.error });
   };
 
-  // Provider pill selector — Claude Code (via subprocess) vs OpenAI.
-  const currentProvider = AI && AI.getProvider ? AI.getProvider() : "openai";
+  // Provider pill selector — exactly one active route receives prompts.
+  const currentProvider = selectedProvider;
   const claudeReady = !!(srvStatus && srvStatus.claude_code_available);
-  const pickProvider = (p) => setTweaks({ ...tweaks, aiProvider: p });
+  const codexReady = !!(srvStatus && srvStatus.codex_cli_available);
+  const cliProvider = currentProvider === "claude_code" || currentProvider === "codex_cli";
+  const activeCliLabel = currentProvider === "claude_code" ? "Claude Code" : currentProvider === "codex_cli" ? "Codex CLI" : "OpenAI";
+  const activeCliPath = currentProvider === "claude_code" ? srvStatus.claude_code_path : srvStatus.codex_cli_path;
+  const activeCliReady = currentProvider === "claude_code" ? claudeReady : currentProvider === "codex_cli" ? codexReady : false;
+  const pickProvider = (p) => persistTweaks({ ...tweaks, aiProvider: p });
 
   return (
     <React.Fragment>
@@ -229,8 +244,8 @@ function IntelligencePanel({ tweaks, setTweaks }) {
         <div>
           <div className="lbl">AI provider</div>
           <div className="desc">
-            <b>Claude Code</b> (default) uses your Max-plan auth via local <code>claude -p</code> — no API key, no per-token cost.
-            &nbsp;<b>OpenAI</b> is an optional fallback via Responses API (server proxy or browser BYOK).
+            Choose the active brain for chat. <b>Claude Code</b> uses local <code>claude -p</code>; <b>Codex CLI</b> uses local <code>codex exec</code>; <b>OpenAI</b> uses the Responses API.
+            Only the selected route receives prompts; the other CLI stays idle.
           </div>
         </div>
         <div />
@@ -243,6 +258,12 @@ function IntelligencePanel({ tweaks, setTweaks }) {
               title={claudeReady ? "Local Claude Code — no key needed" : "Claude binary not found on server PATH"}
             ><Icon name="terminal" size={12} style={{marginRight:5}}/>Claude Code{!claudeReady && " (unavailable)"}</button>
             <button
+              className={currentProvider === "codex_cli" ? "on" : ""}
+              onClick={() => pickProvider("codex_cli")}
+              disabled={!codexReady}
+              title={codexReady ? "Local Codex CLI — uses the selected GPT model" : "Codex binary not found on server PATH"}
+            ><Icon name="sparkles" size={12} style={{marginRight:5}}/>Codex CLI{!codexReady && " (unavailable)"}</button>
+            <button
               className={currentProvider === "openai" ? "on" : ""}
               onClick={() => pickProvider("openai")}
             ><Icon name="sparkles" size={12} style={{marginRight:5}}/>OpenAI</button>
@@ -250,28 +271,30 @@ function IntelligencePanel({ tweaks, setTweaks }) {
         </div>
       </div>
 
-      {currentProvider === "claude_code" && (
+      {cliProvider && (
         <div className="opt">
           <div>
-            <div className="lbl">Claude Code binary</div>
+            <div className="lbl">{activeCliLabel} binary</div>
             <div className="desc">
-              Resolved from server PATH at startup. Prompts pipe through stdin with <code>--max-turns 1 --output-format text</code> for one-shot speed.
+              Resolved from server PATH at startup. {currentProvider === "claude_code"
+                ? <React.Fragment>Prompts pipe through stdin with <code>--max-turns 1 --output-format text</code>.</React.Fragment>
+                : <React.Fragment>Prompts run through <code>codex exec</code> with the selected model and a read-only sandbox.</React.Fragment>}
             </div>
           </div>
-          <div style={{fontSize: 11.5, color: claudeReady ? "var(--pastel-mint-ink)" : "var(--alarm)"}}>
-            {claudeReady ? (srvStatus.claude_code_path || "ready") : "not found"}
+          <div style={{fontSize: 11.5, color: activeCliReady ? "var(--pastel-mint-ink)" : "var(--alarm)"}}>
+            {activeCliReady ? (activeCliPath || "ready") : "not found"}
           </div>
           <div className="ctrl">
-            <button className="btn" onClick={test} disabled={testState.state === "running"}>
+            <button className="btn" onClick={test} disabled={!activeCliReady || testState.state === "running"}>
               {testState.state === "running" ? "testing…" : "Test"}
             </button>
           </div>
         </div>
       )}
 
-      <div className="opt" style={{opacity: currentProvider === "claude_code" ? 0.55 : 1}}>
+      <div className="opt" style={{opacity: cliProvider ? 0.55 : 1}}>
         <div>
-          <div className="lbl">OpenAI API key {currentProvider === "claude_code" && <span style={{fontSize:10, color:"var(--ink-4)", fontWeight:400}}>(fallback only)</span>}</div>
+          <div className="lbl">OpenAI API key {cliProvider && <span style={{fontSize:10, color:"var(--ink-4)", fontWeight:400}}>(fallback only)</span>}</div>
           <div className="desc">Bring-your-own-key. Calls go straight from your browser to OpenAI via the Responses API. {maskedHint}.</div>
         </div>
         <div />
@@ -294,7 +317,7 @@ function IntelligencePanel({ tweaks, setTweaks }) {
       <div className="opt">
         <div>
           <div className="lbl">Model</div>
-          <div className="desc">Selected model for Responses API calls. Nano is fastest, 5.4 is the ceiling.</div>
+          <div className="desc">Selected model for OpenAI Responses and Codex CLI calls. Nano is fastest, 5.4 is the ceiling.</div>
         </div>
         <div />
         <div className="ctrl">
@@ -306,7 +329,7 @@ function IntelligencePanel({ tweaks, setTweaks }) {
         </div>
       </div>
 
-      <div className="opt" style={{opacity: currentProvider === "claude_code" ? 0.55 : 1}}>
+      <div className="opt" style={{opacity: currentProvider !== "openai" ? 0.55 : 1}}>
         <div>
           <div className="lbl">Test connection (OpenAI)</div>
           <div className="desc">Probe the OpenAI path. Use only when the OpenAI provider is selected above.</div>
@@ -367,6 +390,7 @@ function SettingsScreen({ tweaks, setTweaks, go, onReset }) {
     ["clickup", "ClickUp"],
     ["close", "Close CRM"],
     ["claude_code", "Claude Code"],
+    ["codex_cli", "Codex CLI"],
     ["cursor", "Cursor bridge"],
   ];
   const credRows = [

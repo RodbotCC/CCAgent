@@ -270,10 +270,11 @@ window.SecretaryChat = (() => {
 
     // Dispatch to server which routes per provider.
     const provider = (window.SecretaryAI && window.SecretaryAI.getProvider && window.SecretaryAI.getProvider()) || "claude_code";
+    const model = (window.SecretaryAI && window.SecretaryAI.getModel && window.SecretaryAI.getModel()) || "gpt-5.4-mini";
     const res = await fetch("/api/chat/send", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ messages, system: systemPrompt, provider, timeout: 180 }),
+      body: JSON.stringify({ messages, system: systemPrompt, provider, model, timeout: 180 }),
     });
     const data = await res.json().catch(() => ({}));
     if (!res.ok || !data.ok) {

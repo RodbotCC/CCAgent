@@ -1,0 +1,41 @@
+%% Client State Temporal Flow — Comeketo Agent
+%% Per spec §16. How plans age, how comms invalidate them,
+%% and where guardrails + approval cards interrupt the path to send.
+
+flowchart TD
+    Plan["05_seven_day_plan.md<br/>(strategy draft — NOT truth)"]:::plan --> Move["Next scheduled move<br/>(per plan)"]:::move
+    Comms["New comms / transcript<br/>(01b_comms_verbatim.md updated)"]:::evidence --> State["State update<br/>(client_ledger.md)"]:::evidence
+    State --> Check{"Plan still valid?<br/>(reply received?<br/>dates still ok?<br/>guardrails passed?)"}:::decision
+
+    Check -->|"yes — no reply<br/>dates pass"| Guardrails["Run guardrails<br/>(comeketo-inbox skill)"]:::guard
+    Check -->|"no — reply<br/>or dates stale"| Stale["Plan is stale<br/>· pause<br/>· re-audit before next send"]:::stale
+    Check -->|"new transcript<br/>imported"| Rewrite["Rewrite or re-validate plan<br/>against verbatim file"]:::stale
+
+    Stale --> Rewrite
+    Rewrite --> Plan
+
+    Guardrails --> Approval{"Risky move?<br/>(fee waiver, discount,<br/>scope promise, pricing<br/>claim, enrichment-based<br/>personalization)"}:::decision
+
+    Approval -->|"no — boring-safe<br/>(nudge, confirmation,<br/>tasting reminder)"| Surface["Surface / send<br/>via comeketo-inbox skill"]:::send
+    Approval -->|"yes — high risk"| Card["Isolated approval card<br/>(NOT batched)"]:::card
+
+    Card --> Operator{"Operator<br/>approves?"}:::decision
+    Operator -->|yes| Surface
+    Operator -->|no| Hold["Hold<br/>· annotate plan<br/>· Open Problems entry"]:::stale
+    Hold --> Plan
+
+    Surface --> Log["Append to client_ledger.md<br/>+ activity.jsonl"]:::audit
+    Log --> Wait["Wait for client response<br/>(Inactivity is a state)"]:::wait
+    Wait -.->|"reply received"| Comms
+    Wait -.->|"no reply,<br/>dates still pass"| Plan
+
+    classDef plan fill:#fcd34d,stroke:#b45309,color:#451a03
+    classDef move fill:#fde68a,stroke:#d97706,color:#451a03
+    classDef evidence fill:#22c55e,stroke:#15803d,color:#052e16
+    classDef guard fill:#ef4444,stroke:#991b1b,color:#fff
+    classDef card fill:#dc2626,stroke:#7f1d1d,color:#fff,stroke-width:3px
+    classDef stale fill:#fb923c,stroke:#9a3412,color:#fff
+    classDef send fill:#10b981,stroke:#047857,color:#fff
+    classDef audit fill:#7c3aed,stroke:#5b21b6,color:#fff
+    classDef wait fill:#cbd5e1,stroke:#64748b,color:#0f172a,stroke-dasharray: 4 3
+    classDef decision fill:#f8fafc,stroke:#64748b,color:#0f172a

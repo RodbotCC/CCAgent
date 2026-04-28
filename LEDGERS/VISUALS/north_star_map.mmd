@@ -1,0 +1,55 @@
+%% North Star Map — Comeketo Agent
+%% Project Thesis at the top, 10 North Star goals beneath, each linked to the actual systems they govern.
+%% Use this to trace any feature or workstream back to which NS goal(s) it serves.
+
+flowchart TD
+    Thesis["Project Thesis<br/>The repo is the memory of the build.<br/>FileTree orchestration over RAG memory.<br/>Automation that feels more human, not less."]:::thesis
+
+    Thesis --> NS01["NS-01<br/>Durable Project Memory"]:::goal
+    Thesis --> NS02["NS-02<br/>FileTree Orchestration"]:::goal
+    Thesis --> NS03["NS-03<br/>Box-Based Local Intelligence"]:::goal
+    Thesis --> NS04["NS-04<br/>Human Automation"]:::goal
+    Thesis --> NS05["NS-05<br/>Safe Movement"]:::goal
+    Thesis --> NS06["NS-06<br/>Source-of-Truth Discipline"]:::goal
+    Thesis --> NS07["NS-07<br/>Rebuildability"]:::goal
+    Thesis --> NS08["NS-08<br/>Visual Comprehension"]:::goal
+    Thesis --> NS09["NS-09<br/>Agent Handoff"]:::goal
+    Thesis --> NS10["NS-10<br/>Defense as Build Work"]:::goal
+
+    NS01 --> Ledgers["LEDGERS/<br/>(Global, Temporal, North Star,<br/>planned roster)"]:::system
+    NS01 --> ActLog["activity.jsonl<br/>(audit trail)"]:::system
+    NS01 --> GH["GitHub<br/>(RodbotCC/CCAgent)"]:::system
+
+    NS02 --> Tree["Versioned file tree<br/>(CCAgentindex/, Auto/, src)"]:::system
+    NS02 --> Bedrock["CCAgentindex/<br/>(bedrock state)"]:::system
+
+    NS03 --> Boxes["Boxes:<br/>Client (28) · Staff (10) ·<br/>Orchestrator · Inbox Skill · Ledger"]:::system
+    NS03 --> Templates["BOX_LEDGER_TEMPLATE +<br/>DIRECTORY_ORIENTATION_TEMPLATE"]:::system
+
+    NS04 --> Comms["01b_comms_verbatim.md +<br/>comms/*.json (582 payloads)"]:::evidence
+    NS04 --> Skill["Auto/comeketo-inbox/<br/>(NEPQ + ballpark calc + email template)"]:::system
+
+    NS05 --> Guards["Inbox Guardrails<br/>(Guardrails.html,<br/>comeketo-guardrails-agent.md)"]:::guard
+    NS05 --> Cards["Isolated Approval Cards<br/>(NOT batched)"]:::guard
+
+    NS06 --> Sitemap["page_asset_sitemap.md<br/>(UI Done Gate)"]:::system
+    NS06 --> CB_Order["Client Box truth order:<br/>verbatim → curated → meta →<br/>ledger → notes → enrichment"]:::evidence
+
+    NS07 --> Scripts["Auto/Onboard Scripts/ +<br/>outputs/pull_full_comms.py"]:::system
+    NS07 --> Recon["Reconstruction Ledger<br/>(planned)"]:::planned
+
+    NS08 --> Visuals["LEDGERS/VISUALS/<br/>Mermaid maps"]:::system
+
+    NS09 --> Meta["CLAUDE.md · AGENT.md ·<br/>README.md (read-first)"]:::system
+    NS09 --> Temporal["TEMPORAL_CONTINUITY.md<br/>(handoff spine)"]:::system
+    NS09 --> Markers["Audit markers<br/>(YYYY-MM-DD_audit_marker.md)"]:::evidence
+
+    NS10 --> DoneGate["Done Gate<br/>(if it changed, memory changes)"]:::guard
+    NS10 --> Audit["Audit Ledger (planned) +<br/>Open Problems Ledger (planned)"]:::planned
+
+    classDef thesis fill:#0f172a,stroke:#1e293b,color:#f8fafc,stroke-width:3px
+    classDef goal fill:#7c3aed,stroke:#5b21b6,color:#fff,stroke-width:2px
+    classDef system fill:#0ea5e9,stroke:#0369a1,color:#fff
+    classDef evidence fill:#22c55e,stroke:#15803d,color:#052e16
+    classDef guard fill:#ef4444,stroke:#991b1b,color:#fff
+    classDef planned fill:#e0e7ff,stroke:#6366f1,color:#1e1b4b,stroke-dasharray: 4 3

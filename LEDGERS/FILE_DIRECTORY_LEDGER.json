@@ -1,0 +1,322 @@
+{
+  "ledger_type": "file_directory",
+  "version": "0.1.0",
+  "last_updated": "2026-04-28",
+  "repository": "RodbotCC/CCAgent",
+  "branch": "main",
+  "working_copy_root": "/Users/jakeaaron/Downloads/CC Agent",
+  "core_principle": "Before editing a file, understand where it lives and what its directory owns.",
+  "directories": [
+    {
+      "path": "LEDGERS",
+      "status": ["active", "canonical"],
+      "role": "Project-wide memory and continuity layer",
+      "owns": ["global ledgers", "continuity records", "north star goals", "directory map", "visual maps", "Box templates", "canonical ledger-steward configurations"],
+      "does_not_own": ["app runtime behavior", "implementation code", "runtime app-agent prompts"],
+      "read_first": ["LEDGERS/GLOBAL_LEDGER.md", "LEDGERS/INDEX.md"],
+      "local_orientation": "LEDGERS/INDEX.md"
+    },
+    {
+      "path": "Auto",
+      "status": ["active", "mixed"],
+      "role": "Comeketo automation, client substrate, inbox skill, orchestrator, design assets",
+      "is_symlink": true,
+      "symlink_target": "/Users/jakeaaron/Desktop/Auto/",
+      "ownership": "team's standalone automation folder; orchestrator owns it",
+      "warnings": ["Do not write through this alias unless the team explicitly asks (CLAUDE.md §1).", "2026-04-28 verbatim comms backfill was an authorized write."]
+    },
+    {
+      "path": "Auto/Client Boxes",
+      "status": ["active", "canonical"],
+      "role": "Box Collection — 28 per-client living memory/state/plan substrates",
+      "owns": ["client comms (curated + verbatim + raw)", "client state", "profiles", "seven-day plans", "alerts", "audit markers", "per-box agent instructions", "outcome stage files"],
+      "does_not_own": ["global automation rules", "inbox guardrail definitions", "UI rendering logic", "generated dashboard state"],
+      "read_first": ["00_meta.json", "01_comms.md", "01b_comms_verbatim.md", "client_ledger.md", "05_seven_day_plan.md", "09_andre_alerts.md", "YYYY-MM-DD_audit_marker.md if present", "AGENTS.md / CLAUDE.md if present"],
+      "source_of_truth_priority": [
+        "01b_comms_verbatim.md and comms/*.json (full Close transcripts)",
+        "01_comms.md (curated exec summary)",
+        "00_meta.json",
+        "client_ledger.md",
+        "operator-approved notes",
+        "04_profile.md and *_enrichment.md (internal strategy only)"
+      ],
+      "warnings": [
+        "Plans are subordinate to comms, state, guardrails, and approvals.",
+        "Profiles and enrichment are internal strategy unless approved for customer-facing use."
+      ]
+    },
+    {
+      "path": "Auto/Staff Boxes",
+      "status": ["active", "canonical"],
+      "role": "10 staff voice/profile substrates",
+      "owns": ["staff voice profiles", "staff operating profiles"]
+    },
+    {
+      "path": "Auto/orchestrator",
+      "status": ["active", "runtime"],
+      "role": "Render/state/check layer — reads substrates and produces dashboards/state/readiness",
+      "owns": ["ready checks", "render scripts", "dashboard outputs", "run summaries", "wiring/automations", "routine definitions"],
+      "does_not_own": ["canonical client truth", "customer-facing send policy", "page-asset sitemap"],
+      "read_first": ["Auto/orchestrator/README.md", "Auto/orchestrator/SYSTEM_OVERVIEW.md", "Auto/orchestrator/wiring/00_overview.md"]
+    },
+    {
+      "path": "Auto/orchestrator/state",
+      "status": ["generated", "derived"],
+      "role": "Runtime output — dashboards, state files, leads, runs, voice",
+      "owns": ["generated dashboards (dashboard.html, dashboard.json)", "today.html", "master_ledger.csv", "ready_leads.json", "leads/", "runs/", "voice/"],
+      "warnings": ["DO NOT hand-edit. Find the generator script in Auto/orchestrator/bin/."]
+    },
+    {
+      "path": "Auto/orchestrator/bin",
+      "status": ["active", "canonical"],
+      "role": "Python scripts that drive runtime",
+      "key_files": ["comms_state_sweep.py", "index.py", "ready_check.py", "refresh.py", "today.py", "voice.py", "_lib.py"]
+    },
+    {
+      "path": "Auto/orchestrator/wiring",
+      "status": ["active", "canonical"],
+      "role": "Routine catalogs — automations, dashboard, lead box, today, overview",
+      "key_files": ["00_overview.md", "automations.md", "dashboard.md", "lead_box.md", "today.md"]
+    },
+    {
+      "path": "Auto/comeketo-inbox",
+      "status": ["active", "canonical"],
+      "role": "Inbox skill + send guardrails + email templates + pricing scripts",
+      "owns": ["inbox guardrails", "send safety rules", "NEPQ/voice references", "HTML email templates", "ballpark pricing scripts"],
+      "does_not_own": ["per-client strategy (handled via Client Boxes)", "Close data itself", "global project ledger rules"],
+      "read_first": ["Auto/comeketo-inbox/SKILL.md", "Auto/comeketo-inbox/references/guardrails.md"]
+    },
+    {
+      "path": "Auto/Onboard Scripts",
+      "status": ["active", "subset"],
+      "role": "24 build/import/enrichment scripts — subset of top-level Onboard Scripts/",
+      "warnings": ["NOT identical to top-level Onboard Scripts/ — missing 7 analytics_*.py files. See common wrong-turns."]
+    },
+    {
+      "path": "Auto/Hugodemo",
+      "status": ["reference", "template"],
+      "role": "Standalone Client Box demo with own AGENTS.md; sits outside Auto/Client Boxes/"
+    },
+    {
+      "path": "Auto/Boxes",
+      "status": ["needs_verification"],
+      "role": "Apparent snapshot/mirror of Auto/orchestrator/ + Auto/comeketo-inbox/ with newer mtimes (2026-04-27 16:23)",
+      "warnings": ["Likely stale duplicate. DO NOT edit. Coordinate with Jake before any cleanup."]
+    },
+    {
+      "path": "Auto/Comeketo Agent",
+      "status": ["active", "reference"],
+      "role": "Design system (mirror of top-level Comeketo Agent/)",
+      "key_files": ["Comeketo Design Deck.html", "components.css", "deck-stage.js", "icons.js", "tokens.css"]
+    },
+    {
+      "path": "Auto/Extra Stuff",
+      "status": ["scratch", "archive"],
+      "role": "Screenshots and reference files (autodre.txt, ballpark template, voice profiles xlsx)"
+    },
+    {
+      "path": "Auto/Brainstorm",
+      "status": ["empty"],
+      "role": "Placeholder — no current content"
+    },
+    {
+      "path": "CCAgentindex",
+      "status": ["active"],
+      "role": "App bedrock — the only filesystem state the app owns. Loader authority lives at indexes/index.json.",
+      "warnings": ["CLAUDE.md §1 surviving-domains list is OUT OF DATE. Reality has 26 dirs (10 .gitkeep stubs + 16 populated). Trust this ledger's directory list."]
+    },
+    {
+      "path": "CCAgentindex/people",
+      "status": ["active", "canonical"],
+      "role": "People records (kind: coworker / lead / client / contact)",
+      "file_count": 39,
+      "loader_registered": true
+    },
+    {
+      "path": "CCAgentindex/venues",
+      "status": ["active", "canonical"],
+      "role": "Venue records",
+      "file_count": 30,
+      "loader_registered": true
+    },
+    {
+      "path": "CCAgentindex/_ledger",
+      "status": ["active", "canonical", "append_only"],
+      "role": "Audit trail",
+      "key_files": ["activity.jsonl", "delegations/", "ledger_steward_runs/", "chat_reflections.jsonl", "delegation_drafts.json", "delegation_draft_events.jsonl", "pieces_sweeps.jsonl"],
+      "warnings": ["Append-only. Never rewrite past entries."]
+    },
+    {
+      "path": "CCAgentindex/_inbox",
+      "status": ["active", "append_only"],
+      "role": "Inbox events + attachments",
+      "file_count": 77,
+      "key_files": ["inbox.jsonl", "attachments/"],
+      "warnings": ["inbox.jsonl is append-only; entries marked swept by appending a new line, not editing."]
+    },
+    {
+      "path": "CCAgentindex/intelligence",
+      "status": ["active", "heavy"],
+      "role": "Conversation Intelligence + analytics outputs",
+      "file_count": 119,
+      "subdirs": ["cashflow", "channels", "leads", "libraries", "ops", "sales", "_runs"],
+      "key_files": ["MANIFEST.md"],
+      "drives": ["AnalyticsScreen", "ConversationIntelligencePanel"]
+    },
+    {
+      "path": "CCAgentindex/agent_plans",
+      "status": ["active"],
+      "role": "Per-coworker plan JSON",
+      "file_count": 40
+    },
+    {
+      "path": "CCAgentindex/triggers",
+      "status": ["active"],
+      "role": "Automation triggers (auto_*.json + per-lead executors)",
+      "file_count": 12
+    },
+    {
+      "path": "CCAgentindex/scheduled_tasks",
+      "status": ["active"],
+      "role": "Scheduled task definitions",
+      "file_count": 1,
+      "key_files": ["daily_oracle_sweep.md"]
+    },
+    {
+      "path": "CCAgentindex/workflows",
+      "status": ["active"],
+      "role": "Workflow definitions",
+      "file_count": 5
+    },
+    {
+      "path": "CCAgentindex/agents",
+      "status": ["active", "canonical"],
+      "role": "Runnable app-agent definitions (agents.md + prompt.md per agent); includes global_ledger_steward",
+      "file_count": 7
+    },
+    {
+      "path": "CCAgentindex/analytics",
+      "status": ["active"],
+      "role": "Analytics outputs",
+      "file_count": 7
+    },
+    {
+      "path": "CCAgentindex/reports",
+      "status": ["active"],
+      "role": "Report outputs",
+      "file_count": 28
+    },
+    {
+      "path": "CCAgentindex/summaries",
+      "status": ["active"],
+      "role": "Summary outputs",
+      "file_count": 3
+    },
+    {
+      "path": "CCAgentindex/intake_reports",
+      "status": ["active"],
+      "role": "Intake report outputs",
+      "file_count": 3
+    },
+    {
+      "path": "CCAgentindex/catalog",
+      "status": ["active"],
+      "role": "Catalog records",
+      "file_count": 7
+    },
+    {
+      "path": "CCAgentindex/hooks",
+      "status": ["active"],
+      "role": "UI hook toggles",
+      "key_files": ["state.json"]
+    },
+    {
+      "path": "CCAgentindex/indexes",
+      "status": ["active", "canonical", "loader_authority"],
+      "role": "Loader registry",
+      "key_files": ["index.json"]
+    },
+    {
+      "path": "CCAgentindex/Rodbot",
+      "status": ["legacy", "stub"],
+      "role": "Wiped in Apr 2026 great trim; only .gitkeep remains"
+    },
+    {"path": "CCAgentindex/commitments", "status": ["legacy", "stub"], "role": "Retired domain — .gitkeep only"},
+    {"path": "CCAgentindex/threads", "status": ["legacy", "stub"], "role": "Retired domain — .gitkeep only"},
+    {"path": "CCAgentindex/projects", "status": ["legacy", "stub"], "role": "Retired domain — .gitkeep only"},
+    {"path": "CCAgentindex/knowledge", "status": ["legacy", "stub"], "role": "Retired domain — .gitkeep only"},
+    {"path": "CCAgentindex/tables", "status": ["legacy", "stub"], "role": "Retired domain — .gitkeep only"},
+    {"path": "CCAgentindex/annotations", "status": ["legacy", "stub"], "role": "Retired domain — .gitkeep only"},
+    {"path": "CCAgentindex/charts", "status": ["legacy", "stub"], "role": "Retired domain — .gitkeep only"},
+    {
+      "path": "CCAgentindex/_vaults",
+      "status": ["dormant"],
+      "role": "Off-grid specialty vaults — empty until summoned"
+    },
+    {
+      "path": "Onboard Scripts",
+      "status": ["active", "canonical", "superset"],
+      "role": "Build/import/analytics scripts (top-level)",
+      "file_count": 31,
+      "warnings": ["Superset of Auto/Onboard Scripts/. Includes 7 analytics_*.py not in Auto/. Treat top-level as canonical."]
+    },
+    {
+      "path": "docs",
+      "status": ["active", "partial"],
+      "role": "Connector docs + outdated sitemap copy",
+      "key_files": ["connectors.md (current)", "page_asset_sitemap.md (STALE — use root)"],
+      "warnings": ["docs/page_asset_sitemap.md is 11 KB and outdated; root version is 65 KB and live."]
+    },
+    {
+      "path": "rawdata",
+      "status": ["active", "reference"],
+      "role": "External CSV/MD imports (sales playbook, scoreboards, venue index, partnership program docs)"
+    },
+    {
+      "path": "Comeketo Agent",
+      "status": ["active", "reference"],
+      "role": "Design system (top-level mirror of Auto/Comeketo Agent/)",
+      "warnings": ["Identical to Auto/Comeketo Agent/ except .DS_Store. One is a duplicate."]
+    },
+    {
+      "path": "node_modules",
+      "status": ["generated", "external"],
+      "role": "npm dependencies",
+      "warnings": ["Never hand-edit. In .gitignore."]
+    },
+    {
+      "path": "__pycache__",
+      "status": ["generated"],
+      "role": "Python bytecode cache",
+      "warnings": ["Never hand-edit. In .gitignore."]
+    }
+  ],
+  "top_level_canonical_files": {
+    "ui_app": ["app.jsx", "screens.jsx", "components.jsx", "automation.jsx", "styles.css", "Secretary.html", "server.py", "mission_control_loader.js", "delegator.js", "connectors.js", "data.js", "chat.js", "ai.js", "ai_actions.js", "ai_instructions.js", "grid_scorer.js", "lucide.js"],
+    "meta": ["CLAUDE.md", "AGENT.md", "README.md", "CLAUDE_NOTES.md", "Comeketo_Agent_PRD_v1.docx", "Guardrails.html", "comeketo-guardrails-agent.md", "mission_control_schema.md", "skills_index.md"],
+    "data_reference": ["Quote Maker 14.5 - Database.csv", "morning_sweep_grid.workflow (1).json"],
+    "config": [".env", ".gitignore", "package.json", "package-lock.json"],
+    "ui_done_gate": ["page_asset_sitemap.md"]
+  },
+  "common_wrong_turns": [
+    {"id": "edit_orchestrator_state", "mistake": "Editing Auto/orchestrator/state/ files as canonical truth", "fix": "Find generator in Auto/orchestrator/bin/. State is regenerated on every refresh.py run."},
+    {"id": "boxes_page_as_truth", "mistake": "Treating Boxes UI page as client source of truth", "fix": "Boxes page is a UI surface. Auto/Client Boxes/<Name>/ is canonical."},
+    {"id": "plan_without_guardrails", "mistake": "Editing a seven-day plan without checking guardrails", "fix": "Read Auto/comeketo-inbox/references/guardrails.md and the box's 01b_comms_verbatim.md first. Plans are subordinate to comms/state/guardrails/approvals."},
+    {"id": "enrichment_as_customer_facing", "mistake": "Using enrichment facts as customer-facing facts", "fix": "Customer-facing copy must ground in 01_comms.md / 01b_comms_verbatim.md, not 04_profile.md or *_enrichment.md."},
+    {"id": "page_change_no_sitemap", "mistake": "Updating a UI page without updating the sitemap", "fix": "page_asset_sitemap.md (project root) is the Done Gate. Update Assets Ownership, Change Checklist, History, Last Verified."},
+    {"id": "global_fix_for_local_problem", "mistake": "Fixing one client's edge case by changing global automation", "fix": "Prefer local Box fixes (NS-03)."},
+    {"id": "stale_docs_sitemap", "mistake": "Editing docs/page_asset_sitemap.md thinking it's live", "fix": "Use root-level page_asset_sitemap.md. The docs/ copy is stale and abandoned."},
+    {"id": "onboard_scripts_assume_identical", "mistake": "Adding/editing scripts in Auto/Onboard Scripts/ assuming top-level matches", "fix": "Top-level Onboard Scripts/ is the superset. Add to top-level. Coordinate Auto/ duplicate explicitly."},
+    {"id": "auto_boxes_as_live", "mistake": "Editing Auto/Boxes/orchestrator/ thinking it's the live orchestrator", "fix": "Live orchestrator is Auto/orchestrator/. Auto/Boxes/ is a stale snapshot. Don't edit; flag with Jake."},
+    {"id": "comeketo_agent_duplicate", "mistake": "Editing Comeketo Agent/ (top-level) thinking it differs from Auto/Comeketo Agent/", "fix": "They're identical except .DS_Store. Pick one as canonical when Jake decides."},
+    {"id": "trust_claude_md_domains_list", "mistake": "Trusting CLAUDE.md's surviving-CCAgentindex-domains list", "fix": "CLAUDE.md is out of date. Reality is 26 dirs. Trust this ledger's §4.2."},
+    {"id": "auto_symlink_unauthorized_write", "mistake": "Writing through the Auto/ symlink without authorization", "fix": "Auto/ targets /Users/jakeaaron/Desktop/Auto/. Read-only by default; writes need explicit team OK."}
+  ],
+  "open_problems_to_log": [
+    {"id": "claude_md_domains_drift", "summary": "CLAUDE.md §1 surviving-domains list is out of date vs actual CCAgentindex/ contents (26 dirs, 10 stubs, 16 populated). Reconcile."},
+    {"id": "docs_sitemap_stale", "summary": "docs/page_asset_sitemap.md (11 KB) is abandoned; root version is canonical. Likely safe to delete docs/ copy."},
+    {"id": "auto_boxes_purpose_unclear", "summary": "Auto/Boxes/ mirrors orchestrator + comeketo-inbox with newer mtime. Origin and purpose unclear. Coordinate with Jake."},
+    {"id": "two_onboard_scripts", "summary": "Top-level Onboard Scripts/ is a 31-file superset of Auto/Onboard Scripts/ (24 files). Resolve duplicate."},
+    {"id": "two_comeketo_agent", "summary": "Comeketo Agent/ and Auto/Comeketo Agent/ are identical except .DS_Store. Resolve."}
+  ]
+}

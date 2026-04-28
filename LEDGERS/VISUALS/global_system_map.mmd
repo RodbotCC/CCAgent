@@ -1,0 +1,52 @@
+%% Global System Map — Comeketo Agent
+%% How memory and authority flow from GitHub down through Boxes to executable next-moves.
+%% Render with any Mermaid-compatible viewer (GitHub renders inline).
+
+flowchart TD
+    GH["GitHub<br/>(RodbotCC/CCAgent)<br/>Source of Truth"]:::truth
+    LOCAL["Local working copy<br/>/Users/jakeaaron/Downloads/CC Agent"]:::working
+
+    GH <-->|push / pull| LOCAL
+
+    LOCAL --> GL["Global Ledger<br/>LEDGERS/GLOBAL_LEDGER.md"]:::ledger
+    LOCAL --> META["Meta harness<br/>CLAUDE.md · AGENT.md"]:::ledger
+    LOCAL --> SITEMAP["Page-Asset Sitemap<br/>(UI Done Gate)"]:::ledger
+    LOCAL --> ACTL["Activity ledger<br/>CCAgentindex/_ledger/activity.jsonl"]:::ledger
+
+    GL --> NEXT["Next ledgers (planned)<br/>Source-of-Truth · Definition of Done<br/>Directory · Open Problems · Decisions · Phase"]:::planned
+
+    LOCAL --> AUTO["Auto/<br/>(symlink — orchestrator-owned)"]:::system
+    LOCAL --> BEDROCK["CCAgentindex/<br/>(bedrock — app-owned state)"]:::system
+    LOCAL --> UI["UI surfaces<br/>11 routes · screens.jsx · server.py"]:::system
+
+    AUTO --> CB["Client Boxes (28)"]:::box
+    AUTO --> SB["Staff Boxes (10)"]:::box
+    AUTO --> ORCH["Orchestrator Box"]:::box
+    AUTO --> INBOX["comeketo-inbox skill<br/>(Inbox Guardrails)"]:::guard
+
+    CB --> COMMS["01_comms.md (curated)<br/>01b_comms_verbatim.md (full)<br/>comms/*.json (raw)"]:::evidence
+    CB --> STATE["client_ledger.md<br/>00_meta.json"]:::evidence
+    CB --> PROFILE["04_profile.md<br/>*_enrichment.md<br/>(internal strategy only)"]:::profile
+    CB --> PLAN["05_seven_day_plan.md<br/>(strategy draft — NOT truth)"]:::plan
+    CB --> APPROVAL["approval notes<br/>audit markers"]:::evidence
+
+    INBOX --> GUARD["Hard gates · auto-pauses<br/>reply gates · frequency caps<br/>commitment approval requirements"]:::guard
+
+    COMMS --> MOVE(["Next move<br/>(send / approve / hold)"]):::move
+    STATE --> MOVE
+    APPROVAL --> MOVE
+    GUARD --> MOVE
+    PLAN -.->|suggests| MOVE
+    PROFILE -.->|fuels strategy<br/>NOT customer-facing copy| MOVE
+
+    classDef truth fill:#0f172a,stroke:#1e293b,color:#f8fafc,stroke-width:2px
+    classDef working fill:#1e293b,stroke:#334155,color:#e2e8f0
+    classDef ledger fill:#7c3aed,stroke:#5b21b6,color:#fff
+    classDef planned fill:#a78bfa,stroke:#7c3aed,color:#1e1b4b,stroke-dasharray: 4 3
+    classDef system fill:#0ea5e9,stroke:#0369a1,color:#fff
+    classDef box fill:#10b981,stroke:#047857,color:#fff
+    classDef evidence fill:#22c55e,stroke:#15803d,color:#052e16
+    classDef profile fill:#fde68a,stroke:#d97706,color:#451a03
+    classDef plan fill:#fcd34d,stroke:#b45309,color:#451a03
+    classDef guard fill:#ef4444,stroke:#991b1b,color:#fff
+    classDef move fill:#f59e0b,stroke:#92400e,color:#1c1917,stroke-width:3px

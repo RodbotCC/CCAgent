@@ -1,0 +1,886 @@
+{
+  "request_id": "dl_19b41c7eac",
+  "status": "done",
+  "label": "agent:global_ledger_steward",
+  "prompt": "# Agent: Global Ledger Steward\n\n**Rail:** on-demand app agent\n**Dispatch:** `POST /api/agents/global_ledger_steward/run`\n**cwd when fired:** `/Users/jakeaaron/Downloads/CC Agent/CCAgentindex/`\n**Authority:** local writes allowed, scoped to the ledger memory system and this agent's receipts.\n\n---\n\nGLOBAL LEDGER STEWARD SWEEP\n\nYou are the Global Ledger Steward for Comeketo Agent. You are the Orchestrator. Your job is to keep the project-wide memory spine current without turning it into a dumping ground.\n\nThe repo is memory. If the system changed, the system memory changes with it. Global only when global.\n\n## Scope\n\nYou may read:\n\n- `../LEDGERS/GLOBAL_LEDGER.md`\n- `../LEDGERS/GLOBAL_LEDGER.json`\n- `../LEDGERS/INDEX.md`\n- `../LEDGERS/TEMPORAL_CONTINUITY.md`\n- `../LEDGERS/TEMPORAL_CONTINUITY.json`\n- `../LEDGERS/NORTH_STAR.md`\n- `../LEDGERS/FILE_DIRECTORY_LEDGER.md`\n- `../LEDGERS/OPEN_PROBLEMS_LEDGER.md`\n- `../LEDGERS/AGENTS/global_ledger_steward/`\n- `../AGENTS.md`, `../AGENT.md`, `../CLAUDE.md`, `../README.md`\n- `../page_asset_sitemap.md` only to decide whether UI Done Gate changed\n- `_ledger/activity.jsonl` tail\n- `git status --short --branch`\n\nYou may write:\n\n- `../LEDGERS/GLOBAL_LEDGER.md`\n- `../LEDGERS/GLOBAL_LEDGER.json`\n- `../LEDGERS/INDEX.md`\n- `../LEDGERS/TEMPORAL_CONTINUITY.md`\n- `../LEDGERS/TEMPORAL_CONTINUITY.json`\n- `../LEDGERS/FILE_DIRECTORY_LEDGER.md`\n- `../LEDGERS/FILE_DIRECTORY_LEDGER.json`\n- `_ledger/activity.jsonl` append-only\n- `_ledger/ledger_steward_runs/<UTC-timestamp>.json`\n\nDo not write anywhere else unless the user explicitly adds that path in additional context. Never write through `../Auto/`. Never rewrite append-only history. Never push to GitHub.\n\n## Run Modes\n\nDefault mode is `local_write`.\n\nIf the additional context contains `audit-only`, `audit_only`, or `dry run`, then:\n\n- read and classify normally\n- do not edit Markdown or JSON ledgers\n- still write a receipt unless the context explicitly says `no receipt`\n- append one activity line unless the context explicitly says `no activity`\n\n## Required Read Order\n\n1. Read `../LEDGERS/GLOBAL_LEDGER.md`.\n2. Read `../LEDGERS/GLOBAL_LEDGER.json`.\n3. Read `../LEDGERS/INDEX.md`.\n4. Read `../LEDGERS/TEMPORAL_CONTINUITY.md` and `.json`.\n5. Read `../LEDGERS/NORTH_STAR.md` for purpose / tradeoff context.\n6. Read `../LEDGERS/FILE_DIRECTORY_LEDGER.md` for directory authority.\n7. Read `../LEDGERS/OPEN_PROBLEMS_LEDGER.md` for active risks.\n8. Read the canonical steward package at `../LEDGERS/AGENTS/global_ledger_steward/`.\n9. Inspect actual `../LEDGERS/` files and directories.\n10. Read `git status --short --branch`.\n11. Read the last 40 lines of `_ledger/activity.jsonl`.\n\nDo not rely on memory when the file can be read.\n\n## Scan Procedure\n\n1. Compare actual `../LEDGERS/` files/directories against `../LEDGERS/INDEX.md` and `../LEDGERS/GLOBAL_LEDGER.json.ledger_index`.\n2. Detect whether any global-level facts changed:\n   - major system added, retired, renamed, or repurposed\n   - ledger created, activated, renamed, retired, or given an agent steward\n   - read-first order changed\n   - Done Gate changed\n   - global source-of-truth rule changed\n   - major risk posture changed\n   - project phase/current global state changed\n3. Classify the run:\n   - `no_global_update`\n   - `temporal_update`\n   - `global_update`\n   - `multi_ledger_update`\n4. If no global update is needed, do not touch `GLOBAL_LEDGER.md` or `.json`; write a no-op receipt.\n5. If global update is needed, update Markdown and JSON mirror together.\n6. If Index or File Directory ownership changes, update those ledgers and mirrors too.\n7. If current handoff state changed, update Temporal Continuity Markdown and JSON.\n\n## Update Discipline\n\nGlobal Ledger updates belong only in these sections unless there is a clear reason:\n\n- header block (`Last updated`, phase note)\n- §2 Current World State\n- §3 Major Systems\n- §8 Ledger System Map\n- §10 Agent Work Protocol\n- §11 Done Gate\n- §12 Recently Changed\n- §13 Next Handoff Notes\n- §14 Links\n- §16 Update Rules\n\nJSON mirror updates should keep these fields aligned when relevant:\n\n- `last_updated`\n- `last_updated_note`\n- `current_phase`\n- `major_systems`\n- `active_workstreams`\n- `global_rules`\n- `ledger_index`\n- `last_handoff`\n\nKeep edits narrow. Do not add local implementation detail to the Global Ledger.\n\n## Receipt Contract\n\nFor every run, write one JSON receipt to `_ledger/ledger_steward_runs/<UTC-timestamp>.json`:\n\n```json\n{\n  \"ts\": \"<ISO8601 UTC>\",\n  \"actor\": \"global_ledger_steward\",\n  \"mode\": \"local_write | audit_only\",\n  \"classification\": \"no_global_update | temporal_update | global_update | multi_ledger_update\",\n  \"claim\": \"<one sentence>\",\n  \"files_read\": [\"<relative path>\", \"...\"],\n  \"files_written\": [\"<relative path>\", \"...\"],\n  \"ledger_roster\": {\n    \"actual_ledgers\": [\"<path>\", \"...\"],\n    \"index_mismatches\": [],\n    \"json_mirror_mismatches\": []\n  },\n  \"activity_appended\": true,\n  \"abstention\": false,\n  \"risks\": [\"<risk>\", \"...\"],\n  \"next_recommended_read\": [\"../LEDGERS/GLOBAL_LEDGER.md\", \"../LEDGERS/TEMPORAL_CONTINUITY.md\"]\n}\n```\n\nIf blocked, set `abstention: true`, do not edit ledgers, write the receipt, append activity, and return a clean blocker summary.\n\n## Activity Ledger Contract\n\nAppend exactly one line to `_ledger/activity.jsonl`:\n\n```json\n{\"ts\":\"<ISO8601 UTC>\",\"kind\":\"agent_run\",\"actor\":\"global_ledger_steward\",\"request_id\":\"global_ledger_steward_<UTC timestamp>\",\"action\":\"ledger_steward_sweep\",\"target\":\"../LEDGERS/GLOBAL_LEDGER.md\",\"notes\":\"<one sentence summary; include classification and receipt path>\"}\n```\n\nAppend only. Never rewrite prior lines.\n\n## Return Shape\n\nReturn a clean summary:\n\n```text\nGlobal Ledger Steward — <UTC timestamp>\nClassification: <classification>\nLedger edits: <N>\nReceipt: _ledger/ledger_steward_runs/<timestamp>.json\nActivity: appended\nNotes:\n- <short note>\n- <short note>\n```\n\nNo jokes. No meta. No \"let me know\".\n\n---\n\nADDITIONAL CONTEXT FROM THIS RUN:\naudit-only no receipt no activity. Verify read path and classification only; do not edit files, do not append ledgers, do not write receipt.",
+  "mode": "trusted",
+  "cwd": "/Users/jakeaaron/Downloads/CC Agent/CCAgentindex",
+  "started_at": "2026-04-28T11:50:36.524279+00:00",
+  "claude_bin": "/Users/jakeaaron/.local/bin/claude",
+  "policy": {},
+  "approval": {},
+  "source": {},
+  "draft_id": null,
+  "env_snapshot": {
+    "cwd": "/Users/jakeaaron/Downloads/CC Agent/CCAgentindex",
+    "PATH": "/Users/jakeaaron/.local/bin:/opt/homebrew/opt/python@3.11/bin:/Users/jakeaaron/bin:/Users/jakeaaron/.local/bin:/opt/homebrew/opt/python@3.11/bin:/Users/jakeaaron/bin:/Users/jakeaaron/.codex/tmp/arg0/codex-arg02eJfPD:/usr/local/bin:/Users/jakeaaron/.bun/bin:/Users/jakeaaron/Library/pnpm:/Users/jakeaaron/.local/bin:/Users/jakeaaron/.elan/bin:/Library/Frameworks/Python.framework/Versions/3.13/bin:/Library/Frameworks/Python.framework/Versions/3.11/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/Library/Frameworks/Python.framework/Versions/3.12/bin:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/opt/pmk/env/global/bin:/opt/X11/bin:/Library/Apple/usr/bin:/Library/TeX/texbin:/Applications/VMware Fusion.app/Contents/Public:/Users/jakeaaron/.cargo/bin:/Users/jakeaaron/.local/bin:/opt/homebrew/opt/python@3.11/bin:/Users/jakeaaron/bin:/usr/local/bin:/Applications/Codex.app/Contents/Resources",
+    "ANTHROPIC_API_KEY_present": false,
+    "ANTHROPIC_API_KEY_length": 0,
+    "claude_vars": {},
+    "mcp_vars": {}
+  },
+  "timing": {
+    "spawn_ts": "2026-04-28T11:50:36.524279+00:00",
+    "first_token_ts": "2026-04-28T11:51:19.238344+00:00",
+    "done_ts": "2026-04-28T11:51:19.479295+00:00",
+    "spawn_to_first_token_ms": 42714,
+    "first_token_to_done_ms": 240,
+    "total_ms": 42955
+  },
+  "exit_code": 0,
+  "completed_at": "2026-04-28T11:51:19.479295+00:00",
+  "stderr": "",
+  "result": [
+    {
+      "type": "system",
+      "subtype": "init",
+      "cwd": "/Users/jakeaaron/Downloads/CC Agent/CCAgentindex",
+      "session_id": "85c06582-a7a1-4eba-b4e0-7d39c7dde834",
+      "tools": [
+        "Task",
+        "AskUserQuestion",
+        "Bash",
+        "CronCreate",
+        "CronDelete",
+        "CronList",
+        "Edit",
+        "EnterPlanMode",
+        "EnterWorktree",
+        "ExitPlanMode",
+        "ExitWorktree",
+        "Glob",
+        "Grep",
+        "ListMcpResourcesTool",
+        "LSP",
+        "Monitor",
+        "NotebookEdit",
+        "PushNotification",
+        "Read",
+        "ReadMcpResourceTool",
+        "RemoteTrigger",
+        "ScheduleWakeup",
+        "Skill",
+        "TaskOutput",
+        "TaskStop",
+        "TodoWrite",
+        "ToolSearch",
+        "WebFetch",
+        "WebSearch",
+        "Write",
+        "mcp__claude_ai_Close__activity_search",
+        "mcp__claude_ai_Close__aggregation",
+        "mcp__claude_ai_Close__close_product_knowledge_search",
+        "mcp__claude_ai_Close__fetch",
+        "mcp__claude_ai_Close__fetch_contact",
+        "mcp__claude_ai_Close__fetch_email_template",
+        "mcp__claude_ai_Close__fetch_lead",
+        "mcp__claude_ai_Close__fetch_lead_smart_view",
+        "mcp__claude_ai_Close__fetch_lead_status",
+        "mcp__claude_ai_Close__fetch_opportunity",
+        "mcp__claude_ai_Close__fetch_opportunity_status",
+        "mcp__claude_ai_Close__fetch_pipeline_and_opportunity_statuses",
+        "mcp__claude_ai_Close__fetch_sms_template",
+        "mcp__claude_ai_Close__find_agent_configs",
+        "mcp__claude_ai_Close__find_call_outcomes",
+        "mcp__claude_ai_Close__find_custom_activities",
+        "mcp__claude_ai_Close__find_email_templates",
+        "mcp__claude_ai_Close__find_forms",
+        "mcp__claude_ai_Close__find_groups",
+        "mcp__claude_ai_Close__find_lead_custom_fields",
+        "mcp__claude_ai_Close__find_lead_smart_views",
+        "mcp__claude_ai_Close__find_lead_statuses",
+        "mcp__claude_ai_Close__find_meeting_outcomes",
+        "mcp__claude_ai_Close__find_opportunities",
+        "mcp__claude_ai_Close__find_pipelines_and_opportunity_statuses",
+        "mcp__claude_ai_Close__find_scheduling_links",
+        "mcp__claude_ai_Close__find_sms_templates",
+        "mcp__claude_ai_Close__find_workflows",
+        "mcp__claude_ai_Close__get_fields",
+        "mcp__claude_ai_Close__lead_search",
+        "mcp__claude_ai_Close__org_info",
+        "mcp__claude_ai_Close__org_users",
+        "mcp__claude_ai_Close__paginate_search",
+        "mcp__claude_ai_Close__search",
+        "mcp__claude_ai_Google_Calendar__create_event",
+        "mcp__claude_ai_Google_Calendar__delete_event",
+        "mcp__claude_ai_Google_Calendar__get_event",
+        "mcp__claude_ai_Google_Calendar__list_calendars",
+        "mcp__claude_ai_Google_Calendar__list_events",
+        "mcp__claude_ai_Google_Calendar__respond_to_event",
+        "mcp__claude_ai_Google_Calendar__suggest_time",
+        "mcp__claude_ai_Google_Calendar__update_event",
+        "mcp__claude_ai_Google_Drive__create_file",
+        "mcp__claude_ai_Google_Drive__download_file_content",
+        "mcp__claude_ai_Google_Drive__get_file_metadata",
+        "mcp__claude_ai_Google_Drive__get_file_permissions",
+        "mcp__claude_ai_Google_Drive__list_recent_files",
+        "mcp__claude_ai_Google_Drive__read_file_content",
+        "mcp__claude_ai_Google_Drive__search_files",
+        "mcp__claude_ai_Slack__slack_create_canvas",
+        "mcp__claude_ai_Slack__slack_read_canvas",
+        "mcp__claude_ai_Slack__slack_read_channel",
+        "mcp__claude_ai_Slack__slack_read_thread",
+        "mcp__claude_ai_Slack__slack_read_user_profile",
+        "mcp__claude_ai_Slack__slack_schedule_message",
+        "mcp__claude_ai_Slack__slack_search_channels",
+        "mcp__claude_ai_Slack__slack_search_public",
+        "mcp__claude_ai_Slack__slack_search_public_and_private",
+        "mcp__claude_ai_Slack__slack_search_users",
+        "mcp__claude_ai_Slack__slack_send_message",
+        "mcp__claude_ai_Slack__slack_send_message_draft",
+        "mcp__claude_ai_Slack__slack_update_canvas",
+        "mcp__claude_ai_Supabase__apply_migration",
+        "mcp__claude_ai_Supabase__confirm_cost",
+        "mcp__claude_ai_Supabase__create_branch",
+        "mcp__claude_ai_Supabase__create_project",
+        "mcp__claude_ai_Supabase__delete_branch",
+        "mcp__claude_ai_Supabase__deploy_edge_function",
+        "mcp__claude_ai_Supabase__execute_sql",
+        "mcp__claude_ai_Supabase__generate_typescript_types",
+        "mcp__claude_ai_Supabase__get_advisors",
+        "mcp__claude_ai_Supabase__get_cost",
+        "mcp__claude_ai_Supabase__get_edge_function",
+        "mcp__claude_ai_Supabase__get_logs",
+        "mcp__claude_ai_Supabase__get_organization",
+        "mcp__claude_ai_Supabase__get_project",
+        "mcp__claude_ai_Supabase__get_project_url",
+        "mcp__claude_ai_Supabase__get_publishable_keys",
+        "mcp__claude_ai_Supabase__list_branches",
+        "mcp__claude_ai_Supabase__list_edge_functions",
+        "mcp__claude_ai_Supabase__list_extensions",
+        "mcp__claude_ai_Supabase__list_migrations",
+        "mcp__claude_ai_Supabase__list_organizations",
+        "mcp__claude_ai_Supabase__list_projects",
+        "mcp__claude_ai_Supabase__list_tables",
+        "mcp__claude_ai_Supabase__merge_branch",
+        "mcp__claude_ai_Supabase__pause_project",
+        "mcp__claude_ai_Supabase__rebase_branch",
+        "mcp__claude_ai_Supabase__reset_branch",
+        "mcp__claude_ai_Supabase__restore_project",
+        "mcp__claude_ai_Supabase__search_docs",
+        "mcp__github__add_issue_comment",
+        "mcp__github__create_branch",
+        "mcp__github__create_issue",
+        "mcp__github__create_or_update_file",
+        "mcp__github__create_pull_request",
+        "mcp__github__create_pull_request_review",
+        "mcp__github__create_repository",
+        "mcp__github__fork_repository",
+        "mcp__github__get_file_contents",
+        "mcp__github__get_issue",
+        "mcp__github__get_pull_request",
+        "mcp__github__get_pull_request_comments",
+        "mcp__github__get_pull_request_files",
+        "mcp__github__get_pull_request_reviews",
+        "mcp__github__get_pull_request_status",
+        "mcp__github__list_commits",
+        "mcp__github__list_issues",
+        "mcp__github__list_pull_requests",
+        "mcp__github__merge_pull_request",
+        "mcp__github__push_files",
+        "mcp__github__search_code",
+        "mcp__github__search_issues",
+        "mcp__github__search_repositories",
+        "mcp__github__search_users",
+        "mcp__github__update_issue",
+        "mcp__github__update_pull_request_branch",
+        "mcp__pieces__anchor_points_batch_snapshot",
+        "mcp__pieces__anchors_batch_snapshot",
+        "mcp__pieces__anchors_full_text_search",
+        "mcp__pieces__annotations_batch_snapshot",
+        "mcp__pieces__annotations_full_text_search",
+        "mcp__pieces__ask_pieces_ltm",
+        "mcp__pieces__conversation_messages_batch_snapshot",
+        "mcp__pieces__conversation_messages_full_text_search",
+        "mcp__pieces__conversations_batch_snapshot",
+        "mcp__pieces__conversations_full_text_search",
+        "mcp__pieces__create_pieces_memory",
+        "mcp__pieces__entities_batch_snapshot",
+        "mcp__pieces__entities_full_text_search",
+        "mcp__pieces__extract_temporal_range",
+        "mcp__pieces__hints_batch_snapshot",
+        "mcp__pieces__hints_full_text_search",
+        "mcp__pieces__hints_vector_search",
+        "mcp__pieces__material_identifiers",
+        "mcp__pieces__materials_vector_search",
+        "mcp__pieces__models_batch_snapshot",
+        "mcp__pieces__models_full_text_search",
+        "mcp__pieces__persons_batch_snapshot",
+        "mcp__pieces__persons_full_text_search",
+        "mcp__pieces__ranges_batch_snapshot",
+        "mcp__pieces__tags_batch_snapshot",
+        "mcp__pieces__tags_full_text_search",
+        "mcp__pieces__tags_vector_search",
+        "mcp__pieces__websites_batch_snapshot",
+        "mcp__pieces__websites_full_text_search",
+        "mcp__pieces__workstream_events_batch_snapshot",
+        "mcp__pieces__workstream_events_full_text_search",
+        "mcp__pieces__workstream_events_vector_search",
+        "mcp__pieces__workstream_summaries_batch_snapshot",
+        "mcp__pieces__workstream_summaries_full_text_search",
+        "mcp__pieces__workstream_summaries_vector_search",
+        "mcp__pieces__wpe_source_windows_batch_snapshot",
+        "mcp__pieces__wpe_source_windows_full_text_search",
+        "mcp__pieces__wpe_sources_batch_snapshot",
+        "mcp__pieces__wpe_sources_full_text_search",
+        "mcp__supabase__apply_migration",
+        "mcp__supabase__create_branch",
+        "mcp__supabase__delete_branch",
+        "mcp__supabase__deploy_edge_function",
+        "mcp__supabase__execute_sql",
+        "mcp__supabase__generate_typescript_types",
+        "mcp__supabase__get_advisors",
+        "mcp__supabase__get_edge_function",
+        "mcp__supabase__get_logs",
+        "mcp__supabase__get_project_url",
+        "mcp__supabase__get_publishable_keys",
+        "mcp__supabase__get_storage_config",
+        "mcp__supabase__list_branches",
+        "mcp__supabase__list_edge_functions",
+        "mcp__supabase__list_extensions",
+        "mcp__supabase__list_migrations",
+        "mcp__supabase__list_storage_buckets",
+        "mcp__supabase__list_tables",
+        "mcp__supabase__merge_branch",
+        "mcp__supabase__rebase_branch",
+        "mcp__supabase__reset_branch",
+        "mcp__supabase__search_docs",
+        "mcp__supabase__update_storage_config"
+      ],
+      "mcp_servers": [
+        {
+          "name": "pieces",
+          "status": "connected"
+        },
+        {
+          "name": "github",
+          "status": "connected"
+        },
+        {
+          "name": "supabase",
+          "status": "connected"
+        },
+        {
+          "name": "claude.ai Google Calendar",
+          "status": "connected"
+        },
+        {
+          "name": "claude.ai Google Drive",
+          "status": "connected"
+        },
+        {
+          "name": "claude.ai Supabase",
+          "status": "connected"
+        },
+        {
+          "name": "claude.ai ClickUp",
+          "status": "failed"
+        },
+        {
+          "name": "claude.ai Slack",
+          "status": "connected"
+        },
+        {
+          "name": "claude.ai Close",
+          "status": "connected"
+        }
+      ],
+      "model": "claude-opus-4-7[1m]",
+      "permissionMode": "bypassPermissions",
+      "slash_commands": [
+        "update-config",
+        "debug",
+        "simplify",
+        "batch",
+        "fewer-permission-prompts",
+        "loop",
+        "schedule",
+        "claude-api",
+        "social-autoposter",
+        "ai-browser-profile",
+        "doc-coauthoring",
+        "travel-planner",
+        "google-workspace-setup",
+        "deep-research",
+        "xlsx",
+        "pdf",
+        "find-skills",
+        "supabase-postgres-best-practices",
+        "supabase",
+        "canvas-design",
+        "pptx",
+        "telegram",
+        "video-edit",
+        "frontend-design",
+        "web-scraping",
+        "docx",
+        "social-autoposter-setup",
+        "andre-escalation-ladder",
+        "superpowers:write-plan",
+        "superpowers:execute-plan",
+        "superpowers:brainstorm",
+        "superpowers:test-driven-development",
+        "superpowers:dispatching-parallel-agents",
+        "superpowers:subagent-driven-development",
+        "superpowers:finishing-a-development-branch",
+        "superpowers:using-superpowers",
+        "superpowers:brainstorming",
+        "superpowers:requesting-code-review",
+        "superpowers:writing-plans",
+        "superpowers:verification-before-completion",
+        "superpowers:using-git-worktrees",
+        "superpowers:receiving-code-review",
+        "superpowers:executing-plans",
+        "superpowers:systematic-debugging",
+        "superpowers:writing-skills",
+        "compact",
+        "context",
+        "cost",
+        "heapdump",
+        "init",
+        "review",
+        "security-review",
+        "extra-usage",
+        "insights",
+        "team-onboarding"
+      ],
+      "apiKeySource": "none",
+      "claude_code_version": "2.1.114",
+      "output_style": "default",
+      "agents": [
+        "Explore",
+        "general-purpose",
+        "Plan",
+        "statusline-setup",
+        "superpowers:code-reviewer"
+      ],
+      "skills": [
+        "update-config",
+        "debug",
+        "simplify",
+        "batch",
+        "fewer-permission-prompts",
+        "loop",
+        "schedule",
+        "claude-api",
+        "social-autoposter",
+        "ai-browser-profile",
+        "doc-coauthoring",
+        "travel-planner",
+        "google-workspace-setup",
+        "deep-research",
+        "xlsx",
+        "pdf",
+        "find-skills",
+        "supabase-postgres-best-practices",
+        "supabase",
+        "canvas-design",
+        "pptx",
+        "telegram",
+        "video-edit",
+        "frontend-design",
+        "web-scraping",
+        "docx",
+        "social-autoposter-setup",
+        "andre-escalation-ladder",
+        "superpowers:write-plan",
+        "superpowers:execute-plan",
+        "superpowers:brainstorm",
+        "superpowers:test-driven-development",
+        "superpowers:dispatching-parallel-agents",
+        "superpowers:subagent-driven-development",
+        "superpowers:finishing-a-development-branch",
+        "superpowers:using-superpowers",
+        "superpowers:brainstorming",
+        "superpowers:requesting-code-review",
+        "superpowers:writing-plans",
+        "superpowers:verification-before-completion",
+        "superpowers:using-git-worktrees",
+        "superpowers:receiving-code-review",
+        "superpowers:executing-plans",
+        "superpowers:systematic-debugging",
+        "superpowers:writing-skills"
+      ],
+      "plugins": [
+        {
+          "name": "swift-lsp",
+          "path": "/Users/jakeaaron/.claude/plugins/cache/claude-plugins-official/swift-lsp/1.0.0",
+          "source": "swift-lsp@claude-plugins-official"
+        },
+        {
+          "name": "skill-creator",
+          "path": "/Users/jakeaaron/.claude/plugins/cache/awesome-claude-skills/skill-creator/unknown",
+          "source": "skill-creator@awesome-claude-skills"
+        },
+        {
+          "name": "mcp-builder",
+          "path": "/Users/jakeaaron/.claude/plugins/cache/awesome-claude-skills/mcp-builder/unknown",
+          "source": "mcp-builder@awesome-claude-skills"
+        },
+        {
+          "name": "warp",
+          "path": "/Users/jakeaaron/.claude/plugins/cache/claude-code-warp/warp/2.0.0",
+          "source": "warp@claude-code-warp"
+        },
+        {
+          "name": "superpowers",
+          "path": "/Users/jakeaaron/.claude/plugins/cache/superpowers-dev/superpowers/4.0.3",
+          "source": "superpowers@superpowers-dev"
+        }
+      ],
+      "uuid": "ffb47727-365d-42d4-a4d1-2a5f239aada2",
+      "memory_paths": {
+        "auto": "/Users/jakeaaron/.claude/projects/-Users-jakeaaron-Downloads-CC-Agent/memory/"
+      },
+      "fast_mode_state": "off"
+    },
+    {
+      "type": "assistant",
+      "message": {
+        "model": "claude-opus-4-7",
+        "id": "msg_018H2EKz3g8uJ7ry7hkT89PM",
+        "type": "message",
+        "role": "assistant",
+        "content": [
+          {
+            "type": "thinking",
+            "thinking": "",
+            "signature": "EpYCClkIDRgCKkAYwD5OTUhn7iXLlTI7FmW0FQ97ycs+POb2ltJmDbhEY/pT5W91q6v/bicLYIFgOAQnagHXyEy2xqDdfRLb7gXWMg9jbGF1ZGUtb3B1cy00LTc4ABIMFmLbNGCye5yZHvGmGgxvePR6y2zmpkOgdIciMJNUdjTvOFQAqyqsaWen1PNflLJ/6p6BP/mu14sZJxkxRpzzE5L7t6gUME0bwzji0CprYdc8LjNCspz1UaF1nFxvlask5AHD8gN4CN5Dw0ZL5mR0tZQpVjmlSd0vdOC+PCgUkOJhb2wjgwTgjQ3s5qNkljcnr2/h+f8HJrVMv1lIM/ZdFTEERZs7R8uWi5gbkv4UIMCyvrat19Dy4JkYAQ=="
+          }
+        ],
+        "stop_reason": null,
+        "stop_sequence": null,
+        "stop_details": null,
+        "usage": {
+          "input_tokens": 6,
+          "cache_creation_input_tokens": 49649,
+          "cache_read_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 49649
+          },
+          "output_tokens": 8,
+          "service_tier": "standard",
+          "inference_geo": "not_available"
+        },
+        "context_management": null
+      },
+      "parent_tool_use_id": null,
+      "session_id": "85c06582-a7a1-4eba-b4e0-7d39c7dde834",
+      "uuid": "2325b251-43f5-4ea5-b6da-f7e5955718c4"
+    },
+    {
+      "type": "assistant",
+      "message": {
+        "model": "claude-opus-4-7",
+        "id": "msg_018H2EKz3g8uJ7ry7hkT89PM",
+        "type": "message",
+        "role": "assistant",
+        "content": [
+          {
+            "type": "tool_use",
+            "id": "toolu_016KmnuToSewkisd8KwHH861",
+            "name": "Bash",
+            "input": {
+              "command": "ls \"/Users/jakeaaron/Downloads/CC Agent/LEDGERS/\" 2>&1; echo \"---\"; ls \"/Users/jakeaaron/Downloads/CC Agent/LEDGERS/AGENTS/global_ledger_steward/\" 2>&1",
+              "description": "List ledgers directory"
+            },
+            "caller": {
+              "type": "direct"
+            }
+          }
+        ],
+        "stop_reason": null,
+        "stop_sequence": null,
+        "stop_details": null,
+        "usage": {
+          "input_tokens": 6,
+          "cache_creation_input_tokens": 49649,
+          "cache_read_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 49649
+          },
+          "output_tokens": 8,
+          "service_tier": "standard",
+          "inference_geo": "not_available"
+        },
+        "context_management": null
+      },
+      "parent_tool_use_id": null,
+      "session_id": "85c06582-a7a1-4eba-b4e0-7d39c7dde834",
+      "uuid": "529c8fa1-e9e9-4583-8ce0-159494baadfd"
+    },
+    {
+      "type": "assistant",
+      "message": {
+        "model": "claude-opus-4-7",
+        "id": "msg_018H2EKz3g8uJ7ry7hkT89PM",
+        "type": "message",
+        "role": "assistant",
+        "content": [
+          {
+            "type": "tool_use",
+            "id": "toolu_01WKf7SEhLCoEHXBsxF4wf3D",
+            "name": "Bash",
+            "input": {
+              "command": "cd \"/Users/jakeaaron/Downloads/CC Agent\" && git status --short --branch 2>&1 | head -60",
+              "description": "Git status"
+            },
+            "caller": {
+              "type": "direct"
+            }
+          }
+        ],
+        "stop_reason": null,
+        "stop_sequence": null,
+        "stop_details": null,
+        "usage": {
+          "input_tokens": 6,
+          "cache_creation_input_tokens": 49649,
+          "cache_read_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 49649
+          },
+          "output_tokens": 8,
+          "service_tier": "standard",
+          "inference_geo": "not_available"
+        },
+        "context_management": null
+      },
+      "parent_tool_use_id": null,
+      "session_id": "85c06582-a7a1-4eba-b4e0-7d39c7dde834",
+      "uuid": "04f3f7d7-b7b5-4abc-97b1-ad36fd31f49a"
+    },
+    {
+      "type": "rate_limit_event",
+      "rate_limit_info": {
+        "status": "allowed_warning",
+        "resetsAt": 1777518000,
+        "rateLimitType": "seven_day",
+        "utilization": 0.95,
+        "isUsingOverage": false,
+        "surpassedThreshold": 0.75
+      },
+      "uuid": "b534cef8-62ec-4ed2-ad34-26c4207f79b5",
+      "session_id": "85c06582-a7a1-4eba-b4e0-7d39c7dde834"
+    },
+    {
+      "type": "user",
+      "message": {
+        "role": "user",
+        "content": [
+          {
+            "tool_use_id": "toolu_016KmnuToSewkisd8KwHH861",
+            "type": "tool_result",
+            "content": "not interactive and can't open terminal\ncompinit: initialization aborted\ncomplete:13: command not found: compdef\nAGENTS\nFILE_DIRECTORY_LEDGER.json\nFILE_DIRECTORY_LEDGER.md\nGLOBAL_LEDGER.json\nGLOBAL_LEDGER.md\nINDEX.md\nLOCAL_TEMPLATE\nNORTH_STAR.json\nNORTH_STAR.md\nOPEN_PROBLEMS_LEDGER.json\nOPEN_PROBLEMS_LEDGER.md\nTEMPORAL_CONTINUITY.json\nTEMPORAL_CONTINUITY.md\nVISUALS\n---\nAGENTS.md\nREADME.md\nglobal_ledger_steward.config.json",
+            "is_error": false
+          }
+        ]
+      },
+      "parent_tool_use_id": null,
+      "session_id": "85c06582-a7a1-4eba-b4e0-7d39c7dde834",
+      "uuid": "56565ce5-6d1e-480d-920d-61eb142c4c3d",
+      "timestamp": "2026-04-28T11:51:00.919Z",
+      "tool_use_result": {
+        "stdout": "not interactive and can't open terminal\ncompinit: initialization aborted\ncomplete:13: command not found: compdef\nAGENTS\nFILE_DIRECTORY_LEDGER.json\nFILE_DIRECTORY_LEDGER.md\nGLOBAL_LEDGER.json\nGLOBAL_LEDGER.md\nINDEX.md\nLOCAL_TEMPLATE\nNORTH_STAR.json\nNORTH_STAR.md\nOPEN_PROBLEMS_LEDGER.json\nOPEN_PROBLEMS_LEDGER.md\nTEMPORAL_CONTINUITY.json\nTEMPORAL_CONTINUITY.md\nVISUALS\n---\nAGENTS.md\nREADME.md\nglobal_ledger_steward.config.json",
+        "stderr": "",
+        "interrupted": false,
+        "isImage": false,
+        "noOutputExpected": false
+      }
+    },
+    {
+      "type": "user",
+      "message": {
+        "role": "user",
+        "content": [
+          {
+            "tool_use_id": "toolu_01WKf7SEhLCoEHXBsxF4wf3D",
+            "type": "tool_result",
+            "content": "not interactive and can't open terminal\ncompinit: initialization aborted\ncomplete:13: command not found: compdef\n## main...origin/main\n M .gitignore\n M AGENT.md\n D \"Auto/Comeketo Agent/Comeketo Design Deck.html\"\n D \"Auto/Comeketo Agent/components.css\"\n D \"Auto/Comeketo Agent/deck-stage.js\"\n D \"Auto/Comeketo Agent/icons.js\"\n D \"Auto/Comeketo Agent/tokens.css\"\n D \"Auto/Extra Stuff/CleanShot 2026-04-25 at 13.53.04@2x.png\"\n D \"Auto/Extra Stuff/CleanShot 2026-04-25 at 16.27.35@2x.png\"\n D \"Auto/Extra Stuff/CleanShot 2026-04-25 at 16.27.41@2x.png\"\n D \"Auto/Extra Stuff/CleanShot 2026-04-25 at 16.27.45@2x.png\"\n D \"Auto/Extra Stuff/CleanShot 2026-04-25 at 16.27.49@2x.png\"\n D \"Auto/Extra Stuff/CleanShot 2026-04-25 at 16.28.14@2x.png\"\n D \"Auto/Extra Stuff/CleanShot 2026-04-25 at 16.28.28@2x.png\"\n D \"Auto/Extra Stuff/Comeketo_Venue_Index_2026-04-25.xlsx\"\n D \"Auto/Extra Stuff/autodre.txt\"\n D \"Auto/Extra Stuff/comeketo-ballpark-email-template.html\"\n M CCAgentindex/_ledger/activity.jsonl\n M CCAgentindex/_ledger/chat_reflections.jsonl\n M CCAgentindex/_ledger/pieces_sweeps.jsonl\n M CLAUDE.md\n D \"Comeketo Agent/Comeketo Design Deck.html\"\n D \"Comeketo Agent/components.css\"\n D \"Comeketo Agent/deck-stage.js\"\n D \"Comeketo Agent/icons.js\"\n D \"Comeketo Agent/tokens.css\"\n M README.md\n M Secretary.html\n M ai_instructions.js\n M components.jsx\n M mission_control_loader.js\n M package-lock.json\n M package.json\n M page_asset_sitemap.md\n?? .agents/\n?? .mcp.json\n?? AGENTS.md\n?? \"Aesthetic Asset Kit/\"\n?? CCAgentindex/Boxes\n?? \"CCAgentindex/Client Boxes\"\n?? \"CCAgentindex/Onboard Scripts\"\n?? \"CCAgentindex/Staff Boxes\"\n?? CCAgentindex/_inbox/attachments/2026-04-28/CleanShot_2026-04-28_at_05.10.48_2x_921b422416.png\n?? CCAgentindex/_inbox/attachments/2026-04-28/CleanShot_2026-04-28_at_05.11.33_2x_eecce6c9b2.png\n?? CCAgentindex/_inbox/attachments/2026-04-28/CleanShot_2026-04-28_at_05.11.40_2x_5b19326b96.png\n?? CCAgentindex/_inbox/attachments/2026-04-28/CleanShot_2026-04-28_at_05.11.46_2x_f6746ec2d0.png\n?? CCAgentindex/_inbox/attachments/2026-04-28/CleanShot_2026-04-28_at_05.11.56_2x_79d65f6c68.png\n?? CCAgentindex/_inbox/attachments/2026-04-28/CleanShot_2026-04-28_at_05.12.01_2x_d1146a13b3.png\n?? CCAgentindex/_inbox/attachments/2026-04-28/CleanShot_2026-04-28_at_05.12.14_2x_2df3fdb2e2.png\n?? CCAgentindex/_inbox/attachments/2026-04-28/CleanShot_2026-04-28_at_05.20.06_2x_1c84e94e46.png\n?? CCAgentindex/_inbox/attachments/2026-04-28/CleanShot_2026-04-28_at_05.20.06_2x_81174fe262.png\n?? CCAgentindex/_ledger/delegations/dl_19b41c7eac.json\n?? CCAgentindex/_ledger/ledger_steward_runs/\n?? CCAgentindex/agents/global_ledger_steward/\n?? CCAgentindex/comeketo-inbox\n?? CCAgentindex/orchestrator\n?? CCAgentindex/reports/snap_benefits/\n?? LEDGERS/\n?? file_directory_subagent_package/\nShell cwd was reset to /Users/jakeaaron/Downloads/CC Agent/CCAgentindex",
+            "is_error": false
+          }
+        ]
+      },
+      "parent_tool_use_id": null,
+      "session_id": "85c06582-a7a1-4eba-b4e0-7d39c7dde834",
+      "uuid": "024a15fd-14ce-4b57-9c66-9fa12ab7da6f",
+      "timestamp": "2026-04-28T11:51:01.533Z",
+      "tool_use_result": {
+        "stdout": "not interactive and can't open terminal\ncompinit: initialization aborted\ncomplete:13: command not found: compdef\n## main...origin/main\n M .gitignore\n M AGENT.md\n D \"Auto/Comeketo Agent/Comeketo Design Deck.html\"\n D \"Auto/Comeketo Agent/components.css\"\n D \"Auto/Comeketo Agent/deck-stage.js\"\n D \"Auto/Comeketo Agent/icons.js\"\n D \"Auto/Comeketo Agent/tokens.css\"\n D \"Auto/Extra Stuff/CleanShot 2026-04-25 at 13.53.04@2x.png\"\n D \"Auto/Extra Stuff/CleanShot 2026-04-25 at 16.27.35@2x.png\"\n D \"Auto/Extra Stuff/CleanShot 2026-04-25 at 16.27.41@2x.png\"\n D \"Auto/Extra Stuff/CleanShot 2026-04-25 at 16.27.45@2x.png\"\n D \"Auto/Extra Stuff/CleanShot 2026-04-25 at 16.27.49@2x.png\"\n D \"Auto/Extra Stuff/CleanShot 2026-04-25 at 16.28.14@2x.png\"\n D \"Auto/Extra Stuff/CleanShot 2026-04-25 at 16.28.28@2x.png\"\n D \"Auto/Extra Stuff/Comeketo_Venue_Index_2026-04-25.xlsx\"\n D \"Auto/Extra Stuff/autodre.txt\"\n D \"Auto/Extra Stuff/comeketo-ballpark-email-template.html\"\n M CCAgentindex/_ledger/activity.jsonl\n M CCAgentindex/_ledger/chat_reflections.jsonl\n M CCAgentindex/_ledger/pieces_sweeps.jsonl\n M CLAUDE.md\n D \"Comeketo Agent/Comeketo Design Deck.html\"\n D \"Comeketo Agent/components.css\"\n D \"Comeketo Agent/deck-stage.js\"\n D \"Comeketo Agent/icons.js\"\n D \"Comeketo Agent/tokens.css\"\n M README.md\n M Secretary.html\n M ai_instructions.js\n M components.jsx\n M mission_control_loader.js\n M package-lock.json\n M package.json\n M page_asset_sitemap.md\n?? .agents/\n?? .mcp.json\n?? AGENTS.md\n?? \"Aesthetic Asset Kit/\"\n?? CCAgentindex/Boxes\n?? \"CCAgentindex/Client Boxes\"\n?? \"CCAgentindex/Onboard Scripts\"\n?? \"CCAgentindex/Staff Boxes\"\n?? CCAgentindex/_inbox/attachments/2026-04-28/CleanShot_2026-04-28_at_05.10.48_2x_921b422416.png\n?? CCAgentindex/_inbox/attachments/2026-04-28/CleanShot_2026-04-28_at_05.11.33_2x_eecce6c9b2.png\n?? CCAgentindex/_inbox/attachments/2026-04-28/CleanShot_2026-04-28_at_05.11.40_2x_5b19326b96.png\n?? CCAgentindex/_inbox/attachments/2026-04-28/CleanShot_2026-04-28_at_05.11.46_2x_f6746ec2d0.png\n?? CCAgentindex/_inbox/attachments/2026-04-28/CleanShot_2026-04-28_at_05.11.56_2x_79d65f6c68.png\n?? CCAgentindex/_inbox/attachments/2026-04-28/CleanShot_2026-04-28_at_05.12.01_2x_d1146a13b3.png\n?? CCAgentindex/_inbox/attachments/2026-04-28/CleanShot_2026-04-28_at_05.12.14_2x_2df3fdb2e2.png\n?? CCAgentindex/_inbox/attachments/2026-04-28/CleanShot_2026-04-28_at_05.20.06_2x_1c84e94e46.png\n?? CCAgentindex/_inbox/attachments/2026-04-28/CleanShot_2026-04-28_at_05.20.06_2x_81174fe262.png\n?? CCAgentindex/_ledger/delegations/dl_19b41c7eac.json\n?? CCAgentindex/_ledger/ledger_steward_runs/\n?? CCAgentindex/agents/global_ledger_steward/\n?? CCAgentindex/comeketo-inbox\n?? CCAgentindex/orchestrator\n?? CCAgentindex/reports/snap_benefits/\n?? LEDGERS/\n?? file_directory_subagent_package/",
+        "stderr": "\nShell cwd was reset to /Users/jakeaaron/Downloads/CC Agent/CCAgentindex",
+        "interrupted": false,
+        "isImage": false,
+        "noOutputExpected": false
+      }
+    },
+    {
+      "type": "assistant",
+      "message": {
+        "model": "claude-opus-4-7",
+        "id": "msg_0179AuPuoKXidyhpCv2xuGto",
+        "type": "message",
+        "role": "assistant",
+        "content": [
+          {
+            "type": "tool_use",
+            "id": "toolu_011qcHLiTT7SJESqoU9SDKry",
+            "name": "Read",
+            "input": {
+              "file_path": "/Users/jakeaaron/Downloads/CC Agent/LEDGERS/INDEX.md"
+            },
+            "caller": {
+              "type": "direct"
+            }
+          }
+        ],
+        "stop_reason": null,
+        "stop_sequence": null,
+        "stop_details": null,
+        "usage": {
+          "input_tokens": 1,
+          "cache_creation_input_tokens": 2374,
+          "cache_read_input_tokens": 49649,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 2374
+          },
+          "output_tokens": 66,
+          "service_tier": "standard",
+          "inference_geo": "not_available"
+        },
+        "context_management": null
+      },
+      "parent_tool_use_id": null,
+      "session_id": "85c06582-a7a1-4eba-b4e0-7d39c7dde834",
+      "uuid": "a1c8be09-473c-4a19-8f05-16f0fe5e5297"
+    },
+    {
+      "type": "user",
+      "message": {
+        "role": "user",
+        "content": [
+          {
+            "tool_use_id": "toolu_011qcHLiTT7SJESqoU9SDKry",
+            "type": "tool_result",
+            "content": "1\t# LEDGERS Index\n2\t\n3\tThis is the roster of every ledger planned for the project. The Global Ledger is the world map; everything below is a neighborhood map.\n4\t\n5\t> The first file an agent reads before doing meaningful work is `GLOBAL_LEDGER.md`. This index tells you what's next.\n6\t\n7\tLast updated: 2026-04-28 (Global Ledger Steward automation landed)\n8\t\n9\t---\n10\t\n11\t## Status legend\n12\t\n13\t- **active** — file exists, content is current.\n14\t- **partial** — file exists but is incomplete or being migrated from another surface.\n15\t- **planned** — not yet created. Build order is suggested below.\n16\t\n17\t---\n18\t\n19\t## Top-level continuity\n20\t\n21\t| Ledger | Path | Status | Owns |\n22\t|---|---|---|---|\n23\t| Global Ledger | `LEDGERS/GLOBAL_LEDGER.md` | **active** | Top-level world state, project orientation, read-first protocol. |\n24\t| Global Ledger (JSON mirror) | `LEDGERS/GLOBAL_LEDGER.json` | **active** | Machine-readable mirror of structured state. |\n25\t| Ledger Index | `LEDGERS/INDEX.md` | **active** | This file. Roster of all ledgers and their build status. |\n26\t| Temporal Continuity Ledger | `LEDGERS/TEMPORAL_CONTINUITY.md` | **active** | Current project moment, recent changes, active assumptions, carry-forward context, next handoff. Read after Global. |\n27\t| Temporal Continuity (JSON mirror) | `LEDGERS/TEMPORAL_CONTINUITY.json` | **active** | Machine-readable mirror of current state. |\n28\t| North Star Ledger | `LEDGERS/NORTH_STAR.md` | **active** | Project thesis, 10 NS goals, anti-goals, tradeoff rules, audit questions, Wholesome Enrichment principle. The \"why\" behind decisions. Read when planning major work or auditing. |\n29\t| North Star (JSON mirror) | `LEDGERS/NORTH_STAR.json` | **active** | Machine-readable mirror of all 10 goals + principles + anti-goals + tradeoff rules. |\n30\t| Global Ledger Steward package | `LEDGERS/AGENTS/global_ledger_steward/` | **active** | Canonical steward configuration for protecting/updating Global Ledger + JSON mirror. |\n31\t| Global Ledger Steward app agent | `CCAgentindex/agents/global_ledger_steward/` | **active** | Runnable app agent via `POST /api/agents/global_ledger_steward/run`; writes scoped local ledger updates and per-run receipts. |\n32\t| Phase Ledger | `LEDGERS/PHASE.md` | planned | Current milestone state and exit criteria. |\n33\t\n34\t---\n35\t\n36\t## Truth and rules\n37\t\n38\t| Ledger | Path | Status | Owns |\n39\t|---|---|---|---|\n40\t| Source-of-Truth Ledger | `LEDGERS/SOURCE_OF_TRUTH.md` | planned | Which system owns which truth. Detailed expansion of Global §4. |\n41\t| Definition of Done Ledger | `LEDGERS/DEFINITION_OF_DONE.md` | planned | Completion standards by surface (UI, ledger, box, automation). |\n42\t| Page-Asset Sitemap | `page_asset_sitemap.md` (project root) | **active** | UI Done Gate. Page/route/binding ownership. |\n43\t\n44\t---\n45\t\n46\t## Map and inventory\n47\t\n48\t| Ledger | Path | Status | Owns |\n49\t|---|---|---|---|\n50\t| File Directory Ledger | `LEDGERS/FILE_DIRECTORY_LEDGER.md` | **active** | Top-level + subdirectory map (real paths only), ownership table, canonical vs generated, status taxonomy, common wrong-turns. The project's city map. |\n51\t| File Directory (JSON mirror) | `LEDGERS/FILE_DIRECTORY_LEDGER.json` | **active** | Structured mirror of every directory + open_problems_to_log[]. |\n52\t| Directory Configuration template | `LEDGERS/LOCAL_TEMPLATE/DIRECTORY_ORIENTATION_TEMPLATE.md` | **active** | Template stamp for \"you are here\" files in any directory. |\n53\t| Box Ledger template | `LEDGERS/LOCAL_TEMPLATE/BOX_LEDGER_TEMPLATE.md` | **active** | Template stamp for any new Box. |\n54\t| File Contents Ledger | `LEDGERS/FILE_CONTENTS.md` | planned | Important file responsibilities. |\n55\t| Asset / Widget Map | `LEDGERS/ASSET_WIDGET_MAP.md` | planned | Pages, widgets, APIs, data flow. (Partially live in `page_asset_sitemap.md`.) |\n56\t| Page Ledgers | `LEDGERS/PAGES/<route>.md` | planned | One per surviving UI route: grid, settings, leads, clients, coworkers, contacts, briefing, activity, automation, intake, analytics. |\n57\t| Widget Ledgers | `LEDGERS/WIDGETS/<widget>.md` | planned | One per major widget. |\n58\t| Connections Ledger | `LEDGERS/CONNECTIONS.md` | planned | External systems and services (Close, Pieces, Twilio, Slack, Google, ClickUp, Supabase). |\n59\t| Settings Ledger | `LEDGERS/SETTINGS.md` | planned | Configurable options and feature flags. |\n60\t\n61\t---\n62\t\n63\t## Memory of the work\n64\t\n65\t| Ledger | Path | Status | Owns |\n66\t|---|---|---|---|\n67\t| Decisions Ledger | `LEDGERS/DECISIONS.md` | planned | Major choices and the reasoning behind them. |\n68\t| Communications Ledger | `LEDGERS/COMMUNICATIONS.md` | planned | Handoffs, warnings, notes between agents/humans. |\n69\t| Open Problems Ledger | `LEDGERS/OPEN_PROBLEMS_LEDGER.md` | **active** | 13 active problems + 1 closed. Stable IDs (PROB-YYYY-MM-DD-###), severity/urgency separated, mandatory close criteria. **Read before starting work** to avoid rediscovering known issues. |\n70\t| Open Problems (JSON mirror) | `LEDGERS/OPEN_PROBLEMS_LEDGER.json` | **active** | Structured mirror with blocked, partially-fixed, recurring patterns, recently-closed. |\n71\t| Audit Ledger | `LEDGERS/AUDIT.md` | planned | Audit findings and follow-up. |\n72\t| Prompt / Reconstruction Ledger | `LEDGERS/PROMPT_RECONSTRUCTION.md` | planned | How important things were built — repeatable processes. |\n73\t| Scout Ledger | `LEDGERS/SCOUT.md` | planned | Tool/model/workflow research notes. |\n74\t| Activity ledger (audit trail) | `CCAgentindex/_ledger/activity.jsonl` | **active** | Append-only delegation/event log. |\n75\t\n76\t---\n77\t\n78\t## Visuals\n79\t\n80\tMermaid `.mmd` files under `LEDGERS/VISUALS/`:\n81\t\n82\t| Visual | Path | Status |\n83\t|---|---|---|\n84\t| Global system map | `LEDGERS/VISUALS/global_system_map.mmd` | **active** |\n85\t| Ledger dependency map | `LEDGERS/VISUALS/ledger_dependency_map.mmd` | **active** |\n86\t| Client Box lifecycle | `LEDGERS/VISUALS/client_box_lifecycle.mmd` | **active** |\n87\t| Temporal continuity flow (session protocol) | `LEDGERS/VISUALS/temporal_continuity_flow.mmd` | **active** |\n88\t| Client state temporal flow (plan aging + approval) | `LEDGERS/VISUALS/client_state_temporal.mmd` | **active** |\n89\t| North Star map (thesis → 10 goals → systems) | `LEDGERS/VISUALS/north_star_map.mmd` | **active** |\n90\t| North Star alignment check (decision tree) | `LEDGERS/VISUALS/north_star_alignment_check.mmd` | **active** |\n91\t| File directory map (repo tree shape) | `LEDGERS/VISUALS/file_directory_map.mmd` | **active** |\n92\t| Directory ownership map (canonical → runtime → UI flows) | `LEDGERS/VISUALS/directory_ownership_map.mmd` | **active** |\n93\t| Problem lifecycle (Found → Triage → Verify → Close) | `LEDGERS/VISUALS/problem_lifecycle.mmd` | **active** |\n94\t| Open problems board (grouped by urgency × severity) | `LEDGERS/VISUALS/open_problems_board.mmd` | **active** |\n95\t| Risk heatmap (system risk chains) | `LEDGERS/VISUALS/risk_heatmap.mmd` | **active** |\n96\t| Page / API / data-flow map | `LEDGERS/VISUALS/page_api_dataflow.mmd` | planned |\n97\t| Source-of-truth flow | `LEDGERS/VISUALS/source_of_truth_flow.mmd` | planned |\n98\t| Box hierarchy map | `LEDGERS/VISUALS/box_hierarchy.mmd` | planned |\n99\t\n100\t---\n101\t\n102\t## Suggested build order (Phase 6 onward)\n103\t\n104\tPhases 1–5 are complete: Global Ledger (constitution), Temporal Continuity (cockpit log), North Star (compass), File Directory (city map), Open Problems (protection system). The first steward automation is also active: `global_ledger_steward` can run local ledger-maintenance sweeps through the app agent path. The order below is a recommendation — pick by what's most painful next.\n105\t\n106\t1. **Source-of-Truth Ledger** — encodes rules already summarized in Global §4 + NS-06 + FDL §6 + OPL recurring patterns. Would unblock PROB-001 (allowed-to-know schema) and reduce PROB-010 risk.\n107\t2. **Definition of Done Ledger** — locks in \"if the system changed, the system memory changes with it\" per surface; references North Star goals + OPL close-criteria pattern. Pairs naturally with Source-of-Truth.\n108\t3. **Decisions Ledger** — start retroactively logging the big calls already made. Several OPL entries are blocked on decisions (PROB-010, 011, 012, 013, 014) — DoD + Decisions together would unblock them.\n109\t4. **Audit Ledger** — formalize the client-box audit pattern Brenda established. Each entry references North Star goals (supported / threatened / anti-goal proximity) and OPL entries created/closed.\n110\t5. **Directory Configuration files** — stamp the project tree using `DIRECTORY_ORIENTATION_TEMPLATE.md`. FDL names where they should live; this fills them in.\n111\t6. **Phase Ledger** — name the current phase and its exit criteria.\n112\t7. **Page Ledgers** (one per surviving route) — start with `boxes`, then `analytics`, `automation`, `intake`.\n113\t8. **Connections Ledger** — encode external-system contract (Close, Pieces, Twilio, Slack, Google, ClickUp, Supabase). Pairs with closing PROB-009.\n114\t9. **Communications Ledger**, **Prompt / Reconstruction Ledger**, **Scout Ledger** — slower-moving, build as content arrives.\n115\t10. **Widget Ledgers** + **Settings Ledger** — last, mostly stable patterns from Page Ledgers.\n116\t\n117\t---\n118\t\n119\t## Templates\n120\t\n121\tLocal Box scaffolds live at `LEDGERS/LOCAL_TEMPLATE/`:\n122\t\n123\t- `BOX_LEDGER_TEMPLATE.md` — for any new Box\n124\t- `DIRECTORY_ORIENTATION_TEMPLATE.md` — for any directory that needs a \"you are here\" file\n125\t\n126\t---\n127\t\n128\t## Update rules for this index\n129\t\n130\tUpdate `INDEX.md` whenever:\n131\t\n132\t- a new ledger is created (flip status from planned to active)\n133\t- a ledger is retired (mark retired with date)\n134\t- the build order changes\n135\t- a new visual lands under `VISUALS/`\n136\t\n137\tThe Global Ledger is the world map. This index is its table of contents.\n138\t"
+          }
+        ]
+      },
+      "parent_tool_use_id": null,
+      "session_id": "85c06582-a7a1-4eba-b4e0-7d39c7dde834",
+      "uuid": "5b1bddd6-12d8-430a-824d-cefecb816aca",
+      "timestamp": "2026-04-28T11:51:03.756Z",
+      "tool_use_result": {
+        "type": "text",
+        "file": {
+          "filePath": "/Users/jakeaaron/Downloads/CC Agent/LEDGERS/INDEX.md",
+          "content": "# LEDGERS Index\n\nThis is the roster of every ledger planned for the project. The Global Ledger is the world map; everything below is a neighborhood map.\n\n> The first file an agent reads before doing meaningful work is `GLOBAL_LEDGER.md`. This index tells you what's next.\n\nLast updated: 2026-04-28 (Global Ledger Steward automation landed)\n\n---\n\n## Status legend\n\n- **active** — file exists, content is current.\n- **partial** — file exists but is incomplete or being migrated from another surface.\n- **planned** — not yet created. Build order is suggested below.\n\n---\n\n## Top-level continuity\n\n| Ledger | Path | Status | Owns |\n|---|---|---|---|\n| Global Ledger | `LEDGERS/GLOBAL_LEDGER.md` | **active** | Top-level world state, project orientation, read-first protocol. |\n| Global Ledger (JSON mirror) | `LEDGERS/GLOBAL_LEDGER.json` | **active** | Machine-readable mirror of structured state. |\n| Ledger Index | `LEDGERS/INDEX.md` | **active** | This file. Roster of all ledgers and their build status. |\n| Temporal Continuity Ledger | `LEDGERS/TEMPORAL_CONTINUITY.md` | **active** | Current project moment, recent changes, active assumptions, carry-forward context, next handoff. Read after Global. |\n| Temporal Continuity (JSON mirror) | `LEDGERS/TEMPORAL_CONTINUITY.json` | **active** | Machine-readable mirror of current state. |\n| North Star Ledger | `LEDGERS/NORTH_STAR.md` | **active** | Project thesis, 10 NS goals, anti-goals, tradeoff rules, audit questions, Wholesome Enrichment principle. The \"why\" behind decisions. Read when planning major work or auditing. |\n| North Star (JSON mirror) | `LEDGERS/NORTH_STAR.json` | **active** | Machine-readable mirror of all 10 goals + principles + anti-goals + tradeoff rules. |\n| Global Ledger Steward package | `LEDGERS/AGENTS/global_ledger_steward/` | **active** | Canonical steward configuration for protecting/updating Global Ledger + JSON mirror. |\n| Global Ledger Steward app agent | `CCAgentindex/agents/global_ledger_steward/` | **active** | Runnable app agent via `POST /api/agents/global_ledger_steward/run`; writes scoped local ledger updates and per-run receipts. |\n| Phase Ledger | `LEDGERS/PHASE.md` | planned | Current milestone state and exit criteria. |\n\n---\n\n## Truth and rules\n\n| Ledger | Path | Status | Owns |\n|---|---|---|---|\n| Source-of-Truth Ledger | `LEDGERS/SOURCE_OF_TRUTH.md` | planned | Which system owns which truth. Detailed expansion of Global §4. |\n| Definition of Done Ledger | `LEDGERS/DEFINITION_OF_DONE.md` | planned | Completion standards by surface (UI, ledger, box, automation). |\n| Page-Asset Sitemap | `page_asset_sitemap.md` (project root) | **active** | UI Done Gate. Page/route/binding ownership. |\n\n---\n\n## Map and inventory\n\n| Ledger | Path | Status | Owns |\n|---|---|---|---|\n| File Directory Ledger | `LEDGERS/FILE_DIRECTORY_LEDGER.md` | **active** | Top-level + subdirectory map (real paths only), ownership table, canonical vs generated, status taxonomy, common wrong-turns. The project's city map. |\n| File Directory (JSON mirror) | `LEDGERS/FILE_DIRECTORY_LEDGER.json` | **active** | Structured mirror of every directory + open_problems_to_log[]. |\n| Directory Configuration template | `LEDGERS/LOCAL_TEMPLATE/DIRECTORY_ORIENTATION_TEMPLATE.md` | **active** | Template stamp for \"you are here\" files in any directory. |\n| Box Ledger template | `LEDGERS/LOCAL_TEMPLATE/BOX_LEDGER_TEMPLATE.md` | **active** | Template stamp for any new Box. |\n| File Contents Ledger | `LEDGERS/FILE_CONTENTS.md` | planned | Important file responsibilities. |\n| Asset / Widget Map | `LEDGERS/ASSET_WIDGET_MAP.md` | planned | Pages, widgets, APIs, data flow. (Partially live in `page_asset_sitemap.md`.) |\n| Page Ledgers | `LEDGERS/PAGES/<route>.md` | planned | One per surviving UI route: grid, settings, leads, clients, coworkers, contacts, briefing, activity, automation, intake, analytics. |\n| Widget Ledgers | `LEDGERS/WIDGETS/<widget>.md` | planned | One per major widget. |\n| Connections Ledger | `LEDGERS/CONNECTIONS.md` | planned | External systems and services (Close, Pieces, Twilio, Slack, Google, ClickUp, Supabase). |\n| Settings Ledger | `LEDGERS/SETTINGS.md` | planned | Configurable options and feature flags. |\n\n---\n\n## Memory of the work\n\n| Ledger | Path | Status | Owns |\n|---|---|---|---|\n| Decisions Ledger | `LEDGERS/DECISIONS.md` | planned | Major choices and the reasoning behind them. |\n| Communications Ledger | `LEDGERS/COMMUNICATIONS.md` | planned | Handoffs, warnings, notes between agents/humans. |\n| Open Problems Ledger | `LEDGERS/OPEN_PROBLEMS_LEDGER.md` | **active** | 13 active problems + 1 closed. Stable IDs (PROB-YYYY-MM-DD-###), severity/urgency separated, mandatory close criteria. **Read before starting work** to avoid rediscovering known issues. |\n| Open Problems (JSON mirror) | `LEDGERS/OPEN_PROBLEMS_LEDGER.json` | **active** | Structured mirror with blocked, partially-fixed, recurring patterns, recently-closed. |\n| Audit Ledger | `LEDGERS/AUDIT.md` | planned | Audit findings and follow-up. |\n| Prompt / Reconstruction Ledger | `LEDGERS/PROMPT_RECONSTRUCTION.md` | planned | How important things were built — repeatable processes. |\n| Scout Ledger | `LEDGERS/SCOUT.md` | planned | Tool/model/workflow research notes. |\n| Activity ledger (audit trail) | `CCAgentindex/_ledger/activity.jsonl` | **active** | Append-only delegation/event log. |\n\n---\n\n## Visuals\n\nMermaid `.mmd` files under `LEDGERS/VISUALS/`:\n\n| Visual | Path | Status |\n|---|---|---|\n| Global system map | `LEDGERS/VISUALS/global_system_map.mmd` | **active** |\n| Ledger dependency map | `LEDGERS/VISUALS/ledger_dependency_map.mmd` | **active** |\n| Client Box lifecycle | `LEDGERS/VISUALS/client_box_lifecycle.mmd` | **active** |\n| Temporal continuity flow (session protocol) | `LEDGERS/VISUALS/temporal_continuity_flow.mmd` | **active** |\n| Client state temporal flow (plan aging + approval) | `LEDGERS/VISUALS/client_state_temporal.mmd` | **active** |\n| North Star map (thesis → 10 goals → systems) | `LEDGERS/VISUALS/north_star_map.mmd` | **active** |\n| North Star alignment check (decision tree) | `LEDGERS/VISUALS/north_star_alignment_check.mmd` | **active** |\n| File directory map (repo tree shape) | `LEDGERS/VISUALS/file_directory_map.mmd` | **active** |\n| Directory ownership map (canonical → runtime → UI flows) | `LEDGERS/VISUALS/directory_ownership_map.mmd` | **active** |\n| Problem lifecycle (Found → Triage → Verify → Close) | `LEDGERS/VISUALS/problem_lifecycle.mmd` | **active** |\n| Open problems board (grouped by urgency × severity) | `LEDGERS/VISUALS/open_problems_board.mmd` | **active** |\n| Risk heatmap (system risk chains) | `LEDGERS/VISUALS/risk_heatmap.mmd` | **active** |\n| Page / API / data-flow map | `LEDGERS/VISUALS/page_api_dataflow.mmd` | planned |\n| Source-of-truth flow | `LEDGERS/VISUALS/source_of_truth_flow.mmd` | planned |\n| Box hierarchy map | `LEDGERS/VISUALS/box_hierarchy.mmd` | planned |\n\n---\n\n## Suggested build order (Phase 6 onward)\n\nPhases 1–5 are complete: Global Ledger (constitution), Temporal Continuity (cockpit log), North Star (compass), File Directory (city map), Open Problems (protection system). The first steward automation is also active: `global_ledger_steward` can run local ledger-maintenance sweeps through the app agent path. The order below is a recommendation — pick by what's most painful next.\n\n1. **Source-of-Truth Ledger** — encodes rules already summarized in Global §4 + NS-06 + FDL §6 + OPL recurring patterns. Would unblock PROB-001 (allowed-to-know schema) and reduce PROB-010 risk.\n2. **Definition of Done Ledger** — locks in \"if the system changed, the system memory changes with it\" per surface; references North Star goals + OPL close-criteria pattern. Pairs naturally with Source-of-Truth.\n3. **Decisions Ledger** — start retroactively logging the big calls already made. Several OPL entries are blocked on decisions (PROB-010, 011, 012, 013, 014) — DoD + Decisions together would unblock them.\n4. **Audit Ledger** — formalize the client-box audit pattern Brenda established. Each entry references North Star goals (supported / threatened / anti-goal proximity) and OPL entries created/closed.\n5. **Directory Configuration files** — stamp the project tree using `DIRECTORY_ORIENTATION_TEMPLATE.md`. FDL names where they should live; this fills them in.\n6. **Phase Ledger** — name the current phase and its exit criteria.\n7. **Page Ledgers** (one per surviving route) — start with `boxes`, then `analytics`, `automation`, `intake`.\n8. **Connections Ledger** — encode external-system contract (Close, Pieces, Twilio, Slack, Google, ClickUp, Supabase). Pairs with closing PROB-009.\n9. **Communications Ledger**, **Prompt / Reconstruction Ledger**, **Scout Ledger** — slower-moving, build as content arrives.\n10. **Widget Ledgers** + **Settings Ledger** — last, mostly stable patterns from Page Ledgers.\n\n---\n\n## Templates\n\nLocal Box scaffolds live at `LEDGERS/LOCAL_TEMPLATE/`:\n\n- `BOX_LEDGER_TEMPLATE.md` — for any new Box\n- `DIRECTORY_ORIENTATION_TEMPLATE.md` — for any directory that needs a \"you are here\" file\n\n---\n\n## Update rules for this index\n\nUpdate `INDEX.md` whenever:\n\n- a new ledger is created (flip status from planned to active)\n- a ledger is retired (mark retired with date)\n- the build order changes\n- a new visual lands under `VISUALS/`\n\nThe Global Ledger is the world map. This index is its table of contents.\n",
+          "numLines": 138,
+          "startLine": 1,
+          "totalLines": 138
+        }
+      }
+    },
+    {
+      "type": "assistant",
+      "message": {
+        "model": "claude-opus-4-7",
+        "id": "msg_0179AuPuoKXidyhpCv2xuGto",
+        "type": "message",
+        "role": "assistant",
+        "content": [
+          {
+            "type": "tool_use",
+            "id": "toolu_01YVJNrTRVAs8Q3bgt3Bqftj",
+            "name": "Read",
+            "input": {
+              "file_path": "/Users/jakeaaron/Downloads/CC Agent/LEDGERS/GLOBAL_LEDGER.md"
+            },
+            "caller": {
+              "type": "direct"
+            }
+          }
+        ],
+        "stop_reason": null,
+        "stop_sequence": null,
+        "stop_details": null,
+        "usage": {
+          "input_tokens": 1,
+          "cache_creation_input_tokens": 2374,
+          "cache_read_input_tokens": 49649,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 2374
+          },
+          "output_tokens": 66,
+          "service_tier": "standard",
+          "inference_geo": "not_available"
+        },
+        "context_management": null
+      },
+      "parent_tool_use_id": null,
+      "session_id": "85c06582-a7a1-4eba-b4e0-7d39c7dde834",
+      "uuid": "8c34f16a-8331-4097-96f6-f08bd7c83472"
+    },
+    {
+      "type": "user",
+      "message": {
+        "role": "user",
+        "content": [
+          {
+            "tool_use_id": "toolu_01YVJNrTRVAs8Q3bgt3Bqftj",
+            "type": "tool_result",
+            "content": "1\t# Global Ledger\n2\t\n3\tLast updated: 2026-04-28 (Global Ledger Steward automation landed)\n4\tMaintainer: Jake / Comeketo Agent project agents\n5\tRepository: [RodbotCC/CCAgent](https://github.com/RodbotCC/CCAgent)\n6\tDefault branch: `main`\n7\tCurrent phase: Client Boxes + Automation Safety Hardening — Ledger system buildout (Phases 1–5 complete; first ledger steward automation active)\n8\tCurrent project state: Active build; live-ish automation; guardrail and continuity hardening in progress\n9\tRead-first status: **Mandatory before meaningful edits.**\n10\t\n11\t> The repo is not just code. The repo is the memory of the build.\n12\t\n13\t---\n14\t\n15\t## 1. Project Identity\n16\t\n17\tThis project is a GitHub-backed AI operations system for **Comeketo Catering**. It combines client memory, inbox automation, page surfaces, ledgers, boxes, and agent-handoff systems into a durable file-tree orchestration environment.\n18\t\n19\tThe project is not just an app. It is a living operating layer around sales, client context, automations, and agent continuity.\n20\t\n21\tThe build philosophy is **file-tree-first**. Important memory should be versioned in GitHub, not trapped in chat history or local-only state. The local file tree is the working copy. GitHub is the source of truth.\n22\t\n23\tTwo principles bind everything together:\n24\t\n25\t1. **The plan is not truth. The box is truth.** A seven-day plan is a draft strategy subordinate to comms, state, guardrails, approvals, and source-of-truth rules.\n26\t2. **If it matters to future work, it belongs in the versioned file tree.** Code, configuration, ledgers, decisions, open problems, page ownership, automation rules, human preferences, current project state, rebuild instructions, visual maps, audit notes, handoff notes — all of it.\n27\t\n28\t---\n29\t\n30\t## 2. Current World State\n31\t\n32\t- GitHub (`RodbotCC/CCAgent`, branch `main`) is the source of truth.\n33\t- Local file tree at `/Users/jakeaaron/Downloads/CC Agent/` is the working copy.\n34\t- Working tree is currently dirty — there is unpushed local work. Coordinate with the human before any direct GitHub write.\n35\t- `CCAgentindex/` is the bedrock — the only filesystem state the app owns. The retired domains (`projects/`, `threads/`, `commitments/`, `knowledge/`) were wiped in the Apr 2026 great trim. Surviving domains: `people/`, `venues/`, `_ledger/`, `_inbox/`, `indexes/`.\n36\t- `Auto/` is a symlink to the team's standalone automation folder (`/Users/jakeaaron/Desktop/Auto/`). It holds 28 Client Boxes, 10 Staff Boxes, the orchestrator wiring, and the comeketo-inbox skill. Read freely; write only when the team explicitly asks (the orchestrator owns it).\n37\t- Client Boxes are becoming the canonical per-client memory/state layer. As of 2026-04-28 each of the 28 boxes carries `01_comms.md` (curated exec summary), `01b_comms_verbatim.md` (full Close.com transcripts and email bodies), and `comms/<type>_<date>_<id>.json` raw payloads (582 total).\n38\t- The Boxes UI page is a read/display surface over Client Boxes, Staff Boxes, and orchestrator state HTML. Specialized renderers exist for `hugo_casillas` and `brenda_steve`.\n39\t- Eleven UI routes survive after the Apr 2026 trim: `grid, settings, leads, clients, coworkers, contacts, briefing, activity, automation, intake, analytics`.\n40\t- Guardrails are being hardened because some early plans mixed strategy, enrichment, and executable copy too tightly. `Guardrails.html` and `comeketo-guardrails-agent.md` at project root are the current reference surfaces; the inbox skill at `Auto/comeketo-inbox/` carries the operational rules.\n41\t- Pieces.app is the memory backend (39 MCP tools) for activity, sweeps, and recall. The `Rodbot/` identity folder was wiped in the Apr 2026 trim — Pieces stands alone now.\n42\t- The first runnable ledger steward is active: `global_ledger_steward` lives in `CCAgentindex/agents/global_ledger_steward/` and runs through `POST /api/agents/global_ledger_steward/run`. Canonical steward materials live at `LEDGERS/AGENTS/global_ledger_steward/`.\n43\t- Current priority: make the system safer while preserving momentum. One ledger at a time. One client box at a time.\n44\t\n45\t---\n46\t\n47\t## 3. Major Systems\n48\t\n49\t### 3.1 Client Boxes — `Auto/Client Boxes/`\n50\t\n51\tCanonical per-client memory and operating substrate.\n52\t\n53\tOwns:\n54\t\n55\t- comms (`01_comms.md` curated; `01b_comms_verbatim.md` full transcripts; `comms/*.json` raw)\n56\t- state (`client_ledger.md`, `00_meta.json`)\n57\t- profile (`04_profile.md`)\n58\t- enrichment lanes — operational vs protected/off-limits\n59\t- seven-day plan (`05_seven_day_plan.md`)\n60\t- guardrail overlay (when present)\n61\t- approval notes\n62\t- audit markers\n63\t- per-lead specialized renderer slots (Hugo Casillas, Brenda & Steve so far)\n64\t\n65\tDoes not own: organization-wide truth, runtime state, UI surfaces.\n66\t\n67\t### 3.2 Orchestrator — `Auto/orchestrator/`\n68\t\n69\tRuntime/render/state layer. Holds the wiring, sweep outputs, and per-lead rollups for the standalone automation domain.\n70\t\n71\tOwns:\n72\t\n73\t- `wiring/automations.md` — the routine catalog\n74\t- `state/master_ledger.csv` and `state/today.html` — daily snapshots\n75\t- generated outputs and ready checks\n76\t- Hugo + Brenda-Steve routine implementations\n77\t\n78\tDoes not own: canonical client truth (that lives in Client Boxes).\n79\t\n80\t### 3.3 Boxes Page — `BoxesScreen` in `screens.jsx`\n81\t\n82\tUI surface for browsing and reading boxes.\n83\t\n84\tOwns:\n85\t\n86\t- box browsing, search, refresh/poll\n87\t- in-site dossier renderer (markdown-first, design-kit cards, admonition styling)\n88\t- right-click → delegations handoff\n89\t- per-box completeness scoring\n90\t- specialized per-lead renderers (Hugo, Brenda/Steve)\n91\t\n92\tDoes not own: client truth, plan authority, source-of-truth definitions.\n93\t\n94\t### 3.4 Inbox Guardrails — `Auto/comeketo-inbox/` + `Guardrails.html` + `comeketo-guardrails-agent.md`\n95\t\n96\tSafety contract for sends and Close inbox work. Overrides plans, profiles, enrichment, and automation momentum.\n97\t\n98\tOwns:\n99\t\n100\t- hard gates (fee waivers, discounts, scope promises, price guarantees)\n101\t- auto-pauses (reply received → plan stale)\n102\t- reply gates\n103\t- calendar reality\n104\t- frequency caps\n105\t- commitment approval requirements\n106\t- enrichment vs comms boundaries\n107\t\n108\t### 3.5 Ledgers — `LEDGERS/` (this directory)\n109\t\n110\tProject memory system. Continuity, orientation, definition-of-done, source-of-truth clarity, auditability, handoff memory. Steward agent packages live under `LEDGERS/AGENTS/`; the first active app agent is `global_ledger_steward`. See §8 for the full ledger map.\n111\t\n112\t### 3.6 Meta Harness\n113\t\n114\tWorkflow layer that teaches agents how to operate safely. The current meta harness lives across `CLAUDE.md`, `AGENT.md`, `page_asset_sitemap.md`, this Global Ledger, and the read-first protocol in §10.\n115\t\n116\t### 3.7 Bedrock — `CCAgentindex/`\n117\t\n118\tThe only filesystem state the app owns. Loader authority lives in `CCAgentindex/indexes/index.json`. Surviving domains: `people/`, `venues/`, `_ledger/`, `_inbox/`, `indexes/`. Retired in Apr 2026 trim: `projects/`, `threads/`, `commitments/`, `knowledge/`, `Rodbot/`.\n119\t\n120\t### 3.8 Pieces Memory Backend\n121\t\n122\tLocal PiecesOS at `localhost:39300` provides 39 MCP tools across Ask, full-text search, vector search, and batch snapshot. Wired both server-side (`/api/pieces/*` endpoints in `server.py`) and into the Claude Code subprocess via `claude mcp add`. See `CLAUDE.md` Appendix — Pieces MCP integration.\n123\t\n124\t---\n125\t\n126\t## 4. Source-of-Truth Rules\n127\t\n128\t### 4.1 GitHub\n129\t\n130\tGitHub (`RodbotCC/CCAgent`) is the durable source of truth for project memory, ledgers, code, configs, and handoff state.\n131\t\n132\t### 4.2 Local file tree\n133\t\n134\tThe local file tree is the working copy. It may contain unpushed work. **Agents must check `git status` before any direct write to GitHub.** When in doubt, work locally and let the human push.\n135\t\n136\t### 4.3 Client Boxes\n137\t\n138\tFor client-specific truth, trust in this order:\n139\t\n140\t1. `01b_comms_verbatim.md` and `comms/*.json` — full Close.com record\n141\t2. `01_comms.md` — curated exec summary\n142\t3. `00_meta.json` — structured metadata\n143\t4. `client_ledger.md` — running operator log\n144\t5. approved operator notes\n145\t6. `04_profile.md` and `*_enrichment.md` — internal strategy only, **not customer-facing truth**\n146\t\n147\t### 4.4 Generated outputs\n148\t\n149\tGenerated files are views, not primary truth, unless explicitly marked canonical. The orchestrator's `today.html` and `master_ledger.csv` are views of state, not state itself.\n150\t\n151\t### 4.5 Plans\n152\t\n153\tSeven-day plans (`05_seven_day_plan.md`) are strategy drafts. They do not override guardrails, current state, replies, approvals, or comms. **The plan is not truth. The box is truth.**\n154\t\n155\t### 4.6 UI pages\n156\t\n157\tUI pages render truth. They do not define truth unless explicitly stated in a Source-of-Truth Ledger entry.\n158\t\n159\t### 4.7 Page-asset sitemap\n160\t\n161\t`page_asset_sitemap.md` at project root is the operational truth for page/asset ownership. Any task that changes a page, route behavior, or page data binding is **not complete** until the sitemap is updated. This is the UI Done Gate. (See `CLAUDE.md` §5.5.)\n162\t\n163\t### 4.8 Activity ledger\n164\t\n165\t`CCAgentindex/_ledger/activity.jsonl` is the project's append-only audit trail. Every non-trivial delegation must leave a trace. Append only — never rewrite.\n166\t\n167\t---\n168\t\n169\t## 5. Global Operating Rules\n170\t\n171\t1. Read before writing.\n172\t2. Prefer narrow, reversible changes.\n173\t3. Do not treat generated state as canonical unless marked.\n174\t4. Do not let plans override guardrails.\n175\t5. Risky automation moves require explicit approval.\n176\t6. If a client replies, their plan becomes stale until reviewed.\n177\t7. If a page or data binding changes, update `page_asset_sitemap.md`.\n178\t8. If project state changes, update the relevant ledger.\n179\t9. If a local directory has a Box, read it before editing there.\n180\t10. If a problem is found but not fixed, record it (Open Problems Ledger).\n181\t11. If a decision is made, record it (Decisions Ledger).\n182\t12. If a change would confuse a future agent, leave a handoff note.\n183\t13. Never invent paths. Use the canonical paths in `CLAUDE.md` §1 and this ledger.\n184\t14. Never invent fields. Read a sibling schema before creating a new bedrock entry.\n185\t15. Never write through the `Auto/` alias unless the team explicitly asks.\n186\t\n187\t---\n188\t\n189\t## 6. Active Workstreams\n190\t\n191\t### Client Boxes hardening\n192\t\n193\tGoal: every client box is safe, current, and usable by automation.\n194\tPosture: one box at a time. Audit, clean, leave marker, proceed.\n195\tStatus (2026-04-28): all 28 boxes have full Close.com verbatim comms + raw payloads. Brenda & Steve received the first explicit audit/marker pass.\n196\t\n197\t### Allowed-to-know constraints\n198\t\n199\tGoal: separate comms-confirmed facts from enrichment-only/internal strategy in customer-facing copy.\n200\tPosture: needs implementation across Client Boxes. Profiles may carry useful internal strategy, but customer-facing copy must only use facts found in comms or with explicit operator approval.\n201\t\n202\t### Ledger system buildout\n203\t\n204\tGoal: create global and local memory layers for durable project continuity.\n205\tPosture: designing and implementing one ledger at a time, then giving the active ledgers steward agents. **Phases 1–5 are complete; the Global Ledger Steward is the first runnable ledger-maintenance agent.** See `LEDGERS/INDEX.md` for the full roster and order.\n206\t\n207\t### Boxes page integration\n208\t\n209\tGoal: the Boxes UI accurately reflects source Client Boxes and their safety state.\n210\tPosture: existing page focused on Hugo + Brenda/Steve while the design system finalizes; verbatim comms file (`01b_comms_verbatim.md`) is sitting in every box but not yet bound to a UI section.\n211\t\n212\t### Inbox guardrail enforcement\n213\t\n214\tGoal: every send passes the guardrail contract before leaving the system.\n215\tPosture: hard gates in place at the comeketo-inbox skill level; needs surfacing in the automation page so risky moves become explicit approval cards rather than batched approvals.\n216\t\n217\t---\n218\t\n219\t## 7. Active Risks / Known Fragile Areas\n220\t\n221\t### Batch approval risk\n222\t\n223\tBatch approval can hide high-risk moves. Fee waivers, discounts, scope promises, enrichment-based personalization, and pricing claims need **isolated** approval cards — not blended into a routine batch.\n224\t\n225\t### Plan / guardrail contradiction\n226\t\n227\tSome seven-day plans were written before guardrails were fully enforced. Plans may contain unsafe executable copy. **If a plan and a guardrail conflict, the guardrail wins.**\n228\t\n229\t### Reply invalidates plan\n230\t\n231\tAny meaningful inbound from a client can invalidate the existing seven-day plan. Plans must be re-checked against latest comms before any plan-driven send.\n232\t\n233\t### Enrichment boundary\n234\t\n235\t`04_profile.md` and `*_enrichment.md` may contain useful internal strategy, but customer-facing copy must only use facts from comms or explicit approval. Treat enrichment as planning fuel, not as content.\n236\t\n237\t### GitHub / local drift\n238\t\n239\tThe working tree is currently dirty (modified `CCAgentindex/_ledger/pieces_sweeps.jsonl`, untracked `Auto/Client Boxes/Flávia Benson/Flávia Benson.txt`). Agents may write directly to GitHub while the human has unpushed local work. **Always `git status` before any direct GitHub write.**\n240\t\n241\t### Auto/ alias write risk\n242\t\n243\t`Auto/` is a symlink. Writing through it bypasses the orchestrator's ownership unless explicitly authorized. The 2026-04-28 verbatim comms backfill was an explicit team-authorized write; future writes need the same posture.\n244\t\n245\t### Pieces session staleness\n246\t\n247\tPiecesOS sessions can expire silently. The server retries automatically; if errors persist, restart `server.py` to drop the cached session. If PiecesOS isn't running, the Activity screen and `/api/pieces/*` will fail gracefully but visibly.\n248\t\n249\t---\n250\t\n251\t## 8. Ledger System Map\n252\t\n253\tThe Global Ledger is the world map. Local ledgers are neighborhood maps.\n254\t\n255\t| Ledger | Owns | Status |\n256\t|---|---|---|\n257\t| Global Ledger | top-level world state, orientation, read-first | **active** (this file) |\n258\t| Temporal Continuity | current state across time, recent changes, active assumptions, next handoff | **active** ([`TEMPORAL_CONTINUITY.md`](TEMPORAL_CONTINUITY.md) + [`.json`](TEMPORAL_CONTINUITY.json)) |\n259\t| North Star | project thesis, 10 NS goals, anti-goals, tradeoff rules, audit questions | **active** ([`NORTH_STAR.md`](NORTH_STAR.md) + [`.json`](NORTH_STAR.json)) |\n260\t| File Directory | top-level + subdirectory map, ownership table, canonical vs generated, common wrong-turns | **active** ([`FILE_DIRECTORY_LEDGER.md`](FILE_DIRECTORY_LEDGER.md) + [`.json`](FILE_DIRECTORY_LEDGER.json)) |\n261\t| Open Problems | known/risky/incomplete/blocked work — protection system, not a shame file | **active** ([`OPEN_PROBLEMS_LEDGER.md`](OPEN_PROBLEMS_LEDGER.md) + [`.json`](OPEN_PROBLEMS_LEDGER.json)) — 13 active + 1 closed |\n262\t| Ledger Steward Agents | runnable/submittable agents that maintain ledgers and write receipts | **partial / active first agent** (`LEDGERS/AGENTS/global_ledger_steward/` + `CCAgentindex/agents/global_ledger_steward/`) |\n263\t| Source-of-Truth | which system owns which truth | planned (rules summarized in §4 and FDL §6) |\n264\t| Definition of Done | completion standards | planned |\n265\t| Directory | file tree map | superseded — see File Directory Ledger above |\n266\t| Directory Configuration | local \"you are here\" rules | planned (template at `LEDGERS/LOCAL_TEMPLATE/`) |\n267\t| File Contents | important file responsibilities | planned |\n268\t| Asset / Widget Map | pages, widgets, APIs, data flow | partially active — `page_asset_sitemap.md` is the live UI map |\n269\t| Connections | external systems and services | planned |\n270\t| Decisions | major choices and why | planned |\n271\t| Communications | handoffs, warnings, notes | planned |\n272\t| Open Problems | known unfinished work | planned |\n273\t| Prompt / Reconstruction | how important things were built | planned |\n274\t| Scout | tool/model/workflow research | planned |\n275\t| Audit | audit findings and follow-up | planned |\n276\t| Phase | current milestone state | planned |\n277\t| Page Ledgers | page-specific memory (one per route) | planned |\n278\t| Widget Ledgers | widget-specific memory | planned |\n279\t| Settings | configurable options | planned |\n280\t\n281\tSee `LEDGERS/INDEX.md` for paths, ownership, and build order.\n282\t\n283\t---\n284\t\n285\t## 9. Box System Map\n286\t\n287\tA Box is the living memory and configuration layer for a directory.\n288\t\n289\tA Box should answer:\n290\t\n291\t- Where am I?\n292\t- What does this area own?\n293\t- What should never happen here?\n294\t- What source of truth applies?\n295\t- What files matter?\n296\t- What ledgers apply locally?\n297\t- What changed recently?\n298\t- What problems are open?\n299\t- What should be updated when work happens?\n300\t\n301\tImportant project boxes:\n302\t\n303\t- **Client Boxes** — `Auto/Client Boxes/<Name>/` (28 active)\n304\t- **Staff Boxes** — `Auto/Staff Boxes/` (10 voice profiles)\n305\t- **Orchestrator Box** — `Auto/orchestrator/`\n306\t- **Inbox Skill Box** — `Auto/comeketo-inbox/`\n307\t- **App / UI Box** — project root `.jsx` / `.js` / `.html` / `server.py` (no formal Box file yet — planned)\n308\t- **Automation Box** — automations live across `Auto/orchestrator/wiring/` and the `automation` UI page (planned formal Box)\n309\t- **Ledger Box** — `LEDGERS/` (this directory)\n310\t\n311\tThe Global Ledger does not define every box in detail. Each Box owns its local truth. The first formal Box scaffolds live at `LEDGERS/LOCAL_TEMPLATE/`.\n312\t\n313\t> Do not solve local complexity globally if it belongs inside a Box.\n314\t\n315\t---\n316\t\n317\t## 10. Agent Work Protocol\n318\t\n319\tBefore meaningful edits:\n320\t\n321\t1. Read `LEDGERS/GLOBAL_LEDGER.md` (this file).\n322\t2. Identify the affected system (§3).\n323\t3. Read the relevant local Box or directory orientation.\n324\t4. Read source-of-truth rules for the data being changed (§4).\n325\t5. Check open problems and recent audit notes (Open Problems / Audit Ledgers when they exist).\n326\t6. Inspect current files. Read a sibling schema before inventing a new one.\n327\t7. Make the smallest safe change.\n328\t8. Run available checks or explain why not.\n329\t9. Update affected ledgers (Done Gate, §11).\n330\t10. Leave a handoff note if future agents need context (Communications Ledger when it exists).\n331\t11. Commit with a clear message.\n332\t12. **Push to GitHub only after confirming no local-only work would be overwritten.**\n333\t\n334\tFor risky areas (automation, sends, client plans, approval gates, source-of-truth bindings, generated state), **stop and check guardrails before writing.**\n335\t\n336\tFor Close inbox work specifically, the comeketo-inbox skill at `Auto/comeketo-inbox/` is the operational contract. It overrides plans, profiles, and enrichment.\n337\t\n338\t---\n339\t\n340\t## 11. Done Gate\n341\t\n342\t> Work is not complete until the memory of the work is updated.\n343\t\n344\tMeaningful changes must update the relevant continuity surface:\n345\t\n346\t- Changed project state → update Global Ledger §2 / §6 / §12 (or Temporal Continuity Ledger when it exists).\n347\t- Changed a page, route, or data binding → update `page_asset_sitemap.md`.\n348\t- Changed folder ownership → update Directory Ledger.\n349\t- Changed a client plan → update the box's `client_ledger.md` and append to `CCAgentindex/_ledger/activity.jsonl`.\n350\t- Changed source-of-truth rule → update §4 here AND the Source-of-Truth Ledger.\n351\t- Made a major decision → update Decisions Ledger.\n352\t- Found but did not fix a problem → update Open Problems Ledger.\n353\t- Changed a repeatable process → update Prompt / Reconstruction Ledger.\n354\t- Completed an audit → update Audit Ledger.\n355\t- Performed any non-trivial delegation → append to `CCAgentindex/_ledger/activity.jsonl`.\n356\t\n357\tShort version: **if the system changed, the system's memory changes with it.**\n358\t\n359\t---\n360\t\n361\t## 12. Recently Changed\n362\t\n363\t### 2026-04-28\n364\t\n365\t- **Global Ledger Steward automation landed.** Promoted the draft `global_ledger_subagent_package/` into canonical steward materials at `LEDGERS/AGENTS/global_ledger_steward/` and a runnable app agent at `CCAgentindex/agents/global_ledger_steward/`. The agent runs through `POST /api/agents/global_ledger_steward/run`, has local write authority scoped to ledger memory files, appends one activity line per run, and writes receipts under `CCAgentindex/_ledger/ledger_steward_runs/`. This is the first live steward in the planned ledger-agent pattern; sibling Temporal, North Star, File Directory, and Open Problems packages remain draft until promoted.\n366\t- **Phase 5: Open Problems Ledger created.** Added [`OPEN_PROBLEMS_LEDGER.md`](OPEN_PROBLEMS_LEDGER.md) + [`OPEN_PROBLEMS_LEDGER.json`](OPEN_PROBLEMS_LEDGER.json) + [`VISUALS/problem_lifecycle.mmd`](VISUALS/problem_lifecycle.mmd) + [`VISUALS/open_problems_board.mmd`](VISUALS/open_problems_board.mmd) + [`VISUALS/risk_heatmap.mmd`](VISUALS/risk_heatmap.mmd). 13 active problems (PROB-001 through 014, with 008 already closed because Phases 1–4 met its close criteria), structured with stable IDs, severity/urgency separated, close criteria mandatory. Recurring patterns named (source vs surface confusion, plans becoming stale, documentation drift, directory duplication). PROB-005 (transcripts) flagged as `partial` since the 2026-04-28 verbatim backfill closed 2 of 5 close criteria. PROB-008 (ledger system) closed with verification evidence pointing to the four prior phases.\n367\t- **Phase 4: File Directory Ledger created.** Added [`FILE_DIRECTORY_LEDGER.md`](FILE_DIRECTORY_LEDGER.md) + [`FILE_DIRECTORY_LEDGER.json`](FILE_DIRECTORY_LEDGER.json) + [`VISUALS/file_directory_map.mmd`](VISUALS/file_directory_map.mmd) + [`VISUALS/directory_ownership_map.mmd`](VISUALS/directory_ownership_map.mmd). Top-level + subdirectory map (real paths only — no inventions), ownership table, canonical vs generated areas, status taxonomy, 12 common wrong-turns. **Surfaced 5 open problems for the Open Problems Ledger when it lands:** (1) CLAUDE.md §1 surviving-domains list is out of date vs CCAgentindex/ reality (26 dirs, 10 stubs, 16 populated); (2) `docs/page_asset_sitemap.md` is stale (11 KB) — root version is canonical; (3) `Auto/Boxes/` is a needs-verification mirror of orchestrator + comeketo-inbox; (4) Top-level `Onboard Scripts/` is a 31-file superset of `Auto/Onboard Scripts/` (24); (5) `Comeketo Agent/` and `Auto/Comeketo Agent/` are duplicates.\n368\t- **Phase 3: North Star Ledger created.** Added [`NORTH_STAR.md`](NORTH_STAR.md) + [`NORTH_STAR.json`](NORTH_STAR.json) + [`VISUALS/north_star_map.mmd`](VISUALS/north_star_map.mmd) + [`VISUALS/north_star_alignment_check.mmd`](VISUALS/north_star_alignment_check.mmd). Ten North Star goals (NS-01 through NS-10), anti-goals, tradeoff rules, audit questions, Wholesome Enrichment principle, Client Automation North Star.\n369\t- **Phase 2: Temporal Continuity Ledger created.** Added [`TEMPORAL_CONTINUITY.md`](TEMPORAL_CONTINUITY.md) + [`TEMPORAL_CONTINUITY.json`](TEMPORAL_CONTINUITY.json) + [`VISUALS/temporal_continuity_flow.mmd`](VISUALS/temporal_continuity_flow.mmd) + [`VISUALS/client_state_temporal.mmd`](VISUALS/client_state_temporal.mmd).\n370\t- **Phase 1: Global Ledger created.** Established `LEDGERS/` as the project's top-level memory spine with `GLOBAL_LEDGER.md`, `GLOBAL_LEDGER.json`, `INDEX.md`, three Mermaid visuals, and local Box templates.\n371\t- **Verbatim comms backfill across all 28 client boxes.** Pulled full Close.com conversation history (call transcripts, voicemail transcripts, full email bodies, SMS, WhatsApp, threads) via direct `api.close.com/api/v1` access. 582 raw activity payloads. Per-box `01b_comms_verbatim.md` plus `comms/*.json`. Existing `01_comms.md` summaries untouched.\n372\t- Sitemap boxes-page section updated with verbatim comms asset ownership and 2026-04-28 history line.\n373\t- Established explicit principle: **the plan is subordinate to comms, state, guardrails, and approvals.**\n374\t- Established safe-movement posture for the early automation proof period.\n375\t\n376\t### 2026-04-27 (carried forward from `page_asset_sitemap.md`)\n377\t\n378\t- Boxes page runtime, layout, completeness, lead-dossier, renderer, specialization (Hugo + Brenda/Steve), markdown design-kit, design-kit convergence passes.\n379\t- Analytics page restored as the Conversation Intelligence flag-bearer.\n380\t- Delegations channel picker + feedback clarity pass.\n381\t\n382\tFor finer-grained history, see `git log` and `CCAgentindex/_ledger/activity.jsonl`.\n383\t\n384\t---\n385\t\n386\t## 13. Next Handoff Notes\n387\t\n388\t**Current preferred workflow:** one ledger at a time. Phases 1–5 (Global + Temporal Continuity + North Star + File Directory + Open Problems) have landed. The Global Ledger Steward is now runnable for global-memory maintenance sweeps. Next ledger awaits Jake's signal — Phase 6 likely Source-of-Truth (encodes rules already summarized in §4 + NS-06 + FDL §6), Definition of Done, or Decisions. See `LEDGERS/INDEX.md`.\n389\t\n390\t**Read order:** Global Ledger → Temporal Continuity Ledger → North Star Ledger (when planning) → File Directory Ledger (when navigating) → Open Problems Ledger (before starting work — what's broken or risky in the area you're about to touch?) → relevant Box / local ledger → work.\n391\t\n392\t- **Global** wins for permanent identity and rules.\n393\t- **Temporal Continuity** wins for current working state.\n394\t- **North Star** is the purpose layer: read it when planning major work, auditing changes, or resolving tradeoffs.\n395\t- **File Directory** is the city map: read it when locating files, editing unfamiliar areas, or onboarding.\n396\t- **Open Problems** is the protection system: read it before starting work to avoid rediscovering what we already know is broken.\n397\t\n398\t**Current client-box workflow:** one client box at a time. Audit, clean, leave marker, then proceed. Brenda & Steve had the first explicit pass.\n399\t\n400\t**Important caution:** The human has unpushed local work right now (`git status` shows modified `CCAgentindex/_ledger/pieces_sweeps.jsonl` and an untracked client-box `.txt`). **Do not push to GitHub without checking with Jake.** Local commits are fine; coordinate before push.\n401\t\n402\t**Watch items:**\n403\t\n404\t- Run `global_ledger_steward` after major global-memory changes or before closing a session where ledger drift is plausible. Audit-only mode is available via extra context; local-write mode is the default.\n405\t- Plans authored before guardrail enforcement may contain unsafe executable copy. Re-validate any plan before plan-driven sends.\n406\t- The `01b_comms_verbatim.md` file is in every box but not yet wired to the UI. Future Boxes-page work can surface it as a second comms tab.\n407\t- The Close API key (`CLOSE_API_KEY`) used for the verbatim backfill was never written to disk. If another verbatim refresh is needed, the human must re-supply it.\n408\t\n409\t---\n410\t\n411\t## 14. Links to Local Ledgers and Surfaces\n412\t\n413\tExisting memory surfaces (live now):\n414\t\n415\t- Project root agent instructions: [`CLAUDE.md`](../CLAUDE.md)\n416\t- Subprocess agent instructions: [`AGENT.md`](../AGENT.md)\n417\t- Page-asset sitemap (UI Done Gate): [`page_asset_sitemap.md`](../page_asset_sitemap.md)\n418\t- Activity ledger (audit trail): [`CCAgentindex/_ledger/activity.jsonl`](../CCAgentindex/_ledger/activity.jsonl)\n419\t- Inbox guardrails reference: [`Guardrails.html`](../Guardrails.html), [`comeketo-guardrails-agent.md`](../comeketo-guardrails-agent.md), [`Auto/comeketo-inbox/`](../Auto/comeketo-inbox/)\n420\t- Project README: [`README.md`](../README.md)\n421\t- PRD: [`Comeketo_Agent_PRD_v1.docx`](../Comeketo_Agent_PRD_v1.docx)\n422\t- Runnable Global Ledger Steward app agent: [`CCAgentindex/agents/global_ledger_steward/agents.md`](../CCAgentindex/agents/global_ledger_steward/agents.md) + [`prompt.md`](../CCAgentindex/agents/global_ledger_steward/prompt.md)\n423\t\n424\tThis ledger directory:\n425\t\n426\t- Index: [`LEDGERS/INDEX.md`](INDEX.md)\n427\t- Structured state: [`LEDGERS/GLOBAL_LEDGER.json`](GLOBAL_LEDGER.json)\n428\t- Visuals: [`LEDGERS/VISUALS/`](VISUALS/)\n429\t- Local Box templates: [`LEDGERS/LOCAL_TEMPLATE/`](LOCAL_TEMPLATE/)\n430\t- Steward agents: [`LEDGERS/AGENTS/`](AGENTS/) — canonical steward configurations; first active package is [`AGENTS/global_ledger_steward/`](AGENTS/global_ledger_steward/)\n431\t\n432\tActive ledgers (this directory):\n433\t\n434\t- [`LEDGERS/TEMPORAL_CONTINUITY.md`](TEMPORAL_CONTINUITY.md) — current project moment, recent changes, active assumptions, carry-forward context, next handoff. **Read this after the Global Ledger.**\n435\t- [`LEDGERS/TEMPORAL_CONTINUITY.json`](TEMPORAL_CONTINUITY.json) — structured mirror.\n436\t- [`LEDGERS/NORTH_STAR.md`](NORTH_STAR.md) — project thesis, 10 NS goals, guiding principles, anti-goals, goal-to-system map, tradeoff rules, audit questions, Wholesome Enrichment principle. **Read this when planning major work or auditing.**\n437\t- [`LEDGERS/NORTH_STAR.json`](NORTH_STAR.json) — structured mirror with all 10 goals.\n438\t- [`LEDGERS/FILE_DIRECTORY_LEDGER.md`](FILE_DIRECTORY_LEDGER.md) — top-level + subdirectory map, ownership table, canonical vs generated, common wrong-turns. **Read this when navigating an unfamiliar area.**\n439\t- [`LEDGERS/FILE_DIRECTORY_LEDGER.json`](FILE_DIRECTORY_LEDGER.json) — structured mirror with all directories + open problems surfaced.\n440\t- [`LEDGERS/OPEN_PROBLEMS_LEDGER.md`](OPEN_PROBLEMS_LEDGER.md) — 13 active problems with stable IDs, status, severity/urgency, workarounds, close criteria. **Read this before starting work in any area to avoid rediscovering known issues.**\n441\t- [`LEDGERS/OPEN_PROBLEMS_LEDGER.json`](OPEN_PROBLEMS_LEDGER.json) — structured mirror including blocked, partially-fixed, recurring patterns, recently-closed.\n442\t\n443\tPlanned ledgers (not yet created — see INDEX.md for build order):\n444\t\n445\t- `LEDGERS/SOURCE_OF_TRUTH.md`\n446\t- `LEDGERS/DEFINITION_OF_DONE.md`\n447\t- `LEDGERS/DIRECTORY.md`\n448\t- `LEDGERS/OPEN_PROBLEMS.md`\n449\t- `LEDGERS/DECISIONS.md`\n450\t- `LEDGERS/COMMUNICATIONS.md`\n451\t- `LEDGERS/CONNECTIONS.md`\n452\t- `LEDGERS/PROMPT_RECONSTRUCTION.md`\n453\t- `LEDGERS/SCOUT.md`\n454\t- `LEDGERS/AUDIT.md`\n455\t- `LEDGERS/PHASE.md`\n456\t- `LEDGERS/SETTINGS.md`\n457\t- `LEDGERS/PAGES/<route>.md` (one per UI route)\n458\t- `LEDGERS/WIDGETS/<widget>.md` (one per major widget)\n459\t\n460\t---\n461\t\n462\t## 15. Visualization Index\n463\t\n464\tVisual maps live under `LEDGERS/VISUALS/` as Mermaid (`.mmd`) text files — diffable, GitHub-friendly, and renderable inline.\n465\t\n466\tCurrent visuals:\n467\t\n468\t- [`VISUALS/global_system_map.mmd`](VISUALS/global_system_map.mmd) — GitHub → Global Ledger → Boxes flow, including the Client Box internals that drive next-move decisions.\n469\t- [`VISUALS/ledger_dependency_map.mmd`](VISUALS/ledger_dependency_map.mmd) — Global Ledger as hub with all sub-ledgers.\n470\t- [`VISUALS/client_box_lifecycle.mmd`](VISUALS/client_box_lifecycle.mmd) — audit → clean → marker → next workflow.\n471\t- [`VISUALS/temporal_continuity_flow.mmd`](VISUALS/temporal_continuity_flow.mmd) — session-start protocol with end-of-session memory update.\n472\t- [`VISUALS/client_state_temporal.mmd`](VISUALS/client_state_temporal.mmd) — how plans age, how comms invalidate them, where guardrails + approval cards interrupt the send path.\n473\t- [`VISUALS/north_star_map.mmd`](VISUALS/north_star_map.mmd) — project thesis → 10 NS goals → governed systems.\n474\t- [`VISUALS/north_star_alignment_check.mmd`](VISUALS/north_star_alignment_check.mmd) — decision tree for evaluating proposed work against North Star goals.\n475\t- [`VISUALS/file_directory_map.mmd`](VISUALS/file_directory_map.mmd) — repo root → top-level dirs → key children (the actual shape of the tree as of 2026-04-28).\n476\t- [`VISUALS/directory_ownership_map.mmd`](VISUALS/directory_ownership_map.mmd) — canonical → runtime → UI flow + inbox/send loop + intelligence + memory continuity.\n477\t- [`VISUALS/problem_lifecycle.mmd`](VISUALS/problem_lifecycle.mmd) — Found → Record → Triage → Workaround → Next Action → Fixed? → Verify → Close (with blocked/partial/recurring branches).\n478\t- [`VISUALS/open_problems_board.mmd`](VISUALS/open_problems_board.mmd) — current problems grouped by Now/Critical, Soon/High, Soon/Medium, Later/Medium, Later/Low + Recently Closed.\n479\t- [`VISUALS/risk_heatmap.mmd`](VISUALS/risk_heatmap.mmd) — system-level risk graph showing how unresolved problems chain into customer-facing harm.\n480\t\n481\tPlanned:\n482\t\n483\t- Page / API / data-flow map\n484\t- Source-of-truth flow\n485\t- Box hierarchy map (full)\n486\t\n487\tMermaid is the chosen format because it is text, diffable, GitHub-friendly, and rendered natively in GitHub markdown previews.\n488\t\n489\t---\n490\t\n491\t## 16. Update Rules\n492\t\n493\tUpdate the Global Ledger when:\n494\t\n495\t- the project identity changes\n496\t- a new major system is added\n497\t- a major system is retired\n498\t- global source-of-truth rules change\n499\t- global agent workflow changes\n500\t- a new ledger type is created\n501\t- a new Box class is created\n502\t- a new phase begins\n503\t- major risk posture changes\n504\t- the read-first order changes\n505\t- the Done Gate changes\n506\t\n507\tDo **not** update the Global Ledger for tiny local changes. Those belong in the relevant local ledger or Box.\n508\t\n509\tWhen updating: bump `Last updated`, refresh §2 (Current World State), append to §12 (Recently Changed), and update §13 (Next Handoff Notes) if the next-actor context shifted.\n510\t\n511\t---\n512\t\n513\t## Final Operating Rule\n514\t\n515\t> The repo is not just code.\n516\t>\n517\t> The repo is the memory of the build.\n518\t>\n519\t> Before changing the system, understand the memory.\n520\t> After changing the system, update the memory.\n521\t"
+          }
+        ]
+      },
+      "parent_tool_use_id": null,
+      "session_id": "85c06582-a7a1-4eba-b4e0-7d39c7dde834",
+      "uuid": "b1c967ef-381b-45bb-b753-a51d2e0d6ea2",
+      "timestamp": "2026-04-28T11:51:04.593Z",
+      "tool_use_result": {
+        "type": "text",
+        "file": {
+          "filePath": "/Users/jakeaaron/Downloads/CC Agent/LEDGERS/GLOBAL_LEDGER.md",
+          "content": "# Global Ledger\n\nLast updated: 2026-04-28 (Global Ledger Steward automation landed)\nMaintainer: Jake / Comeketo Agent project agents\nRepository: [RodbotCC/CCAgent](https://github.com/RodbotCC/CCAgent)\nDefault branch: `main`\nCurrent phase: Client Boxes + Automation Safety Hardening — Ledger system buildout (Phases 1–5 complete; first ledger steward automation active)\nCurrent project state: Active build; live-ish automation; guardrail and continuity hardening in progress\nRead-first status: **Mandatory before meaningful edits.**\n\n> The repo is not just code. The repo is the memory of the build.\n\n---\n\n## 1. Project Identity\n\nThis project is a GitHub-backed AI operations system for **Comeketo Catering**. It combines client memory, inbox automation, page surfaces, ledgers, boxes, and agent-handoff systems into a durable file-tree orchestration environment.\n\nThe project is not just an app. It is a living operating layer around sales, client context, automations, and agent continuity.\n\nThe build philosophy is **file-tree-first**. Important memory should be versioned in GitHub, not trapped in chat history or local-only state. The local file tree is the working copy. GitHub is the source of truth.\n\nTwo principles bind everything together:\n\n1. **The plan is not truth. The box is truth.** A seven-day plan is a draft strategy subordinate to comms, state, guardrails, approvals, and source-of-truth rules.\n2. **If it matters to future work, it belongs in the versioned file tree.** Code, configuration, ledgers, decisions, open problems, page ownership, automation rules, human preferences, current project state, rebuild instructions, visual maps, audit notes, handoff notes — all of it.\n\n---\n\n## 2. Current World State\n\n- GitHub (`RodbotCC/CCAgent`, branch `main`) is the source of truth.\n- Local file tree at `/Users/jakeaaron/Downloads/CC Agent/` is the working copy.\n- Working tree is currently dirty — there is unpushed local work. Coordinate with the human before any direct GitHub write.\n- `CCAgentindex/` is the bedrock — the only filesystem state the app owns. The retired domains (`projects/`, `threads/`, `commitments/`, `knowledge/`) were wiped in the Apr 2026 great trim. Surviving domains: `people/`, `venues/`, `_ledger/`, `_inbox/`, `indexes/`.\n- `Auto/` is a symlink to the team's standalone automation folder (`/Users/jakeaaron/Desktop/Auto/`). It holds 28 Client Boxes, 10 Staff Boxes, the orchestrator wiring, and the comeketo-inbox skill. Read freely; write only when the team explicitly asks (the orchestrator owns it).\n- Client Boxes are becoming the canonical per-client memory/state layer. As of 2026-04-28 each of the 28 boxes carries `01_comms.md` (curated exec summary), `01b_comms_verbatim.md` (full Close.com transcripts and email bodies), and `comms/<type>_<date>_<id>.json` raw payloads (582 total).\n- The Boxes UI page is a read/display surface over Client Boxes, Staff Boxes, and orchestrator state HTML. Specialized renderers exist for `hugo_casillas` and `brenda_steve`.\n- Eleven UI routes survive after the Apr 2026 trim: `grid, settings, leads, clients, coworkers, contacts, briefing, activity, automation, intake, analytics`.\n- Guardrails are being hardened because some early plans mixed strategy, enrichment, and executable copy too tightly. `Guardrails.html` and `comeketo-guardrails-agent.md` at project root are the current reference surfaces; the inbox skill at `Auto/comeketo-inbox/` carries the operational rules.\n- Pieces.app is the memory backend (39 MCP tools) for activity, sweeps, and recall. The `Rodbot/` identity folder was wiped in the Apr 2026 trim — Pieces stands alone now.\n- The first runnable ledger steward is active: `global_ledger_steward` lives in `CCAgentindex/agents/global_ledger_steward/` and runs through `POST /api/agents/global_ledger_steward/run`. Canonical steward materials live at `LEDGERS/AGENTS/global_ledger_steward/`.\n- Current priority: make the system safer while preserving momentum. One ledger at a time. One client box at a time.\n\n---\n\n## 3. Major Systems\n\n### 3.1 Client Boxes — `Auto/Client Boxes/`\n\nCanonical per-client memory and operating substrate.\n\nOwns:\n\n- comms (`01_comms.md` curated; `01b_comms_verbatim.md` full transcripts; `comms/*.json` raw)\n- state (`client_ledger.md`, `00_meta.json`)\n- profile (`04_profile.md`)\n- enrichment lanes — operational vs protected/off-limits\n- seven-day plan (`05_seven_day_plan.md`)\n- guardrail overlay (when present)\n- approval notes\n- audit markers\n- per-lead specialized renderer slots (Hugo Casillas, Brenda & Steve so far)\n\nDoes not own: organization-wide truth, runtime state, UI surfaces.\n\n### 3.2 Orchestrator — `Auto/orchestrator/`\n\nRuntime/render/state layer. Holds the wiring, sweep outputs, and per-lead rollups for the standalone automation domain.\n\nOwns:\n\n- `wiring/automations.md` — the routine catalog\n- `state/master_ledger.csv` and `state/today.html` — daily snapshots\n- generated outputs and ready checks\n- Hugo + Brenda-Steve routine implementations\n\nDoes not own: canonical client truth (that lives in Client Boxes).\n\n### 3.3 Boxes Page — `BoxesScreen` in `screens.jsx`\n\nUI surface for browsing and reading boxes.\n\nOwns:\n\n- box browsing, search, refresh/poll\n- in-site dossier renderer (markdown-first, design-kit cards, admonition styling)\n- right-click → delegations handoff\n- per-box completeness scoring\n- specialized per-lead renderers (Hugo, Brenda/Steve)\n\nDoes not own: client truth, plan authority, source-of-truth definitions.\n\n### 3.4 Inbox Guardrails — `Auto/comeketo-inbox/` + `Guardrails.html` + `comeketo-guardrails-agent.md`\n\nSafety contract for sends and Close inbox work. Overrides plans, profiles, enrichment, and automation momentum.\n\nOwns:\n\n- hard gates (fee waivers, discounts, scope promises, price guarantees)\n- auto-pauses (reply received → plan stale)\n- reply gates\n- calendar reality\n- frequency caps\n- commitment approval requirements\n- enrichment vs comms boundaries\n\n### 3.5 Ledgers — `LEDGERS/` (this directory)\n\nProject memory system. Continuity, orientation, definition-of-done, source-of-truth clarity, auditability, handoff memory. Steward agent packages live under `LEDGERS/AGENTS/`; the first active app agent is `global_ledger_steward`. See §8 for the full ledger map.\n\n### 3.6 Meta Harness\n\nWorkflow layer that teaches agents how to operate safely. The current meta harness lives across `CLAUDE.md`, `AGENT.md`, `page_asset_sitemap.md`, this Global Ledger, and the read-first protocol in §10.\n\n### 3.7 Bedrock — `CCAgentindex/`\n\nThe only filesystem state the app owns. Loader authority lives in `CCAgentindex/indexes/index.json`. Surviving domains: `people/`, `venues/`, `_ledger/`, `_inbox/`, `indexes/`. Retired in Apr 2026 trim: `projects/`, `threads/`, `commitments/`, `knowledge/`, `Rodbot/`.\n\n### 3.8 Pieces Memory Backend\n\nLocal PiecesOS at `localhost:39300` provides 39 MCP tools across Ask, full-text search, vector search, and batch snapshot. Wired both server-side (`/api/pieces/*` endpoints in `server.py`) and into the Claude Code subprocess via `claude mcp add`. See `CLAUDE.md` Appendix — Pieces MCP integration.\n\n---\n\n## 4. Source-of-Truth Rules\n\n### 4.1 GitHub\n\nGitHub (`RodbotCC/CCAgent`) is the durable source of truth for project memory, ledgers, code, configs, and handoff state.\n\n### 4.2 Local file tree\n\nThe local file tree is the working copy. It may contain unpushed work. **Agents must check `git status` before any direct write to GitHub.** When in doubt, work locally and let the human push.\n\n### 4.3 Client Boxes\n\nFor client-specific truth, trust in this order:\n\n1. `01b_comms_verbatim.md` and `comms/*.json` — full Close.com record\n2. `01_comms.md` — curated exec summary\n3. `00_meta.json` — structured metadata\n4. `client_ledger.md` — running operator log\n5. approved operator notes\n6. `04_profile.md` and `*_enrichment.md` — internal strategy only, **not customer-facing truth**\n\n### 4.4 Generated outputs\n\nGenerated files are views, not primary truth, unless explicitly marked canonical. The orchestrator's `today.html` and `master_ledger.csv` are views of state, not state itself.\n\n### 4.5 Plans\n\nSeven-day plans (`05_seven_day_plan.md`) are strategy drafts. They do not override guardrails, current state, replies, approvals, or comms. **The plan is not truth. The box is truth.**\n\n### 4.6 UI pages\n\nUI pages render truth. They do not define truth unless explicitly stated in a Source-of-Truth Ledger entry.\n\n### 4.7 Page-asset sitemap\n\n`page_asset_sitemap.md` at project root is the operational truth for page/asset ownership. Any task that changes a page, route behavior, or page data binding is **not complete** until the sitemap is updated. This is the UI Done Gate. (See `CLAUDE.md` §5.5.)\n\n### 4.8 Activity ledger\n\n`CCAgentindex/_ledger/activity.jsonl` is the project's append-only audit trail. Every non-trivial delegation must leave a trace. Append only — never rewrite.\n\n---\n\n## 5. Global Operating Rules\n\n1. Read before writing.\n2. Prefer narrow, reversible changes.\n3. Do not treat generated state as canonical unless marked.\n4. Do not let plans override guardrails.\n5. Risky automation moves require explicit approval.\n6. If a client replies, their plan becomes stale until reviewed.\n7. If a page or data binding changes, update `page_asset_sitemap.md`.\n8. If project state changes, update the relevant ledger.\n9. If a local directory has a Box, read it before editing there.\n10. If a problem is found but not fixed, record it (Open Problems Ledger).\n11. If a decision is made, record it (Decisions Ledger).\n12. If a change would confuse a future agent, leave a handoff note.\n13. Never invent paths. Use the canonical paths in `CLAUDE.md` §1 and this ledger.\n14. Never invent fields. Read a sibling schema before creating a new bedrock entry.\n15. Never write through the `Auto/` alias unless the team explicitly asks.\n\n---\n\n## 6. Active Workstreams\n\n### Client Boxes hardening\n\nGoal: every client box is safe, current, and usable by automation.\nPosture: one box at a time. Audit, clean, leave marker, proceed.\nStatus (2026-04-28): all 28 boxes have full Close.com verbatim comms + raw payloads. Brenda & Steve received the first explicit audit/marker pass.\n\n### Allowed-to-know constraints\n\nGoal: separate comms-confirmed facts from enrichment-only/internal strategy in customer-facing copy.\nPosture: needs implementation across Client Boxes. Profiles may carry useful internal strategy, but customer-facing copy must only use facts found in comms or with explicit operator approval.\n\n### Ledger system buildout\n\nGoal: create global and local memory layers for durable project continuity.\nPosture: designing and implementing one ledger at a time, then giving the active ledgers steward agents. **Phases 1–5 are complete; the Global Ledger Steward is the first runnable ledger-maintenance agent.** See `LEDGERS/INDEX.md` for the full roster and order.\n\n### Boxes page integration\n\nGoal: the Boxes UI accurately reflects source Client Boxes and their safety state.\nPosture: existing page focused on Hugo + Brenda/Steve while the design system finalizes; verbatim comms file (`01b_comms_verbatim.md`) is sitting in every box but not yet bound to a UI section.\n\n### Inbox guardrail enforcement\n\nGoal: every send passes the guardrail contract before leaving the system.\nPosture: hard gates in place at the comeketo-inbox skill level; needs surfacing in the automation page so risky moves become explicit approval cards rather than batched approvals.\n\n---\n\n## 7. Active Risks / Known Fragile Areas\n\n### Batch approval risk\n\nBatch approval can hide high-risk moves. Fee waivers, discounts, scope promises, enrichment-based personalization, and pricing claims need **isolated** approval cards — not blended into a routine batch.\n\n### Plan / guardrail contradiction\n\nSome seven-day plans were written before guardrails were fully enforced. Plans may contain unsafe executable copy. **If a plan and a guardrail conflict, the guardrail wins.**\n\n### Reply invalidates plan\n\nAny meaningful inbound from a client can invalidate the existing seven-day plan. Plans must be re-checked against latest comms before any plan-driven send.\n\n### Enrichment boundary\n\n`04_profile.md` and `*_enrichment.md` may contain useful internal strategy, but customer-facing copy must only use facts from comms or explicit approval. Treat enrichment as planning fuel, not as content.\n\n### GitHub / local drift\n\nThe working tree is currently dirty (modified `CCAgentindex/_ledger/pieces_sweeps.jsonl`, untracked `Auto/Client Boxes/Flávia Benson/Flávia Benson.txt`). Agents may write directly to GitHub while the human has unpushed local work. **Always `git status` before any direct GitHub write.**\n\n### Auto/ alias write risk\n\n`Auto/` is a symlink. Writing through it bypasses the orchestrator's ownership unless explicitly authorized. The 2026-04-28 verbatim comms backfill was an explicit team-authorized write; future writes need the same posture.\n\n### Pieces session staleness\n\nPiecesOS sessions can expire silently. The server retries automatically; if errors persist, restart `server.py` to drop the cached session. If PiecesOS isn't running, the Activity screen and `/api/pieces/*` will fail gracefully but visibly.\n\n---\n\n## 8. Ledger System Map\n\nThe Global Ledger is the world map. Local ledgers are neighborhood maps.\n\n| Ledger | Owns | Status |\n|---|---|---|\n| Global Ledger | top-level world state, orientation, read-first | **active** (this file) |\n| Temporal Continuity | current state across time, recent changes, active assumptions, next handoff | **active** ([`TEMPORAL_CONTINUITY.md`](TEMPORAL_CONTINUITY.md) + [`.json`](TEMPORAL_CONTINUITY.json)) |\n| North Star | project thesis, 10 NS goals, anti-goals, tradeoff rules, audit questions | **active** ([`NORTH_STAR.md`](NORTH_STAR.md) + [`.json`](NORTH_STAR.json)) |\n| File Directory | top-level + subdirectory map, ownership table, canonical vs generated, common wrong-turns | **active** ([`FILE_DIRECTORY_LEDGER.md`](FILE_DIRECTORY_LEDGER.md) + [`.json`](FILE_DIRECTORY_LEDGER.json)) |\n| Open Problems | known/risky/incomplete/blocked work — protection system, not a shame file | **active** ([`OPEN_PROBLEMS_LEDGER.md`](OPEN_PROBLEMS_LEDGER.md) + [`.json`](OPEN_PROBLEMS_LEDGER.json)) — 13 active + 1 closed |\n| Ledger Steward Agents | runnable/submittable agents that maintain ledgers and write receipts | **partial / active first agent** (`LEDGERS/AGENTS/global_ledger_steward/` + `CCAgentindex/agents/global_ledger_steward/`) |\n| Source-of-Truth | which system owns which truth | planned (rules summarized in §4 and FDL §6) |\n| Definition of Done | completion standards | planned |\n| Directory | file tree map | superseded — see File Directory Ledger above |\n| Directory Configuration | local \"you are here\" rules | planned (template at `LEDGERS/LOCAL_TEMPLATE/`) |\n| File Contents | important file responsibilities | planned |\n| Asset / Widget Map | pages, widgets, APIs, data flow | partially active — `page_asset_sitemap.md` is the live UI map |\n| Connections | external systems and services | planned |\n| Decisions | major choices and why | planned |\n| Communications | handoffs, warnings, notes | planned |\n| Open Problems | known unfinished work | planned |\n| Prompt / Reconstruction | how important things were built | planned |\n| Scout | tool/model/workflow research | planned |\n| Audit | audit findings and follow-up | planned |\n| Phase | current milestone state | planned |\n| Page Ledgers | page-specific memory (one per route) | planned |\n| Widget Ledgers | widget-specific memory | planned |\n| Settings | configurable options | planned |\n\nSee `LEDGERS/INDEX.md` for paths, ownership, and build order.\n\n---\n\n## 9. Box System Map\n\nA Box is the living memory and configuration layer for a directory.\n\nA Box should answer:\n\n- Where am I?\n- What does this area own?\n- What should never happen here?\n- What source of truth applies?\n- What files matter?\n- What ledgers apply locally?\n- What changed recently?\n- What problems are open?\n- What should be updated when work happens?\n\nImportant project boxes:\n\n- **Client Boxes** — `Auto/Client Boxes/<Name>/` (28 active)\n- **Staff Boxes** — `Auto/Staff Boxes/` (10 voice profiles)\n- **Orchestrator Box** — `Auto/orchestrator/`\n- **Inbox Skill Box** — `Auto/comeketo-inbox/`\n- **App / UI Box** — project root `.jsx` / `.js` / `.html` / `server.py` (no formal Box file yet — planned)\n- **Automation Box** — automations live across `Auto/orchestrator/wiring/` and the `automation` UI page (planned formal Box)\n- **Ledger Box** — `LEDGERS/` (this directory)\n\nThe Global Ledger does not define every box in detail. Each Box owns its local truth. The first formal Box scaffolds live at `LEDGERS/LOCAL_TEMPLATE/`.\n\n> Do not solve local complexity globally if it belongs inside a Box.\n\n---\n\n## 10. Agent Work Protocol\n\nBefore meaningful edits:\n\n1. Read `LEDGERS/GLOBAL_LEDGER.md` (this file).\n2. Identify the affected system (§3).\n3. Read the relevant local Box or directory orientation.\n4. Read source-of-truth rules for the data being changed (§4).\n5. Check open problems and recent audit notes (Open Problems / Audit Ledgers when they exist).\n6. Inspect current files. Read a sibling schema before inventing a new one.\n7. Make the smallest safe change.\n8. Run available checks or explain why not.\n9. Update affected ledgers (Done Gate, §11).\n10. Leave a handoff note if future agents need context (Communications Ledger when it exists).\n11. Commit with a clear message.\n12. **Push to GitHub only after confirming no local-only work would be overwritten.**\n\nFor risky areas (automation, sends, client plans, approval gates, source-of-truth bindings, generated state), **stop and check guardrails before writing.**\n\nFor Close inbox work specifically, the comeketo-inbox skill at `Auto/comeketo-inbox/` is the operational contract. It overrides plans, profiles, and enrichment.\n\n---\n\n## 11. Done Gate\n\n> Work is not complete until the memory of the work is updated.\n\nMeaningful changes must update the relevant continuity surface:\n\n- Changed project state → update Global Ledger §2 / §6 / §12 (or Temporal Continuity Ledger when it exists).\n- Changed a page, route, or data binding → update `page_asset_sitemap.md`.\n- Changed folder ownership → update Directory Ledger.\n- Changed a client plan → update the box's `client_ledger.md` and append to `CCAgentindex/_ledger/activity.jsonl`.\n- Changed source-of-truth rule → update §4 here AND the Source-of-Truth Ledger.\n- Made a major decision → update Decisions Ledger.\n- Found but did not fix a problem → update Open Problems Ledger.\n- Changed a repeatable process → update Prompt / Reconstruction Ledger.\n- Completed an audit → update Audit Ledger.\n- Performed any non-trivial delegation → append to `CCAgentindex/_ledger/activity.jsonl`.\n\nShort version: **if the system changed, the system's memory changes with it.**\n\n---\n\n## 12. Recently Changed\n\n### 2026-04-28\n\n- **Global Ledger Steward automation landed.** Promoted the draft `global_ledger_subagent_package/` into canonical steward materials at `LEDGERS/AGENTS/global_ledger_steward/` and a runnable app agent at `CCAgentindex/agents/global_ledger_steward/`. The agent runs through `POST /api/agents/global_ledger_steward/run`, has local write authority scoped to ledger memory files, appends one activity line per run, and writes receipts under `CCAgentindex/_ledger/ledger_steward_runs/`. This is the first live steward in the planned ledger-agent pattern; sibling Temporal, North Star, File Directory, and Open Problems packages remain draft until promoted.\n- **Phase 5: Open Problems Ledger created.** Added [`OPEN_PROBLEMS_LEDGER.md`](OPEN_PROBLEMS_LEDGER.md) + [`OPEN_PROBLEMS_LEDGER.json`](OPEN_PROBLEMS_LEDGER.json) + [`VISUALS/problem_lifecycle.mmd`](VISUALS/problem_lifecycle.mmd) + [`VISUALS/open_problems_board.mmd`](VISUALS/open_problems_board.mmd) + [`VISUALS/risk_heatmap.mmd`](VISUALS/risk_heatmap.mmd). 13 active problems (PROB-001 through 014, with 008 already closed because Phases 1–4 met its close criteria), structured with stable IDs, severity/urgency separated, close criteria mandatory. Recurring patterns named (source vs surface confusion, plans becoming stale, documentation drift, directory duplication). PROB-005 (transcripts) flagged as `partial` since the 2026-04-28 verbatim backfill closed 2 of 5 close criteria. PROB-008 (ledger system) closed with verification evidence pointing to the four prior phases.\n- **Phase 4: File Directory Ledger created.** Added [`FILE_DIRECTORY_LEDGER.md`](FILE_DIRECTORY_LEDGER.md) + [`FILE_DIRECTORY_LEDGER.json`](FILE_DIRECTORY_LEDGER.json) + [`VISUALS/file_directory_map.mmd`](VISUALS/file_directory_map.mmd) + [`VISUALS/directory_ownership_map.mmd`](VISUALS/directory_ownership_map.mmd). Top-level + subdirectory map (real paths only — no inventions), ownership table, canonical vs generated areas, status taxonomy, 12 common wrong-turns. **Surfaced 5 open problems for the Open Problems Ledger when it lands:** (1) CLAUDE.md §1 surviving-domains list is out of date vs CCAgentindex/ reality (26 dirs, 10 stubs, 16 populated); (2) `docs/page_asset_sitemap.md` is stale (11 KB) — root version is canonical; (3) `Auto/Boxes/` is a needs-verification mirror of orchestrator + comeketo-inbox; (4) Top-level `Onboard Scripts/` is a 31-file superset of `Auto/Onboard Scripts/` (24); (5) `Comeketo Agent/` and `Auto/Comeketo Agent/` are duplicates.\n- **Phase 3: North Star Ledger created.** Added [`NORTH_STAR.md`](NORTH_STAR.md) + [`NORTH_STAR.json`](NORTH_STAR.json) + [`VISUALS/north_star_map.mmd`](VISUALS/north_star_map.mmd) + [`VISUALS/north_star_alignment_check.mmd`](VISUALS/north_star_alignment_check.mmd). Ten North Star goals (NS-01 through NS-10), anti-goals, tradeoff rules, audit questions, Wholesome Enrichment principle, Client Automation North Star.\n- **Phase 2: Temporal Continuity Ledger created.** Added [`TEMPORAL_CONTINUITY.md`](TEMPORAL_CONTINUITY.md) + [`TEMPORAL_CONTINUITY.json`](TEMPORAL_CONTINUITY.json) + [`VISUALS/temporal_continuity_flow.mmd`](VISUALS/temporal_continuity_flow.mmd) + [`VISUALS/client_state_temporal.mmd`](VISUALS/client_state_temporal.mmd).\n- **Phase 1: Global Ledger created.** Established `LEDGERS/` as the project's top-level memory spine with `GLOBAL_LEDGER.md`, `GLOBAL_LEDGER.json`, `INDEX.md`, three Mermaid visuals, and local Box templates.\n- **Verbatim comms backfill across all 28 client boxes.** Pulled full Close.com conversation history (call transcripts, voicemail transcripts, full email bodies, SMS, WhatsApp, threads) via direct `api.close.com/api/v1` access. 582 raw activity payloads. Per-box `01b_comms_verbatim.md` plus `comms/*.json`. Existing `01_comms.md` summaries untouched.\n- Sitemap boxes-page section updated with verbatim comms asset ownership and 2026-04-28 history line.\n- Established explicit principle: **the plan is subordinate to comms, state, guardrails, and approvals.**\n- Established safe-movement posture for the early automation proof period.\n\n### 2026-04-27 (carried forward from `page_asset_sitemap.md`)\n\n- Boxes page runtime, layout, completeness, lead-dossier, renderer, specialization (Hugo + Brenda/Steve), markdown design-kit, design-kit convergence passes.\n- Analytics page restored as the Conversation Intelligence flag-bearer.\n- Delegations channel picker + feedback clarity pass.\n\nFor finer-grained history, see `git log` and `CCAgentindex/_ledger/activity.jsonl`.\n\n---\n\n## 13. Next Handoff Notes\n\n**Current preferred workflow:** one ledger at a time. Phases 1–5 (Global + Temporal Continuity + North Star + File Directory + Open Problems) have landed. The Global Ledger Steward is now runnable for global-memory maintenance sweeps. Next ledger awaits Jake's signal — Phase 6 likely Source-of-Truth (encodes rules already summarized in §4 + NS-06 + FDL §6), Definition of Done, or Decisions. See `LEDGERS/INDEX.md`.\n\n**Read order:** Global Ledger → Temporal Continuity Ledger → North Star Ledger (when planning) → File Directory Ledger (when navigating) → Open Problems Ledger (before starting work — what's broken or risky in the area you're about to touch?) → relevant Box / local ledger → work.\n\n- **Global** wins for permanent identity and rules.\n- **Temporal Continuity** wins for current working state.\n- **North Star** is the purpose layer: read it when planning major work, auditing changes, or resolving tradeoffs.\n- **File Directory** is the city map: read it when locating files, editing unfamiliar areas, or onboarding.\n- **Open Problems** is the protection system: read it before starting work to avoid rediscovering what we already know is broken.\n\n**Current client-box workflow:** one client box at a time. Audit, clean, leave marker, then proceed. Brenda & Steve had the first explicit pass.\n\n**Important caution:** The human has unpushed local work right now (`git status` shows modified `CCAgentindex/_ledger/pieces_sweeps.jsonl` and an untracked client-box `.txt`). **Do not push to GitHub without checking with Jake.** Local commits are fine; coordinate before push.\n\n**Watch items:**\n\n- Run `global_ledger_steward` after major global-memory changes or before closing a session where ledger drift is plausible. Audit-only mode is available via extra context; local-write mode is the default.\n- Plans authored before guardrail enforcement may contain unsafe executable copy. Re-validate any plan before plan-driven sends.\n- The `01b_comms_verbatim.md` file is in every box but not yet wired to the UI. Future Boxes-page work can surface it as a second comms tab.\n- The Close API key (`CLOSE_API_KEY`) used for the verbatim backfill was never written to disk. If another verbatim refresh is needed, the human must re-supply it.\n\n---\n\n## 14. Links to Local Ledgers and Surfaces\n\nExisting memory surfaces (live now):\n\n- Project root agent instructions: [`CLAUDE.md`](../CLAUDE.md)\n- Subprocess agent instructions: [`AGENT.md`](../AGENT.md)\n- Page-asset sitemap (UI Done Gate): [`page_asset_sitemap.md`](../page_asset_sitemap.md)\n- Activity ledger (audit trail): [`CCAgentindex/_ledger/activity.jsonl`](../CCAgentindex/_ledger/activity.jsonl)\n- Inbox guardrails reference: [`Guardrails.html`](../Guardrails.html), [`comeketo-guardrails-agent.md`](../comeketo-guardrails-agent.md), [`Auto/comeketo-inbox/`](../Auto/comeketo-inbox/)\n- Project README: [`README.md`](../README.md)\n- PRD: [`Comeketo_Agent_PRD_v1.docx`](../Comeketo_Agent_PRD_v1.docx)\n- Runnable Global Ledger Steward app agent: [`CCAgentindex/agents/global_ledger_steward/agents.md`](../CCAgentindex/agents/global_ledger_steward/agents.md) + [`prompt.md`](../CCAgentindex/agents/global_ledger_steward/prompt.md)\n\nThis ledger directory:\n\n- Index: [`LEDGERS/INDEX.md`](INDEX.md)\n- Structured state: [`LEDGERS/GLOBAL_LEDGER.json`](GLOBAL_LEDGER.json)\n- Visuals: [`LEDGERS/VISUALS/`](VISUALS/)\n- Local Box templates: [`LEDGERS/LOCAL_TEMPLATE/`](LOCAL_TEMPLATE/)\n- Steward agents: [`LEDGERS/AGENTS/`](AGENTS/) — canonical steward configurations; first active package is [`AGENTS/global_ledger_steward/`](AGENTS/global_ledger_steward/)\n\nActive ledgers (this directory):\n\n- [`LEDGERS/TEMPORAL_CONTINUITY.md`](TEMPORAL_CONTINUITY.md) — current project moment, recent changes, active assumptions, carry-forward context, next handoff. **Read this after the Global Ledger.**\n- [`LEDGERS/TEMPORAL_CONTINUITY.json`](TEMPORAL_CONTINUITY.json) — structured mirror.\n- [`LEDGERS/NORTH_STAR.md`](NORTH_STAR.md) — project thesis, 10 NS goals, guiding principles, anti-goals, goal-to-system map, tradeoff rules, audit questions, Wholesome Enrichment principle. **Read this when planning major work or auditing.**\n- [`LEDGERS/NORTH_STAR.json`](NORTH_STAR.json) — structured mirror with all 10 goals.\n- [`LEDGERS/FILE_DIRECTORY_LEDGER.md`](FILE_DIRECTORY_LEDGER.md) — top-level + subdirectory map, ownership table, canonical vs generated, common wrong-turns. **Read this when navigating an unfamiliar area.**\n- [`LEDGERS/FILE_DIRECTORY_LEDGER.json`](FILE_DIRECTORY_LEDGER.json) — structured mirror with all directories + open problems surfaced.\n- [`LEDGERS/OPEN_PROBLEMS_LEDGER.md`](OPEN_PROBLEMS_LEDGER.md) — 13 active problems with stable IDs, status, severity/urgency, workarounds, close criteria. **Read this before starting work in any area to avoid rediscovering known issues.**\n- [`LEDGERS/OPEN_PROBLEMS_LEDGER.json`](OPEN_PROBLEMS_LEDGER.json) — structured mirror including blocked, partially-fixed, recurring patterns, recently-closed.\n\nPlanned ledgers (not yet created — see INDEX.md for build order):\n\n- `LEDGERS/SOURCE_OF_TRUTH.md`\n- `LEDGERS/DEFINITION_OF_DONE.md`\n- `LEDGERS/DIRECTORY.md`\n- `LEDGERS/OPEN_PROBLEMS.md`\n- `LEDGERS/DECISIONS.md`\n- `LEDGERS/COMMUNICATIONS.md`\n- `LEDGERS/CONNECTIONS.md`\n- `LEDGERS/PROMPT_RECONSTRUCTION.md`\n- `LEDGERS/SCOUT.md`\n- `LEDGERS/AUDIT.md`\n- `LEDGERS/PHASE.md`\n- `LEDGERS/SETTINGS.md`\n- `LEDGERS/PAGES/<route>.md` (one per UI route)\n- `LEDGERS/WIDGETS/<widget>.md` (one per major widget)\n\n---\n\n## 15. Visualization Index\n\nVisual maps live under `LEDGERS/VISUALS/` as Mermaid (`.mmd`) text files — diffable, GitHub-friendly, and renderable inline.\n\nCurrent visuals:\n\n- [`VISUALS/global_system_map.mmd`](VISUALS/global_system_map.mmd) — GitHub → Global Ledger → Boxes flow, including the Client Box internals that drive next-move decisions.\n- [`VISUALS/ledger_dependency_map.mmd`](VISUALS/ledger_dependency_map.mmd) — Global Ledger as hub with all sub-ledgers.\n- [`VISUALS/client_box_lifecycle.mmd`](VISUALS/client_box_lifecycle.mmd) — audit → clean → marker → next workflow.\n- [`VISUALS/temporal_continuity_flow.mmd`](VISUALS/temporal_continuity_flow.mmd) — session-start protocol with end-of-session memory update.\n- [`VISUALS/client_state_temporal.mmd`](VISUALS/client_state_temporal.mmd) — how plans age, how comms invalidate them, where guardrails + approval cards interrupt the send path.\n- [`VISUALS/north_star_map.mmd`](VISUALS/north_star_map.mmd) — project thesis → 10 NS goals → governed systems.\n- [`VISUALS/north_star_alignment_check.mmd`](VISUALS/north_star_alignment_check.mmd) — decision tree for evaluating proposed work against North Star goals.\n- [`VISUALS/file_directory_map.mmd`](VISUALS/file_directory_map.mmd) — repo root → top-level dirs → key children (the actual shape of the tree as of 2026-04-28).\n- [`VISUALS/directory_ownership_map.mmd`](VISUALS/directory_ownership_map.mmd) — canonical → runtime → UI flow + inbox/send loop + intelligence + memory continuity.\n- [`VISUALS/problem_lifecycle.mmd`](VISUALS/problem_lifecycle.mmd) — Found → Record → Triage → Workaround → Next Action → Fixed? → Verify → Close (with blocked/partial/recurring branches).\n- [`VISUALS/open_problems_board.mmd`](VISUALS/open_problems_board.mmd) — current problems grouped by Now/Critical, Soon/High, Soon/Medium, Later/Medium, Later/Low + Recently Closed.\n- [`VISUALS/risk_heatmap.mmd`](VISUALS/risk_heatmap.mmd) — system-level risk graph showing how unresolved problems chain into customer-facing harm.\n\nPlanned:\n\n- Page / API / data-flow map\n- Source-of-truth flow\n- Box hierarchy map (full)\n\nMermaid is the chosen format because it is text, diffable, GitHub-friendly, and rendered natively in GitHub markdown previews.\n\n---\n\n## 16. Update Rules\n\nUpdate the Global Ledger when:\n\n- the project identity changes\n- a new major system is added\n- a major system is retired\n- global source-of-truth rules change\n- global agent workflow changes\n- a new ledger type is created\n- a new Box class is created\n- a new phase begins\n- major risk posture changes\n- the read-first order changes\n- the Done Gate changes\n\nDo **not** update the Global Ledger for tiny local changes. Those belong in the relevant local ledger or Box.\n\nWhen updating: bump `Last updated`, refresh §2 (Current World State), append to §12 (Recently Changed), and update §13 (Next Handoff Notes) if the next-actor context shifted.\n\n---\n\n## Final Operating Rule\n\n> The repo is not just code.\n>\n> The repo is the memory of the build.\n>\n> Before changing the system, understand the memory.\n> After changing the system, update the memory.\n",
+          "numLines": 521,
+          "startLine": 1,
+          "totalLines": 521
+        }
+      }
+    },
+    {
+      "type": "assistant",
+      "message": {
+        "model": "claude-opus-4-7",
+        "id": "msg_01NzP2Y7LucPrDzzAWFb4Nhh",
+        "type": "message",
+        "role": "assistant",
+        "content": [
+          {
+            "type": "thinking",
+            "thinking": "",
+            "signature": "EucEClkIDRgCKkD6sZILTlk81VpIAfeLcUmZbT6StKNqpls8F2IIOCwj3Rc/sYe4GvXP0UtwESls7Z0dDoOPv3He8zZki9pXy+zcMg9jbGF1ZGUtb3B1cy00LTc4ABIMtHZP5dnZd7h6H7MeGgxTn+ja/b/oAReDZRwiMOyvcNUS2k+HMpH6Oa4OQLVfxwE7/V2+JJvT09gCF30aTov/OkG9z0qrryBunjgs6Sq7A32dXuEcFqJ1gD4oHn1S8oumZSLajb7EYi4xovvi5GMC21N0lxrL7QhRnh6gbgVeW7OE0dhgchjKpToxPb4hY6IIbzBvLOyriMfQwtFEvLekkHyBnPpgJ638R7qnxNAvCG+rKghtUVtVUrQgQfKyJgK7OVP4mNtR2G5PIMROZGLnjJ9WT6WywYsteQXhsJoyD4IYtBARmkG5MVdsXtHayBHsaRTPQgHs6cykEr8+ODLuuIWFZ9sy1SE+PeeILEsJH4NGDi07eerBy1vUNOsVgA8SRrpSeo9FV208M43Ti+QtCBdHPnAjnECbNzivAzeyiRrfpd/KR8prZE3JNSgYGHG3/M3HOaUfOB50IPEMz2bzr49mOGf8tawL6SWiRz8NAEH9dLEdVWNKVMIc5xjsr3JL8CfTHqS72KZp/tYRYpovkl8hej9QqYPawEfV5PQV9icJujkPKCz9XHfViP4l5WvVcCQv1onF9C18EbWnUggevfoTOhBobH3LazEVCpB54acOj9WVaQLrGu2YHTUsAjX+HisHDBiVa5B1Lbix+FsbP8zmXkurKLYmLI73jnjgjbQC3lA+LEcfQ0s3GAE="
+          }
+        ],
+        "stop_reason": null,
+        "stop_sequence": null,
+        "stop_details": null,
+        "usage": {
+          "input_tokens": 1,
+          "cache_creation_input_tokens": 19416,
+          "cache_read_input_tokens": 52023,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 19416
+          },
+          "output_tokens": 42,
+          "service_tier": "standard",
+          "inference_geo": "not_available"
+        },
+        "context_management": null
+      },
+      "parent_tool_use_id": null,
+      "session_id": "85c06582-a7a1-4eba-b4e0-7d39c7dde834",
+      "uuid": "c9676a87-fbd1-4550-8cce-2b6b5be0be6e"
+    },
+    {
+      "type": "assistant",
+      "message": {
+        "model": "claude-opus-4-7",
+        "id": "msg_01NzP2Y7LucPrDzzAWFb4Nhh",
+        "type": "message",
+        "role": "assistant",
+        "content": [
+          {
+            "type": "text",
+            "text": "Global Ledger Steward — 2026-04-28 (audit-only)\nClassification: no_global_update\nLedger edits: 0\nReceipt: skipped (audit-only no receipt)\nActivity: skipped (audit-only no activity)\n\nNotes:\n- Read path verified: `LEDGERS/GLOBAL_LEDGER.md` + `.json`, `INDEX.md`, `TEMPORAL_CONTINUITY.md/.json`, `NORTH_STAR.md`, `FILE_DIRECTORY_LEDGER.md`, `OPEN_PROBLEMS_LEDGER.md`, `LEDGERS/AGENTS/global_ledger_steward/` all present and reachable from cwd `CCAgentindex/` via `../LEDGERS/`.\n- Global Ledger header dated 2026-04-28 already reflects steward landing (§2, §3.5, §6, §8, §12, §13, §14). INDEX.md row for steward is **active**. No drift detected vs current world state — global facts unchanged since last update.\n- Working tree dirty per `git status` (matches §7 GitHub/local drift risk note); no push warranted.\n- Sibling steward packages (Temporal, North Star, File Directory, Open Problems) remain draft per §12 — consistent with current ledger state, no update needed.\n- Next recommended read on next live run: `LEDGERS/GLOBAL_LEDGER.md`, `LEDGERS/TEMPORAL_CONTINUITY.md`."
+          }
+        ],
+        "stop_reason": null,
+        "stop_sequence": null,
+        "stop_details": null,
+        "usage": {
+          "input_tokens": 1,
+          "cache_creation_input_tokens": 19416,
+          "cache_read_input_tokens": 52023,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 19416
+          },
+          "output_tokens": 42,
+          "service_tier": "standard",
+          "inference_geo": "not_available"
+        },
+        "context_management": null
+      },
+      "parent_tool_use_id": null,
+      "session_id": "85c06582-a7a1-4eba-b4e0-7d39c7dde834",
+      "uuid": "538f0015-cc56-451d-b737-50e23b60eda4"
+    },
+    {
+      "type": "result",
+      "subtype": "success",
+      "is_error": false,
+      "api_error_status": null,
+      "duration_ms": 33148,
+      "duration_api_ms": 22436,
+      "num_turns": 5,
+      "result": "Global Ledger Steward — 2026-04-28 (audit-only)\nClassification: no_global_update\nLedger edits: 0\nReceipt: skipped (audit-only no receipt)\nActivity: skipped (audit-only no activity)\n\nNotes:\n- Read path verified: `LEDGERS/GLOBAL_LEDGER.md` + `.json`, `INDEX.md`, `TEMPORAL_CONTINUITY.md/.json`, `NORTH_STAR.md`, `FILE_DIRECTORY_LEDGER.md`, `OPEN_PROBLEMS_LEDGER.md`, `LEDGERS/AGENTS/global_ledger_steward/` all present and reachable from cwd `CCAgentindex/` via `../LEDGERS/`.\n- Global Ledger header dated 2026-04-28 already reflects steward landing (§2, §3.5, §6, §8, §12, §13, §14). INDEX.md row for steward is **active**. No drift detected vs current world state — global facts unchanged since last update.\n- Working tree dirty per `git status` (matches §7 GitHub/local drift risk note); no push warranted.\n- Sibling steward packages (Temporal, North Star, File Directory, Open Problems) remain draft per §12 — consistent with current ledger state, no update needed.\n- Next recommended read on next live run: `LEDGERS/GLOBAL_LEDGER.md`, `LEDGERS/TEMPORAL_CONTINUITY.md`.",
+      "stop_reason": "end_turn",
+      "session_id": "85c06582-a7a1-4eba-b4e0-7d39c7dde834",
+      "total_cost_usd": 0.5272697500000001,
+      "usage": {
+        "input_tokens": 8,
+        "cache_creation_input_tokens": 71439,
+        "cache_read_input_tokens": 101672,
+        "output_tokens": 1196,
+        "server_tool_use": {
+          "web_search_requests": 0,
+          "web_fetch_requests": 0
+        },
+        "service_tier": "standard",
+        "cache_creation": {
+          "ephemeral_1h_input_tokens": 71439,
+          "ephemeral_5m_input_tokens": 0
+        },
+        "inference_geo": "",
+        "iterations": [
+          {
+            "input_tokens": 1,
+            "output_tokens": 665,
+            "cache_read_input_tokens": 52023,
+            "cache_creation_input_tokens": 19416,
+            "cache_creation": {
+              "ephemeral_5m_input_tokens": 0,
+              "ephemeral_1h_input_tokens": 19416
+            },
+            "type": "message"
+          }
+        ],
+        "speed": "standard"
+      },
+      "modelUsage": {
+        "claude-opus-4-7[1m]": {
+          "inputTokens": 8,
+          "outputTokens": 1196,
+          "cacheReadInputTokens": 101672,
+          "cacheCreationInputTokens": 71439,
+          "webSearchRequests": 0,
+          "costUSD": 0.5272697500000001,
+          "contextWindow": 1000000,
+          "maxOutputTokens": 64000
+        }
+      },
+      "permission_denials": [],
+      "terminal_reason": "completed",
+      "fast_mode_state": "off",
+      "uuid": "7ff7b4cf-127d-4ad1-8f7b-11af366d6773"
+    }
+  ],
+  "raw_stdout": null,
+  "summary": "Global Ledger Steward — 2026-04-28 (audit-only)\nClassification: no_global_update\nLedger edits: 0\nReceipt: skipped (audit-only no receipt)\nActivity: skipped (audit-only no activity)\n\nNotes:\n- Read path verified: `LEDGERS/GLOBAL_LEDGER.md` + `.json`, `INDEX.md`, `TEMPORAL_CONTINUITY.md/.json`, `NORTH_STAR.md`, `FILE_DIRECTORY_LEDGER.md`, `OPEN_PROBLEMS_LEDGER.md`, `LEDGERS/AGENTS/global_ledger_steward/` all present and reachable from cwd `CCAgentindex/` via `../LEDGERS/`.\n- Global Ledger header dated 2026-04-28 already reflects steward landing (§2, §3.5, §6, §8, §12, §13, §14). INDEX.md row for steward is **active**. No drift detected vs current world state — global facts unchanged since last update.\n- Working tree dirty per `git status` (matches §7 GitHub/local drift risk note); no push warranted.\n- Sibling steward packages (Temporal, North Star, File Directory, Open Problems) remain draft per §12 — consistent with current ledger state, no update needed.\n- Next recommended read on next live run: `LEDGERS/GLOBAL_LEDGER.md`, `LEDGERS/TEMPORAL_CONTINUITY.md`."
+}

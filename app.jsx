@@ -559,9 +559,12 @@ function AIActionBar({ mcStatus, aiConfigured, aiBusy, isOverride, demoMode, his
         }}/>
         <span>
           <b>ai</b> · {aiConfigured
-            ? (window.SecretaryAI && window.SecretaryAI.getProvider && window.SecretaryAI.getProvider() === "claude_code"
-                ? "Claude Code"
-                : "OpenAI")
+            ? (() => {
+                const p = window.SecretaryAI && window.SecretaryAI.getProvider && window.SecretaryAI.getProvider();
+                if (p === "claude_code") return "Claude Code";
+                if (p === "codex_cli") return "Codex CLI";
+                return "OpenAI";
+              })()
             : "not configured"}
         </span>
       </span>

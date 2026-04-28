@@ -1,6 +1,6 @@
 /* Comeketo Agent — AI provider layer.
 
-   Two providers, one interface:
+   Three providers, one interface:
 
    1. **claude_code** (default) — local `claude -p` subprocess via
       /api/claude_code/generate. Uses the team's Max-plan auth. No API key.
@@ -9,6 +9,9 @@
    2. **openai** (optional fallback) — Responses API. Routes through
       /api/proxy/openai/v1/responses when .env has OPENAI_API_KEY, else
       BYOK direct with a browser-localStorage key.
+
+   3. **codex_cli** — local `codex exec` subprocess via
+      /api/codex_cli/generate. Uses the selected GPT model and the Codex login.
 
    Provider choice lives in tweaks.aiProvider. The app doesn't care which
    one is active — SecretaryInstructions.ask() and SecretaryActions.* all
@@ -23,6 +26,7 @@ window.SecretaryAI = (() => {
     checked: false,
     openai: false, close: false, clickup: false, slack: false,
     claude_code_available: false, claude_code_path: null,
+    codex_cli_available: false, codex_cli_path: null,
     note: null,
   };
   async function checkServer(force = false) {
@@ -36,6 +40,8 @@ window.SecretaryAI = (() => {
           openai: !!s.openai, close: !!s.close, clickup: !!s.clickup, slack: !!s.slack,
           claude_code_available: !!s.claude_code_available,
           claude_code_path: s.claude_code_path || null,
+          codex_cli_available: !!s.codex_cli_available,
+          codex_cli_path: s.codex_cli_path || null,
           note: s.slack_note || null,
         });
       } else {
@@ -68,29 +74,36 @@ window.SecretaryAI = (() => {
 
   // ---- Provider selection ------------------------------------------------
 
-  // Returns 'claude_code' | 'openai'. Default is claude_code when the server
-  // reports the binary available; otherwise falls back to openai (proxy or BYOK).
+  // Returns 'claude_code' | 'codex_cli' | 'openai'. Default is claude_code when
+  // available, then Codex CLI, then OpenAI (proxy or BYOK).
   function getProvider() {
     try {
       const t = JSON.parse(localStorage.getItem("secretary.tweaks") || "{}");
       if (t.aiProvider === "openai") return "openai";
+      if (t.aiProvider === "codex_cli") return "codex_cli";
       if (t.aiProvider === "claude_code") return "claude_code";
-      // auto / unset — prefer Claude Code if available, else openai
-      return SERVER_STATUS.claude_code_available ? "claude_code" : "openai";
+      // auto / unset — prefer Claude Code, then Codex CLI, then OpenAI.
+      if (SERVER_STATUS.claude_code_available) return "claude_code";
+      if (SERVER_STATUS.codex_cli_available) return "codex_cli";
+      return "openai";
     } catch {
-      return SERVER_STATUS.claude_code_available ? "claude_code" : "openai";
+      if (SERVER_STATUS.claude_code_available) return "claude_code";
+      if (SERVER_STATUS.codex_cli_available) return "codex_cli";
+      return "openai";
     }
   }
 
   function isConfigured() {
     const p = getProvider();
     if (p === "claude_code") return SERVER_STATUS.claude_code_available;
+    if (p === "codex_cli") return SERVER_STATUS.codex_cli_available;
     return SERVER_STATUS.openai || !!getKey();
   }
 
   function getRoute() {
     const p = getProvider();
     if (p === "claude_code") return "claude-code-subprocess";
+    if (p === "codex_cli") return "codex-cli-subprocess";
     if (SERVER_STATUS.openai) return "openai-server-proxy";
     if (getKey()) return "openai-byok-direct";
     return null;
@@ -132,6 +145,23 @@ window.SecretaryAI = (() => {
     return { text: data.output_text || "", raw: data, route: "claude-code-subprocess" };
   }
 
+  async function respondCodexCli({ input, instructions, model, signal, timeout }) {
+    const res = await fetch("/api/codex_cli/generate", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ input, instructions, model: model || getModel(), timeout: timeout || 120 }),
+      signal,
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok || !data.ok) {
+      const msg = data.error || `codex_cli ${res.status}`;
+      const err = new Error(`Codex CLI: ${msg}`);
+      if (data.stderr) err.stderr = data.stderr;
+      throw err;
+    }
+    return { text: data.output_text || "", raw: data, route: "codex-cli-subprocess" };
+  }
+
   async function respondOpenAI({ input, instructions, model, signal, extra }) {
     await checkServer();
     const body = {
@@ -166,11 +196,19 @@ window.SecretaryAI = (() => {
     const provider = getProvider();
     if (provider === "claude_code") {
       if (!SERVER_STATUS.claude_code_available) {
-        // Graceful fallback: if Claude Code isn't reachable, try OpenAI.
+        // Graceful fallback is API-only. Do not silently switch to the other CLI.
         if (SERVER_STATUS.openai || getKey()) return respondOpenAI(args);
-        throw new Error("No AI provider available. Start server.py with claude on PATH, or set OpenAI key in Settings.");
+        throw new Error("Claude Code provider selected but claude is not on PATH. Set OpenAI key for API fallback or choose another provider in Settings.");
       }
       return respondClaudeCode(args);
+    }
+    if (provider === "codex_cli") {
+      if (!SERVER_STATUS.codex_cli_available) {
+        // Graceful fallback is API-only. Do not silently switch to the other CLI.
+        if (SERVER_STATUS.openai || getKey()) return respondOpenAI(args);
+        throw new Error("Codex CLI provider selected but codex is not on PATH. Set OpenAI key for API fallback or choose another provider in Settings.");
+      }
+      return respondCodexCli(args);
     }
     return respondOpenAI(args);
   }

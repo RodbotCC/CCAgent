@@ -1,0 +1,65 @@
+%% Risk Heatmap — Comeketo Agent Open Problems
+%% System-level risk graph. How problems chain into customer-facing harm if not addressed.
+%% Edges show risk propagation: source system → vulnerable surface → outcome.
+
+flowchart TD
+    subgraph EnrichmentChain["Enrichment chain (NS-04)"]
+        Enrichment["Enrichment files<br/>04_profile.md<br/>*_enrichment.md"]:::source --> P1["PROB-001<br/>Allowed-To-Know<br/>Missing"]:::critical
+        P1 --> CopyRisk["Customer-facing copy risk<br/>(creepy personalization,<br/>unsupported claims)"]:::outcome
+    end
+
+    subgraph CommsChain["Comms / transcript chain (NS-04, NS-06)"]
+        Comms["Close.com comms<br/>+ verbatim transcripts"]:::source --> P5["PROB-005<br/>Transcripts integration<br/>50% complete"]:::partial
+        P5 --> PlanIncomplete["Plan / copy may<br/>over-rely on enrichment<br/>instead of comms"]:::outcome
+    end
+
+    subgraph SweepChain["State sweep chain (NS-05)"]
+        Sweep["comms_state_sweep.py<br/>+ scheduled fires"]:::source --> P7["PROB-007<br/>Historical Inbound<br/>Noise"]:::medium
+        Sweep --> P6["PROB-006<br/>No Plan Rewrite<br/>Trigger"]:::high
+        P7 --> ReplyGate["Reply gate<br/>confusion · false alerts"]:::outcome
+        P6 --> StalePlan["Plan continues after<br/>client state changed"]:::outcome
+    end
+
+    subgraph ApprovalChain["Approval chain (NS-05)"]
+        Approval["Batch approval surface<br/>(automation page)"]:::source --> P3["PROB-003<br/>Risk Not Isolated"]:::critical
+        P3 --> UnsafeCommits["Unsafe commitments<br/>(fee waivers, discounts,<br/>scope promises)"]:::outcome
+    end
+
+    subgraph BoxAuditChain["Box audit chain (NS-04, NS-05)"]
+        Boxes["28 Client Box plans<br/>(some pre-guardrail)"]:::source --> P2["PROB-002<br/>Audit Backlog<br/>1/28 done"]:::high
+        P2 --> StalePlanRisk["Stale plans<br/>compound the risk<br/>from PROB-006"]:::outcome
+    end
+
+    subgraph DocsChain["Documentation drift chain (NS-09)"]
+        Docs["CLAUDE.md ·<br/>page_asset_sitemap.md ·<br/>directory layout"]:::source --> P10["PROB-010<br/>CLAUDE.md domains<br/>out of date"]:::high
+        Docs --> P11["PROB-011<br/>docs/sitemap stale"]:::low
+        P10 --> AgentMisorient["Subprocess agents<br/>misoriented about<br/>bedrock"]:::outcome
+        P11 --> WrongFile["Edits to wrong file<br/>(low likelihood now,<br/>flagged in FDL §10)"]:::outcome
+    end
+
+    subgraph DupChain["Directory duplication chain"]
+        Dup["Auto/Boxes mirror ·<br/>Onboard Scripts × 2 ·<br/>Comeketo Agent × 2"]:::source --> P12["PROB-012<br/>Auto/Boxes purpose"]:::medium
+        Dup --> P13["PROB-013<br/>Onboard Scripts dup"]:::medium
+        Dup --> P14["PROB-014<br/>Comeketo Agent dup"]:::low
+        P12 --> WrongCopy["Edits to wrong copy"]:::outcome
+        P13 --> WrongCopy
+        P14 --> WrongCopy
+    end
+
+    subgraph GitChain["Git workflow chain (NS-09)"]
+        Git["Agent direct writes ·<br/>Jake local unpushed"]:::source --> P4["PROB-004<br/>GitHub direct writes<br/>vs local"]:::medium
+        P4 --> MergeRisk["Merge conflict ·<br/>rebase confusion ·<br/>accidental overwrite"]:::outcome
+    end
+
+    %% Cross-chain links
+    P1 -.->|fuels| StalePlanRisk
+    P5 -.->|partial fix reduces| CopyRisk
+    P3 -.->|amplifies| StalePlanRisk
+
+    classDef source fill:#0ea5e9,stroke:#0369a1,color:#fff
+    classDef critical fill:#dc2626,stroke:#7f1d1d,color:#fff,stroke-width:3px
+    classDef high fill:#f59e0b,stroke:#92400e,color:#1c1917,stroke-width:2px
+    classDef medium fill:#fcd34d,stroke:#b45309,color:#451a03
+    classDef partial fill:#facc15,stroke:#a16207,color:#451a03,stroke-dasharray: 4 3
+    classDef low fill:#fde68a,stroke:#d97706,color:#451a03
+    classDef outcome fill:#fb923c,stroke:#9a3412,color:#fff,stroke-dasharray: 4 3

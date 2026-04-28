@@ -1,0 +1,45 @@
+%% Problem Lifecycle — Comeketo Agent Open Problems Ledger
+%% From discovery to closure. Branches for blocked / partial / closed-with-evidence.
+
+flowchart TD
+    Found([Problem discovered<br/>during work / audit / chat]):::start --> Record["Record in OPL §5<br/>· stable ID PROB-YYYY-MM-DD-###<br/>· status / severity / urgency<br/>· affected systems · close criteria"]:::record
+
+    Record --> Triage["Triage<br/>· severity (critical/high/medium/low)<br/>· urgency (now/soon/later/watch)<br/>· tags · owner · blocked-by"]:::triage
+
+    Triage --> Workaround["Define workaround<br/>(how to operate safely<br/>until fixed)"]:::workaround
+
+    Workaround --> Next["Recommended next action<br/>(what should happen)"]:::next
+
+    Next --> Working{Work begins?}:::decision
+
+    Working -->|No · blocked| Blocked["Mark blocked<br/>· §7 Blocked Problems<br/>· name what's blocking<br/>· name next-unblock"]:::blocked
+    Blocked -.->|unblock event| Working
+
+    Working -->|"Yes · in-progress<br/>or partial-fix sprint"| Fix["Work / fix / audit<br/>(may take many sessions)"]:::work
+
+    Fix --> Done{All close<br/>criteria met?}:::decision
+
+    Done -->|"No · partial<br/>(some criteria met,<br/>some open)"| Partial["Mark 'partial'<br/>· §8 Partially Fixed<br/>· list what was fixed<br/>· list what remains"]:::partial
+    Partial -.->|"more work begins"| Fix
+
+    Done -->|Yes| Verify["Verify the fix<br/>· evidence (commits, files,<br/>audit markers, tests)<br/>· cite each close criterion"]:::verify
+
+    Verify --> Close["Close in §10 Recently Closed<br/>· close date<br/>· what fixed it<br/>· verification evidence<br/>· related commits / activity entries"]:::close
+
+    Close --> Archive["After time, archive<br/>(closed history not<br/>cluttering active list)"]:::archive
+
+    Found -.->|"if recurring pattern emerges"| Pattern["§9 Recurring Patterns<br/>· name the pattern<br/>· name preventive ledger<br/>· often becomes design req"]:::pattern
+
+    classDef start fill:#10b981,stroke:#047857,color:#fff,stroke-width:2px
+    classDef record fill:#7c3aed,stroke:#5b21b6,color:#fff
+    classDef triage fill:#a78bfa,stroke:#7c3aed,color:#1e1b4b
+    classDef workaround fill:#fcd34d,stroke:#b45309,color:#451a03
+    classDef next fill:#0ea5e9,stroke:#0369a1,color:#fff
+    classDef decision fill:#f8fafc,stroke:#64748b,color:#0f172a
+    classDef blocked fill:#fb923c,stroke:#9a3412,color:#fff,stroke-dasharray: 4 3
+    classDef work fill:#22c55e,stroke:#15803d,color:#052e16
+    classDef partial fill:#facc15,stroke:#a16207,color:#451a03
+    classDef verify fill:#3b82f6,stroke:#1e40af,color:#fff
+    classDef close fill:#10b981,stroke:#047857,color:#fff,stroke-width:2px
+    classDef archive fill:#cbd5e1,stroke:#64748b,color:#0f172a,stroke-dasharray: 4 3
+    classDef pattern fill:#dc2626,stroke:#7f1d1d,color:#fff

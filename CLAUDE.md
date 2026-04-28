@@ -6,6 +6,17 @@ This file is structured around six operational disciplines. Follow them in order
 
 ---
 
+## 0) Read first — the Global Ledger
+
+Before any meaningful edit, read [`LEDGERS/GLOBAL_LEDGER.md`](LEDGERS/GLOBAL_LEDGER.md). It is the project's top-level memory spine and orientation file. The structured mirror lives at [`LEDGERS/GLOBAL_LEDGER.json`](LEDGERS/GLOBAL_LEDGER.json) and the full ledger roster at [`LEDGERS/INDEX.md`](LEDGERS/INDEX.md).
+
+The Global Ledger answers: what is this project, what is true right now, what major systems exist, what truth to trust, what risks are active, and what must be updated when work happens. The six disciplines below remain authoritative for delegations — the Global Ledger is the orientation layer above them.
+
+> The repo is not just code. The repo is the memory of the build.
+> Before changing the system, understand the memory. After changing the system, update the memory.
+
+---
+
 ## 1) Canonical paths — the only paths that exist
 
 **Project root (workspace — where `server.py` lives):**

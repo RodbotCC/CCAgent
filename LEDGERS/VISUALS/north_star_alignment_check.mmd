@@ -1,0 +1,31 @@
+%% North Star Alignment Check — Comeketo Agent
+%% Decision tree for evaluating proposed work against North Star goals.
+%% Use this during audits, code review, ledger updates, and planning.
+
+flowchart TD
+    Work([Proposed work / change / send / feature]):::start --> Q1{"Supports a North Star goal?<br/>(NS-01 through NS-10)"}:::decision
+
+    Q1 -->|"Yes — supports goal(s)"| Q2{"Does it threaten<br/>any other North Star goal?"}:::decision
+    Q1 -->|"No — unclear"| Q3{"Necessary maintenance,<br/>fix, or unblocker?"}:::decision
+
+    Q2 -->|No| Record["Record alignment<br/>· cite NS-IDs in commit/audit<br/>· update relevant ledgers<br/>· proceed"]:::record
+    Q2 -->|Yes| Tradeoff["Apply tradeoff rule<br/>(see NORTH_STAR.md §9)<br/>· document the tension<br/>· surface to operator<br/>· prefer safer path"]:::tradeoff
+
+    Tradeoff --> Q4{"Resolution<br/>preserves higher<br/>priority goal?"}:::decision
+    Q4 -->|Yes| Record
+    Q4 -->|No| Hold["Hold + document<br/>· Open Problems entry<br/>· request explicit approval<br/>· do not proceed silently"]:::hold
+
+    Q3 -->|Yes| Record2["Record why it was necessary<br/>· cite the constraint<br/>· note absence of NS support<br/>· proceed"]:::recordwarn
+    Q3 -->|No| Q5{"Anti-goal proximity?<br/>(generic drip · creepy enrichment ·<br/>silent commitments · fake dashboards ·<br/>memory deletion)"}:::decision
+
+    Q5 -->|Yes — approaches anti-goal| Reject["Reject or rework<br/>· document why<br/>· flag drift<br/>· consider alternative approach"]:::reject
+    Q5 -->|No — just unclear value| Question["Question / deprioritize<br/>· busywork risk<br/>· surface to operator before continuing"]:::question
+
+    classDef start fill:#10b981,stroke:#047857,color:#fff,stroke-width:2px
+    classDef decision fill:#f8fafc,stroke:#64748b,color:#0f172a
+    classDef record fill:#22c55e,stroke:#15803d,color:#052e16
+    classDef recordwarn fill:#fcd34d,stroke:#b45309,color:#451a03
+    classDef tradeoff fill:#a78bfa,stroke:#7c3aed,color:#1e1b4b
+    classDef hold fill:#fb923c,stroke:#9a3412,color:#fff
+    classDef question fill:#cbd5e1,stroke:#64748b,color:#0f172a,stroke-dasharray: 4 3
+    classDef reject fill:#dc2626,stroke:#7f1d1d,color:#fff,stroke-width:3px

@@ -1,0 +1,61 @@
+%% File Directory Map — Comeketo Agent
+%% Repo root → top-level dirs → key children. The shape of the tree as it actually exists on disk (verified 2026-04-28).
+%% Solid = canonical. Dashed = generated/legacy/stale.
+
+flowchart TD
+    Repo["/Users/jakeaaron/Downloads/CC Agent<br/>(repo root · branch main)"]:::root
+
+    Repo --> LEDGERS["LEDGERS/<br/>(canonical memory spine)"]:::canonical
+    Repo --> Auto["Auto/<br/>(symlink → ~/Desktop/Auto/<br/>orchestrator-owned)"]:::symlink
+    Repo --> Bedrock["CCAgentindex/<br/>(app bedrock — 26 dirs)"]:::canonical
+    Repo --> Docs["docs/<br/>(connector docs +<br/>STALE sitemap copy)"]:::partial
+    Repo --> Raw["rawdata/<br/>(external CSV/MD imports)"]:::reference
+    Repo --> OS_top["Onboard Scripts/<br/>(31 files — superset)"]:::canonical
+    Repo --> CA_top["Comeketo Agent/<br/>(design system — duplicate)"]:::reference
+    Repo --> UI["UI/app source<br/>at root<br/>(*.jsx, *.js, server.py,<br/>styles.css, Secretary.html)"]:::canonical
+    Repo --> Sitemap["page_asset_sitemap.md<br/>(UI Done Gate · root)"]:::canonical
+    Repo --> Meta["CLAUDE.md · AGENT.md ·<br/>README.md ·<br/>guardrails files"]:::canonical
+    Repo --> Gen["node_modules/ ·<br/>__pycache__/ ·<br/>.logs/ ·<br/>.git/ · .claude/"]:::generated
+
+    LEDGERS --> GL["GLOBAL_LEDGER<br/>.md + .json"]:::canonical
+    LEDGERS --> TC["TEMPORAL_CONTINUITY<br/>.md + .json"]:::canonical
+    LEDGERS --> NS["NORTH_STAR<br/>.md + .json"]:::canonical
+    LEDGERS --> FDL["FILE_DIRECTORY_LEDGER<br/>.md + .json (this file)"]:::canonical
+    LEDGERS --> IDX["INDEX.md<br/>(roster)"]:::canonical
+    LEDGERS --> Vis["VISUALS/ (Mermaid)"]:::canonical
+    LEDGERS --> Tmpl["LOCAL_TEMPLATE/<br/>(BOX + DIRECTORY templates)"]:::canonical
+
+    Auto --> CB["Client Boxes/<br/>(28 boxes · canonical)"]:::canonical
+    Auto --> SB["Staff Boxes/<br/>(10 voice profiles)"]:::canonical
+    Auto --> Orch["orchestrator/<br/>(runtime/render layer)"]:::canonical
+    Auto --> Inbox["comeketo-inbox/<br/>(skill + guardrails)"]:::canonical
+    Auto --> OS_auto["Onboard Scripts/<br/>(24 files · subset)"]:::partial
+    Auto --> Hugod["Hugodemo/<br/>(reference template)"]:::reference
+    Auto --> Boxes_dup["Boxes/<br/>(needs verification —<br/>likely stale mirror)"]:::stale
+    Auto --> CA_auto["Comeketo Agent/<br/>(design — duplicate)"]:::reference
+    Auto --> AutoMisc["Extra Stuff · Brainstorm ·<br/>CIA.txt · QuoteMaker.jsx ·<br/>various reference files"]:::reference
+
+    CB --> CB_box["Per-box files:<br/>00_meta.json · 01_comms.md ·<br/>01b_comms_verbatim.md · comms/ ·<br/>04_profile.md · 05_seven_day_plan.md ·<br/>09_andre_alerts.md · client_ledger.md ·<br/>YYYY-MM-DD_audit_marker.md ·<br/>AGENTS.md / CLAUDE.md (some)"]:::canonical
+
+    Orch --> Orch_bin["bin/<br/>(comms_state_sweep ·<br/>ready_check · refresh ·<br/>today · voice · _lib)"]:::canonical
+    Orch --> Orch_state["state/<br/>(GENERATED · do not<br/>hand-edit)"]:::generated
+    Orch --> Orch_wiring["wiring/<br/>(automations · routines)"]:::canonical
+    Orch --> Orch_docs["README · SYSTEM_OVERVIEW ·<br/>MANUAL_FIRE · KICKOFF_TODAY ·<br/>PLAN · build.py · render_lead.py"]:::canonical
+
+    Inbox --> Inbox_skill["SKILL.md · references/ ·<br/>scripts/ · assets/"]:::canonical
+
+    Bedrock --> BR_active["ACTIVE: people (39) · venues (30) ·<br/>_ledger (7) · _inbox (77) ·<br/>intelligence (119) · agent_plans (40) ·<br/>reports (28) · triggers (12) · workflows (5) ·<br/>agents · analytics · catalog · summaries ·<br/>intake_reports · scheduled_tasks · hooks ·<br/>indexes (loader auth)"]:::canonical
+    Bedrock --> BR_legacy["LEGACY STUBS (.gitkeep only):<br/>Rodbot · commitments · threads ·<br/>projects · knowledge · tables ·<br/>annotations · charts"]:::legacy
+    Bedrock --> BR_dormant["_vaults/ (dormant by design)"]:::legacy
+
+    Docs --> Doc_conn["connectors.md (current)"]:::canonical
+    Docs --> Doc_stale["page_asset_sitemap.md<br/>(STALE · 11 KB · use root)"]:::stale
+
+    classDef root fill:#0f172a,stroke:#1e293b,color:#f8fafc,stroke-width:3px
+    classDef canonical fill:#22c55e,stroke:#15803d,color:#052e16
+    classDef symlink fill:#0ea5e9,stroke:#0369a1,color:#fff
+    classDef reference fill:#a78bfa,stroke:#7c3aed,color:#1e1b4b
+    classDef partial fill:#fcd34d,stroke:#b45309,color:#451a03
+    classDef stale fill:#fb923c,stroke:#9a3412,color:#fff,stroke-dasharray: 4 3
+    classDef legacy fill:#cbd5e1,stroke:#64748b,color:#0f172a,stroke-dasharray: 4 3
+    classDef generated fill:#94a3b8,stroke:#475569,color:#fff,stroke-dasharray: 4 3

@@ -24,6 +24,7 @@ import re
 import shutil
 import subprocess
 import sys
+import tempfile
 import threading
 import time
 import unicodedata
@@ -91,15 +92,15 @@ def _extract_last_touches(markdown_text, limit=5):
     return lines[:max(1, int(limit or 5))]
 
 
-# Locate the `claude` binary. Server's PATH is minimal; the login shell has
-# the real one. Probe it once at startup and cache.
-def _find_claude_binary():
-    direct = shutil.which("claude")
+# Locate CLI agent binaries. Server's PATH is minimal; the login shell has
+# the real one. Probe once at startup and cache.
+def _find_cli_binary(name, fallback_paths=None):
+    direct = shutil.which(name)
     if direct:
         return direct
     try:
         result = subprocess.run(
-            ["/bin/zsh", "-l", "-c", "which claude"],
+            ["/bin/zsh", "-l", "-c", f"which {name}"],
             capture_output=True, text=True, timeout=5,
         )
         path = result.stdout.strip().splitlines()[-1] if result.stdout.strip() else ""
@@ -107,17 +108,69 @@ def _find_claude_binary():
             return path
     except Exception:
         pass
-    for candidate in [
-        Path.home() / ".claude" / "local" / "claude",
-        Path("/opt/homebrew/bin/claude"),
-        Path("/usr/local/bin/claude"),
-    ]:
+    for candidate in (fallback_paths or []):
         if candidate.exists():
             return str(candidate)
     return None
 
 
-CLAUDE_BIN = _find_claude_binary()
+CLAUDE_BIN = _find_cli_binary("claude", [
+    Path.home() / ".claude" / "local" / "claude",
+    Path("/opt/homebrew/bin/claude"),
+    Path("/usr/local/bin/claude"),
+])
+CODEX_BIN = _find_cli_binary("codex", [
+    Path.home() / ".codex" / "local" / "codex",
+    Path("/opt/homebrew/bin/codex"),
+    Path("/usr/local/bin/codex"),
+])
+
+
+def _build_codex_prompt(instructions, user_input):
+    instructions = (instructions or "").strip()
+    user_input = (user_input or "").strip()
+    if not instructions:
+        return user_input
+    return f"System instructions:\n{instructions}\n\nUser request:\n{user_input}"
+
+
+def _run_codex_exec(prompt, model=None, timeout_s=120, image_paths=None):
+    if not CODEX_BIN:
+        return ("", "", "codex binary not found")
+    output_path = None
+    try:
+        with tempfile.NamedTemporaryFile(prefix="comeketo-codex-", suffix=".txt", delete=False) as f:
+            output_path = f.name
+        cmd = [
+            CODEX_BIN, "exec",
+            "-m", (model or "gpt-5.4-mini"),
+            "-C", str(HERE),
+            "-s", "read-only",
+            "--skip-git-repo-check",
+            "--output-last-message", output_path,
+        ]
+        for path in (image_paths or []):
+            if path:
+                cmd += ["--image", str(path)]
+        cmd.append("-")
+        proc = subprocess.run(cmd, input=prompt, capture_output=True, text=True, timeout=timeout_s)
+        text = ""
+        if output_path and Path(output_path).exists():
+            text = Path(output_path).read_text(errors="replace").strip()
+        if proc.returncode != 0:
+            detail = ((proc.stderr or "") + "\n" + (proc.stdout or "")).strip()
+            return ("", detail[-2000:], f"codex exit {proc.returncode}")
+        return (text or (proc.stdout or "").strip(), (proc.stderr or "")[-2000:], None)
+    except subprocess.TimeoutExpired:
+        return ("", "", f"timeout after {timeout_s}s")
+    except Exception as e:
+        return ("", "", f"{type(e).__name__}: {e}")
+    finally:
+        if output_path:
+            try:
+                Path(output_path).unlink(missing_ok=True)
+            except Exception:
+                pass
 
 _REPORT_LOCKS = {}
 _REPORT_LOCKS_GUARD = threading.Lock()
@@ -717,6 +770,8 @@ class Handler(SimpleHTTPRequestHandler):
                 "clickup_list_source": _CLICKUP_DEFAULT["source"],
                 "claude_code_available": bool(CLAUDE_BIN),
                 "claude_code_path": CLAUDE_BIN,
+                "codex_cli_available": bool(CODEX_BIN),
+                "codex_cli_path": CODEX_BIN,
                 "github_mcp": github_mcp,
                 "delegation_targets": {
                     "general": {
@@ -742,6 +797,11 @@ class Handler(SimpleHTTPRequestHandler):
                     "claude_code": {
                         "available": bool(CLAUDE_BIN),
                         "detail": (f"Binary at {CLAUDE_BIN}" if CLAUDE_BIN else "Claude Code binary not found on PATH."),
+                        "requires_approval_for_write": True,
+                    },
+                    "codex_cli": {
+                        "available": bool(CODEX_BIN),
+                        "detail": (f"Binary at {CODEX_BIN}" if CODEX_BIN else "Codex binary not found on PATH."),
                         "requires_approval_for_write": True,
                     },
                     "cursor": {
@@ -2503,6 +2563,35 @@ class Handler(SimpleHTTPRequestHandler):
             except Exception as e:
                 return ("", "", f"{type(e).__name__}: {e}")
 
+        if provider == "codex_cli":
+            lines = []
+            image_paths = []
+            for m in messages:
+                role = m.get("role", "user")
+                text_parts = [p.get("text", "") for p in _parts(m) if p.get("type") == "text"]
+                imgs = [p for p in _parts(m) if p.get("type") == "image"]
+                body_lines = [t for t in text_parts if t]
+                for a in imgs:
+                    path = a.get("path") or ""
+                    if path:
+                        image_paths.append(path)
+                        body_lines.append(f"[attached image: {path}]")
+                body = "\n".join(body_lines).strip()
+                if role == "user":        lines.append(f"USER: {body}")
+                elif role == "assistant": lines.append(f"ASSISTANT: {body}")
+                else:                     lines.append(f"{role.upper()}: {body}")
+            lines.append("ASSISTANT:")
+            transcript = _build_codex_prompt(system, "\n\n".join(lines))
+            text, stderr, err = _run_codex_exec(
+                transcript,
+                model=payload.get("model") or "gpt-5.4-mini",
+                timeout_s=timeout_s,
+                image_paths=image_paths,
+            )
+            if err:
+                return ("", "", f"{err}: {stderr[-400:]}" if stderr else err)
+            return (text.strip(), "codex-cli-subprocess", None)
+
         # OpenAI Responses
         if not ENV.get("OPENAI_API_KEY"):
             return ("", "", "OPENAI_API_KEY not set on server")
@@ -3491,6 +3580,11 @@ class Handler(SimpleHTTPRequestHandler):
             # Uses --max-turns 1 --output-format text for speed.
             length = int(self.headers.get("Content-Length") or 0)
             return self._claude_code_generate(self.rfile.read(length) if length else b"")
+        if p == "/api/codex_cli/generate":
+            # Synchronous Codex CLI endpoint. Uses `codex exec` with the selected
+            # model and a read-only sandbox so only the selected CLI handles the turn.
+            length = int(self.headers.get("Content-Length") or 0)
+            return self._codex_cli_generate(self.rfile.read(length) if length else b"")
         if p == "/api/chat/send":
             # Multi-turn chat. Client sends full transcript each turn; we
             # relay to the active provider. Server is a pure relay — all
@@ -3667,6 +3761,48 @@ class Handler(SimpleHTTPRequestHandler):
                 return self._json({"ok": False, "error": f"timeout after {timeout_s}s"}, code=504)
             except Exception as e:
                 return self._json({"ok": False, "error": f"{type(e).__name__}: {e}"}, code=500)
+
+        if provider == "codex_cli":
+            if not CODEX_BIN:
+                return self._json({"ok": False, "error": "codex binary not found"}, code=503)
+            lines = []
+            image_paths = []
+            for m in messages:
+                role = m.get("role", "user")
+                text = _text_only(m)
+                atts = _attachments(m)
+                if not text and not atts:
+                    continue
+                body_lines = [text] if text else []
+                for a in atts:
+                    path = a.get("path") or a.get("url") or ""
+                    if path:
+                        image_paths.append(path)
+                        body_lines.append(f"[attached image: {path}]")
+                body = "\n".join(body_lines).strip()
+                if role == "user":        lines.append(f"USER: {body}")
+                elif role == "assistant": lines.append(f"ASSISTANT: {body}")
+                elif role == "system":    lines.append(f"SYSTEM NOTE: {body}")
+                else:                     lines.append(f"{role.upper()}: {body}")
+            lines.append("ASSISTANT:")
+            transcript = _build_codex_prompt(system, "\n\n".join(lines))
+            text, stderr, err = _run_codex_exec(
+                transcript,
+                model=payload.get("model") or "gpt-5.4-mini",
+                timeout_s=timeout_s,
+                image_paths=image_paths,
+            )
+            if err:
+                return self._json({
+                    "ok": False,
+                    "error": err,
+                    "stderr": stderr[-2000:] if stderr else "",
+                }, code=502 if "exit" in err else 504 if "timeout" in err else 500)
+            return self._json({
+                "ok": True,
+                "reply": text.strip(),
+                "provider_route": "codex-cli-subprocess",
+            })
 
         # OpenAI Responses — multi-turn via input array with multimodal parts.
         if not ENV.get("OPENAI_API_KEY"):
@@ -4244,6 +4380,32 @@ class Handler(SimpleHTTPRequestHandler):
             return self._json({"ok": False, "error": f"timeout after {timeout_s}s"}, code=504)
         except Exception as e:
             return self._json({"ok": False, "error": f"{type(e).__name__}: {e}"}, code=500)
+
+    def _codex_cli_generate(self, body):
+        if not CODEX_BIN:
+            return self._json({"ok": False, "error": "codex binary not found"}, code=503)
+        try:
+            payload = json.loads(body.decode("utf-8")) if body else {}
+        except Exception as e:
+            return self._json({"ok": False, "error": f"bad json: {e}"}, code=400)
+        instructions = (payload.get("instructions") or "").strip()
+        user_input = (payload.get("input") or "").strip()
+        if not user_input:
+            return self._json({"ok": False, "error": "missing input"}, code=400)
+        timeout_s = int(payload.get("timeout") or 120)
+        prompt = _build_codex_prompt(instructions, user_input)
+        text, stderr, err = _run_codex_exec(
+            prompt,
+            model=payload.get("model") or "gpt-5.4-mini",
+            timeout_s=timeout_s,
+        )
+        if err:
+            return self._json({
+                "ok": False,
+                "error": err,
+                "stderr": stderr[-2000:] if stderr else "",
+            }, code=502 if "exit" in err else 504 if "timeout" in err else 500)
+        return self._json({"ok": True, "output_text": text.strip()})
 
     # ────── Delegation: Claude Code as a subprocess ─────────────────────
     # Comeketo Agent dispatches a prompt; we spawn `claude -p` in a background
@@ -5430,6 +5592,10 @@ def main():
         print(f"[secretary] claude code delegate ready → {CLAUDE_BIN}", flush=True)
     else:
         print("[secretary] claude code binary not found — delegation endpoint will 503", flush=True)
+    if CODEX_BIN:
+        print(f"[secretary] codex cli provider ready → {CODEX_BIN}", flush=True)
+    else:
+        print("[secretary] codex cli binary not found — Codex provider will 503", flush=True)
     # Auto-resolve a ClickUp default list so the user never has to paste an id.
     if ENV.get("CLICKUP_API_TOKEN") and ENV.get("CLICKUP_SPACE_ID"):
         cl = resolve_and_cache_clickup()

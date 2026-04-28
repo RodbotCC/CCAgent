@@ -142,40 +142,16 @@
   // thread also sweeps hourly so the ledger is complete even when the browser
   // is closed. Latest sweep lands on window.PiecesContext for ai_instructions.
   async function primePiecesFromLedger() {
-    try {
-      const r = await fetch("/api/pieces/sweeps/latest");
-      if (!r.ok) return;
-      const j = await r.json();
-      if (j && j.ok && j.latest) {
-        window.PiecesContext = {
-          fetchedAt: j.latest.ts,
-          raw: j.latest.raw || "",
-          source: "server_ledger",
-        };
-      }
-    } catch (_) {}
+    // 2026-04-28 — Pieces removed from chat context window per Jake.
+    // Activity page still uses /api/pieces/* directly. We just stop
+    // populating window.PiecesContext (which fed the chat prompt assembler).
+    return;
   }
 
   async function sweepPieces() {
-    try {
-      // Ask the server to fire a delta sweep. It handles the "since last"
-      // framing internally and appends the new sweep to the ledger.
-      const since = window.PiecesContext && window.PiecesContext.fetchedAt;
-      const r = await fetch("/api/pieces/sweep", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ since: since || null }),
-      });
-      if (!r.ok) return;
-      const j = await r.json();
-      if (j && j.ok && j.sweep) {
-        window.PiecesContext = {
-          fetchedAt: j.sweep.ts,
-          raw: j.sweep.raw || "",
-          source: "browser_sweep",
-        };
-      }
-    } catch (_) { /* best-effort — prompt degrades silently */ }
+    // 2026-04-28 — disabled (see note in primePiecesFromLedger above).
+    // The 10-min poll loop in the boot block below will no-op safely.
+    return;
   }
 
   // Boot: prime from ledger so prompt is immediately populated, then sweep
