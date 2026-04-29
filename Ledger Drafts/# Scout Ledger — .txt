@@ -1,0 +1,1144 @@
+# Scout Ledger — Project-Wide Implementation Outline
+
+## 0. Purpose
+
+The **Scout Ledger** is the project’s disciplined exploration layer.
+
+It tracks research into better tools, models, APIs, frameworks, services, patterns, automations, workflows, libraries, hosting options, and implementation approaches.
+
+The uploaded ledger plan describes the Scout Ledger as the place to investigate better tools, models, APIs, frameworks, services, patterns, and workflows without randomly switching tools every time something shiny appears. It should record what tools are being considered, what problem they solve, what was tested, what worked, what failed, and what should be adopted, rejected, watched, or revisited. 
+
+That is the key:
+
+> The goal is not tool-chasing.
+> The goal is disciplined exploration.
+
+Modern AI projects are especially vulnerable to shiny-object drift.
+
+The Scout Ledger gives curiosity a container.
+
+---
+
+# Scout Ledger — Project-Wide Implementation Outline
+
+## 1. Core Operating Principle
+
+The Scout Ledger should enforce this rule:
+
+> Explore deliberately. Adopt cautiously. Remember what was already evaluated.
+
+A project like this will constantly encounter new options:
+
+* a better model
+* a new MCP server
+* a new dashboard framework
+* a new browser automation tool
+* a new vector/database/search option
+* a new email renderer
+* a new CRM API pattern
+* a new local agent runtime
+* a new GitHub automation workflow
+* a new transcript processor
+* a new visualization library
+
+Without a Scout Ledger, the project will keep researching the same things repeatedly or switching tools without memory.
+
+The Scout Ledger should help answer:
+
+* What problem are we trying to solve?
+* What options are we considering?
+* What have we already tested?
+* What worked?
+* What failed?
+* What is better than our current approach?
+* What is not worth switching to?
+* What should we watch but not adopt yet?
+* What would adoption cost?
+* What would break if we switched?
+* What North Star goal would this support?
+
+---
+
+## 2. Recommended Location
+
+Create it in the central ledger directory:
+
+```text
+/LEDGERS/
+  SCOUT_LEDGER.md
+  SCOUT_LEDGER.json
+  INDEX.md
+  SCOUT_REPORTS/
+    models/
+    tools/
+    apis/
+    frameworks/
+    workflows/
+  VISUALS/
+    scout_pipeline.mmd
+    tool_comparison_map.mmd
+```
+
+Recommended final files:
+
+```text
+/LEDGERS/SCOUT_LEDGER.md
+/LEDGERS/SCOUT_LEDGER.json
+```
+
+Longer evaluations should live in:
+
+```text
+/LEDGERS/SCOUT_REPORTS/<category>/<report_slug>.md
+```
+
+The main ledger is the index and summary.
+Scout reports hold detail.
+
+---
+
+## 3. Role in the Ledger System
+
+The Scout Ledger sits between Open Problems, Decisions, and Connections.
+
+```text
+Open Problems Ledger
+  └── What problem needs a better solution?
+
+Scout Ledger
+  └── What options are we researching?
+
+Decisions Ledger
+  └── What did we decide to adopt, reject, or defer?
+
+Connections Ledger
+  └── What external tools/services are now dependencies?
+
+Reconstruction Ledger
+  └── How do we rebuild or integrate the adopted tool?
+```
+
+Important flow:
+
+```text
+Problem discovered
+→ scout options
+→ evaluate
+→ decide
+→ integrate
+→ record dependency
+→ record rebuild recipe
+```
+
+The Scout Ledger is not the final decision.
+It feeds decisions.
+
+---
+
+## 4. What This Ledger Owns
+
+## Owns
+
+* tool/model/API/framework research
+* comparison notes
+* candidate evaluations
+* adoption criteria
+* rejection reasons
+* watchlist items
+* experiments and test results
+* tool-switching cost analysis
+* research links or references
+* recommendation status
+* revisit dates
+* adoption readiness
+
+## Does not own
+
+* final architectural decisions
+* all external dependency status
+* implementation recipes
+* billing/credential maps after adoption
+* every article/link read
+* every passing curiosity
+* local one-off notes with no project impact
+
+Those belong in Decisions, Connections, Reconstruction, Communications, and Open Problems ledgers.
+
+The Scout Ledger should track **evaluated options**, not every interesting thought.
+
+---
+
+## 5. Recommended `SCOUT_LEDGER.md` Structure
+
+Use stable headings:
+
+```markdown
+# Scout Ledger
+
+Last updated:
+Maintainer:
+Status:
+Read when:
+Core rule:
+
+## 1. Purpose
+## 2. Scout Entry Format
+## 3. Scout Status Labels
+## 4. Evaluation Criteria
+## 5. Active Scout Queue
+## 6. Current Recommendations
+## 7. Watchlist
+## 8. Rejected / Not Worth It
+## 9. Adopted From Scouting
+## 10. Scout Reports Index
+## 11. Tool Switching Rules
+## 12. Visualization Index
+## 13. Update Rules
+```
+
+The ledger should be practical, not academic.
+
+---
+
+## 6. Scout Entry Format
+
+Use stable IDs.
+
+Recommended ID format:
+
+```text
+SCOUT-YYYY-MM-DD-###
+```
+
+Example:
+
+```text
+SCOUT-2026-04-28-001
+```
+
+Template:
+
+```markdown
+## SCOUT-YYYY-MM-DD-### — <Tool / Pattern / Option>
+
+Status:
+Category:
+Problem it addresses:
+Scout owner:
+Date opened:
+Last reviewed:
+Revisit date:
+Related open problem:
+Related North Star goals:
+Related connections:
+Decision status:
+
+### Question
+
+What are we trying to find out?
+
+### Current System
+
+What do we use now?
+
+### Candidate
+
+What is being evaluated?
+
+### Why It Might Help
+
+What could improve?
+
+### Risks / Costs
+
+What could get worse?
+
+### Test Plan
+
+How should we evaluate it?
+
+### Findings
+
+What did we learn?
+
+### Recommendation
+
+Adopt, reject, watch, defer, or test more.
+
+### Next Action
+
+What happens next?
+
+### Links / References
+
+Only durable useful references.
+```
+
+Keep it tight unless it needs a full scout report.
+
+---
+
+## 7. Scout Status Labels
+
+Standardize statuses:
+
+```markdown
+## 3. Scout Status Labels
+
+Use one:
+
+- `queued`: worth evaluating later
+- `researching`: actively being researched
+- `testing`: hands-on test in progress
+- `watch`: promising but not ready / not urgent
+- `recommended`: should be adopted or tried
+- `adopted`: moved into project
+- `rejected`: not worth using
+- `deferred`: useful, but not now
+- `superseded`: replaced by better option
+```
+
+Optional fields:
+
+```text
+urgency: now / soon / later / watch
+confidence: high / medium / low
+switching_cost: low / medium / high
+risk: low / medium / high
+```
+
+---
+
+## 8. Evaluation Criteria
+
+Every scout should be judged against project needs.
+
+Suggested criteria:
+
+```markdown
+## 4. Evaluation Criteria
+
+Evaluate candidates against:
+
+### Fit
+
+Does it solve a real project problem?
+
+### Continuity
+
+Does it support GitHub/file-tree continuity, or does it create hidden state?
+
+### Inspectability
+
+Can agents and humans understand what it is doing?
+
+### Source-of-truth compatibility
+
+Does it preserve source-of-truth discipline?
+
+### Locality
+
+Does it support Box/local-directory workflows?
+
+### Safety
+
+Could it trigger unsafe writes, sends, data leaks, or customer-facing actions?
+
+### Integration cost
+
+How hard is it to adopt?
+
+### Switching cost
+
+What breaks if we move from current system?
+
+### Rebuildability
+
+Can we recreate this setup later?
+
+### Billing / dependency risk
+
+Does it add paid, quota, credential, or uptime risk?
+
+### North Star alignment
+
+Which North Star goal does it support?
+```
+
+A candidate should not be adopted just because it is impressive.
+
+It must fit the architecture.
+
+---
+
+## 9. Active Scout Queue — Seed Items
+
+These are the obvious scout tracks for this project.
+
+### SCOUT-2026-04-28-001 — Approval Card / Risk Review UI Pattern
+
+```markdown
+## SCOUT-2026-04-28-001 — Approval Card / Risk Review UI Pattern
+
+Status: queued  
+Category: workflow / UI / safety  
+Problem it addresses: risky moves can hide inside batch approval  
+Related open problem: PROB-2026-04-28-003  
+Related North Star goals: NS-04, NS-05, NS-06  
+Urgency: soon  
+
+### Question
+
+What is the best UI/workflow pattern for isolating high-risk approvals?
+
+### Current System
+
+Risky moves may appear inside batch review. User may approve quickly while rushed.
+
+### Candidate
+
+Approval cards that require explicit confirmation based on risk class:
+
+- `APPROVE FEE WAIVER`
+- `APPROVE ENRICHMENT USE`
+- `APPROVE PRICE COMMITMENT`
+- `APPROVE SCOPE PROMISE`
+
+### Why It Might Help
+
+It preserves automation speed while making dangerous moves visible.
+
+### Risks / Costs
+
+Too much friction may slow routine work. Too little friction fails the purpose.
+
+### Test Plan
+
+Prototype card schema and review against Brenda & Steve case.
+
+### Recommendation
+
+Likely adopt after design.
+```
+
+---
+
+### SCOUT-2026-04-28-002 — Transcript Import / Fact Provenance Pattern
+
+````markdown
+## SCOUT-2026-04-28-002 — Transcript Import / Fact Provenance Pattern
+
+Status: queued  
+Category: data pipeline / Client Boxes  
+Problem it addresses: full phone transcripts need to become usable comms truth  
+Related open problems: PROB-2026-04-28-001, PROB-2026-04-28-005  
+Related North Star goals: NS-03, NS-04, NS-06  
+Urgency: soon  
+
+### Question
+
+What is the best structure for storing full transcripts and extracting allowed-to-use facts with provenance?
+
+### Current System
+
+`01_comms.md` has summarized comms. Full phone transcripts are being collected.
+
+### Candidate
+
+Store transcripts in:
+
+```text
+Auto/Client Boxes/<Name>/transcripts/
+  call_YYYY-MM-DD_<activity_id>.md
+````
+
+Extract facts into:
+
+```text
+allowed_to_use.md
+allowed_to_use.json
+```
+
+Each fact should cite its source activity/transcript.
+
+### Why It Might Help
+
+It makes customer-facing fact use safe and auditable.
+
+### Risks / Costs
+
+May create too much per-client overhead if schema is overbuilt.
+
+### Test Plan
+
+Try with one high-value box, likely Brenda & Steve or Hugo.
+
+### Recommendation
+
+Likely adopt after Source-of-Truth / Allowed-To-Know design.
+
+````
+
+---
+
+### SCOUT-2026-04-28-003 — Mermaid vs Rich Graph Renderer For Ledger Visuals
+
+```markdown
+## SCOUT-2026-04-28-003 — Mermaid vs Rich Graph Renderer For Ledger Visuals
+
+Status: watch  
+Category: visualization  
+Problem it addresses: humans need shape beside text ledgers  
+Related North Star goals: NS-08, NS-09  
+Urgency: later  
+
+### Question
+
+Should the project rely on Mermaid diagrams first, or adopt a richer graph visualization stack?
+
+### Current System
+
+Markdown and Mermaid are simple, GitHub-friendly, diffable, and easy for agents.
+
+### Candidate
+
+Start with Mermaid. Later consider richer graph views if dependency maps become too complex.
+
+### Why It Might Help
+
+Mermaid gives immediate visual comprehension without adding heavy tooling.
+
+### Risks / Costs
+
+Complex graphs may become unreadable.
+
+### Recommendation
+
+Use Mermaid first. Watch for need to upgrade.
+````
+
+---
+
+### SCOUT-2026-04-28-004 — Branch / PR Workflow For Agent Writes
+
+```markdown
+## SCOUT-2026-04-28-004 — Branch / PR Workflow For Agent Writes
+
+Status: queued  
+Category: Git workflow  
+Problem it addresses: direct GitHub writes can conflict with user local work  
+Related open problem: PROB-2026-04-28-004  
+Related North Star goals: NS-01, NS-09, NS-10  
+Urgency: soon  
+
+### Question
+
+What should be the default Git workflow when agents write to the repo?
+
+### Current System
+
+Agent can write directly to GitHub main. User may have unpushed local changes.
+
+### Candidate
+
+Default to branch/PR for agent changes unless user confirms local tree is clean and direct-to-main is okay.
+
+### Why It Might Help
+
+Avoids conflicts and keeps human control.
+
+### Risks / Costs
+
+More process friction.
+
+### Test Plan
+
+Try next non-urgent repo write as branch-based flow.
+
+### Recommendation
+
+Likely adopt as standard.
+```
+
+---
+
+### SCOUT-2026-04-28-005 — Local Meta Harness Script
+
+````markdown
+## SCOUT-2026-04-28-005 — Local Meta Harness Script
+
+Status: queued  
+Category: agent workflow / scripts  
+Problem it addresses: agents need path-aware context before editing  
+Related North Star goals: NS-02, NS-03, NS-09, NS-10  
+Urgency: later  
+
+### Question
+
+Should the project add a script like `context_for_path.py` that reads ledgers and local `BOX.md` files for a target path?
+
+### Current System
+
+Agents manually read Global Ledger, Directory Ledger, and local Box files.
+
+### Candidate
+
+Script:
+
+```bash
+python scripts/context_for_path.py "Auto/Client Boxes/Brenda & Steve/05_seven_day_plan.md"
+````
+
+Output:
+
+* relevant global ledgers
+* local Box files
+* source-of-truth notes
+* Done Gate
+* common warnings
+
+### Why It Might Help
+
+Turns the ledger system into a real meta harness.
+
+### Risks / Costs
+
+Requires maintaining machine-readable ledger schemas.
+
+### Recommendation
+
+Watch until first-wave ledgers are implemented.
+
+````
+
+---
+
+### SCOUT-2026-04-28-006 — Model / Agent Role Split
+
+```markdown
+## SCOUT-2026-04-28-006 — Model / Agent Role Split
+
+Status: watch  
+Category: model workflow  
+Problem it addresses: different models may be better at design, implementation, audit, and cleanup  
+Related North Star goals: NS-09, NS-10  
+Urgency: later  
+
+### Question
+
+How should ChatGPT, Opus, local scripts, and future agents split responsibilities?
+
+### Current System
+
+ChatGPT is producing outlines and GitHub reads/writes. User plans to hand implementation to Opus.
+
+### Candidate
+
+Role split:
+- ChatGPT: architecture, audits, high-level planning, connected-source reading
+- Opus: implementation from outlines
+- scripts: deterministic checks/generation
+- local Boxes: persistent instructions
+
+### Why It Might Help
+
+Uses each tool where strongest.
+
+### Risks / Costs
+
+Coordination overhead and inconsistent assumptions.
+
+### Recommendation
+
+Watch and document what works.
+````
+
+---
+
+## 10. Current Recommendations
+
+This section should summarize scout conclusions.
+
+Initial recommendations:
+
+```markdown
+## 6. Current Recommendations
+
+### Use Mermaid first for visuals
+
+Reason:
+Simple, diffable, GitHub-friendly, low overhead.
+
+Status:
+recommended
+
+### Start with branch/PR workflow for future agent writes
+
+Reason:
+User may have local unpushed work. Direct-to-main is risky.
+
+Status:
+recommended pending decision
+
+### Build allowed-to-know layer before more aggressive automation
+
+Reason:
+Client facts, enrichment, and customer-facing copy need separation.
+
+Status:
+recommended
+
+### Keep Scout Ledger lightweight
+
+Reason:
+This ledger should prevent tool-chasing, not create another research sink.
+
+Status:
+recommended
+```
+
+Recommendations should later become Decisions if adopted.
+
+---
+
+## 11. Watchlist
+
+Purpose: tools/patterns worth watching but not adopting yet.
+
+Example:
+
+```markdown
+## 7. Watchlist
+
+| Item | Why Watch | Revisit |
+|---|---|---|
+| Rich graph visualization | Mermaid may become too limited for large dependency maps | after first visual maps exist |
+| Supabase | May be useful if file-backed state needs DB backing | after source-of-truth ledger |
+| Advanced transcript extraction | Needed for allowed-to-know layer at scale | after transcript files land |
+| Agent meta harness CLI | Useful once ledger schemas stabilize | after first-wave ledgers |
+| Local vector/search helper | Could support search, but must not replace file-tree truth | later |
+```
+
+Notice the last one: vector/search can be useful as a helper, but not as primary memory.
+
+That preserves user philosophy.
+
+---
+
+## 12. Rejected / Not Worth It
+
+Purpose: avoid re-researching.
+
+Example:
+
+```markdown
+## 8. Rejected / Not Worth It
+
+No rejected items yet.
+
+When rejecting, record:
+- what was considered
+- why it was rejected
+- whether to revisit later
+```
+
+Rejection is useful memory.
+
+---
+
+## 13. Adopted From Scouting
+
+Purpose: track when research becomes reality.
+
+Example:
+
+```markdown
+## 9. Adopted From Scouting
+
+No formally adopted scout items yet.
+
+When adopted:
+- create/update Decision record
+- update Connections if external service
+- update Reconstruction if build recipe needed
+- update Settings if configurable
+- update Source-of-Truth if authority changes
+```
+
+---
+
+## 14. Scout Reports Index
+
+Longer research goes in files.
+
+Example:
+
+```markdown
+## 10. Scout Reports Index
+
+| Report | Status | Summary |
+|---|---|---|
+| `SCOUT_REPORTS/workflows/approval_cards.md` | planned | risk approval UI/workflow pattern |
+| `SCOUT_REPORTS/client_boxes/transcript_fact_provenance.md` | planned | transcript import + allowed facts |
+| `SCOUT_REPORTS/visuals/mermaid_vs_graph_renderer.md` | planned | visual map tooling |
+```
+
+The main ledger should not become a wall of research.
+
+---
+
+## 15. Tool Switching Rules
+
+This section is extremely important.
+
+```markdown
+## 11. Tool Switching Rules
+
+Do not switch tools just because a new tool looks better.
+
+Before adopting a new tool, answer:
+
+- What exact problem does it solve?
+- What current system does it replace or augment?
+- What North Star goal does it support?
+- What new dependency does it create?
+- What credentials, billing, or uptime risks come with it?
+- What migration cost exists?
+- What breaks if it fails?
+- Can we revert?
+- Does it preserve GitHub/file-tree source-of-truth?
+- Does it create hidden state?
+```
+
+Adoption should require a decision.
+
+```markdown
+A scout recommendation is not an adoption decision.
+
+Adoption requires:
+- Decision Ledger entry
+- Connections Ledger update if external
+- Reconstruction recipe if complex
+- Settings Ledger update if configurable
+- Done Gate satisfied
+```
+
+---
+
+## 16. Recommended `SCOUT_LEDGER.json` Shape
+
+```json
+{
+  "ledger_type": "scout",
+  "version": "0.1.0",
+  "last_updated": "2026-04-28",
+  "core_rule": "Explore deliberately. Adopt cautiously. Remember what was already evaluated.",
+  "status_labels": [
+    "queued",
+    "researching",
+    "testing",
+    "watch",
+    "recommended",
+    "adopted",
+    "rejected",
+    "deferred",
+    "superseded"
+  ],
+  "evaluation_criteria": [
+    "fit",
+    "continuity",
+    "inspectability",
+    "source_of_truth_compatibility",
+    "locality",
+    "safety",
+    "integration_cost",
+    "switching_cost",
+    "rebuildability",
+    "billing_dependency_risk",
+    "north_star_alignment"
+  ],
+  "scouts": [
+    {
+      "id": "SCOUT-2026-04-28-001",
+      "title": "Approval Card / Risk Review UI Pattern",
+      "status": "queued",
+      "category": "workflow_ui_safety",
+      "problem_it_addresses": "Risky moves can hide inside batch approval.",
+      "related_open_problem": "PROB-2026-04-28-003",
+      "related_north_star_goals": ["NS-04", "NS-05", "NS-06"],
+      "urgency": "soon",
+      "recommendation": "Likely adopt after design."
+    },
+    {
+      "id": "SCOUT-2026-04-28-003",
+      "title": "Mermaid vs Rich Graph Renderer For Ledger Visuals",
+      "status": "watch",
+      "category": "visualization",
+      "problem_it_addresses": "Humans need shape beside text ledgers.",
+      "related_north_star_goals": ["NS-08", "NS-09"],
+      "recommendation": "Use Mermaid first. Watch for need to upgrade."
+    }
+  ],
+  "tool_switching_rules": [
+    "Do not switch tools just because a new tool looks better.",
+    "A scout recommendation is not an adoption decision.",
+    "Adoption requires a Decision Ledger entry."
+  ]
+}
+```
+
+---
+
+## 17. Suggested Visual Layer
+
+Create:
+
+```text
+/LEDGERS/VISUALS/scout_pipeline.mmd
+/LEDGERS/VISUALS/tool_comparison_map.mmd
+/LEDGERS/VISUALS/scout_to_decision_flow.mmd
+```
+
+Example scout pipeline:
+
+```mermaid
+flowchart TD
+  Problem[Open Problem / Opportunity] --> Scout[Scout Entry]
+  Scout --> Research[Research]
+  Research --> Test[Test / Prototype]
+  Test --> Recommend{Recommendation}
+  Recommend -->|Adopt| Decision[Decision Ledger]
+  Recommend -->|Reject| Rejected[Rejected / Not Worth It]
+  Recommend -->|Watch| Watchlist[Watchlist]
+  Recommend -->|Defer| Deferred[Deferred]
+  Decision --> Connections[Connections Ledger if external]
+  Decision --> Recon[Reconstruction Ledger if complex]
+  Decision --> Settings[Settings Ledger if configurable]
+```
+
+Example evaluation matrix:
+
+```mermaid
+flowchart LR
+  Candidate[Candidate Tool] --> Fit[Fit]
+  Candidate --> Safety[Safety]
+  Candidate --> Continuity[Continuity]
+  Candidate --> Cost[Switching Cost]
+  Candidate --> Truth[Source-of-Truth Compatibility]
+  Candidate --> Rebuild[Rebuildability]
+  Fit --> Recommendation[Recommendation]
+  Safety --> Recommendation
+  Continuity --> Recommendation
+  Cost --> Recommendation
+  Truth --> Recommendation
+  Rebuild --> Recommendation
+```
+
+---
+
+## 18. Relationship to Open Problems Ledger
+
+The Scout Ledger often starts with an open problem.
+
+Example:
+
+```text
+Open Problem:
+Allowed-to-know constraint not implemented.
+
+Scout:
+Evaluate transcript fact provenance patterns.
+
+Decision:
+Adopt Client Box-level `allowed_to_use.json`.
+```
+
+A scout without a problem or opportunity can still exist, but it should justify why it matters.
+
+---
+
+## 19. Relationship to Decisions Ledger
+
+Scouting does not decide.
+
+It recommends.
+
+When a scout results in adoption or rejection with future impact, create a Decision record.
+
+Example:
+
+```text
+Scout recommendation:
+Use Mermaid first.
+
+Decision:
+Mermaid is first-wave visual format for ledgers.
+```
+
+Rejected choices can also become decisions if they keep coming back.
+
+---
+
+## 20. Relationship to Connections Ledger
+
+If a scout adds an external dependency, update Connections.
+
+Example:
+
+```text
+Scout:
+Evaluate Supabase.
+
+If adopted:
+Connections Ledger records Supabase service, credentials, failure modes, billing risk.
+```
+
+Do not add tools to Connections just because they were scouted.
+
+Only add active, planned, or watch dependencies with clear status.
+
+---
+
+## 21. Relationship to Reconstruction Ledger
+
+If a scout becomes an implementation pattern, add reconstruction memory.
+
+Example:
+
+```text
+Scout:
+Approval-card pattern.
+
+If adopted:
+Reconstruction Ledger records how to rebuild approval-card workflow.
+```
+
+This turns research into reusable build knowledge.
+
+---
+
+## 22. Relationship to North Star
+
+Every scout should name which North Star goal it supports.
+
+If a scout does not support a North Star goal, it may still be useful, but the reason should be explicit.
+
+This protects against tool-chasing.
+
+Example:
+
+```text
+Mermaid visual maps
+Supports:
+NS-08 Visual Comprehension
+NS-09 Agent Handoff Continuity
+NS-10 Defense as Build Work
+```
+
+---
+
+## 23. Scout Change Done Gate
+
+Update this ledger when:
+
+```markdown
+- a new tool/model/API/framework is worth evaluating
+- a research question is opened
+- a test is run
+- a candidate is rejected
+- a candidate is recommended
+- a candidate is adopted
+- a candidate is put on watch
+- a tool choice affects dependencies, settings, or source-of-truth
+- a repeated research question comes back
+```
+
+Do not update for every random interesting link.
+
+A scout entry should have project relevance.
+
+---
+
+## 24. What Opus Should Build First
+
+Give Opus this build order:
+
+```text
+1. Create /LEDGERS/SCOUT_LEDGER.md.
+2. Create /LEDGERS/SCOUT_LEDGER.json.
+3. Create /LEDGERS/SCOUT_REPORTS/ with subfolders:
+   - models
+   - tools
+   - apis
+   - frameworks
+   - workflows
+   - client_boxes
+   - visuals
+4. Add link to /LEDGERS/INDEX.md.
+5. Add link to /LEDGERS/OPEN_PROBLEMS_LEDGER.md if it exists.
+6. Add link to /LEDGERS/DECISIONS_LEDGER.md if it exists.
+7. Add link to /LEDGERS/CONNECTIONS_LEDGER.md if it exists.
+8. Create /LEDGERS/VISUALS/scout_pipeline.mmd.
+9. Create /LEDGERS/VISUALS/scout_to_decision_flow.mmd.
+10. Add Scout Entry Format.
+11. Add Scout Status Labels.
+12. Add Evaluation Criteria.
+13. Seed scout entries:
+    - Approval Card / Risk Review UI Pattern
+    - Transcript Import / Fact Provenance Pattern
+    - Mermaid vs Rich Graph Renderer
+    - Branch / PR Workflow For Agent Writes
+    - Local Meta Harness Script
+    - Model / Agent Role Split
+14. Add Tool Switching Rules.
+15. Commit with message: "Add scout ledger".
+```
+
+---
+
+## 25. Quality Bar
+
+The Scout Ledger succeeds if future agents can answer:
+
+* What are we considering?
+* Why are we considering it?
+* What problem does it solve?
+* What did we already test?
+* What did we reject?
+* What should we watch?
+* What should we adopt?
+* What would adoption cost?
+* What North Star goal does it support?
+* What new dependency would it create?
+
+It fails if:
+
+* it becomes a pile of shiny links
+* it does not tie options to real problems
+* it does not record rejection reasons
+* it recommends adoption without decisions
+* it ignores dependency/billing/security risk
+* it repeats research already done
+* it causes tool churn
+
+The Scout Ledger should make exploration disciplined and cumulative.
+
+---
+
+## 26. Final Operating Rule
+
+The Scout Ledger should end with this:
+
+```markdown
+Curiosity is good.
+
+Unremembered curiosity is churn.
+
+Scout the option.
+Record the lesson.
+Adopt only when it serves the system.
+```
+
+---
+
+

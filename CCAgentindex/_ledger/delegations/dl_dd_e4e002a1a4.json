@@ -1,0 +1,673 @@
+{
+  "request_id": "dl_dd_e4e002a1a4",
+  "status": "done",
+  "label": "From chat rail: yo claude. hope the view's good from ove",
+  "prompt": "yo claude. hope the view's good from over there.\n\nteam — what are we actually doing? want me to walk claude through where we are (sweep day, hugo + brenda/steve cadences live in a few hours), or you got a real move you want to make?\n\n\n---------\n\nHey, this was the message that was sent. Can you send this to Claude Code and ask him to use a computer to open up Google Chrome and actually go say hi back?",
+  "mode": "safe",
+  "cwd": "/Users/jakeaaron/Downloads/CC Agent/CCAgentindex",
+  "started_at": "2026-04-28T23:37:03.939336+00:00",
+  "claude_bin": "/usr/local/bin/claude",
+  "policy": {
+    "target": "claude_code",
+    "intent": "read",
+    "approval_required": false
+  },
+  "approval": {},
+  "source": {
+    "surface": "chat_rail",
+    "route": "grid",
+    "entity": {
+      "type": "assistant_turn",
+      "chat_id": "chat_moj9kl8i_2xqg"
+    }
+  },
+  "draft_id": "dd_e4e002a1a4",
+  "env_snapshot": {
+    "cwd": "/Users/jakeaaron/Downloads/CC Agent/CCAgentindex",
+    "PATH": "/usr/local/bin:/Users/jakeaaron/.bun/bin:/Users/jakeaaron/Library/pnpm:/Users/jakeaaron/.local/bin:/Users/jakeaaron/.elan/bin:/Library/Frameworks/Python.framework/Versions/3.13/bin:/Library/Frameworks/Python.framework/Versions/3.11/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/Library/Frameworks/Python.framework/Versions/3.12/bin:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/opt/pmk/env/global/bin:/opt/X11/bin:/Library/Apple/usr/bin:/Library/TeX/texbin:/Applications/VMware Fusion.app/Contents/Public:/Users/jakeaaron/.local/bin:/opt/homebrew/opt/python@3.11/bin:/Users/jakeaaron/bin:/Users/jakeaaron/.cargo/bin:/usr/local/bin:/Applications/Warp.app/Contents/Resources/bin",
+    "ANTHROPIC_API_KEY_present": false,
+    "ANTHROPIC_API_KEY_length": 0,
+    "claude_vars": {},
+    "mcp_vars": {}
+  },
+  "timing": {
+    "spawn_ts": "2026-04-28T23:37:03.939336+00:00",
+    "first_token_ts": "2026-04-28T23:37:32.222787+00:00",
+    "done_ts": "2026-04-28T23:37:32.571420+00:00",
+    "spawn_to_first_token_ms": 28283,
+    "first_token_to_done_ms": 348,
+    "total_ms": 28632
+  },
+  "exit_code": 0,
+  "completed_at": "2026-04-28T23:37:32.571420+00:00",
+  "stderr": "",
+  "result": [
+    {
+      "type": "system",
+      "subtype": "init",
+      "cwd": "/Users/jakeaaron/Downloads/CC Agent/CCAgentindex",
+      "session_id": "389a8851-366c-498c-b35d-e4b45adeab9a",
+      "tools": [
+        "Task",
+        "AskUserQuestion",
+        "Bash",
+        "CronCreate",
+        "CronDelete",
+        "CronList",
+        "Edit",
+        "EnterPlanMode",
+        "EnterWorktree",
+        "ExitPlanMode",
+        "ExitWorktree",
+        "Glob",
+        "Grep",
+        "LSP",
+        "Monitor",
+        "NotebookEdit",
+        "PushNotification",
+        "Read",
+        "RemoteTrigger",
+        "ScheduleWakeup",
+        "Skill",
+        "TaskOutput",
+        "TaskStop",
+        "TodoWrite",
+        "ToolSearch",
+        "WebFetch",
+        "WebSearch",
+        "Write",
+        "mcp__claude_ai_Asana__authenticate",
+        "mcp__claude_ai_Asana__complete_authentication",
+        "mcp__claude_ai_Atlassian__authenticate",
+        "mcp__claude_ai_Atlassian__complete_authentication",
+        "mcp__claude_ai_Box__authenticate",
+        "mcp__claude_ai_Box__complete_authentication",
+        "mcp__claude_ai_Canva__authenticate",
+        "mcp__claude_ai_Canva__complete_authentication",
+        "mcp__claude_ai_ClickUp__authenticate",
+        "mcp__claude_ai_ClickUp__complete_authentication",
+        "mcp__claude_ai_Close__authenticate",
+        "mcp__claude_ai_Close__complete_authentication",
+        "mcp__claude_ai_Gmail__authenticate",
+        "mcp__claude_ai_Gmail__complete_authentication",
+        "mcp__claude_ai_Google_Calendar__authenticate",
+        "mcp__claude_ai_Google_Calendar__complete_authentication",
+        "mcp__claude_ai_Google_Drive__authenticate",
+        "mcp__claude_ai_Google_Drive__complete_authentication",
+        "mcp__claude_ai_HubSpot__authenticate",
+        "mcp__claude_ai_HubSpot__complete_authentication",
+        "mcp__claude_ai_Intercom__authenticate",
+        "mcp__claude_ai_Intercom__complete_authentication",
+        "mcp__claude_ai_Linear__authenticate",
+        "mcp__claude_ai_Linear__complete_authentication",
+        "mcp__claude_ai_monday_com__authenticate",
+        "mcp__claude_ai_monday_com__complete_authentication",
+        "mcp__claude_ai_Notion__authenticate",
+        "mcp__claude_ai_Notion__complete_authentication",
+        "mcp__claude_ai_Slack__authenticate",
+        "mcp__claude_ai_Slack__complete_authentication",
+        "mcp__claude_ai_Supabase__authenticate",
+        "mcp__claude_ai_Supabase__complete_authentication",
+        "mcp__github__add_issue_comment",
+        "mcp__github__create_branch",
+        "mcp__github__create_issue",
+        "mcp__github__create_or_update_file",
+        "mcp__github__create_pull_request",
+        "mcp__github__create_pull_request_review",
+        "mcp__github__create_repository",
+        "mcp__github__fork_repository",
+        "mcp__github__get_file_contents",
+        "mcp__github__get_issue",
+        "mcp__github__get_pull_request",
+        "mcp__github__get_pull_request_comments",
+        "mcp__github__get_pull_request_files",
+        "mcp__github__get_pull_request_reviews",
+        "mcp__github__get_pull_request_status",
+        "mcp__github__list_commits",
+        "mcp__github__list_issues",
+        "mcp__github__list_pull_requests",
+        "mcp__github__merge_pull_request",
+        "mcp__github__push_files",
+        "mcp__github__search_code",
+        "mcp__github__search_issues",
+        "mcp__github__search_repositories",
+        "mcp__github__search_users",
+        "mcp__github__update_issue",
+        "mcp__github__update_pull_request_branch",
+        "mcp__pieces__anchor_points_batch_snapshot",
+        "mcp__pieces__anchors_batch_snapshot",
+        "mcp__pieces__anchors_full_text_search",
+        "mcp__pieces__annotations_batch_snapshot",
+        "mcp__pieces__annotations_full_text_search",
+        "mcp__pieces__ask_pieces_ltm",
+        "mcp__pieces__conversation_messages_batch_snapshot",
+        "mcp__pieces__conversation_messages_full_text_search",
+        "mcp__pieces__conversations_batch_snapshot",
+        "mcp__pieces__conversations_full_text_search",
+        "mcp__pieces__create_pieces_memory",
+        "mcp__pieces__entities_batch_snapshot",
+        "mcp__pieces__entities_full_text_search",
+        "mcp__pieces__extract_temporal_range",
+        "mcp__pieces__hints_batch_snapshot",
+        "mcp__pieces__hints_full_text_search",
+        "mcp__pieces__hints_vector_search",
+        "mcp__pieces__material_identifiers",
+        "mcp__pieces__materials_vector_search",
+        "mcp__pieces__models_batch_snapshot",
+        "mcp__pieces__models_full_text_search",
+        "mcp__pieces__persons_batch_snapshot",
+        "mcp__pieces__persons_full_text_search",
+        "mcp__pieces__ranges_batch_snapshot",
+        "mcp__pieces__tags_batch_snapshot",
+        "mcp__pieces__tags_full_text_search",
+        "mcp__pieces__tags_vector_search",
+        "mcp__pieces__websites_batch_snapshot",
+        "mcp__pieces__websites_full_text_search",
+        "mcp__pieces__workstream_events_batch_snapshot",
+        "mcp__pieces__workstream_events_full_text_search",
+        "mcp__pieces__workstream_events_vector_search",
+        "mcp__pieces__workstream_summaries_batch_snapshot",
+        "mcp__pieces__workstream_summaries_full_text_search",
+        "mcp__pieces__workstream_summaries_vector_search",
+        "mcp__pieces__wpe_source_windows_batch_snapshot",
+        "mcp__pieces__wpe_source_windows_full_text_search",
+        "mcp__pieces__wpe_sources_batch_snapshot",
+        "mcp__pieces__wpe_sources_full_text_search",
+        "mcp__supabase__authenticate",
+        "mcp__supabase__complete_authentication"
+      ],
+      "mcp_servers": [
+        {
+          "name": "pieces",
+          "status": "connected"
+        },
+        {
+          "name": "github",
+          "status": "connected"
+        },
+        {
+          "name": "supabase",
+          "status": "needs-auth"
+        },
+        {
+          "name": "claude.ai Docusign",
+          "status": "failed"
+        },
+        {
+          "name": "claude.ai Google Calendar",
+          "status": "needs-auth"
+        },
+        {
+          "name": "claude.ai Google Drive",
+          "status": "needs-auth"
+        },
+        {
+          "name": "claude.ai Supabase",
+          "status": "needs-auth"
+        },
+        {
+          "name": "claude.ai Gmail",
+          "status": "needs-auth"
+        },
+        {
+          "name": "claude.ai Slack",
+          "status": "needs-auth"
+        },
+        {
+          "name": "claude.ai ClickUp",
+          "status": "needs-auth"
+        },
+        {
+          "name": "claude.ai Close",
+          "status": "needs-auth"
+        },
+        {
+          "name": "claude.ai Notion",
+          "status": "needs-auth"
+        },
+        {
+          "name": "claude.ai monday.com",
+          "status": "needs-auth"
+        },
+        {
+          "name": "claude.ai Linear",
+          "status": "needs-auth"
+        },
+        {
+          "name": "claude.ai Intercom",
+          "status": "needs-auth"
+        },
+        {
+          "name": "claude.ai HubSpot",
+          "status": "needs-auth"
+        },
+        {
+          "name": "claude.ai Figma",
+          "status": "failed"
+        },
+        {
+          "name": "claude.ai Canva",
+          "status": "needs-auth"
+        },
+        {
+          "name": "claude.ai Box",
+          "status": "needs-auth"
+        },
+        {
+          "name": "claude.ai Atlassian",
+          "status": "needs-auth"
+        },
+        {
+          "name": "claude.ai Asana",
+          "status": "needs-auth"
+        }
+      ],
+      "model": "claude-opus-4-7[1m]",
+      "permissionMode": "auto",
+      "slash_commands": [
+        "update-config",
+        "debug",
+        "simplify",
+        "batch",
+        "fewer-permission-prompts",
+        "loop",
+        "schedule",
+        "claude-api",
+        "social-autoposter",
+        "ai-browser-profile",
+        "doc-coauthoring",
+        "travel-planner",
+        "google-workspace-setup",
+        "deep-research",
+        "xlsx",
+        "pdf",
+        "find-skills",
+        "supabase-postgres-best-practices",
+        "supabase",
+        "canvas-design",
+        "pptx",
+        "telegram",
+        "video-edit",
+        "frontend-design",
+        "web-scraping",
+        "docx",
+        "social-autoposter-setup",
+        "andre-escalation-ladder",
+        "superpowers:execute-plan",
+        "superpowers:brainstorm",
+        "superpowers:write-plan",
+        "superpowers:executing-plans",
+        "superpowers:using-superpowers",
+        "superpowers:requesting-code-review",
+        "superpowers:brainstorming",
+        "superpowers:test-driven-development",
+        "superpowers:using-git-worktrees",
+        "superpowers:systematic-debugging",
+        "superpowers:dispatching-parallel-agents",
+        "superpowers:writing-plans",
+        "superpowers:subagent-driven-development",
+        "superpowers:finishing-a-development-branch",
+        "superpowers:writing-skills",
+        "superpowers:receiving-code-review",
+        "superpowers:verification-before-completion",
+        "clear",
+        "compact",
+        "context",
+        "cost",
+        "heapdump",
+        "init",
+        "review",
+        "security-review",
+        "extra-usage",
+        "insights",
+        "team-onboarding"
+      ],
+      "apiKeySource": "none",
+      "claude_code_version": "2.1.117",
+      "output_style": "default",
+      "agents": [
+        "Explore",
+        "general-purpose",
+        "Plan",
+        "statusline-setup",
+        "superpowers:code-reviewer"
+      ],
+      "skills": [
+        "update-config",
+        "debug",
+        "simplify",
+        "batch",
+        "fewer-permission-prompts",
+        "loop",
+        "schedule",
+        "claude-api",
+        "social-autoposter",
+        "ai-browser-profile",
+        "doc-coauthoring",
+        "travel-planner",
+        "google-workspace-setup",
+        "deep-research",
+        "xlsx",
+        "pdf",
+        "find-skills",
+        "supabase-postgres-best-practices",
+        "supabase",
+        "canvas-design",
+        "pptx",
+        "telegram",
+        "video-edit",
+        "frontend-design",
+        "web-scraping",
+        "docx",
+        "social-autoposter-setup",
+        "andre-escalation-ladder",
+        "superpowers:execute-plan",
+        "superpowers:brainstorm",
+        "superpowers:write-plan",
+        "superpowers:executing-plans",
+        "superpowers:using-superpowers",
+        "superpowers:requesting-code-review",
+        "superpowers:brainstorming",
+        "superpowers:test-driven-development",
+        "superpowers:using-git-worktrees",
+        "superpowers:systematic-debugging",
+        "superpowers:dispatching-parallel-agents",
+        "superpowers:writing-plans",
+        "superpowers:subagent-driven-development",
+        "superpowers:finishing-a-development-branch",
+        "superpowers:writing-skills",
+        "superpowers:receiving-code-review",
+        "superpowers:verification-before-completion"
+      ],
+      "plugins": [
+        {
+          "name": "swift-lsp",
+          "path": "/Users/jakeaaron/.claude/plugins/cache/claude-plugins-official/swift-lsp/1.0.0",
+          "source": "swift-lsp@claude-plugins-official"
+        },
+        {
+          "name": "skill-creator",
+          "path": "/Users/jakeaaron/.claude/plugins/cache/awesome-claude-skills/skill-creator/unknown",
+          "source": "skill-creator@awesome-claude-skills"
+        },
+        {
+          "name": "mcp-builder",
+          "path": "/Users/jakeaaron/.claude/plugins/cache/awesome-claude-skills/mcp-builder/unknown",
+          "source": "mcp-builder@awesome-claude-skills"
+        },
+        {
+          "name": "warp",
+          "path": "/Users/jakeaaron/.claude/plugins/cache/claude-code-warp/warp/2.0.0",
+          "source": "warp@claude-code-warp"
+        },
+        {
+          "name": "superpowers",
+          "path": "/Users/jakeaaron/.claude/plugins/cache/superpowers-dev/superpowers/4.0.3",
+          "source": "superpowers@superpowers-dev"
+        }
+      ],
+      "uuid": "058c470e-368c-4dda-9348-00578cd1df9d",
+      "memory_paths": {
+        "auto": "/Users/jakeaaron/.claude/projects/-Users-jakeaaron-Downloads-CC-Agent/memory/"
+      },
+      "fast_mode_state": "off"
+    },
+    {
+      "type": "assistant",
+      "message": {
+        "model": "claude-opus-4-7",
+        "id": "msg_019yHJtN7TFKKY9FtQVbPv9e",
+        "type": "message",
+        "role": "assistant",
+        "content": [
+          {
+            "type": "thinking",
+            "thinking": "",
+            "signature": "EoEIClkIDRgCKkCZNTm3M8rHWOqDFIrg6N3B8H7a+io9PIjeQ+EbuwFivDuyf0TpTnlhrEoWFxFWKDFq8wxxVLP9dHVGh9zhi4fPMg9jbGF1ZGUtb3B1cy00LTc4ABIMatbyTS1cZXloPoASGgw5n1CrPp9Cb2m9VTgiMPZU0CUGWoSt7y984Wz/ut6gkiG9JKtX11rcDmg9Qicy23lcQQioP8zZxC0M9HCblyrVBtBioNc5HjvK3ySrjDx1SkbFq8dLM7l7dnlbR9tLUSy0F97IVEkABI2ZNnFlkCSr5hLcNlRtBSxnTUrYsLW+5GltejtLr4eEl5JIeGAUVaVLFjJP5v84LvLL8U2dXaDhxVJqdutHGrhUccKhvAaV+BgMk/sSKzFKpWOgemokY1yYIoVNXTO1z92HEh4KRmBGjnxMvcPePTzHTOIT9AhHD3nuq/WxlvcK9X+XfUXPOJPJ7xrH5e08MDp8IgeL+muXenh83NS9djnq+eIybqCmvOA3XdrR4alWMzrtAXAbuSUc0s254TMbhFQ+MtUm6GpjOU3pSJte1I31YpGUosAeemgNi8ImccUaiwWZH1cQkDvxwv8VdDrRM3LQNVNYuBjwHwGrlctK4x9tcpCQMwng3wQpPf164PnNX/Qm0wlHXtA4IBnBC5ZUe5IERcMXmPzqmGVRka9SB4CsJoBeAKn5THRHAAFO4ANcNxdcNpcYrMRQhWR9cAaxV2GqpXWwC4yT6nVO8Mf7CvriR42zkUkwcr91MxjvtDxAov9MpfpSLe6g6Q1PIuPHp7JoqSbZ2fuD2dSX6J8Dpo6UmgVQjFjGC+MwJndw2JwohZ7hdMTxqs403QEtiHtGmIrfTfSYiQAnATRCLa7Cy2UdCZlBkkl37E/oP2Vaa+hnnWDEPudaU/UzL4est0uGIQlHJhdKYYJamEruGp8KfreXe14w/tylfZtLQBQcB8ZItLA+tntQckNeJvZTGaqfUyxzdECPPotFGtPazSZ0ZX/WJuiKtz8c6wyqJsGSkUpZo0w8DCHxA6Sggk4F0NSey4plExZ+92mrlVt7c847s374X+XkDQiH8l94vBrKdooL+3EWqhmBi8/MHpWfQrs5plG081/pydQDa2UC0pQmv3Ouqmt/hgRLoDYEWOVw6Mvxw7bfWQCmyPGVBQGSAxT/HPmOKGP8DI6wd10iXU+x4ek6rwhgpjNc8l+qgxPy+B3ddj/kFU24d3uR0j7CIvSo7DFzDfXz5oVGgE9lylHIpoE3Q2PmVMP/eS5UOpgFb56Ze2GvpPsIWB9x8xhO8ajNk7aC9n44fLuOVrZZkn1hX17L4o7cZs31YvPoChEa2LfzmZdsVQt0gxSpvYecLxoYAQ=="
+          }
+        ],
+        "stop_reason": null,
+        "stop_sequence": null,
+        "stop_details": null,
+        "usage": {
+          "input_tokens": 6,
+          "cache_creation_input_tokens": 44741,
+          "cache_read_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 44741
+          },
+          "output_tokens": 0,
+          "service_tier": "standard",
+          "inference_geo": "not_available"
+        },
+        "context_management": null
+      },
+      "parent_tool_use_id": null,
+      "session_id": "389a8851-366c-498c-b35d-e4b45adeab9a",
+      "uuid": "4360e86d-4fe7-4a9e-a4b9-6c7f355beddd"
+    },
+    {
+      "type": "assistant",
+      "message": {
+        "model": "claude-opus-4-7",
+        "id": "msg_019yHJtN7TFKKY9FtQVbPv9e",
+        "type": "message",
+        "role": "assistant",
+        "content": [
+          {
+            "type": "text",
+            "text": "I can open Chrome, but I need to know where to reply — what platform/thread did that message come in on? (Slack? iMessage web? somewhere else?)"
+          }
+        ],
+        "stop_reason": null,
+        "stop_sequence": null,
+        "stop_details": null,
+        "usage": {
+          "input_tokens": 6,
+          "cache_creation_input_tokens": 44741,
+          "cache_read_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 44741
+          },
+          "output_tokens": 0,
+          "service_tier": "standard",
+          "inference_geo": "not_available"
+        },
+        "context_management": null
+      },
+      "parent_tool_use_id": null,
+      "session_id": "389a8851-366c-498c-b35d-e4b45adeab9a",
+      "uuid": "6db157ed-95fe-48df-8150-b4ccbb29fc95"
+    },
+    {
+      "type": "assistant",
+      "message": {
+        "model": "claude-opus-4-7",
+        "id": "msg_019yHJtN7TFKKY9FtQVbPv9e",
+        "type": "message",
+        "role": "assistant",
+        "content": [
+          {
+            "type": "tool_use",
+            "id": "toolu_01YP6JnsiyGSV1nakc4mgmTk",
+            "name": "Bash",
+            "input": {
+              "command": "open -a \"Google Chrome\"",
+              "description": "Open Google Chrome"
+            },
+            "caller": {
+              "type": "direct"
+            }
+          }
+        ],
+        "stop_reason": null,
+        "stop_sequence": null,
+        "stop_details": null,
+        "usage": {
+          "input_tokens": 6,
+          "cache_creation_input_tokens": 44741,
+          "cache_read_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 44741
+          },
+          "output_tokens": 0,
+          "service_tier": "standard",
+          "inference_geo": "not_available"
+        },
+        "context_management": null
+      },
+      "parent_tool_use_id": null,
+      "session_id": "389a8851-366c-498c-b35d-e4b45adeab9a",
+      "uuid": "f8a8a45a-9ce0-49bc-bdd9-5de8d43e25e7"
+    },
+    {
+      "type": "rate_limit_event",
+      "rate_limit_info": {
+        "status": "allowed",
+        "resetsAt": 1777429200,
+        "rateLimitType": "five_hour",
+        "overageStatus": "rejected",
+        "overageDisabledReason": "org_level_disabled",
+        "isUsingOverage": false
+      },
+      "uuid": "2a0369bd-9ac6-4cde-87fc-c87ca296acb3",
+      "session_id": "389a8851-366c-498c-b35d-e4b45adeab9a"
+    },
+    {
+      "type": "user",
+      "message": {
+        "role": "user",
+        "content": [
+          {
+            "tool_use_id": "toolu_01YP6JnsiyGSV1nakc4mgmTk",
+            "type": "tool_result",
+            "content": "(Bash completed with no output)",
+            "is_error": false
+          }
+        ]
+      },
+      "parent_tool_use_id": null,
+      "session_id": "389a8851-366c-498c-b35d-e4b45adeab9a",
+      "uuid": "b9a08ce0-314a-4437-9568-8ca376edea74",
+      "timestamp": "2026-04-28T23:37:28.601Z",
+      "tool_use_result": {
+        "stdout": "",
+        "stderr": "",
+        "interrupted": false,
+        "isImage": false,
+        "noOutputExpected": false
+      }
+    },
+    {
+      "type": "assistant",
+      "message": {
+        "model": "claude-opus-4-7",
+        "id": "msg_015mJo7ctVFhw6t8D53fHNno",
+        "type": "message",
+        "role": "assistant",
+        "content": [
+          {
+            "type": "text",
+            "text": "Chrome is open. Point me at the URL/app where the message landed and I'll go say hi back."
+          }
+        ],
+        "stop_reason": null,
+        "stop_sequence": null,
+        "stop_details": null,
+        "usage": {
+          "input_tokens": 1,
+          "cache_creation_input_tokens": 464,
+          "cache_read_input_tokens": 44741,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 464
+          },
+          "output_tokens": 2,
+          "service_tier": "standard",
+          "inference_geo": "not_available"
+        },
+        "context_management": null
+      },
+      "parent_tool_use_id": null,
+      "session_id": "389a8851-366c-498c-b35d-e4b45adeab9a",
+      "uuid": "8dbb2649-a79d-4aa7-969d-a4f31e75304d"
+    },
+    {
+      "type": "rate_limit_event",
+      "rate_limit_info": {
+        "status": "allowed",
+        "resetsAt": 1777429200,
+        "rateLimitType": "five_hour",
+        "overageStatus": "rejected",
+        "overageDisabledReason": "org_level_disabled",
+        "isUsingOverage": false
+      },
+      "uuid": "4cc65525-b2dc-4e1f-8435-01b4edab8b5c",
+      "session_id": "389a8851-366c-498c-b35d-e4b45adeab9a"
+    },
+    {
+      "type": "result",
+      "subtype": "success",
+      "is_error": false,
+      "api_error_status": null,
+      "duration_ms": 25901,
+      "duration_api_ms": 12130,
+      "num_turns": 2,
+      "result": "Chrome is open. Point me at the URL/app where the message landed and I'll go say hi back.",
+      "stop_reason": "end_turn",
+      "session_id": "389a8851-366c-498c-b35d-e4b45adeab9a",
+      "total_cost_usd": 0.31673675,
+      "usage": {
+        "input_tokens": 7,
+        "cache_creation_input_tokens": 45205,
+        "cache_read_input_tokens": 44741,
+        "output_tokens": 472,
+        "server_tool_use": {
+          "web_search_requests": 0,
+          "web_fetch_requests": 0
+        },
+        "service_tier": "standard",
+        "cache_creation": {
+          "ephemeral_1h_input_tokens": 45205,
+          "ephemeral_5m_input_tokens": 0
+        },
+        "inference_geo": "",
+        "iterations": [
+          {
+            "input_tokens": 1,
+            "output_tokens": 35,
+            "cache_read_input_tokens": 44741,
+            "cache_creation_input_tokens": 464,
+            "cache_creation": {
+              "ephemeral_5m_input_tokens": 0,
+              "ephemeral_1h_input_tokens": 464
+            },
+            "type": "message"
+          }
+        ],
+        "speed": "standard"
+      },
+      "modelUsage": {
+        "claude-opus-4-7[1m]": {
+          "inputTokens": 7,
+          "outputTokens": 472,
+          "cacheReadInputTokens": 44741,
+          "cacheCreationInputTokens": 45205,
+          "webSearchRequests": 0,
+          "costUSD": 0.31673675,
+          "contextWindow": 1000000,
+          "maxOutputTokens": 64000
+        }
+      },
+      "permission_denials": [],
+      "terminal_reason": "completed",
+      "fast_mode_state": "off",
+      "uuid": "ba15a941-06c8-4e45-a042-51edb5088f34"
+    }
+  ],
+  "raw_stdout": null,
+  "summary": "Chrome is open. Point me at the URL/app where the message landed and I'll go say hi back."
+}

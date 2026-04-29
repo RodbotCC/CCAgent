@@ -1,0 +1,572 @@
+{
+  "ledger_type": "communications",
+  "version": "0.1.0",
+  "last_updated": "2026-04-29",
+  "status": "active",
+  "maintainer": "Jake / Comeketo Agent project agents",
+  "core_rule": "If a future agent needs to hear it, leave it where they can find it.",
+  "steward_agent": {
+    "status": "not_yet_authored",
+    "future_canonical_path": "Subagent Boxes/communications_subagent_package/",
+    "future_runnable_path": "CCAgentindex/agents/communications_steward/",
+    "phase_when_built": "Phase B (Sub-agents)"
+  },
+  "id_format": "COMM-YYYY-MM-DD-###",
+  "communication_types": [
+    "handoff",
+    "warning",
+    "preference",
+    "lesson",
+    "attempt",
+    "boundary",
+    "coordination",
+    "review-note",
+    "local-context",
+    "git-note"
+  ],
+  "section_map": {
+    "1": "Purpose",
+    "2": "Communication Entry Format",
+    "3": "Communication Types",
+    "4": "Active Handoff Notes",
+    "5": "Warnings To Future Agents",
+    "6": "Human Preferences / Working Style Notes",
+    "7": "Lessons Learned",
+    "8": "Attempted / Abandoned Work Notes",
+    "9": "Cross-System Coordination Notes",
+    "10": "Archived Communications",
+    "11": "Visualization Index",
+    "12": "Update Rules",
+    "13": "Relationships To Other Ledgers",
+    "14": "Quality Bar",
+    "15": "Final Operating Rule"
+  },
+  "active_entries": [
+    {
+      "id": "COMM-2026-04-28-001",
+      "title": "Ledger Build Rhythm",
+      "section": 4,
+      "date": "2026-04-28",
+      "from": "User (Jake)",
+      "to": "Future agents / Opus",
+      "types": [
+        "handoff",
+        "preference"
+      ],
+      "status": "promoted_to_decisions_ledger",
+      "priority": "high",
+      "affected_systems": [
+        "ledgers",
+        "agent workflow"
+      ],
+      "related_ledgers": [
+        "INDEX.md"
+      ],
+      "promote_when": "rhythm changes (e.g., parallelization is approved)",
+      "message": "Build ledger outlines and implementations one at a time. The user types P (or sends the next ledger spec as an upload) to proceed to the next ledger.",
+      "suggested_action": "Continue ledger work in order. Do not skip ahead. Do not batch.",
+      "expiry_review": "Review after first wave of ledgers is implemented (likely Phase 8-10).",
+      "promoted_to": "DEC-2026-04-28-008",
+      "promoted_on": "2026-04-29",
+      "archive_after": "one full session cycle per Communications Ledger Section 12"
+    },
+    {
+      "id": "COMM-2026-04-28-002",
+      "title": "Client Box Cleanup Rhythm",
+      "section": 4,
+      "date": "2026-04-28",
+      "from": "User (Jake)",
+      "to": "Future agents",
+      "types": [
+        "handoff",
+        "preference"
+      ],
+      "status": "active",
+      "priority": "high",
+      "affected_systems": [
+        "Client Boxes",
+        "inbox automation",
+        "guardrails"
+      ],
+      "related_ledgers": [
+        "OPEN_PROBLEMS_LEDGER.md (PROB-002)",
+        "per-Box ledgers"
+      ],
+      "promote_when": "client-box audit pattern formalizes (Decisions Ledger candidate)",
+      "message": "Client Box audits should happen one box at a time. Read the box (including 01b_comms_verbatim.md), report findings, clean if approved, leave an audit marker, then proceed.",
+      "suggested_action": "For each box, check comms, state, profile, seven-day plan, alerts, ledger, guardrails, calendar drift, risky commitments, enrichment boundary, and plan validity. Brenda & Steve is the template.",
+      "expiry_review": "Downgrade when all 28 active Client Boxes have been audited."
+    },
+    {
+      "id": "COMM-2026-04-28-003",
+      "title": "Brenda & Steve Fee-Waiver Lesson",
+      "section": 4,
+      "date": "2026-04-28",
+      "from": "User + audit session",
+      "to": "Future agents",
+      "types": [
+        "lesson",
+        "warning"
+      ],
+      "status": "promoted_to_decisions_ledger",
+      "priority": "high",
+      "affected_systems": [
+        "Client Boxes",
+        "approval flow",
+        "inbox automation"
+      ],
+      "related_ledgers": [
+        "OPEN_PROBLEMS_LEDGER.md (PROB-003)",
+        "DECISIONS_LEDGER.md (DEC-2026-04-28-005)"
+      ],
+      "promote_when": "approval-card workflow exists -> promote to Decisions",
+      "message": "The Brenda & Steve fee-waiver move may have been strategically correct, but it was too risky to be hidden inside a rushed batch approval flow. Future risky moves should be isolated and explicitly approved.",
+      "suggested_action": "When a plan contains fee waivers, no-charge language, discounts, guest-count promises, pricing commitments, or enrichment-based personalization, convert it into an approval-required card or flatten the copy.",
+      "expiry_review": "Review after approval-card workflow exists in the automation page.",
+      "promoted_to": "DEC-2026-04-28-005",
+      "promoted_on": "2026-04-29",
+      "archive_after": "one full session cycle per Communications Ledger Section 12"
+    },
+    {
+      "id": "COMM-2026-04-29-002",
+      "title": "Cleanup Phase, Not Greenfield (Build Arc Context)",
+      "section": 4,
+      "date": "2026-04-29",
+      "from": "User (Jake) via Claude Code catch-up session",
+      "to": "Future agents (especially cold-starting Cowork sessions)",
+      "types": [
+        "handoff",
+        "boundary"
+      ],
+      "status": "active",
+      "priority": "high",
+      "affected_systems": [
+        "entire project - orientation"
+      ],
+      "related_ledgers": [
+        "TEMPORAL_CONTINUITY.md (Section 1)",
+        "GLOBAL_LEDGER.md (Section 2)"
+      ],
+      "promote_when": "cleanup phase ends -> Decisions Ledger entry naming the next phase",
+      "message": "The project is 3 days in, in cleanup phase, not greenfield. Build arc: plumbing-first attempt was scrapped under Rodrigo pressure -> UI rebuilt from working pieces -> automations/Boxes/Onboard Scripts authored on a heroic day, now symlinked into bedrock at Auto/ -> Ledger Phases 1-6 + first steward live. Now: cleanup. Bedrock needs triad reconciliation (PROB-016, deferred).",
+      "suggested_action": "Read this before suggesting structural changes. Defer to PROB-016 for bedrock work. Preserve Auto/ as read-mostly. Don't force greenfield patterns onto a cleanup project.",
+      "expiry_review": "Review when Phase B (sub-agents) and Phase C (Subagent Boxes) complete and bedrock reconciliation can run safely."
+    },
+    {
+      "id": "COMM-2026-04-29-003",
+      "title": "Three-Phase Build Discipline (A -> B -> C)",
+      "section": 4,
+      "date": "2026-04-29",
+      "from": "User (Jake)",
+      "to": "Future agents",
+      "types": [
+        "handoff",
+        "preference"
+      ],
+      "status": "promoted_to_decisions_ledger",
+      "priority": "high",
+      "affected_systems": [
+        "ledgers",
+        "sub-agents",
+        "bedrock"
+      ],
+      "related_ledgers": [
+        "INDEX.md",
+        "TEMPORAL_CONTINUITY.md (Section 1)"
+      ],
+      "promote_when": "phase order is settled in Decisions Ledger",
+      "message": "Phase A: finish all Ledgers (current). Phase B: finish all Sub-agents (graduate Subagent Boxes packages into runnable app agents). Phase C: build Subagent Boxes (boxes of ledgers controlled by sub-agent configurations). Do not skip ahead. Do not parallelize without explicit approval.",
+      "suggested_action": "When asked to build something with state, confirm which phase the project is in before proposing structure.",
+      "expiry_review": "Review on Phase A completion.",
+      "promoted_to": "DEC-2026-04-29-002",
+      "promoted_on": "2026-04-29",
+      "archive_after": "one full session cycle per Communications Ledger Section 12"
+    },
+    {
+      "id": "COMM-2026-04-28-004",
+      "title": "Watch For Local Git Drift",
+      "section": 5,
+      "date": "2026-04-28",
+      "from": "User + GitHub write session",
+      "to": "Future agents",
+      "types": [
+        "warning",
+        "git-note"
+      ],
+      "status": "active",
+      "priority": "high",
+      "affected_systems": [
+        "GitHub",
+        "local repo",
+        "agent writes"
+      ],
+      "related_ledgers": [
+        "TEMPORAL_CONTINUITY.md (Section 13 Current Git Posture)"
+      ],
+      "promote_when": "stable branch workflow is adopted -> archive",
+      "message": "The user may have local unpushed work while agents are writing directly to GitHub. The working tree is currently dirty with multiple sessions' uncommitted edits.",
+      "suggested_action": "Run git status before any direct GitHub write. Never force-push main. Local commits are fine if explicitly requested; pushing is Jake's call.",
+      "expiry_review": "Archive once stable branch workflow is adopted and git status is consistently clean before agent writes."
+    },
+    {
+      "id": "COMM-2026-04-28-005",
+      "title": "Plans May Predate Guardrails",
+      "section": 5,
+      "date": "2026-04-28",
+      "from": "Audit session (Brenda)",
+      "to": "Future agents",
+      "types": [
+        "warning"
+      ],
+      "status": "active",
+      "priority": "high",
+      "affected_systems": [
+        "Client Boxes",
+        "seven-day plans",
+        "scheduled fires"
+      ],
+      "related_ledgers": [
+        "OPEN_PROBLEMS_LEDGER.md (PROB-002)",
+        "per-Box ledgers"
+      ],
+      "promote_when": "all 28 boxes audited -> downgrade to lesson, then archive",
+      "message": "Some seven-day plans were written before current inbox guardrails were fully enforced. They may contain stale dates, risky commitment language, enrichment leakage, or unsafe send assumptions.",
+      "suggested_action": "Before trusting any plan, audit it against current comms (including 01b_comms_verbatim.md), state, and guardrails. Reply received -> plan is stale.",
+      "expiry_review": "Downgrade once all 28 active Client Boxes carry an Audit-cleaned line and an audit marker."
+    },
+    {
+      "id": "COMM-2026-04-29-004",
+      "title": "Bedrock Reconciliation Deferred (See PROB-016)",
+      "section": 5,
+      "date": "2026-04-29",
+      "from": "Claude Code catch-up session",
+      "to": "Future agents",
+      "types": [
+        "warning",
+        "coordination"
+      ],
+      "status": "active",
+      "priority": "high",
+      "affected_systems": [
+        "CCAgentindex/",
+        "bedrock structure"
+      ],
+      "related_ledgers": [
+        "OPEN_PROBLEMS_LEDGER.md (PROB-2026-04-28-016)"
+      ],
+      "promote_when": "ledger + sub-agent buildouts complete -> execute reconciliation, then archive",
+      "message": "CCAgentindex/ was bootstrapped on the fly before the triad philosophy was formalized. The 32-subdir layout needs triad-based reconciliation, but do not act on this yet. Reconciliation is blocked on Phase A and Phase B completion.",
+      "suggested_action": "If you notice bedrock-shaped issues, add evidence to PROB-016, not to this ledger. Communications carries the pointer; Open Problems owns the tracking.",
+      "expiry_review": "Archive when PROB-016 closes."
+    },
+    {
+      "id": "COMM-2026-04-28-006",
+      "title": "Preferred Ledger Writing Style",
+      "section": 6,
+      "date": "2026-04-28",
+      "from": "User (Jake)",
+      "to": "Future agents",
+      "types": [
+        "preference"
+      ],
+      "status": "active",
+      "priority": "medium",
+      "affected_systems": [
+        "ledgers",
+        "Opus handoff"
+      ],
+      "related_ledgers": [
+        "INDEX.md",
+        "Ledger Drafts/"
+      ],
+      "promote_when": "style guide solidifies -> Decisions Ledger entry",
+      "message": "User prefers ledger writeups that are broad, gorgeous, implementation-ready, and high-level enough that agents do not overfit to a single implementation. Outline drafts at /Ledger Drafts/ are meant to be handed to Opus for implementation.",
+      "suggested_action": "Keep ledger outlines elegant, practical, and implementation-oriented. Avoid narrow overengineering unless asked. Read the matching outline at /Ledger Drafts/<name>.txt first.",
+      "expiry_review": "Review when style guide is formalized in a Decisions Ledger entry."
+    },
+    {
+      "id": "COMM-2026-04-28-007",
+      "title": "Safe Movement Preference",
+      "section": 6,
+      "date": "2026-04-28",
+      "from": "User (Jake)",
+      "to": "Future agents",
+      "types": [
+        "preference",
+        "boundary"
+      ],
+      "status": "active",
+      "priority": "high",
+      "affected_systems": [
+        "Comeketo automation",
+        "Client Boxes",
+        "inbox work"
+      ],
+      "related_ledgers": [
+        "NORTH_STAR.md (NS-05)",
+        "OPEN_PROBLEMS_LEDGER.md (PROB-003)"
+      ],
+      "promote_when": "trust threshold is named in Decisions Ledger",
+      "message": "Comeketo (Rodrigo) wants to see automation movement, but Jake wants the early system to be careful. Prefer safe movement over aggressive cleverness while trust is being established.",
+      "suggested_action": "Flatten risky plans unless the risky move is explicitly approved. Use polite nudges, clear next-step asks, reply-aware handling, and guardrail checks.",
+      "expiry_review": "Review when explicit trust thresholds are named."
+    },
+    {
+      "id": "COMM-2026-04-29-001",
+      "title": "Triad Spine: Box + Ledger + Sub-agent",
+      "section": 6,
+      "date": "2026-04-29",
+      "from": "User (Jake) via Claude Code catch-up session",
+      "to": "Future agents",
+      "types": [
+        "preference",
+        "boundary"
+      ],
+      "status": "promoted_to_decisions_ledger",
+      "priority": "high",
+      "affected_systems": [
+        "entire project - architectural"
+      ],
+      "related_ledgers": [
+        "TEMPORAL_CONTINUITY.md (Section 1)",
+        "GLOBAL_LEDGER.md (Section 3)"
+      ],
+      "promote_when": "Decisions Ledger lands -> promote as a settled architecture decision",
+      "message": "Architectural spine is the Box + Ledger + Sub-agent triad. Anything stateful gets all three. Box = unit of state. Ledger = legible memory. Sub-agent = operator. Standing rule: legibility is more important than the build itself. Code without a corresponding Ledger entry is debt to repay.",
+      "suggested_action": "Before designing anything stateful, ask: where is the Box? where is the Ledger? where will the Sub-agent live? If any answer is 'we'll figure that out later', stop and figure it out now.",
+      "expiry_review": "Promote to Decisions Ledger when that ledger lands. Currently a Communication only because Decisions doesn't exist yet \u2014 but the rule itself is settled.",
+      "promoted_to": "DEC-2026-04-29-001",
+      "promoted_on": "2026-04-29",
+      "archive_after": "one full session cycle per Communications Ledger Section 12"
+    },
+    {
+      "id": "COMM-2026-04-28-008",
+      "title": "Plumbing-First Build Attempt",
+      "section": 8,
+      "date": "2026-04-26 to 2026-04-27",
+      "captured_on": "2026-04-29",
+      "from": "Jake (build history)",
+      "to": "Future agents",
+      "types": [
+        "attempt"
+      ],
+      "status": "abandoned (superseded by pragmatic rebuild)",
+      "priority": "medium",
+      "affected_systems": [
+        "ledgers",
+        "sub-agent scaffolding",
+        "UI"
+      ],
+      "related_ledgers": [
+        "TEMPORAL_CONTINUITY.md (Section 1)",
+        "GLOBAL_LEDGER.md (Section 2)"
+      ],
+      "promote_when": "n/a (historical context only)",
+      "what_was_attempted": "First build pass on Comeketo Agent was plumbing-first: build out ledger system and sub-agent scaffolding before user-facing UI matured.",
+      "result": "Spine work was real, but Rodrigo (Comeketo owner) needed something usable/demoable sooner than the plumbing-first plan permitted.",
+      "why_stopped": "Pressure to demo collided with the plumbing timeline. Jake scrapped the plumbing-first plan mid-stream and pivoted: rebuilt UI from working pieces, then on a heroic day via Claude Co-Work authored almost all automations/Boxes/Onboard Scripts in a separate folder (now symlinked into bedrock at Auto/).",
+      "future_agents_should_know": [
+        "Bedrock layout (CCAgentindex/) carries the bootstrapped-era 32-subdir shape from this attempt. PROB-016 owns the eventual reconciliation.",
+        "Six bedrock subdirs are aliases into Auto/: Boxes, Client Boxes, Staff Boxes, comeketo-inbox, Onboard Scripts, orchestrator. This was the salvage path from the pivot.",
+        "The 5 draft sub-agent packages at /Subagent Boxes/ are surviving plumbing-first work. They are the Phase B starting point \u2014 not greenfield.",
+        "Lesson is not 'plumbing-first is wrong.' Lesson is that owner pressure can collide with depth-first plans, and the rebuild should preserve as much of the prior spine as possible."
+      ]
+    }
+  ],
+  "lessons_learned": [
+    {
+      "id": "LESSON-sitting-there-is-state",
+      "section": 7,
+      "title": "Sitting There Is State",
+      "summary": "Silence, waiting, holding, and watching are not absence. They are states. Future systems should represent waiting states explicitly.",
+      "applies_to": [
+        "Client Boxes",
+        "scheduled fires",
+        "reply gates",
+        "plan validity",
+        "temporal continuity"
+      ],
+      "encoded_in": "TEMPORAL_CONTINUITY.md Section 14 (Inactivity As State)"
+    },
+    {
+      "id": "LESSON-automation-can-be-personal",
+      "section": 7,
+      "title": "Automation Can Become More Personal",
+      "summary": "The goal is not generic drip automation. The goal is automation that remembers what people said, respects their context, and helps Andre show up prepared. Wholesome enrichment is allowed for internal understanding. Creepy personalization is not.",
+      "applies_to": [
+        "Comeketo automation",
+        "Client Boxes",
+        "inbox work"
+      ],
+      "encoded_in": "NORTH_STAR.md Section 6 (Wholesome Enrichment principle)",
+      "enforcement_blocked_by": "PROB-001 (Allowed-To-Know Constraint Not Implemented)"
+    },
+    {
+      "id": "LESSON-wholesome-vs-creepy",
+      "section": 7,
+      "title": "Wholesome Enrichment vs Creepy Personalization",
+      "summary": "Enrichment is allowed for internal strategy. It is not customer-facing. Customer-facing copy must use only facts found in comms or with explicit operator approval.",
+      "allowed_sources_for_customer_copy": [
+        "01_comms.md",
+        "01b_comms_verbatim.md",
+        "comms/*.json",
+        "00_meta.json",
+        "client_ledger.md",
+        "approved operator notes",
+        "explicit operator approval for one-off uses"
+      ],
+      "internal_only_sources": [
+        "04_profile.md",
+        "*_enrichment.md"
+      ]
+    },
+    {
+      "id": "COMM-2026-04-29-005",
+      "section": 7,
+      "title": "TCL/GL Drift Is The Failure Mode",
+      "date": "2026-04-29",
+      "from": "User (Jake)",
+      "types": [
+        "lesson",
+        "preference"
+      ],
+      "status": "promoted_to_decisions_ledger",
+      "priority": "critical",
+      "affected_systems": [
+        "Temporal Continuity Ledger",
+        "Global Ledger",
+        "every cold-starting agent"
+      ],
+      "summary": "Cold-starting agents read TCL and Global Ledger first. If those ledgers are stale, every agent that boots from them is stale. The fix is discipline: whoever does the work also updates the orientation surface in the same unit of work.",
+      "jake_exact_words": "The ledger is more important than the actual work. Literally everything needs to be ledgered.",
+      "suggested_action": "Treat TCL and Global Ledger updates as part of the change, not an optional epilogue. Update header dates. Append to Section 3 Recent Meaningful Changes. Update Section 1 Current Snapshot if anything structural changed.",
+      "expiry_review": "Does not expire. This is the meta-rule that keeps every other ledger usable.",
+      "promoted_to": "DEC-2026-04-29-003",
+      "promoted_on": "2026-04-29",
+      "archive_after": "one full session cycle per Communications Ledger Section 12"
+    }
+  ],
+  "cross_system_notes": [
+    {
+      "id": "CROSS-client-box-state-flow",
+      "section": 9,
+      "title": "Client Box State Flow",
+      "summary": "Client comms feed state. State affects plan validity. Plan validity affects scheduled fires. Scheduled fires must obey guardrails. Boxes UI displays state but does not own it.",
+      "systems_involved": [
+        "Close (canonical comms source)",
+        "Client Boxes (Auto/Client Boxes/<Name>/)",
+        "comms_state_sweep (planned automation)",
+        "Inbox guardrails (Auto/comeketo-inbox/, Guardrails.html, comeketo-guardrails-agent.md)",
+        "Scheduled fires (CCAgentindex/triggers/)",
+        "Boxes UI page (screens.jsx::BoxesScreen)",
+        "Ledgers"
+      ],
+      "authority_order_for_client_truth": [
+        "01b_comms_verbatim.md",
+        "01_comms.md",
+        "00_meta.json",
+        "client_ledger.md",
+        "approved operator notes",
+        "profile/enrichment (internal-only)"
+      ],
+      "may_become": [
+        "Source-of-Truth Ledger entry",
+        "Asset/Widget Map entry"
+      ]
+    },
+    {
+      "id": "CROSS-page-work-done-gate",
+      "section": 9,
+      "title": "Page Work Done Gate",
+      "summary": "Any page, route, or page data-binding change must update page_asset_sitemap.md in the same unit of work. UI Done Gate.",
+      "defined_in": "CLAUDE.md Section 5.5",
+      "enforced_by": "GLOBAL_LEDGER.md Section 4.7",
+      "surviving_routes": [
+        "grid",
+        "settings",
+        "leads",
+        "clients",
+        "coworkers",
+        "contacts",
+        "briefing",
+        "activity",
+        "automation",
+        "intake",
+        "analytics"
+      ]
+    }
+  ],
+  "archived_entries": [],
+  "promotion_paths": {
+    "settled_rule": "Decisions Ledger (when it lands)",
+    "unresolved_problem": "Open Problems Ledger",
+    "local_context": "the relevant Box",
+    "north_star_principle": "North Star Ledger",
+    "source_of_truth_statement": "Source-of-Truth Ledger (when it lands)"
+  },
+  "archive_policy": {
+    "archive_when": [
+      "warning no longer applies",
+      "handoff completed",
+      "preference promoted to decision",
+      "issue moved to Open Problems",
+      "context moved into local Box",
+      "lesson became a North Star principle"
+    ],
+    "archive_format": "leave entry in place with status='promoted' or 'archived' and a closing line: 'Archived: YYYY-MM-DD - <reason>'"
+  },
+  "visuals": [
+    {
+      "name": "handoff_flow",
+      "path": "LEDGERS/VISUALS/handoff_flow.mmd",
+      "purpose": "Decision tree for routing important context to the correct ledger"
+    },
+    {
+      "name": "communication_lifecycle",
+      "path": "LEDGERS/VISUALS/communication_lifecycle.mmd",
+      "purpose": "Active -> Resolved? -> Promote/Archive flow"
+    },
+    {
+      "name": "communications_timeline",
+      "path": "LEDGERS/VISUALS/communications_timeline.mmd",
+      "purpose": "Chronological view of seeded entries"
+    }
+  ],
+  "counts": {
+    "active_handoff_notes": 5,
+    "warnings": 3,
+    "preferences": 3,
+    "lessons": 4,
+    "attempts_abandoned": 1,
+    "cross_system_notes": 2,
+    "archived": 0,
+    "total_seeded_entries": 18
+  },
+  "promotion_log": [
+    {
+      "comm_id": "COMM-2026-04-28-001",
+      "promoted_to": "DEC-2026-04-28-008",
+      "promoted_on": "2026-04-29"
+    },
+    {
+      "comm_id": "COMM-2026-04-28-003",
+      "promoted_to": "DEC-2026-04-28-005",
+      "promoted_on": "2026-04-29"
+    },
+    {
+      "comm_id": "COMM-2026-04-29-001",
+      "promoted_to": "DEC-2026-04-29-001",
+      "promoted_on": "2026-04-29"
+    },
+    {
+      "comm_id": "COMM-2026-04-29-003",
+      "promoted_to": "DEC-2026-04-29-002",
+      "promoted_on": "2026-04-29"
+    },
+    {
+      "comm_id": "COMM-2026-04-29-005",
+      "promoted_to": "DEC-2026-04-29-003",
+      "promoted_on": "2026-04-29"
+    }
+  ]
+}

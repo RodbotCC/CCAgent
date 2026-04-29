@@ -1,0 +1,1091 @@
+# Asset / Widget Map Ledger — Project-Wide Implementation Outline
+
+## 0. Purpose
+
+The **Asset / Widget Map Ledger** explains how visible product surfaces connect to the underlying system.
+
+It maps pages, widgets, panels, routes, APIs, stores, models, files, side effects, generated state, and source-of-truth dependencies.
+
+This is one of the most important ledgers for UI-heavy builds.
+
+The uploaded ledger plan says this ledger should track pages, widgets, panels, routes, APIs, servers, models, tools, stores, sources of truth, side effects, and dependencies. It should answer what renders where, what data each surface reads or writes, what breaks if it changes, and what other widgets depend on it. 
+
+The project already has an early version of this idea in the **Comeketo Page-Asset Source Of Truth** file. That file maps route names, primary screen components, assets on each page, API ownership, side effects, change checklists, and history. It also defines a mandatory Done Gate for page, route, and page data-binding changes. 
+
+The Asset / Widget Map Ledger should not replace that sitemap.
+
+It should **promote it into a richer, project-wide dependency system**.
+
+---
+
+# 1. Core Operating Principle
+
+The Asset / Widget Map Ledger should enforce this rule:
+
+> A visible surface is not just UI. It is a contract between render, data, state, source truth, and side effects.
+
+A widget is dangerous when no one knows:
+
+* where it renders
+* what owns it
+* what data it reads
+* what data it writes
+* what API it calls
+* what state it mutates
+* what source of truth it trusts
+* what side effects it can trigger
+* what breaks if it changes
+
+This ledger makes visible surfaces traceable.
+
+The goal is not to create pretty diagrams.
+
+The goal is to prevent hidden dependency bugs.
+
+---
+
+# 2. Recommended Location
+
+Create it in the central ledger directory:
+
+```text id="n01bf5"
+/LEDGERS/
+  ASSET_WIDGET_MAP.md
+  ASSET_WIDGET_MAP.json
+  INDEX.md
+  VISUALS/
+    page_widget_map.mmd
+    widget_dependency_graph.mmd
+    route_api_dataflow.mmd
+```
+
+Recommended final path:
+
+```text id="kdtnuz"
+/LEDGERS/ASSET_WIDGET_MAP.md
+/LEDGERS/ASSET_WIDGET_MAP.json
+```
+
+The existing page-asset sitemap should either remain at its current location and be linked from here, or be moved only if the user explicitly wants that. For now, **link to it, do not replace it.**
+
+---
+
+# 3. Role in the Ledger System
+
+The Asset / Widget Map Ledger sits between UI implementation and source-of-truth discipline.
+
+```text id="suafky"
+Global Ledger
+  └── What is the project?
+
+File Directory Ledger
+  └── Where do UI/app files live?
+
+File Contents Ledger
+  └── What do app.jsx, screens.jsx, server.py, etc. do?
+
+Asset / Widget Map Ledger
+  └── What pages/widgets exist?
+  └── What renders where?
+  └── What data/APIs/sources/side effects connect to each surface?
+
+Page Ledgers
+  └── Local memory for a single page
+
+Widget Ledgers
+  └── Local memory for high-risk widgets
+```
+
+This ledger is the bridge between “files” and “product behavior.”
+
+---
+
+# 4. What This Ledger Owns
+
+## Owns
+
+* route-to-page map
+* page-to-component map
+* page-to-widget map
+* widget ownership
+* widget data dependencies
+* widget write/side-effect dependencies
+* page API dependencies
+* source-of-truth links
+* generated vs canonical data notes
+* page/widget risk notes
+* cross-widget dependencies
+* visual dependency graphs
+* mandatory update rules for visible assets
+
+## Does not own
+
+* every tiny DOM element
+* every CSS class
+* all implementation details
+* full source-of-truth policy
+* detailed file descriptions
+* all API endpoint documentation
+* every local page bug
+* full task tracking
+
+Those belong in code, styles, File Contents Ledger, Source-of-Truth Ledger, Page Ledgers, Widget Ledgers, and Open Problems Ledger.
+
+The Asset / Widget Map Ledger should capture **meaningful product surfaces**, not every div.
+
+---
+
+# 5. Recommended `ASSET_WIDGET_MAP.md` Structure
+
+Use stable headings:
+
+```markdown id="iphcu9"
+# Asset / Widget Map Ledger
+
+Last updated:
+Maintainer:
+Status:
+Read when:
+Existing source:
+Core rule:
+
+## 1. Purpose
+## 2. Relationship To Page-Asset Sitemap
+## 3. Route Index
+## 4. Page Asset Map
+## 5. Widget Registry
+## 6. API / Data Dependency Map
+## 7. Source-of-Truth Links
+## 8. Side Effect Map
+## 9. Generated vs Canonical Surface Rules
+## 10. High-Risk Widgets
+## 11. Change Done Gate
+## 12. Visualization Index
+## 13. Update Rules
+```
+
+This ledger should be practical and graph-friendly.
+
+---
+
+# 6. Relationship To Existing Page-Asset Sitemap
+
+This is essential.
+
+The uploaded sitemap already gives a route index and page-by-page ownership map. It lists routes like `grid`, `settings`, `leads`, `clients`, `coworkers`, `contacts`, `venues`, `briefing`, `activity`, `automation`, `intake`, `analytics`, `delegations`, and `boxes`. It also maps each page to primary components, assets, APIs, data sources, side effects, checklists, verification dates, and history. 
+
+So the Asset / Widget Map Ledger should say:
+
+```markdown id="ufpy2i"
+## 2. Relationship To Page-Asset Sitemap
+
+The existing Comeketo Page-Asset Source Of Truth remains the operational page ownership file.
+
+This Asset / Widget Map Ledger extends that file by:
+
+- standardizing widget-level entries
+- mapping cross-page shared widgets
+- adding graph-oriented dependency views
+- linking pages/widgets to canonical source-of-truth files
+- tracking high-risk side effects
+- connecting page changes to Done Gates, audits, and source-of-truth rules
+
+Do not duplicate the sitemap line-by-line unless migrating intentionally.
+Link to it and treat it as current page-route ownership truth.
+```
+
+This avoids stale duplication.
+
+---
+
+# 7. Route Index
+
+Start by mirroring the known route list from the sitemap.
+
+```markdown id="a23l5v"
+## 3. Route Index
+
+Current App Router routes:
+
+- `grid`
+- `settings`
+- `leads`
+- `clients`
+- `coworkers`
+- `contacts`
+- `venues`
+- `briefing`
+- `activity`
+- `automation`
+- `intake`
+- `analytics`
+- `delegations`
+- `boxes`
+```
+
+Each route should eventually have:
+
+```text id="5u5hik"
+Route
+Primary component
+Primary file
+Data source
+APIs
+Side effects
+Source-of-truth notes
+Local page ledger
+```
+
+The sitemap already provides this page-level data for current routes. 
+
+---
+
+# 8. Page Asset Map
+
+Purpose: summarize pages without replacing the sitemap.
+
+Use a table:
+
+```markdown id="wnizlh"
+## 4. Page Asset Map
+
+| Page / Route | Primary Component | Render File | Main Data Sources | Main APIs | Side Effects | Source-of-Truth Notes |
+|---|---|---|---|---|---|---|
+| `grid` | `FrontPage` | `components.jsx` | `window.SECRETARY_DATA.grids`, localStorage | `/api/cells/*`, `/api/attachments/upload` | grid generation/refinement writes | page-asset sitemap owns full detail |
+| `settings` | `SettingsScreen` | `screens.jsx` | `secretary.tweaks`, status/settings APIs | `/api/status`, `/api/settings/*` | localStorage + `.env` save/clear | credentials require care |
+| `automation` | `AutomationShell` | `automation.jsx` | workflows/triggers/catalog/state | `/api/workflows/*`, `/api/triggers/*`, `/api/catalog/*` | workflow/trigger persistence | high side-effect surface |
+| `intake` | `IntakeScreen` | `screens.jsx` | reports/docs/Q&A state | `/api/reports/*`, `/api/chat/preprocess` | report/document/Q&A writes | ingestion + OCR risks |
+| `boxes` | `BoxesScreen` | `screens.jsx` | `Auto/Client Boxes`, `Auto/Staff Boxes`, orchestrator state | `/api/boxes/*` | read-only ingestion + delegation handoff | UI view; not client truth |
+```
+
+The `boxes` entry should explicitly say:
+
+```markdown id="kfn0td"
+The Boxes page is a read/display surface. It does not own canonical client truth.
+Canonical client truth lives in `Auto/Client Boxes`.
+```
+
+That lesson has come up repeatedly and should be preserved.
+
+---
+
+# 9. Widget Registry
+
+Purpose: define reusable or high-value widgets/components.
+
+Do not track every small component.
+
+Track widgets that:
+
+* render meaningful state
+* connect to APIs
+* write data
+* trigger side effects
+* are shared across pages
+* are easy to break
+* are part of the user’s mental model
+* need source-of-truth clarity
+
+Template:
+
+```markdown id="801iez"
+### `<WidgetName>`
+
+Renders on:
+Owner file:
+Owner page:
+Purpose:
+Reads:
+Writes:
+APIs:
+Side effects:
+Source of truth:
+Depends on:
+Depended on by:
+Settings:
+Risk level:
+Done Gate:
+Common mistakes:
+```
+
+Example entries:
+
+---
+
+## 9.1 `BoxesScreen`
+
+```markdown id="rd5zrf"
+### `BoxesScreen`
+
+Renders on:
+- `boxes` route
+
+Owner file:
+- `screens.jsx`
+
+Purpose:
+Single-surface dossier view over selected Client/Staff Boxes and orchestrator state.
+
+Reads:
+- `Auto/Client Boxes`
+- `Auto/Staff Boxes`
+- `Auto/orchestrator/state`
+- loader data from `mission_control_loader.js`
+
+APIs:
+- `/api/boxes/list`
+- `/api/boxes/<id>`
+- `/api/boxes/<id>/html`
+- `/api/boxes/<id>/template/<slug>`
+
+Writes:
+- no direct canonical client writes expected
+- optional delegation draft handoffs
+
+Side effects:
+- may create delegation drafts if handoff action used
+
+Source of truth:
+- Client truth: `Auto/Client Boxes`
+- Staff truth: `Auto/Staff Boxes`
+- Rendered state: `Auto/orchestrator/state`
+
+Risk level:
+High, because it can visually imply truth. Must clearly distinguish source vs generated vs display.
+
+Done Gate:
+Update page-asset sitemap for page/data-binding changes.
+Update Asset / Widget Map if source/read/write behavior changes.
+
+Common mistakes:
+- treating Boxes page as canonical client truth
+- fixing display by editing generated state instead of source box
+```
+
+The sitemap confirms the `boxes` page reads `Auto/Client Boxes`, `Auto/Staff Boxes`, and `Auto/orchestrator/state`, and uses `/api/boxes/*` endpoints. 
+
+---
+
+## 9.2 `AutomationShell`
+
+```markdown id="ohvkg4"
+### `AutomationShell`
+
+Renders on:
+- `automation` route
+
+Owner file:
+- `automation.jsx`
+
+Purpose:
+Workflow graph authoring, subagents, state, hooks, triggers, and Rodbot assistant rail.
+
+Reads:
+- workflows
+- triggers
+- catalog edges
+- agent plans/hooks/state snapshots
+
+APIs:
+- `/api/workflows/list`
+- `/api/workflows/save`
+- `/api/workflows/get`
+- `/api/triggers/list|save|delete`
+- `/api/catalog/edges/list|get|save|delete|bump_usage`
+- automation endpoints in `server.py`
+
+Writes:
+- workflow files
+- trigger files
+- plan/hook-state persistence
+- activity ledger events
+
+Side effects:
+High. Can alter workflow/trigger/automation state.
+
+Risk level:
+High.
+
+Done Gate:
+Update sitemap and widget map for workflow/API/write behavior changes.
+Update Automation/Connections/Source-of-Truth ledgers if ownership changes.
+
+Common mistakes:
+- treating a visual graph edit as harmless when it changes persisted automation behavior
+```
+
+The sitemap identifies the automation page’s tabs, workflow graph authoring, Rodbot rail, trigger/hook/state views, APIs, and persistence side effects. 
+
+---
+
+## 9.3 `DelegationsScreen`
+
+```markdown id="fz8nh2"
+### `DelegationsScreen`
+
+Renders on:
+- `delegations` route
+
+Owner file:
+- `screens.jsx`
+
+Purpose:
+Draft queue, run timeline, channel picker, approval controls, markdown final-edit flow.
+
+Reads:
+- delegation drafts
+- delegation run files
+- status API
+
+APIs:
+- `/api/delegate`
+- `/api/delegate/<id>`
+- `/api/delegations/drafts`
+- `/api/delegations/drafts/{create|update|delete|submit|rewrite|undo}`
+- `/api/status`
+
+Writes:
+- delegation draft files
+- delegation run files
+- delegation events ledger
+
+Side effects:
+Can submit or rewrite drafts and trigger target-aware write approval flows.
+
+Risk level:
+High, because it bridges human approval and external/action channels.
+
+Done Gate:
+Update sitemap, delegation ledger if created, and approval/write policy notes if behavior changes.
+```
+
+The sitemap identifies Delegations as the draft-first handoff and approval surface with channel picker cards, run timeline, final-edit preview, and write approval gates. 
+
+---
+
+## 9.4 `IntakeScreen`
+
+```markdown id="bfebj5"
+### `IntakeScreen`
+
+Renders on:
+- `intake` route
+
+Owner file:
+- `screens.jsx`
+
+Purpose:
+Report creation, multi-file ingest, document cards, Q&A, context menus, and handoff actions.
+
+Reads:
+- reports
+- uploaded documents
+- Q&A histories
+- thinking traces
+
+APIs:
+- `/api/reports/list|create|delete|get`
+- `/api/attachments/upload`
+- `/api/reports/<slug>/ingest`
+- `/api/chat/preprocess`
+- `/api/reports/<slug>/ask`
+- `/api/reports/<slug>/documents/<id>/delete`
+
+Writes:
+- reports
+- ingested document records
+- Q&A history
+- possibly delegation handoffs
+
+Risk level:
+Medium/high because ingestion changes knowledge surfaces and may involve OCR.
+
+Done Gate:
+Update sitemap and ingestion/source-of-truth notes if data flow changes.
+```
+
+The sitemap confirms this page’s reports, ingest, Q&A, document deletion, context menus, and delegations handoff behavior. 
+
+---
+
+## 9.5 Shared `Markdown` Component
+
+```markdown id="6950p9"
+### `Markdown`
+
+Renders on:
+- multiple pages and panels
+
+Owner file:
+- `components.jsx`
+
+Purpose:
+Shared markdown rendering surface using `marked` + `DOMPurify`.
+
+Reads:
+- markdown strings from pages, chat, reports, dossiers, previews
+
+Writes:
+- no direct writes
+
+Side effects:
+- render/sanitize behavior affects many pages
+
+Risk level:
+High shared dependency.
+
+Done Gate:
+Changing sanitizer/render behavior requires checking every page using markdown.
+Update File Contents Ledger and relevant Widget/Page Ledgers if behavior changes.
+
+Common mistakes:
+- changing markdown behavior for one page and breaking previews elsewhere
+```
+
+The sitemap identifies the shared markdown renderer in `components.jsx` using `marked` and `DOMPurify`. 
+
+---
+
+# 10. API / Data Dependency Map
+
+Purpose: connect visible surfaces to backend/data.
+
+Use a table:
+
+```markdown id="xa0452"
+## 6. API / Data Dependency Map
+
+| API / Data Source | Used By | Reads From | Writes To | Side Effect Risk |
+|---|---|---|---|---|
+| `/api/boxes/list` | Boxes page | Client/Staff Boxes, orchestrator state | none expected | low |
+| `/api/boxes/<id>` | Boxes page | selected box files | none expected | low |
+| `/api/workflows/save` | Automation page | workflow request body | workflow storage | high |
+| `/api/triggers/save` | Automation page | trigger request body | trigger storage | high |
+| `/api/delegations/drafts/submit` | Delegations page | draft state | delegation run / external target flow | high |
+| `/api/reports/<slug>/ingest` | Intake page | uploaded docs | report/document store | medium/high |
+| `/api/settings/mcp_credentials/save` | Settings page | credential form | `.env` allowlist | high/sensitive |
+```
+
+This should eventually be machine-readable in JSON.
+
+---
+
+# 11. Source-of-Truth Links
+
+Purpose: tie widgets to canonical data.
+
+Example:
+
+```markdown id="zq8gah"
+## 7. Source-of-Truth Links
+
+| Surface | Displayed Data | Canonical Source | Cache / Generated Surface |
+|---|---|---|---|
+| Boxes page | client dossier | `Auto/Client Boxes/<Name>/` | `/api/boxes/*`, rendered HTML |
+| Boxes page | generated state | source Client Boxes + orchestrator scripts | `Auto/orchestrator/state` |
+| Automation page | workflows | workflow storage files/API | UI graph state |
+| Intake page | reports | report storage | rendered cards/Q&A |
+| Settings page | credentials | server allowlisted `.env` values | masked UI fields |
+| Analytics page | snapshot analytics | `CCAgentindex/analytics/*.json` | charts/panels |
+```
+
+Rule:
+
+```markdown id="vp3bu2"
+If a widget displays derived data, the widget entry must point to the canonical source, not only the API response.
+```
+
+This prevents display-as-truth mistakes.
+
+---
+
+# 12. Side Effect Map
+
+Purpose: identify surfaces that mutate state.
+
+Example:
+
+```markdown id="3vtlm8"
+## 8. Side Effect Map
+
+### Low-risk display surfaces
+
+- Boxes page dossier display
+- Briefing list/body display
+- Analytics charts, if read-only
+
+### Medium-risk write surfaces
+
+- Intake report/document ingestion
+- Grid card generation/refinement
+- Q&A history persistence
+
+### High-risk write surfaces
+
+- Automation workflow/trigger saves
+- Delegation draft submit/rewrite/delete
+- Settings credential save/clear
+- Any future Close/send/action endpoint
+```
+
+Each high-risk side effect should have:
+
+```text id="6vq3vo"
+approval path
+write target
+rollback story
+ledger/audit record
+source-of-truth note
+```
+
+This is especially important for the user’s automation safety posture.
+
+---
+
+# 13. Generated vs Canonical Surface Rules
+
+Purpose: prevent UI from becoming false authority.
+
+Example:
+
+```markdown id="ew70q5"
+## 9. Generated vs Canonical Surface Rules
+
+UI surfaces may display generated or cached data.
+
+Generated display is not automatically source truth.
+
+Rules:
+
+1. If a page shows Client Box data, canonical truth remains in `Auto/Client Boxes`.
+2. If a page shows orchestrator state, check whether the state is generated.
+3. If a page shows analytics snapshots, identify the snapshot generator/source.
+4. If a page lets users write data, record where the write lands.
+5. If a page changes source-of-truth ownership, update Source-of-Truth Ledger.
+```
+
+This should be repeated in relevant Page Ledgers.
+
+---
+
+# 14. High-Risk Widgets
+
+Purpose: list widgets/panels where changes require extra caution.
+
+Initial list:
+
+```markdown id="r61f90"
+## 10. High-Risk Widgets
+
+### Automation workflow graph
+
+Risk:
+Persists workflows/triggers and can change automation behavior.
+
+### Delegation approval controls
+
+Risk:
+Can submit work to target channels or external systems.
+
+### Settings credential editor
+
+Risk:
+Writes sensitive `.env` values.
+
+### Boxes dossier view
+
+Risk:
+Can visually imply source truth and may support handoff actions.
+
+### Intake ingest/Q&A
+
+Risk:
+Creates knowledge records from uploaded documents; OCR and extraction can introduce errors.
+
+### Shared Markdown renderer
+
+Risk:
+Affects many pages and sanitization/render behavior.
+
+### Any future Close send/approval widget
+
+Risk:
+Can trigger customer-facing actions.
+```
+
+Each high-risk widget should eventually have a Widget Ledger entry.
+
+---
+
+# 15. Change Done Gate
+
+Purpose: define when this ledger/sitemap must update.
+
+Example:
+
+```markdown id="933ljg"
+## 11. Change Done Gate
+
+Update the Asset / Widget Map or page-asset sitemap when:
+
+- a route is added, removed, or renamed
+- a page changes primary component
+- a page changes data source
+- a page changes API usage
+- a page gains or loses side effects
+- a widget starts reading new data
+- a widget starts writing data
+- a widget changes source-of-truth assumptions
+- a shared widget changes behavior across pages
+- a high-risk widget changes approval/write behavior
+```
+
+For page changes, the existing sitemap rule is mandatory: page, route behavior, or data-binding changes are incomplete until the sitemap is updated. 
+
+---
+
+# 16. Recommended `ASSET_WIDGET_MAP.json` Shape
+
+The JSON file should support dashboards/checks.
+
+Example:
+
+```json id="h12k2g"
+{
+  "ledger_type": "asset_widget_map",
+  "version": "0.1.0",
+  "last_updated": "2026-04-28",
+  "source_sitemap": "Comeketo Page-Asset Source Of Truth",
+  "routes": [
+    {
+      "route": "boxes",
+      "primary_component": "BoxesScreen",
+      "owner_file": "screens.jsx",
+      "data_sources": [
+        "Auto/Client Boxes",
+        "Auto/Staff Boxes",
+        "Auto/orchestrator/state"
+      ],
+      "apis": [
+        "/api/boxes/list",
+        "/api/boxes/<id>",
+        "/api/boxes/<id>/html",
+        "/api/boxes/<id>/template/<slug>"
+      ],
+      "side_effects": [
+        "optional delegation draft handoffs"
+      ],
+      "canonical_truth": [
+        "Auto/Client Boxes",
+        "Auto/Staff Boxes"
+      ],
+      "risk_level": "high"
+    },
+    {
+      "route": "automation",
+      "primary_component": "AutomationShell",
+      "owner_file": "automation.jsx",
+      "apis": [
+        "/api/workflows/list",
+        "/api/workflows/save",
+        "/api/workflows/get",
+        "/api/triggers/list",
+        "/api/triggers/save",
+        "/api/triggers/delete"
+      ],
+      "side_effects": [
+        "workflow persistence",
+        "trigger persistence",
+        "activity ledger events"
+      ],
+      "risk_level": "high"
+    }
+  ],
+  "widgets": [
+    {
+      "id": "boxes_screen",
+      "name": "BoxesScreen",
+      "renders_on": ["boxes"],
+      "owner_file": "screens.jsx",
+      "reads": ["Auto/Client Boxes", "Auto/Staff Boxes", "Auto/orchestrator/state"],
+      "writes": ["delegation drafts only when handoff action used"],
+      "risk_level": "high",
+      "common_mistakes": [
+        "treating Boxes page as canonical client truth"
+      ]
+    }
+  ],
+  "high_risk_surfaces": [
+    "Automation workflow graph",
+    "Delegation approval controls",
+    "Settings credential editor",
+    "Boxes dossier view",
+    "Intake ingest/Q&A",
+    "Shared Markdown renderer"
+  ]
+}
+```
+
+This can later power a dependency graph or “what changes if I touch this?” tool.
+
+---
+
+# 17. Suggested Visual Layer
+
+Create:
+
+```text id="mtrmjx"
+/LEDGERS/VISUALS/page_widget_map.mmd
+/LEDGERS/VISUALS/widget_dependency_graph.mmd
+/LEDGERS/VISUALS/route_api_dataflow.mmd
+/LEDGERS/VISUALS/boxes_page_dataflow.mmd
+```
+
+Example page/widget map:
+
+```mermaid id="i4ye7o"
+flowchart TD
+  App[app.jsx Route Switch]
+
+  App --> Grid[grid / FrontPage]
+  App --> Settings[settings / SettingsScreen]
+  App --> Automation[automation / AutomationShell]
+  App --> Intake[intake / IntakeScreen]
+  App --> Delegations[delegations / DelegationsScreen]
+  App --> Boxes[boxes / BoxesScreen]
+
+  Boxes --> BoxAPI[/api/boxes/*]
+  BoxAPI --> ClientBoxes[Auto/Client Boxes]
+  BoxAPI --> StaffBoxes[Auto/Staff Boxes]
+  BoxAPI --> OrchestratorState[Auto/orchestrator/state]
+
+  Automation --> WorkflowAPI[/api/workflows/*]
+  Automation --> TriggerAPI[/api/triggers/*]
+
+  Delegations --> DelegationAPI[/api/delegations/*]
+  Intake --> ReportsAPI[/api/reports/*]
+  Settings --> SettingsAPI[/api/settings/*]
+```
+
+Example Boxes page dataflow:
+
+```mermaid id="e64t2n"
+flowchart LR
+  ClientBoxes[Auto/Client Boxes: Canonical] --> BoxesAPI[/api/boxes/*]
+  StaffBoxes[Auto/Staff Boxes: Canonical] --> BoxesAPI
+  OrchestratorState[Auto/orchestrator/state: Generated] --> BoxesAPI
+  BoxesAPI --> BoxesScreen[BoxesScreen UI]
+  BoxesScreen --> Handoff[Optional Delegation Draft Handoff]
+```
+
+Example side-effect map:
+
+```mermaid id="6m8zpi"
+flowchart TD
+  UI[User Action] --> DisplayOnly{Display Only?}
+  DisplayOnly -->|Yes| Read[Read Source/API]
+  DisplayOnly -->|No| Write{Writes State?}
+  Write -->|Yes| Gate[Check Done Gate / Approval]
+  Gate --> Store[Persist to File/API]
+  Store --> Ledger[Update Ledger / Event Log]
+```
+
+---
+
+# 18. Relationship to Page Ledgers
+
+The Asset / Widget Map Ledger gives the global map.
+
+Page Ledgers give page-specific detail.
+
+Example:
+
+```text id="5sv0ve"
+Asset / Widget Map:
+boxes page reads Client Boxes and orchestrator state.
+
+Page Ledger for boxes:
+exact UI states, empty states, error states, completeness checklist, renderer behavior, open bugs, page-specific Done Gate.
+```
+
+Do not overload the global map with every page nuance.
+
+Create Page Ledgers for pages that are:
+
+* high-value
+* high-risk
+* frequently edited
+* API-heavy
+* stateful
+* confusing
+
+Obvious candidates:
+
+```text id="pm73m1"
+boxes
+automation
+delegations
+intake
+settings
+analytics
+```
+
+---
+
+# 19. Relationship to Widget Ledgers
+
+The Asset / Widget Map should list widgets.
+
+Widget Ledgers should be created for widgets with complex behavior.
+
+Example candidates:
+
+```text id="iofehr"
+Automation workflow graph
+Delegation approval controls
+Boxes dossier renderer
+Intake ingest panel
+Settings credential editor
+Shared Markdown renderer
+```
+
+The Widget Ledger will go deeper:
+
+* exact props/state
+* UI states
+* events
+* data contracts
+* tests/checks
+* known bugs
+* local Done Gate
+
+The global Asset / Widget Map should link to those local widget ledgers when they exist.
+
+---
+
+# 20. Relationship to Source-of-Truth Ledger
+
+This ledger should not become the full source-of-truth ledger.
+
+It should point each surface to its canonical source.
+
+The Source-of-Truth Ledger will define the authority rules.
+
+Example:
+
+```text id="xligem"
+Asset / Widget Map:
+BoxesScreen reads Auto/Client Boxes through /api/boxes/*.
+
+Source-of-Truth Ledger:
+For client plan truth, trust Auto/Client Boxes/<Name>/05_seven_day_plan.md only after comms/state/guardrail audit.
+```
+
+Both are needed.
+
+One maps surface dependencies.
+The other maps truth authority.
+
+---
+
+# 21. Relationship to Done Gate
+
+The Asset / Widget Map should be wired into Definition of Done.
+
+For any meaningful page/widget change:
+
+```markdown id="bh9az6"
+Done requires:
+- page-asset sitemap updated
+- Asset / Widget Map updated if dependencies changed
+- Page Ledger updated if page behavior changed
+- Widget Ledger updated if high-risk widget behavior changed
+- Source-of-Truth Ledger updated if data authority changed
+```
+
+This keeps UI changes from becoming invisible architecture drift.
+
+---
+
+# 22. What Opus Should Build First
+
+Give Opus this build order:
+
+```text id="720a9a"
+1. Create /LEDGERS/ASSET_WIDGET_MAP.md.
+2. Create /LEDGERS/ASSET_WIDGET_MAP.json.
+3. Add link to /LEDGERS/INDEX.md.
+4. Add link to /LEDGERS/DEFINITION_OF_DONE.md if it exists.
+5. Add link to /LEDGERS/FILE_CONTENTS_LEDGER.md if it exists.
+6. Link the existing Comeketo Page-Asset Source Of Truth as the current page-route ownership source.
+7. Create /LEDGERS/VISUALS/page_widget_map.mmd.
+8. Create /LEDGERS/VISUALS/boxes_page_dataflow.mmd.
+9. Seed route list from the existing sitemap.
+10. Seed first high-risk widget entries:
+    - BoxesScreen
+    - AutomationShell
+    - DelegationsScreen
+    - IntakeScreen
+    - Shared Markdown renderer
+    - Settings credential editor
+11. Seed API/data dependency table from the existing sitemap.
+12. Add Side Effect Map.
+13. Add Generated vs Canonical Surface Rules.
+14. Commit with message: "Add asset widget map ledger".
+```
+
+Important instruction:
+
+```text id="0g24oq"
+Do not duplicate the full sitemap line-by-line.
+Reference it, extend it, and use it as the operational page ownership source unless intentionally migrating.
+```
+
+---
+
+# 23. Quality Bar
+
+The Asset / Widget Map Ledger succeeds if future agents can answer:
+
+* What pages/routes exist?
+* What component renders each page?
+* What widgets live on each page?
+* What data does each page/widget read?
+* What does each page/widget write?
+* What APIs does each surface call?
+* What side effects can the surface trigger?
+* What is the canonical source behind displayed data?
+* What breaks if this widget changes?
+* Which widgets are high-risk?
+* What map or sitemap must be updated after changes?
+
+It fails if:
+
+* it becomes stale after page changes
+* it duplicates the sitemap without adding dependency clarity
+* it maps visuals but not data/side effects
+* it ignores source-of-truth distinctions
+* it tracks too many tiny components
+* it does not flag high-risk widgets
+* agents still change UI behavior without updating maps
+
+This ledger should make the app’s visible system legible.
+
+---
+
+# 24. Final Operating Rule
+
+The Asset / Widget Map Ledger should end with this:
+
+```markdown id="do44cd"
+A widget is not just what it looks like.
+
+A widget is what it reads, what it writes, what it trusts, what it triggers, and what it can break.
+
+Map the surface.
+Map the source.
+Map the side effect.
+```
+
+---
+

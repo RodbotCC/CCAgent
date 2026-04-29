@@ -1,0 +1,1277 @@
+# File Contents Ledger — Project-Wide Implementation Outline
+
+## 0. Purpose
+
+The **File Contents Ledger** explains what important files do.
+
+The File Directory Ledger tells agents where things live.
+The Directory Configuration Ledger tells agents how to behave inside important directories.
+The File Contents Ledger tells agents what key files are responsible for.
+
+This ledger is not meant to summarize every line of code.
+
+It exists because many agent failures happen at the file level:
+
+* editing a large shared file without understanding its role
+* putting new logic into the wrong module
+* changing a source file without updating the generated output pipeline
+* editing a file that looks canonical but is actually derived
+* missing the file that should have been changed instead
+* failing to update related files after a change
+
+The uploaded ledger plan describes the File Contents Ledger as practical orientation for important files: what the file does, when it should be edited, what should not be added, what depends on it, what it depends on, and what common mistakes happen around it. 
+
+The goal is simple:
+
+> A future agent should not have to blindly grep its way into understanding.
+
+---
+
+# 1. Core Operating Principle
+
+The File Contents Ledger should enforce this rule:
+
+> Important files should have a known job.
+
+If a file is central to the system, agents should be able to quickly answer:
+
+* What does this file do?
+* Is this file source, generated, config, template, archive, or documentation?
+* When should it be edited?
+* When should it not be edited?
+* What files does it depend on?
+* What depends on it?
+* What should be updated if it changes?
+* What mistakes commonly happen around it?
+* What verification should run after changing it?
+
+This ledger is the “what is this file?” layer of the project memory system.
+
+---
+
+# 2. Recommended Location
+
+Create it in the central ledger directory:
+
+```text id="d6l1uy"
+/LEDGERS/
+  FILE_CONTENTS_LEDGER.md
+  FILE_CONTENTS_LEDGER.json
+  INDEX.md
+  VISUALS/
+    important_file_map.mmd
+    file_dependency_map.mmd
+```
+
+Recommended final path:
+
+```text id="2h2mhr"
+/LEDGERS/FILE_CONTENTS_LEDGER.md
+/LEDGERS/FILE_CONTENTS_LEDGER.json
+```
+
+The Global Ledger and File Directory Ledger should link to it.
+
+Local `BOX.md` files should point to relevant file entries when a directory contains important files.
+
+---
+
+# 3. Role in the Ledger System
+
+The File Contents Ledger sits below the Directory Configuration Ledger.
+
+```text id="0wb0p6"
+Global Ledger
+  └── What is the project?
+
+File Directory Ledger
+  └── What directories exist and what do they own?
+
+Directory Configuration Ledger / BOX.md
+  └── How do I work inside this directory?
+
+File Contents Ledger
+  └── What do the important files do?
+  └── What changes require related updates?
+```
+
+Useful mental model:
+
+```text id="vgcwe8"
+Directory Ledger = map of neighborhoods
+Directory Config = rules for each neighborhood
+File Contents Ledger = building labels and responsibility cards
+```
+
+---
+
+# 4. What This Ledger Owns
+
+## Owns
+
+* important file descriptions
+* file type/status labels
+* edit guidance
+* dependency notes
+* downstream impact notes
+* verification notes
+* “do not add here” warnings
+* source/generated/template/archive labels
+* file-level Done Gate triggers
+* common mistake notes
+* links to related ledgers/docs
+
+## Does not own
+
+* every file in the repo
+* full code documentation
+* line-by-line explanations
+* all widget dependencies
+* all API docs
+* every historical edit
+* all open bugs
+
+Those belong in code comments, Page Ledgers, Widget Ledgers, API docs, Open Problems Ledger, Audit Ledger, and local Box files.
+
+This ledger should focus on files that future agents are likely to touch or misunderstand.
+
+---
+
+# 5. Which Files Deserve Entries
+
+Do **not** create entries for every file automatically.
+
+Create File Contents Ledger entries for files that meet one or more of these conditions:
+
+```markdown id="l4skp4"
+A file deserves an entry if it:
+
+- is edited often
+- is large or crowded
+- controls routing
+- controls page rendering
+- controls server/API behavior
+- defines guardrails or policy
+- defines source-of-truth rules
+- generates output
+- is generated output that agents might accidentally edit
+- stores important configuration
+- controls automation
+- controls client state
+- is a canonical template
+- has known common mistakes
+- connects multiple systems
+- requires companion updates when changed
+```
+
+Examples likely needing entries:
+
+```text id="5jgsgm"
+app.jsx
+components.jsx
+screens.jsx
+automation.jsx
+server.py
+styles.css
+mission_control_loader.js
+delegator.js
+Secretary.html
+
+Auto/orchestrator/build.py
+Auto/orchestrator/bin/_lib.py
+Auto/orchestrator/bin/ready_check.py
+Auto/orchestrator/bin/comms_state_sweep.py
+Auto/orchestrator/bin/refresh.py
+Auto/orchestrator/bin/today.py
+Auto/orchestrator/render_lead.py
+
+Auto/comeketo-inbox/SKILL.md
+Auto/comeketo-inbox/references/guardrails.md
+Auto/comeketo-inbox/references/nepq-style.md
+Auto/comeketo-inbox/assets/menu_data.json
+Auto/comeketo-inbox/scripts/price_ballpark.py
+Auto/comeketo-inbox/scripts/render_email.py
+
+Auto/Client Boxes/<Name>/00_meta.json
+Auto/Client Boxes/<Name>/01_comms.md
+Auto/Client Boxes/<Name>/04_profile.md
+Auto/Client Boxes/<Name>/05_seven_day_plan.md
+Auto/Client Boxes/<Name>/09_andre_alerts.md
+Auto/Client Boxes/<Name>/client_ledger.md
+```
+
+For repeated patterns like Client Box files, use a **file class entry** rather than duplicating per client.
+
+---
+
+# 6. Recommended `FILE_CONTENTS_LEDGER.md` Structure
+
+Use stable headings.
+
+```markdown id="9rah22"
+# File Contents Ledger
+
+Last updated:
+Maintainer:
+Repository:
+Status:
+Read when:
+
+## 1. Purpose
+## 2. File Entry Standard
+## 3. File Status Labels
+## 4. High-Priority File Index
+## 5. File Class Entries
+## 6. Important File Entries
+## 7. Generated / Do-Not-Edit File Index
+## 8. Companion Update Rules
+## 9. Common File-Level Mistakes
+## 10. Visualization Index
+## 11. Update Rules
+```
+
+This ledger will likely become one of the most practical agent-orientation files.
+
+---
+
+# 7. File Entry Standard
+
+Each file entry should follow a consistent format.
+
+Template:
+
+```markdown id="hq0sq2"
+### `<path/to/file>`
+
+Status:
+Type:
+Owner system:
+Primary role:
+Edit when:
+Do not edit when:
+Depends on:
+Depended on by:
+Companion updates:
+Verification:
+Common mistakes:
+Related ledgers/docs:
+```
+
+A shorter table can be used for simple files.
+
+Use full entries for dangerous or central files.
+
+---
+
+# 8. File Status Labels
+
+Standardize file labels.
+
+```markdown id="9fhhhd"
+## 3. File Status Labels
+
+Use one or more:
+
+- `canonical`: source of truth
+- `source`: human/agent-editable implementation source
+- `generated`: derived output; do not hand-edit
+- `config`: configuration or settings
+- `policy`: rules/guardrails
+- `template`: reusable template
+- `runtime`: used by running system
+- `script`: executable build/transform/check file
+- `ledger`: memory/continuity file
+- `archive`: historical reference
+- `legacy`: old system, use cautiously
+- `sensitive`: contains client, credential, or risky operational context
+- `high-risk`: changes can create unsafe behavior
+```
+
+A file can have multiple labels.
+
+Example:
+
+```text id="1ysxw1"
+Auto/comeketo-inbox/references/guardrails.md
+status: canonical + policy + high-risk
+```
+
+---
+
+# 9. High-Priority File Index
+
+Purpose: a quick map before detailed entries.
+
+Example:
+
+```markdown id="33vr0q"
+## 4. High-Priority File Index
+
+| File | Type | Why It Matters |
+|---|---|---|
+| `app.jsx` | source / routing | owns app route switching |
+| `screens.jsx` | source / UI | owns major page screens |
+| `server.py` | source / API | owns backend endpoints |
+| `Auto/comeketo-inbox/references/guardrails.md` | policy | send safety contract |
+| `Auto/orchestrator/bin/comms_state_sweep.py` | script/runtime | updates comms/state ledgers |
+| `Auto/Client Boxes/<Name>/05_seven_day_plan.md` | client strategy | future send source, must obey guardrails |
+| `Auto/Client Boxes/<Name>/client_ledger.md` | generated/state | reflects sweeps; usually do not hand-edit |
+```
+
+This should be skim-friendly.
+
+---
+
+# 10. File Class Entries
+
+For repeated patterns, define a class once.
+
+## 10.1 Client Box File Class
+
+```markdown id="7yf8qi"
+## 5. File Class Entries
+
+### Client Box: `00_meta.json`
+
+Status:
+canonical + config + sensitive
+
+Primary role:
+Stores lead metadata, cadence state, IDs, contact fields, active flags, and sweep timestamps.
+
+Edit when:
+- pausing/unpausing a cadence
+- correcting lead metadata
+- setting plan anchor dates
+- updating explicit local state with care
+
+Do not edit when:
+- trying to change generated dashboard display only
+- trying to fix comms history
+- trying to change global automation behavior
+
+Depends on:
+- Close lead/contact data
+- kickoff workflow
+- comms/state sweep
+
+Depended on by:
+- scheduled fires
+- ready checks
+- orchestrator/dashboard renderers
+- client ledger generation
+
+Companion updates:
+- if cadence status changes, leave local audit/handoff note
+- if source-of-truth meaning changes, update Source-of-Truth Ledger
+- if client strategy changes, update audit marker
+
+Common mistakes:
+- treating stale `active_cadence` as reliable without checking comms
+- changing state without recording why
+```
+
+## 10.2 Client Box: `01_comms.md`
+
+```markdown id="8tcnl1"
+### Client Box: `01_comms.md`
+
+Status:
+canonical + sensitive
+
+Primary role:
+Conversation history between Comeketo/Andre and the client.
+
+Edit when:
+- importing full comms/transcripts
+- appending verified communication history
+- correcting clearly wrong imported comms with an audit note
+
+Do not edit when:
+- inventing context
+- summarizing enrichment
+- changing strategy
+- hiding bad sends
+
+Depends on:
+- Close activities
+- phone transcripts
+- state sweep/import process
+
+Depended on by:
+- allowed-to-know facts
+- reply gate
+- seven-day plan rewrite
+- client audits
+- future outbound composition
+
+Companion updates:
+- if new meaningful inbound is added, plan may need rewrite
+- update allowed-to-use facts when implemented
+- update `client_ledger.md` through sweep/generator, not by hand if generated
+
+Common mistakes:
+- assuming profile facts are comms facts
+- missing that a new inbound invalidates the old plan
+```
+
+## 10.3 Client Box: `04_profile.md`
+
+```markdown id="t5q8b6"
+### Client Box: `04_profile.md`
+
+Status:
+internal strategy + sensitive
+
+Primary role:
+Synthesizes client identity, strategy, decision dynamics, and enrichment.
+
+Edit when:
+- enrichment is refreshed
+- profile is found to contain unsafe/unverified claims
+- strategy needs to reflect new comms
+
+Do not edit when:
+- trying to create customer-facing truth
+- trying to log actual comms
+- trying to authorize risky moves
+
+Depends on:
+- comms
+- transcripts
+- enrichment
+- human/operator judgment
+
+Depended on by:
+- strategy planning
+- tone guidance
+- internal briefing
+
+Companion updates:
+- if facts become customer-facing eligible, add to allowed-to-know/allowed-to-use layer, not just profile
+- if profile creates a risky inference, record guardrail note
+
+Common mistakes:
+- using profile language directly in outbound copy
+- letting enrichment leak into customer-facing messages
+```
+
+## 10.4 Client Box: `05_seven_day_plan.md`
+
+```markdown id="c3zfeo"
+### Client Box: `05_seven_day_plan.md`
+
+Status:
+strategy + high-risk + sensitive
+
+Primary role:
+Day-by-day strategy and suggested moves for a client.
+
+Edit when:
+- plan is stale
+- comms/state changed
+- guardrails changed
+- dates drifted
+- risky language needs flattening
+- plan needs rewrite after inbound
+
+Do not edit when:
+- trying to change global guardrails
+- trying to record actual sends
+- trying to patch generated state
+
+Depends on:
+- `01_comms.md`
+- full transcripts
+- `00_meta.json`
+- `04_profile.md`
+- Inbox Guardrails
+- approval ledger/notes when implemented
+
+Depended on by:
+- scheduled fire prompts
+- Andre alerts
+- audits
+- next-move generation
+
+Companion updates:
+- update `09_andre_alerts.md` if schedule or moves change
+- leave audit marker after meaningful cleanup
+- update Temporal Continuity if workflow-level lesson emerges
+- update allowed-to-know layer if facts are classified
+
+Common mistakes:
+- treating plan as send license
+- leaving stale weekdays
+- leaving fee waiver or discount language ungated
+- surfacing enrichment-only facts
+```
+
+## 10.5 Client Box: `09_andre_alerts.md`
+
+```markdown id="4vgbbp"
+### Client Box: `09_andre_alerts.md`
+
+Status:
+action prompts + high-risk + sensitive
+
+Primary role:
+Condensed action prompts and timing notes for Andre/system review.
+
+Edit when:
+- plan schedule changes
+- alert wording is unsafe
+- guardrail reminders need local insertion
+- dates need explicit correction
+
+Do not edit when:
+- trying to rewrite full strategy without updating `05_seven_day_plan.md`
+- trying to log actual sends
+
+Depends on:
+- seven-day plan
+- meta anchor date
+- guardrails
+- current comms/state
+
+Depended on by:
+- scheduled task creation
+- human review
+- action surfaces
+
+Companion updates:
+- keep aligned with `05_seven_day_plan.md`
+- leave audit marker after meaningful change
+
+Common mistakes:
+- schedule drift from plan
+- bare weekdays without dates
+- risky move hidden as simple alert
+```
+
+## 10.6 Client Box: `client_ledger.md`
+
+```markdown id="8j4izr"
+### Client Box: `client_ledger.md`
+
+Status:
+generated/derived state, sensitive
+
+Primary role:
+Regenerated state summary showing cadence position, recent fires, inbound activity, and sweep timestamp.
+
+Edit when:
+- normally do not hand-edit
+- only correct manually with explicit audit note if generator is unavailable and correction is urgent
+
+Do not edit when:
+- trying to fix source comms
+- trying to change cadence truth
+- trying to alter plan
+
+Depends on:
+- Close activities
+- `01_comms.md`
+- `00_meta.json`
+- comms_state_sweep
+
+Depended on by:
+- audits
+- dashboards
+- current state review
+
+Companion updates:
+- fix generator or source files if ledger is wrong
+- rerun sweep/generator where possible
+
+Common mistakes:
+- treating imported historical inbound as new post-cadence reply without checking timestamps
+```
+
+These file classes will save a ton of repeated explanation.
+
+---
+
+# 11. Important File Entries
+
+Opus should inspect repo paths before finalizing. Below is the intended style.
+
+## 11.1 `app.jsx`
+
+```markdown id="rvhzgq"
+### `app.jsx`
+
+Status:
+source + routing + high-impact
+
+Primary role:
+Owns app route switch and known screen list.
+
+Edit when:
+- adding/removing routes
+- changing route behavior
+- changing navigation mapping
+
+Do not edit when:
+- only changing a screen’s internal rendering
+- only changing API behavior
+- only changing page data source without route impact
+
+Depends on:
+- screen components
+- route constants
+- shared app state
+
+Depended on by:
+- all app navigation
+- page-asset sitemap
+
+Companion updates:
+- update page-asset sitemap for route/page changes
+- update Page Ledger if implemented
+- update cache-busting if required by app packaging
+
+Common mistakes:
+- adding route without sitemap update
+- changing route behavior without updating navigation references
+```
+
+The uploaded sitemap identifies `app.jsx` as the route/history owner and says route changes must update the sitemap Done Gate. 
+
+## 11.2 `screens.jsx`
+
+```markdown id="ok6itv"
+### `screens.jsx`
+
+Status:
+source + UI + high-impact
+
+Primary role:
+Owns many primary screens/pages.
+
+Edit when:
+- changing page rendering
+- changing page-level data display
+- adding interactions inside major screens
+
+Do not edit when:
+- changing shared component primitives better handled in `components.jsx`
+- changing backend API behavior
+- changing source data generation
+
+Depends on:
+- shared components
+- app state
+- server APIs
+- loader scripts
+- styles
+
+Depended on by:
+- routed screens
+- page-asset sitemap
+- user-visible app behavior
+
+Companion updates:
+- update page-asset sitemap for affected pages
+- update styles if visual classes change
+- update server/API docs if data contracts change
+
+Common mistakes:
+- changing visible data binding without sitemap update
+```
+
+## 11.3 `components.jsx`
+
+```markdown id="tpmgbz"
+### `components.jsx`
+
+Status:
+source + shared UI + high-impact
+
+Primary role:
+Shared components, markdown rendering, context menu primitives, top-level UI pieces.
+
+Edit when:
+- changing shared UI behavior
+- changing markdown renderer
+- changing context menu system
+- changing shared primitives used across pages
+
+Do not edit when:
+- change is page-specific and belongs in `screens.jsx`
+- backend API needs to change
+- data pipeline needs to change
+
+Depends on:
+- DOMPurify/marked loaded through app shell if applicable
+- shared app state and styling
+
+Depended on by:
+- multiple pages
+- page-specific screens
+- chat/markdown surfaces
+
+Companion updates:
+- update affected Page/Widget Ledgers
+- update page-asset sitemap if page behavior/asset ownership changes
+- test multiple pages that use shared component
+
+Common mistakes:
+- breaking many pages through a “small” shared component change
+```
+
+The uploaded sitemap identifies shared navigation, context menu primitives, and markdown/chat rail in `components.jsx`. 
+
+## 11.4 `server.py`
+
+```markdown id="y7x6gs"
+### `server.py`
+
+Status:
+source + API + high-impact
+
+Primary role:
+Backend API endpoints, persistence behavior, external operation boundaries.
+
+Edit when:
+- adding/changing API endpoints
+- changing persistence behavior
+- changing server-side source/data processing
+- changing approval gates or write policies
+
+Do not edit when:
+- only changing frontend layout
+- only changing static copy
+- source data belongs in a ledger or Client Box
+
+Depends on:
+- local files
+- external credentials
+- app data directories
+- scripts/loaders
+
+Depended on by:
+- frontend pages
+- automation surfaces
+- intake/delegation/boxes APIs
+- page-asset sitemap
+
+Companion updates:
+- update page-asset sitemap if endpoint supports a page
+- update Connections/Settings Ledger if credentials/settings change
+- update Source-of-Truth Ledger if canonical data ownership changes
+- update API docs if created later
+
+Common mistakes:
+- changing API shape without frontend update
+- adding side effects without Done Gate
+```
+
+The sitemap lists many page APIs owned by `server.py`, so changes there often have page-map implications. 
+
+---
+
+# 12. Inbox / Guardrail Files
+
+## 12.1 `Auto/comeketo-inbox/references/guardrails.md`
+
+```markdown id="dpknqh"
+### `Auto/comeketo-inbox/references/guardrails.md`
+
+Status:
+canonical + policy + high-risk
+
+Primary role:
+Source-of-truth safety contract for Close inbox work and customer-facing sends.
+
+Edit when:
+- send safety rules change
+- new hard gate is added
+- approval rules change
+- reply/frequency/calendar/commitment/enrichment rules change
+
+Do not edit when:
+- changing one client’s local strategy only
+- trying to authorize a single exception without recording it locally
+- rewriting tone only without policy change
+
+Depends on:
+- operator decisions
+- observed failures
+- compliance/safety needs
+- inbox workflow
+
+Depended on by:
+- scheduled fires
+- Client Box audits
+- inbox work
+- outbound copy generation
+- approval surfaces
+
+Companion updates:
+- update Global/Temporal if policy posture changes
+- update Client Box plans if new guardrails invalidate them
+- update Source-of-Truth Ledger
+- update Reconstruction Ledger if rule emerged from a failure pattern
+
+Common mistakes:
+- writing plans that ignore updated guardrails
+- treating guardrails as suggestions
+```
+
+This is one of the highest-risk files in the project.
+
+---
+
+# 13. Orchestrator Files
+
+## 13.1 `Auto/orchestrator/bin/comms_state_sweep.py`
+
+```markdown id="xbo3wa"
+### `Auto/orchestrator/bin/comms_state_sweep.py`
+
+Status:
+source + runtime script + high-risk
+
+Primary role:
+Refreshes client comms/state from Close activity, appends comms, regenerates client ledgers, updates meta sweep fields, and detects inbound activity.
+
+Edit when:
+- sweep behavior changes
+- Close activity import rules change
+- inbound detection changes
+- client ledger generation changes
+- state update rules change
+
+Do not edit when:
+- changing one client’s plan
+- changing UI display only
+- changing guardrail policy without applying it through proper workflow
+
+Depends on:
+- Close API/activity data
+- Client Boxes
+- meta fields
+- ledger generation logic
+- environment/config
+
+Depended on by:
+- client state freshness
+- reply detection
+- dashboards
+- scheduled fire safety
+- client audits
+
+Companion updates:
+- update Source-of-Truth Ledger if state ownership changes
+- update File Contents Ledger entry if behavior changes
+- update Open Problems if sweep detects historical inbound incorrectly
+- update Client Box local docs if output shape changes
+
+Common mistakes:
+- confusing historical imported inbound with new post-cadence reply
+- changing generated ledger format without updating readers
+```
+
+This file deserves careful audit because it controls the “tap happened / plan stale” flow.
+
+## 13.2 `Auto/orchestrator/bin/ready_check.py`
+
+```markdown id="9iz5ph"
+### `Auto/orchestrator/bin/ready_check.py`
+
+Status:
+source + script
+
+Primary role:
+Determines which Client Boxes are ready based on required file presence and metadata.
+
+Edit when:
+- readiness criteria change
+- required files change
+- new client-box readiness states are introduced
+
+Do not edit when:
+- trying to fix one missing client file
+- trying to bypass readiness for a single client without recording why
+
+Depends on:
+- Client Box file structure
+- required-file contract
+- meta fields
+
+Depended on by:
+- ready leads output
+- kickoff workflow
+- dashboards
+
+Companion updates:
+- update Definition of Done if readiness standard changes
+- update Client Boxes BOX.md
+- update Source-of-Truth Ledger if ready output becomes authoritative
+
+Common mistakes:
+- treating ready as safe-to-send; ready only means structurally complete unless guardrails pass
+```
+
+That last sentence is crucial.
+
+---
+
+# 14. Generated / Do-Not-Edit File Index
+
+Purpose: quick warning list.
+
+Example:
+
+```markdown id="t96urw"
+## 7. Generated / Do-Not-Edit File Index
+
+Usually generated / derived:
+
+| File/Pattern | Generated By | Edit Rule |
+|---|---|---|
+| `Auto/orchestrator/state/*.html` | orchestrator render scripts | do not hand-edit; fix renderer/source |
+| `Auto/orchestrator/state/*.json` | orchestrator scripts | do not hand-edit unless explicitly marked |
+| `Auto/orchestrator/state/*.csv` | orchestrator scripts | do not hand-edit; regenerate |
+| `Auto/orchestrator/state/runs/*.json` | scheduled fire/sweep summaries | append through runtime, do not rewrite casually |
+| `Auto/Client Boxes/<Name>/client_ledger.md` | comms_state_sweep | usually do not hand-edit |
+```
+
+Rule:
+
+```markdown id="9cw1tp"
+If a generated file is wrong, fix the source or generator first.
+```
+
+---
+
+# 15. Companion Update Rules
+
+Purpose: make file changes trigger memory changes.
+
+Example:
+
+```markdown id="pvxfqm"
+## 8. Companion Update Rules
+
+If changing `app.jsx`:
+- update page-asset sitemap if routes/page behavior changed
+
+If changing `screens.jsx`:
+- update page-asset sitemap if page assets/data binding changed
+
+If changing `server.py`:
+- update sitemap if page API changed
+- update Connections/Settings/Source-of-Truth ledgers if applicable
+
+If changing `Auto/comeketo-inbox/references/guardrails.md`:
+- audit affected plans
+- update Temporal Continuity if risk posture changed
+
+If changing `Auto/Client Boxes/<Name>/05_seven_day_plan.md`:
+- update `09_andre_alerts.md` if timing/action changed
+- leave audit marker
+- check allowed-to-know layer
+
+If changing `Auto/orchestrator/bin/comms_state_sweep.py`:
+- update file entry
+- update Source-of-Truth Ledger if state semantics changed
+- verify generated output readers still work
+```
+
+This section saves future agents from incomplete edits.
+
+---
+
+# 16. Common File-Level Mistakes
+
+Example:
+
+```markdown id="gm4dbm"
+## 9. Common File-Level Mistakes
+
+- Editing a generated file instead of its source.
+- Changing a route without updating the sitemap.
+- Changing a page’s data binding without updating asset ownership.
+- Treating `client_ledger.md` as canonical source instead of generated state.
+- Treating `05_seven_day_plan.md` as send authority.
+- Using `04_profile.md` facts directly in customer-facing copy.
+- Changing guardrails without checking existing plans for contradictions.
+- Adding logic to a crowded shared file when it belongs in a smaller module.
+- Changing API response shape without checking frontend consumers.
+```
+
+This is one of the most valuable parts of the ledger.
+
+---
+
+# 17. Recommended `FILE_CONTENTS_LEDGER.json` Shape
+
+```json id="tsqrrd"
+{
+  "ledger_type": "file_contents",
+  "version": "0.1.0",
+  "last_updated": "2026-04-28",
+  "file_status_labels": [
+    "canonical",
+    "source",
+    "generated",
+    "config",
+    "policy",
+    "template",
+    "runtime",
+    "script",
+    "ledger",
+    "archive",
+    "legacy",
+    "sensitive",
+    "high-risk"
+  ],
+  "file_classes": [
+    {
+      "id": "client_box_meta",
+      "pattern": "Auto/Client Boxes/<Name>/00_meta.json",
+      "status": ["canonical", "config", "sensitive"],
+      "primary_role": "Lead metadata and cadence state",
+      "companion_updates": ["audit marker if cadence state changes"]
+    },
+    {
+      "id": "client_box_plan",
+      "pattern": "Auto/Client Boxes/<Name>/05_seven_day_plan.md",
+      "status": ["strategy", "high-risk", "sensitive"],
+      "primary_role": "Day-by-day strategy and suggested moves",
+      "companion_updates": [
+        "update 09_andre_alerts.md if timing/action changed",
+        "leave audit marker",
+        "check guardrails"
+      ],
+      "common_mistakes": [
+        "treating plan as send license",
+        "leaving stale weekdays",
+        "surfacing enrichment-only facts"
+      ]
+    }
+  ],
+  "files": [
+    {
+      "path": "app.jsx",
+      "status": ["source", "routing", "high-impact"],
+      "primary_role": "App route switch and known screen list",
+      "companion_updates": ["page-asset sitemap for route/page changes"]
+    },
+    {
+      "path": "Auto/comeketo-inbox/references/guardrails.md",
+      "status": ["canonical", "policy", "high-risk"],
+      "primary_role": "Source-of-truth safety contract for Close inbox/customer-facing sends",
+      "companion_updates": [
+        "audit affected plans",
+        "update Temporal Continuity if posture changed"
+      ]
+    }
+  ],
+  "generated_patterns": [
+    {
+      "pattern": "Auto/orchestrator/state/*",
+      "edit_rule": "Do not hand-edit; fix source or generator."
+    },
+    {
+      "pattern": "Auto/Client Boxes/<Name>/client_ledger.md",
+      "edit_rule": "Usually regenerated by sweep; do not hand-edit casually."
+    }
+  ]
+}
+```
+
+This JSON can later power a file-orientation tool.
+
+---
+
+# 18. Suggested Visual Layer
+
+Create:
+
+```text id="59e295"
+/LEDGERS/VISUALS/important_file_map.mmd
+/LEDGERS/VISUALS/file_dependency_map.mmd
+/LEDGERS/VISUALS/client_box_file_flow.mmd
+```
+
+Example Client Box file flow:
+
+```mermaid id="s28lc8"
+flowchart TD
+  Meta[00_meta.json] --> Plan[05_seven_day_plan.md]
+  Comms[01_comms.md] --> Plan
+  Profile[04_profile.md] --> Plan
+  Guardrails[Inbox Guardrails] --> PlanAudit[Plan Audit]
+  Plan --> Alerts[09_andre_alerts.md]
+  Comms --> Ledger[client_ledger.md generated]
+  Meta --> Ledger
+  Ledger --> Dashboard[Orchestrator / Boxes Page]
+  Alerts --> Fire[Scheduled Fire / Human Review]
+  PlanAudit --> Fire
+```
+
+Example UI file map:
+
+```mermaid id="jtpnwo"
+flowchart TD
+  App[app.jsx routes] --> Screens[screens.jsx pages]
+  Screens --> Components[components.jsx shared UI]
+  Screens --> Server[server.py APIs]
+  Components --> Styles[styles.css]
+  Server --> Data[Source Data / Ledgers / Boxes]
+  App --> Sitemap[Page-Asset Sitemap]
+  Screens --> Sitemap
+  Server --> Sitemap
+```
+
+Visuals should be derived or updated when major file roles change.
+
+---
+
+# 19. Relationship to Page-Asset Sitemap
+
+The File Contents Ledger should not duplicate every page section from the sitemap.
+
+Instead:
+
+* document major files like `app.jsx`, `screens.jsx`, `server.py`
+* point page-specific ownership to the sitemap
+* remind agents that page/route/data-binding edits require sitemap updates
+
+The uploaded sitemap already maps pages, route index, primary screen components, APIs, side effects, and change checklists. 
+
+The File Contents Ledger should say:
+
+```markdown id="16hebu"
+For page-specific asset ownership, the page-asset sitemap is authoritative.
+This ledger only explains the high-level role of shared files.
+```
+
+---
+
+# 20. Relationship to Source-of-Truth Ledger
+
+The File Contents Ledger says what files do.
+
+The Source-of-Truth Ledger says which file/system should be trusted for each kind of information.
+
+Example:
+
+```text id="rqwgho"
+File Contents Ledger:
+01_comms.md is conversation history.
+
+Source-of-Truth Ledger:
+For customer-facing allowed facts, trust full transcripts and 01_comms.md before profile/enrichment.
+```
+
+They should link to each other.
+
+---
+
+# 21. Relationship to File Directory Ledger
+
+The File Directory Ledger maps folders.
+The File Contents Ledger maps important files.
+
+Do not merge them.
+
+Example:
+
+```text id="6lisuj"
+File Directory Ledger:
+Auto/orchestrator owns runtime/render/state layer.
+
+File Contents Ledger:
+Auto/orchestrator/bin/comms_state_sweep.py updates client comms/state and regenerates ledgers.
+```
+
+This separation keeps both readable.
+
+---
+
+# 22. What Opus Should Build First
+
+Give Opus this build order:
+
+```text id="c2qj8i"
+1. Create /LEDGERS/FILE_CONTENTS_LEDGER.md.
+2. Create /LEDGERS/FILE_CONTENTS_LEDGER.json.
+3. Add link to /LEDGERS/INDEX.md.
+4. Add link to /LEDGERS/FILE_DIRECTORY_LEDGER.md if it exists.
+5. Add link to /LEDGERS/DIRECTORY_CONFIGURATION_LEDGER.md if it exists.
+6. Create /LEDGERS/VISUALS/important_file_map.mmd.
+7. Create /LEDGERS/VISUALS/client_box_file_flow.mmd.
+8. Add file status labels.
+9. Add Client Box file class entries:
+   - `00_meta.json`
+   - `01_comms.md`
+   - `04_profile.md`
+   - `05_seven_day_plan.md`
+   - `09_andre_alerts.md`
+   - `client_ledger.md`
+10. Add first high-priority file entries:
+   - `app.jsx`
+   - `components.jsx`
+   - `screens.jsx`
+   - `server.py`
+   - `Auto/comeketo-inbox/references/guardrails.md`
+   - `Auto/orchestrator/bin/comms_state_sweep.py`
+   - `Auto/orchestrator/bin/ready_check.py`
+11. Add Generated / Do-Not-Edit index.
+12. Add Companion Update Rules.
+13. Commit with message: "Add file contents ledger".
+```
+
+Important instruction:
+
+```text id="vw51sn"
+Opus must inspect actual paths before finalizing file entries. If a listed file does not exist at the expected path, mark it `needs verification` instead of inventing.
+```
+
+---
+
+# 23. Quality Bar
+
+The File Contents Ledger succeeds if future agents can answer:
+
+* What does this important file do?
+* Should I edit it?
+* What should I not put here?
+* What depends on this file?
+* What does this file depend on?
+* What else must be updated if I change it?
+* Is this file canonical or generated?
+* What mistakes happen around this file?
+
+It fails if:
+
+* it tries to document every file
+* it becomes line-by-line code commentary
+* it is not updated when major file roles change
+* it duplicates page/widget ledgers
+* agents still edit generated files accidentally
+* high-risk files lack warnings
+* companion updates are missing
+
+The File Contents Ledger should reduce the cost of safe editing.
+
+---
+
+# 24. Final Operating Rule
+
+The File Contents Ledger should end with this:
+
+```markdown id="04y3gt"
+An important file should not be a black box.
+
+Before editing it, know its job.
+After changing it, update what depends on its job.
+```
+
+---
+
+

@@ -1,0 +1,1284 @@
+# Settings Ledger — Project-Wide Implementation Outline
+
+## 0. Purpose
+
+The **Settings Ledger** tracks the knobs, switches, credentials, runtime options, user preferences, environment variables, feature flags, model/provider choices, UI preferences, and configurable behaviors that affect the project.
+
+Settings are dangerous because they often look small.
+
+A single setting can change:
+
+* what model is used
+* whether a workflow runs
+* whether credentials are available
+* whether a page writes to disk
+* whether a widget can submit a delegation
+* whether Close/Slack/Pieces/OpenAI works
+* whether customer-facing automation is active
+* whether generated state is stale or refreshed
+* whether a local run behaves differently from GitHub/cloud
+
+The Settings Ledger exists so future agents can answer:
+
+> What can be configured, where is it configured, what does it affect, and what breaks if it changes?
+
+---
+
+# 1. Core Operating Principle
+
+The Settings Ledger should enforce this rule:
+
+> A setting is behavior disguised as configuration.
+
+Settings are not passive.
+
+They can change the project’s runtime behavior without changing code. So they need memory.
+
+A future agent should be able to answer:
+
+* What settings exist?
+* Where are they stored?
+* Are they user-facing or internal?
+* Are they local-only or GitHub-backed?
+* Are they safe to commit?
+* Do they affect credentials?
+* Do they affect model/provider behavior?
+* Do they affect automation?
+* Do they affect sends or external actions?
+* What pages/widgets depend on them?
+* What should be verified after changing them?
+
+The Settings Ledger is the project’s configuration map.
+
+---
+
+# 2. Recommended Location
+
+Create it in the central ledger directory:
+
+```text
+/LEDGERS/
+  SETTINGS_LEDGER.md
+  SETTINGS_LEDGER.json
+  INDEX.md
+  VISUALS/
+    settings_map.mmd
+    settings_dependency_flow.mmd
+    credential_settings_flow.mmd
+```
+
+Recommended final files:
+
+```text
+/LEDGERS/SETTINGS_LEDGER.md
+/LEDGERS/SETTINGS_LEDGER.json
+```
+
+If settings become large, add:
+
+```text
+/LEDGERS/SETTINGS/
+  credentials.md
+  model_settings.md
+  ui_preferences.md
+  automation_settings.md
+  local_env.md
+```
+
+But start with one main Settings Ledger.
+
+---
+
+# 3. Role in the Ledger System
+
+The Settings Ledger overlaps with Connections, Source-of-Truth, Pages, Widgets, and Automation.
+
+```text
+Connections Ledger
+  └── What external systems exist?
+
+Settings Ledger
+  └── What configuration controls those systems?
+
+Source-of-Truth Ledger
+  └── Which settings source is authoritative?
+
+Page Ledger
+  └── Which pages expose settings?
+
+Widget Ledger
+  └── Which widgets read/write settings?
+
+Definition of Done Ledger
+  └── What must be updated when settings change?
+```
+
+Example:
+
+```text
+Connections Ledger:
+Close is a required CRM dependency.
+
+Settings Ledger:
+Close API key is expected in `.env`, must never be committed, and changes affect comms sweeps/sends.
+```
+
+---
+
+# 4. What This Ledger Owns
+
+## Owns
+
+* setting registry
+* configuration source locations
+* environment variable names, never values
+* user-facing settings
+* internal runtime settings
+* model/provider settings
+* credential settings
+* feature flags
+* UI preferences
+* localStorage settings
+* `.env` expectations
+* settings pages/widgets
+* setting side effects
+* setting verification steps
+* safe defaults
+* settings change Done Gate
+
+## Does not own
+
+* raw secrets
+* API keys
+* passwords
+* OAuth tokens
+* full external service dependency details
+* every application constant
+* all source-of-truth rules
+* every UI component affected by a setting
+
+Those belong in secure stores, Connections Ledger, Source-of-Truth Ledger, File Contents Ledger, and code.
+
+This ledger records configuration, not secrets.
+
+---
+
+# 5. Recommended `SETTINGS_LEDGER.md` Structure
+
+Use stable headings:
+
+```markdown
+# Settings Ledger
+
+Last updated:
+Maintainer:
+Status:
+Read when:
+Security rule:
+Core rule:
+
+## 1. Purpose
+## 2. Security Rules
+## 3. Setting Entry Format
+## 4. Setting Categories
+## 5. Settings Registry
+## 6. Credential / Secret Settings
+## 7. Model / Provider Settings
+## 8. Automation Settings
+## 9. UI / Local Preference Settings
+## 10. Feature Flags
+## 11. Settings Pages / Widgets
+## 12. Settings Verification Playbook
+## 13. Settings Change Done Gate
+## 14. Visualization Index
+## 15. Update Rules
+```
+
+This ledger should be easy to use during debugging.
+
+---
+
+# 6. Security Rules
+
+This section must be near the top.
+
+```markdown
+## 2. Security Rules
+
+Never store raw secrets in this ledger.
+
+Do not record:
+
+- API keys
+- passwords
+- OAuth tokens
+- refresh tokens
+- private keys
+- service account JSON contents
+- database passwords
+- raw `.env` values
+
+Allowed:
+
+- setting name
+- environment variable name
+- expected storage location
+- service affected
+- whether a value is required
+- whether it is user-facing
+- how to verify safely
+- what breaks if missing
+- whether it is safe to commit
+```
+
+Include this rule:
+
+```markdown
+If a setting is secret-bearing, the ledger may describe the key but must not contain the value.
+```
+
+---
+
+# 7. Setting Entry Format
+
+Use stable IDs.
+
+Recommended ID format:
+
+```text
+SET-<category>-###
+```
+
+Examples:
+
+```text
+SET-CRED-001
+SET-MODEL-001
+SET-AUTO-001
+SET-UI-001
+```
+
+Template:
+
+```markdown
+## SET-<CATEGORY>-### — <Setting Name>
+
+Status:
+Category:
+Scope:
+Storage:
+User-facing:
+Secret-bearing:
+Safe to commit:
+Owner:
+Used by:
+Related connections:
+Related pages/widgets:
+Related ledgers:
+
+### Purpose
+
+What this setting controls.
+
+### Expected Location
+
+Where it lives.
+
+### Allowed Values / Shape
+
+What values are valid. Do not include secrets.
+
+### Default / Fallback
+
+What happens if missing.
+
+### Side Effects
+
+What changes when this setting changes.
+
+### Verification
+
+How to safely verify it.
+
+### Failure Mode
+
+What breaks if wrong/missing.
+
+### Change Rules
+
+What must be updated or checked after changing it.
+```
+
+This makes settings auditable.
+
+---
+
+# 8. Setting Categories
+
+Recommended categories:
+
+```markdown
+## 4. Setting Categories
+
+### Credential / Secret Settings
+
+Settings that authorize access to external systems.
+
+Examples:
+- Close API key
+- Slack token
+- OpenAI API key if app uses API
+- Supabase keys if active
+- Pieces endpoint/token if applicable
+
+### Model / Provider Settings
+
+Settings that control model selection, provider, mode, or reasoning behavior.
+
+Examples:
+- model provider
+- model name
+- fallback model
+- local/remote model switch
+
+### Automation Settings
+
+Settings that control scheduled tasks, sweeps, sends, triggers, or workflow behavior.
+
+Examples:
+- automation enabled
+- dry run
+- global send kill switch
+- active cadence flag
+- sweep interval
+- manual approval required
+
+### UI / Local Preference Settings
+
+Settings stored in localStorage or user preferences.
+
+Examples:
+- theme
+- selected page
+- selected box
+- grid layout
+- panel state
+
+### Feature Flags
+
+Settings that turn features on/off.
+
+Examples:
+- enable Boxes page edit mode
+- enable delegation handoff
+- enable generated preview
+- enable transcript import
+- enable allowed-to-know panel
+
+### Path / Runtime Settings
+
+Settings that point to folders, files, ports, or runtime modes.
+
+Examples:
+- repo root
+- data directory
+- server port
+- orchestrator state path
+```
+
+Opus should verify actual settings from code before finalizing.
+
+---
+
+# 9. Settings Registry
+
+The ledger should include a quick registry.
+
+Example:
+
+```markdown
+## 5. Settings Registry
+
+| Setting | Category | Storage | Secret? | User-Facing? | Affects | Status |
+|---|---|---|---|---|---|---|
+| Close API key | credential | `.env` | yes | maybe via settings UI | Close sweeps/sends | needs verification |
+| Slack token | credential | `.env` / connector | yes | maybe | alerts/review | needs verification |
+| MCP credentials | credential | server settings / `.env` allowlist | yes | yes | MCP tools | active per sitemap |
+| Model provider | model | settings API/local config | no/depends | yes | model behavior | active per sitemap |
+| Pieces status/config | connection/model-tool | local app/API/settings | maybe | yes | briefing/activity/settings | active per sitemap |
+| Theme/accent/UI state | UI preference | localStorage | no | yes | UI rendering | active |
+| Automation workflow state | automation | workflow storage/API | no/depends | yes | automation page | active |
+| Client cadence active flag | automation/client | `00_meta.json` | no | no | scheduled fires | active |
+| Global send kill switch | automation safety | TBD | no | operator-facing | customer-facing sends | needed |
+```
+
+The sitemap indicates the settings page includes status, MCP credential save/clear, model operations, Pieces status, and localStorage / `.env`-style side effects, so those should be verified and mapped.
+
+---
+
+# 10. Credential / Secret Settings
+
+This section should be very careful.
+
+## 10.1 Close API Key
+
+```markdown
+## SET-CRED-001 — Close API Key
+
+Status: needs verification / likely required
+Category: credential
+Scope: runtime / CRM
+Storage: `.env` or secure runtime config
+User-facing: maybe through settings UI, verify
+Secret-bearing: yes
+Safe to commit: no
+Owner: Comeketo / operator
+Used by:
+- comms_state_sweep
+- Close reads/writes
+- inbox automation
+- scheduled fires
+- lead/task state
+
+### Purpose
+
+Authorizes access to Close CRM data and actions.
+
+### Expected Location
+
+`.env` or secure server config. Exact variable name must be verified from code.
+
+### Allowed Values / Shape
+
+Secret token/string. Do not record value.
+
+### Default / Fallback
+
+If missing, Close reads/writes fail. Client Boxes may become stale. Customer-facing sends must not run.
+
+### Side Effects
+
+Changing this setting can alter which Close account/workspace is used.
+
+### Verification
+
+Use safe read-only Close API check. Never test by sending customer-facing SMS/email.
+
+### Failure Mode
+
+- no live comms import
+- no state sweep
+- no sends
+- stale Client Boxes
+- reply gate unreliable
+
+### Change Rules
+
+Update Connections Ledger if credential storage or service status changes.
+```
+
+---
+
+## 10.2 Slack Token / Slack Connection
+
+```markdown
+## SET-CRED-002 — Slack Token / Slack Connection
+
+Status: needs verification
+Category: credential
+Scope: communication / approval
+Storage: `.env`, connector auth, or platform app config
+User-facing: maybe
+Secret-bearing: yes
+Safe to commit: no
+Used by:
+- alerts
+- Andre review loop
+- team audit reporting
+- future approval cards
+
+### Purpose
+
+Allows system to post alerts, review prompts, or handoff messages to Slack.
+
+### Expected Location
+
+Verify from repo/server settings.
+
+### Verification
+
+Prefer safe identity/status check. Post only to test channel if explicitly authorized.
+
+### Failure Mode
+
+- approvals not surfaced
+- reply alerts missing
+- team audit reports fail
+- scheduled fires may stall if Slack ack required
+
+### Change Rules
+
+Update Connections Ledger and Settings Ledger together.
+```
+
+---
+
+## 10.3 MCP Credentials
+
+```markdown
+## SET-CRED-003 — MCP Credentials
+
+Status: active per settings sitemap, verify exact behavior
+Category: credential
+Scope: tools / external systems
+Storage: server allowlisted credential store or `.env`, verify
+User-facing: yes
+Secret-bearing: yes
+Safe to commit: no
+Related page: `settings`
+Related widget: Settings credential editor
+
+### Purpose
+
+Stores credentials for MCP/tool connections exposed through settings.
+
+### Expected Location
+
+Verify exact server endpoints and allowlisted keys.
+
+### Verification
+
+Use settings status/read check. Do not expose raw values.
+
+### Failure Mode
+
+- connected tool actions fail
+- settings page may show missing credential
+- external integrations unavailable
+
+### Change Rules
+
+Any change to editable MCP credential keys must update:
+- Settings Ledger
+- Connections Ledger
+- Settings Page Ledger
+- Settings Credential Editor Widget Ledger
+```
+
+---
+
+# 11. Model / Provider Settings
+
+## 11.1 Model Provider
+
+```markdown
+## SET-MODEL-001 — Model Provider
+
+Status: needs verification / active per sitemap
+Category: model/provider
+Scope: app runtime / AI features
+Storage: settings API, local config, or server config; verify
+User-facing: yes
+Secret-bearing: no, unless provider credentials are included separately
+Safe to commit: depends on storage
+Used by:
+- model-powered app features
+- reports/Q&A
+- rewrite flows
+- automation assistant surfaces
+
+### Purpose
+
+Controls which model/provider the app uses for AI-assisted features.
+
+### Expected Location
+
+Verify from `server.py`, settings APIs, and settings page code.
+
+### Allowed Values / Shape
+
+Should be enumerated in code/settings UI.
+
+### Default / Fallback
+
+Fallback model/provider should be defined. If none, model features fail.
+
+### Side Effects
+
+Changing provider can change output behavior, latency, cost, and available tools.
+
+### Verification
+
+Run safe non-customer-facing model/status check.
+
+### Failure Mode
+
+- Q&A/rewrite/report features fail
+- outputs change unexpectedly
+- cost/latency changes
+
+### Change Rules
+
+Update Scout Ledger if evaluating a new model/provider.
+Update Connections Ledger if a new external provider is adopted.
+Update Reconstruction Ledger if generation recipes depend on model behavior.
+```
+
+---
+
+# 12. Automation Settings
+
+This project needs explicit automation settings because of customer-facing risk.
+
+## 12.1 Client Cadence Active Flag
+
+```markdown
+## SET-AUTO-001 — Client Cadence Active Flag
+
+Status: active
+Category: automation/client-state
+Scope: per-client
+Storage: `Auto/Client Boxes/<Name>/00_meta.json`
+User-facing: no
+Secret-bearing: no
+Safe to commit: yes, but sensitive operational state
+Used by:
+- scheduled fires
+- ready checks
+- client audits
+- state sweep
+
+### Purpose
+
+Indicates whether a client box has an active cadence.
+
+### Expected Location
+
+`00_meta.json`, likely field `active_cadence`.
+
+### Side Effects
+
+If true, automation may consider future scheduled moves. If false, client should not be actively touched by cadence unless manually directed.
+
+### Verification
+
+Check `00_meta.json`, plan, comms, and client ledger together. Do not trust flag alone.
+
+### Failure Mode
+
+- active false when client should move
+- active true when cadence should be paused
+- scheduled fire risk if stale
+
+### Change Rules
+
+Any manual change should leave audit/handoff note.
+If client replied, cadence should pause or plan should be marked stale according to future rewrite rule.
+```
+
+---
+
+## 12.2 Global Send Kill Switch
+
+```markdown
+## SET-AUTO-002 — Global Send Kill Switch
+
+Status: needed / design pending
+Category: automation safety
+Scope: global customer-facing actions
+Storage: TBD
+User-facing: operator-facing
+Secret-bearing: no
+Safe to commit: yes if config file, but state sensitivity should be considered
+Used by:
+- scheduled fires
+- inbox automation
+- customer-facing send paths
+
+### Purpose
+
+Provides one global way to stop customer-facing sends while allowing read/audit/sweep behavior to continue.
+
+### Expected Location
+
+TBD. Options:
+- `/LEDGERS` is probably wrong because this is runtime config, not memory.
+- `Auto/orchestrator/config.json`
+- `.env`
+- app settings store
+- operator dashboard setting
+
+### Default / Fallback
+
+Safe default should be conservative if unset, depending on runtime design.
+
+### Side Effects
+
+If enabled, no customer-facing send should occur.
+
+### Verification
+
+Dry-run scheduled fire and confirm it blocks send path.
+
+### Failure Mode
+
+If missing, there may be no central emergency brake.
+
+### Change Rules
+
+Requires Decision + Source-of-Truth + Settings + Automation docs once implemented.
+```
+
+---
+
+## 12.3 Dry Run Mode
+
+```markdown
+## SET-AUTO-003 — Dry Run Mode
+
+Status: needed / verify if exists
+Category: automation safety
+Scope: scheduled fires / scripts
+Storage: TBD
+User-facing: operator/developer
+Secret-bearing: no
+Safe to commit: yes if default config
+Used by:
+- scheduled fires
+- plan validators
+- inbox automation
+- scripts
+
+### Purpose
+
+Allows automation to generate intended actions without executing customer-facing sends or external writes.
+
+### Side Effects
+
+Should create logs/previews instead of sends.
+
+### Verification
+
+Run safe dry-run and confirm no external write occurs.
+
+### Failure Mode
+
+If dry run is unreliable, testing may accidentally write/send.
+
+### Change Rules
+
+Any script/action tool with external side effects should support or respect dry-run mode where possible.
+```
+
+---
+
+# 13. UI / Local Preference Settings
+
+These are lower-risk but still important.
+
+```markdown
+## 9. UI / Local Preference Settings
+
+### SET-UI-001 — Theme / Appearance
+
+Status: active, verify storage
+Category: UI preference
+Storage: localStorage or app settings
+Secret-bearing: no
+Safe to commit: not applicable if localStorage
+Affects:
+- visual display only
+
+### SET-UI-002 — Selected Page / Panel State
+
+Status: active, verify
+Category: UI preference
+Storage: localStorage / URL / app state
+Affects:
+- operator navigation
+- page restore behavior
+
+### SET-UI-003 — Selected Box
+
+Status: likely active on Boxes page, verify
+Category: UI preference / page state
+Storage: localStorage or URL, verify
+Affects:
+- which box dossier is displayed
+```
+
+Rule:
+
+```markdown
+UI preferences are usually not source-of-truth. They should not be mistaken for canonical project state.
+```
+
+---
+
+# 14. Feature Flags
+
+Feature flags should be documented before they become invisible behavior.
+
+Candidate feature flags:
+
+```markdown
+## 10. Feature Flags
+
+| Flag | Status | Purpose | Risk |
+|---|---|---|---|
+| `enable_boxes_edit_mode` | planned/verify | allow editing Client Boxes from UI | high |
+| `enable_delegation_handoff` | verify | allow Boxes/Intake to create delegation drafts | medium/high |
+| `enable_risk_approval_cards` | planned | isolate risky move approval | high but safety-positive |
+| `enable_transcript_import` | planned | import full phone transcripts | high/source-truth |
+| `enable_allowed_to_know_panel` | planned | display/classify allowed facts | high/source-truth |
+| `enable_customer_send` | verify/needed | allow customer-facing sends | critical |
+```
+
+Feature flags should have owners, defaults, and verification.
+
+---
+
+# 15. Settings Pages / Widgets
+
+The Settings Ledger should link to UI surfaces that edit settings.
+
+```markdown
+## 11. Settings Pages / Widgets
+
+### Settings Page
+
+Route:
+`settings`
+
+Likely owner:
+`SettingsScreen` in `screens.jsx`, verify.
+
+Responsibilities:
+- app status
+- MCP credentials
+- model/provider controls
+- Pieces status/config
+- theme/local preferences
+- credential save/clear flows
+
+Related Widget Ledger:
+- Settings Credential Editor
+
+Related Connections:
+- OpenAI/ChatGPT or app model provider
+- Pieces
+- MCP tools
+- Slack/Close if exposed
+```
+
+This should connect to Page Ledger and Widget Ledger.
+
+---
+
+# 16. Settings Verification Playbook
+
+```markdown
+## 12. Settings Verification Playbook
+
+### Safe verification
+
+Prefer:
+
+- status endpoint checks
+- read-only connection checks
+- masked credential presence checks
+- local config parse checks
+- dry-run behavior checks
+- non-customer-facing model test
+
+### Risky verification
+
+Requires explicit authorization:
+
+- posting to Slack
+- writing credentials
+- clearing credentials
+- saving workflow/trigger settings
+- changing active automation flags
+- sending customer-facing SMS/email
+
+### Never use as a settings test
+
+- customer-facing send
+- deleting production workflow
+- clearing credential without confirmation
+- changing Close lead status
+- force-pushing config changes
+```
+
+This keeps debugging safe.
+
+---
+
+# 17. Settings Change Done Gate
+
+```markdown
+## 13. Settings Change Done Gate
+
+A settings change is not done until:
+
+- [ ] setting owner is clear
+- [ ] storage location is clear
+- [ ] secret-bearing status is clear
+- [ ] safe-to-commit status is clear
+- [ ] affected pages/widgets are known
+- [ ] affected connections are known
+- [ ] side effects are understood
+- [ ] fallback/default behavior is defined
+- [ ] verification is performed or honestly marked unavailable
+- [ ] Settings Ledger updated
+- [ ] Connections Ledger updated if external service changed
+- [ ] Source-of-Truth Ledger updated if authority changed
+- [ ] Page/Widget Ledgers updated if UI changed
+```
+
+For secret settings:
+
+```markdown
+No settings change is done if raw secrets are exposed in committed files, ledgers, screenshots, logs, or chat artifacts.
+```
+
+For automation settings:
+
+```markdown
+No customer-facing automation setting change is done unless send/approval/dry-run behavior is verified.
+```
+
+---
+
+# 18. Recommended `SETTINGS_LEDGER.json` Shape
+
+```json
+{
+  "ledger_type": "settings",
+  "version": "0.1.0",
+  "last_updated": "2026-04-28",
+  "security_rule": "Never store raw secrets in this ledger.",
+  "core_rule": "A setting is behavior disguised as configuration.",
+  "categories": [
+    "credential_secret",
+    "model_provider",
+    "automation",
+    "ui_local_preference",
+    "feature_flag",
+    "path_runtime"
+  ],
+  "settings": [
+    {
+      "id": "SET-CRED-001",
+      "name": "Close API Key",
+      "category": "credential_secret",
+      "status": "needs_verification",
+      "storage": ".env or secure runtime config",
+      "secret_bearing": true,
+      "safe_to_commit": false,
+      "used_by": [
+        "comms_state_sweep",
+        "Close reads/writes",
+        "inbox automation",
+        "scheduled fires"
+      ],
+      "failure_mode": [
+        "no live comms import",
+        "no state sweep",
+        "no sends",
+        "stale Client Boxes"
+      ],
+      "verification": "safe read-only Close API check"
+    },
+    {
+      "id": "SET-AUTO-001",
+      "name": "Client Cadence Active Flag",
+      "category": "automation",
+      "status": "active",
+      "storage": "Auto/Client Boxes/<Name>/00_meta.json",
+      "secret_bearing": false,
+      "safe_to_commit": true,
+      "used_by": [
+        "scheduled fires",
+        "ready checks",
+        "client audits",
+        "state sweep"
+      ],
+      "verification": "check meta, plan, comms, and client ledger together"
+    },
+    {
+      "id": "SET-AUTO-002",
+      "name": "Global Send Kill Switch",
+      "category": "automation",
+      "status": "needed",
+      "storage": "TBD",
+      "secret_bearing": false,
+      "safe_to_commit": true,
+      "used_by": [
+        "scheduled fires",
+        "customer-facing send paths"
+      ],
+      "failure_mode": "no central emergency brake"
+    }
+  ],
+  "feature_flags": [
+    {
+      "name": "enable_risk_approval_cards",
+      "status": "planned",
+      "risk": "high but safety-positive"
+    },
+    {
+      "name": "enable_customer_send",
+      "status": "needs_verification",
+      "risk": "critical"
+    }
+  ]
+}
+```
+
+This JSON can later power a settings dashboard or validator.
+
+---
+
+# 19. Suggested Visual Layer
+
+Create:
+
+```text
+/LEDGERS/VISUALS/settings_map.mmd
+/LEDGERS/VISUALS/settings_dependency_flow.mmd
+/LEDGERS/VISUALS/credential_settings_flow.mmd
+/LEDGERS/VISUALS/automation_settings_flow.mmd
+```
+
+Example settings dependency flow:
+
+```mermaid
+flowchart TD
+  Setting[Setting] --> Storage[Storage Location]
+  Setting --> Page[Settings Page / Widget]
+  Setting --> Runtime[Runtime Behavior]
+  Setting --> Connection[External Connection]
+  Runtime --> SideEffect[Side Effects]
+  Connection --> Failure[Failure Mode]
+  Setting --> Done[Settings Done Gate]
+```
+
+Example credential flow:
+
+```mermaid
+flowchart LR
+  UI[Settings Credential Editor] --> API[Settings API]
+  API --> Store[.env / Secure Config]
+  Store --> Service[External Service]
+  Service --> Feature[Feature / Workflow]
+
+  Ledger[Settings Ledger] -. describes, no secrets .-> Store
+  Connections[Connections Ledger] -. dependency map .-> Service
+```
+
+Example automation settings flow:
+
+```mermaid
+flowchart TD
+  Kill[Global Send Kill Switch] --> SendPath[Customer-Facing Send Path]
+  DryRun[Dry Run Mode] --> SendPath
+  Cadence[Client active_cadence] --> Fire[Scheduled Fire]
+  ReplyGate[Reply Gate State] --> Fire
+  Fire --> Guardrails[Guardrails]
+  Guardrails --> Approval[Approval Required?]
+  Approval --> SendPath
+```
+
+---
+
+# 20. Relationship to Connections Ledger
+
+Connections tells the project what services exist.
+
+Settings tells the project what config controls those services.
+
+Example:
+
+```text
+Connections Ledger:
+Slack is used for alerts.
+
+Settings Ledger:
+Slack token/channel IDs are expected in secure config and must not be committed.
+```
+
+If a service is added, update Connections.
+If its credentials/config are exposed to the app, update Settings too.
+
+---
+
+# 21. Relationship to Source-of-Truth Ledger
+
+Some settings are source-of-truth for behavior.
+
+Example:
+
+```text
+active_cadence in `00_meta.json` may be source-of-truth for whether a client cadence is active.
+
+But it is not sufficient alone to authorize sending.
+```
+
+The Source-of-Truth Ledger should define authority.
+
+The Settings Ledger should define configuration mechanics.
+
+---
+
+# 22. Relationship to Page and Widget Ledgers
+
+Settings Page and Settings Credential Editor should link here.
+
+If a widget reads or writes settings, its Widget Ledger should list:
+
+* setting IDs
+* storage
+* side effects
+* verification
+* secret risk
+
+If a page exposes settings, its Page Ledger should list:
+
+* what settings it shows
+* what it can write
+* what external systems it affects
+
+---
+
+# 23. Relationship to Open Problems
+
+Settings issues often become open problems.
+
+Seed likely problems:
+
+```text
+Global send kill switch not implemented
+Dry-run mode not verified
+Optional service settings not verified
+Credential storage locations need confirmation
+```
+
+These should be tracked in Open Problems if unresolved.
+
+---
+
+# 24. Relationship to Audit Ledger
+
+Settings should be audited when:
+
+* credentials change
+* settings page changes
+* automation flags change
+* customer-facing send settings change
+* model/provider settings change
+* local/cloud config differs
+
+Audit should check:
+
+```text
+raw secrets not exposed
+storage is correct
+safe verification used
+fallback behavior exists
+affected ledgers updated
+```
+
+---
+
+# 25. What Opus Should Build First
+
+Give Opus this build order:
+
+```text
+1. Create /LEDGERS/SETTINGS_LEDGER.md.
+2. Create /LEDGERS/SETTINGS_LEDGER.json.
+3. Add link to /LEDGERS/INDEX.md.
+4. Add link to /LEDGERS/CONNECTIONS_LEDGER.md if it exists.
+5. Add link to /LEDGERS/PAGE_LEDGER.md if it exists.
+6. Add link to /LEDGERS/WIDGET_LEDGER.md if it exists.
+7. Add link to /LEDGERS/SOURCE_OF_TRUTH.md if it exists.
+8. Create /LEDGERS/VISUALS/settings_map.mmd.
+9. Create /LEDGERS/VISUALS/credential_settings_flow.mmd.
+10. Add Security Rules.
+11. Add Setting Entry Format.
+12. Add Setting Categories.
+13. Seed setting entries:
+    - Close API Key
+    - Slack Token / Slack Connection
+    - MCP Credentials
+    - Model Provider
+    - Client Cadence Active Flag
+    - Global Send Kill Switch
+    - Dry Run Mode
+    - Theme / Appearance
+    - Selected Box
+14. Add Feature Flags section.
+15. Add Settings Verification Playbook.
+16. Add Settings Change Done Gate.
+17. Commit with message: "Add settings ledger".
+```
+
+Important instruction:
+
+```text
+Opus must verify actual variable names, endpoints, and storage paths from repo code before finalizing. If unsure, mark `needs verification`.
+```
+
+---
+
+# 26. Quality Bar
+
+The Settings Ledger succeeds if future agents can answer:
+
+* What settings exist?
+* Where are they stored?
+* Are they secret-bearing?
+* Are they safe to commit?
+* What systems depend on them?
+* What pages/widgets edit them?
+* What happens if they are missing?
+* How do we verify them safely?
+* What settings affect automation?
+* What settings affect customer-facing actions?
+* What settings need decisions or implementation?
+
+It fails if:
+
+* it stores secrets
+* it invents variable names
+* it ignores side effects
+* it does not distinguish localStorage from `.env` from GitHub-backed config
+* it does not connect to Connections
+* it does not identify customer-facing automation settings
+* it lets settings changes happen without verification
+* it becomes stale after settings UI changes
+
+This ledger should make configuration visible, safe, and auditable.
+
+---
+
+# 27. Final Operating Rule
+
+The Settings Ledger should end with this:
+
+```markdown
+A setting is not just a value.
+
+It is a behavior switch.
+
+Know where it lives.
+Know what it changes.
+Know what breaks when it is wrong.
+Never write down the secret.
+```
+
+---
+
+

@@ -1,0 +1,1092 @@
+# Decisions Ledger — Project-Wide Implementation Outline
+
+## 0. Purpose
+
+The **Decisions Ledger** records major choices.
+
+It explains what was decided, why it was decided, what alternatives were considered, what consequences follow, and what future agents should not casually undo.
+
+The uploaded ledger plan describes the Decisions Ledger as the place where project judgment lives. It should prevent future agents from reopening settled questions or accidentally reversing important architectural choices. 
+
+That is exactly right.
+
+A decision is stronger when it is written down.
+
+Without a Decisions Ledger, the project will keep relitigating the same questions:
+
+* Should GitHub be the source of truth?
+* Are Client Boxes canonical?
+* Can automation use enrichment in customer-facing copy?
+* Should risky moves be auto-sent or approval-gated?
+* Is the Boxes page source truth or just display?
+* Should one client’s edge case create global automation changes?
+* Are ledgers required for done?
+
+The Decisions Ledger should preserve the judgment behind those answers.
+
+---
+
+# 1. Core Operating Principle
+
+The Decisions Ledger should enforce this rule:
+
+> Decisions that shape future work must survive the session where they were made.
+
+Chat is not enough.
+
+A major architectural or operational choice should not live only in a model response, a Slack thread, or someone’s memory.
+
+The project needs durable decision records so future agents can answer:
+
+* What did we decide?
+* Why?
+* What problem were we solving?
+* What alternatives did we reject?
+* Is this final or experimental?
+* What systems does this affect?
+* What should not be undone without review?
+
+The Decisions Ledger is how the project remembers judgment.
+
+---
+
+# 2. Recommended Location
+
+Create it in the central ledger directory:
+
+```text id="f408sj"
+/LEDGERS/
+  DECISIONS_LEDGER.md
+  DECISIONS_LEDGER.json
+  INDEX.md
+  VISUALS/
+    decision_timeline.mmd
+    decision_dependency_map.mmd
+```
+
+Recommended final path:
+
+```text id="skd920"
+/LEDGERS/DECISIONS_LEDGER.md
+/LEDGERS/DECISIONS_LEDGER.json
+```
+
+The Global Ledger, Temporal Continuity Ledger, North Star Ledger, and Definition of Done Ledger should all link to it.
+
+---
+
+# 3. Role in the Ledger System
+
+The Decisions Ledger captures durable choices.
+
+```text id="j0y94b"
+Global Ledger
+  └── current project-wide rules and orientation
+
+Temporal Continuity Ledger
+  └── current state and recent context
+
+Decisions Ledger
+  └── durable choices and their rationale
+
+Open Problems Ledger
+  └── unresolved questions not yet decided
+
+Audit Ledger
+  └── findings that may create future decisions
+
+Reconstruction Ledger
+  └── build recipes shaped by decisions
+```
+
+Important distinction:
+
+```text id="ap73ic"
+Open Problem:
+Should risky fee-waiver moves be allowed?
+
+Decision:
+Risky fee-waiver moves may be suggested but require explicit isolated approval before send.
+```
+
+The Decisions Ledger records the second one.
+
+---
+
+# 4. What This Ledger Owns
+
+## Owns
+
+* major architectural decisions
+* operational decisions
+* safety/guardrail decisions
+* source-of-truth decisions
+* workflow decisions
+* technology/tooling decisions
+* project philosophy decisions
+* deprecations/reversals
+* decision status
+* decision rationale
+* alternatives considered
+* affected systems
+* consequences
+* review dates where needed
+
+## Does not own
+
+* every small implementation choice
+* all current tasks
+* every bug
+* active uncertainties
+* detailed work logs
+* complete meeting notes
+* all open questions
+
+Those belong in Open Problems, Communications, Temporal Continuity, Audit, Scout, and Reconstruction ledgers.
+
+This ledger should be selective.
+
+If everything is a decision, nothing is a decision.
+
+---
+
+# 5. Recommended `DECISIONS_LEDGER.md` Structure
+
+Use stable headings:
+
+```markdown id="kz8ca4"
+# Decisions Ledger
+
+Last updated:
+Maintainer:
+Status:
+Read when:
+Core rule:
+
+## 1. Purpose
+## 2. Decision Record Format
+## 3. Decision Status Labels
+## 4. Current Active Decisions
+## 5. Decision Records
+## 6. Deprecated / Reversed Decisions
+## 7. Decision Dependencies
+## 8. Decisions Needing Review
+## 9. Common Decision Mistakes
+## 10. Visualization Index
+## 11. Update Rules
+```
+
+This ledger should be easy to browse by decision ID.
+
+---
+
+# 6. Decision Record Format
+
+Each decision should have a stable ID.
+
+Recommended ID format:
+
+```text id="197b5u"
+DEC-YYYY-MM-DD-### short-slug
+```
+
+Example:
+
+```text id="1g0lyb"
+DEC-2026-04-28-001-github-source-of-truth
+```
+
+Decision template:
+
+```markdown id="57k7bp"
+## DEC-YYYY-MM-DD-### — <Decision Title>
+
+Status:
+Date:
+Decider:
+Affected systems:
+Related North Star goals:
+Related ledgers:
+Supersedes:
+Superseded by:
+
+### Decision
+
+What was decided.
+
+### Context
+
+What situation caused the decision.
+
+### Rationale
+
+Why this was chosen.
+
+### Alternatives Considered
+
+What else could have been done.
+
+### Consequences
+
+What this changes downstream.
+
+### Do Not Undo Casually
+
+What future agents should avoid reversing without explicit review.
+
+### Review Trigger
+
+When this decision should be revisited.
+```
+
+Not every field must be long.
+
+But every decision should include **decision**, **context**, **rationale**, and **consequences**.
+
+---
+
+# 7. Decision Status Labels
+
+Standardize statuses.
+
+```markdown id="6sb199"
+## 3. Decision Status Labels
+
+Use one:
+
+- `active`: current decision, should be followed
+- `experimental`: current but under trial
+- `provisional`: accepted for now, may change soon
+- `under-review`: being reconsidered
+- `superseded`: replaced by a later decision
+- `deprecated`: no longer recommended
+- `rejected`: considered and explicitly not chosen
+```
+
+Add optional fields:
+
+```text id="1f3qmv"
+confidence: high / medium / low
+scope: global / local / experimental / client-specific / UI / automation
+```
+
+This helps future agents know how strongly to obey it.
+
+---
+
+# 8. Current Active Decisions
+
+Purpose: quick index.
+
+Example:
+
+```markdown id="z624ub"
+## 4. Current Active Decisions
+
+| ID | Decision | Status | Scope | Affected Systems |
+|---|---|---|---|---|
+| DEC-2026-04-28-001 | GitHub is the source of truth | active | global | all systems |
+| DEC-2026-04-28-002 | Use FileTree orchestration over RAG memory | active | global | ledgers, Boxes, agents |
+| DEC-2026-04-28-003 | Client Boxes are canonical client truth | active | client automation | Client Boxes, Boxes page, orchestrator |
+| DEC-2026-04-28-004 | Seven-day plans are strategy drafts, not send licenses | active | automation safety | Client Boxes, scheduled fires |
+| DEC-2026-04-28-005 | Risky sales moves require isolated approval | active | send safety | inbox, approvals, Client Boxes |
+| DEC-2026-04-28-006 | Boxes page is display/read layer, not canonical truth | active | UI/source truth | Boxes page, Client Boxes |
+| DEC-2026-04-28-007 | Work proceeds one ledger at a time | active | workflow | ledger buildout |
+```
+
+This index lets an agent skim the settled rules.
+
+---
+
+# 9. Starter Decision Records
+
+These are the decisions that should be seeded based on the current project philosophy and conversation.
+
+## 9.1 GitHub is the source of truth
+
+```markdown id="30x37f"
+## DEC-2026-04-28-001 — GitHub Is The Source Of Truth
+
+Status: active  
+Date: 2026-04-28  
+Decider: User / project owner  
+Affected systems: all repo-backed systems, ledgers, agents, Client Boxes  
+Related North Star goals: NS-01, NS-02, NS-09, NS-10  
+
+### Decision
+
+GitHub is the durable source of truth for the project.
+
+The local file tree is the working copy. Important project memory, ledgers, source files, maps, decisions, and handoff notes should be versioned and pushed to GitHub.
+
+### Context
+
+The project needs continuity across agents, tools, MCP servers, local machines, and future sessions. Local-only state and chat history are not durable enough.
+
+### Rationale
+
+GitHub gives the project shared, versioned, inspectable memory. It lets other agents and tools connect through Git instead of relying on the user’s local machine.
+
+### Alternatives Considered
+
+- Local-only file tree
+- Chat history as memory
+- RAG/vector memory as primary continuity
+- Scattered docs outside repo
+
+### Consequences
+
+- Important project memory belongs in repo files.
+- Ledgers should be committed.
+- Agents should report commit SHAs when writing directly.
+- Direct GitHub writes must consider the user may have unpushed local work.
+
+### Do Not Undo Casually
+
+Do not move core continuity back into chat-only or local-only memory without explicit review.
+
+### Review Trigger
+
+Revisit only if GitHub stops being accessible or another versioned source-of-truth system replaces it.
+```
+
+---
+
+## 9.2 FileTree orchestration over RAG memory
+
+```markdown id="ae0o8u"
+## DEC-2026-04-28-002 — Use FileTree Orchestration Over RAG Memory
+
+Status: active  
+Date: 2026-04-28  
+Decider: User / project owner  
+Affected systems: ledgers, Boxes, meta harness, agent workflow  
+Related North Star goals: NS-01, NS-02, NS-03, NS-09  
+
+### Decision
+
+The project will use FileTree orchestration as its primary memory and coordination model, not RAG as the memory model.
+
+### Context
+
+The user wants durable, inspectable, directory-aware continuity. They want each meaningful directory to carry context, rules, ledgers, source-of-truth notes, and local memory.
+
+### Rationale
+
+FileTree orchestration gives agents explicit, versioned, local context. It is easier to audit, rebuild, hand off, and reason about than vague retrieval over scattered memory.
+
+### Alternatives Considered
+
+- RAG/vector memory as primary project memory
+- chat history as continuity
+- ad hoc docs
+- monolithic global memory file
+
+### Consequences
+
+- Important memory belongs in files.
+- Directories should become Boxes when meaningful.
+- Local context should live near the files it governs.
+- Meta harness should read ledgers and local Boxes before work.
+
+### Do Not Undo Casually
+
+Do not replace Box/local-file continuity with hidden memory without review.
+
+### Review Trigger
+
+Revisit only if a hybrid retrieval layer is added as a helper while keeping file tree as source of truth.
+```
+
+---
+
+## 9.3 Client Boxes are canonical client truth
+
+```markdown id="guf8yq"
+## DEC-2026-04-28-003 — Client Boxes Are Canonical Client Truth
+
+Status: active  
+Date: 2026-04-28  
+Decider: User / project owner  
+Affected systems: Client Boxes, Boxes page, orchestrator, scheduled fires  
+Related North Star goals: NS-03, NS-04, NS-06  
+
+### Decision
+
+`Auto/Client Boxes/<Name>/` is the canonical per-client memory and operating substrate.
+
+The Boxes page and orchestrator state are read/render/generation layers over that substrate.
+
+### Context
+
+There was confusion about whether the `boxes` UI/page or `Auto/Boxes` umbrella orchestrator was the actual client truth. The project clarified that Client Boxes hold the specific client memory, comms, state, profile, plan, alerts, and local audit notes.
+
+### Rationale
+
+Client-specific complexity should live inside the client’s own Box. One client’s constraints should not force global automation rewrites.
+
+### Alternatives Considered
+
+- Treating Boxes page as the source
+- Treating orchestrator state as the source
+- Centralizing all client logic in one global automation
+
+### Consequences
+
+- Client-specific edits should happen in the relevant Client Box.
+- The Boxes page must not be treated as canonical client truth.
+- Generated state should point back to Client Boxes.
+- Per-client audit markers and local notes matter.
+
+### Do Not Undo Casually
+
+Do not make UI or generated dashboard state the canonical source for client truth without explicit migration.
+
+### Review Trigger
+
+Revisit only if a new database-backed canonical client layer is intentionally introduced.
+```
+
+---
+
+## 9.4 Seven-day plans are strategy drafts, not send licenses
+
+```markdown id="gkjrwc"
+## DEC-2026-04-28-004 — Seven-Day Plans Are Strategy Drafts, Not Send Licenses
+
+Status: active  
+Date: 2026-04-28  
+Decider: User / project owner  
+Affected systems: Client Boxes, scheduled fires, inbox automation, guardrails  
+Related North Star goals: NS-04, NS-05, NS-06  
+
+### Decision
+
+A seven-day plan is a strategy draft. It does not authorize sending by itself.
+
+Before any send, the current comms, state, guardrails, approvals, calendar reality, frequency caps, and reply gates must still pass.
+
+### Context
+
+Some plans were written before guardrails were fully enforced. A plan can contain strong strategy but still conflict with current send rules or changed client state.
+
+### Rationale
+
+Plans age. Replies, transcripts, state sweeps, and updated guardrails can invalidate a previously good plan.
+
+### Alternatives Considered
+
+- Treat seven-day plan text as executable send authority
+- Disable plans entirely
+- Require manual rewrite before every move
+
+### Consequences
+
+- Scheduled fires must treat plans as input, not authority.
+- If a lead replies, the plan may become stale and need rewrite.
+- Plan audits should check for stale dates, risky commitments, and enrichment leakage.
+- Client Box cleanup should flatten risky future sends.
+
+### Do Not Undo Casually
+
+Do not allow automation to send directly from plan text without guardrail validation.
+
+### Review Trigger
+
+Revisit if a formal plan compiler/validator is built that enforces all gates before execution.
+```
+
+---
+
+## 9.5 Risky moves require isolated approval
+
+```markdown id="kf1fu9"
+## DEC-2026-04-28-005 — Risky Sales Moves Require Isolated Approval
+
+Status: active  
+Date: 2026-04-28  
+Decider: User / project owner  
+Affected systems: inbox automation, approval surfaces, Client Boxes, scheduled fires  
+Related North Star goals: NS-04, NS-05, NS-06  
+
+### Decision
+
+Risky sales moves may be suggested, but they require explicit isolated approval before customer-facing send.
+
+Risky moves include:
+
+- fee waivers
+- discounts
+- free services
+- no-charge language
+- guest-count promises
+- pricing guarantees
+- scope expansions
+- enrichment-based personalization
+- strong claims not grounded in comms
+
+### Context
+
+The Brenda & Steve fee-waiver move may have been strategically correct, but it was approved in a rushed batch context and did not receive enough isolated risk friction.
+
+### Rationale
+
+Good sales judgment and safe automation are not the same thing. Automation can suggest bold moves, but a human should explicitly own financial, pricing, scope, or risky personalization commitments.
+
+### Alternatives Considered
+
+- Ban all risky moves
+- Allow risky moves inside normal batch approval
+- Auto-send risky moves if plan says so
+
+### Consequences
+
+- Risky moves should become approval cards.
+- Approval cards should name the risk clearly.
+- Batch approval should not hide financial/scope commitments.
+- Future Client Box plans should gate or flatten risky language.
+
+### Do Not Undo Casually
+
+Do not let risky commitments ship as ordinary follow-up copy without explicit approval.
+
+### Review Trigger
+
+Revisit after approval UI supports isolated risk confirmations robustly.
+```
+
+---
+
+## 9.6 Boxes page is display/read layer
+
+```markdown id="l0ij8k"
+## DEC-2026-04-28-006 — Boxes Page Is Display Layer, Not Canonical Truth
+
+Status: active  
+Date: 2026-04-28  
+Decider: User / project owner  
+Affected systems: Boxes page, Client Boxes, orchestrator state, page-asset sitemap  
+Related North Star goals: NS-06, NS-08  
+
+### Decision
+
+The `boxes` route/page is a UI read/display surface over Client Boxes, Staff Boxes, and orchestrator state. It does not own canonical client truth.
+
+### Context
+
+The sitemap says the `boxes` page reads `Auto/Client Boxes`, `Auto/Staff Boxes`, and `Auto/orchestrator/state`, and exposes a single-surface dossier view. That could visually imply ownership if not documented.
+
+### Rationale
+
+UI should make truth visible, not become truth accidentally.
+
+### Alternatives Considered
+
+- Treat Boxes page as canonical client source
+- Treat orchestrator state as canonical
+- Hide source distinction
+
+### Consequences
+
+- Fix client truth in Client Boxes, not the UI display.
+- Fix generated state through sources/generators.
+- Page changes still update page-asset sitemap.
+- Boxes page should clearly communicate source freshness and generated/canonical distinctions where possible.
+
+### Do Not Undo Casually
+
+Do not write client truth into the Boxes page layer without source-of-truth migration.
+
+### Review Trigger
+
+Revisit if a database or app-native canonical Box store replaces file-based Client Boxes.
+```
+
+The uploaded sitemap confirms the Boxes page’s data source and API ownership. 
+
+---
+
+## 9.7 Page-asset sitemap is mandatory Done Gate for page changes
+
+```markdown id="z9fb1e"
+## DEC-2026-04-28-007 — Page-Asset Sitemap Is Mandatory Done Gate For Page Changes
+
+Status: active  
+Date: 2026-04-28  
+Decider: existing project policy / accepted into ledger system  
+Affected systems: UI pages, routes, APIs, page data binding  
+Related North Star goals: NS-06, NS-08, NS-10  
+
+### Decision
+
+Any task that changes a page, route behavior, or page data binding is not complete until the page-asset sitemap is updated.
+
+### Context
+
+The Comeketo Page-Asset Source Of Truth already defines this mandatory Done Gate and lists what must be updated: relevant page section’s Asset Ownership, Change Checklist, History, and Last Verified. :contentReference[oaicite:2]{index=2}
+
+### Rationale
+
+Page behavior and data ownership drift quickly if not recorded.
+
+### Alternatives Considered
+
+- Rely on code diffs only
+- Update sitemap only occasionally
+- Replace sitemap with comments in code
+
+### Consequences
+
+- UI/page work must include sitemap update.
+- Asset / Widget Map should link to sitemap rather than duplicate it.
+- Audits can fail page work if sitemap is stale.
+
+### Do Not Undo Casually
+
+Do not remove this Done Gate without replacing it with an equal or stronger page ownership system.
+
+### Review Trigger
+
+Revisit only if Page Ledgers or an automated page map supersede the sitemap.
+```
+
+---
+
+## 9.8 One ledger at a time implementation rhythm
+
+```markdown id="fylbr2"
+## DEC-2026-04-28-008 — Build Ledgers One At A Time
+
+Status: active  
+Date: 2026-04-28  
+Decider: user  
+Affected systems: ledger implementation workflow, Opus handoff  
+Related North Star goals: NS-01, NS-09, NS-10  
+
+### Decision
+
+The ledger system should be designed and implemented one ledger at a time.
+
+The user types `P` to proceed to the next ledger outline.
+
+### Context
+
+The ledger system is large. Implementing it all at once would be too broad and could create shallow, low-quality files.
+
+### Rationale
+
+One-ledger-at-a-time keeps focus, creates rhythm, and lets the user hand clean implementation outlines to Opus.
+
+### Alternatives Considered
+
+- Build all ledgers in one pass
+- Start coding without design
+- Only create a global README
+
+### Consequences
+
+- Each ledger gets a dedicated implementation outline.
+- Opus can implement incrementally.
+- The system can evolve without overwhelming the repo.
+
+### Do Not Undo Casually
+
+Do not attempt a massive all-ledgers rewrite unless the user explicitly changes workflow.
+
+### Review Trigger
+
+Revisit after first wave of ledgers is implemented.
+```
+
+---
+
+# 10. Deprecated / Reversed Decisions
+
+This section should track things the project no longer believes.
+
+Example:
+
+```markdown id="p60yt8"
+## 6. Deprecated / Reversed Decisions
+
+No formal deprecated decisions yet.
+
+Candidate to record later:
+- Any earlier assumption that seven-day plans could be directly executable without a guardrail compiler.
+- Any earlier assumption that generic Close drip style was acceptable for high-value Client Boxes.
+```
+
+This helps future agents understand evolution.
+
+---
+
+# 11. Decision Dependencies
+
+Purpose: show how decisions depend on each other.
+
+Example:
+
+```markdown id="7agboq"
+## 7. Decision Dependencies
+
+- DEC-001 GitHub source of truth supports all ledger decisions.
+- DEC-002 FileTree orchestration depends on DEC-001.
+- DEC-003 Client Boxes canonical truth depends on DEC-002.
+- DEC-004 Plans are strategy drafts depends on DEC-003 and guardrail policy.
+- DEC-005 Risky moves require isolated approval depends on DEC-004.
+- DEC-007 Page sitemap Done Gate supports Source-of-Truth and Asset/Widget Map discipline.
+```
+
+This can become a visual graph.
+
+---
+
+# 12. Decisions Needing Review
+
+Purpose: track decisions that are not fully settled.
+
+Example:
+
+```markdown id="x1ubfq"
+## 8. Decisions Needing Review
+
+### Approval UI / Risk Card Standard
+
+Status: needs future decision
+
+Question:
+What exact UI/process should isolate approval for risky moves?
+
+Current working assumption:
+Risky moves become explicit approval cards requiring specific confirmation.
+
+Needs decision on:
+- wording
+- approval logging
+- where approval lives
+- whether approval expires
+- how approval attaches to future sends
+```
+
+If it is not decided yet, do not fake it.
+
+Put it here or in Open Problems.
+
+---
+
+# 13. Common Decision Mistakes
+
+```markdown id="rlf7as"
+## 9. Common Decision Mistakes
+
+- Treating a one-time workaround as a global decision.
+- Making a decision in chat but not recording it.
+- Recording what was chosen but not why.
+- Failing to mark experimental decisions as experimental.
+- Forgetting to supersede old decisions.
+- Reopening settled architecture without reading the Decisions Ledger.
+- Applying a local client rule globally.
+- Letting a tool’s convenience override source-of-truth decisions.
+```
+
+This is a useful guardrail for future agents.
+
+---
+
+# 14. Recommended `DECISIONS_LEDGER.json` Shape
+
+```json id="7kb9wg"
+{
+  "ledger_type": "decisions",
+  "version": "0.1.0",
+  "last_updated": "2026-04-28",
+  "decision_status_labels": [
+    "active",
+    "experimental",
+    "provisional",
+    "under-review",
+    "superseded",
+    "deprecated",
+    "rejected"
+  ],
+  "decisions": [
+    {
+      "id": "DEC-2026-04-28-001",
+      "slug": "github-source-of-truth",
+      "title": "GitHub Is The Source Of Truth",
+      "status": "active",
+      "date": "2026-04-28",
+      "scope": "global",
+      "affected_systems": ["all repo-backed systems", "ledgers", "agents", "Client Boxes"],
+      "related_north_star_goals": ["NS-01", "NS-02", "NS-09", "NS-10"],
+      "decision": "GitHub is the durable source of truth for the project.",
+      "rationale": "GitHub gives the project shared, versioned, inspectable memory.",
+      "do_not_undo_casually": "Do not move core continuity back into chat-only or local-only memory without explicit review."
+    },
+    {
+      "id": "DEC-2026-04-28-005",
+      "slug": "risky-moves-isolated-approval",
+      "title": "Risky Sales Moves Require Isolated Approval",
+      "status": "active",
+      "date": "2026-04-28",
+      "scope": "automation_safety",
+      "affected_systems": ["inbox automation", "approval surfaces", "Client Boxes", "scheduled fires"],
+      "related_north_star_goals": ["NS-04", "NS-05", "NS-06"],
+      "decision": "Risky sales moves may be suggested, but require explicit isolated approval before customer-facing send.",
+      "risky_move_examples": [
+        "fee waivers",
+        "discounts",
+        "free services",
+        "no-charge language",
+        "guest-count promises",
+        "pricing guarantees",
+        "scope expansions",
+        "enrichment-based personalization"
+      ],
+      "rationale": "Good sales judgment and safe automation are not the same thing."
+    }
+  ],
+  "under_review": [
+    {
+      "id": "REVIEW-approval-ui-risk-card-standard",
+      "question": "What exact UI/process should isolate approval for risky moves?",
+      "current_assumption": "Risky moves become explicit approval cards requiring specific confirmation."
+    }
+  ]
+}
+```
+
+This can later power decision indexes and audit references.
+
+---
+
+# 15. Suggested Visual Layer
+
+Create:
+
+```text id="sjx1vm"
+/LEDGERS/VISUALS/decision_timeline.mmd
+/LEDGERS/VISUALS/decision_dependency_map.mmd
+```
+
+Example dependency map:
+
+```mermaid id="jh8j6r"
+flowchart TD
+  D1[DEC-001 GitHub Source of Truth]
+  D2[DEC-002 FileTree over RAG]
+  D3[DEC-003 Client Boxes Canonical]
+  D4[DEC-004 Plans Are Strategy Drafts]
+  D5[DEC-005 Risky Moves Need Isolated Approval]
+  D6[DEC-006 Boxes Page Is Display Layer]
+  D7[DEC-007 Sitemap Done Gate]
+  D8[DEC-008 One Ledger At A Time]
+
+  D1 --> D2
+  D2 --> D3
+  D3 --> D4
+  D4 --> D5
+  D3 --> D6
+  D7 --> D6
+  D1 --> D8
+```
+
+Example decision timeline:
+
+```mermaid id="3ejmyw"
+timeline
+  title Project Decisions
+  2026-04-28 : GitHub is source of truth
+             : FileTree orchestration over RAG memory
+             : Client Boxes canonical client truth
+             : Plans are strategy drafts
+             : Risky moves require isolated approval
+             : Page sitemap is UI Done Gate
+```
+
+---
+
+# 16. Relationship to Open Problems Ledger
+
+This distinction matters:
+
+```text id="gb4nd5"
+Open Problems Ledger:
+What is unresolved?
+
+Decisions Ledger:
+What has been decided?
+```
+
+When an open problem becomes settled, promote it into the Decisions Ledger.
+
+Example:
+
+```text id="cv3jmc"
+Open problem:
+How do we classify allowed-to-know facts?
+
+Future decision:
+Allowed-to-know facts live in each Client Box as `allowed_to_use.md/json`, with categories X/Y/Z.
+```
+
+Do not put unresolved debates into Decisions as if settled.
+
+---
+
+# 17. Relationship to Audit Ledger
+
+Audits should cite decisions.
+
+Example:
+
+```text id="0kz9pz"
+Audit finding:
+Brenda & Steve plan contained fee-waiver language in future sends.
+
+Relevant decision:
+DEC-2026-04-28-005 — Risky Sales Moves Require Isolated Approval.
+
+Result:
+Future fee-waiver language gated/flattened.
+```
+
+This makes audit findings enforce settled judgment.
+
+---
+
+# 18. Relationship to Reconstruction Ledger
+
+Build recipes should cite decisions that shaped them.
+
+Example:
+
+```text id="ipjwfy"
+Reconstruction recipe for Client Box cleanup should cite:
+- DEC-003 Client Boxes canonical truth
+- DEC-004 Plans are strategy drafts
+- DEC-005 Risky moves require isolated approval
+```
+
+This helps future rebuilds preserve intent.
+
+---
+
+# 19. Relationship to North Star
+
+Each major decision should list which North Star goals it supports.
+
+This creates alignment.
+
+Example:
+
+```text id="so24r4"
+DEC-005 supports:
+- NS-04 Automation That Feels More Human
+- NS-05 Safe Movement
+- NS-06 Source-of-Truth Discipline
+```
+
+If a decision does not support a North Star, it may still be necessary, but the reason should be recorded.
+
+---
+
+# 20. Decision Change Done Gate
+
+A major decision is done when:
+
+```markdown id="w50h5m"
+- [ ] decision is recorded
+- [ ] context is recorded
+- [ ] rationale is recorded
+- [ ] affected systems are listed
+- [ ] alternatives are noted if useful
+- [ ] consequences are clear
+- [ ] status is set
+- [ ] review trigger is defined if needed
+- [ ] related ledgers/docs are linked
+```
+
+If a decision reverses another:
+
+```markdown id="59p9ro"
+- [ ] old decision is marked superseded/deprecated
+- [ ] new decision links to old decision
+- [ ] affected local rules are updated
+```
+
+---
+
+# 21. What Opus Should Build First
+
+Give Opus this build order:
+
+```text id="qmerik"
+1. Create /LEDGERS/DECISIONS_LEDGER.md.
+2. Create /LEDGERS/DECISIONS_LEDGER.json.
+3. Add link to /LEDGERS/INDEX.md.
+4. Add link to /LEDGERS/GLOBAL_LEDGER.md if it exists.
+5. Add link to /LEDGERS/TEMPORAL_CONTINUITY.md if it exists.
+6. Add link to /LEDGERS/NORTH_STAR.md if it exists.
+7. Create /LEDGERS/VISUALS/decision_dependency_map.mmd.
+8. Create /LEDGERS/VISUALS/decision_timeline.mmd.
+9. Add Decision Record Format.
+10. Add Decision Status Labels.
+11. Seed current active decisions:
+    - GitHub is source of truth
+    - FileTree orchestration over RAG memory
+    - Client Boxes are canonical client truth
+    - Seven-day plans are strategy drafts
+    - Risky sales moves require isolated approval
+    - Boxes page is display/read layer, not canonical truth
+    - Page-asset sitemap is mandatory Done Gate
+    - Ledger implementation proceeds one ledger at a time
+12. Add Decisions Needing Review section for approval UI/risk card standard.
+13. Commit with message: "Add decisions ledger".
+```
+
+---
+
+# 22. Quality Bar
+
+The Decisions Ledger succeeds if future agents can answer:
+
+* What major choices have already been made?
+* Why were they made?
+* What should not be reopened casually?
+* What alternatives were rejected?
+* What systems are affected?
+* Which decisions are experimental?
+* Which decisions are active?
+* Which decisions have been superseded?
+* What open questions still need actual decisions?
+
+It fails if:
+
+* it records every tiny implementation choice
+* it omits rationale
+* it does not track status
+* it never marks decisions superseded
+* it hides unresolved questions as if they are settled
+* future agents keep re-arguing the same choices
+* it is not referenced during audits and implementation
+
+The Decisions Ledger should preserve judgment without freezing the project.
+
+---
+
+# 23. Final Operating Rule
+
+The Decisions Ledger should end with this:
+
+```markdown id="utrr4x"
+A decision not recorded is a decision waiting to be forgotten.
+
+Write down the choice.
+Write down the why.
+Write down what future agents should not undo by accident.
+```
+
+---
+
+

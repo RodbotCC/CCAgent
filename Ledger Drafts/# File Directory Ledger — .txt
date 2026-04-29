@@ -1,0 +1,1010 @@
+# File Directory Ledger — Project-Wide Implementation Outline
+
+## 0. Purpose
+
+The **File Directory Ledger** explains the shape of the file tree.
+
+It is the project’s table of contents, directory map, and “where does this belong?” guide.
+
+The Global Ledger tells agents what the project is.
+The File Directory Ledger tells agents where they are.
+
+The uploaded ledger plan describes this ledger as the project’s table of contents. It should map the main folders, what they are responsible for, and how they relate to each other. It should prevent agents from finding similar words somewhere else and editing the wrong area. 
+
+That is the core job.
+
+This ledger exists to stop “grep roulette.”
+
+A future agent should not have to blindly search the repo, guess what a folder means, and hope it edits the right thing.
+
+---
+
+# 1. Core Operating Principle
+
+The File Directory Ledger should enforce this rule:
+
+> Before editing a file, understand where it lives and what its directory owns.
+
+The file tree is not just storage.
+
+The file tree is architecture.
+
+Directories should communicate:
+
+* what they own
+* what they do not own
+* what source of truth they trust
+* what local rules apply
+* what nearby files are generated
+* what nearby files are canonical
+* what areas are dangerous
+* what agents should read first
+
+The project’s philosophy says the repo is memory. The File Directory Ledger makes the repo navigable memory.
+
+---
+
+# 2. Recommended Location
+
+Create it in the central ledger directory:
+
+```text id="fyalk1"
+/LEDGERS/
+  FILE_DIRECTORY_LEDGER.md
+  FILE_DIRECTORY_LEDGER.json
+  INDEX.md
+  VISUALS/
+    file_directory_map.mmd
+    directory_ownership_map.mmd
+```
+
+Recommended final path:
+
+```text id="qafshr"
+/LEDGERS/FILE_DIRECTORY_LEDGER.md
+/LEDGERS/FILE_DIRECTORY_LEDGER.json
+```
+
+The Global Ledger should link to this file under “Ledger System Map” and “Read-first order.”
+
+Directory-specific local orientations should link back to it.
+
+---
+
+# 3. Role in the Ledger System
+
+The File Directory Ledger sits between global project memory and local Box memory.
+
+```text id="qkt4jq"
+Global Ledger
+  └── What is the project?
+
+File Directory Ledger
+  └── What directories exist?
+  └── What does each directory own?
+  └── Where should agents go?
+
+Directory Configuration Ledgers / Boxes
+  └── What are the local rules inside this directory?
+
+File Contents Ledger
+  └── What do important files do?
+```
+
+Think of it like this:
+
+```text id="wqwcd2"
+Global Ledger = world map
+File Directory Ledger = city map
+Directory Config / Box = neighborhood sign
+File Contents Ledger = building directory
+```
+
+The File Directory Ledger should not replace local directory configs. It should point to them.
+
+---
+
+# 4. What This Ledger Owns
+
+## Owns
+
+* top-level directory map
+* important subdirectory map
+* directory ownership/responsibility
+* canonical vs generated areas
+* edit boundaries
+* source-of-truth notes by directory
+* read-first recommendations
+* relationships between directories
+* “do not edit here unless…” warnings
+* directory status:
+
+  * active
+  * generated
+  * archive
+  * legacy
+  * experimental
+  * deprecated
+  * external
+* links to local Box / orientation files
+* directory-level Done Gate triggers
+
+## Does not own
+
+* every file summary
+* every component dependency
+* every local rule
+* detailed widget/API maps
+* all open problems
+* every generated artifact
+* full source-of-truth matrix
+
+Those belong in File Contents Ledger, Asset/Widget Map, Source-of-Truth Ledger, local Boxes, Page Ledgers, and Open Problems Ledger.
+
+The File Directory Ledger should be navigational, not encyclopedic.
+
+---
+
+# 5. Recommended `FILE_DIRECTORY_LEDGER.md` Structure
+
+Use stable headings.
+
+```markdown id="jwxv2i"
+# File Directory Ledger
+
+Last updated:
+Maintainer:
+Repository:
+Status:
+Read when:
+
+## 1. Directory Philosophy
+## 2. Read-First Directory Rules
+## 3. Top-Level Directory Map
+## 4. Important Subdirectory Maps
+## 5. Directory Ownership Table
+## 6. Canonical vs Generated Areas
+## 7. Active / Legacy / Archive Status
+## 8. Directory Relationships
+## 9. Local Box / Orientation Index
+## 10. Common Wrong-Turns
+## 11. Directory Change Done Gate
+## 12. Visualization Index
+## 13. Update Rules
+```
+
+This ledger should be easy to scan.
+
+Tables are welcome.
+
+Visual maps are especially important here.
+
+---
+
+# 6. Section-by-Section Implementation
+
+## 6.1 Header Block
+
+Example:
+
+```markdown id="c60tle"
+# File Directory Ledger
+
+Last updated: 2026-04-28
+Maintainer: Jake / Tech Support / Project agents
+Repository: RodbotCC/CCAgent
+Status: Active
+Read when: locating files, editing unfamiliar areas, adding folders, moving source truth, auditing structure
+```
+
+---
+
+## 6.2 Directory Philosophy
+
+Purpose: explain how the project thinks about folders.
+
+Example:
+
+```markdown id="2zgj1v"
+## 1. Directory Philosophy
+
+The file tree is the project’s working memory.
+
+Directories are not passive containers. Important directories should own a clear area of the system and eventually introduce themselves through a local Box, directory orientation file, or local ledger.
+
+The File Directory Ledger gives project-wide orientation. Local Box files give directory-specific operating rules.
+
+Before editing in an unfamiliar area:
+1. Find the directory in this ledger.
+2. Read its ownership and source-of-truth notes.
+3. Read any local Box / AGENTS / CLAUDE / README file.
+4. Edit only after the directory’s role is clear.
+```
+
+This sets the behavior.
+
+---
+
+## 6.3 Read-First Directory Rules
+
+Purpose: give agents immediate safe-navigation rules.
+
+Example:
+
+```markdown id="otldvi"
+## 2. Read-First Directory Rules
+
+- Do not edit a directory just because a keyword search found it.
+- Check whether the file is canonical, generated, legacy, or archive.
+- If a directory has a local Box or orientation file, read it before editing.
+- If changing a page, check the page-asset sitemap.
+- If changing client-specific truth, work inside `Auto/Client Boxes/<Name>/`.
+- If changing runtime rendering, inspect `Auto/orchestrator/`.
+- If changing send rules, inspect inbox guardrails before plan text.
+- If changing generated state, identify the source generator first.
+- If moving or renaming directories, update this ledger.
+```
+
+This prevents wrong-area edits.
+
+---
+
+# 7. Top-Level Directory Map
+
+This is the heart of the ledger.
+
+Opus should populate it from the actual repo.
+
+Use a table like:
+
+```markdown id="xv8tbd"
+## 3. Top-Level Directory Map
+
+| Path | Status | Owns | Does Not Own | Source-of-Truth Notes | Read First |
+|---|---|---|---|---|---|
+| `/Auto` | active | Comeketo automation/client-box/orchestrator system | unrelated app root unless explicitly connected | mixed canonical + runtime/generated areas | `/Auto/README.md` or local Box when created |
+| `/LEDGERS` | active | project-wide memory system | app runtime behavior | canonical continuity layer | `GLOBAL_LEDGER.md` |
+| `/app` or app root | active if present | frontend routes/screens | client truth | UI surfaces truth from source files/APIs | page-asset sitemap |
+| `/components` | active if present | shared UI components | source data | component layer only | component/page ledger |
+| `/server` | active if present | backend endpoints | frontend ownership | API behavior; check source data | API/file contents ledger |
+```
+
+Because we do not want Opus to hallucinate the exact repo structure, instruct it:
+
+```text id="84iaa4"
+Opus must inspect the repository tree before filling this section.
+Do not invent directories.
+Use actual paths.
+```
+
+For the Comeketo repo as understood so far, important known areas include:
+
+```text id="4bivzz"
+Auto/
+Auto/Client Boxes/
+Auto/Staff Boxes/
+Auto/orchestrator/
+Auto/comeketo-inbox/
+Auto/Onboard Scripts/
+Auto/Comeketo Agent/
+LEDGERS/               planned/new
+```
+
+If app files live at root, those should also be mapped:
+
+```text id="6n5jav"
+app.jsx
+components.jsx
+screens.jsx
+automation.jsx
+server.py
+styles.css
+mission_control_loader.js
+delegator.js
+Secretary.html
+```
+
+Those individual files may belong more in the File Contents Ledger, but their containing area should be mapped here.
+
+---
+
+# 8. Important Subdirectory Maps
+
+Purpose: map high-value directories without going all the way to file summaries.
+
+## 8.1 `Auto/`
+
+Example:
+
+```markdown id="c0ow6l"
+### `/Auto`
+
+Status: active  
+Role: Comeketo automation, client substrate, inbox skill, orchestrator, and related operational files.
+
+Important children:
+
+| Path | Role |
+|---|---|
+| `Auto/Client Boxes/` | canonical per-client box substrate |
+| `Auto/Staff Boxes/` | staff voice/profile substrates |
+| `Auto/orchestrator/` | runtime/render/state/check layer |
+| `Auto/comeketo-inbox/` | inbox skill and guardrails |
+| `Auto/Onboard Scripts/` | build/import/enrichment/analytics scripts |
+| `Auto/Comeketo Agent/` | design system / UI assets if present |
+```
+
+## 8.2 `Auto/Client Boxes/`
+
+```markdown id="v2g9k3"
+### `/Auto/Client Boxes`
+
+Status: active / canonical  
+Role: one folder per client/lead. Each folder is a living client Box.
+
+Owns:
+- client comms
+- lead state
+- profile
+- seven-day plan
+- alerts
+- audit markers
+- allowed-to-know constraints when implemented
+- local client-specific continuity
+
+Does not own:
+- global automation rules
+- inbox guardrail definitions
+- UI rendering logic
+- generated dashboard state
+
+Source-of-truth notes:
+For customer-facing facts, comms/transcripts are primary. Profiles and enrichment are internal strategy unless approved.
+
+Read first in each client folder:
+1. `00_meta.json`
+2. `01_comms.md`
+3. full transcripts if present
+4. `client_ledger.md`
+5. `05_seven_day_plan.md`
+6. `09_andre_alerts.md`
+7. audit marker / local Box notes
+```
+
+## 8.3 `Auto/orchestrator/`
+
+```markdown id="95bp0l"
+### `/Auto/orchestrator`
+
+Status: active runtime/render layer  
+Role: reads substrates and produces rendered pages, state files, dashboards, and readiness outputs.
+
+Owns:
+- ready checks
+- rendered state
+- dashboard outputs
+- run summaries
+- state refresh scripts
+- runtime adapters
+
+Does not own:
+- canonical client truth
+- customer-facing send policy
+- enrichment truth
+- page-asset sitemap unless explicitly linked
+
+Warning:
+Generated files under orchestrator state should not be hand-edited unless explicitly marked canonical.
+```
+
+## 8.4 `Auto/comeketo-inbox/`
+
+```markdown id="tm7ioi"
+### `/Auto/comeketo-inbox`
+
+Status: active send/inbox skill  
+Role: inbox handling rules, guardrails, style, templates, and pricing/rendering tools.
+
+Owns:
+- inbox guardrails
+- send safety rules
+- NEPQ/voice references
+- HTML email templates
+- ballpark pricing scripts if present
+
+Does not own:
+- per-client strategy except as applied through Client Boxes
+- Close data itself
+- global project ledger rules
+
+Read first:
+- `SKILL.md`
+- `references/guardrails.md`
+```
+
+## 8.5 UI / App Area
+
+The uploaded page-asset sitemap identifies app route/page ownership: `app.jsx` owns routing, `components.jsx` owns shared UI, `screens.jsx` owns most screens, `automation.jsx` owns the automation shell, `server.py` owns many APIs, and `styles.css` owns styling. The sitemap also defines the mandatory Done Gate for page/route/data-binding changes. 
+
+The File Directory Ledger should include the actual folder/path where these files live.
+
+Example:
+
+```markdown id="3czfxf"
+### App / UI Root
+
+Status: active  
+Role: app shell, routes, pages, shared components, APIs, styles.
+
+Known key files:
+- `app.jsx`
+- `components.jsx`
+- `screens.jsx`
+- `automation.jsx`
+- `server.py`
+- `styles.css`
+- `mission_control_loader.js`
+- `delegator.js`
+- `Secretary.html`
+
+Warning:
+For page, route, data-binding, or visible asset changes, update the page-asset sitemap before considering work done.
+```
+
+---
+
+# 9. Directory Ownership Table
+
+Purpose: quick lookup.
+
+Example:
+
+```markdown id="qv5j83"
+## 5. Directory Ownership Table
+
+| Directory | Owner Concept | Edit When | Avoid When |
+|---|---|---|---|
+| `Auto/Client Boxes` | Client truth | auditing or updating a specific client Box | changing global send policy |
+| `Auto/orchestrator` | Runtime/render/state | changing generated dashboards/readiness/state flow | editing client facts directly |
+| `Auto/comeketo-inbox` | Inbox/send guardrails | changing send rules/templates/Close inbox behavior | changing one client’s plan only |
+| `LEDGERS` | Project memory | updating continuity/source-of-truth/done/audit records | hiding implementation code here |
+| UI root | App pages/components | changing screens/routes/components/APIs | defining client truth |
+```
+
+This table should become the “where do I edit?” shortcut.
+
+---
+
+# 10. Canonical vs Generated Areas
+
+Purpose: prevent agents from editing output as input.
+
+Example:
+
+```markdown id="6o98ht"
+## 6. Canonical vs Generated Areas
+
+### Canonical areas
+
+These are usually source-of-truth inputs:
+
+- `LEDGERS/`
+- `Auto/Client Boxes/<Name>/`
+- `Auto/comeketo-inbox/references/guardrails.md`
+- page-asset sitemap
+- source scripts/components/routes
+
+### Generated or derived areas
+
+These are usually outputs and should not be hand-edited unless explicitly marked:
+
+- `Auto/orchestrator/state/`
+- generated dashboard JSON/CSV
+- rendered HTML pages
+- build artifacts
+- cache-busted bundles
+- temporary run outputs
+
+Rule:
+If a file looks generated, find the generator before editing.
+```
+
+The Source-of-Truth Ledger will later define this more formally.
+
+The File Directory Ledger should give the navigational warning.
+
+---
+
+# 11. Active / Legacy / Archive Status
+
+Purpose: reduce confusion between current and old systems.
+
+Example:
+
+```markdown id="ycsgpd"
+## 7. Active / Legacy / Archive Status
+
+Each significant directory should have a status:
+
+- `active`: current system, safe to modify with proper checks
+- `canonical`: source of truth
+- `generated`: derived output, do not hand-edit
+- `legacy`: old system, inspect before reusing
+- `archive`: preserved for history, do not treat as current
+- `experimental`: not production truth
+- `deprecated`: should not receive new work
+- `external`: imported or vendor-owned
+
+Status should be visible in the directory map.
+```
+
+Known candidate examples from current context:
+
+```text id="f0w3i1"
+Auto/Client Boxes        active + canonical
+Auto/orchestrator        active runtime
+Auto/orchestrator/state  generated/derived
+Auto/Hugodemo            likely reference/archive, verify before labeling
+comeketo-inbox.skill     preserved original ZIP, likely archive/source package
+Auto/comeketo-inbox      active unpacked skill
+```
+
+Opus should verify these labels from repo docs before finalizing.
+
+---
+
+# 12. Directory Relationships
+
+Purpose: show how folders depend on one another.
+
+Example:
+
+```markdown id="j81q38"
+## 8. Directory Relationships
+
+### Client Box flow
+
+`Auto/Client Boxes/<Name>/`
+→ read by `Auto/orchestrator/`
+→ rendered into `Auto/orchestrator/state/`
+→ surfaced by app Boxes page/API
+
+### Inbox/send flow
+
+`Auto/Client Boxes/<Name>/`
++ `Auto/comeketo-inbox/references/guardrails.md`
++ Close comms/transcripts
+→ scheduled fire / inbox agent
+→ Close activity
+→ `01_comms.md` / `client_ledger.md` update
+
+### UI flow
+
+source files / APIs
+→ app route/page
+→ page-asset sitemap tracks ownership and Done Gate
+```
+
+This section should eventually be paired with a Mermaid graph.
+
+---
+
+# 13. Local Box / Orientation Index
+
+Purpose: link global directory map to local directory memory.
+
+Example:
+
+```markdown id="e3o32t"
+## 9. Local Box / Orientation Index
+
+| Directory | Local Orientation | Status |
+|---|---|---|
+| `Auto/Client Boxes` | planned: `Auto/Client Boxes/BOX.md` | planned |
+| `Auto/orchestrator` | existing docs: `SYSTEM_OVERVIEW.md`, `README.md`, `MANUAL_FIRE.md` | active |
+| `Auto/comeketo-inbox` | `SKILL.md`, `references/guardrails.md` | active |
+| `LEDGERS` | planned: `LEDGERS/README.md` or `LEDGERS/BOX.md` | planned |
+| UI root | page-asset sitemap + app docs | active/planned |
+```
+
+The ledger should make it obvious where local guidance lives.
+
+---
+
+# 14. Common Wrong-Turns
+
+Purpose: explicitly name mistakes agents are likely to make.
+
+Example:
+
+```markdown id="bq9z1f"
+## 10. Common Wrong-Turns
+
+### Mistake: Editing orchestrator state as truth
+
+Fix:
+Find the source Client Box or generator script.
+
+### Mistake: Treating the Boxes page as the client source of truth
+
+Fix:
+Boxes page is a UI surface. Client Boxes are canonical.
+
+### Mistake: Editing a seven-day plan without checking guardrails
+
+Fix:
+Read Inbox Guardrails and current comms first.
+
+### Mistake: Using enrichment facts as customer-facing facts
+
+Fix:
+Check comms/transcripts or allowed-to-know layer.
+
+### Mistake: Updating a page without updating the sitemap
+
+Fix:
+Update page-asset source of truth before done.
+
+### Mistake: Fixing one client by changing global automation
+
+Fix:
+Prefer local Box fixes unless the pattern is systemic.
+```
+
+This section is incredibly useful for future agents.
+
+It should be direct and memorable.
+
+---
+
+# 15. Directory Change Done Gate
+
+Purpose: define when this ledger must be updated.
+
+Example:
+
+```markdown id="8kdx94"
+## 11. Directory Change Done Gate
+
+Update this ledger when:
+
+- a top-level directory is added, removed, renamed, or repurposed
+- an important subdirectory is added, removed, renamed, or repurposed
+- a directory’s canonical/generated/legacy status changes
+- source-of-truth ownership moves between directories
+- a local Box or orientation file is added
+- a major relationship between directories changes
+- agents have repeatedly edited the wrong area
+- a new common wrong-turn is discovered
+```
+
+Also include:
+
+```markdown id="fn2nl8"
+Do not update this ledger for every tiny file addition.
+Use the File Contents Ledger for important-file responsibilities.
+```
+
+---
+
+# 16. Visualization Index
+
+Purpose: make directory shape visual.
+
+Recommended files:
+
+```text id="wbs4xb"
+/LEDGERS/VISUALS/file_directory_map.mmd
+/LEDGERS/VISUALS/directory_ownership_map.mmd
+/LEDGERS/VISUALS/client_box_directory_flow.mmd
+```
+
+Example Mermaid:
+
+```mermaid id="ptp9k3"
+flowchart TD
+  Repo[Repository Root]
+
+  Repo --> Ledgers[LEDGERS/]
+  Repo --> Auto[Auto/]
+  Repo --> UI[App/UI Root]
+
+  Ledgers --> GL[Global Ledger]
+  Ledgers --> TL[Temporal Continuity]
+  Ledgers --> NS[North Star]
+  Ledgers --> DOD[Definition of Done]
+  Ledgers --> FDL[File Directory Ledger]
+
+  Auto --> ClientBoxes[Client Boxes/]
+  Auto --> StaffBoxes[Staff Boxes/]
+  Auto --> Orchestrator[orchestrator/]
+  Auto --> Inbox[comeketo-inbox/]
+  Auto --> Scripts[Onboard Scripts/]
+
+  ClientBoxes --> ClientA[Client Box: Brenda & Steve]
+  ClientBoxes --> ClientB[Client Box: Hugo Casillas]
+  Orchestrator --> State[state/ generated]
+  Inbox --> Guardrails[references/guardrails.md]
+
+  UI --> App[app.jsx]
+  UI --> Screens[screens.jsx]
+  UI --> Components[components.jsx]
+  UI --> Server[server.py]
+```
+
+Example canonical/generated map:
+
+```mermaid id="z0yx3n"
+flowchart LR
+  CB[Client Boxes: Canonical] --> OR[Orchestrator Scripts]
+  OR --> State[orchestrator/state: Generated]
+  State --> BoxesPage[Boxes Page: UI Surface]
+
+  Guardrails[Inbox Guardrails: Canonical] --> Fire[Scheduled Fire]
+  CB --> Fire
+  Fire --> Close[Close Activity]
+  Close --> Comms[01_comms.md Updated]
+```
+
+Mermaid is ideal because it stays versioned and diffable.
+
+---
+
+# 17. Recommended `FILE_DIRECTORY_LEDGER.json` Shape
+
+The JSON file should let scripts or dashboards reason about directories.
+
+Example:
+
+```json id="enzqxk"
+{
+  "ledger_type": "file_directory",
+  "version": "0.1.0",
+  "last_updated": "2026-04-28",
+  "repository": "RodbotCC/CCAgent",
+  "directories": [
+    {
+      "path": "LEDGERS",
+      "status": ["active", "canonical"],
+      "role": "Project-wide memory and continuity layer",
+      "owns": ["global ledgers", "continuity records", "visual maps"],
+      "does_not_own": ["runtime application behavior"],
+      "read_first": ["LEDGERS/GLOBAL_LEDGER.md"],
+      "local_orientation": "LEDGERS/INDEX.md"
+    },
+    {
+      "path": "Auto/Client Boxes",
+      "status": ["active", "canonical"],
+      "role": "Per-client memory/state/plan substrate",
+      "owns": ["client comms", "client state", "profiles", "seven-day plans", "audit markers"],
+      "does_not_own": ["global guardrails", "UI rendering logic"],
+      "read_first": [
+        "00_meta.json",
+        "01_comms.md",
+        "client_ledger.md",
+        "05_seven_day_plan.md",
+        "09_andre_alerts.md"
+      ],
+      "warnings": [
+        "Plans are subordinate to comms, state, guardrails, and approvals.",
+        "Profiles/enrichment are internal strategy unless approved."
+      ]
+    },
+    {
+      "path": "Auto/orchestrator/state",
+      "status": ["generated", "derived"],
+      "role": "Rendered/generated runtime output",
+      "owns": ["generated dashboards", "ready state", "run summaries"],
+      "does_not_own": ["canonical client truth"],
+      "warnings": ["Find generator before editing."]
+    }
+  ],
+  "common_wrong_turns": [
+    {
+      "mistake": "Editing generated orchestrator state as source truth",
+      "corrective_action": "Edit Client Box or generator script instead."
+    },
+    {
+      "mistake": "Treating Boxes page as canonical client truth",
+      "corrective_action": "Use Auto/Client Boxes as canonical source."
+    }
+  ]
+}
+```
+
+This JSON can later power directory dashboards or agent bootstrap checks.
+
+---
+
+# 18. Relationship to Directory Configuration Ledger
+
+The next ledger, Directory Configuration Ledger, will zoom into individual directories.
+
+The File Directory Ledger says:
+
+```text id="s521ez"
+Auto/Client Boxes exists.
+It owns per-client truth.
+Read local files first.
+```
+
+The Directory Configuration Ledger says:
+
+```text id="x3jys3"
+Inside Auto/Client Boxes, here is exactly how to work.
+Here are required files.
+Here are local rules.
+Here is what to update.
+```
+
+So keep this ledger broad.
+
+Do not overload it with every local rule.
+
+---
+
+# 19. Relationship to Source-of-Truth Ledger
+
+The File Directory Ledger gives rough source hints.
+
+The Source-of-Truth Ledger will give formal authority rules.
+
+Example:
+
+```text id="5uzyt8"
+File Directory Ledger:
+Auto/orchestrator/state is generated.
+
+Source-of-Truth Ledger:
+For client readiness, source is ready_check output generated from Client Boxes; do not edit ready_leads.json manually.
+```
+
+The two should link to each other.
+
+---
+
+# 20. Relationship to Page-Asset Sitemap
+
+The File Directory Ledger should reference the sitemap where UI files are involved.
+
+The uploaded sitemap identifies route/page ownership across app screens and states that page/route/data-binding changes are incomplete until the sitemap is updated. 
+
+In the File Directory Ledger, UI root entries should say:
+
+```markdown id="m2v31u"
+For page-level ownership, do not duplicate the sitemap here. Link to the page-asset sitemap and treat it as the authoritative UI asset map.
+```
+
+That avoids duplicate stale maps.
+
+---
+
+# 21. Relationship to Client Boxes
+
+Client Boxes are a special directory class.
+
+The File Directory Ledger should name them as:
+
+```text id="a5w6ar"
+Directory type: Box Collection
+Each child directory: Local Client Box
+```
+
+Recommended pattern:
+
+```text id="z70idz"
+Auto/Client Boxes/
+  Brenda & Steve/
+    00_meta.json
+    01_comms.md
+    04_profile.md
+    05_seven_day_plan.md
+    09_andre_alerts.md
+    client_ledger.md
+    audit markers
+```
+
+The ledger should include:
+
+```markdown id="rxiu4c"
+A client folder is not merely a data folder. It is the living memory and operating context for that client.
+```
+
+This ties the directory map back to the Box philosophy.
+
+---
+
+# 22. Relationship to GitHub
+
+Because GitHub is the source of truth, the File Directory Ledger should note:
+
+```markdown id="7ew5c0"
+Directory state should reflect the pushed repository state.
+
+If local files differ from GitHub, local work may be ahead or divergent. Agents writing directly to GitHub should be cautious when the human has unpushed local changes.
+```
+
+This matters because of the direct-GitHub-write workflow issue.
+
+---
+
+# 23. Implementation Steps for Opus
+
+Give Opus this build order:
+
+```text id="8hu84e"
+1. Inspect the actual repository tree.
+2. Create /LEDGERS/FILE_DIRECTORY_LEDGER.md.
+3. Create /LEDGERS/FILE_DIRECTORY_LEDGER.json.
+4. Add link to /LEDGERS/INDEX.md.
+5. Add link to /LEDGERS/GLOBAL_LEDGER.md if it exists.
+6. Add link to /LEDGERS/DEFINITION_OF_DONE.md if it exists.
+7. Create /LEDGERS/VISUALS/file_directory_map.mmd.
+8. Create /LEDGERS/VISUALS/directory_ownership_map.mmd.
+9. Populate top-level directory map using actual paths only.
+10. Map known important areas:
+    - Auto/
+    - Auto/Client Boxes/
+    - Auto/Staff Boxes/
+    - Auto/orchestrator/
+    - Auto/orchestrator/state/
+    - Auto/comeketo-inbox/
+    - UI/app files area
+    - LEDGERS/
+11. Mark canonical vs generated vs legacy/archive where known.
+12. Add common wrong-turns section.
+13. Commit with message: "Add file directory ledger".
+```
+
+Important instruction:
+
+```text id="9cwtd0"
+Do not invent directories.
+If unsure, mark status as `needs verification`.
+```
+
+---
+
+# 24. Quality Bar
+
+The File Directory Ledger succeeds if a future agent can answer:
+
+* What directories exist?
+* What does each major directory own?
+* What does each major directory not own?
+* Where should I go before editing?
+* What is canonical?
+* What is generated?
+* What is legacy/archive?
+* What local orientation should I read?
+* What common wrong turns should I avoid?
+
+It fails if:
+
+* it becomes an exhaustive file dump
+* it is not updated when directories change
+* it duplicates page/widget/file ledgers
+* it does not distinguish canonical from generated
+* it lets agents keep editing the wrong area
+* it is too vague to guide actual work
+* it invents structure not present in the repo
+
+This ledger should make the repo feel navigable.
+
+---
+
+# 25. Final Operating Rule
+
+The File Directory Ledger should end with this:
+
+```markdown id="3d7o9j"
+A file path is not just a location.
+
+It is a responsibility boundary.
+
+Before editing the file, understand the directory.
+Before moving the directory, update the map.
+```
+
+---
+

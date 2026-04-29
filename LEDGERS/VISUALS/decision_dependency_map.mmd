@@ -1,0 +1,63 @@
+%% Decisions Ledger — Decision Dependency Map
+%% How decisions depend on each other. Solid arrow = "depends on / supports".
+
+flowchart TD
+    %% Foundation
+    D1["DEC-2026-04-28-001<br/>GitHub Source of Truth"]:::foundation
+
+    %% Memory architecture
+    D2["DEC-2026-04-28-002<br/>FileTree Over RAG"]:::active
+    D29_1["DEC-2026-04-29-001<br/>Triad Spine<br/>Box + Ledger + Sub-agent"]:::architectural
+
+    %% Client truth
+    D3["DEC-2026-04-28-003<br/>Client Boxes Canonical"]:::active
+    D6["DEC-2026-04-28-006<br/>Boxes Page Display Only"]:::active
+    D7["DEC-2026-04-28-007<br/>Sitemap Done Gate"]:::active
+
+    %% Send safety
+    D4["DEC-2026-04-28-004<br/>Plans Are Strategy Drafts"]:::active
+    D5["DEC-2026-04-28-005<br/>Risky Moves Need Isolated Approval"]:::active
+
+    %% Workflow
+    D8["DEC-2026-04-28-008<br/>One Ledger At A Time"]:::active
+    D29_2["DEC-2026-04-29-002<br/>Three-Phase Build A→B→C"]:::architectural
+
+    %% Meta
+    D29_3["DEC-2026-04-29-003<br/>TCL/GL Update Discipline"]:::meta
+    D29_4["DEC-2026-04-29-004<br/>Audit Ledger Out-of-Scope"]:::scope
+
+    %% Dependencies
+    D1 --> D2
+    D1 --> D8
+    D1 --> D29_3
+
+    D2 --> D3
+    D2 --> D29_1
+
+    D29_1 --> D3
+    D29_1 --> D29_2
+
+    D3 --> D4
+    D3 --> D6
+
+    D4 --> D5
+
+    D7 --> D6
+
+    D8 -.->|becomes Phase A of| D29_2
+
+    D29_3 -.->|enforced by every other| D1
+    D29_3 -.->|enforced by every other| D2
+
+    D29_4 -.->|depends on| D8
+
+    %% Sibling ledgers feeding 29-4
+    OPL["Open Problems Ledger"]:::sibling --> D29_4
+    COMM["Communications Ledger"]:::sibling --> D29_4
+
+    classDef foundation fill:#dc2626,stroke:#7f1d1d,color:#fff,stroke-width:3px
+    classDef architectural fill:#7c3aed,stroke:#5b21b6,color:#fff,stroke-width:3px
+    classDef active fill:#10b981,stroke:#047857,color:#fff
+    classDef meta fill:#f59e0b,stroke:#b45309,color:#fff,stroke-width:2px
+    classDef scope fill:#9ca3af,stroke:#4b5563,color:#fff
+    classDef sibling fill:#e0e7ff,stroke:#6366f1,color:#1e1b4b

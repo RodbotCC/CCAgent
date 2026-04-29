@@ -6,12 +6,57 @@
   "status": "active",
   "core_rule": "If a problem is known but not fixed, record it.",
   "core_principle": "A known problem that is not recorded becomes future confusion.",
-  "status_labels": ["open", "triaged", "in-progress", "blocked", "partial", "needs-decision", "needs-audit", "needs-verification", "closed", "wont-fix"],
-  "severity_labels": ["critical", "high", "medium", "low"],
-  "urgency_labels": ["now", "soon", "later", "watch"],
-  "tags": ["safety", "client-box", "automation", "UI", "source-of-truth", "git", "connection", "ledger", "generated-state", "enrichment", "approval", "documentation", "cleanup", "duplicate", "directory", "comms", "plan-aging", "agent-handoff", "bedrock", "bug-suspected", "needs-verification", "workflow"],
-  "active_problem_count": 12,
-  "closed_problem_count": 3,
+  "status_labels": [
+    "open",
+    "triaged",
+    "in-progress",
+    "blocked",
+    "partial",
+    "needs-decision",
+    "needs-audit",
+    "needs-verification",
+    "closed",
+    "wont-fix"
+  ],
+  "severity_labels": [
+    "critical",
+    "high",
+    "medium",
+    "low"
+  ],
+  "urgency_labels": [
+    "now",
+    "soon",
+    "later",
+    "watch"
+  ],
+  "tags": [
+    "safety",
+    "client-box",
+    "automation",
+    "UI",
+    "source-of-truth",
+    "git",
+    "connection",
+    "ledger",
+    "generated-state",
+    "enrichment",
+    "approval",
+    "documentation",
+    "cleanup",
+    "duplicate",
+    "directory",
+    "comms",
+    "plan-aging",
+    "agent-handoff",
+    "bedrock",
+    "bug-suspected",
+    "needs-verification",
+    "workflow",
+    "architecture"
+  ],
+  "active_problem_count": 13,
+  "closed_problem_count": 1,
   "problems": [
     {
       "id": "PROB-2026-04-28-001",
@@ -21,19 +66,51 @@
       "urgency": "now",
       "discovered": "2026-04-28",
       "discovered_by": "Jake + Brenda audit conversation",
-      "affected_systems": ["Client Boxes", "inbox automation", "scheduled fires", "profile/enrichment", "customer-facing copy"],
-      "related_files": ["Auto/Client Boxes/<Name>/01_comms.md", "Auto/Client Boxes/<Name>/04_profile.md", "Auto/Client Boxes/<Name>/05_seven_day_plan.md", "future allowed_to_use.md/.json"],
-      "related_ledgers": ["Source-of-Truth (planned)", "Decisions (planned)", "Audit (planned)", "North Star NS-04 + Wholesome Enrichment principle"],
+      "affected_systems": [
+        "Client Boxes",
+        "inbox automation",
+        "scheduled fires",
+        "profile/enrichment",
+        "customer-facing copy"
+      ],
+      "related_files": [
+        "Auto/Client Boxes/<Name>/01_comms.md",
+        "Auto/Client Boxes/<Name>/04_profile.md",
+        "Auto/Client Boxes/<Name>/05_seven_day_plan.md",
+        "future allowed_to_use.md/.json"
+      ],
+      "related_ledgers": [
+        "Source-of-Truth (planned)",
+        "Decisions (DECISIONS_LEDGER.md)",
+        "Audit (out-of-scope 2026-04-29)",
+        "North Star NS-04 + Wholesome Enrichment principle"
+      ],
       "owner": "TBD",
       "blocked_by": "schema/design decision",
-      "tags": ["client-box", "enrichment", "source-of-truth", "safety"],
+      "tags": [
+        "client-box",
+        "enrichment",
+        "source-of-truth",
+        "safety"
+      ],
       "problem": "The system does not yet have a formal layer that separates: facts the client actually shared / facts from transcripts/comms / enrichment-only internal strategy / protected/off-limits facts / unverified facts / approval-required facts and actions.",
-      "evidence": "Brenda & Steve highlighted the risk: enrichment-derived context was useful internally but could leak into customer-facing copy. Jake explicitly said the project needs a 'what we're allowed to know' constraint. Wholesome Enrichment principle (NORTH_STAR.md §6) names the four-bucket model but no schema or workflow implements it.",
+      "evidence": "Brenda & Steve highlighted the risk: enrichment-derived context was useful internally but could leak into customer-facing copy. Jake explicitly said the project needs a 'what we're allowed to know' constraint. Wholesome Enrichment principle (NORTH_STAR.md \u00a76) names the four-bucket model but no schema or workflow implements it.",
       "impact": "Without this layer, automation may surface creepy or unsupported personalization, misuse enrichment, or treat internal strategy as customer-facing truth. Violates NS-04 and Wholesome Enrichment principle.",
       "current_workaround": "During Client Box audits, manually flatten outbound copy and only use facts traceable to comms/transcripts or explicit approval. Brenda's plan carries this discipline now.",
       "recommended_next_action": "Design Client Box-level allowed_to_use schema and workflow. Possible files: allowed_to_use.md, allowed_to_use.json, protected_facts.md, approval_required.md. Pair with Source-of-Truth Ledger when it lands.",
-      "close_criteria": ["schema exists", "at least one Client Box uses it", "scheduled-fire / read protocol checks it before composing", "inbox guardrails reference it", "Wholesome Enrichment principle is mechanically enforced not just documented"],
-      "history": [{"date": "2026-04-28", "note": "created — initial problem statement carried forward from Ledger 05 spec"}]
+      "close_criteria": [
+        "schema exists",
+        "at least one Client Box uses it",
+        "scheduled-fire / read protocol checks it before composing",
+        "inbox guardrails reference it",
+        "Wholesome Enrichment principle is mechanically enforced not just documented"
+      ],
+      "history": [
+        {
+          "date": "2026-04-28",
+          "note": "created \u2014 initial problem statement carried forward from Ledger 05 spec"
+        }
+      ]
     },
     {
       "id": "PROB-2026-04-28-002",
@@ -43,19 +120,52 @@
       "urgency": "soon",
       "discovered": "2026-04-28",
       "discovered_by": "Jake (Brenda audit pattern)",
-      "affected_systems": ["Client Boxes", "scheduled fires", "inbox guardrails"],
-      "related_files": ["Auto/Client Boxes/<Name>/05_seven_day_plan.md", "09_andre_alerts.md", "01_comms.md", "client_ledger.md", "YYYY-MM-DD_audit_marker.md"],
-      "related_ledgers": ["Audit (planned)", "Client Box ledgers"],
+      "affected_systems": [
+        "Client Boxes",
+        "scheduled fires",
+        "inbox guardrails"
+      ],
+      "related_files": [
+        "Auto/Client Boxes/<Name>/05_seven_day_plan.md",
+        "09_andre_alerts.md",
+        "01_comms.md",
+        "client_ledger.md",
+        "YYYY-MM-DD_audit_marker.md"
+      ],
+      "related_ledgers": [
+        "Audit (out-of-scope 2026-04-29)",
+        "Client Box ledgers"
+      ],
       "owner": "Jake + agent workflow (one box at a time)",
-      "tags": ["client-box", "safety", "automation", "cleanup"],
-      "progress": {"completed": ["Brenda & Steve"], "remaining": 27},
+      "tags": [
+        "client-box",
+        "safety",
+        "automation",
+        "cleanup"
+      ],
+      "progress": {
+        "completed": [
+          "Brenda & Steve"
+        ],
+        "remaining": 27
+      },
       "problem": "Active Client Box plans may have been written before current guardrails were fully enforced. They may contain stale dates, risky commitment language, enrichment leakage, or send assumptions that no longer pass safety rules.",
       "evidence": "Brenda & Steve had stale weekday/date drift and ungated fee-waiver/no-charge language. Plan was audit-cleaned 2026-04-28 01:40 AM ET (commits bec920d, 0a46a3b); marker at Auto/Client Boxes/Brenda & Steve/2026-04-28_audit_marker.md. The other 27 boxes have not been re-validated.",
       "impact": "Future scheduled fires could surface or send unsafe copy if plans are trusted blindly. Violates NS-05 (Safe Movement).",
       "current_workaround": "Audit one Client Box at a time. Clean plan/alerts if approved. Leave audit marker. PROB-005 partial fix (verbatim comms backfill) makes auditing easier.",
-      "recommended_next_action": "Continue with priority queue: Hugo Casillas, Daphney & Frankie, Dawn M Denton, Eliana Lopes, Elizabeth & Peter, Emanuella Andrade, Esther Manu, Flávia Benson, Flaviane Mesquita, then the rest.",
-      "close_criteria": ["all 28 active Client Boxes have been audited", "each cleaned plan carries Audit-cleaned: <date> line", "each box has YYYY-MM-DD_audit_marker.md", "audit findings logged in Audit Ledger with North Star alignment block"],
-      "history": [{"date": "2026-04-28", "note": "created. Brenda completed (1/28). 27 remaining."}]
+      "recommended_next_action": "Continue with priority queue: Hugo Casillas, Daphney & Frankie, Dawn M Denton, Eliana Lopes, Elizabeth & Peter, Emanuella Andrade, Esther Manu, Fl\u00e1via Benson, Flaviane Mesquita, then the rest.",
+      "close_criteria": [
+        "all 28 active Client Boxes have been audited",
+        "each cleaned plan carries Audit-cleaned: <date> line",
+        "each box has YYYY-MM-DD_audit_marker.md",
+        "audit findings logged in Audit Ledger with North Star alignment block"
+      ],
+      "history": [
+        {
+          "date": "2026-04-28",
+          "note": "created. Brenda completed (1/28). 27 remaining."
+        }
+      ]
     },
     {
       "id": "PROB-2026-04-28-003",
@@ -65,18 +175,47 @@
       "urgency": "soon",
       "discovered": "2026-04-28",
       "discovered_by": "Brenda fee-waiver retrospective",
-      "affected_systems": ["approval surfaces", "inbox automation", "scheduled fires", "automation page", "Delegations/Boxes review surfaces"],
-      "related_files": ["automation.jsx", "Auto/comeketo-inbox/", "future approval-card components"],
-      "related_ledgers": ["Decisions (planned)", "North Star NS-05"],
+      "affected_systems": [
+        "approval surfaces",
+        "inbox automation",
+        "scheduled fires",
+        "automation page",
+        "Delegations/Boxes review surfaces"
+      ],
+      "related_files": [
+        "automation.jsx",
+        "Auto/comeketo-inbox/",
+        "future approval-card components"
+      ],
+      "related_ledgers": [
+        "Decisions (DECISIONS_LEDGER.md)",
+        "North Star NS-05"
+      ],
       "owner": "TBD",
-      "tags": ["approval", "safety", "automation", "UI"],
+      "tags": [
+        "approval",
+        "safety",
+        "automation",
+        "UI"
+      ],
       "problem": "Risky moves can be approved as part of a batch without enough explicit friction. The system needs a clear approval-card pattern for financial, pricing, scope, enrichment, or high-risk personalization moves.",
       "evidence": "Brenda fee-waiver was technically approved by Jake while rushed through batch approval. NS-05 names this as the operative tension: 'smart enough to suggest bold moves, but not autonomous enough to hide risky commitments inside batch approval.'",
       "impact": "System can make strategically plausible but authority-sensitive moves without the human fully noticing. Violates NS-05 directly; threatens NS-04.",
       "current_workaround": "During plan cleanup, flatten risky future moves or mark them approval-required. Brenda's plan now opens with a Safety Status block requiring guardrails.",
       "recommended_next_action": "Design explicit risk approval cards: APPROVE FEE WAIVER, APPROVE ENRICHMENT USE, APPROVE PRICE COMMITMENT, APPROVE SCOPE PROMISE. Risk-card UI not batchable.",
-      "close_criteria": ["approval-card standard exists (component + UX spec)", "risk categories defined", "approval logged to activity.jsonl", "scheduled fires check approval before risky sends", "categories mapped to NS-05 risk taxonomy"],
-      "history": [{"date": "2026-04-28", "note": "created"}]
+      "close_criteria": [
+        "approval-card standard exists (component + UX spec)",
+        "risk categories defined",
+        "approval logged to activity.jsonl",
+        "scheduled fires check approval before risky sends",
+        "categories mapped to NS-05 risk taxonomy"
+      ],
+      "history": [
+        {
+          "date": "2026-04-28",
+          "note": "created"
+        }
+      ]
     },
     {
       "id": "PROB-2026-04-28-004",
@@ -86,17 +225,39 @@
       "urgency": "soon",
       "discovered": "2026-04-28",
       "discovered_by": "Brenda cleanup commit retrospective",
-      "affected_systems": ["GitHub workflow", "agent writes", "Jake's local repo"],
-      "related_ledgers": ["Connections (planned)", "Communications (planned)", "Decisions (planned)"],
+      "affected_systems": [
+        "GitHub workflow",
+        "agent writes",
+        "Jake's local repo"
+      ],
+      "related_ledgers": [
+        "Connections (planned)",
+        "Communications (COMMUNICATIONS_LEDGER.md)",
+        "Decisions (DECISIONS_LEDGER.md)"
+      ],
       "owner": "TBD",
-      "tags": ["git", "workflow", "agent-handoff"],
+      "tags": [
+        "git",
+        "workflow",
+        "agent-handoff"
+      ],
       "problem": "Agents may write directly to GitHub while Jake has local unpushed work.",
-      "evidence": "After Brenda cleanup commits (bec920d, 0a46a3b), Jake realized local work was not yet pushed. As of 2026-04-28 working tree dirty: M AGENT.md, CLAUDE.md, README.md, activity.jsonl, pieces_sweeps.jsonl; ?? LEDGERS/, Flávia Benson.txt.",
+      "evidence": "After Brenda cleanup commits (bec920d, 0a46a3b), Jake realized local work was not yet pushed. As of 2026-04-28 working tree dirty: M AGENT.md, CLAUDE.md, README.md, activity.jsonl, pieces_sweeps.jsonl; ?? LEDGERS/, Fl\u00e1via Benson.txt.",
       "impact": "Merge conflicts, rebase confusion, or accidental overwrites if branch workflow is unclear. Violates NS-09.",
-      "current_workaround": "This session's pattern: write locally, ledger-log, surface in summary, wait for Jake's go-ahead. Documented in TEMPORAL_CONTINUITY.md §13.",
+      "current_workaround": "This session's pattern: write locally, ledger-log, surface in summary, wait for Jake's go-ahead. Documented in TEMPORAL_CONTINUITY.md \u00a713.",
       "recommended_next_action": "Define standard branch workflow: direct-to-main only when Jake confirms tree clean; otherwise feature branch + PR; always report SHAs; never force-push main; coordinate before bundling pre-existing dirty files.",
-      "close_criteria": ["Git workflow policy recorded in Decisions Ledger", "Connections Ledger documents branch/push expectations", "Communications Ledger entry for 'Jake controls commit/push timing'", "AGENT.md / CLAUDE.md updated to reference policy"],
-      "history": [{"date": "2026-04-28", "note": "created"}]
+      "close_criteria": [
+        "Git workflow policy recorded in Decisions Ledger",
+        "Connections Ledger documents branch/push expectations",
+        "Communications Ledger entry for 'Jake controls commit/push timing'",
+        "AGENT.md / CLAUDE.md updated to reference policy"
+      ],
+      "history": [
+        {
+          "date": "2026-04-28",
+          "note": "created"
+        }
+      ]
     },
     {
       "id": "PROB-2026-04-28-005",
@@ -107,20 +268,80 @@
       "urgency": "soon",
       "discovered": "2026-04-28",
       "discovered_by": "Jake (recognized the gap during inbox conversation)",
-      "affected_systems": ["Client Boxes", "allowed-to-know facts", "plan rewrites", "comms truth", "Boxes UI page"],
-      "related_files": ["Auto/Client Boxes/<Name>/01b_comms_verbatim.md", "Auto/Client Boxes/<Name>/comms/<type>_<date>_<id>.json", "outputs/pull_full_comms.py", "server.py box endpoints"],
-      "related_ledgers": ["Source-of-Truth (planned)", "Audit (planned)"],
+      "affected_systems": [
+        "Client Boxes",
+        "allowed-to-know facts",
+        "plan rewrites",
+        "comms truth",
+        "Boxes UI page"
+      ],
+      "related_files": [
+        "Auto/Client Boxes/<Name>/01b_comms_verbatim.md",
+        "Auto/Client Boxes/<Name>/comms/<type>_<date>_<id>.json",
+        "outputs/pull_full_comms.py",
+        "server.py box endpoints"
+      ],
+      "related_ledgers": [
+        "Source-of-Truth (planned)",
+        "Audit (out-of-scope 2026-04-29)"
+      ],
       "owner": "Jake + agent",
-      "tags": ["client-box", "comms", "source-of-truth"],
+      "tags": [
+        "client-box",
+        "comms",
+        "source-of-truth"
+      ],
       "problem": "Client Boxes had only comms summaries; full phone transcripts and email bodies were missing.",
       "evidence": "Jake's 2026-04-28 message about needing full transcripts to ground automation in actual comms.",
       "impact": "Plans and customer-facing copy may have over-relied on profile/enrichment because verbatim comms weren't in the box. Violates NS-04 and NS-06.",
-      "what_was_fixed": ["2026-04-28 verbatim comms backfill via outputs/pull_full_comms.py", "All 28 Client Boxes carry 01b_comms_verbatim.md (chronological with speaker-labeled call transcripts, voicemail transcripts, full email body_text/body_html, SMS, WhatsApp, threads)", "comms/<type>_<date>_<id>.json raw payloads, one per activity. 582 raw activity payloads total.", "Source-of-truth priority order updated in FILE_DIRECTORY_LEDGER.md §4.3"],
-      "what_remains_open": ["Boxes UI page still binds to 01_comms.md only (server.py line 4717)", "comms_state_sweep.py does not read verbatim file yet", "Plan rewrite trigger after new transcript import not formalized (PROB-006)", "Per-box client_ledger.md does not yet reflect verbatim availability"],
+      "what_was_fixed": [
+        "2026-04-28 verbatim comms backfill via outputs/pull_full_comms.py",
+        "All 28 Client Boxes carry 01b_comms_verbatim.md (chronological with speaker-labeled call transcripts, voicemail transcripts, full email body_text/body_html, SMS, WhatsApp, threads)",
+        "comms/<type>_<date>_<id>.json raw payloads, one per activity. 582 raw activity payloads total.",
+        "Source-of-truth priority order updated in FILE_DIRECTORY_LEDGER.md \u00a74.3"
+      ],
+      "what_remains_open": [
+        "Boxes UI page still binds to 01_comms.md only (server.py line 4717)",
+        "comms_state_sweep.py does not read verbatim file yet",
+        "Plan rewrite trigger after new transcript import not formalized (PROB-006)",
+        "Per-box client_ledger.md does not yet reflect verbatim availability"
+      ],
       "current_workaround": "Use existing 01_comms.md plus the new 01b_comms_verbatim.md when reviewing manually. Avoid surfacing facts not clearly in comms.",
       "recommended_next_action": "Wire 01b_comms_verbatim.md into BoxesScreen as second comms tab; update comms_state_sweep.py to read verbatim when present; define plan-staleness rule against verbatim file (couples PROB-006).",
-      "close_criteria": [{"item": "Transcript location defined", "met": true}, {"item": "At least one transcript imported", "met": true, "note": "582 across 28 boxes"}, {"item": "Client Box read protocol updated in automation (not just docs)", "met": false}, {"item": "Plan rewrite trigger defined when new transcript lands", "met": false, "note": "see PROB-006"}, {"item": "Boxes UI page surfaces verbatim file", "met": false}],
-      "history": [{"date": "2026-04-28", "note": "created"}, {"date": "2026-04-28", "note": "verbatim comms backfill landed (request_id comms_verbatim_backfill_2026-04-28). Status open → partial. Severity high → medium."}]
+      "close_criteria": [
+        {
+          "item": "Transcript location defined",
+          "met": true
+        },
+        {
+          "item": "At least one transcript imported",
+          "met": true,
+          "note": "582 across 28 boxes"
+        },
+        {
+          "item": "Client Box read protocol updated in automation (not just docs)",
+          "met": false
+        },
+        {
+          "item": "Plan rewrite trigger defined when new transcript lands",
+          "met": false,
+          "note": "see PROB-006"
+        },
+        {
+          "item": "Boxes UI page surfaces verbatim file",
+          "met": false
+        }
+      ],
+      "history": [
+        {
+          "date": "2026-04-28",
+          "note": "created"
+        },
+        {
+          "date": "2026-04-28",
+          "note": "verbatim comms backfill landed (request_id comms_verbatim_backfill_2026-04-28). Status open \u2192 partial. Severity high \u2192 medium."
+        }
+      ]
     },
     {
       "id": "PROB-2026-04-28-006",
@@ -130,17 +351,42 @@
       "urgency": "soon",
       "discovered": "2026-04-28",
       "discovered_by": "spec author + plan-aging conversations",
-      "affected_systems": ["Client Boxes", "Auto/orchestrator/bin/comms_state_sweep.py", "scheduled fires", "client_ledger.md"],
-      "related_ledgers": ["Audit (planned)", "North Star NS-05", "TEMPORAL_CONTINUITY.md §15 plan-aging rules"],
+      "affected_systems": [
+        "Client Boxes",
+        "Auto/orchestrator/bin/comms_state_sweep.py",
+        "scheduled fires",
+        "client_ledger.md"
+      ],
+      "related_ledgers": [
+        "Audit (out-of-scope 2026-04-29)",
+        "North Star NS-05",
+        "TEMPORAL_CONTINUITY.md \u00a715 plan-aging rules"
+      ],
       "owner": "TBD",
-      "tags": ["client-box", "automation", "safety", "plan-aging"],
+      "tags": [
+        "client-box",
+        "automation",
+        "safety",
+        "plan-aging"
+      ],
       "problem": "The project agrees conceptually that any meaningful client tap/reply can invalidate the current seven-day plan, but the rewrite trigger and workflow are not formalized in code.",
-      "evidence": "Jake said any tap should trigger plan re-check. TEMPORAL_CONTINUITY.md §15 documents the rules. client_state_temporal.mmd shows the desired flow. But no field/marker mechanically tracks plan-stale status.",
-      "impact": "Automation may continue from an old plan after the client's state has changed. Violates NS-05 and 'reply → plan stale' rule.",
+      "evidence": "Jake said any tap should trigger plan re-check. TEMPORAL_CONTINUITY.md \u00a715 documents the rules. client_state_temporal.mmd shows the desired flow. But no field/marker mechanically tracks plan-stale status.",
+      "impact": "Automation may continue from an old plan after the client's state has changed. Violates NS-05 and 'reply \u2192 plan stale' rule.",
       "current_workaround": "Manual audits and operator review during scheduled batch approval.",
-      "recommended_next_action": "Implement state transition in comms_state_sweep.py: new_inbound_detected → active_cadence=paused → plan_status=stale → generate inbound summary → surface for plan rewrite → manual confirmation required.",
-      "close_criteria": ["plan_status field or marker exists in box schema (sibling-schema check first)", "comms_state_sweep.py marks plan stale on new-inbound", "scheduled fire checks plan freshness", "manual confirmation path in UI", "documented in Audit Ledger and Decisions Ledger"],
-      "history": [{"date": "2026-04-28", "note": "created"}]
+      "recommended_next_action": "Implement state transition in comms_state_sweep.py: new_inbound_detected \u2192 active_cadence=paused \u2192 plan_status=stale \u2192 generate inbound summary \u2192 surface for plan rewrite \u2192 manual confirmation required.",
+      "close_criteria": [
+        "plan_status field or marker exists in box schema (sibling-schema check first)",
+        "comms_state_sweep.py marks plan stale on new-inbound",
+        "scheduled fire checks plan freshness",
+        "manual confirmation path in UI",
+        "documented in Audit Ledger and Decisions Ledger"
+      ],
+      "history": [
+        {
+          "date": "2026-04-28",
+          "note": "created"
+        }
+      ]
     },
     {
       "id": "PROB-2026-04-28-007",
@@ -150,17 +396,38 @@
       "urgency": "soon",
       "discovered": "2026-04-28",
       "discovered_by": "Brenda client_ledger.md review",
-      "affected_systems": ["Auto/orchestrator/bin/comms_state_sweep.py", "client_ledger.md", "reply gate", "Client Boxes"],
-      "related_ledgers": ["Audit (planned)"],
+      "affected_systems": [
+        "Auto/orchestrator/bin/comms_state_sweep.py",
+        "client_ledger.md",
+        "reply gate",
+        "Client Boxes"
+      ],
+      "related_ledgers": [
+        "Audit (out-of-scope 2026-04-29)"
+      ],
       "owner": "TBD",
-      "tags": ["client-box", "automation", "bug-suspected"],
+      "tags": [
+        "client-box",
+        "automation",
+        "bug-suspected"
+      ],
       "problem": "State sweep may mark 'new inbound this cycle' when importing historical inbound activities, not necessarily fresh post-cadence replies.",
-      "evidence": "Brenda client_ledger.md showed 'New inbound this cycle: True' but listed inbound items from April 19, before cadence start (Day 1 = Monday 2026-04-27). 2026-04-28 verbatim backfill imported additional historical activities — may have re-triggered this in other boxes.",
+      "evidence": "Brenda client_ledger.md showed 'New inbound this cycle: True' but listed inbound items from April 19, before cadence start (Day 1 = Monday 2026-04-27). 2026-04-28 verbatim backfill imported additional historical activities \u2014 may have re-triggered this in other boxes.",
       "impact": "False operator-review alerts; confused plan-pause logic; couples badly with PROB-006 when it lands.",
       "current_workaround": "Check timestamps against cadence_started_at before treating inbound as fresh.",
       "recommended_next_action": "Audit comms_state_sweep.py inbound detection. Compare against cadence_started_at or last-sweep timestamp. Differentiate 'newly imported historical' from 'new post-cadence inbound.' Update labels.",
-      "close_criteria": ["sweep differentiates newly-imported historical from new post-cadence inbound", "client ledger labels are clear (new_post_cadence_inbound: bool vs imported_historical_activities: int)", "reply gate uses correct timestamp logic", "documented decision in Decisions Ledger"],
-      "history": [{"date": "2026-04-28", "note": "created"}]
+      "close_criteria": [
+        "sweep differentiates newly-imported historical from new post-cadence inbound",
+        "client ledger labels are clear (new_post_cadence_inbound: bool vs imported_historical_activities: int)",
+        "reply gate uses correct timestamp logic",
+        "documented decision in Decisions Ledger"
+      ],
+      "history": [
+        {
+          "date": "2026-04-28",
+          "note": "created"
+        }
+      ]
     },
     {
       "id": "PROB-2026-04-28-009",
@@ -170,17 +437,38 @@
       "urgency": "later",
       "discovered": "2026-04-28",
       "discovered_by": "Connections inventory exercise",
-      "affected_systems": ["Connections Ledger (planned)", "Settings Ledger (planned)", "app runtime"],
-      "related_files": [".env", "connectors.js", "docs/connectors.md", "package.json", "server.py imports"],
+      "affected_systems": [
+        "Connections Ledger (planned)",
+        "Settings Ledger (planned)",
+        "app runtime"
+      ],
+      "related_files": [
+        ".env",
+        "connectors.js",
+        "docs/connectors.md",
+        "package.json",
+        "server.py imports"
+      ],
       "owner": "TBD",
-      "tags": ["connection", "documentation", "cleanup"],
+      "tags": [
+        "connection",
+        "documentation",
+        "cleanup"
+      ],
       "problem": "Some services are available as connectors or mentioned in environment context, but may not actually be active project dependencies.",
       "evidence": ".env lists various credentials; connectors.js and docs/connectors.md exist but haven't been audited against actual import statements / API calls.",
       "impact": "Connections Ledger could hallucinate dependencies if not verified.",
       "current_workaround": "Mark unverified services as needs-verification when listing.",
       "recommended_next_action": "Inspect repo imports, .env.example, server endpoints, and docs/connectors.md. Build Connections Ledger from evidence.",
-      "close_criteria": ["each optional service marked active, optional, or not used based on grep evidence"],
-      "history": [{"date": "2026-04-28", "note": "created"}]
+      "close_criteria": [
+        "each optional service marked active, optional, or not used based on grep evidence"
+      ],
+      "history": [
+        {
+          "date": "2026-04-28",
+          "note": "created"
+        }
+      ]
     },
     {
       "id": "PROB-2026-04-28-010",
@@ -190,18 +478,42 @@
       "urgency": "soon",
       "discovered": "2026-04-28",
       "discovered_by": "Phase 4 File Directory Ledger inspection",
-      "affected_systems": ["CLAUDE.md (project root)", "agent orientation", "bedrock understanding"],
-      "related_files": ["CLAUDE.md §1", "CCAgentindex/"],
-      "related_ledgers": ["File Directory Ledger §4.2", "Source-of-Truth (planned)"],
+      "affected_systems": [
+        "CLAUDE.md (project root)",
+        "agent orientation",
+        "bedrock understanding"
+      ],
+      "related_files": [
+        "CLAUDE.md \u00a71",
+        "CCAgentindex/"
+      ],
+      "related_ledgers": [
+        "File Directory Ledger \u00a74.2",
+        "Source-of-Truth (planned)"
+      ],
       "owner": "Jake (decision required)",
-      "tags": ["documentation", "ledger", "bedrock"],
-      "problem": "CLAUDE.md §1 says CCAgentindex/ has 5 surviving domains: people, venues, _ledger, _inbox, indexes. Reality is 26 directories: 10 .gitkeep stubs (Rodbot, commitments, threads, projects, knowledge, tables, annotations, charts) and 16 populated, including heavyweights — intelligence/ (119 files), _inbox/ (77), agent_plans/ (40), people/ (39), venues/ (30), reports/ (28), triggers/ (12).",
-      "evidence": "Direct inspection on 2026-04-28. Documented in FILE_DIRECTORY_LEDGER.md §4.2.",
+      "tags": [
+        "documentation",
+        "ledger",
+        "bedrock"
+      ],
+      "problem": "CLAUDE.md \u00a71 says CCAgentindex/ has 5 surviving domains: people, venues, _ledger, _inbox, indexes. Reality is 26 directories: 10 .gitkeep stubs (Rodbot, commitments, threads, projects, knowledge, tables, annotations, charts) and 16 populated, including heavyweights \u2014 intelligence/ (119 files), _inbox/ (77), agent_plans/ (40), people/ (39), venues/ (30), reports/ (28), triggers/ (12).",
+      "evidence": "Direct inspection on 2026-04-28. Documented in FILE_DIRECTORY_LEDGER.md \u00a74.2.",
       "impact": "claude -p subprocesses spawned from /api/delegate read CLAUDE.md as authoritative. They will believe domains like intelligence/, agent_plans/, triggers/, reports/ either don't exist or shouldn't be touched. Violates NS-09 and NS-06.",
       "current_workaround": "OPL and FILE_DIRECTORY_LEDGER.md document reality. Agents reading those files first get accurate orientation.",
-      "recommended_next_action": "Decision needed from Jake: Option A (update CLAUDE.md §1 to match reality), Option B (retire any populated domains that were unintentional), or Option C (add post-trim additions section). Most likely A.",
-      "close_criteria": ["decision recorded in Decisions Ledger", "CLAUDE.md §1 surviving-domains list matches actual disk", "FILE_DIRECTORY_LEDGER.md §4.2 cross-references updated CLAUDE.md", "this problem moves to Recently Closed"],
-      "history": [{"date": "2026-04-28", "note": "created. Surfaced from FILE_DIRECTORY_LEDGER.json open_problems_to_log[].claude_md_domains_drift."}]
+      "recommended_next_action": "Decision needed from Jake: Option A (update CLAUDE.md \u00a71 to match reality), Option B (retire any populated domains that were unintentional), or Option C (add post-trim additions section). Most likely A.",
+      "close_criteria": [
+        "decision recorded in Decisions Ledger",
+        "CLAUDE.md \u00a71 surviving-domains list matches actual disk",
+        "FILE_DIRECTORY_LEDGER.md \u00a74.2 cross-references updated CLAUDE.md",
+        "this problem moves to Recently Closed"
+      ],
+      "history": [
+        {
+          "date": "2026-04-28",
+          "note": "created. Surfaced from FILE_DIRECTORY_LEDGER.json open_problems_to_log[].claude_md_domains_drift."
+        }
+      ]
     },
     {
       "id": "PROB-2026-04-28-011",
@@ -211,18 +523,38 @@
       "urgency": "later",
       "discovered": "2026-04-28",
       "discovered_by": "Phase 4 File Directory Ledger inspection",
-      "affected_systems": ["docs/", "agent orientation", "sitemap discoverability"],
-      "related_files": ["docs/page_asset_sitemap.md (11 KB, stale)", "page_asset_sitemap.md (root, 65 KB, live)"],
-      "related_ledgers": ["File Directory Ledger §10 wrong-turn stale_docs_sitemap"],
+      "affected_systems": [
+        "docs/",
+        "agent orientation",
+        "sitemap discoverability"
+      ],
+      "related_files": [
+        "docs/page_asset_sitemap.md (11 KB, stale)",
+        "page_asset_sitemap.md (root, 65 KB, live)"
+      ],
+      "related_ledgers": [
+        "File Directory Ledger \u00a710 wrong-turn stale_docs_sitemap"
+      ],
       "owner": "Jake (decision required)",
-      "tags": ["cleanup", "documentation", "duplicate"],
+      "tags": [
+        "cleanup",
+        "documentation",
+        "duplicate"
+      ],
       "problem": "Two page_asset_sitemap.md files exist. Root copy 65 KB updated 2026-04-28 (live UI Done Gate). docs/page_asset_sitemap.md 11 KB abandoned.",
       "evidence": "diff confirms different content. Root referenced everywhere; docs/ copy isn't.",
       "impact": "An agent could grep for 'sitemap' and edit the wrong file. Violates NS-06.",
-      "current_workaround": "FILE_DIRECTORY_LEDGER.md §10 explicitly flags this wrong-turn.",
+      "current_workaround": "FILE_DIRECTORY_LEDGER.md \u00a710 explicitly flags this wrong-turn.",
       "recommended_next_action": "Decision: delete docs/page_asset_sitemap.md or convert to symlink/redirect.",
-      "close_criteria": ["only one page_asset_sitemap.md exists, or any copies are clearly redirect-only"],
-      "history": [{"date": "2026-04-28", "note": "created"}]
+      "close_criteria": [
+        "only one page_asset_sitemap.md exists, or any copies are clearly redirect-only"
+      ],
+      "history": [
+        {
+          "date": "2026-04-28",
+          "note": "created"
+        }
+      ]
     },
     {
       "id": "PROB-2026-04-28-012",
@@ -232,46 +564,91 @@
       "urgency": "soon",
       "discovered": "2026-04-28",
       "discovered_by": "Phase 4 File Directory Ledger inspection",
-      "affected_systems": ["Auto/Boxes/orchestrator/", "Auto/Boxes/comeketo-inbox/", "agent navigation"],
-      "related_files": ["Auto/Boxes/", "Auto/orchestrator/", "Auto/comeketo-inbox/"],
-      "related_ledgers": ["File Directory Ledger §7"],
+      "affected_systems": [
+        "Auto/Boxes/orchestrator/",
+        "Auto/Boxes/comeketo-inbox/",
+        "agent navigation"
+      ],
+      "related_files": [
+        "Auto/Boxes/",
+        "Auto/orchestrator/",
+        "Auto/comeketo-inbox/"
+      ],
+      "related_ledgers": [
+        "File Directory Ledger \u00a77"
+      ],
       "owner": "Jake (verification required)",
-      "tags": ["directory", "duplicate", "needs-verification"],
+      "tags": [
+        "directory",
+        "duplicate",
+        "needs-verification"
+      ],
       "problem": "Auto/Boxes/ exists as sibling to Auto/orchestrator/ and Auto/comeketo-inbox/, containing mirrors of both with newer mtimes (2026-04-27 16:23 vs 2026-04-26 02:42). _lib.py content was byte-identical.",
-      "evidence": "Direct inspection. Marked needs-verification in FILE_DIRECTORY_LEDGER.md §7.",
+      "evidence": "Direct inspection. Marked needs-verification in FILE_DIRECTORY_LEDGER.md \u00a77.",
       "impact": "Agent could edit wrong copy. Newer mtime is misleading. Possibly abandoned snapshot.",
-      "current_workaround": "FILE_DIRECTORY_LEDGER.md §10 wrong-turn auto_boxes_as_live warns against editing.",
+      "current_workaround": "FILE_DIRECTORY_LEDGER.md \u00a710 wrong-turn auto_boxes_as_live warns against editing.",
       "recommended_next_action": "Jake to clarify Auto/Boxes/ purpose. If abandoned, delete or archive. If intentional, document and rename.",
-      "close_criteria": ["purpose documented OR directory removed", "FDL §7 status changed from needs-verification to active (with role) or removed", "FDL §10 wrong-turn updated"],
-      "history": [{"date": "2026-04-28", "note": "created"}]
+      "close_criteria": [
+        "purpose documented OR directory removed",
+        "FDL \u00a77 status changed from needs-verification to active (with role) or removed",
+        "FDL \u00a710 wrong-turn updated"
+      ],
+      "history": [
+        {
+          "date": "2026-04-28",
+          "note": "created"
+        }
+      ]
     },
     {
       "id": "PROB-2026-04-28-013",
-      "title": "Two Onboard Scripts/ Folders — Auto/ is canonical, top-level is legacy",
+      "title": "Two Onboard Scripts/ Folders \u2014 Auto/ is canonical, top-level is legacy",
       "status": "triaged",
       "severity": "low",
       "severity_at_creation": "medium",
       "urgency": "watch",
       "discovered": "2026-04-28",
       "discovered_by": "Phase 4 FDL inspection (initial misread); corrected by Jake",
-      "affected_systems": ["Auto/Onboard Scripts/ (24 files, canonical/working)", "Onboard Scripts/ (root, 31 files, legacy from old app, being slowly rewritten)"],
-      "related_files": ["7 analytics_*.py at top-level — legacy versions being mined into the analytics page"],
-      "related_ledgers": ["FDL §3, §4.1, §7, §10 (corrected)"],
-      "owner": "Jake (informal — gradual migration as analytics work completes)",
-      "tags": ["cleanup", "legacy", "directory", "analytics"],
-      "problem": "Initial Phase 4 reading inverted ownership. Top-level Onboard Scripts/ is the legacy from a predecessor app — scripts known to be bad. Auto/Onboard Scripts/ is the legitimate working set translated/reworked from the legacy ones. The 7 analytics_*.py files at top-level are old versions being gradually mined and rewritten into the analytics page.",
+      "affected_systems": [
+        "Auto/Onboard Scripts/ (24 files, canonical/working)",
+        "Onboard Scripts/ (root, 31 files, legacy from old app, being slowly rewritten)"
+      ],
+      "related_files": [
+        "7 analytics_*.py at top-level \u2014 legacy versions being mined into the analytics page"
+      ],
+      "related_ledgers": [
+        "FDL \u00a73, \u00a74.1, \u00a77, \u00a710 (corrected)"
+      ],
+      "owner": "Jake (informal \u2014 gradual migration as analytics work completes)",
+      "tags": [
+        "cleanup",
+        "legacy",
+        "directory",
+        "analytics"
+      ],
+      "problem": "Initial Phase 4 reading inverted ownership. Top-level Onboard Scripts/ is the legacy from a predecessor app \u2014 scripts known to be bad. Auto/Onboard Scripts/ is the legitimate working set translated/reworked from the legacy ones. The 7 analytics_*.py files at top-level are old versions being gradually mined and rewritten into the analytics page.",
       "impact": "Low risk now that ownership is corrected. The danger was the inverted assumption.",
-      "current_workaround": "Treat Auto/Onboard Scripts/ as canonical for new work. Leave top-level alone — source pool being slowly translated. Don't delete; don't sync; don't assume parity.",
+      "current_workaround": "Treat Auto/Onboard Scripts/ as canonical for new work. Leave top-level alone \u2014 source pool being slowly translated. Don't delete; don't sync; don't assume parity.",
       "recommended_next_action": "Continue gradual rewrite as analytics page work needs each script. No immediate action.",
-      "close_criteria": ["all needed legacy scripts rewritten/translated", "top-level Onboard Scripts/ archived (or marked archive-only)", "FDL updated"],
+      "close_criteria": [
+        "all needed legacy scripts rewritten/translated",
+        "top-level Onboard Scripts/ archived (or marked archive-only)",
+        "FDL updated"
+      ],
       "history": [
-        {"date": "2026-04-28", "note": "created with inverted assumption (top-level treated as canonical superset)"},
-        {"date": "2026-04-28", "note": "corrected by Jake: Auto/ is canonical/working; top-level is legacy. Severity medium → low. Status needs-decision → triaged. Urgency later → watch."}
+        {
+          "date": "2026-04-28",
+          "note": "created with inverted assumption (top-level treated as canonical superset)"
+        },
+        {
+          "date": "2026-04-28",
+          "note": "corrected by Jake: Auto/ is canonical/working; top-level is legacy. Severity medium \u2192 low. Status needs-decision \u2192 triaged. Urgency later \u2192 watch."
+        }
       ]
     },
     {
       "id": "PROB-2026-04-28-015",
-      "title": "Migrate Auto/ Contents Into CCAgentindex/ → CLOSED via Symlink",
+      "title": "Migrate Auto/ Contents Into CCAgentindex/ \u2192 CLOSED via Symlink",
       "status": "closed",
       "closed": "2026-04-28",
       "resolution": "6 relative symlinks created under CCAgentindex/: Boxes, Client Boxes, comeketo-inbox, Onboard Scripts, orchestrator, Staff Boxes. Each points to ../Auto/<name>. Agent now has bedrock-side access to Auto/ contents as memory without moving anything. Active scheduled fires + seven-day cadence undisturbed. server.py AUTO_ROOT constants keep working. Reversible via unlink.",
@@ -279,12 +656,38 @@
       "urgency_at_creation": "later",
       "discovered": "2026-04-28",
       "discovered_by": "Jake (migration goal stated during cleanup conversation)",
-      "affected_systems": ["Auto/Client Boxes/ (28 boxes)", "Auto/Staff Boxes/ (10)", "Auto/orchestrator/", "Auto/comeketo-inbox/", "server.py AUTO_ROOT", "Auto/orchestrator/bin/_lib.py", "voice.py", "scheduled fires", "seven-day plan cadence"],
-      "related_files_at_risk": ["server.py lines 41-44 (AUTO_ROOT, AUTO_CLIENT_BOXES, AUTO_STAFF_BOXES, AUTO_ORCH_STATE)", "server.py 10 references to AUTO_*", "Auto/orchestrator/bin/_lib.py line 27 (AUTO = ROOT.parent)", "Auto/orchestrator/bin/voice.py line 5 docstring", "/api/boxes/* endpoints"],
-      "related_ledgers": ["FDL §4.1", "North Star NS-03 + NS-05"],
+      "affected_systems": [
+        "Auto/Client Boxes/ (28 boxes)",
+        "Auto/Staff Boxes/ (10)",
+        "Auto/orchestrator/",
+        "Auto/comeketo-inbox/",
+        "server.py AUTO_ROOT",
+        "Auto/orchestrator/bin/_lib.py",
+        "voice.py",
+        "scheduled fires",
+        "seven-day plan cadence"
+      ],
+      "related_files_at_risk": [
+        "server.py lines 41-44 (AUTO_ROOT, AUTO_CLIENT_BOXES, AUTO_STAFF_BOXES, AUTO_ORCH_STATE)",
+        "server.py 10 references to AUTO_*",
+        "Auto/orchestrator/bin/_lib.py line 27 (AUTO = ROOT.parent)",
+        "Auto/orchestrator/bin/voice.py line 5 docstring",
+        "/api/boxes/* endpoints"
+      ],
+      "related_ledgers": [
+        "FDL \u00a74.1",
+        "North Star NS-03 + NS-05"
+      ],
       "owner": "Jake (decision required Wednesday)",
       "blocked_by": "active seven-day setup (Brenda plan + scheduled fires anchored to Day 1 = Monday 2026-04-27); migration would disrupt cadence; revisit after Opus access restored",
-      "tags": ["directory", "migration", "safety", "automation", "bedrock", "deferred"],
+      "tags": [
+        "directory",
+        "migration",
+        "safety",
+        "automation",
+        "bedrock",
+        "deferred"
+      ],
       "problem": "Everything in Auto/ should eventually live under CCAgentindex/. Auto/ is currently a symlink to /Users/jakeaaron/Desktop/Auto/. Bedrock (CCAgentindex/) is the only filesystem state the app owns, but Client Box truth lives outside it under Auto/.",
       "path_reference_inventory": {
         "server_py": "10 references; AUTO_ROOT/AUTO_CLIENT_BOXES/AUTO_STAFF_BOXES/AUTO_ORCH_STATE constants",
@@ -296,46 +699,265 @@
         "onboard_scripts_both_locations": "zero hardcoded Auto/ refs"
       },
       "migration_options": [
-        {"id": "A", "label": "Sever symlink, copy contents into bedrock", "summary": "Copy Client Boxes/Staff Boxes/orchestrator/comeketo-inbox into new homes under CCAgentindex/. Update server.py constants. Risk: high (live scheduled fires + cadence)."},
-        {"id": "B", "label": "Symlink CCAgentindex/auto → /Users/jakeaaron/Desktop/Auto/", "summary": "Same content, new access path. Cosmetic; doesn't really solve bedrock-ownership concern."},
-        {"id": "C", "label": "Restructure into bedrock domains", "summary": "Each Client Box becomes part of CCAgentindex/people/<slug>/box/. Most aligned with NS-03 but biggest blast radius — touches loader, schemas, render_lead, BoxesScreen."},
-        {"id": "D", "label": "Hybrid: keep Auto/ for orchestrator runtime, migrate boxes only", "summary": "Move Auto/Client Boxes/ and Auto/Staff Boxes/ into bedrock; leave Auto/orchestrator/ alone since it's actively running scheduled fires."}
+        {
+          "id": "A",
+          "label": "Sever symlink, copy contents into bedrock",
+          "summary": "Copy Client Boxes/Staff Boxes/orchestrator/comeketo-inbox into new homes under CCAgentindex/. Update server.py constants. Risk: high (live scheduled fires + cadence)."
+        },
+        {
+          "id": "B",
+          "label": "Symlink CCAgentindex/auto \u2192 /Users/jakeaaron/Desktop/Auto/",
+          "summary": "Same content, new access path. Cosmetic; doesn't really solve bedrock-ownership concern."
+        },
+        {
+          "id": "C",
+          "label": "Restructure into bedrock domains",
+          "summary": "Each Client Box becomes part of CCAgentindex/people/<slug>/box/. Most aligned with NS-03 but biggest blast radius \u2014 touches loader, schemas, render_lead, BoxesScreen."
+        },
+        {
+          "id": "D",
+          "label": "Hybrid: keep Auto/ for orchestrator runtime, migrate boxes only",
+          "summary": "Move Auto/Client Boxes/ and Auto/Staff Boxes/ into bedrock; leave Auto/orchestrator/ alone since it's actively running scheduled fires."
+        }
       ],
       "current_workaround": "Live with the split until Wednesday. Seven-day cadence (Brenda Day 2 of 7 as of 2026-04-28) keeps running undisturbed.",
       "recommended_next_action": "Wednesday 2026-04-29 with Opus: pick migration option, plan phased rollout, ensure scheduled fires can be paused safely during cutover, run migration, update server.py constants, verify scheduled fires resume correctly.",
-      "close_criteria": ["migration option selected", "phased plan agreed (pause cadence → migrate → verify → resume)", "all Auto/ path refs in code updated", "scheduled fires + seven-day cadence resume cleanly", "FDL §4.1 + §3 updated", "this problem moves to Recently Closed"],
+      "close_criteria": [
+        "migration option selected",
+        "phased plan agreed (pause cadence \u2192 migrate \u2192 verify \u2192 resume)",
+        "all Auto/ path refs in code updated",
+        "scheduled fires + seven-day cadence resume cleanly",
+        "FDL \u00a74.1 + \u00a73 updated",
+        "this problem moves to Recently Closed"
+      ],
       "history": [
-        {"date": "2026-04-28", "note": "created. Status: deferred. Path-reference survey completed (no code outside server.py and Auto/orchestrator/bin/ hardcodes Auto/). Revisit Wednesday."}
+        {
+          "date": "2026-04-28",
+          "note": "created. Status: deferred. Path-reference survey completed (no code outside server.py and Auto/orchestrator/bin/ hardcodes Auto/). Revisit Wednesday."
+        }
+      ]
+    },
+    {
+      "id": "PROB-2026-04-28-016",
+      "title": "CCAgentindex/ Bedrock Was Bootstrapped On The Fly \u2014 Needs Triad-Based Reconciliation",
+      "status": "needs-decision",
+      "severity": "high",
+      "urgency": "later",
+      "discovered": "2026-04-28",
+      "discovered_by": "Jake (catch-up conversation, post-rebuild cleanup phase)",
+      "affected_systems": [
+        "CCAgentindex/ filesystem layout (32 subdirectories)",
+        "mission_control_loader.js",
+        "indexes/index.json",
+        "/api/* endpoints in server.py that read bedrock paths",
+        "every Box / Ledger / Sub-agent that has not yet been authored"
+      ],
+      "related_files": [
+        "CCAgentindex/ (32 subdirectories)",
+        "LEDGERS/INDEX.md",
+        "LEDGERS/FILE_DIRECTORY_LEDGER.md",
+        "*_subagent_package/ (5 at repo root)"
+      ],
+      "related_ledgers": [
+        "File Directory Ledger \u00a73",
+        "North Star NS-03 (single source of truth)",
+        "Phase Ledger (planned)",
+        "Definition of Done Ledger (planned)"
+      ],
+      "owner": "Jake (decision required after ledger + sub-agent buildout settles)",
+      "blocked_by": "ledger system not yet fully built; sub-agent system not yet fully built; PROB-001, PROB-010",
+      "tags": [
+        "bedrock",
+        "directory",
+        "architecture",
+        "cleanup",
+        "source-of-truth",
+        "plan-aging"
+      ],
+      "subdir_inventory": {
+        "total": 32,
+        "triad_aligned_via_symlink": [
+          "Boxes",
+          "Client Boxes",
+          "Staff Boxes",
+          "comeketo-inbox",
+          "Onboard Scripts",
+          "orchestrator"
+        ],
+        "bedrock_primitives": [
+          "_inbox",
+          "_ledger",
+          "_vaults"
+        ],
+        "loader_index_plumbing": [
+          "indexes"
+        ],
+        "agent_infra": [
+          "agents",
+          "agent_plans"
+        ],
+        "bootstrap_era_categorical": [
+          "analytics",
+          "annotations",
+          "catalog",
+          "charts",
+          "commitments",
+          "hooks",
+          "intake_reports",
+          "intelligence",
+          "knowledge",
+          "people",
+          "projects",
+          "reports",
+          "Rodbot",
+          "scheduled_tasks",
+          "summaries",
+          "tables",
+          "threads",
+          "triggers",
+          "venues",
+          "workflows"
+        ]
+      },
+      "problem": "CCAgentindex/ is the bedrock memory substrate the agent reads when running live in the app. It was written on the fly and bootstrapped before the Box+Ledger+Sub-agent triad was the formal philosophy. As a result the bedrock has 32 top-level subdirectories representing categorical thinking from the bootstrap era \u2014 many of which should collapse INTO Boxes (per-entity state), Ledgers (legible memory), or Sub-agent packages (operators) once the triad is finished being built out.",
+      "evidence": "Jake stated 2026-04-28: 'this is essentially the bedrock source of truth memory substrate for our Claude code binary or Codex binary or whatever we're actually running the agent with when we're live inside the application... and this was written on the fly and bootstrapped as I went. Now we actually have our ledger systems being built, our boxes being built, our sub-agents being built, and all of this needs to be aggregated and properly connected and indexed... I just don't think it's a good idea to have like 40 different subdirectories when we're doing it the other way now.'",
+      "impact": "Two competing organizational models in the same bedrock cause read-time confusion (which directory owns truth?), write-time fragmentation (state about a client could land in 4+ places), loader drift (indexes/index.json keys must change in lockstep with reorganization), and conceptual violation of NS-03 + the legibility-first commitment.",
+      "current_workaround": "Treat new state-bearing work as triad-shaped (Box+Ledger+Sub-agent). Don't add to commitments/, projects/, threads/, knowledge/ unless an existing sibling already lives there and consistency demands it. Capture migration intent in this entry so it isn't lost.",
+      "recommended_next_action": "DO NOT ACT YET. Per Jake 2026-04-28: 'the real thing that needs to be done is we need to finish building the ledgers and finish building the sub-agents. Once that's done we can let the dust settle and actually start figuring this all out.' Sequence: (1) finish ledger buildout, (2) finish sub-agent buildout, (3) run reconciliation pass \u2014 for each bootstrap-era subdir decide collapse-into-Box / become-Ledger / become-Sub-agent-territory / survive-as-primitive / archive, (4) update indexes/index.json + FILE_DIRECTORY_LEDGER + mission_control_loader.js + CLAUDE.md to match.",
+      "close_criteria": [
+        "Ledger system buildout reached 'active' for all planned ledgers in LEDGERS/INDEX.md",
+        "Sub-agent system buildout reached at least one runnable app agent per state-bearing domain",
+        "Reconciliation pass completed: each CCAgentindex/ subdirectory has a documented role in the triad model OR has been archived",
+        "LEDGERS/FILE_DIRECTORY_LEDGER.md updated to reflect reconciled bedrock",
+        "indexes/index.json keys match reconciled bedrock",
+        "Project CLAUDE.md describes bedrock organization in triad terms"
+      ],
+      "history": [
+        {
+          "date": "2026-04-28",
+          "note": "created. Jake flagged during catch-up conversation. Deferred pending ledger + sub-agent buildout completion. Inventory of 32 subdirs captured at creation."
+        }
       ]
     }
   ],
   "blocked_problems": [
-    {"id": "PROB-2026-04-28-001", "blocked_by": "schema decision", "next_unblock": "design Source-of-Truth / allowed_to_use schema"},
-    {"id": "PROB-2026-04-28-005", "blocked_by": "UI binding decision + plan-aging rule (PROB-006)", "next_unblock": "wire 01b_comms_verbatim.md into BoxesScreen", "scope": "remaining 50% of integration"},
-    {"id": "PROB-2026-04-28-003", "blocked_by": "UI/workflow decision", "next_unblock": "design approval-card standard + risk taxonomy"},
-    {"id": "PROB-2026-04-28-006", "blocked_by": "schema decision (plan_status field) + sibling-schema check", "next_unblock": "add field to box schema, then implement sweep logic"},
-    {"id": "PROB-2026-04-28-010", "blocked_by": "Jake decision (Option A/B/C)", "next_unblock": "Jake review + sync"},
-    {"id": "PROB-2026-04-28-012", "blocked_by": "Jake clarification", "next_unblock": "Jake review"}
+    {
+      "id": "PROB-2026-04-28-001",
+      "blocked_by": "schema decision",
+      "next_unblock": "design Source-of-Truth / allowed_to_use schema"
+    },
+    {
+      "id": "PROB-2026-04-28-005",
+      "blocked_by": "UI binding decision + plan-aging rule (PROB-006)",
+      "next_unblock": "wire 01b_comms_verbatim.md into BoxesScreen",
+      "scope": "remaining 50% of integration"
+    },
+    {
+      "id": "PROB-2026-04-28-003",
+      "blocked_by": "UI/workflow decision",
+      "next_unblock": "design approval-card standard + risk taxonomy"
+    },
+    {
+      "id": "PROB-2026-04-28-006",
+      "blocked_by": "schema decision (plan_status field) + sibling-schema check",
+      "next_unblock": "add field to box schema, then implement sweep logic"
+    },
+    {
+      "id": "PROB-2026-04-28-010",
+      "blocked_by": "Jake decision (Option A/B/C)",
+      "next_unblock": "Jake review + sync"
+    },
+    {
+      "id": "PROB-2026-04-28-012",
+      "blocked_by": "Jake clarification",
+      "next_unblock": "Jake review"
+    }
   ],
   "partially_fixed": [
     {
       "id": "PROB-2026-04-28-005",
-      "scope": "global — verbatim comms backfill landed, integration steps remain",
-      "fixed": ["verbatim comms backfill across all 28 boxes (582 raw activity payloads)", "01b_comms_verbatim.md + comms/*.json per box", "Source-of-truth priority order updated in FDL §4.3", "pull script preserved at outputs/pull_full_comms.py"],
-      "remaining": ["Boxes UI page binding (server.py line 4717)", "automation reading protocol (comms_state_sweep.py)", "plan rewrite trigger (PROB-006)", "per-box client_ledger.md update"]
+      "scope": "global \u2014 verbatim comms backfill landed, integration steps remain",
+      "fixed": [
+        "verbatim comms backfill across all 28 boxes (582 raw activity payloads)",
+        "01b_comms_verbatim.md + comms/*.json per box",
+        "Source-of-truth priority order updated in FDL \u00a74.3",
+        "pull script preserved at outputs/pull_full_comms.py"
+      ],
+      "remaining": [
+        "Boxes UI page binding (server.py line 4717)",
+        "automation reading protocol (comms_state_sweep.py)",
+        "plan rewrite trigger (PROB-006)",
+        "per-box client_ledger.md update"
+      ]
     },
     {
       "id": "brenda_steve_local",
-      "scope": "local — 1 box specific, but pattern is the template for PROB-002",
-      "fixed": ["stale schedule labels removed", "future fee/no-charge language gated", "future enrichment leakage reduced", "audit marker added (2026-04-28_audit_marker.md)", "Audit-cleaned line prepended", "Safety Status block added"],
-      "remaining_global": ["allowed-to-know layer not implemented (PROB-001)", "approval-card workflow not implemented (PROB-003)", "27 other boxes still un-audited (PROB-002)"]
+      "scope": "local \u2014 1 box specific, but pattern is the template for PROB-002",
+      "fixed": [
+        "stale schedule labels removed",
+        "future fee/no-charge language gated",
+        "future enrichment leakage reduced",
+        "audit marker added (2026-04-28_audit_marker.md)",
+        "Audit-cleaned line prepended",
+        "Safety Status block added"
+      ],
+      "remaining_global": [
+        "allowed-to-know layer not implemented (PROB-001)",
+        "approval-card workflow not implemented (PROB-003)",
+        "27 other boxes still un-audited (PROB-002)"
+      ]
     }
   ],
   "recurring_patterns": [
-    {"id": "source_vs_surface", "pattern": "Agents may confuse UI/generation surfaces with canonical source files", "systems": ["Boxes UI page", "Auto/orchestrator/state/", "Client Boxes", "page-asset sitemap"], "preventive_ledgers": ["File Directory (§6)", "Source-of-Truth (planned)", "Asset/Widget Map (planned)"]},
-    {"id": "plans_becoming_stale", "pattern": "Plans are written at one moment, then time/client replies/guardrails change. The plan keeps existing as if nothing happened.", "systems": ["seven-day plans", "scheduled fires", "client state", "automation page"], "preventive_approach": "plan freshness markers (PROB-006), reply gate, rewrite trigger, audit markers, TEMPORAL §15 plan-aging rules"},
-    {"id": "documentation_drift", "pattern": "Docs reflect a project state that has since changed. Agents trust docs and act on stale info.", "systems": ["CLAUDE.md", "AGENT.md", "README.md", "page_asset_sitemap.md", "ledgers"], "preventive_approach": "Done Gate (when DoD lands) + Last Verified dates + cross-references"},
-    {"id": "directory_duplication", "pattern": "Same content exists in two places. Edits go to the wrong copy.", "systems": ["Auto/Boxes/ mirror", "Comeketo Agent/ duplicates", "Onboard Scripts/ superset/subset", "sitemap copies"], "preventive_approach": "FDL §10 Common Wrong-Turns + symlinks where safe + Decisions Ledger to pick canonical"}
+    {
+      "id": "source_vs_surface",
+      "pattern": "Agents may confuse UI/generation surfaces with canonical source files",
+      "systems": [
+        "Boxes UI page",
+        "Auto/orchestrator/state/",
+        "Client Boxes",
+        "page-asset sitemap"
+      ],
+      "preventive_ledgers": [
+        "File Directory (\u00a76)",
+        "Source-of-Truth (planned)",
+        "Asset/Widget Map (planned)"
+      ]
+    },
+    {
+      "id": "plans_becoming_stale",
+      "pattern": "Plans are written at one moment, then time/client replies/guardrails change. The plan keeps existing as if nothing happened.",
+      "systems": [
+        "seven-day plans",
+        "scheduled fires",
+        "client state",
+        "automation page"
+      ],
+      "preventive_approach": "plan freshness markers (PROB-006), reply gate, rewrite trigger, audit markers, TEMPORAL \u00a715 plan-aging rules"
+    },
+    {
+      "id": "documentation_drift",
+      "pattern": "Docs reflect a project state that has since changed. Agents trust docs and act on stale info.",
+      "systems": [
+        "CLAUDE.md",
+        "AGENT.md",
+        "README.md",
+        "page_asset_sitemap.md",
+        "ledgers"
+      ],
+      "preventive_approach": "Done Gate (when DoD lands) + Last Verified dates + cross-references"
+    },
+    {
+      "id": "directory_duplication",
+      "pattern": "Same content exists in two places. Edits go to the wrong copy.",
+      "systems": [
+        "Auto/Boxes/ mirror",
+        "Comeketo Agent/ duplicates",
+        "Onboard Scripts/ superset/subset",
+        "sitemap copies"
+      ],
+      "preventive_approach": "FDL \u00a710 Common Wrong-Turns + symlinks where safe + Decisions Ledger to pick canonical"
+    }
   ],
   "recently_closed": [
     {
@@ -344,19 +966,55 @@
       "status": "closed",
       "closed": "2026-04-28",
       "severity_at_creation": "medium",
-      "what_fixed_it": "Phases 1–4 landed in same session: Global, Temporal Continuity, North Star, File Directory ledgers + INDEX + 9 visuals + 2 Box templates + read-first wiring in CLAUDE.md/AGENT.md/README.md.",
+      "what_fixed_it": "Phases 1\u20134 landed in same session: Global, Temporal Continuity, North Star, File Directory ledgers + INDEX + 9 visuals + 2 Box templates + read-first wiring in CLAUDE.md/AGENT.md/README.md.",
       "verification_evidence": [
-        {"criterion": "Global Ledger exists", "met": true, "path": "LEDGERS/GLOBAL_LEDGER.md"},
-        {"criterion": "Temporal Continuity Ledger exists", "met": true, "path": "LEDGERS/TEMPORAL_CONTINUITY.md"},
-        {"criterion": "Index exists", "met": true, "path": "LEDGERS/INDEX.md"},
-        {"criterion": "First-wave ledgers are linked", "met": true, "note": "Global ↔ Temporal ↔ North Star ↔ File Directory cross-refs"},
-        {"criterion": "Agent read-first workflow points to them", "met": true, "note": "CLAUDE.md §0, AGENT.md Read-second block, README.md Project memory section"}
+        {
+          "criterion": "Global Ledger exists",
+          "met": true,
+          "path": "LEDGERS/GLOBAL_LEDGER.md"
+        },
+        {
+          "criterion": "Temporal Continuity Ledger exists",
+          "met": true,
+          "path": "LEDGERS/TEMPORAL_CONTINUITY.md"
+        },
+        {
+          "criterion": "Index exists",
+          "met": true,
+          "path": "LEDGERS/INDEX.md"
+        },
+        {
+          "criterion": "First-wave ledgers are linked",
+          "met": true,
+          "note": "Global \u2194 Temporal \u2194 North Star \u2194 File Directory cross-refs"
+        },
+        {
+          "criterion": "Agent read-first workflow points to them",
+          "met": true,
+          "note": "CLAUDE.md \u00a70, AGENT.md Read-second block, README.md Project memory section"
+        }
       ],
-      "related_activity_ledger_entries": ["global_ledger_phase1_2026-04-28", "temporal_continuity_phase2_2026-04-28", "north_star_phase3_2026-04-28", "file_directory_phase4_2026-04-28"],
-      "successor_work": "Phase 5+ ledger buildout — Open Problems (this file), Source-of-Truth, Definition of Done, Decisions, etc. per LEDGERS/INDEX.md build order. Not 'successor problems' — just normal phase work."
+      "related_activity_ledger_entries": [
+        "global_ledger_phase1_2026-04-28",
+        "temporal_continuity_phase2_2026-04-28",
+        "north_star_phase3_2026-04-28",
+        "file_directory_phase4_2026-04-28"
+      ],
+      "successor_work": "Phase 5+ ledger buildout \u2014 Open Problems (this file), Source-of-Truth, Definition of Done, Decisions, etc. per LEDGERS/INDEX.md build order. Not 'successor problems' \u2014 just normal phase work."
     }
   ],
-  "lifecycle": ["Problem discovered", "Record it", "Triage severity / urgency", "Assign system / owner if possible", "Define workaround", "Define close criteria", "Work / fix / audit", "Verify", "Close or mark partial", "Archive if no longer useful"],
+  "lifecycle": [
+    "Problem discovered",
+    "Record it",
+    "Triage severity / urgency",
+    "Assign system / owner if possible",
+    "Define workaround",
+    "Define close criteria",
+    "Work / fix / audit",
+    "Verify",
+    "Close or mark partial",
+    "Archive if no longer useful"
+  ],
   "local_vs_global_rule": "If the problem affects one folder/client only, record locally (e.g. in client_ledger.md or local Box ledger). If it affects a pattern, workflow, source-of-truth rule, safety posture, or multiple systems, record here.",
   "final_operating_rule": "A known problem that is not recorded becomes future confusion. If it is broken, name it. If it is risky, classify it. If it is blocked, say why. If it is fixed, prove it."
 }

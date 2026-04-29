@@ -1,0 +1,1070 @@
+# Phase Ledger — Project-Wide Implementation Outline
+
+## 0. Purpose
+
+The **Phase Ledger** tracks major phases of the project.
+
+A phase is bigger than a task and smaller than the entire North Star.
+
+It may be:
+
+* a product milestone
+* a build sprint
+* a refactor pass
+* a safety-hardening pass
+* a release cycle
+* a ledger implementation wave
+* a Client Box cleanup wave
+* an automation rollout stage
+* a UI rebuild phase
+* a source-of-truth migration
+
+The uploaded ledger plan describes the Phase Ledger as the place to track what phase the project is in, the goal of that phase, what deliverables belong to it, what is in scope, what is out of scope, what is complete, what remains, what risks/blockers exist, and what ledgers must be updated before the phase closes. 
+
+This matters because not every task should be judged in isolation.
+
+Some work only makes sense as part of a larger phase.
+
+The Phase Ledger gives the project milestone memory.
+
+---
+
+# 1. Core Operating Principle
+
+The Phase Ledger should enforce this rule:
+
+> A phase is not just a collection of tasks. It is a bounded chapter of the build.
+
+A phase should tell future agents:
+
+* What are we trying to accomplish right now?
+* Why does this phase exist?
+* What is in scope?
+* What is out of scope?
+* What deliverables define success?
+* What has already been completed?
+* What remains?
+* What risks or blockers matter?
+* Which ledgers/maps must be updated before the phase closes?
+* What would make this phase complete enough to move on?
+
+The Phase Ledger prevents “random progress.”
+
+It gives the project chapters.
+
+---
+
+# 2. Recommended Location
+
+Create it in the central ledger directory:
+
+```text id="h9vfxc"
+/LEDGERS/
+  PHASE_LEDGER.md
+  PHASE_LEDGER.json
+  INDEX.md
+  PHASES/
+    2026-04-ledger-system-buildout.md
+    2026-04-client-box-safety-hardening.md
+    2026-04-automation-proof-period.md
+  VISUALS/
+    phase_timeline.mmd
+    phase_dependency_map.mmd
+    phase_done_gate_flow.mmd
+```
+
+Recommended final core files:
+
+```text id="sqt0gl"
+/LEDGERS/PHASE_LEDGER.md
+/LEDGERS/PHASE_LEDGER.json
+```
+
+Longer phase records should live in:
+
+```text id="xkyn4l"
+/LEDGERS/PHASES/<phase_slug>.md
+```
+
+The main ledger is the index and current status surface.
+
+---
+
+# 3. Role in the Ledger System
+
+The Phase Ledger sits between North Star and daily work.
+
+```text id="hul3y6"
+North Star Ledger
+  └── What are we trying to become?
+
+Phase Ledger
+  └── What chapter are we in right now?
+
+Definition of Done Ledger
+  └── What does complete mean?
+
+Temporal Continuity Ledger
+  └── What is true right now?
+
+Open Problems Ledger
+  └── What is blocking or risky?
+
+Audit Ledger
+  └── Did the phase meet its checks?
+```
+
+A task may support a phase.
+
+A phase should support North Star goals.
+
+The Phase Ledger helps prove that relationship.
+
+---
+
+# 4. What This Ledger Owns
+
+## Owns
+
+* phase list
+* active phase status
+* phase goals
+* phase scope
+* out-of-scope boundaries
+* phase deliverables
+* phase-level Definition of Done
+* phase risks/blockers
+* phase progress
+* phase completion notes
+* phase closeout requirements
+* phase-to-ledger update requirements
+* phase timeline
+* phase dependencies
+
+## Does not own
+
+* every task detail
+* every file description
+* all open problems
+* every current session note
+* all audit details
+* every decision rationale
+* full implementation recipes
+
+Those belong in Open Problems, Temporal Continuity, Audit, Decisions, Reconstruction, and local Box ledgers.
+
+The Phase Ledger should answer “what chapter are we in?” not “what line changed?”
+
+---
+
+# 5. Recommended `PHASE_LEDGER.md` Structure
+
+Use stable headings:
+
+```markdown id="qqcs8u"
+# Phase Ledger
+
+Last updated:
+Maintainer:
+Status:
+Current active phase:
+Read when:
+Core rule:
+
+## 1. Purpose
+## 2. Phase Entry Format
+## 3. Phase Status Labels
+## 4. Current Active Phases
+## 5. Phase Records
+## 6. Phase Deliverables Index
+## 7. Phase Risks / Blockers
+## 8. Phase Closeout Requirements
+## 9. Completed / Archived Phases
+## 10. Visualization Index
+## 11. Update Rules
+```
+
+This ledger should feel like a milestone board plus closeout checklist.
+
+---
+
+# 6. Phase Entry Format
+
+Use stable IDs.
+
+Recommended ID format:
+
+```text id="q5d80p"
+PHASE-YYYY-MM-DD-###
+```
+
+Example:
+
+```text id="crcgfw"
+PHASE-2026-04-28-001
+```
+
+Template:
+
+```markdown id="exxzhx"
+## PHASE-YYYY-MM-DD-### — <Phase Name>
+
+Status:
+Started:
+Target close:
+Owner:
+Scope:
+Related North Star goals:
+Related decisions:
+Related open problems:
+Related audits:
+Related reconstruction recipes:
+
+### Phase Goal
+
+What this phase is trying to accomplish.
+
+### Why This Phase Exists
+
+Why now?
+
+### In Scope
+
+What belongs in this phase.
+
+### Out of Scope
+
+What should not be dragged into this phase.
+
+### Deliverables
+
+What must exist.
+
+### Definition of Done
+
+What must be true before this phase closes.
+
+### Current Progress
+
+What is done, partial, not started.
+
+### Risks / Blockers
+
+What could stop or damage the phase.
+
+### Required Ledger Updates
+
+What memory surfaces must be updated before closing.
+
+### Closeout Notes
+
+Filled when phase closes.
+
+### History
+
+- YYYY-MM-DD — note
+```
+
+This template keeps phase work grounded.
+
+---
+
+# 7. Phase Status Labels
+
+```markdown id="6u2ayj"
+## 3. Phase Status Labels
+
+Use one:
+
+- `planned`: phase is defined but not active
+- `active`: currently being worked
+- `paused`: intentionally waiting
+- `blocked`: cannot proceed until blocker resolves
+- `partial`: partially completed, not fully closed
+- `closing`: closeout / verification in progress
+- `complete`: phase met close criteria
+- `superseded`: replaced by another phase
+- `abandoned`: intentionally stopped
+```
+
+Optional fields:
+
+```text id="3jdy4j"
+priority: critical / high / medium / low
+confidence: high / medium / low
+```
+
+---
+
+# 8. Current Active Phases — Seed List
+
+Based on current project state, there are three active/near-active phases.
+
+## 8.1 Phase 01 — Ledger System Buildout
+
+```markdown id="kh7yr0"
+## PHASE-2026-04-28-001 — Ledger System Buildout
+
+Status: active  
+Started: 2026-04-28  
+Owner: User + ChatGPT outline + Opus implementation  
+Scope: project-wide memory system  
+Related North Star goals: NS-01, NS-02, NS-03, NS-08, NS-09, NS-10  
+Related decisions:
+- GitHub is source of truth
+- FileTree orchestration over RAG memory
+- Build ledgers one at a time
+
+### Phase Goal
+
+Create a durable `/LEDGERS` system that gives the project global memory, local memory, source-of-truth clarity, Done Gates, audits, visual maps, and agent handoff continuity.
+
+### Why This Phase Exists
+
+The project is becoming complex enough that chat memory and ad hoc notes are not enough. The user wants GitHub-backed continuity so future agents can continue from the repo.
+
+### In Scope
+
+- Global Ledger
+- Temporal Continuity Ledger
+- North Star Ledger
+- Definition of Done Ledger
+- File Directory Ledger
+- Directory Configuration Ledger
+- File Contents Ledger
+- Asset / Widget Map Ledger
+- Connections Ledger
+- Decisions Ledger
+- Communications Ledger
+- Open Problems Ledger
+- Reconstruction Ledger
+- Scout Ledger
+- Audit Ledger
+- Phase Ledger
+- remaining page/widget/settings/source-of-truth ledgers
+- `INDEX.md`
+- JSON mirrors where useful
+- Mermaid visual maps
+
+### Out of Scope
+
+- rewriting the whole application
+- implementing full automation changes
+- migrating source-of-truth storage
+- solving every Client Box issue during ledger design
+- adding heavy dashboard tooling before the core ledger files exist
+
+### Deliverables
+
+- `/LEDGERS` directory
+- Markdown file for each first-wave ledger
+- JSON mirror for machine-readable ledgers where useful
+- visual maps for graph-heavy ledgers
+- `INDEX.md`
+- links from Global Ledger
+- first local `BOX.md` orientations
+- Done Gate references
+
+### Definition of Done
+
+This phase is complete when:
+
+- all planned first-wave ledgers exist
+- ledger index links them
+- Global Ledger defines read-first workflow
+- Definition of Done explains update requirements
+- File Directory + Directory Config define Box behavior
+- at least one visual map exists
+- Opus commits implementation to GitHub
+- Temporal Continuity records phase closeout
+- Audit Ledger records first ledger-system audit
+
+### Current Progress
+
+Outline generation is in progress one ledger at a time. Implementation is planned for Opus.
+
+Completed outlines so far:
+- Global
+- Temporal Continuity
+- North Star
+- Definition of Done
+- File Directory
+- Directory Configuration
+- File Contents
+- Asset / Widget Map
+- Connections
+- Decisions
+- Communications
+- Open Problems
+- Reconstruction
+- Scout
+- Audit
+- Phase
+
+### Risks / Blockers
+
+- Files may become too generic if Opus does not preserve project-specific context.
+- Ledger system may become too heavy if every small edit requires too much ceremony.
+- Implementation may conflict with user’s local unpushed work.
+- Visual maps may become stale if not linked to update rules.
+
+### Required Ledger Updates
+
+Before closing:
+- Temporal Continuity
+- Audit Ledger
+- Open Problems if any pieces missing
+- Reconstruction Ledger with final recipe
+- Decisions if implementation workflow changes
+```
+
+---
+
+## 8.2 Phase 02 — Client Box Safety Hardening
+
+```markdown id="m7gsbf"
+## PHASE-2026-04-28-002 — Client Box Safety Hardening
+
+Status: active  
+Started: 2026-04-28  
+Owner: User + agents  
+Scope: `Auto/Client Boxes` and related guardrail/scheduled-fire safety  
+Related North Star goals: NS-03, NS-04, NS-05, NS-06, NS-10  
+Related open problems:
+- Allowed-To-Know Constraint Not Implemented
+- Active Client Boxes Need Guardrail Audit
+- Approval Flow Does Not Yet Isolate Risky Moves
+- Full Phone Transcripts Not Yet Integrated
+- Plan Rewrite Trigger After Inbound Needs Formalization
+
+### Phase Goal
+
+Audit and harden active Client Boxes so automation can create movement without blindly trusting stale, risky, or enrichment-leaking plan text.
+
+### Why This Phase Exists
+
+Comeketo wants visible automation movement, but early plans may have been too aggressive or written before guardrails were fully enforced. The Brenda & Steve case revealed the need for safer plan cleanup and explicit approval handling.
+
+### In Scope
+
+- audit active Client Boxes one at a time
+- check required files
+- check comms/state/plan alignment
+- check calendar reality
+- check reply gates
+- check commitment language
+- check enrichment boundary
+- clean plan and alerts when approved
+- leave audit markers
+- prepare for transcript import
+- design allowed-to-know layer
+- identify plan rewrite triggers
+
+### Out of Scope
+
+- rewriting the entire automation system
+- changing all clients at once
+- inventing new risky offers
+- sending customer-facing messages without approval
+- treating one client’s issue as global rule unless pattern repeats
+
+### Deliverables
+
+- audit marker per cleaned client box
+- cleaned `05_seven_day_plan.md` where needed
+- cleaned `09_andre_alerts.md` where needed
+- list of remaining risky boxes
+- allowed-to-know schema proposal
+- plan-stale/rewrite trigger proposal
+- open problems for unresolved systemic issues
+
+### Definition of Done
+
+This phase is complete when:
+
+- all active ready Client Boxes are audited
+- risky future copy is flattened or gated
+- stale calendar labels are fixed
+- enrichment-only facts are not customer-facing
+- each touched box has an audit marker
+- allowed-to-know schema exists or open problem is explicitly carried forward
+- plan rewrite trigger after inbound is implemented or formally designed
+- Audit Ledger summarizes findings
+- Open Problems reflects remaining systemic issues
+
+### Current Progress
+
+- Brenda & Steve audited and cleaned.
+- Audit marker added.
+- Systemic lessons identified.
+
+### Risks / Blockers
+
+- Full transcripts are still being imported.
+- Some boxes may appear ready but have stale plans.
+- Approval UI for risky moves is not implemented.
+- State sweeps may confuse historical inbound with new replies.
+
+### Required Ledger Updates
+
+- Audit Ledger for each meaningful audit
+- Open Problems for unresolved patterns
+- Communications for future-agent warnings
+- Decisions if new rules are formalized
+- Source-of-Truth Ledger once allowed-to-know layer exists
+```
+
+---
+
+## 8.3 Phase 03 — Early Automation Proof Period
+
+```markdown id="75uv7s"
+## PHASE-2026-04-28-003 — Early Automation Proof Period
+
+Status: active / overlapping  
+Started: 2026-04-27  
+Owner: User + Comeketo automation system  
+Scope: proving automation can create safe, visible movement  
+Related North Star goals: NS-04, NS-05, NS-06  
+Related decisions:
+- Risky sales moves require isolated approval.
+- Seven-day plans are strategy drafts, not send licenses.
+
+### Phase Goal
+
+Show Comeketo visible automation movement while keeping risky autonomy constrained.
+
+### Why This Phase Exists
+
+Comeketo wants to see the automation doing real work. The user wants that movement, but with guardrails strong enough to avoid accidental risky concessions, stale sends, creepy enrichment, or uncontrolled customer-facing behavior.
+
+### In Scope
+
+- safe nudges
+- tasting confirmations
+- venue/detail asks
+- reply-aware pauses
+- state sweeps
+- Client Box updates
+- approval surfaces
+- audit markers
+- guardrail checks
+
+### Out of Scope
+
+- fully autonomous discounting
+- fully autonomous price commitments
+- enrichment-based customer-facing personalization
+- aggressive high-pressure sales sequences
+- unreviewed multi-touch bursts
+- pretending old plans are safe without audit
+
+### Deliverables
+
+- working state sweeps
+- visible Client Box state updates
+- safe scheduled-fire behavior
+- review/approval flow
+- run summaries
+- early audit trail
+- operator-visible movement
+
+### Definition of Done
+
+This phase is complete when:
+
+- Comeketo can see automation movement
+- no critical unsafe send pattern is active
+- risky moves require explicit approval
+- reply gate is trusted
+- Client Boxes have fresh enough state
+- early audit ledger shows what happened
+- user has confidence to expand autonomy carefully
+
+### Current Progress
+
+- Brenda & Steve and Hugo were confirmed as receiving state updates as of visible sweep.
+- Brenda & Steve Day 1 fired historically.
+- Brenda & Steve future plan was cleaned after audit.
+
+### Risks / Blockers
+
+- State update freshness needs continued verification.
+- User may be rushed during approvals.
+- Approval UI may not isolate risk enough.
+- Plans may predate guardrails.
+- Client replies must pause plans correctly.
+
+### Required Ledger Updates
+
+- Temporal Continuity
+- Audit Ledger
+- Open Problems
+- Decisions if autonomy boundaries change
+- Connections if scheduled/runtime dependencies change
+```
+
+---
+
+# 9. Phase Deliverables Index
+
+Purpose: quick milestone checklist.
+
+```markdown id="nyyf5l"
+## 6. Phase Deliverables Index
+
+| Phase | Deliverable | Status | Notes |
+|---|---|---|---|
+| Ledger System Buildout | `/LEDGERS/GLOBAL_LEDGER.md` | outline complete / implementation pending | Opus to implement |
+| Ledger System Buildout | `/LEDGERS/INDEX.md` | pending | should link all ledgers |
+| Ledger System Buildout | Mermaid visuals | pending | start simple |
+| Client Box Safety | Brenda & Steve audit marker | complete | local cleanup done |
+| Client Box Safety | Hugo audit | pending | likely next box |
+| Client Box Safety | allowed-to-know schema | pending | urgent |
+| Automation Proof | visible state sweeps | partial | confirmed for Brenda/Hugo from repo snapshot |
+| Automation Proof | isolated risk approval | pending | needs design |
+```
+
+This lets the user and agents see progress.
+
+---
+
+# 10. Phase Risks / Blockers
+
+```markdown id="xun9r3"
+## 7. Phase Risks / Blockers
+
+### Local/GitHub drift
+
+Risk:
+Opus or agents may commit while user has local unpushed work.
+
+Mitigation:
+Use branch/PR workflow or sync before direct-to-main writes.
+
+### Ledger bloat
+
+Risk:
+Ledgers become too heavy and slow down real work.
+
+Mitigation:
+Keep global ledgers broad. Keep local detail in Boxes. Use update rules.
+
+### Automation trust gap
+
+Risk:
+Comeketo wants movement faster than safety systems mature.
+
+Mitigation:
+Safe movement now; approval cards for risky moves; audit active boxes.
+
+### Incomplete comms truth
+
+Risk:
+Full transcripts not yet integrated.
+
+Mitigation:
+Use existing comms conservatively until transcript import is formalized.
+```
+
+---
+
+# 11. Phase Closeout Requirements
+
+Each phase should have closeout.
+
+```markdown id="icyv1z"
+## 8. Phase Closeout Requirements
+
+A phase cannot close until:
+
+- deliverables are checked
+- Definition of Done is checked
+- open problems are moved or closed
+- audit is recorded
+- Temporal Continuity is updated
+- relevant Decisions are recorded
+- Reconstruction recipe is updated if the phase created a repeatable pattern
+- handoff note is left for the next phase
+```
+
+Closeout template:
+
+```markdown id="cx2z5e"
+### Phase Closeout Template
+
+Phase:
+Close date:
+Result:
+Completed deliverables:
+Incomplete deliverables moved to:
+Open problems created/updated:
+Decisions created/updated:
+Audits completed:
+North Star goals supported:
+Next phase:
+Handoff:
+```
+
+---
+
+# 12. Completed / Archived Phases
+
+At first:
+
+```markdown id="0q7tlp"
+## 9. Completed / Archived Phases
+
+No completed phases recorded yet.
+
+When a phase closes, move summary here and keep detailed record in `/LEDGERS/PHASES/`.
+```
+
+Do not delete old phases.
+
+Archive them.
+
+---
+
+# 13. Recommended `PHASE_LEDGER.json` Shape
+
+```json id="2vxgho"
+{
+  "ledger_type": "phase",
+  "version": "0.1.0",
+  "last_updated": "2026-04-28",
+  "current_active_phases": [
+    "PHASE-2026-04-28-001",
+    "PHASE-2026-04-28-002",
+    "PHASE-2026-04-28-003"
+  ],
+  "status_labels": [
+    "planned",
+    "active",
+    "paused",
+    "blocked",
+    "partial",
+    "closing",
+    "complete",
+    "superseded",
+    "abandoned"
+  ],
+  "phases": [
+    {
+      "id": "PHASE-2026-04-28-001",
+      "title": "Ledger System Buildout",
+      "status": "active",
+      "started": "2026-04-28",
+      "scope": "project-wide memory system",
+      "related_north_star_goals": ["NS-01", "NS-02", "NS-03", "NS-08", "NS-09", "NS-10"],
+      "goal": "Create a durable /LEDGERS system for project memory, source-of-truth clarity, Done Gates, audits, visual maps, and agent handoff continuity.",
+      "deliverables": [
+        {
+          "name": "Global Ledger",
+          "status": "outline_complete_implementation_pending"
+        },
+        {
+          "name": "Temporal Continuity Ledger",
+          "status": "outline_complete_implementation_pending"
+        },
+        {
+          "name": "Ledger Index",
+          "status": "pending"
+        },
+        {
+          "name": "Visual maps",
+          "status": "pending"
+        }
+      ],
+      "risks": [
+        "ledgers become too generic",
+        "ledger bloat",
+        "GitHub/local drift"
+      ]
+    },
+    {
+      "id": "PHASE-2026-04-28-002",
+      "title": "Client Box Safety Hardening",
+      "status": "active",
+      "started": "2026-04-28",
+      "scope": "Auto/Client Boxes and related guardrail/scheduled-fire safety",
+      "goal": "Audit and harden active Client Boxes so automation can create movement without blindly trusting stale, risky, or enrichment-leaking plan text.",
+      "deliverables": [
+        {
+          "name": "Brenda & Steve audit marker",
+          "status": "complete"
+        },
+        {
+          "name": "Remaining active boxes audited",
+          "status": "pending"
+        },
+        {
+          "name": "Allowed-to-know schema",
+          "status": "pending"
+        }
+      ]
+    }
+  ]
+}
+```
+
+This can later power a phase dashboard.
+
+---
+
+# 14. Suggested Visual Layer
+
+Create:
+
+```text id="r4x0k4"
+/LEDGERS/VISUALS/phase_timeline.mmd
+/LEDGERS/VISUALS/phase_dependency_map.mmd
+/LEDGERS/VISUALS/phase_done_gate_flow.mmd
+```
+
+Example timeline:
+
+```mermaid id="752q0o"
+timeline
+  title Project Phases
+  2026-04-27 : Early Automation Proof Period starts
+  2026-04-28 : Client Box Safety Hardening begins
+             : Ledger System Buildout begins
+```
+
+Example dependency map:
+
+```mermaid id="zgz1na"
+flowchart TD
+  P1[Ledger System Buildout] --> P2[Client Box Safety Hardening]
+  P1 --> P3[Automation Proof Period]
+  P2 --> P3
+
+  P1 --> Global[Global + Temporal + Done Ledgers]
+  P2 --> Audit[Client Box Audit Markers]
+  P2 --> Allowed[Allowed-To-Know Layer]
+  P3 --> Approval[Risk Approval Flow]
+```
+
+Example closeout flow:
+
+```mermaid id="dopjqp"
+flowchart TD
+  Phase[Phase Work] --> Deliverables{Deliverables Complete?}
+  Deliverables -->|No| Open[Move remaining to Open Problems / Next Phase]
+  Deliverables -->|Yes| DoneGate[Run Phase Done Gate]
+  DoneGate --> Audit[Record Audit]
+  Audit --> Temporal[Update Temporal Continuity]
+  Temporal --> Close[Close Phase]
+```
+
+---
+
+# 15. Relationship to Temporal Continuity
+
+Temporal Continuity says what is true right now.
+
+Phase Ledger says what chapter the project is in.
+
+Example:
+
+```text id="qwsslh"
+Temporal:
+User is currently asking for one ledger at a time.
+
+Phase:
+Ledger System Buildout is active and outlines are being produced.
+```
+
+Temporal should reference active phase.
+
+Phase should link to temporal status.
+
+---
+
+# 16. Relationship to North Star
+
+Every phase should support at least one North Star goal.
+
+If a phase does not map to a North Star, ask why.
+
+Example:
+
+```text id="gnisum"
+Ledger System Buildout supports:
+NS-01 Durable Project Memory
+NS-02 FileTree Orchestration
+NS-09 Agent Handoff Continuity
+NS-10 Defense as Build Activity
+```
+
+This protects against busywork phases.
+
+---
+
+# 17. Relationship to Definition of Done
+
+Each phase has its own Definition of Done.
+
+The Definition of Done Ledger defines the general standard.
+The Phase Ledger applies it to the milestone.
+
+Example:
+
+```text id="w6k9hr"
+General DoD:
+Update relevant ledgers.
+
+Phase DoD:
+Ledger System Buildout is not done until Global, Temporal, Index, visuals, and first audit exist.
+```
+
+---
+
+# 18. Relationship to Open Problems
+
+Phases should not hide unfinished work.
+
+If a phase closes with remaining issues, those issues must move to Open Problems or a next phase.
+
+Example:
+
+```text id="b8rjki"
+Client Box Safety Hardening closes, but approval UI not implemented.
+→ Open Problem remains or new Approval Workflow Phase begins.
+```
+
+No unresolved problem should vanish at phase close.
+
+---
+
+# 19. Relationship to Audit Ledger
+
+Every meaningful phase should end with an audit.
+
+Example:
+
+```text id="f7sqoz"
+Phase:
+Ledger System Buildout
+
+Closing audit:
+Do ledgers exist?
+Are links valid?
+Is INDEX current?
+Do update rules exist?
+Are visuals present?
+```
+
+The Audit Ledger records the evidence.
+
+---
+
+# 20. Relationship to Reconstruction Ledger
+
+A phase that creates a repeatable pattern should update Reconstruction.
+
+Example:
+
+```text id="s32c0t"
+Client Box Safety Hardening creates repeatable audit workflow.
+→ Reconstruction Ledger records Client Box cleanup recipe.
+```
+
+This preserves how the phase was done.
+
+---
+
+# 21. Phase Change Done Gate
+
+Update this ledger when:
+
+```markdown id="8jebas"
+- a new phase starts
+- a phase scope changes
+- deliverables change
+- a phase is paused/blocked
+- a phase closes
+- a phase is superseded
+- major risks/blockers change
+- phase Done Gate changes
+- phase work creates new open problems
+```
+
+Do not update for tiny task movement unless it affects phase progress.
+
+---
+
+# 22. What Opus Should Build First
+
+Give Opus this build order:
+
+```text id="3r5vud"
+1. Create /LEDGERS/PHASE_LEDGER.md.
+2. Create /LEDGERS/PHASE_LEDGER.json.
+3. Create /LEDGERS/PHASES/ directory.
+4. Add link to /LEDGERS/INDEX.md.
+5. Add link to /LEDGERS/TEMPORAL_CONTINUITY.md if it exists.
+6. Add link to /LEDGERS/NORTH_STAR.md if it exists.
+7. Add link to /LEDGERS/DEFINITION_OF_DONE.md if it exists.
+8. Add link to /LEDGERS/AUDIT_LEDGER.md if it exists.
+9. Create /LEDGERS/VISUALS/phase_timeline.mmd.
+10. Create /LEDGERS/VISUALS/phase_dependency_map.mmd.
+11. Add Phase Entry Format.
+12. Add Status Labels.
+13. Seed active phases:
+    - Ledger System Buildout
+    - Client Box Safety Hardening
+    - Early Automation Proof Period
+14. Add Phase Deliverables Index.
+15. Add Phase Closeout Requirements.
+16. Commit with message: "Add phase ledger".
+```
+
+---
+
+# 23. Quality Bar
+
+The Phase Ledger succeeds if future agents can answer:
+
+* What phase are we in?
+* Why does this phase exist?
+* What is in scope?
+* What is out of scope?
+* What deliverables define success?
+* What has been completed?
+* What remains?
+* What risks/blockers exist?
+* What ledgers must be updated before close?
+* What phase comes next?
+
+It fails if:
+
+* it becomes a giant task list
+* phases do not have close criteria
+* active phases are stale
+* out-of-scope boundaries are missing
+* phase risks are hidden
+* phase closeout does not update other ledgers
+* work cannot be tied to North Star goals
+
+The Phase Ledger should make project momentum legible.
+
+---
+
+# 24. Final Operating Rule
+
+The Phase Ledger should end with this:
+
+```markdown id="i01sr8"
+A phase is a chapter of the build.
+
+Name the chapter.
+Bound the chapter.
+Finish the chapter.
+Carry the unfinished truth forward.
+```
+
+---
+
+

@@ -1,0 +1,34 @@
+%% Communications Ledger — Communication Lifecycle
+%% Active -> Resolved? -> Promote (Decisions / Open Problems / Box) or Archive
+
+flowchart LR
+    Created["Entry created<br/>COMM-YYYY-MM-DD-###"] --> Active["Active<br/>(Sections 4-9)"]:::active
+
+    Active --> ReadCheck{Read by a<br/>future agent?}
+    ReadCheck -->|Yes, useful| Apply["Agent applies<br/>the message"]:::active
+    ReadCheck -->|Yes, no longer relevant| ResolveStart["Mark for resolution"]
+    ReadCheck -->|Periodic review| StaleCheck{Still<br/>relevant?}
+    StaleCheck -->|Yes| Active
+    StaleCheck -->|No| ResolveStart
+
+    Apply --> Outcome{Outcome shifts<br/>the entry?}
+    Outcome -->|Becomes a settled rule| PromoteDec["Promote to<br/>Decisions Ledger"]:::promote
+    Outcome -->|Becomes a tracked problem| PromoteOP["Promote to<br/>Open Problems Ledger"]:::promote
+    Outcome -->|Becomes local context| MoveBox["Move to local Box"]:::promote
+    Outcome -->|Still active| Active
+
+    ResolveStart --> Reason{Why resolved?}
+    Reason -->|Promoted| PromoteDec
+    Reason -->|Promoted| PromoteOP
+    Reason -->|Promoted| MoveBox
+    Reason -->|No longer applies| Archive["Section 10<br/>Archived"]:::archive
+
+    PromoteDec --> Marker["Original entry marked<br/>status: promoted<br/>+ pointer to new home"]
+    PromoteOP --> Marker
+    MoveBox --> Marker
+    Marker --> ArchiveAfter["Archive after one<br/>session cycle confirms<br/>the promotion sticks"]:::archive
+    Archive --> ArchiveAfter
+
+    classDef active fill:#10b981,stroke:#047857,color:#fff
+    classDef promote fill:#7c3aed,stroke:#5b21b6,color:#fff
+    classDef archive fill:#9ca3af,stroke:#4b5563,color:#fff

@@ -1,0 +1,1527 @@
+# Connections Ledger — Project-Wide Implementation Outline
+
+## 0. Purpose
+
+The **Connections Ledger** tracks every external system the project depends on.
+
+This includes applications, APIs, services, credentials, MCP servers, model providers, databases, billing dependencies, automation platforms, GitHub connectors, Close, Slack, Google Drive, ClickUp, Supabase, paid tools, local servers, and anything else that can make the project work — or break.
+
+The uploaded ledger plan describes this ledger as part technical map and part operations ledger. It should answer what external apps the project uses, which services are required or optional, what APIs/credentials are involved, what tools are paid, when billing or tokens renew, what breaks if a service goes down, and who depends on each connection. 
+
+This ledger prevents surprise breakage.
+
+A project like this does not only fail because code is wrong.
+
+It can fail because:
+
+* an API key expires
+* a token is missing
+* a paid service runs out
+* a connector is not enabled
+* a local server is down
+* a model setting changed
+* a webhook points to the wrong place
+* Close, Slack, GitHub, or Google Drive state is misunderstood
+* one automation assumes a connection exists that is only configured locally
+
+The Connections Ledger is the project’s dependency reality check.
+
+---
+
+# 1. Core Operating Principle
+
+The Connections Ledger should enforce this rule:
+
+> If the project depends on an outside system, that dependency must be visible.
+
+Not necessarily the secret itself.
+
+Never store raw secrets in the ledger.
+
+But the dependency should be recorded:
+
+* service name
+* purpose
+* where credentials are expected
+* whether it is required or optional
+* who/what uses it
+* what breaks if unavailable
+* how to verify it
+* renewal/billing/trial risk if relevant
+* local vs GitHub vs cloud state
+* owner or responsible human/system
+
+The project should never be surprised by a forgotten dependency.
+
+---
+
+# 2. Recommended Location
+
+Create it in the central ledger directory:
+
+```text id="kjmatn"
+/LEDGERS/
+  CONNECTIONS_LEDGER.md
+  CONNECTIONS_LEDGER.json
+  INDEX.md
+  VISUALS/
+    connection_map.mmd
+    service_dependency_graph.mmd
+    credential_flow.mmd
+```
+
+Recommended final path:
+
+```text id="ctgq42"
+/LEDGERS/CONNECTIONS_LEDGER.md
+/LEDGERS/CONNECTIONS_LEDGER.json
+```
+
+The Global Ledger should link to it.
+
+The Settings Ledger, Source-of-Truth Ledger, Asset / Widget Map, and Automation/Box ledgers should point into it whenever an external dependency matters.
+
+---
+
+# 3. Role in the Ledger System
+
+The Connections Ledger sits across the whole project because external dependencies cut through everything.
+
+```text id="d31t4c"
+Global Ledger
+  └── project-wide orientation
+
+Connections Ledger
+  └── external systems, APIs, tools, credentials, services, billing, failure modes
+
+Settings Ledger
+  └── user-configurable settings and credential surfaces
+
+Asset / Widget Map
+  └── which pages/widgets call which APIs/services
+
+Source-of-Truth Ledger
+  └── which external system owns which data
+
+Automation Ledgers / Boxes
+  └── which automations depend on which services
+```
+
+The Connections Ledger is not just for developers.
+
+It is for operators too.
+
+It should answer:
+
+> “What do we rely on, and what happens if it breaks?”
+
+---
+
+# 4. What This Ledger Owns
+
+## Owns
+
+* external service inventory
+* connector inventory
+* API dependency map
+* credential expectation map
+* required vs optional service classification
+* billing/trial/renewal notes
+* failure modes
+* verification steps
+* local/cloud dependency distinctions
+* service owners
+* downstream consumers
+* replacement or fallback notes
+* security/sensitivity notes
+
+## Does not own
+
+* raw API keys
+* passwords
+* OAuth tokens
+* full endpoint documentation
+* every local environment variable value
+* all source-of-truth rules
+* every page API call
+* all settings UI details
+
+Those belong in secure stores, `.env`, Settings Ledger, Source-of-Truth Ledger, API docs, and app configuration.
+
+The Connections Ledger should say **what exists and where to verify**, not expose secrets.
+
+---
+
+# 5. Recommended `CONNECTIONS_LEDGER.md` Structure
+
+Use stable headings:
+
+```markdown id="0v8ypk"
+# Connections Ledger
+
+Last updated:
+Maintainer:
+Status:
+Read when:
+Security rule:
+
+## 1. Purpose
+## 2. Security Rules
+## 3. Connection Categories
+## 4. Required Connections
+## 5. Optional / Enhancement Connections
+## 6. Connection Registry
+## 7. Credentials / Secret Locations
+## 8. Failure Mode Map
+## 9. Billing / Renewal / Quota Watch
+## 10. Verification Playbook
+## 11. Local vs Cloud Dependencies
+## 12. Connection Change Done Gate
+## 13. Visualization Index
+## 14. Update Rules
+```
+
+This ledger should be operationally useful.
+
+It should tell someone what to check when something stops working.
+
+---
+
+# 6. Security Rules
+
+This must be near the top.
+
+```markdown id="nytbqd"
+## 2. Security Rules
+
+Never store raw secrets in this ledger.
+
+Do not record:
+- API keys
+- access tokens
+- refresh tokens
+- passwords
+- private keys
+- OAuth secrets
+- service account JSON contents
+- database passwords
+
+Allowed:
+- service name
+- credential variable name
+- expected storage location
+- owner/responsible party
+- whether credential exists
+- how to verify connection safely
+- expiration/renewal notes
+- what breaks if missing
+
+If a credential is missing, record the missing dependency, not the secret.
+```
+
+This keeps the ledger safe while still useful.
+
+---
+
+# 7. Connection Categories
+
+Purpose: organize dependencies.
+
+Recommended categories:
+
+```markdown id="ldms7v"
+## 3. Connection Categories
+
+### 3.1 Source Control / Repo
+
+- GitHub
+- GitHub connector
+- GitHub MCP/app integrations
+
+### 3.2 CRM / Sales Data
+
+- Close
+- Close API
+- Close inbox/tasks/activity data
+
+### 3.3 Communication Surfaces
+
+- Slack
+- Andre DM
+- team channels
+- email sending through Close or configured mail systems
+
+### 3.4 File / Knowledge Sources
+
+- Google Drive
+- uploaded file library
+- local file tree
+- GitHub repo contents
+
+### 3.5 Automation / Agent Runtime
+
+- Cowork scheduled tasks
+- local scripts
+- MCP servers
+- browser/app connectors
+- external action tools
+
+### 3.6 App Runtime
+
+- local server
+- frontend files
+- backend APIs
+- environment config
+- localStorage where relevant
+
+### 3.7 Model Providers / AI Tools
+
+- OpenAI / ChatGPT
+- Claude / Opus
+- Pieces
+- any configured model picker
+
+### 3.8 Data / Database
+
+- Supabase if used
+- local JSON/CSV stores
+- analytics snapshots
+- report stores
+
+### 3.9 Billing / Paid Tools
+
+- paid API credits
+- subscriptions
+- trial services
+- renewal-sensitive dependencies
+```
+
+Categories should reflect actual project dependencies after Opus inspects the repo.
+
+---
+
+# 8. Required Connections
+
+Purpose: what must exist for core operation.
+
+Example:
+
+```markdown id="g19e26"
+## 4. Required Connections
+
+| Connection | Required For | What Breaks If Missing | Verification |
+|---|---|---|---|
+| GitHub | durable source of truth, agent handoff, repo memory | agents lose shared canonical continuity | can fetch/push repo |
+| Close API | lead comms, tasks, sends, activity sweeps | no live CRM state, no send/sweep behavior | safe status/activity test |
+| Slack | Andre review surfaces, team audit reporting | review/approval loop breaks | test channel/DM post or status check |
+| Local `.env` | credentials/config | APIs and external actions fail | server status endpoint or env check |
+| App server | UI/API runtime | pages cannot load dynamic data | `/api/status` or local health check |
+```
+
+Do not pretend every service is required.
+
+Separate required from optional so failure response is clear.
+
+---
+
+# 9. Optional / Enhancement Connections
+
+Some connections make the system better but are not always required.
+
+Example:
+
+```markdown id="bxqxp1"
+## 5. Optional / Enhancement Connections
+
+| Connection | Enhances | What Degrades If Missing |
+|---|---|---|
+| Google Drive | docs/slides/source discovery | internal docs may be unavailable |
+| ClickUp | task/project lookup | ClickUp project context unavailable |
+| Pieces | activity/briefing intelligence | activity panels and sweeps degrade |
+| Supabase | database-backed features if used | DB-backed features unavailable |
+| Browser/file connectors | external search/lookup | agent context narrower |
+```
+
+This helps triage.
+
+If optional service fails, the system can continue with reduced capability.
+
+---
+
+# 10. Connection Registry
+
+This is the heart of the ledger.
+
+Each connection should use a stable card.
+
+Template:
+
+```markdown id="wpvaav"
+### `<Connection Name>`
+
+Category:
+Status:
+Required level:
+Owner:
+Used by:
+Purpose:
+Credentials:
+Expected config location:
+Data read:
+Data written:
+Side effects:
+Failure mode:
+Verification:
+Fallback:
+Billing / quota notes:
+Related files:
+Related ledgers:
+Security notes:
+```
+
+Below are starter entries.
+
+---
+
+## 10.1 GitHub
+
+```markdown id="scc6kp"
+### GitHub
+
+Category:
+Source Control / Repo
+
+Status:
+Required
+
+Required level:
+Critical
+
+Owner:
+Repo owner / project operator
+
+Used by:
+- agents
+- ledgers
+- codebase
+- file-tree memory
+- Opus implementation workflow
+- GitHub connector
+
+Purpose:
+Durable source of truth for code, ledgers, client box state, configuration, and handoff memory.
+
+Credentials:
+Handled by local Git auth or GitHub connector/app. Do not store tokens in ledger.
+
+Expected config location:
+- local Git config / credential manager
+- ChatGPT GitHub connector where applicable
+
+Data read:
+- repository files
+- commits
+- branches
+- PRs/issues if enabled
+
+Data written:
+- commits
+- branches
+- PRs
+- files changed directly by agents if authorized
+
+Side effects:
+High. Direct writes can conflict with local unpushed work.
+
+Failure mode:
+- agents cannot read/write source of truth
+- continuity cannot be pushed
+- local/GitHub drift can occur
+
+Verification:
+- `git status`
+- `git fetch origin`
+- connector can list/fetch files
+- push test only when safe
+
+Fallback:
+- local file work with later push
+- patch files/manual commit
+
+Billing / quota notes:
+None unless using paid GitHub features.
+
+Related ledgers:
+- Global Ledger
+- Temporal Continuity Ledger
+- File Directory Ledger
+- Connections Ledger
+
+Security notes:
+Never store GitHub tokens in repo.
+```
+
+Important project-specific warning:
+
+```markdown id="u73k07"
+Direct GitHub agent writes must account for the human possibly having unpushed local work.
+```
+
+---
+
+## 10.2 Close
+
+```markdown id="j9g94c"
+### Close
+
+Category:
+CRM / Sales Data
+
+Status:
+Required for live Comeketo inbox/client automation
+
+Required level:
+Critical for sends, comms sweeps, lead state, task movement
+
+Owner:
+Comeketo / Andre / system operator
+
+Used by:
+- comms_state_sweep
+- client ledgers
+- inbox automation
+- scheduled fires
+- lead/task state
+- future allowed-to-know extraction
+
+Purpose:
+Canonical live CRM source for leads, contacts, activities, calls, SMS, email, tasks, opportunities, ownership, and statuses.
+
+Credentials:
+Close API key. Do not store raw key in ledger.
+
+Expected config location:
+- `.env`
+- server/app credential handling if implemented
+
+Data read:
+- lead records
+- contact records
+- activities
+- tasks
+- calls/transcripts when available
+- opportunities
+- status/owner fields
+
+Data written:
+- SMS/email activities when sending
+- task movements
+- notes/logs
+- status updates if explicitly allowed
+
+Side effects:
+Very high. Can contact customers or alter CRM state.
+
+Failure mode:
+- no live comms import
+- no state sweep
+- no customer sends
+- stale Client Boxes
+- reply gate cannot be trusted from live state
+
+Verification:
+- safe read-only API check
+- fetch known lead by ID
+- fetch recent activities for known lead
+- never test by sending customer-facing message
+
+Fallback:
+- use last synced `01_comms.md` and `client_ledger.md`, clearly marked stale
+- manual Close review
+
+Related files:
+- `Auto/Client Boxes/<Name>/01_comms.md`
+- `Auto/Client Boxes/<Name>/client_ledger.md`
+- `Auto/orchestrator/bin/comms_state_sweep.py`
+- inbox skill files
+
+Security notes:
+Close is customer-facing. Treat writes as high-risk.
+```
+
+This connection is central to Client Boxes.
+
+---
+
+## 10.3 Slack
+
+```markdown id="gmww0e"
+### Slack
+
+Category:
+Communication Surfaces
+
+Status:
+Required for review/approval loop if Slack DM/team reporting is active
+
+Required level:
+High
+
+Owner:
+Comeketo workspace/operator
+
+Used by:
+- Andre DM review surfaces
+- team audit reporting
+- reply detected alerts
+- send failure alerts
+- scheduled fire confirmations
+- delegation/handoff workflows if connected
+
+Purpose:
+Human approval and reporting layer.
+
+Credentials:
+Slack bot/user token or connector auth. Do not store raw token in ledger.
+
+Expected config location:
+- `.env`
+- Slack connector/app config
+- server configuration
+
+Data read:
+- review replies/reactions if implemented
+- channel/user IDs
+
+Data written:
+- DM messages
+- team channel messages
+- thread replies
+- alerts
+
+Side effects:
+Medium/high. Not usually customer-facing, but can create operational confusion if wrong.
+
+Failure mode:
+- Andre approval loop breaks
+- alerts not surfaced
+- team audit trail missing
+- scheduled fires may stall if waiting for Slack ack
+
+Verification:
+- safe status check
+- post to test channel only if explicitly allowed
+- verify channel/DM IDs
+
+Fallback:
+- manual approval in app/delegations page
+- logs only, no send until reviewed
+
+Related files:
+- `.env`
+- orchestrator/manual fire docs
+- server APIs if Slack posting exists
+- communications ledger if built
+
+Security notes:
+Never store Slack tokens in ledger.
+```
+
+---
+
+## 10.4 Google Drive
+
+```markdown id="0j74ej"
+### Google Drive
+
+Category:
+File / Knowledge Sources
+
+Status:
+Optional/high-value depending on workflow
+
+Required level:
+Medium
+
+Owner:
+User / Comeketo workspace
+
+Used by:
+- internal docs lookup
+- uploaded/synced docs
+- possible sitemap/source docs
+- agent research over connected files
+
+Purpose:
+Access to documents, spreadsheets, slides, and operational references.
+
+Credentials:
+Connector OAuth. Do not store credentials in repo.
+
+Expected config location:
+- ChatGPT connector
+- Google Drive app authorization
+- not local repo
+
+Data read:
+- docs
+- sheets
+- slides
+- uploaded files
+- operational references
+
+Data written:
+Normally none unless explicitly authorized.
+
+Side effects:
+Low if read-only; higher if write tools are used.
+
+Failure mode:
+- internal docs unavailable
+- agent may need user upload instead
+- public web may be insufficient
+
+Verification:
+- connector can search/open known doc
+- file_search can retrieve accessible docs
+
+Fallback:
+- user uploads file directly
+- store canonical docs in GitHub when appropriate
+
+Related ledgers:
+- Source-of-Truth Ledger
+- File Directory Ledger if docs are mirrored into repo
+```
+
+---
+
+## 10.5 Cowork Scheduled Tasks
+
+```markdown id="ld7uy2"
+### Cowork Scheduled Tasks
+
+Category:
+Automation / Agent Runtime
+
+Status:
+Required for scheduled cadence heartbeat if this runtime is active
+
+Required level:
+High for live scheduled fires/sweeps
+
+Owner:
+Jake / Cowork environment
+
+Used by:
+- per-lead scheduled fires
+- recurring comms-state-sweep
+- future automation tasks
+
+Purpose:
+Runs future prompts/sessions on a schedule.
+
+Credentials:
+Handled by Cowork environment. Do not store secrets in ledger.
+
+Expected config location:
+- Cowork scheduled-task system
+- possibly local task prompt files
+- `.env` for services used by tasks
+
+Data read:
+- task prompts
+- Client Boxes
+- inbox skill
+- guardrails
+- Close/Slack state
+
+Data written:
+- Close sends
+- comms logs
+- run summaries
+- Slack alerts
+- client state updates
+
+Side effects:
+Very high. Can trigger customer-facing actions.
+
+Failure mode:
+- future sends do not fire
+- sweeps do not run
+- client ledgers go stale
+- automation appears dead
+
+Verification:
+- list scheduled tasks if available
+- inspect recent run summaries
+- check last sweep timestamp
+- verify no paused/global kill switch
+
+Fallback:
+- manual fire through controlled session
+- local script run if safe
+- pause customer-facing sends until schedule verified
+
+Related files:
+- `Auto/orchestrator/MANUAL_FIRE.md`
+- `Auto/orchestrator/SYSTEM_OVERVIEW.md`
+- `Auto/orchestrator/bin/comms_state_sweep.py`
+- Client Boxes
+
+Security notes:
+Because tasks can act in the future, every task must respect guardrails.
+```
+
+---
+
+## 10.6 OpenAI / ChatGPT
+
+```markdown id="e0b1q0"
+### OpenAI / ChatGPT
+
+Category:
+Model Providers / AI Tools
+
+Status:
+Required for current agent workflows
+
+Required level:
+High
+
+Owner:
+User / workspace
+
+Used by:
+- agent reasoning
+- GitHub-connected editing
+- file analysis
+- ledger design
+- client box auditing
+- future skill/tool workflows
+
+Purpose:
+AI reasoning, writing, audit, implementation planning, and tool-connected work.
+
+Credentials:
+Managed by platform, not repo.
+
+Expected config location:
+- ChatGPT account/workspace
+- API key only if app calls OpenAI directly
+
+Data read:
+- user-provided files
+- connected sources
+- repo files via connectors
+- uploaded docs
+
+Data written:
+- GitHub files when authorized
+- generated artifacts when requested
+- chat outputs
+
+Side effects:
+Can write to repo through connectors; can propose or execute actions if tools allow.
+
+Failure mode:
+- agent workflow unavailable
+- manual/local workflow needed
+
+Verification:
+- platform/tool availability
+- connector access checks
+
+Fallback:
+- local scripts
+- other agent/model providers
+```
+
+If the app itself uses OpenAI API, that should be a separate connection entry after Opus verifies actual usage.
+
+---
+
+## 10.7 Claude / Opus
+
+```markdown id="49tut4"
+### Claude / Opus
+
+Category:
+Model Providers / AI Tools
+
+Status:
+Active intended implementation agent
+
+Required level:
+High for current planned implementation flow
+
+Owner:
+User
+
+Used by:
+- implementing ledger outlines
+- repo edits
+- possibly local Claude Code workflow
+
+Purpose:
+Implementation agent that will receive ledger outlines and turn them into repo files.
+
+Credentials:
+Managed by user/tool, not repo.
+
+Expected config location:
+- user’s Claude/Opus environment
+- possibly local Claude Code config if used
+
+Data read:
+- repo files
+- ledger outlines
+- local file tree
+
+Data written:
+- repo changes
+- commits if configured
+
+Side effects:
+Can alter many files. Needs clear Done Gate and Git workflow.
+
+Failure mode:
+- implementation slows or moves to another agent
+
+Verification:
+- agent can read repo
+- agent can write branch/commit safely
+
+Fallback:
+- ChatGPT/GitHub connector
+- manual implementation
+```
+
+---
+
+## 10.8 Pieces
+
+The uploaded sitemap references Pieces on briefing/activity/settings/intake-related surfaces, including Pieces status, sweeps, ask, and briefing ribbon integrations. 
+
+```markdown id="50vtje"
+### Pieces
+
+Category:
+Model Providers / Activity Intelligence / Local Tooling
+
+Status:
+Optional or active enhancement, verify actual runtime dependency
+
+Required level:
+Medium if briefing/activity features rely on it
+
+Owner:
+User/local environment
+
+Used by:
+- Briefing page ribbon
+- Activity page sweeps/tools catalog
+- Settings model/control layer
+- possible intake/context workflows
+
+Purpose:
+Activity intelligence, sweeps, ask panel, tools/status surfaces.
+
+Credentials:
+Verify actual configuration. Do not store secrets.
+
+Expected config location:
+- local Pieces app/service
+- server settings
+- `.env` if applicable
+
+Data read:
+- Pieces status
+- sweeps
+- latest activity
+- ask responses
+
+Data written:
+- sweep requests if endpoint triggers them
+
+Failure mode:
+- Pieces ribbon/activity panels degrade
+- ask/sweep features unavailable
+
+Verification:
+- `/api/pieces/status`
+- `/api/pieces/sweeps/latest`
+
+Fallback:
+- hide/degrade Pieces-specific UI
+- use other report/activity sources
+
+Related files:
+- `screens.jsx`
+- `server.py`
+- page-asset sitemap
+```
+
+---
+
+## 10.9 Supabase
+
+Only include as active if Opus verifies actual usage. The environment has a Supabase connector available, but availability does not mean the repo depends on it.
+
+```markdown id="tr4j5b"
+### Supabase
+
+Category:
+Database / External Backend
+
+Status:
+Needs verification
+
+Required level:
+Unknown until repo inspection
+
+Owner:
+User/project
+
+Used by:
+Unknown until implementation confirms.
+
+Purpose:
+Potential database/auth/storage/backend service.
+
+Credentials:
+Supabase project URL/key if used. Never store raw credentials.
+
+Expected config location:
+`.env` or platform secrets if used.
+
+Failure mode:
+Unknown until dependency verified.
+
+Verification:
+- inspect repo for Supabase client/config
+- check `.env.example` if present
+- check server imports
+
+Fallback:
+Mark inactive if not used.
+```
+
+This prevents the ledger from hallucinating dependencies.
+
+---
+
+# 11. Credentials / Secret Locations
+
+Purpose: identify where credentials should live without exposing them.
+
+Example:
+
+```markdown id="933jok"
+## 7. Credentials / Secret Locations
+
+| Credential | Used For | Expected Location | Raw Secret Stored Here? |
+|---|---|---|---|
+| Close API key | Close reads/writes/sends | `.env` / server config | No |
+| Slack token | Slack alerts/DMs | `.env` / connector config | No |
+| GitHub auth | repo read/write | Git credential manager / connector | No |
+| OpenAI API key | app model calls if used | `.env` / platform secret | No |
+| Supabase keys | DB if used | `.env` / platform secret | No |
+| Google Drive OAuth | Drive connector | platform connector | No |
+```
+
+Include:
+
+```markdown id="bhtku4"
+This ledger may name environment variable names, but must not contain their values.
+```
+
+---
+
+# 12. Failure Mode Map
+
+Purpose: operational triage.
+
+Example:
+
+```markdown id="1cch52"
+## 8. Failure Mode Map
+
+| Symptom | Likely Connection | First Check | Fallback |
+|---|---|---|---|
+| Client ledgers stale | Close / comms sweep / scheduler | last sweep timestamp, Close API read | manual Close review |
+| No Slack approval messages | Slack | token/channel/DM status | manual approval in app |
+| Boxes page stale | API/server/orchestrator state | `/api/boxes/list`, source box files | read Client Box directly |
+| Automation fires not running | Cowork scheduler | scheduled task list, run summaries | manual fire only |
+| Settings credentials not saving | server/env write allowlist | `/api/settings/mcp_credentials` | manual `.env` update |
+| Activity page empty | Pieces | `/api/pieces/status` | hide/degrade panel |
+| GitHub write conflict | GitHub/local drift | `git status`, `git fetch`, branch status | rebase/branch workflow |
+```
+
+This is the section people will love when something breaks.
+
+---
+
+# 13. Billing / Renewal / Quota Watch
+
+Purpose: avoid surprise service loss.
+
+This does not need to be detailed at first, but it should exist.
+
+```markdown id="lrh3jh"
+## 9. Billing / Renewal / Quota Watch
+
+Track services where expiration, billing, quotas, trials, or credits can break the project.
+
+| Service | Billing/Quota Risk | Renewal/Expiry | Owner | Notes |
+|---|---|---|---|---|
+| OpenAI API | token/credit usage if app uses API | needs verification | user | platform-managed if ChatGPT only |
+| Claude/Opus | subscription/model access | user-managed | user | implementation workflow depends on access |
+| Close | CRM subscription/API access | Comeketo-managed | Comeketo | critical |
+| Slack | workspace/app limits | Comeketo-managed | Comeketo | approval/reporting |
+| Pieces | local subscription/app status | needs verification | user | optional panels |
+| Supabase | free tier/paid limits if used | needs verification | user/project | only if active |
+```
+
+Add:
+
+```markdown id="60e92g"
+If a service is paid or quota-limited, record the owner and verification path even if the exact billing date is unknown.
+```
+
+---
+
+# 14. Verification Playbook
+
+Purpose: safe checks for connections.
+
+```markdown id="d0hxfl"
+## 10. Verification Playbook
+
+### Safe read checks
+
+Use safe read checks before write checks.
+
+Examples:
+- fetch known GitHub file
+- fetch Close lead metadata
+- fetch Close recent activities without sending
+- check `/api/status`
+- check `/api/pieces/status`
+- list workflows/triggers without saving
+- read Slack channel/user identity without posting if possible
+
+### Write checks
+
+Only perform write checks when explicitly authorized.
+
+Examples requiring caution:
+- Slack test post
+- Close note creation
+- workflow save
+- trigger save
+- credential save
+- customer-facing send
+
+### Never use as a connection test
+
+- sending a customer SMS
+- sending a customer email
+- changing lead status
+- moving tasks in production
+- deleting workflows/triggers
+- overwriting credentials
+```
+
+This protects against “testing” by causing damage.
+
+---
+
+# 15. Local vs Cloud Dependencies
+
+Purpose: clarify what is local-only vs shared.
+
+```markdown id="ftm0o3"
+## 11. Local vs Cloud Dependencies
+
+### GitHub-backed
+
+Shared through repo:
+- ledgers
+- code
+- Client Boxes if committed
+- source maps
+- audit markers
+
+### Local machine
+
+May not be available to every agent:
+- unpushed local changes
+- local `.env`
+- local servers
+- local Pieces app
+- local Cowork files if outside repo
+- local generated artifacts not committed
+
+### Cloud/platform
+
+Available through account/connector:
+- GitHub connector
+- Google Drive connector
+- Slack connector
+- Close API
+- ChatGPT/Claude accounts
+```
+
+Important rule:
+
+```markdown id="aj20fl"
+If a dependency is local-only and important, either commit its configuration recipe to GitHub or record the dependency clearly.
+```
+
+This directly supports the user’s GitHub-as-source-of-truth philosophy.
+
+---
+
+# 16. Connection Change Done Gate
+
+Purpose: define when this ledger must be updated.
+
+```markdown id="7n9hbp"
+## 12. Connection Change Done Gate
+
+Update this ledger when:
+
+- a new external service is added
+- a service is removed
+- an API dependency changes
+- a credential variable is renamed
+- a service changes from optional to required
+- a service changes from required to optional
+- a new side effect is introduced
+- billing/quota/trial risk is discovered
+- verification steps change
+- a failure mode is discovered
+- a local-only dependency becomes important
+- an automation starts depending on a connection
+```
+
+For UI changes:
+
+```markdown id="pw3bpp"
+If a page or widget begins using a new external connection, update both the Connections Ledger and the Asset / Widget Map.
+```
+
+For settings changes:
+
+```markdown id="n1j5qv"
+If a credential becomes user-configurable, update the Settings Ledger too.
+```
+
+---
+
+# 17. Recommended `CONNECTIONS_LEDGER.json` Shape
+
+```json id="cvhxxm"
+{
+  "ledger_type": "connections",
+  "version": "0.1.0",
+  "last_updated": "2026-04-28",
+  "security_rule": "Never store raw secrets in this ledger.",
+  "connections": [
+    {
+      "id": "github",
+      "name": "GitHub",
+      "category": "source_control",
+      "status": "required",
+      "required_level": "critical",
+      "used_by": ["agents", "ledgers", "codebase", "file_tree_memory"],
+      "purpose": "Durable source of truth for code, ledgers, configs, and handoff memory.",
+      "credentials": {
+        "type": "git_auth_or_connector",
+        "raw_secret_stored_in_ledger": false
+      },
+      "data_read": ["repository files", "commits", "branches"],
+      "data_written": ["commits", "branches", "files"],
+      "side_effect_risk": "high",
+      "failure_mode": "Cannot read/write source of truth.",
+      "verification": ["git status", "git fetch origin", "connector fetch file"],
+      "fallback": ["local patch", "manual commit later"]
+    },
+    {
+      "id": "close",
+      "name": "Close",
+      "category": "crm_sales_data",
+      "status": "required_for_live_automation",
+      "required_level": "critical",
+      "used_by": ["comms_state_sweep", "client_ledgers", "inbox_automation", "scheduled_fires"],
+      "purpose": "Live CRM source for leads, contacts, activities, tasks, sends, and statuses.",
+      "credentials": {
+        "expected_location": ".env",
+        "raw_secret_stored_in_ledger": false
+      },
+      "data_read": ["lead records", "activities", "tasks", "opportunities"],
+      "data_written": ["sms/email activities if sending", "task movements", "notes"],
+      "side_effect_risk": "very_high",
+      "failure_mode": "No live comms import, no sends, stale client state.",
+      "verification": ["safe read-only lead/activity fetch"],
+      "fallback": ["manual Close review", "use last synced comms marked stale"]
+    }
+  ],
+  "failure_modes": [
+    {
+      "symptom": "Client ledgers stale",
+      "likely_connections": ["close", "cowork_scheduled_tasks"],
+      "first_checks": ["last sweep timestamp", "safe Close API read"]
+    }
+  ]
+}
+```
+
+This JSON can later power a connection health dashboard.
+
+---
+
+# 18. Suggested Visual Layer
+
+Create:
+
+```text id="sy1pi1"
+/LEDGERS/VISUALS/connection_map.mmd
+/LEDGERS/VISUALS/service_dependency_graph.mmd
+/LEDGERS/VISUALS/credential_flow.mmd
+/LEDGERS/VISUALS/client_automation_connections.mmd
+```
+
+Example service dependency graph:
+
+```mermaid id="v1m2yx"
+flowchart TD
+  Repo[GitHub Repo] --> Ledgers[LEDGERS]
+  Repo --> ClientBoxes[Auto/Client Boxes]
+  Repo --> App[App/UI + Server]
+
+  Close[Close API] --> Sweep[comms_state_sweep]
+  Sweep --> ClientBoxes
+  ClientBoxes --> Orchestrator[Auto/orchestrator]
+  Orchestrator --> BoxesPage[Boxes Page]
+
+  Slack[Slack] --> Review[Andre Review / Alerts]
+  Cowork[Cowork Scheduled Tasks] --> Fire[Scheduled Fires]
+  Fire --> Close
+  Fire --> Slack
+  Fire --> ClientBoxes
+
+  Drive[Google Drive] --> Docs[Internal Docs Lookup]
+  Pieces[Pieces] --> Activity[Activity / Briefing Panels]
+  Models[OpenAI / Claude] --> Agents[Agent Workflows]
+  Agents --> Repo
+```
+
+Example credential flow:
+
+```mermaid id="lrql9t"
+flowchart LR
+  Env[.env / Secret Store] --> Server[server.py / runtime]
+  Server --> Close[Close API]
+  Server --> Slack[Slack API]
+  Server --> Pieces[Pieces API if used]
+
+  ConnectorAuth[Platform Connectors] --> GitHub[GitHub]
+  ConnectorAuth --> Drive[Google Drive]
+
+  Ledger[Connections Ledger] -. describes, no secrets .-> Env
+  Ledger -. describes, no secrets .-> ConnectorAuth
+```
+
+The dotted “describes, no secrets” line is important.
+
+---
+
+# 19. Relationship to Settings Ledger
+
+Connections and settings overlap, but they are not the same.
+
+```text id="kut93x"
+Connections Ledger:
+What external systems exist and what depends on them.
+
+Settings Ledger:
+What configurable options expose or control those systems.
+```
+
+Example:
+
+```text id="zz2wlg"
+Connections Ledger:
+Close API exists and is critical.
+
+Settings Ledger:
+Where Close API key is configured, whether user can edit it, default behavior, masking rules.
+```
+
+When credentials become UI-editable, update both.
+
+---
+
+# 20. Relationship to Source-of-Truth Ledger
+
+Connections can be sources of truth, but not always.
+
+Example:
+
+```text id="3htmg1"
+Close:
+source of truth for live lead activity and CRM status.
+
+GitHub:
+source of truth for project memory/code.
+
+Slack:
+communication/reporting surface, not source of client truth unless a specific approval event is recorded.
+
+Google Drive:
+source of internal docs if linked; may not be canonical if docs are mirrored into GitHub.
+```
+
+The Source-of-Truth Ledger will define authority.
+
+The Connections Ledger defines dependency.
+
+---
+
+# 21. Relationship to Asset / Widget Map
+
+Every widget with external dependencies should point to the Connections Ledger.
+
+Example:
+
+```text id="5li3om"
+Settings credential editor
+  → Connections Ledger for services
+  → Settings Ledger for UI/config behavior
+
+Activity page Pieces panel
+  → Connections Ledger for Pieces dependency
+
+Boxes page
+  → mostly repo/local state, but may depend on server APIs
+
+Delegations page
+  → external channel dependencies depending on target
+```
+
+If a widget starts using a new service, update both ledgers.
+
+---
+
+# 22. Relationship to Client Boxes
+
+Client Boxes depend on external connections indirectly.
+
+```text id="474fvs"
+Close → comms/state truth
+Slack → approval/alerts
+Cowork → scheduled fires/sweeps
+GitHub → durable box memory
+OpenAI/Claude → audit/plan generation
+```
+
+A Client Box can look healthy in GitHub but still be stale if Close/Cowork sweeps are not running.
+
+So the Connections Ledger should help agents distinguish:
+
+```text id="adgh1h"
+Box files exist
+vs
+Box state is fresh
+```
+
+Freshness depends on connections.
+
+---
+
+# 23. What Opus Should Build First
+
+Give Opus this build order:
+
+```text id="f4ulpu"
+1. Create /LEDGERS/CONNECTIONS_LEDGER.md.
+2. Create /LEDGERS/CONNECTIONS_LEDGER.json.
+3. Add link to /LEDGERS/INDEX.md.
+4. Add link to /LEDGERS/GLOBAL_LEDGER.md if it exists.
+5. Add link to /LEDGERS/ASSET_WIDGET_MAP.md if it exists.
+6. Create /LEDGERS/VISUALS/connection_map.mmd.
+7. Create /LEDGERS/VISUALS/service_dependency_graph.mmd.
+8. Add security rule: no raw secrets.
+9. Seed connection entries:
+   - GitHub
+   - Close
+   - Slack
+   - Cowork Scheduled Tasks
+   - Google Drive
+   - OpenAI / ChatGPT
+   - Claude / Opus
+   - Pieces
+   - Supabase as needs-verification unless actual use is found
+10. Add Credentials / Secret Locations table without values.
+11. Add Failure Mode Map.
+12. Add Verification Playbook.
+13. Add Local vs Cloud Dependencies.
+14. Commit with message: "Add connections ledger".
+```
+
+Important instruction:
+
+```text id="zx1km9"
+Do not invent active services. If a service is available but not confirmed in the repo, mark it `needs verification`.
+```
+
+---
+
+# 24. Quality Bar
+
+The Connections Ledger succeeds if future agents and humans can answer:
+
+* What external services does the project depend on?
+* Which are required?
+* Which are optional?
+* What credentials are expected?
+* Where should credentials live?
+* What breaks if a service fails?
+* How can the connection be safely verified?
+* What services are paid/quota-sensitive?
+* Which pages/widgets/automations depend on each service?
+* Which connections are local-only vs cloud/shared?
+* What fallback exists?
+
+It fails if:
+
+* it stores secrets
+* it invents dependencies
+* it ignores billing/quota risk
+* it does not distinguish required from optional
+* it does not include failure modes
+* it lacks verification steps
+* it becomes stale when services change
+* it does not connect to settings, widgets, or source-of-truth ledgers
+
+This ledger should make the project operationally safer.
+
+---
+
+# 25. Final Operating Rule
+
+The Connections Ledger should end with this:
+
+```markdown id="ihe5pq"
+External systems are part of the architecture.
+
+If the project needs it, map it.
+If it can break the project, name the failure mode.
+If it requires a secret, record the location — never the secret.
+```
+
+---
+
+

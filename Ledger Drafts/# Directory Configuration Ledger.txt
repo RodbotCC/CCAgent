@@ -1,0 +1,1056 @@
+# Directory Configuration Ledger — Project-Wide Implementation Outline
+
+## 0. Purpose
+
+The **Directory Configuration Ledger** gives each meaningful directory its own local operating instructions.
+
+The File Directory Ledger maps the project’s file tree from above.
+
+The Directory Configuration Ledger creates the local “you are here” sign inside important directories.
+
+The uploaded ledger plan describes this as the local orientation layer every meaningful directory should have. It should explain what the directory is for, what it owns, what it does not own, what important files live there, what source of truth applies, and what should be updated when the directory changes. 
+
+This is the first ledger where the project’s **Box** concept really starts to become operational.
+
+A directory should not be a mystery.
+
+A future agent should be able to enter a folder, read one local file, and understand how to behave.
+
+---
+
+# 1. Core Operating Principle
+
+The Directory Configuration Ledger should enforce this rule:
+
+> Every important directory should introduce itself.
+
+A directory configuration should answer:
+
+* Where am I?
+* What does this directory own?
+* What does this directory not own?
+* What is canonical here?
+* What is generated here?
+* What should never be edited directly?
+* What files matter most?
+* What local guardrails apply?
+* What other directories does this connect to?
+* What ledgers must be updated when work happens here?
+* What should future agents read before making changes?
+
+This prevents agents from treating every folder like generic storage.
+
+The project wants place-based continuity.
+This ledger makes the file tree self-explaining.
+
+---
+
+# 2. Recommended Global Location
+
+Create the project-wide ledger here:
+
+```text
+/LEDGERS/
+  DIRECTORY_CONFIGURATION_LEDGER.md
+  DIRECTORY_CONFIGURATION_LEDGER.json
+  INDEX.md
+  VISUALS/
+    directory_configuration_pattern.mmd
+    box_orientation_flow.mmd
+```
+
+Recommended final path:
+
+```text
+/LEDGERS/DIRECTORY_CONFIGURATION_LEDGER.md
+/LEDGERS/DIRECTORY_CONFIGURATION_LEDGER.json
+```
+
+This global ledger defines the standard for local directory configs.
+
+---
+
+# 3. Recommended Local File Names
+
+Each meaningful directory should eventually contain one of these local orientation files.
+
+Preferred:
+
+```text
+BOX.md
+```
+
+Alternative if the directory is not quite a Box:
+
+```text
+DIRECTORY.md
+```
+
+Alternative for agent-specific instructions:
+
+```text
+AGENTS.md
+CLAUDE.md
+```
+
+Recommended standard:
+
+```text
+<important-directory>/
+  BOX.md
+```
+
+Use `BOX.md` when the directory has real local memory, rules, source-of-truth notes, or workflow.
+
+Use `DIRECTORY.md` only for simpler orientation.
+
+For this project, most meaningful directories are really Boxes.
+
+---
+
+# 4. Role in the Ledger System
+
+The Directory Configuration Ledger sits below the File Directory Ledger.
+
+```text
+Global Ledger
+  └── What is this project?
+
+File Directory Ledger
+  └── What directories exist?
+  └── What does each directory broadly own?
+
+Directory Configuration Ledger
+  └── What should every important directory explain locally?
+
+Local BOX.md
+  └── How do I work safely inside this directory?
+```
+
+The global Directory Configuration Ledger defines the template and rules.
+
+Each local `BOX.md` applies those rules to a specific place.
+
+---
+
+# 5. What This Ledger Owns
+
+## Owns
+
+* standard structure for directory configs
+* required sections for `BOX.md`
+* rules for when a directory needs a config
+* local source-of-truth expectations
+* local Done Gate expectations
+* directory onboarding pattern
+* directory status labels
+* local memory conventions
+* relationship between global ledgers and local Boxes
+* how agents should read local orientation before editing
+
+## Does not own
+
+* full file tree map
+* every important file summary
+* page/widget dependency maps
+* detailed client plans
+* complete open-problem inventory
+* every individual directory’s local content
+
+Those belong in local `BOX.md` files, File Contents Ledger, Page Ledgers, Widget Ledgers, Source-of-Truth Ledger, and Open Problems Ledger.
+
+This ledger defines the **pattern**.
+Local Boxes hold the **specifics**.
+
+---
+
+# 6. Recommended `DIRECTORY_CONFIGURATION_LEDGER.md` Structure
+
+```markdown
+# Directory Configuration Ledger
+
+Last updated:
+Maintainer:
+Status:
+Read when:
+Core rule:
+
+## 1. Purpose
+## 2. When a Directory Needs a Config
+## 3. Standard Local BOX.md Template
+## 4. Directory Status Labels
+## 5. Local Source-of-Truth Rules
+## 6. Local Done Gate Rules
+## 7. Local Ledger Links
+## 8. Local Agent Protocol
+## 9. Recommended First Boxes
+## 10. Common Mistakes
+## 11. Visualization Index
+## 12. Update Rules
+```
+
+This ledger should be practical enough that Opus can use it to start creating local configs.
+
+---
+
+# 7. When a Directory Needs a Config
+
+Not every folder needs a `BOX.md`.
+
+A directory needs a local config when it meets one or more of these conditions:
+
+```markdown
+## 2. When a Directory Needs a Config
+
+Create a local `BOX.md` when a directory:
+
+- owns a major system
+- contains canonical source-of-truth files
+- contains generated files agents might accidentally edit
+- has local rules or guardrails
+- has multiple important subfolders
+- is frequently edited by agents
+- has caused confusion before
+- connects to external services
+- contains client/customer data
+- contains automation or scheduled-task behavior
+- contains UI route/page/widget ownership
+- requires a local Done Gate
+- has local open problems or audit history
+```
+
+Examples that clearly need local configs:
+
+```text
+/LEDGERS/
+/Auto/
+/Auto/Client Boxes/
+/Auto/orchestrator/
+/Auto/comeketo-inbox/
+UI/app root
+```
+
+Client folders themselves may also need smaller local notes, but the pattern can start with audit markers and grow into `BOX.md` when needed.
+
+---
+
+# 8. Standard Local `BOX.md` Template
+
+This is the core implementation.
+
+Each meaningful directory should use a stable local template.
+
+```markdown
+# BOX.md — <Directory Name>
+
+Last updated:
+Directory path:
+Directory status:
+Owner concept:
+Read-first priority:
+Canonical / generated / mixed:
+Local Done Gate:
+
+## 1. What This Directory Is
+## 2. What This Directory Owns
+## 3. What This Directory Does Not Own
+## 4. Source-of-Truth Rules
+## 5. Important Files
+## 6. Important Subdirectories
+## 7. Generated / Do-Not-Edit Areas
+## 8. Local Guardrails
+## 9. How To Work Here
+## 10. What To Update When Work Happens
+## 11. Common Mistakes
+## 12. Open Local Problems
+## 13. Recent Local Changes
+## 14. Links To Related Ledgers
+```
+
+This template should be copied into each important directory and filled in locally.
+
+---
+
+# 9. Local `BOX.md` Section Details
+
+## 9.1 What This Directory Is
+
+Example:
+
+```markdown
+## 1. What This Directory Is
+
+This directory is the canonical per-client memory substrate for Comeketo leads.
+
+Each child folder is a Client Box: a local memory and operating package for one lead.
+```
+
+This should be plain and immediate.
+
+---
+
+## 9.2 What This Directory Owns
+
+Example:
+
+```markdown
+## 2. What This Directory Owns
+
+This directory owns:
+
+- per-client comms
+- per-client state
+- per-client profiles
+- seven-day plans
+- Andre alert plans
+- client audit markers
+- allowed-to-know facts when implemented
+- local client continuity
+```
+
+Ownership should be explicit.
+
+---
+
+## 9.3 What This Directory Does Not Own
+
+This is just as important.
+
+Example:
+
+```markdown
+## 3. What This Directory Does Not Own
+
+This directory does not own:
+
+- global inbox guardrails
+- UI rendering logic
+- generated dashboard state
+- global project ledgers
+- Close API credentials
+- app route ownership
+```
+
+This prevents scope bleed.
+
+---
+
+## 9.4 Source-of-Truth Rules
+
+Example:
+
+```markdown
+## 4. Source-of-Truth Rules
+
+For client facts, trust in this order:
+
+1. full transcripts, when present
+2. `01_comms.md`
+3. `00_meta.json`
+4. `client_ledger.md`
+5. operator-approved notes
+6. profile/enrichment only as internal strategy
+
+Seven-day plans are strategy drafts. They do not override comms, state, guardrails, or approvals.
+```
+
+Every important directory should explain what to trust.
+
+---
+
+## 9.5 Important Files
+
+Example:
+
+```markdown
+## 5. Important Files
+
+| File | Purpose | Edit? |
+|---|---|---|
+| `00_meta.json` | lead metadata and cadence state | careful |
+| `01_comms.md` | conversation history | append/update through sweep or audit |
+| `04_profile.md` | internal profile and strategy | careful; not customer-facing truth |
+| `05_seven_day_plan.md` | strategy plan | editable after audit |
+| `09_andre_alerts.md` | action prompts / alerts | editable after audit |
+| `client_ledger.md` | generated sweep/state ledger | usually generated; do not hand-edit unless explicitly allowed |
+```
+
+This is the local version of file orientation.
+
+The global File Contents Ledger can later go deeper.
+
+---
+
+## 9.6 Important Subdirectories
+
+Example:
+
+```markdown
+## 6. Important Subdirectories
+
+| Subdirectory | Purpose |
+|---|---|
+| `<Client Name>/` | one client box |
+| `_templates/` | planned templates |
+| `_archive/` | retired or historical boxes, if created |
+```
+
+Only include real subdirectories.
+
+---
+
+## 9.7 Generated / Do-Not-Edit Areas
+
+Example:
+
+```markdown
+## 7. Generated / Do-Not-Edit Areas
+
+Do not hand-edit generated files unless the local process explicitly allows it.
+
+Generated or derived files:
+- `client_ledger.md` may be regenerated by sweep.
+- orchestrator state outputs are generated outside this directory.
+
+If a generated file is wrong, fix the source or generator first.
+```
+
+This section is essential for agents.
+
+---
+
+## 9.8 Local Guardrails
+
+Example:
+
+```markdown
+## 8. Local Guardrails
+
+- Do not send or approve customer-facing copy from enrichment alone.
+- Do not reuse fee-waiver or discount language without explicit approval.
+- If a lead replies, pause/rewrite the plan.
+- Calendar labels must resolve to explicit dates.
+- Client-facing copy must pass Inbox Guardrails.
+```
+
+This is where global rules become local.
+
+---
+
+## 9.9 How To Work Here
+
+Example:
+
+```markdown
+## 9. How To Work Here
+
+Before editing:
+
+1. Read this `BOX.md`.
+2. Read the relevant client folder.
+3. Check current comms/state.
+4. Check guardrails.
+5. Identify whether the target file is source or generated.
+6. Make the narrowest safe change.
+7. Leave an audit marker if client strategy/state changed.
+8. Update relevant ledgers if the directory meaning changed.
+```
+
+This is the local agent protocol.
+
+---
+
+## 9.10 What To Update When Work Happens
+
+Example:
+
+```markdown
+## 10. What To Update When Work Happens
+
+If you change a client plan:
+- update local audit marker
+- consider Temporal Continuity if cross-client workflow changed
+
+If you change directory structure:
+- update File Directory Ledger
+- update this BOX.md
+
+If you change local source-of-truth rules:
+- update Source-of-Truth Ledger
+- update this BOX.md
+
+If you find an unresolved local issue:
+- add to Open Local Problems
+- update Open Problems Ledger if project-wide
+```
+
+This turns local configs into living memory.
+
+---
+
+## 9.11 Common Mistakes
+
+Example:
+
+```markdown
+## 11. Common Mistakes
+
+- Treating profile/enrichment as customer-facing truth.
+- Editing generated state instead of source files.
+- Updating one client by changing global automation.
+- Forgetting to leave an audit marker after cleanup.
+- Trusting stale seven-day plan dates after state changes.
+```
+
+Every `BOX.md` should include the mistakes most likely in that directory.
+
+---
+
+## 9.12 Open Local Problems
+
+Example:
+
+```markdown
+## 12. Open Local Problems
+
+| Problem | Status | Next Action |
+|---|---|---|
+| Allowed-to-know layer not implemented | open | design local file schema |
+| Full transcripts not yet imported for all clients | open | wait for automation output |
+```
+
+This should not replace the global Open Problems Ledger.
+
+It should hold local problems.
+
+---
+
+## 9.13 Recent Local Changes
+
+Example:
+
+```markdown
+## 13. Recent Local Changes
+
+- 2026-04-28 — Brenda & Steve plan cleaned; audit marker added.
+- 2026-04-28 — Directory configuration standard introduced.
+```
+
+Keep it short.
+
+Long history belongs in audit logs or Git.
+
+---
+
+## 9.14 Links To Related Ledgers
+
+Example:
+
+```markdown
+## 14. Links To Related Ledgers
+
+- Global Ledger: `/LEDGERS/GLOBAL_LEDGER.md`
+- File Directory Ledger: `/LEDGERS/FILE_DIRECTORY_LEDGER.md`
+- Definition of Done Ledger: `/LEDGERS/DEFINITION_OF_DONE.md`
+- Source-of-Truth Ledger: `/LEDGERS/SOURCE_OF_TRUTH.md`
+- Inbox Guardrails: `/Auto/comeketo-inbox/references/guardrails.md`
+```
+
+Every local config should point outward.
+
+---
+
+# 10. Directory Status Labels
+
+The Directory Configuration Ledger should standardize labels.
+
+```markdown
+## 4. Directory Status Labels
+
+Use one or more:
+
+- `canonical`: source of truth lives here
+- `active`: current working system
+- `generated`: output from scripts/renderers
+- `mixed`: contains both source and generated files
+- `legacy`: old but may still contain useful references
+- `archive`: historical; do not use as current truth
+- `experimental`: not production truth
+- `deprecated`: should not receive new work
+- `external`: vendor/imported/dependency-owned
+- `sensitive`: contains credentials, private data, or risky client info
+```
+
+Examples:
+
+```text
+Auto/Client Boxes        canonical + active + sensitive
+Auto/orchestrator        active + mixed
+Auto/orchestrator/state  generated
+Auto/comeketo-inbox      canonical + active
+LEDGERS                  canonical + active
+```
+
+Opus should verify before final labeling.
+
+---
+
+# 11. Recommended First Boxes
+
+The project should not try to configure every directory at once.
+
+Start with the directories that matter most.
+
+## First Wave
+
+```text
+/LEDGERS/BOX.md
+/Auto/Client Boxes/BOX.md
+/Auto/orchestrator/BOX.md
+/Auto/comeketo-inbox/BOX.md
+```
+
+## Second Wave
+
+```text
+/Auto/Staff Boxes/BOX.md
+/Auto/Onboard Scripts/BOX.md
+UI/app root BOX.md or DIRECTORY.md
+```
+
+## Third Wave
+
+```text
+Per-client local BOX.md only for high-value or complex clients.
+```
+
+For most client folders, start with audit markers.
+Move to a full local `BOX.md` when the client is complex enough to need one.
+
+Brenda & Steve would qualify.
+
+Hugo likely qualifies.
+
+---
+
+# 12. Special Pattern: Client Box Local Config
+
+Eventually, high-value client folders can use:
+
+```text
+Auto/Client Boxes/Brenda & Steve/
+  BOX.md
+  00_meta.json
+  01_comms.md
+  04_profile.md
+  05_seven_day_plan.md
+  09_andre_alerts.md
+  client_ledger.md
+  2026-04-28_audit_marker.md
+```
+
+Client-level `BOX.md` should include:
+
+```markdown
+# BOX.md — Brenda & Steve
+
+## Current State
+## Allowed-To-Use Facts
+## Internal-Only Strategy
+## Approval-Required Moves
+## Current Plan Validity
+## Reply Gate Status
+## Risk Notes
+## Next Safe Move
+## Audit History
+```
+
+This is where the “allowed to know / allowed to say” constraint can eventually live.
+
+---
+
+# 13. Local Source-of-Truth Rules
+
+Every directory config should include a local source-of-truth section.
+
+Template:
+
+```markdown
+## Source-of-Truth Rules
+
+Canonical here:
+- ...
+
+Generated here:
+- ...
+
+Do not edit directly:
+- ...
+
+Trust first:
+1. ...
+2. ...
+3. ...
+
+If conflict:
+- ...
+```
+
+Example for orchestrator:
+
+```markdown
+Canonical here:
+- scripts
+- renderer logic
+- ready-check logic
+
+Generated here:
+- `state/*.html`
+- `state/*.json`
+- `state/*.csv`
+- `state/runs/*.json`
+
+If generated output is wrong:
+- fix source data or generator, then regenerate.
+```
+
+This is crucial.
+
+---
+
+# 14. Local Done Gate Rules
+
+Each `BOX.md` should include the local Done Gate.
+
+Template:
+
+```markdown
+## Local Done Gate
+
+Work in this directory is not done until:
+
+- [ ] correct local source was changed
+- [ ] generated files were not edited as source
+- [ ] local rules were followed
+- [ ] relevant ledgers/maps were updated
+- [ ] local open problems were recorded
+- [ ] handoff/audit note was left if needed
+```
+
+For Client Boxes:
+
+```markdown
+Client Box work is not done until an audit marker is added or updated when strategy/state changes.
+```
+
+For UI:
+
+```markdown
+Page work is not done until the page-asset sitemap is updated.
+```
+
+The uploaded sitemap already establishes this rule for page/route/data-binding changes, so local UI directory config should point to it. 
+
+---
+
+# 15. Local Agent Protocol
+
+Each `BOX.md` should contain a simple local work protocol.
+
+Universal pattern:
+
+```text
+Read
+Locate truth
+Check rules
+Edit narrowly
+Verify
+Record
+Handoff
+```
+
+Markdown version:
+
+```markdown
+## Local Agent Protocol
+
+1. Read this `BOX.md`.
+2. Read linked local ledgers.
+3. Identify canonical source files.
+4. Check generated/do-not-edit warnings.
+5. Check local guardrails.
+6. Make the smallest safe change.
+7. Verify or explain why verification was not possible.
+8. Update local memory.
+9. Update global ledger only if the change affects global understanding.
+10. Commit/push or explain local-only status.
+```
+
+This should be copied into each important Box, then customized.
+
+---
+
+# 16. Common Mistakes This Ledger Prevents
+
+This global ledger should name the big mistakes:
+
+```markdown
+## 10. Common Mistakes
+
+- Creating a folder with no orientation.
+- Letting a directory’s purpose drift without updating its config.
+- Treating a local exception as a global rule.
+- Editing generated output because the source path was unclear.
+- Making agents infer source-of-truth rules from scattered files.
+- Overloading Global Ledger with details that belong in a local Box.
+- Creating local rules without linking them back to global ledgers.
+- Forgetting that directories can contain sensitive client or automation context.
+```
+
+---
+
+# 17. Recommended `DIRECTORY_CONFIGURATION_LEDGER.json` Shape
+
+```json
+{
+  "ledger_type": "directory_configuration",
+  "version": "0.1.0",
+  "last_updated": "2026-04-28",
+  "default_local_config_file": "BOX.md",
+  "alternative_local_config_files": ["DIRECTORY.md", "AGENTS.md", "CLAUDE.md"],
+  "directory_status_labels": [
+    "canonical",
+    "active",
+    "generated",
+    "mixed",
+    "legacy",
+    "archive",
+    "experimental",
+    "deprecated",
+    "external",
+    "sensitive"
+  ],
+  "requires_config_when": [
+    "owns_major_system",
+    "contains_canonical_truth",
+    "contains_generated_files",
+    "has_local_guardrails",
+    "frequently_edited_by_agents",
+    "contains_client_data",
+    "contains_automation_behavior",
+    "requires_local_done_gate"
+  ],
+  "standard_sections": [
+    "What This Directory Is",
+    "What This Directory Owns",
+    "What This Directory Does Not Own",
+    "Source-of-Truth Rules",
+    "Important Files",
+    "Important Subdirectories",
+    "Generated / Do-Not-Edit Areas",
+    "Local Guardrails",
+    "How To Work Here",
+    "What To Update When Work Happens",
+    "Common Mistakes",
+    "Open Local Problems",
+    "Recent Local Changes",
+    "Links To Related Ledgers"
+  ],
+  "first_wave_boxes": [
+    "LEDGERS/BOX.md",
+    "Auto/Client Boxes/BOX.md",
+    "Auto/orchestrator/BOX.md",
+    "Auto/comeketo-inbox/BOX.md"
+  ]
+}
+```
+
+This JSON can later drive a script that checks whether key directories have configs.
+
+---
+
+# 18. Suggested Visual Layer
+
+Create:
+
+```text
+/LEDGERS/VISUALS/directory_configuration_pattern.mmd
+/LEDGERS/VISUALS/box_orientation_flow.mmd
+```
+
+Example:
+
+```mermaid
+flowchart TD
+  Agent[Agent enters directory] --> Box{BOX.md exists?}
+  Box -->|Yes| Read[Read BOX.md]
+  Box -->|No| FDL[Check File Directory Ledger]
+  Read --> Truth[Identify source of truth]
+  Truth --> Rules[Check local guardrails]
+  Rules --> Edit[Make narrow edit]
+  Edit --> Done[Apply local Done Gate]
+  Done --> Memory[Update local/global memory]
+```
+
+Box hierarchy map:
+
+```mermaid
+flowchart TD
+  Global[Global Ledger] --> Directory[File Directory Ledger]
+  Directory --> Config[Directory Configuration Ledger]
+  Config --> LedgersBox[LEDGERS/BOX.md]
+  Config --> ClientBoxes[Auto/Client Boxes/BOX.md]
+  Config --> Orchestrator[Auto/orchestrator/BOX.md]
+  Config --> Inbox[Auto/comeketo-inbox/BOX.md]
+
+  ClientBoxes --> Brenda[Brenda & Steve BOX.md]
+  ClientBoxes --> Hugo[Hugo Casillas BOX.md]
+```
+
+---
+
+# 19. Relationship to Boxes
+
+This ledger is where the Box concept becomes concrete.
+
+A Box is:
+
+```text
+A directory with memory, rules, source-of-truth notes, local ledgers, handoff context, and a Done Gate.
+```
+
+A Box is not:
+
+```text
+just a folder
+just a README
+just a doc dump
+```
+
+The Directory Configuration Ledger should say:
+
+```markdown
+A Box should make a directory agent-operable.
+```
+
+That means:
+
+* the agent knows where it is
+* the agent knows what the directory owns
+* the agent knows what not to touch
+* the agent knows what to update
+* the agent knows how to leave continuity behind
+
+This is the local intelligence layer of the project.
+
+---
+
+# 20. Relationship to Future Automation
+
+Eventually, a meta harness can read the file tree like this:
+
+```text
+1. find repo root
+2. read Global Ledger
+3. read Temporal Continuity
+4. inspect target path
+5. walk upward until BOX.md found
+6. read local Box
+7. determine source-of-truth and Done Gate
+8. proceed safely
+```
+
+This enables directory-aware agents.
+
+Suggested future script:
+
+```text
+scripts/context_for_path.py Auto/Client Boxes/Brenda & Steve/05_seven_day_plan.md
+```
+
+Output:
+
+```text
+Target path belongs to Client Boxes.
+Read:
+- /LEDGERS/GLOBAL_LEDGER.md
+- /LEDGERS/TEMPORAL_CONTINUITY.md
+- /Auto/Client Boxes/BOX.md
+- /Auto/Client Boxes/Brenda & Steve/BOX.md if present
+- Inbox Guardrails
+Local Done Gate:
+- audit marker required after strategy/state change
+Warnings:
+- enrichment boundary
+- commitment language
+- generated client_ledger.md
+```
+
+That is the meta harness vision.
+
+---
+
+# 21. What Opus Should Build First
+
+Give Opus this build order:
+
+```text
+1. Create /LEDGERS/DIRECTORY_CONFIGURATION_LEDGER.md.
+2. Create /LEDGERS/DIRECTORY_CONFIGURATION_LEDGER.json.
+3. Add link to /LEDGERS/INDEX.md.
+4. Add link to /LEDGERS/FILE_DIRECTORY_LEDGER.md if it exists.
+5. Add link to /LEDGERS/GLOBAL_LEDGER.md if it exists.
+6. Create /LEDGERS/VISUALS/directory_configuration_pattern.mmd.
+7. Create /LEDGERS/VISUALS/box_orientation_flow.mmd.
+8. Define the standard local BOX.md template.
+9. Create first-wave local BOX.md files:
+   - /LEDGERS/BOX.md
+   - /Auto/Client Boxes/BOX.md
+   - /Auto/orchestrator/BOX.md
+   - /Auto/comeketo-inbox/BOX.md
+10. Keep each first-wave BOX.md useful but not bloated.
+11. Do not create per-client BOX.md files yet unless explicitly asked.
+12. Commit with message: "Add directory configuration ledger and first box orientations".
+```
+
+---
+
+# 22. Quality Bar
+
+The Directory Configuration Ledger succeeds if:
+
+* important directories introduce themselves
+* agents know what a directory owns before editing
+* local source-of-truth rules are visible
+* generated/do-not-edit areas are clearly marked
+* local Done Gates exist where needed
+* global ledgers are not overloaded with local detail
+* future agents can enter a folder and behave safely
+* Box architecture becomes real through files, not just philosophy
+
+It fails if:
+
+* `BOX.md` files become vague READMEs
+* local configs are not updated when directory responsibilities change
+* every folder gets a config whether it needs one or not
+* local configs duplicate global ledgers
+* agents still have to guess what a directory does
+* generated files remain indistinguishable from source truth
+
+This ledger should make directories feel alive, oriented, and safe.
+
+---
+
+# 23. Final Operating Rule
+
+The Directory Configuration Ledger should end with this:
+
+```markdown
+A meaningful directory should not be silent.
+
+If a directory matters, it should say what it is, what it owns, what it trusts, what it forbids, and how to leave it better than you found it.
+```
+
+---
+
+

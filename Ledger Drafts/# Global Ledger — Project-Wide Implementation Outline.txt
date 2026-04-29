@@ -1,0 +1,1276 @@
+
+
+# Global Ledger — Project-Wide Implementation Outline
+
+## 0. Purpose
+
+The **Global Ledger** is the top-level continuity layer for the entire project.
+
+It is the project’s durable “world state.”
+
+It should tell any future agent, human, model, MCP server, or automation what this project is, how it is organized, what currently matters, what rules govern the work, where truth lives, what is active, what is risky, and what must be updated when the system changes.
+
+The Global Ledger is not just documentation.
+
+It is the project’s memory spine.
+
+The local file tree is the working copy.
+GitHub is the source of truth.
+The repo is not just code. The repo is the memory of the build. 
+
+The Global Ledger should make that principle real.
+
+---
+
+# 1. Core Operating Principle
+
+The Global Ledger should enforce this rule across the project:
+
+> If it matters to future work, it belongs in the versioned file tree.
+
+That includes:
+
+* code
+* configuration
+* ledgers
+* maps
+* decisions
+* open problems
+* page ownership
+* source-of-truth rules
+* automation rules
+* human preferences
+* current project state
+* rebuild instructions
+* visual maps
+* audit notes
+* handoff notes
+* implementation history
+
+The Global Ledger should be the first file an agent reads before doing meaningful work.
+
+It should answer:
+
+* What is this project?
+* What is true right now?
+* What are the major systems?
+* What is currently active?
+* What should agents know before touching anything?
+* What are the global rules?
+* What has changed recently?
+* What needs to be updated when work happens?
+
+The user’s ledger philosophy already defines the Global Ledger as the “top-level memory of the project” and the source of durable world state. 
+
+---
+
+# 2. Recommended Location
+
+Create a dedicated ledger root near the project root.
+
+Suggested structure:
+
+```text
+/LEDGERS/
+  GLOBAL_LEDGER.md
+  GLOBAL_LEDGER.json
+  INDEX.md
+  VISUALS/
+    global_system_map.mmd
+    global_system_map.svg
+    global_memory_flow.mmd
+  LOCAL_TEMPLATE/
+    BOX_LEDGER_TEMPLATE.md
+    DIRECTORY_ORIENTATION_TEMPLATE.md
+```
+
+Alternative if the project already has an internal control directory:
+
+```text
+/Auto/ledgers/
+  GLOBAL_LEDGER.md
+  GLOBAL_LEDGER.json
+  INDEX.md
+  VISUALS/
+```
+
+Recommended final pattern:
+
+```text
+/LEDGERS/GLOBAL_LEDGER.md
+```
+
+Keep the Global Ledger at an obvious top-level path so agents do not have to hunt for it.
+
+---
+
+# 3. Markdown + JSON Pair
+
+The Global Ledger should exist in two forms:
+
+## 3.1 Human / Agent Reading File
+
+```text
+GLOBAL_LEDGER.md
+```
+
+Purpose:
+
+* readable by humans
+* readable by agents
+* easy to skim
+* good for orientation
+* good for handoff
+* good for broad context
+
+## 3.2 Machine-Readable State File
+
+```text
+GLOBAL_LEDGER.json
+```
+
+Purpose:
+
+* usable by scripts
+* usable by dashboards
+* usable by status renderers
+* usable by automation
+* usable by MCP tools
+* useful for integrity checks
+
+The Markdown file should be the narrative source.
+The JSON file should be the structured index/state mirror.
+
+If the two conflict, the Markdown should explain intent and the JSON should reflect current structured facts.
+
+---
+
+# 4. Global Ledger Responsibilities
+
+The Global Ledger should own project-wide orientation, not local detail.
+
+It should not become a dumping ground for everything.
+
+It should point to local ledgers, not replace them.
+
+## Owns
+
+* project identity
+* current global state
+* major systems map
+* root source-of-truth rules
+* active phase
+* active risks
+* global done gates
+* global update rules
+* links to local ledgers
+* handoff instructions for future agents
+* current “read first” order
+* global rules that apply everywhere
+
+## Does not own
+
+* detailed page implementation
+* every widget dependency
+* every local open problem
+* every file summary
+* every client-specific plan
+* every API detail
+* every code comment
+
+Those belong in local ledgers, page ledgers, widget ledgers, directory configs, source-of-truth ledgers, and boxes.
+
+The Global Ledger is the map of the world.
+The local ledgers are the maps of neighborhoods.
+
+---
+
+# 5. Required Sections for `GLOBAL_LEDGER.md`
+
+The Global Ledger should use stable headings so future agents can parse it consistently.
+
+Recommended structure:
+
+```markdown
+# Global Ledger
+
+Last updated:
+Maintainer:
+Repository:
+Current phase:
+Current project state:
+Read-first status:
+
+## 1. Project Identity
+## 2. Current World State
+## 3. Major Systems
+## 4. Source-of-Truth Rules
+## 5. Global Operating Rules
+## 6. Active Workstreams
+## 7. Active Risks / Known Fragile Areas
+## 8. Ledger System Map
+## 9. Box System Map
+## 10. Agent Work Protocol
+## 11. Done Gate
+## 12. Recently Changed
+## 13. Next Handoff Notes
+## 14. Links to Local Ledgers
+## 15. Visualization Index
+## 16. Update Rules
+```
+
+Each section should be practical and direct.
+
+---
+
+# 6. Section-by-Section Implementation
+
+## 6.1 Header Block
+
+The top of the file should immediately tell an agent what it is looking at.
+
+Example:
+
+```markdown
+# Global Ledger
+
+Last updated: 2026-04-28
+Maintainer: Jake / Tech Support / Project agents
+Repository: RodbotCC/CCAgent
+Current phase: Client Boxes + Automation Safety Hardening
+Current project state: Active build, live-ish automation, guardrail cleanup in progress
+Read-first status: Mandatory before meaningful edits
+```
+
+This makes the file instantly useful.
+
+---
+
+## 6.2 Project Identity
+
+Purpose: explain the project in one readable page.
+
+Should answer:
+
+* What is this project?
+* Who is it for?
+* What is it trying to become?
+* What makes it different?
+* What is the core design philosophy?
+
+Example tone:
+
+```markdown
+## 1. Project Identity
+
+This project is a GitHub-backed AI operations system for Comeketo. It combines client memory, automation, inbox work, page surfaces, ledgers, boxes, and agent handoff systems into a durable file-tree orchestration environment.
+
+The project is not just an app. It is a living operating layer around sales, client context, automations, and agent continuity.
+
+The build philosophy is file-tree-first. Important memory should be versioned in GitHub, not trapped in chat history or local-only state.
+```
+
+Include this principle:
+
+```markdown
+The plan is not truth. The box is truth. The plan is a draft strategy subordinate to comms, state, guardrails, approvals, and source-of-truth rules.
+```
+
+That line matters deeply for the Client Boxes system.
+
+---
+
+## 6.3 Current World State
+
+Purpose: tell the next agent what is true right now.
+
+This should be short but current.
+
+Example:
+
+```markdown
+## 2. Current World State
+
+- GitHub is the source of truth.
+- Local file tree is the working copy.
+- Client Boxes are becoming the canonical per-client memory/state layer.
+- The Boxes page is a read/display surface over Client Boxes and orchestrator state.
+- Guardrails are being hardened because some early plans mixed strategy, enrichment, and executable copy too tightly.
+- Automation is allowed to create movement, but risky moves require explicit approval.
+- Current priority: make the system safer while preserving momentum.
+```
+
+This section should be updated whenever the project’s real state shifts.
+
+It is not a changelog.
+It is a “what is true now” summary.
+
+---
+
+## 6.4 Major Systems
+
+Purpose: give the project-level system map.
+
+Recommended format:
+
+```markdown
+## 3. Major Systems
+
+### 3.1 Client Boxes
+
+Canonical per-client memory and operating substrate.
+
+Owns:
+- comms
+- state
+- profile
+- allowed-to-use facts
+- protected/off-limits facts
+- seven-day plan
+- guardrail overlay
+- approval notes
+- audit markers
+
+### 3.2 Orchestrator
+
+Runtime/render/state layer.
+
+Owns:
+- dashboard state
+- ready checks
+- generated outputs
+- sweep outputs
+- per-lead rollups
+
+Does not own:
+- canonical client truth
+
+### 3.3 Boxes Page
+
+UI surface for viewing selected boxes.
+
+Owns:
+- display
+- dossier rendering
+- box browsing
+- handoff actions
+
+Does not own:
+- client truth
+- plan authority
+
+### 3.4 Inbox Guardrails
+
+Safety contract for sends and Close inbox work.
+
+Owns:
+- hard gates
+- auto-pauses
+- reply gates
+- calendar reality
+- frequency caps
+- commitment approval requirements
+- enrichment boundaries
+
+### 3.5 Ledgers
+
+Project memory system.
+
+Owns:
+- continuity
+- orientation
+- definitions of done
+- source-of-truth clarity
+- auditability
+- handoff memory
+
+### 3.6 Meta Harness
+
+Workflow layer that teaches agents how to operate safely.
+
+Owns:
+- read order
+- change protocol
+- ledger update protocol
+- done gate enforcement
+```
+
+The goal is not to be exhaustive.
+The goal is to prevent agents from confusing layers.
+
+---
+
+## 6.5 Source-of-Truth Rules
+
+Purpose: prevent agents from editing the wrong thing.
+
+This is one of the most important Global Ledger sections.
+
+Example:
+
+```markdown
+## 4. Source-of-Truth Rules
+
+### 4.1 GitHub
+
+GitHub is the durable source of truth for project memory, ledgers, code, configs, and handoff state.
+
+### 4.2 Local file tree
+
+The local file tree is the working copy. It may contain unpushed work. Agents must be careful when writing directly to GitHub if local changes may exist.
+
+### 4.3 Client Boxes
+
+For client-specific truth, trust:
+
+1. `01_comms.md`
+2. full transcripts when available
+3. `00_meta.json`
+4. `client_ledger.md`
+5. approved operator notes
+6. profile/enrichment only as internal strategy, not customer-facing truth
+
+### 4.4 Generated outputs
+
+Generated files are views, not primary truth, unless explicitly marked canonical.
+
+### 4.5 Plans
+
+Seven-day plans are strategy drafts. They do not override guardrails, current state, replies, approvals, or comms.
+
+### 4.6 UI pages
+
+UI pages render truth. They do not define truth unless explicitly stated in a source-of-truth ledger.
+```
+
+This section should connect directly to the future Source-of-Truth Ledger, but it should keep the global version concise.
+
+---
+
+## 6.6 Global Operating Rules
+
+Purpose: define rules that apply everywhere.
+
+Example:
+
+```markdown
+## 5. Global Operating Rules
+
+1. Read before writing.
+2. Prefer narrow, reversible changes.
+3. Do not treat generated state as canonical unless marked.
+4. Do not let plans override guardrails.
+5. Risky automation moves require explicit approval.
+6. If a client replies, their plan becomes stale until reviewed.
+7. If a page/data binding changes, update the page-asset sitemap.
+8. If project state changes, update the relevant ledger.
+9. If a local directory has a Box, read it before editing there.
+10. If a problem is found but not fixed, record it.
+11. If a decision is made, record it.
+12. If a change would confuse a future agent, leave a handoff note.
+```
+
+This is where the project’s “common law” lives.
+
+---
+
+## 6.7 Active Workstreams
+
+Purpose: orient the agent to what is currently happening.
+
+Example:
+
+```markdown
+## 6. Active Workstreams
+
+### Client Boxes hardening
+
+Goal:
+Make each client box safe, current, and usable by automation.
+
+Current posture:
+One box at a time. Audit, clean, leave marker, proceed.
+
+### Allowed-to-know constraints
+
+Goal:
+Separate comms-confirmed facts from enrichment-only/internal strategy.
+
+Current posture:
+Needs implementation across Client Boxes.
+
+### Ledger system buildout
+
+Goal:
+Create global and local memory layers for durable project continuity.
+
+Current posture:
+Designing and implementing one ledger at a time.
+
+### Boxes page integration
+
+Goal:
+Make the Boxes UI accurately reflect the source Client Boxes and their safety state.
+
+Current posture:
+Existing page exists; sitemap says it is focused on Hugo + Brenda/Steve while design finalizes.
+```
+
+This should remain high signal.
+Do not let it become a giant task board.
+
+The Phase Ledger and Open Problems Ledger can hold more detail.
+
+---
+
+## 6.8 Active Risks / Known Fragile Areas
+
+Purpose: make risks impossible to miss.
+
+Example:
+
+```markdown
+## 7. Active Risks / Known Fragile Areas
+
+### Automation approval risk
+
+Batch approval can hide high-risk moves. Fee waivers, discounts, scope promises, enrichment-based personalization, and pricing claims need isolated approval.
+
+### Plan / guardrail contradiction
+
+Some seven-day plans were written before guardrails were fully enforced. Plans may contain unsafe executable copy.
+
+### Reply invalidates plan
+
+Any meaningful inbound from a client can invalidate the existing seven-day plan.
+
+### Enrichment boundary
+
+Profiles may contain useful internal strategy, but customer-facing copy must only use facts from comms or explicit approval.
+
+### GitHub/local drift
+
+Agents may write directly to GitHub while the human has unpushed local changes. Always consider branch/pull/rebase safety.
+```
+
+This section should be aggressively honest.
+
+If it is scary, write it down.
+
+---
+
+## 6.9 Ledger System Map
+
+Purpose: show how all ledgers relate.
+
+Example:
+
+```markdown
+## 8. Ledger System Map
+
+Global Ledger:
+Top-level world state and project orientation.
+
+Temporal Continuity Ledger:
+Current state across time.
+
+North Star Ledger:
+Goals and principles.
+
+Definition of Done Ledger:
+Completion standards.
+
+Directory Ledger:
+File tree map.
+
+Directory Configuration Ledgers:
+Local “you are here” rules.
+
+File Contents Ledger:
+Important file responsibilities.
+
+Asset / Widget Map:
+Pages, widgets, APIs, data flow.
+
+Connections Ledger:
+External systems and services.
+
+Decisions Ledger:
+Major choices and why.
+
+Communications Ledger:
+Handoffs, warnings, notes.
+
+Open Problems Ledger:
+Known unfinished work.
+
+Prompt / Reconstruction Ledger:
+How important things were built.
+
+Scout Ledger:
+Tool/model/workflow research.
+
+Audit Ledger:
+Audit findings and follow-up.
+
+Phase Ledger:
+Current milestone state.
+
+Page Ledgers:
+Page-specific memory.
+
+Widget Ledgers:
+Widget-specific memory.
+
+Settings Ledger:
+Configurable options.
+
+Source-of-Truth Ledger:
+Which system owns which truth.
+```
+
+This should be linked to actual files as they are created.
+
+---
+
+## 6.10 Box System Map
+
+Purpose: explain the Box philosophy at the global level.
+
+Example:
+
+```markdown
+## 9. Box System Map
+
+A Box is the living memory and configuration layer for a directory.
+
+A Box should answer:
+
+- Where am I?
+- What does this area own?
+- What should never happen here?
+- What source of truth applies?
+- What files matter?
+- What ledgers apply locally?
+- What changed recently?
+- What problems are open?
+- What should be updated when work happens?
+
+Important project boxes:
+
+- Client Boxes
+- Staff Boxes
+- Orchestrator Box
+- Inbox Skill Box
+- App/UI Box
+- Automation Box
+- Ledger Box
+```
+
+The Global Ledger should not define every box in detail.
+It should explain that boxes exist and where to find their local memory.
+
+---
+
+## 6.11 Agent Work Protocol
+
+Purpose: give agents a repeatable workflow.
+
+Example:
+
+```markdown
+## 10. Agent Work Protocol
+
+Before meaningful edits:
+
+1. Read `GLOBAL_LEDGER.md`.
+2. Identify the affected system.
+3. Read the relevant Box or directory orientation.
+4. Read source-of-truth rules for the data being changed.
+5. Check open problems and recent audit notes.
+6. Inspect current files.
+7. Make the smallest safe change.
+8. Run available checks or explain why not.
+9. Update affected ledgers.
+10. Leave a handoff note if future agents need context.
+11. Commit with a clear message.
+12. Push to GitHub unless instructed otherwise.
+```
+
+For risky areas:
+
+```markdown
+If changing automation, sends, client plans, approval gates, source-of-truth bindings, or generated state, stop and check guardrails before writing.
+```
+
+This is the meta harness in human-readable form.
+
+---
+
+## 6.12 Done Gate
+
+Purpose: make “done” include memory.
+
+Example:
+
+```markdown
+## 11. Done Gate
+
+Work is not complete until the memory of the work is updated.
+
+Meaningful changes must update the relevant continuity surface.
+
+Examples:
+
+- Changed project state → update Global or Temporal Ledger.
+- Changed a page → update page-asset sitemap / Page Ledger.
+- Changed folder ownership → update Directory Ledger.
+- Changed client plan → update client audit marker or local Box ledger.
+- Changed source-of-truth rule → update Source-of-Truth Ledger.
+- Made a major decision → update Decisions Ledger.
+- Found but did not fix a problem → update Open Problems Ledger.
+- Changed a repeatable process → update Reconstruction Ledger.
+- Completed an audit → update Audit Ledger.
+```
+
+This connects directly to the user’s “Done Gate” idea from the uploaded ledger list. 
+
+The short version:
+
+```markdown
+If the system changed, the system’s memory changes with it.
+```
+
+---
+
+## 6.13 Recently Changed
+
+Purpose: quick project-level changelog.
+
+This should not replace Git history.
+
+It should summarize meaningful changes in human terms.
+
+Example:
+
+```markdown
+## 12. Recently Changed
+
+### 2026-04-28
+
+- Began formal ledger system design.
+- Identified Global Ledger as first implementation target.
+- Clarified that plans are subordinate to comms, state, guardrails, and approvals.
+- Cleaned Brenda & Steve client box after audit.
+- Added audit marker to Brenda & Steve box.
+- Established safe-movement posture for early automation proof period.
+```
+
+Keep this short.
+Long detail goes in the Temporal Continuity Ledger or Audit Ledger.
+
+---
+
+## 6.14 Next Handoff Notes
+
+Purpose: tell the next agent what to do next.
+
+Example:
+
+```markdown
+## 13. Next Handoff Notes
+
+Current preferred workflow:
+One ledger at a time. Implement Global Ledger first. Then proceed through remaining ledgers in order.
+
+Current client-box workflow:
+One client box at a time. Audit, clean, leave marker, then proceed.
+
+Important caution:
+Human may have unpushed local work. Avoid direct GitHub writes without checking branch/workflow expectations.
+```
+
+This is the “don’t make me re-explain everything” section.
+
+---
+
+## 6.15 Links to Local Ledgers
+
+Purpose: turn the Global Ledger into an index.
+
+Example:
+
+```markdown
+## 14. Links to Local Ledgers
+
+- Temporal Continuity Ledger: `LEDGERS/TEMPORAL_CONTINUITY.md`
+- North Star Ledger: `LEDGERS/NORTH_STAR.md`
+- Source-of-Truth Ledger: `LEDGERS/SOURCE_OF_TRUTH.md`
+- Page-Asset Sitemap: `docs/page_asset_source_of_truth.md`
+- Client Boxes Ledger: `Auto/Client Boxes/BOX_LEDGER.md`
+- Orchestrator Box: `Auto/orchestrator/BOX.md`
+- Inbox Guardrails: `Auto/comeketo-inbox/references/guardrails.md`
+```
+
+Only link files that actually exist.
+Use “planned” labels for files not created yet.
+
+---
+
+## 6.16 Visualization Index
+
+Purpose: make visual memory part of the system.
+
+Example:
+
+```markdown
+## 15. Visualization Index
+
+Visual maps should be generated from ledger files where possible.
+
+Current visual targets:
+
+- Global system map
+- Ledger dependency map
+- Box hierarchy map
+- Page/API/data-flow map
+- Client Box lifecycle map
+- Source-of-truth flow
+```
+
+Suggested files:
+
+```text
+/LEDGERS/VISUALS/global_system_map.mmd
+/LEDGERS/VISUALS/ledger_dependency_map.mmd
+/LEDGERS/VISUALS/client_box_lifecycle.mmd
+```
+
+Mermaid is a good first format because it is text, diffable, GitHub-friendly, and renderable.
+
+Example Mermaid:
+
+```mermaid
+flowchart TD
+  GH[GitHub Source of Truth] --> GL[Global Ledger]
+  GL --> TL[Temporal Continuity Ledger]
+  GL --> NS[North Star Ledger]
+  GL --> ST[Source-of-Truth Ledger]
+  GL --> DL[Directory Ledger]
+  GL --> BX[Boxes]
+
+  BX --> CB[Client Boxes]
+  BX --> OB[Orchestrator Box]
+  BX --> UI[UI/App Box]
+
+  CB --> Comms[Comms]
+  CB --> State[State]
+  CB --> Plan[Seven-Day Plan]
+  CB --> Guardrails[Guardrail Overlay]
+  CB --> Approval[Approval Ledger]
+
+  Guardrails --> Move[Next Move]
+  State --> Move
+  Comms --> Move
+  Approval --> Move
+```
+
+---
+
+## 6.17 Update Rules
+
+Purpose: define when the Global Ledger itself must change.
+
+Example:
+
+```markdown
+## 16. Update Rules
+
+Update the Global Ledger when:
+
+- the project identity changes
+- a new major system is added
+- a major system is retired
+- global source-of-truth rules change
+- global agent workflow changes
+- a new ledger type is created
+- a new Box class is created
+- a new phase begins
+- major risk posture changes
+- the read-first order changes
+- the Done Gate changes
+```
+
+Do not update the Global Ledger for tiny local changes unless they affect project-wide context.
+
+---
+
+# 7. Recommended `GLOBAL_LEDGER.json` Shape
+
+The JSON file should mirror the top-level state.
+
+Example:
+
+```json
+{
+  "ledger_type": "global",
+  "version": "0.1.0",
+  "last_updated": "2026-04-28",
+  "repository": "RodbotCC/CCAgent",
+  "source_of_truth": "GitHub",
+  "current_phase": "Client Boxes + Automation Safety Hardening",
+  "current_state": "active_build",
+  "read_first": true,
+  "major_systems": [
+    {
+      "id": "client_boxes",
+      "name": "Client Boxes",
+      "role": "canonical per-client memory and operating substrate",
+      "path": "Auto/Client Boxes",
+      "status": "active"
+    },
+    {
+      "id": "orchestrator",
+      "name": "Orchestrator",
+      "role": "runtime/render/state layer",
+      "path": "Auto/orchestrator",
+      "status": "active"
+    },
+    {
+      "id": "boxes_page",
+      "name": "Boxes Page",
+      "role": "UI read/display surface for boxes",
+      "status": "active"
+    }
+  ],
+  "global_rules": [
+    "Read before writing.",
+    "GitHub is the source of truth.",
+    "Plans are subordinate to comms, state, guardrails, and approvals.",
+    "Risky automation moves require explicit approval.",
+    "If the system changed, the system memory changes with it."
+  ],
+  "active_risks": [
+    {
+      "id": "batch_approval_risk",
+      "summary": "High-risk moves can be missed during rushed batch approvals.",
+      "status": "active"
+    },
+    {
+      "id": "plan_guardrail_drift",
+      "summary": "Some plans may predate current guardrails.",
+      "status": "active"
+    }
+  ],
+  "ledger_index": [
+    {
+      "id": "temporal_continuity",
+      "path": "LEDGERS/TEMPORAL_CONTINUITY.md",
+      "status": "planned"
+    },
+    {
+      "id": "north_star",
+      "path": "LEDGERS/NORTH_STAR.md",
+      "status": "planned"
+    }
+  ]
+}
+```
+
+This file can later drive dashboards, checks, or agent bootstraps.
+
+---
+
+# 8. Agent Bootstrap Behavior
+
+Once implemented, future agents should be instructed to begin with:
+
+```text
+1. Read /LEDGERS/GLOBAL_LEDGER.md.
+2. Read /LEDGERS/GLOBAL_LEDGER.json.
+3. Identify affected system.
+4. Read the relevant local Box or directory config.
+5. Continue only after source-of-truth and Done Gate are clear.
+```
+
+This can later become a script:
+
+```bash
+python scripts/read_project_context.py
+```
+
+Or a meta harness command:
+
+```text
+PROJECT_BOOTSTRAP
+```
+
+The bootstrap output should tell the agent:
+
+* current phase
+* relevant systems
+* current risks
+* required local ledgers
+* likely Done Gate updates
+* whether GitHub/local drift risk exists
+
+---
+
+# 9. Relationship to Boxes
+
+The Global Ledger should define Boxes as a core project primitive.
+
+A Box is not just a folder.
+A Box is a folder with memory, constraints, ledgers, local rules, source-of-truth notes, and handoff context.
+
+Global Ledger owns the Box concept.
+Each Box owns its local truth.
+
+Example:
+
+```text
+Global Ledger
+  └── defines Box system
+
+Client Boxes
+  └── each client has local state, comms, plan, guardrails, audit markers
+
+Orchestrator Box
+  └── owns runtime/rendering state rules
+
+UI/App Box
+  └── owns route/page/component/data-binding rules
+```
+
+This prevents global overreach.
+
+The Global Ledger should say:
+
+```markdown
+Do not solve local complexity globally if it belongs inside a Box.
+```
+
+That line is extremely important.
+
+---
+
+# 10. Relationship to Client Automation
+
+The Global Ledger should explicitly encode the lesson from Brenda & Steve.
+
+Recommended section:
+
+```markdown
+## Client Automation Safety Principle
+
+Automation may create movement, but it must not silently assume authority.
+
+Safe moves:
+- polite nudges
+- confirmation requests
+- call asks
+- tasting reminders using approved dates
+- venue/detail clarification
+- reply-aware follow-up
+
+Risk moves:
+- fee waivers
+- discounts
+- free services
+- guest-count promises
+- price guarantees
+- urgency pressure
+- enrichment-based personalization
+- claims not found in comms
+
+Risk moves must become approval cards, not automatic sends.
+```
+
+Also:
+
+```markdown
+If a lead replies, the plan is stale until reviewed.
+```
+
+And:
+
+```markdown
+The seven-day plan is a strategy draft, not a send license.
+```
+
+---
+
+# 11. Relationship to Page-Asset Sitemap
+
+The Global Ledger should point to the page-asset sitemap as the UI Done Gate.
+
+The uploaded sitemap says any task changing a page, route behavior, or page data binding is not complete until the sitemap is updated. That rule should be referenced globally.
+
+Recommended text:
+
+```markdown
+For UI/page changes, the page-asset sitemap is a mandatory Done Gate. Any change to a page, route behavior, or page data binding must update the relevant page section, asset ownership, checklist, history, and last verified date.
+```
+
+This keeps the existing sitemap integrated into the larger ledger system instead of replacing it.
+
+---
+
+# 12. Relationship to Inbox Guardrails
+
+The Global Ledger should point to the guardrails as the send safety contract.
+
+Recommended text:
+
+```markdown
+For Close inbox work and customer-facing sends, Inbox Guardrails override seven-day plans, profiles, enrichment, and automation momentum.
+
+If a plan conflicts with guardrails, the guardrail wins.
+```
+
+This prevents the plan from becoming dangerously authoritative.
+
+---
+
+# 13. Implementation Phases
+
+## Phase 1 — Create the Ledger
+
+Create:
+
+```text
+/LEDGERS/GLOBAL_LEDGER.md
+/LEDGERS/GLOBAL_LEDGER.json
+/LEDGERS/INDEX.md
+```
+
+Add the core sections listed above.
+
+Do not overfill it.
+Make it useful immediately.
+
+## Phase 2 — Add Visuals
+
+Create:
+
+```text
+/LEDGERS/VISUALS/global_system_map.mmd
+/LEDGERS/VISUALS/ledger_dependency_map.mmd
+/LEDGERS/VISUALS/client_box_lifecycle.mmd
+```
+
+Keep Mermaid simple.
+
+## Phase 3 — Connect Existing Truth Sources
+
+Link to:
+
+* page-asset sitemap
+* inbox guardrails
+* Client Boxes
+* orchestrator overview
+* Boxes page ownership
+* any existing `CLAUDE.md` / `AGENTS.md`
+* existing project docs
+
+## Phase 4 — Add Agent Bootstrap Rule
+
+Update top-level agent instructions if available:
+
+```text
+Before meaningful edits, read /LEDGERS/GLOBAL_LEDGER.md.
+```
+
+Likely files:
+
+```text
+CLAUDE.md
+AGENTS.md
+README.md
+```
+
+Only if those files exist and are appropriate.
+
+## Phase 5 — Add Done Gate Hook
+
+Add a lightweight checklist to PRs / commit notes / agent workflow:
+
+```text
+Did this change require a ledger update?
+If yes, which ledger changed?
+If no, why not?
+```
+
+## Phase 6 — Keep It Alive
+
+At the end of meaningful sessions, update:
+
+* `Current World State`
+* `Recently Changed`
+* `Next Handoff Notes`
+* relevant linked local ledgers
+
+The Global Ledger should be alive but not noisy.
+
+---
+
+# 14. What Opus Should Build First
+
+Give Opus this exact build order:
+
+```text
+1. Create /LEDGERS directory.
+2. Create /LEDGERS/GLOBAL_LEDGER.md using the outlined sections.
+3. Create /LEDGERS/GLOBAL_LEDGER.json with matching structured state.
+4. Create /LEDGERS/INDEX.md listing all planned ledgers and their status.
+5. Create /LEDGERS/VISUALS/global_system_map.mmd.
+6. Add read-first note to project root README/AGENTS/CLAUDE if appropriate.
+7. Do not rewrite unrelated systems.
+8. Do not over-engineer automation yet.
+9. Commit with message: "Add global ledger continuity layer".
+```
+
+---
+
+# 15. Quality Bar
+
+The Global Ledger is successful if a future agent can open it and understand:
+
+* what the project is
+* what the project is currently doing
+* where major systems live
+* what truth to trust
+* what not to touch casually
+* what risks are active
+* what local ledgers to read next
+* how to know when work is done
+* how to preserve continuity after changes
+
+It fails if:
+
+* it becomes a stale manifesto
+* it duplicates every local doc
+* it hides current risks
+* it is too long to read
+* it does not tell agents what to do
+* it is not updated when project state changes
+* it is not connected to GitHub-backed workflow
+
+---
+
+# 16. Final Operating Rule
+
+The Global Ledger should end with this:
+
+```markdown
+The repo is not just code.
+
+The repo is the memory of the build.
+
+Before changing the system, understand the memory.
+After changing the system, update the memory.
+```
+
+---
+
+When you type **P**, I’ll proceed to the next ledger: **Temporal Continuity Ledger**.

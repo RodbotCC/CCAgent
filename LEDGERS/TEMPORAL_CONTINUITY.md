@@ -1,10 +1,11 @@
 # Temporal Continuity Ledger
 
-Last updated: 2026-04-28 ~07:40 AM ET (post Global Ledger Steward automation)
-Updated by: Jake (orchestrator) + Claude (Cowork)
-Current project moment: Ledger system buildout Phase 5 is complete and the first runnable ledger steward (`global_ledger_steward`) has landed
-Current phase: Early automation proof with safety cleanup
-Next recommended read: [`GLOBAL_LEDGER.md`](GLOBAL_LEDGER.md), then the relevant Box (today: Brenda & Steve, the active client work)
+Last updated: 2026-04-29 (post Cowork housekeeping — directory consolidation, Audit dropped from build queue, Communications Ledger queued)
+Updated by: Jake (orchestrator) + Claude (Code, Opus 4.7 1M context — separate from Cowork sessions)
+Current project moment: **Cleanup phase.** Plumbing-first build was scrapped under owner pressure; UI rebuilt from working pieces; Auto/ payload symlinked into bedrock. Ledger Phases 1–5 + first steward agent are live, but the *bedrock itself* (`CCAgentindex/`) was bootstrapped on the fly and now needs triad-based reconciliation — deferred per PROB-2026-04-28-016 until ledger and sub-agent buildout settles.
+Current phase: **Cleanup + ledger/sub-agent buildout completion.** Not greenfield.
+Architectural spine: **Box + Ledger + Sub-agent triad.** Anything with state that learns or needs updating gets all three. Legibility > build speed.
+Next recommended read: [`GLOBAL_LEDGER.md`](GLOBAL_LEDGER.md), then [`OPEN_PROBLEMS_LEDGER.md`](OPEN_PROBLEMS_LEDGER.md) (esp. PROB-016 for bedrock context), then the relevant Box.
 Continuity status: **active**
 
 > Read this after the Global Ledger. If the Global Ledger tells you what this project is, this file tells you where the project currently is in time.
@@ -15,20 +16,44 @@ Continuity status: **active**
 
 ## 1. Current Snapshot
 
-The project is mid-buildout on the Comeketo Agent — automation, Client Boxes, inbox guardrails, and ledger-backed continuity. Today's session (2026-04-28) covered two large workstreams back-to-back:
+The project is **3 days in, mid-buildout, in cleanup phase** on the Comeketo Agent — automation, Client Boxes, inbox guardrails, ledger-backed continuity. Jake has been working ~20-hour days. He is currently on a team Claude subscription rationing context until Max re-ups.
 
-1. **Verbatim comms backfill** across all 28 client boxes — pulled full Close.com conversation history (call/voicemail transcripts, full email bodies, SMS, WhatsApp, threads) via direct API. 582 raw activity payloads. Per-box `01b_comms_verbatim.md` + `comms/*.json` now sit alongside the curated `01_comms.md` summaries.
-2. **Ledger system Phase 1 (Global Ledger)** — created `LEDGERS/` at project root with the world-map ledger, JSON mirror, planned-roster index, three Mermaid visuals, and two local Box templates. Read-first pointers wired into `CLAUDE.md` (§0), `AGENT.md`, and `README.md`.
+**The build arc so far:**
+1. Plumbing-first attempt (ledgers + sub-agent scaffolding) was **scrapped mid-stream under pressure from Rodrigo (Comeketo owner)** who needed something usable/demoable.
+2. Jake **rebuilt the UI** and patched together what worked from the prior attempt.
+3. On a separate "heroic day" via Claude Co-Work, Jake authored almost all of the **automations, Boxes, and Onboard Scripts** in a separate folder — now symlinked into bedrock at `Auto/` (which itself symlinks to `~/Desktop/Auto/`). Six bedrock subdirs alias into Auto/: `Boxes`, `Client Boxes`, `Staff Boxes`, `comeketo-inbox`, `Onboard Scripts`, `orchestrator`.
+4. Ledger system Phases 1–5 landed (Global, Temporal Continuity, North Star, File Directory, Open Problems) plus first runnable steward (`global_ledger_steward`).
+5. **Now:** cleanup. The bedrock itself is bootstrapped-era 32-subdir layout that needs triad reconciliation (PROB-016, deferred).
 
-This file (Phase 2, Temporal Continuity) is the third major artifact of the session.
+**The architectural spine — Box + Ledger + Sub-agent triad.** Anything with state that learns or needs updating gets all three:
+- **Box** = unit of state (Client Boxes, Staff Boxes, Coworker records, eventually any state-bearing entity)
+- **Ledger** = legible memory of that Box (project-wide ledgers under `LEDGERS/`; per-Box ledgers stamp from `LOCAL_TEMPLATE/BOX_LEDGER_TEMPLATE.md`)
+- **Sub-agent** = the operator that reads/updates the Box and its Ledger (canonical config in `*_subagent_package/` at repo root; runnable form in `CCAgentindex/agents/<name>/`)
 
-Current emphasis going forward:
-- Make automation show visible movement.
-- Keep early sends safer than the first aggressive plans.
-- Audit and clean Client Boxes one at a time. Brenda & Steve received the first explicit audit pass last night (01:40 AM ET, 2026-04-28).
-- Build the ledger system one ledger at a time. User types `P` to proceed to the next ledger.
-- Treat GitHub as the source of truth.
-- Avoid global rewrites when local Box-level fixes are enough.
+**Standing inviolable rule:** **Legibility is more important than the build itself.** Code without a corresponding Ledger entry is a debt to repay. A reader of the Ledger should understand the system without opening code. Jake said this explicitly 2026-04-28: "for everything that we build we cannot be lazy about the legibility. I am actually more concerned about the legibility than the build."
+
+**Current scaffolding maturity (2026-04-29, post-housekeeping):**
+- 28 Client Boxes, ~10 close to complete, others need manual enrichment (deferred — Jake doesn't want to work on this now)
+- 10 Staff Boxes
+- 5 sub-agent packages consolidated at **`/Subagent Boxes/`** (file_directory, global_ledger, north_star, open_problems, temporal_continuity) — moved from repo root 2026-04-29. These are *draft* packages awaiting promotion to runnable app agents under `CCAgentindex/agents/<name>/`. The canonical *active* steward materials still live at `LEDGERS/AGENTS/<name>/`.
+- 3 runnable app agents (`andre_escalation_ladder`, `global_ledger_steward`, `inbox_triage`)
+- **7 active project ledgers** (Global, Temporal Continuity, North Star, File Directory, Open Problems, Communications, **Decisions** — landed 2026-04-29 Phase 7) + 19 outline drafts at **`/Ledger Drafts/`** (moved from `~/Documents/` 2026-04-29) waiting to be ingested. **Read the matching `.txt` outline before authoring any new ledger.**
+- **Audit Ledger removed from build queue (2026-04-29)** — covered by Open Problems / Decisions / Communications / per-Box ledgers. Draft `# Audit Ledger.txt` stays in `Ledger Drafts/` as reference; not deleted.
+- Triad is **lopsided**: more Boxes than Ledgers, more Ledgers than Sub-agents. Filling that grid is the dominant verb.
+
+**Triad-maturity clustering (Jake's whiteboard, 2026-04-29):** colored title = ledger built; box around title = sub-agent exists; colored-in box = sub-agent also set up. Currently colored+boxed: Global, Temporal, North Star, File Directory. Open Problems is built but its sub-agent is still a draft package at `/Subagent Boxes/`.
+
+**Build order discipline (2026-04-29):** Phase A — finish all Ledgers. Phase B — finish all Sub-agents. Phase C — build Subagent Boxes (boxes of ledgers controlled by sub-agent configurations). **Currently in Phase A.**
+
+**Current emphasis going forward:**
+- Cleanup over greenfield — do not propose architecture overhauls
+- Finish ledger buildout — ingest outline drafts from `/Ledger Drafts/` one at a time, in user-confirmed order
+- Finish sub-agent buildout (Phase B) — graduate `/Subagent Boxes/` packages into runnable app agents
+- Build Subagent Boxes (Phase C) — boxes of ledgers controlled by sub-agent configurations
+- Then run bedrock reconciliation pass (per PROB-016)
+- Route rough edges to `OPEN_PROBLEMS_LEDGER.md`, not chat
+- Update Temporal Continuity Ledger and Global Ledger as you work — cold-starting agents read these first
+- Treat GitHub as source of truth, but **don't push without explicit go-ahead**
 
 ---
 
@@ -77,7 +102,49 @@ Posture: hard gates exist in the comeketo-inbox skill at `Auto/comeketo-inbox/`.
 
 ## 3. Recent Meaningful Changes
 
-### 2026-04-28 (this session, ongoing)
+### 2026-04-29 (Cowork session — directory consolidation + Audit dropped + Communications Ledger queued)
+
+This was a Cowork session focused on housekeeping before authoring the Communications Ledger.
+
+- **Sub-agent packages consolidated to `/Subagent Boxes/`.** All 5 draft packages (`file_directory_subagent_package`, `global_ledger_subagent_package`, `north_star_subagent_package`, `open_problems_subagent_package`, `temporal_continuity_subagent_package`) moved from repo root into `/Users/jakeaaron/Downloads/CC Agent/Subagent Boxes/`. Repo root no longer has scattered `*_subagent_package/` directories. These remain *draft* — awaiting promotion to runnable app agents under `CCAgentindex/agents/<name>/`. The canonical *active* steward materials still live at `LEDGERS/AGENTS/<name>/` (today: only `global_ledger_steward`).
+- **Ledger drafts consolidated to `/Ledger Drafts/`.** The 19 hand-drafted `.txt` outlines moved from `~/Documents/` to `/Users/jakeaaron/Downloads/CC Agent/Ledger Drafts/`. This is the source material for unbuilt ledgers — Jake's spine for what each ledger should hold. **Always read the matching `.txt` outline before authoring any new ledger; don't reinvent structure.**
+- **Audit Ledger removed from build queue.** Per Jake: "I don't think we're ever going to need that. It's basically covered in the other things." Audit-shaped findings will land in Open Problems, Decisions, Communications, or per-Box ledgers as appropriate. INDEX.md and GLOBAL_LEDGER §8 updated. The `# Audit Ledger.txt` draft stays in `Ledger Drafts/` as reference; not deleted.
+- **Triad-maturity clustering codified by Jake** (whiteboard image): colored title = ledger built; box around title = sub-agent exists; colored-in box = sub-agent also set up. Currently colored+boxed: Global, Temporal, North Star, File Directory. Open Problems is built but its sub-agent package is still a draft package (now at `/Subagent Boxes/`).
+- **Build order made explicit:** Phase A finish all Ledgers → Phase B finish all Sub-agents → Phase C build Subagent Boxes (boxes of ledgers controlled by sub-agent configurations). Currently in Phase A.
+- **Phase 7: Decisions Ledger landed.** Created `LEDGERS/DECISIONS_LEDGER.md` (~750 lines), `LEDGERS/DECISIONS_LEDGER.json`, and 2 visuals (`decision_dependency_map.mmd`, `decision_timeline.mmd`). 12 active decisions: spec's 8 from 2026-04-28 (GitHub source-of-truth, FileTree-over-RAG, Client Boxes canonical, plans-are-strategy-drafts, risky-moves-need-isolated-approval, Boxes-page-display-only, sitemap-Done-Gate, one-ledger-at-a-time) plus 4 today (triad spine, three-phase build, TCL/GL update discipline, Audit-out-of-scope). 5 Communications entries promoted in (`COMM-2026-04-28-001`, `COMM-2026-04-28-003`, `COMM-2026-04-29-001`, `COMM-2026-04-29-003`, `COMM-2026-04-29-005`). 1 needs-review seeded (Approval UI / Risk Card Standard, related to DEC-005). Steward agent not yet authored — Phase B work, will live at `/Subagent Boxes/decisions_subagent_package/`.
+- **Phase 6: Communications Ledger landed.** Created `LEDGERS/COMMUNICATIONS_LEDGER.md` (~450 lines), `LEDGERS/COMMUNICATIONS_LEDGER.json` (structured mirror), and 3 visuals (`handoff_flow.mmd`, `communication_lifecycle.mmd`, `communications_timeline.mmd`). 18 seeded entries split across the spec's section structure: 5 active handoffs (ledger build rhythm, client-box cleanup rhythm, Brenda fee-waiver lesson, cleanup-phase build arc, three-phase build discipline), 3 warnings (Git drift, plans-may-predate-guardrails, bedrock reconciliation deferred), 3 preferences (preferred ledger style, safe movement, triad spine), 4 lessons (sitting-there-is-state, automation-can-be-personal, wholesome-vs-creepy, **TCL/GL drift is the failure mode**), 1 abandoned attempt (plumbing-first build pivot — historical context), 2 cross-system notes (client-box state flow, page-work Done Gate). Steward agent not yet authored — Phase B work, will live at `/Subagent Boxes/communications_subagent_package/`.
+
+Files touched this Cowork session:
+- `LEDGERS/TEMPORAL_CONTINUITY.md` (this update)
+- `LEDGERS/INDEX.md` (Audit row → out-of-scope; build-order item dropped; new directory pointers added; Communications row → active; 3 new visual rows)
+- `LEDGERS/GLOBAL_LEDGER.md` (§8 Audit row → out-of-scope; §8 Communications row → active; §12 new 2026-04-29 entry; §13 read order updated to include Communications; §14 active-ledgers list updated)
+- `LEDGERS/FILE_DIRECTORY_LEDGER.md` (§3 top-level map gained `Ledger Drafts/` and `Subagent Boxes/` rows)
+- `LEDGERS/COMMUNICATIONS_LEDGER.md` + `.json` (created)
+- `LEDGERS/VISUALS/handoff_flow.mmd` + `communication_lifecycle.mmd` + `communications_timeline.mmd` (created)
+- `LEDGERS/VISUALS/ledger_dependency_map.mmd` (Communications node flipped to active)
+- `CCAgentindex/_ledger/activity.jsonl` (housekeeping + ledger-create appends)
+
+### 2026-04-29 (Claude Code catch-up + bedrock reconciliation flagged)
+
+This was a **catch-up session in Claude Code (Opus 4.7 1M context)**, separate from the Cowork sessions that built Phases 1–5. No code changes. Goals: orient the assistant to the current cleanup-phase posture, log a major architectural problem to the Open Problems Ledger, and produce a clean handoff artifact for the next Cowork session.
+
+- **Box + Ledger + Sub-agent triad codified as the architectural spine.** Saved to assistant memory: every state-bearing entity gets all three. Legibility > build speed.
+- **Rebuild history captured.** Plumbing scrapped under Rodrigo pressure → UI rebuilt from working pieces → Auto/ payload symlinked into bedrock. This is *not greenfield* — it's cleanup. Saved to memory.
+- **22 ledger outline drafts in `~/Documents/`** identified as the source material for not-yet-active ledgers (Settings, Widget, Page, Phase, Audit, Scout, Prompt/Reconstruction, Communications, Decisions, Connections, Asset/Widget Map, File Contents, Directory Configuration, Deliverables/DoD, plus rewrites of the 5 already-active ones). Path reference saved to memory.
+- **Onboard Scripts mtime convention captured.** Late-April mtime = current/integrated; March mtime = scrapped-build legacy kept for future analytics enrichment, do not delete. Saved to memory.
+- **PROB-2026-04-28-016 logged** — *CCAgentindex/ Bedrock Was Bootstrapped On The Fly — Needs Triad-Based Reconciliation.* Status: needs-decision. Severity: high. Urgency: later. Blocked on ledger + sub-agent buildout. Inventory of all 32 bedrock subdirs split into 5 buckets. Recommended action: do not act yet; finish ledgers, finish sub-agents, then reconcile.
+- **Standing rule established:** route rough edges to `OPEN_PROBLEMS_LEDGER.md` rather than chat. Saved to memory as feedback.
+- **Simulation Close account seeded** (separate from production Comeketo Close). API key `api_5TlUc9yZqhQqcLwLM7kzS1.0Fi8MMgRWc4IWJeuIgPuxB` is scoped to a different Close org from the production account — no cross-org write risk. 51 leads created (1 prototype + 50 named) with realistic non-production names, `@example.com` emails, `+1 555-01XX` reserved fictional phones. Enriched with: lead statuses (weighted toward live pipeline), addresses, URLs, 99 notes, 45 tasks (mix of past-due/future/pre-completed), 27 opportunities with $ value + confidence + status across 5 stages. **For training simulation only.** Production Close untouched.
+- **This TCL update.** This is the entry that exists because Jake said "the ledger is more important than the actual work" and explicitly named TCL drift as the failure mode that gave a previous Cowork session a stale orientation.
+
+Files touched this session:
+- `LEDGERS/OPEN_PROBLEMS_LEDGER.md` (added PROB-016, §6 row, §7 row)
+- `LEDGERS/OPEN_PROBLEMS_LEDGER.json` (appended PROB-016, recomputed counts)
+- `LEDGERS/TEMPORAL_CONTINUITY.md` (this update)
+- `CCAgentindex/_ledger/activity.jsonl` (one append: PROB-016 log)
+- `~/.claude/projects/-Users-jakeaaron-Downloads-CC-Agent/memory/` (5 new memory files indexed in `MEMORY.md`)
+
+### 2026-04-28 (Cowork session — Phases 1–5 + verbatim backfill)
 
 - **Global Ledger Steward automation landed.** Promoted `global_ledger_subagent_package/` into canonical steward files at `LEDGERS/AGENTS/global_ledger_steward/` and runtime app-agent files at `CCAgentindex/agents/global_ledger_steward/`. The app agent is discoverable through `/api/agents`, runs via `POST /api/agents/global_ledger_steward/run`, and is scoped to update ledger memory files plus append `_ledger/activity.jsonl` and write `_ledger/ledger_steward_runs/*.json` receipts. This establishes the pattern for later Temporal Continuity, North Star, File Directory, and Open Problems stewards.
 - **Phase 5: Open Problems Ledger created.** Added [`OPEN_PROBLEMS_LEDGER.md`](OPEN_PROBLEMS_LEDGER.md) + [`OPEN_PROBLEMS_LEDGER.json`](OPEN_PROBLEMS_LEDGER.json) + 3 visuals (`problem_lifecycle.mmd`, `open_problems_board.mmd`, `risk_heatmap.mmd`). 13 active problems with stable IDs, severity/urgency separated, mandatory close criteria. **PROB-008 closed** because the spec's close criteria for "Ledger System Not Yet Implemented" are all met by Phases 1–4. **PROB-005 marked `partial`** because the verbatim comms backfill closed 2 of its 5 close criteria (transcripts location defined ✅, ≥1 transcript imported ✅; remaining: UI binding, automation reading protocol, plan rewrite trigger). 5 directory-level problems from Phase 4 promoted to formal PROB-010 through 014.
@@ -127,6 +194,10 @@ These are the assumptions silently shaping work right now. Review often. If an a
 Jake is building a durable GitHub-backed memory system where agents can continue work without relying on chat history. He cares deeply about ledgers, boxes, visual maps, and source-of-truth clarity. The collaboration shape: **Jake is the orchestrator, Claude does the fine details.** Energy and momentum matter — Jake doesn't want gratuitous validation or excess clarification questions on well-specified tasks.
 
 Jake is under pressure to show Comeketo that automation is moving, but he's worried the system may act too aggressively. He wants a posture that preserves momentum while reducing unsafe autonomy.
+
+**This is Jake's career project.** Comeketo Agent is not Secretary, not Sylvia, not OpenClaw. The user-global `~/.claude/CLAUDE.md` describes Secretary Mission Control — that is a *separate* personal-scope project; it is stale orientation when working in this repo. The project-local `CLAUDE.md` overrides it. Jake is also building a personal-scope side version of Comeketo Agent for himself, but the priority is this one.
+
+**The triad is the spine.** Box + Ledger + Sub-agent. Anything stateful gets all three. Legibility-first means a Ledger reader should understand the system without opening code. Don't be lazy about Ledger updates — same unit of work as the change itself, not "I'll get to it." Cold-starting agents (including future Cowork sessions) read TCL and Global Ledger first; if those are stale, every agent that boots from them is stale. **Update them as you work.**
 
 The **Brenda & Steve case is the key lesson driving the current safety push**:
 - The fee-waiver move may have been strategically correct.

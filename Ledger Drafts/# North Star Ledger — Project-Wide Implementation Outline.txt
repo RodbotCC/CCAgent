@@ -1,0 +1,1199 @@
+# North Star Ledger — Project-Wide Implementation Outline
+
+## 0. Purpose
+
+The **North Star Ledger** records what the project is ultimately trying to become.
+
+It is the project’s durable purpose layer.
+
+The Global Ledger says what the project is.
+The Temporal Continuity Ledger says what is true right now.
+The North Star Ledger says what the work is trying to serve.
+
+It should not be vague inspiration.
+
+It should be usable during audits, planning, refactors, feature decisions, agent handoffs, and tradeoff calls.
+
+The uploaded ledger plan says the North Star Ledger should record the major goals of the project, guide tradeoffs, and help audits notice when work supports one of the project’s long-term goals. It gives a strong rule: if work supports a North Star goal, it should be noticed and accounted for. 
+
+That is the heart of this ledger.
+
+The North Star Ledger turns “why are we doing this?” into a versioned source of truth.
+
+---
+
+# 1. Core Operating Principle
+
+The North Star Ledger should enforce this rule:
+
+> Progress should be judged against purpose, not just activity.
+
+A project can generate lots of work without moving closer to what matters.
+
+The North Star Ledger prevents that.
+
+It should help agents ask:
+
+* Did this change actually move the project toward its purpose?
+* Did this feature create durable capability or just visible motion?
+* Did this cleanup protect the system’s future?
+* Did this automation make the client experience more human or more robotic?
+* Did this ledger improve continuity?
+* Did this UI surface make truth easier to understand?
+* Did this workflow reduce future confusion?
+* Did this work create leverage?
+
+The North Star Ledger should make the project’s highest goals visible enough that agents cannot accidentally optimize for the wrong thing.
+
+---
+
+# 2. Recommended Location
+
+Create it beside the Global and Temporal ledgers:
+
+```text id="fdhiyz"
+/LEDGERS/
+  GLOBAL_LEDGER.md
+  TEMPORAL_CONTINUITY.md
+  NORTH_STAR.md
+  NORTH_STAR.json
+  INDEX.md
+  VISUALS/
+    north_star_map.mmd
+    north_star_progress.mmd
+```
+
+Recommended final path:
+
+```text id="zjsl9x"
+/LEDGERS/NORTH_STAR.md
+/LEDGERS/NORTH_STAR.json
+```
+
+The Global Ledger should link to it under the ledger system map.
+The Temporal Continuity Ledger should reference it when current work supports or threatens a goal.
+
+---
+
+# 3. Role in the Ledger System
+
+The North Star Ledger sits above daily tasks but below the user’s core philosophy.
+
+```text id="nkco93"
+Global Ledger
+  └── What is the project?
+
+Temporal Continuity Ledger
+  └── What is true right now?
+
+North Star Ledger
+  └── What are we trying to become?
+
+Phase Ledger
+  └── What milestone are we currently pursuing?
+
+Audit Ledger
+  └── Are we moving toward the North Star?
+
+Definition of Done Ledger
+  └── What counts as complete?
+```
+
+The North Star Ledger should be stable but not frozen.
+
+It should change only when the project’s real purpose changes, when a goal is added or retired, or when a major principle needs to be clarified.
+
+---
+
+# 4. What This Ledger Owns
+
+## Owns
+
+* long-term project goals
+* core principles
+* strategic outcomes
+* tradeoff guidance
+* alignment criteria
+* goal-to-system mapping
+* progress signals
+* anti-goals
+* “what good looks like”
+* durable user philosophy
+* audit alignment questions
+
+## Does not own
+
+* current session state
+* detailed task lists
+* implementation recipes
+* local file maps
+* every tactical decision
+* all known bugs
+* phase-specific deliverables
+* daily changelogs
+
+Those belong elsewhere.
+
+The North Star Ledger should be read during major decisions, not edited after every small task.
+
+---
+
+# 5. Recommended `NORTH_STAR.md` Structure
+
+Use stable headings.
+
+```markdown id="xi5mzo"
+# North Star Ledger
+
+Last updated:
+Maintainer:
+Status:
+Read when:
+Primary project thesis:
+
+## 1. Project Thesis
+## 2. North Star Goals
+## 3. Guiding Principles
+## 4. Anti-Goals
+## 5. Goal-to-System Map
+## 6. Progress Signals
+## 7. Tradeoff Rules
+## 8. Audit Questions
+## 9. Current Alignment Notes
+## 10. Update Rules
+```
+
+Keep it elegant, durable, and readable.
+
+This ledger should feel like the project’s compass.
+
+---
+
+# 6. Section-by-Section Implementation
+
+## 6.1 Header Block
+
+Purpose: immediate orientation.
+
+Example:
+
+```markdown id="f23bnc"
+# North Star Ledger
+
+Last updated: 2026-04-28
+Maintainer: Jake / Tech Support / Project agents
+Status: Active
+Read when: planning major work, auditing changes, resolving tradeoffs, evaluating feature value
+Primary project thesis: Build a GitHub-backed, file-tree-orchestrated AI operations system that remembers itself, treats clients more personally, and lets agents safely continue work across time.
+```
+
+The thesis should be short enough to remember.
+
+---
+
+## 6.2 Project Thesis
+
+Purpose: state the project’s deepest “why.”
+
+Example:
+
+```markdown id="q7a2x1"
+## 1. Project Thesis
+
+This project is building a durable AI operations environment where the repo is not just code — it is the memory of the build.
+
+The system should help humans and agents work through complex client, automation, UI, and operational contexts without relying on fragile chat history, scattered local notes, or repeated rediscovery.
+
+The project should make automation more personal, not more robotic.
+
+It should preserve context, expose truth, respect guardrails, and let future agents continue safely from the file tree.
+```
+
+This section should include the user’s philosophical distinction:
+
+```markdown id="jnzlub"
+This is not RAG as memory.
+
+This is FileTree orchestration: living directories, local ledgers, source-of-truth files, audit trails, visual maps, and GitHub-backed continuity.
+```
+
+That matters because the project’s architecture flows from it.
+
+---
+
+# 7. North Star Goals
+
+This is the main section.
+
+Each North Star goal should have:
+
+```text id="cgzjm1"
+Goal ID
+Name
+Statement
+Why it matters
+What supports it
+What violates it
+Progress signals
+Related systems
+```
+
+Recommended goals for this project:
+
+---
+
+## Goal NS-01 — Durable Project Memory
+
+```markdown id="r11o5c"
+### NS-01 — Durable Project Memory
+
+Statement:
+The project should remember itself through GitHub-backed files, ledgers, maps, and local directory context.
+
+Why it matters:
+Agents should not restart from zero. Humans should not have to repeatedly explain architecture, decisions, preferences, risks, and current state.
+
+Supports:
+- Global Ledger
+- Temporal Continuity Ledger
+- local Box ledgers
+- audit markers
+- source-of-truth files
+- reconstruction records
+- pushed GitHub commits
+
+Violates:
+- relying on chat history as primary memory
+- leaving major decisions undocumented
+- making important local-only changes without pushing
+- changing systems without updating continuity files
+- letting generated output become confused with truth
+
+Progress signals:
+- future agents can orient quickly
+- project state survives across sessions
+- fewer repeated explanations
+- fewer rediscovered problems
+- ledgers stay current without becoming noise
+```
+
+---
+
+## Goal NS-02 — FileTree Orchestration Over RAG Memory
+
+```markdown id="23fgdh"
+### NS-02 — FileTree Orchestration Over RAG Memory
+
+Statement:
+The project should use the versioned file tree as the primary memory and orchestration layer.
+
+Why it matters:
+The user wants durable, inspectable, localizable, GitHub-backed continuity — not vague retrieval over scattered memory.
+
+Supports:
+- directory-specific Boxes
+- local orientation files
+- source-of-truth ledgers
+- scripts that read explicit files
+- visual maps generated from repo truth
+- directory-level agent instructions
+
+Violates:
+- hidden memory that cannot be audited
+- agents guessing from vague context
+- unstructured notes disconnected from the repo
+- global memory replacing local directory truth
+
+Progress signals:
+- important directories introduce themselves
+- agents can identify what area they are in
+- source-of-truth paths are clear
+- local rules travel with the folder
+```
+
+---
+
+## Goal NS-03 — Box-Based Local Intelligence
+
+```markdown id="conq62"
+### NS-03 — Box-Based Local Intelligence
+
+Statement:
+Every important project area should become a Box: a living directory with memory, rules, source-of-truth notes, local ledgers, and handoff context.
+
+Why it matters:
+Complexity should stay local when local. One client’s constraints should not force a rewrite of the whole automation system.
+
+Supports:
+- Client Boxes
+- Staff Boxes
+- Orchestrator Box
+- App/UI Box
+- Ledger Box
+- local audit markers
+- local allowed-to-know constraints
+- local open problems
+
+Violates:
+- solving every local issue globally
+- creating one giant automation brain
+- spreading one client’s risk across every client
+- making agents infer directory rules from filenames alone
+
+Progress signals:
+- agents can enter a directory and know how to behave
+- local changes update local memory
+- per-client plans can change independently
+- folder-specific risks are visible in place
+```
+
+---
+
+## Goal NS-04 — Automation That Feels More Human, Not Less
+
+```markdown id="7ropks"
+### NS-04 — Automation That Feels More Human, Not Less
+
+Statement:
+Automation should help Comeketo treat people with more memory, care, specificity, and respect — not blast generic manipulative drips.
+
+Why it matters:
+The goal is meaningful client handling, not robotic follow-up. Good automation remembers what people said, avoids generic nonsense, respects timing, and helps Andre show up prepared.
+
+Supports:
+- full comms and transcripts
+- allowed-to-use fact layers
+- thread-aware plans
+- state-based pauses
+- reply-aware rewrites
+- wholesome enrichment
+- explicit guardrails
+- human approval for risky moves
+
+Violates:
+- creepy personalization
+- surfacing enrichment-only facts
+- generic NEPQ trickery
+- sending stale messages after replies
+- forcing the same plan across every client
+- over-contacting to show “activity”
+
+Progress signals:
+- messages reflect actual comms
+- clients are not surprised by creepy researched facts
+- fewer stale or contradictory sends
+- automation creates useful movement without sacrificing trust
+```
+
+---
+
+## Goal NS-05 — Safe Movement Before Aggressive Autonomy
+
+```markdown id="eu1096"
+### NS-05 — Safe Movement Before Aggressive Autonomy
+
+Statement:
+Especially during early proof periods, the system should create visible movement while keeping risky autonomy constrained.
+
+Why it matters:
+Comeketo wants to see automation working, but early trust is fragile. The system should prove reliability before making bold sales plays automatically.
+
+Supports:
+- low-risk nudges
+- clear next-step asks
+- explicit approval cards
+- frequency caps
+- reply gates
+- commitment gates
+- audit markers
+- plan cleanup before sends
+
+Violates:
+- silent fee waivers
+- hidden discounts in batch approval
+- unapproved pricing claims
+- enrichment-based customer-facing claims
+- over-messaging to look busy
+- auto-sending big rescue plays without isolated approval
+
+Progress signals:
+- automation moves leads without creating panic
+- risky moves are surfaced clearly
+- approvals are explicit where needed
+- early clients get safer, cleaner follow-up
+```
+
+---
+
+## Goal NS-06 — Source-of-Truth Discipline
+
+```markdown id="g9x2u4"
+### NS-06 — Source-of-Truth Discipline
+
+Statement:
+Before changing information, agents should know where the truth lives.
+
+Why it matters:
+The project has generated views, UI pages, local files, GitHub state, Close data, comms logs, transcripts, profiles, plans, and ledgers. Confusing a view for truth creates dangerous edits.
+
+Supports:
+- Source-of-Truth Ledger
+- page-asset sitemap
+- Client Boxes as canonical lead substrate
+- generated-output labels
+- clear “do not edit” notes
+- local Box rules
+
+Violates:
+- editing generated output instead of source files
+- trusting UI display over canonical box data
+- treating profiles as customer-facing truth
+- using stale plan text over current comms/state
+- ignoring Done Gate updates
+
+Progress signals:
+- agents know which file to edit
+- generated state is not hand-edited accidentally
+- page changes update ownership maps
+- client plans defer to comms and guardrails
+```
+
+---
+
+## Goal NS-07 — Rebuildability and Reconstruction
+
+```markdown id="3aym4p"
+### NS-07 — Rebuildability and Reconstruction
+
+Statement:
+Important systems should be rebuildable from prompts, recipes, ledgers, source files, and documented intent.
+
+Why it matters:
+The project should survive model changes, refactors, agent handoffs, local machine issues, and future upgrades.
+
+Supports:
+- Prompt / Reconstruction Ledger
+- implementation notes
+- build recipes
+- generated artifact notes
+- decisions ledger
+- source-of-truth paths
+- scripts and templates
+
+Violates:
+- one-off magic
+- undocumented generation
+- unclear why a file exists
+- inability to recreate a page, box, widget, or workflow
+- hiding important context only in chat
+
+Progress signals:
+- future agents can rebuild major pieces
+- generated files have recipes
+- prompts and constraints are preserved
+- refactors are safer
+```
+
+---
+
+## Goal NS-08 — Visual Comprehension Beside Text Memory
+
+```markdown id="kbb6ou"
+### NS-08 — Visual Comprehension Beside Text Memory
+
+Statement:
+The project should pair durable markdown/JSON memory with visual maps where shape matters.
+
+Why it matters:
+Agents need structure. Humans need shape. Complex systems become easier to operate when file trees, dependency graphs, page maps, state flows, and timelines are visible.
+
+Supports:
+- Mermaid maps
+- page/asset graphs
+- directory maps
+- client lifecycle diagrams
+- source-of-truth flows
+- side-by-side ledger views
+- dashboard views generated from ledger files
+
+Violates:
+- walls of text for inherently visual relationships
+- disconnected diagrams that do not map to repo truth
+- pretty visuals with no operational use
+- visualizations that become stale and unlinked
+
+Progress signals:
+- humans can understand the project faster
+- agents can identify dependencies
+- UI/data flows are easier to audit
+- maps are generated or updated with ledger changes
+```
+
+---
+
+## Goal NS-09 — Agent Handoff Continuity
+
+```markdown id="gm2l8e"
+### NS-09 — Agent Handoff Continuity
+
+Statement:
+Any capable agent should be able to enter the repo, read the right files, and continue the work safely.
+
+Why it matters:
+The project should not depend on one chat thread, one model, or one human’s memory.
+
+Supports:
+- Global Ledger
+- Temporal Continuity Ledger
+- Communications Ledger
+- local Boxes
+- AGENTS/CLAUDE files
+- audit markers
+- clear read-first order
+- commit messages with meaning
+
+Violates:
+- ambiguous handoffs
+- undocumented partial work
+- unclear next steps
+- no record of what was attempted
+- future agents needing to rediscover context
+
+Progress signals:
+- agents need fewer clarifying questions
+- handoffs preserve warnings
+- stale work is easier to identify
+- local context is discoverable
+```
+
+---
+
+## Goal NS-10 — Defense as a First-Class Build Activity
+
+```markdown id="5iu3zt"
+### NS-10 — Defense as a First-Class Build Activity
+
+Statement:
+The project should treat cleanup, ledgers, maps, audits, source-of-truth updates, and definitions of done as core build work.
+
+Why it matters:
+A build that remembers itself compounds. A build that does not remember itself rots.
+
+Supports:
+- 55 / 45 build rhythm
+- Done Gate
+- audit ledger
+- open problems ledger
+- source-of-truth updates
+- visual maps
+- cleanup passes
+- ledgers updated with meaningful work
+
+Violates:
+- shipping code with no continuity updates
+- ignoring maps and ledgers
+- treating documentation as optional decoration
+- building features faster than the system can remember them
+
+Progress signals:
+- fewer fragile areas
+- clearer ownership
+- easier refactors
+- more durable momentum
+```
+
+---
+
+# 8. Guiding Principles
+
+Purpose: shorter principles agents can apply during work.
+
+Recommended section:
+
+```markdown id="cj53s0"
+## 3. Guiding Principles
+
+### Principle 1 — The repo is memory
+
+The repo is not just code. It is the memory of the build.
+
+### Principle 2 — The box is truth
+
+For local systems, trust the Box before global assumptions.
+
+### Principle 3 — Plans are hypotheses
+
+Plans guide action but do not override comms, state, guardrails, or approvals.
+
+### Principle 4 — Movement should earn trust
+
+Automation should create progress without making unsafe assumptions.
+
+### Principle 5 — Wholesome enrichment
+
+Use context to be more respectful and relevant, not to perform creepy intimacy.
+
+### Principle 6 — Source before surface
+
+Before changing visible behavior, identify the source of truth behind the surface.
+
+### Principle 7 — If it changed, memory should change
+
+Meaningful work should update the relevant continuity layer.
+
+### Principle 8 — Local complexity stays local
+
+Do not rewrite the whole machine for one client’s edge case if a Box-level rule solves it.
+
+### Principle 9 — Visuals are comprehension tools
+
+Use visual maps where relationships matter.
+
+### Principle 10 — Agents need runway
+
+Leave enough context for the next agent to continue safely.
+```
+
+---
+
+# 9. Anti-Goals
+
+Purpose: define what the project does **not** want to become.
+
+This is just as important as goals.
+
+Example:
+
+```markdown id="g00neo"
+## 4. Anti-Goals
+
+The project should not become:
+
+- a generic CRM drip machine
+- a manipulative sales automation engine
+- a pile of disconnected local files
+- a RAG-only memory experiment
+- a UI that hides where truth lives
+- an automation system that makes financial commitments silently
+- a system that uses enrichment creepily
+- a codebase where only the original builder understands the structure
+- a dashboard that looks useful but cannot be trusted
+- a project that moves fast by deleting its own memory
+```
+
+Anti-goals are powerful during audits.
+
+If a change moves toward an anti-goal, it should be flagged.
+
+---
+
+# 10. Goal-to-System Map
+
+Purpose: connect goals to actual project systems.
+
+Example:
+
+```markdown id="h3tymx"
+## 5. Goal-to-System Map
+
+| Goal | Primary systems | Supporting ledgers |
+|---|---|---|
+| NS-01 Durable Project Memory | GitHub, LEDGERS, AGENTS/CLAUDE | Global, Temporal, Communications |
+| NS-02 FileTree Orchestration | Directory Boxes, source files | Directory, Source-of-Truth |
+| NS-03 Box-Based Local Intelligence | Client Boxes, Staff Boxes, Orchestrator Box | Directory Config, Box ledgers |
+| NS-04 Human Automation | Client Boxes, Inbox Guardrails, Close comms | Source-of-Truth, Audit |
+| NS-05 Safe Movement | Guardrails, approval surfaces, scheduled fires | Decisions, Audit, Open Problems |
+| NS-06 Source Discipline | Sitemap, generated-state labels, Client Boxes | Source-of-Truth, Page/Widget |
+| NS-07 Rebuildability | scripts, prompts, ledgers | Reconstruction, Decisions |
+| NS-08 Visual Comprehension | Mermaid, dashboards, maps | Asset Map, Directory Ledger |
+| NS-09 Agent Handoff | Temporal, Communications, audit markers | Communications, Audit |
+| NS-10 Defense | Done Gate, ledgers, audits | Definition of Done, Open Problems |
+```
+
+This table helps audits notice which goals a change supports.
+
+---
+
+# 11. Progress Signals
+
+Purpose: define what “getting closer” looks like.
+
+Example:
+
+```markdown id="zyuach"
+## 6. Progress Signals
+
+The project is moving toward the North Star when:
+
+- future agents need less re-orientation
+- important directories have local memory
+- source-of-truth confusion decreases
+- client plans become safer after state changes
+- risky moves are surfaced instead of silently executed
+- UI pages can be traced to their data sources
+- GitHub contains the important memory, not just local machines
+- audits leave durable findings
+- visual maps clarify real dependencies
+- users can resume work by reading files, not replaying chat
+```
+
+Also include warning signals:
+
+```markdown id="i6rxcl"
+The project is drifting away when:
+
+- plans become executable without guardrails
+- enrichment leaks into customer-facing copy
+- agents edit generated files as if they are sources
+- local-only work becomes essential
+- ledgers go stale
+- agents need repeated human re-explanation
+- dashboards look right but point to unclear truth
+```
+
+---
+
+# 12. Tradeoff Rules
+
+Purpose: help agents make decisions.
+
+Example:
+
+```markdown id="3r0upm"
+## 7. Tradeoff Rules
+
+### Speed vs continuity
+
+Prefer slightly slower work that preserves memory over fast work that future agents cannot continue.
+
+### Global fix vs local Box fix
+
+Prefer local Box fixes when the problem is local. Use global rules only when the pattern repeats or creates systemic risk.
+
+### Automation movement vs safety
+
+Prefer safe movement over aggressive autonomy during early proof. Escalate risky moves to approval.
+
+### Enrichment vs trust
+
+Use enrichment to improve internal understanding. Do not surface it unless grounded in comms or approved.
+
+### UI polish vs truth clarity
+
+A beautiful UI that obscures truth is worse than a plain UI that clearly reflects source state.
+
+### Code change vs source-of-truth update
+
+If changing behavior changes ownership, data binding, or expectations, update the relevant ledger or sitemap.
+```
+
+Tradeoff rules should be referenced during reviews.
+
+---
+
+# 13. Audit Questions
+
+Purpose: make the North Star usable during audits.
+
+Example:
+
+```markdown id="33cqvd"
+## 8. Audit Questions
+
+Before approving meaningful work, ask:
+
+1. Which North Star goal does this support?
+2. Does this change preserve or damage continuity?
+3. Does it make truth easier or harder to locate?
+4. Does it create local memory where local memory is needed?
+5. Does it make automation more human or more robotic?
+6. Does it introduce risky autonomy?
+7. Does it require an approval gate?
+8. Does it update the right ledgers?
+9. Would a future agent understand why this exists?
+10. Can this be rebuilt or audited later?
+```
+
+For Client Box work:
+
+```markdown id="wm1kb4"
+Client Box audit questions:
+
+- Does the plan reflect current comms and state?
+- Are customer-facing facts allowed-to-use?
+- Are enrichment-only facts kept internal?
+- Are risky moves explicitly approved?
+- Does a reply make this plan stale?
+- Is the next move safe enough to surface/send?
+```
+
+---
+
+# 14. Current Alignment Notes
+
+Purpose: track current high-level alignment, not every task.
+
+Example:
+
+```markdown id="r3sm3f"
+## 9. Current Alignment Notes
+
+### 2026-04-28
+
+The current ledger buildout strongly supports NS-01, NS-02, NS-03, NS-09, and NS-10.
+
+The Client Box audit workflow supports NS-04, NS-05, and NS-06 by making automation more personal while constraining risky autonomy.
+
+The Brenda & Steve case clarified a critical North Star tension:
+The system should be smart enough to suggest bold moves, but not autonomous enough to hide risky commitments inside batch approval.
+```
+
+This section should be updated after meaningful audits or strategic shifts.
+
+---
+
+# 15. Update Rules
+
+Purpose: keep the North Star stable but alive.
+
+Example:
+
+```markdown id="eyw104"
+## 10. Update Rules
+
+Update this ledger when:
+
+- a major project goal is added, retired, or clarified
+- user philosophy changes
+- a repeated pattern reveals a new principle
+- audits need a new alignment criterion
+- a system starts drifting toward an anti-goal
+- a tradeoff rule becomes important enough to preserve
+- the project enters a new strategic phase
+
+Do not update this ledger for ordinary implementation details.
+
+If a change only affects current state, update Temporal Continuity.
+If a change only affects a local area, update that Box.
+If a change records a decision, update Decisions Ledger.
+If a change defines completion criteria, update Definition of Done Ledger.
+```
+
+---
+
+# 16. Recommended `NORTH_STAR.json` Shape
+
+The JSON file should make goals machine-readable.
+
+Example:
+
+```json id="jcpibv"
+{
+  "ledger_type": "north_star",
+  "version": "0.1.0",
+  "last_updated": "2026-04-28",
+  "primary_project_thesis": "Build a GitHub-backed, file-tree-orchestrated AI operations system that remembers itself, treats clients more personally, and lets agents safely continue work across time.",
+  "goals": [
+    {
+      "id": "NS-01",
+      "name": "Durable Project Memory",
+      "statement": "The project should remember itself through GitHub-backed files, ledgers, maps, and local directory context.",
+      "related_systems": ["GitHub", "LEDGERS", "Boxes"],
+      "progress_signals": [
+        "future agents orient quickly",
+        "project state survives sessions",
+        "fewer rediscovered problems"
+      ]
+    },
+    {
+      "id": "NS-04",
+      "name": "Automation That Feels More Human, Not Less",
+      "statement": "Automation should help Comeketo treat people with more memory, care, specificity, and respect.",
+      "related_systems": ["Client Boxes", "Inbox Guardrails", "Close comms"],
+      "risk_signals": [
+        "creepy personalization",
+        "generic drip language",
+        "stale messages after replies"
+      ]
+    },
+    {
+      "id": "NS-05",
+      "name": "Safe Movement Before Aggressive Autonomy",
+      "statement": "Early automation should create visible movement while keeping risky autonomy constrained.",
+      "related_systems": ["Guardrails", "Approval gates", "Scheduled fires"],
+      "risk_signals": [
+        "silent fee waivers",
+        "unapproved pricing claims",
+        "hidden high-risk batch approvals"
+      ]
+    }
+  ],
+  "anti_goals": [
+    "generic CRM drip machine",
+    "manipulative sales automation engine",
+    "RAG-only memory experiment",
+    "automation that silently makes financial commitments",
+    "dashboard that looks useful but cannot be trusted"
+  ],
+  "tradeoff_rules": [
+    {
+      "id": "speed_vs_continuity",
+      "rule": "Prefer slightly slower work that preserves memory over fast work that future agents cannot continue."
+    },
+    {
+      "id": "movement_vs_safety",
+      "rule": "Prefer safe movement over aggressive autonomy during early proof. Escalate risky moves to approval."
+    }
+  ]
+}
+```
+
+The JSON can later support:
+
+* audit scoring
+* dashboards
+* PR checks
+* ledger visualization
+* progress summaries
+* goal tags in commits or audit logs
+
+---
+
+# 17. Suggested Visual Layer
+
+Create:
+
+```text id="zps6ap"
+/LEDGERS/VISUALS/north_star_map.mmd
+/LEDGERS/VISUALS/north_star_goal_system_map.mmd
+```
+
+Example Mermaid:
+
+```mermaid id="yt4zdi"
+flowchart TD
+  Thesis[Project Thesis: Repo as Memory of the Build]
+
+  Thesis --> NS01[NS-01 Durable Project Memory]
+  Thesis --> NS02[NS-02 FileTree Orchestration]
+  Thesis --> NS03[NS-03 Box-Based Local Intelligence]
+  Thesis --> NS04[NS-04 Human Automation]
+  Thesis --> NS05[NS-05 Safe Movement]
+  Thesis --> NS06[NS-06 Source-of-Truth Discipline]
+  Thesis --> NS07[NS-07 Rebuildability]
+  Thesis --> NS08[NS-08 Visual Comprehension]
+  Thesis --> NS09[NS-09 Agent Handoff]
+  Thesis --> NS10[NS-10 Defense as Build Work]
+
+  NS01 --> Ledgers[Ledger System]
+  NS02 --> FileTree[Versioned File Tree]
+  NS03 --> Boxes[Boxes]
+  NS04 --> ClientBoxes[Client Boxes + Comms]
+  NS05 --> Guardrails[Inbox Guardrails + Approval Gates]
+  NS06 --> SOT[Source-of-Truth Ledger]
+  NS07 --> Recon[Reconstruction Ledger]
+  NS08 --> Visuals[Mermaid / Maps / Dashboards]
+  NS09 --> Handoff[Temporal + Communications Ledgers]
+  NS10 --> Done[Done Gate + Audit Ledger]
+```
+
+Another useful visual:
+
+```mermaid id="a2jvhu"
+flowchart LR
+  Work[Proposed Work] --> Q{Supports North Star?}
+  Q -->|Yes| Record[Record Alignment]
+  Q -->|No| Check{Necessary Maintenance?}
+  Check -->|Yes| Record2[Record Why]
+  Check -->|No| Reject[Question / Deprioritize]
+```
+
+---
+
+# 18. Relationship to Audits
+
+The North Star Ledger should power audits.
+
+The Audit Ledger should include a field like:
+
+```text id="3mb6ce"
+North Star alignment:
+- NS-04 Human Automation
+- NS-05 Safe Movement
+- NS-06 Source-of-Truth Discipline
+```
+
+That means every audit can say:
+
+* Which goals did this work support?
+* Which goals did it threaten?
+* Which anti-goals did it approach?
+* What should happen next?
+
+For example, the Brenda & Steve audit would say:
+
+```text id="jrknb7"
+Supported:
+- NS-04 Human Automation
+- NS-05 Safe Movement
+- NS-06 Source-of-Truth Discipline
+
+Threatened before cleanup:
+- fee-waiver autonomy risk
+- enrichment boundary risk
+- stale calendar labels
+```
+
+This makes the North Star operational, not ornamental.
+
+---
+
+# 19. Relationship to Definition of Done
+
+The Definition of Done Ledger should reference North Star goals.
+
+Example:
+
+```markdown id="a8qqyi"
+A meaningful task is not fully done until it has either:
+- supported a North Star goal,
+- preserved a North Star goal,
+- removed a threat to a North Star goal,
+- or explicitly recorded why it was necessary despite not mapping cleanly to one.
+```
+
+This prevents “busywork by default.”
+
+---
+
+# 20. Relationship to Client Automation
+
+This section should be explicit because it is central right now.
+
+Recommended North Star language:
+
+```markdown id="nyore8"
+## Client Automation North Star
+
+Comeketo automation should make client handling more remembered, more prepared, and more respectful.
+
+The system should not merely increase touch count.
+
+A good automated move should:
+- reflect what the client actually said
+- respect silence and timing
+- avoid stale claims
+- avoid creepy personalization
+- ask for a real next step
+- pause when the state changes
+- surface risky moves to humans
+- preserve context for the next interaction
+```
+
+This creates a direct quality standard for future seven-day plans.
+
+---
+
+# 21. Relationship to “Wholesome Enrichment”
+
+This should be a named project principle.
+
+Example:
+
+```markdown id="5nw5m0"
+## Wholesome Enrichment
+
+Enrichment is used to understand context, not to perform surveillance.
+
+Allowed:
+- adjust tone
+- avoid generic messaging
+- prepare Andre for a better conversation
+- notice likely decision dynamics
+- respect client context
+
+Not allowed without explicit approval:
+- customer-facing references to researched facts
+- claims that imply hidden knowledge
+- invasive personalization
+- assumptions about identity, family, wealth, religion, politics, health, or personal life
+- manipulative pressure based on inferred vulnerability
+```
+
+This is a beautiful project-defining principle and should absolutely live in the North Star Ledger.
+
+---
+
+# 22. What Opus Should Build First
+
+Give Opus this build order:
+
+```text id="4bjkzc"
+1. Create /LEDGERS/NORTH_STAR.md.
+2. Create /LEDGERS/NORTH_STAR.json.
+3. Add North Star link to /LEDGERS/INDEX.md.
+4. Add North Star link to /LEDGERS/GLOBAL_LEDGER.md if it exists.
+5. Add North Star link to /LEDGERS/TEMPORAL_CONTINUITY.md if it exists.
+6. Create /LEDGERS/VISUALS/north_star_map.mmd.
+7. Seed the North Star Ledger with the 10 goals:
+   - NS-01 Durable Project Memory
+   - NS-02 FileTree Orchestration Over RAG Memory
+   - NS-03 Box-Based Local Intelligence
+   - NS-04 Automation That Feels More Human, Not Less
+   - NS-05 Safe Movement Before Aggressive Autonomy
+   - NS-06 Source-of-Truth Discipline
+   - NS-07 Rebuildability and Reconstruction
+   - NS-08 Visual Comprehension Beside Text Memory
+   - NS-09 Agent Handoff Continuity
+   - NS-10 Defense as a First-Class Build Activity
+8. Add Anti-Goals.
+9. Add Tradeoff Rules.
+10. Add Audit Questions.
+11. Commit with message: "Add north star ledger".
+```
+
+---
+
+# 23. Quality Bar
+
+The North Star Ledger succeeds if it helps future agents:
+
+* know what the project is trying to become
+* judge whether work matters
+* avoid optimizing for shallow activity
+* preserve user philosophy
+* make better tradeoffs
+* audit alignment
+* explain why a change was worth doing
+* detect drift toward anti-goals
+
+It fails if:
+
+* it becomes vague inspiration
+* it never affects decisions
+* it is not referenced during audits
+* it does not include anti-goals
+* it cannot distinguish motion from progress
+* it ignores the user’s actual philosophy
+* it becomes stale while the project changes direction
+
+The North Star Ledger should be beautiful, but it must also have teeth.
+
+---
+
+# 24. Final Operating Rule
+
+The North Star Ledger should end with this:
+
+```markdown id="z9ywp5"
+Do not confuse movement with progress.
+
+Progress means the project became more durable, more truthful, more humane, more understandable, more rebuildable, or safer to continue.
+
+If work supports a North Star, notice it.
+If work threatens a North Star, surface it.
+If work serves no North Star, question it.
+```
+
+---
+

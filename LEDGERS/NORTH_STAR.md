@@ -283,7 +283,7 @@ Each goal carries a fixed ID. References elsewhere (audits, decisions, commits) 
 **Supports:**
 - Global Ledger
 - Temporal Continuity Ledger
-- Communications Ledger (planned)
+- [`Communications Ledger`](COMMUNICATIONS_LEDGER.md) (active 2026-04-29)
 - Local Boxes
 - `AGENT.md`, `CLAUDE.md`, `README.md` read-first wiring
 - Audit markers

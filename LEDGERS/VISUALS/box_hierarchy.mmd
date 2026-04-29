@@ -1,0 +1,46 @@
+%% Box Ledger — Box Hierarchy
+%% Global Ledger -> File Directory Ledger -> Box Ledger -> per-class BOX.md instances.
+
+flowchart TD
+    GL["Global Ledger<br/>LEDGERS/GLOBAL_LEDGER.md"]:::project
+    FDL["File Directory Ledger<br/>(maps what directories exist)"]:::project
+    BL["Box Ledger<br/>LEDGERS/BOX_LEDGER.md<br/>(defines what a Box IS)"]:::self
+    Template["BOX_LEDGER_TEMPLATE.md<br/>(the stamp)"]:::template
+    DirTemplate["DIRECTORY_ORIENTATION_TEMPLATE.md<br/>(lighter alternative)"]:::template
+
+    GL --> FDL
+    FDL --> BL
+    BL --> Template
+    BL --> DirTemplate
+
+    %% First-wave Boxes (Section 10)
+    Template --> LEDGERSBox["LEDGERS/BOX.md<br/>(class: ledger)"]:::firstwave
+    Template --> ClientBoxesBox["Auto/Client Boxes/BOX.md<br/>(class: client)"]:::firstwave
+    Template --> OrchBox["Auto/orchestrator/BOX.md<br/>(class: orchestrator)"]:::firstwave
+    Template --> InboxBox["Auto/comeketo-inbox/BOX.md<br/>(class: inbox-skill)"]:::firstwave
+    Template --> BedrockBox["CCAgentindex/BOX.md<br/>(class: bedrock)"]:::firstwave
+    Template --> AppUIBox["project root BOX.md<br/>(class: app-ui)"]:::firstwave
+
+    %% Per-class instances (third wave for clients)
+    ClientBoxesBox --> Brenda["Brenda & Steve/BOX.md<br/>(third wave)"]:::thirdwave
+    ClientBoxesBox --> Hugo["Hugo Casillas/BOX.md<br/>(third wave)"]:::thirdwave
+    ClientBoxesBox --> Others["...26 other Client Boxes<br/>(audit markers only for now)"]:::client
+
+    %% Second wave
+    Template --> StaffBox["Auto/Staff Boxes/BOX.md<br/>(second wave)"]:::secondwave
+    Template --> OnboardBox["Auto/Onboard Scripts/BOX.md<br/>(second wave)"]:::secondwave
+    Template --> SubagentBox["Subagent Boxes/BOX.md<br/>(second wave)"]:::secondwave
+    Template --> DraftsBox["Ledger Drafts/BOX.md<br/>(second wave)"]:::secondwave
+
+    %% Triad spine reference
+    Triad["DEC-2026-04-29-001<br/>Triad Spine:<br/>Box + Ledger + Sub-agent"]:::decision
+    Triad -.->|operationalizes the<br/>Box leg via| BL
+
+    classDef project fill:#7c3aed,stroke:#5b21b6,color:#fff,stroke-width:2px
+    classDef self fill:#dc2626,stroke:#7f1d1d,color:#fff,stroke-width:3px
+    classDef template fill:#fbbf24,stroke:#b45309,color:#78350f,stroke-width:2px
+    classDef firstwave fill:#10b981,stroke:#047857,color:#fff
+    classDef secondwave fill:#a7f3d0,stroke:#10b981,color:#064e3b
+    classDef thirdwave fill:#bfdbfe,stroke:#3b82f6,color:#1e3a8a
+    classDef client fill:#e0e7ff,stroke:#6366f1,color:#1e1b4b,stroke-dasharray: 4 3
+    classDef decision fill:#f59e0b,stroke:#b45309,color:#fff,stroke-width:2px

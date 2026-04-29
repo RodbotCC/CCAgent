@@ -20,7 +20,7 @@ A "problem" can be: a bug, a stale file, a risky plan, an unclear source of trut
 
 This ledger is paired with:
 
-- **Communications Ledger** (planned) — what should future agents hear?
+- **Communications Ledger** ([`COMMUNICATIONS_LEDGER.md`](COMMUNICATIONS_LEDGER.md)) — what should future agents hear?
 - **Decisions Ledger** (planned) — what has been decided?
 - **Audit Ledger** (planned) — what was reviewed and what did we find?
 - **Definition of Done Ledger** (planned) — what counts as complete?
@@ -134,7 +134,7 @@ Severity: critical · Urgency: now
 Discovered: 2026-04-28 · Discovered by: Jake + Brenda audit conversation
 Affected systems: Client Boxes, inbox automation, scheduled fires, profile/enrichment, customer-facing copy
 Related files: `Auto/Client Boxes/<Name>/01_comms.md`, `04_profile.md`, `05_seven_day_plan.md`, future `allowed_to_use.md`/`.json`
-Related ledgers: Source-of-Truth (planned), Decisions (planned), Audit (planned), North Star NS-04 + Wholesome Enrichment principle
+Related ledgers: Source-of-Truth (planned), [`Decisions`](DECISIONS_LEDGER.md), Audit (out-of-scope 2026-04-29 — see DEC-2026-04-29-004), North Star NS-04 + Wholesome Enrichment principle
 Owner: TBD
 Blocked by: schema/design decision
 Tags: `client-box`, `enrichment`, `source-of-truth`, `safety`
@@ -168,7 +168,7 @@ Severity: high · Urgency: soon
 Discovered: 2026-04-28 · Discovered by: Jake (Brenda audit pattern)
 Affected systems: Client Boxes, scheduled fires, inbox guardrails
 Related files: `Auto/Client Boxes/<Name>/05_seven_day_plan.md`, `09_andre_alerts.md`, `01_comms.md`, `client_ledger.md`, `YYYY-MM-DD_audit_marker.md`
-Related ledgers: Audit (planned), Client Box ledgers
+Related ledgers: Audit (out-of-scope 2026-04-29 — see DEC-2026-04-29-004), Client Box ledgers
 Owner: Jake + agent workflow (one box at a time)
 Tags: `client-box`, `safety`, `automation`, `cleanup`
 
@@ -232,7 +232,7 @@ Status: **open**
 Severity: medium · Urgency: soon
 Discovered: 2026-04-28 · Discovered by: Brenda cleanup commit retrospective
 Affected systems: GitHub workflow, agent writes, Jake's local repo
-Related ledgers: Connections (planned), Communications (planned), Decisions (planned)
+Related ledgers: Connections (planned), [`Communications`](COMMUNICATIONS_LEDGER.md), [`Decisions`](DECISIONS_LEDGER.md)
 Owner: TBD
 Tags: `git`, `workflow`, `agent-handoff`
 
@@ -270,7 +270,7 @@ Urgency: soon
 Discovered: 2026-04-28 (early) · Discovered by: Jake (recognized the gap during inbox conversation)
 Affected systems: Client Boxes, allowed-to-know facts, plan rewrites, comms truth, Boxes UI page
 Related files: `Auto/Client Boxes/<Name>/01b_comms_verbatim.md`, `comms/<type>_<date>_<id>.json`, `outputs/pull_full_comms.py`, server.py box endpoints
-Related ledgers: Source-of-Truth (planned), Audit (planned)
+Related ledgers: Source-of-Truth (planned), Audit (out-of-scope 2026-04-29 — see DEC-2026-04-29-004)
 Owner: Jake + agent
 Tags: `client-box`, `comms`, `source-of-truth`
 
@@ -318,7 +318,7 @@ Status: **open**
 Severity: high · Urgency: soon
 Discovered: 2026-04-28 · Discovered by: spec author + plan-aging conversations
 Affected systems: Client Boxes, `Auto/orchestrator/bin/comms_state_sweep.py`, scheduled fires, `client_ledger.md`
-Related ledgers: Audit (planned), North Star NS-05 + plan-aging rules in `TEMPORAL_CONTINUITY.md` §15
+Related ledgers: Audit (out-of-scope 2026-04-29 — see DEC-2026-04-29-004), North Star NS-05 + plan-aging rules in `TEMPORAL_CONTINUITY.md` §15
 Owner: TBD
 Tags: `client-box`, `automation`, `safety`, `plan-aging`
 
@@ -361,7 +361,7 @@ Status: **needs-audit**
 Severity: medium · Urgency: soon
 Discovered: 2026-04-28 · Discovered by: Brenda `client_ledger.md` review
 Affected systems: `Auto/orchestrator/bin/comms_state_sweep.py`, `client_ledger.md`, reply gate, Client Boxes
-Related ledgers: Audit (planned)
+Related ledgers: Audit (out-of-scope 2026-04-29 — see DEC-2026-04-29-004)
 Owner: TBD
 Tags: `client-box`, `automation`, `bug-suspected`
 
@@ -544,6 +544,57 @@ History:
 
 ---
 
+### PROB-2026-04-28-016 — `CCAgentindex/` Bedrock Was Bootstrapped On The Fly — Needs Triad-Based Reconciliation
+
+Status: **needs-decision** (deferred until ledger + sub-agent buildout settles)
+Severity: high · Urgency: later
+Discovered: 2026-04-28 · Discovered by: Jake (catch-up conversation, post-rebuild cleanup phase)
+Affected systems: entire `CCAgentindex/` filesystem layout (32 subdirectories), `mission_control_loader.js`, `indexes/index.json`, all `/api/*` endpoints in `server.py` that read bedrock paths, every Box / Ledger / Sub-agent that has not yet been authored
+Related files: `CCAgentindex/` (32 subdirs — see inventory below), `LEDGERS/INDEX.md`, `LEDGERS/FILE_DIRECTORY_LEDGER.md`, every `*_subagent_package/` at repo root
+Related ledgers: File Directory Ledger §3, North Star NS-03 (single source of truth), Phase Ledger (planned), Definition of Done Ledger (planned)
+Owner: Jake (decision required after ledger + sub-agent buildout settles)
+Blocked by: ledger system not yet fully built; sub-agent system not yet fully built; PROB-001 (Allowed-To-Know schema), PROB-010 (CLAUDE.md domains list)
+Tags: `bedrock`, `directory`, `architecture`, `cleanup`, `source-of-truth`, `plan-aging`
+
+**Problem.** `CCAgentindex/` is the bedrock memory substrate the Claude Code / Codex agent reads when running live inside the Comeketo Agent app. It was written on the fly and bootstrapped as Jake went, before the Box + Ledger + Sub-agent triad was the formal architectural philosophy. As a result the bedrock has **32 top-level subdirectories** representing categorical thinking from the bootstrap era — many of which should collapse INTO Boxes (per-entity state), Ledgers (legible memory), or Sub-agent packages (operators) once the triad is finished being built out.
+
+**Inventory (32 subdirs as of 2026-04-28):**
+
+- *Already triad-aligned (6 — symlinks to Auto/):* `Boxes`, `Client Boxes`, `Staff Boxes`, `comeketo-inbox`, `Onboard Scripts`, `orchestrator`
+- *Bedrock primitives (3):* `_inbox`, `_ledger`, `_vaults`
+- *Loader / index plumbing (1):* `indexes`
+- *Agent infra (2):* `agents`, `agent_plans`
+- *Bootstrap-era category folders that may collapse into the triad:* `analytics`, `annotations`, `catalog`, `charts`, `commitments`, `hooks`, `intake_reports`, `intelligence`, `knowledge`, `people`, `projects`, `reports`, `Rodbot`, `scheduled_tasks`, `summaries`, `tables`, `threads`, `triggers`, `venues`, `workflows`
+
+**Evidence.** Jake stated 2026-04-28 catch-up conversation: "this is essentially the bedrock source of truth memory substrate for our Claude code binary or Codex binary or whatever we're actually running the agent with when we're live inside the application... and this was written on the fly and bootstrapped as I went. Now we actually have our ledger systems being built, our boxes being built, our sub-agents being built, and all of this needs to be aggregated and properly connected and indexed... I just don't think it's a good idea to have like 40 different subdirectories when we're doing it the other way now."
+
+**Impact.** As long as the bootstrap-era directories remain, the bedrock has *two competing organizational models*: the original "categorical filing" model and the emerging Box+Ledger+Sub-agent triad. This causes:
+- *Read-time confusion* — agents and humans don't know which directory owns truth for a given entity. (E.g., does a venue's state live in `venues/`, in a future `Client Boxes/<venue>/`, or both?)
+- *Write-time fragmentation* — adding state about a client today might land in `people/<slug>.json`, `projects/<slug>.json`, `commitments/`, *or* `Client Boxes/<Name>/`. Triad enforcement is impossible until the substrate matches the philosophy.
+- *Loader drift* — `indexes/index.json` enumerates loader-visible paths; as boxes absorb categorical content, the index keys will need to change in lockstep.
+- *Conceptually violates NS-03* (single source of truth) and the legibility-first commitment (rule from `feedback_box_ledger_subagent_triad`).
+
+**Current workaround.** Treat new state-bearing work as triad-shaped (Box + Ledger + Sub-agent) rather than dropping it into the categorical folders. Don't add to `commitments/`, `projects/`, `threads/`, `knowledge/` etc. unless an existing sibling already lives there and consistency demands it. Capture migration intent here so it isn't lost.
+
+**Recommended next action.** **Do not act on this yet.** Per Jake 2026-04-28: "the real thing that needs to be done is we need to finish building the ledgers and finish building the sub-agents. Once that's done we can let the dust settle and actually start figuring this all out." Sequence:
+1. Finish ledger buildout (ingest the 22 outline drafts in `~/Documents/` per `reference_ledger_outline_drafts.md`).
+2. Finish sub-agent buildout (graduate the 5 packages at root into runnable app agents under `CCAgentindex/agents/`).
+3. *Then* run a reconciliation pass: for each bootstrap-era subdirectory, decide whether it (a) collapses into a Box, (b) becomes a Ledger, (c) becomes a Sub-agent's owned territory, (d) survives as a bedrock primitive, or (e) is archived.
+4. Update `indexes/index.json`, `LEDGERS/FILE_DIRECTORY_LEDGER.md`, `mission_control_loader.js`, and the project `CLAUDE.md` to match the reconciled shape.
+
+**Close criteria.**
+- Ledger system buildout reached "active" for all planned ledgers in `LEDGERS/INDEX.md`.
+- Sub-agent system buildout reached at least one runnable app agent per state-bearing domain.
+- Reconciliation pass completed: each `CCAgentindex/` subdirectory has a documented role in the triad model OR has been archived.
+- `LEDGERS/FILE_DIRECTORY_LEDGER.md` updated to reflect the reconciled bedrock.
+- `indexes/index.json` keys match the reconciled bedrock.
+- `CLAUDE.md` (project) describes bedrock organization in triad terms, not categorical terms.
+
+History:
+- 2026-04-28 — created. Jake flagged during catch-up conversation. Deferred pending ledger + sub-agent buildout completion. Inventory of 32 subdirs captured at creation.
+
+---
+
 ### PROB-2026-04-28-015 — Migrate Auto/ Contents Into CCAgentindex/ → CLOSED via Symlink
 
 Status: **closed (via symlink approach)**
@@ -677,6 +728,7 @@ History:
 - ~~PROB-014 Two Comeketo Agent/ Folders~~ — **closed 2026-04-28** (renamed top-level to `Aesthetic Asset Kit/`)
 
 ### Architecture / Migration
+- PROB-016 CCAgentindex/ Bedrock Was Bootstrapped On The Fly — Needs Triad-Based Reconciliation (high · needs-decision · later · blocked on ledger + sub-agent buildout)
 - ~~PROB-015 Migrate Auto/ Contents Into CCAgentindex/~~ — **closed 2026-04-28** via 6 relative symlinks (Auto subdirs aliased into bedrock)
 
 ### Connections
@@ -694,6 +746,7 @@ History:
 | PROB-006 Plan Rewrite Trigger | schema decision (`plan_status` field) + sibling-schema check | add field to box schema, then implement sweep logic |
 | PROB-010 CLAUDE.md domains list | Jake decision (Option A/B/C) | Jake review + sync |
 | PROB-012 Auto/Boxes/ purpose | Jake clarification | Jake review |
+| PROB-016 Bedrock triad reconciliation | ledger + sub-agent buildout completion | finish ledgers, finish sub-agents, then run reconciliation pass |
 
 Blocked problems should not disappear. They should wait visibly.
 

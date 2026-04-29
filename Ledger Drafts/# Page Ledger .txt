@@ -1,0 +1,1127 @@
+# Page Ledger — Project-Wide Implementation Outline
+
+## 0. Purpose
+
+The **Page Ledger** tracks the state, responsibilities, data flow, assets, source-of-truth assumptions, Done Gate, and open problems for a specific page or screen.
+
+The Asset / Widget Map Ledger gives the global UI map.
+
+The Page Ledger gives one page its own local memory.
+
+The uploaded ledger plan describes the Page Ledger as the place to answer what a page is for, what widgets live there, what data it uses, what APIs it calls, what source of truth it trusts, what states it supports, what done means for the page, what open problems exist, and what changes recently affected it. 
+
+This is crucial for this project because the UI is not just visual.
+
+Pages like `boxes`, `automation`, `delegations`, `intake`, and `settings` can expose state, write data, trigger workflows, or imply truth. A page that looks simple may be sitting on top of Client Boxes, generated orchestrator state, approval flows, credentials, or external APIs.
+
+The Page Ledger makes each page legible.
+
+---
+
+# 1. Core Operating Principle
+
+The Page Ledger should enforce this rule:
+
+> A page is not done until its purpose, data, source truth, states, side effects, and Done Gate are clear.
+
+A page should answer:
+
+* What is this page for?
+* Who uses it?
+* What route owns it?
+* What component renders it?
+* What widgets live here?
+* What data does it read?
+* What does it write?
+* What APIs does it call?
+* What source of truth does it trust?
+* What states can it be in?
+* What side effects can it trigger?
+* What breaks if this page changes?
+* What must be updated when this page changes?
+
+The project already has a page-asset sitemap that defines route/page ownership and says page, route behavior, or page data-binding changes are incomplete until the sitemap is updated. The Page Ledger should build on that, not replace it. 
+
+---
+
+# 2. Recommended Location
+
+Create a page-ledger directory:
+
+```text
+/LEDGERS/
+  PAGE_LEDGER.md
+  PAGE_LEDGER.json
+  PAGES/
+    boxes.md
+    automation.md
+    delegations.md
+    intake.md
+    settings.md
+    analytics.md
+  VISUALS/
+    page_ledger_pattern.mmd
+    page_state_flow.mmd
+    boxes_page_flow.mmd
+```
+
+Recommended core files:
+
+```text
+/LEDGERS/PAGE_LEDGER.md
+/LEDGERS/PAGE_LEDGER.json
+```
+
+Recommended page-specific records:
+
+```text
+/LEDGERS/PAGES/<route>.md
+```
+
+Examples:
+
+```text
+/LEDGERS/PAGES/boxes.md
+/LEDGERS/PAGES/automation.md
+/LEDGERS/PAGES/delegations.md
+```
+
+The main Page Ledger is the index and standard.
+Each `/LEDGERS/PAGES/*.md` file is the local page record.
+
+---
+
+# 3. Role in the Ledger System
+
+The Page Ledger sits under the Asset / Widget Map Ledger.
+
+```text
+Asset / Widget Map Ledger
+  └── global page/widget/API/data map
+
+Page Ledger
+  └── page-specific purpose, states, data, APIs, side effects, Done Gate, open issues
+
+Widget Ledger
+  └── detailed behavior for complex widgets inside a page
+
+Source-of-Truth Ledger
+  └── canonical source rules for data shown on the page
+
+Definition of Done Ledger
+  └── page-change completion requirements
+```
+
+The relationship is:
+
+```text
+Asset / Widget Map = global UI atlas
+Page Ledger = page dossier
+Widget Ledger = component deep dive
+```
+
+---
+
+# 4. What This Ledger Owns
+
+## Owns
+
+* page purpose
+* route/component ownership
+* page-level widgets
+* page-level data dependencies
+* API dependencies
+* read/write behavior
+* side effects
+* supported UI states
+* empty/error/loading states
+* source-of-truth assumptions
+* page-specific Done Gate
+* page-specific open problems
+* recent page changes
+* links to related widgets
+* page verification checklist
+* page-level audit history
+
+## Does not own
+
+* every tiny component detail
+* all shared widget internals
+* full backend API implementation
+* global source-of-truth policy
+* all UI styles
+* full route map
+* every file description
+
+Those belong in Widget Ledgers, File Contents Ledger, Source-of-Truth Ledger, Asset / Widget Map, and code.
+
+The Page Ledger should keep page-level truth clear without becoming a code duplicate.
+
+---
+
+# 5. Recommended `PAGE_LEDGER.md` Structure
+
+Use stable headings:
+
+```markdown
+# Page Ledger
+
+Last updated:
+Maintainer:
+Status:
+Read when:
+Core rule:
+
+## 1. Purpose
+## 2. Page Entry Format
+## 3. Page Status Labels
+## 4. Page Registry
+## 5. High-Risk Pages
+## 6. Page Done Gate
+## 7. Page State Standards
+## 8. Page Verification Standards
+## 9. Page Records Index
+## 10. Visualization Index
+## 11. Update Rules
+```
+
+The main file should stay short and directional.
+
+Most detail should live in `/LEDGERS/PAGES/<route>.md`.
+
+---
+
+# 6. Page Entry Format
+
+Each page record should use a stable template.
+
+```markdown
+# Page Ledger — <Page / Route Name>
+
+Last updated:
+Route:
+Primary component:
+Owner file:
+Page status:
+Risk level:
+Related sitemap section:
+Related widgets:
+Related APIs:
+Related source-of-truth entries:
+Related Done Gate:
+
+## 1. Page Purpose
+## 2. User / Operator Use Case
+## 3. Route + Render Ownership
+## 4. Data Sources
+## 5. APIs
+## 6. Writes / Side Effects
+## 7. Source-of-Truth Rules
+## 8. Widgets On This Page
+## 9. Supported States
+## 10. Empty / Error / Loading States
+## 11. Page-Specific Guardrails
+## 12. Page Done Gate
+## 13. Verification Checklist
+## 14. Open Page Problems
+## 15. Recent Page Changes
+## 16. Related Ledgers / Files
+```
+
+Every high-risk page should eventually have one of these.
+
+---
+
+# 7. Page Status Labels
+
+```markdown
+## 3. Page Status Labels
+
+Use one or more:
+
+- `active`: current live page
+- `read-only`: page displays data but should not write
+- `write-capable`: page can persist data or trigger actions
+- `high-risk`: page can affect automation, credentials, customer-facing actions, or source truth
+- `generated-view`: page displays generated/derived state
+- `source-editing`: page can directly edit canonical data
+- `experimental`: page is not stable
+- `legacy`: page exists but should not guide new work
+- `needs-audit`: page needs review
+```
+
+Examples:
+
+```text
+boxes        active + generated-view + high-risk
+automation   active + write-capable + high-risk
+delegations  active + write-capable + high-risk
+settings     active + write-capable + sensitive
+intake       active + write-capable + medium/high risk
+analytics    active + generated-view
+```
+
+Opus should verify exact statuses from current code and sitemap.
+
+---
+
+# 8. Page Registry
+
+The page registry should mirror the existing sitemap at a high level, without duplicating all details.
+
+Example:
+
+```markdown
+## 4. Page Registry
+
+| Route | Primary Component | Owner File | Risk | Page Ledger |
+|---|---|---|---|---|
+| `grid` | `FrontPage` | `components.jsx` | medium | planned |
+| `settings` | `SettingsScreen` | `screens.jsx` | high/sensitive | `PAGES/settings.md` |
+| `leads` | verify | verify | medium | planned |
+| `clients` | verify | verify | medium | planned |
+| `coworkers` | verify | verify | medium | planned |
+| `contacts` | verify | verify | medium | planned |
+| `venues` | verify | verify | medium | planned |
+| `briefing` | verify | verify | medium | planned |
+| `activity` | verify | verify | medium | planned |
+| `automation` | `AutomationShell` | `automation.jsx` | high | `PAGES/automation.md` |
+| `intake` | `IntakeScreen` | `screens.jsx` | medium/high | `PAGES/intake.md` |
+| `analytics` | verify | verify | medium | `PAGES/analytics.md` |
+| `delegations` | `DelegationsScreen` | `screens.jsx` | high | `PAGES/delegations.md` |
+| `boxes` | `BoxesScreen` | `screens.jsx` | high | `PAGES/boxes.md` |
+```
+
+The existing sitemap already lists these routes and page ownership information, so Opus should seed from that file. 
+
+---
+
+# 9. High-Risk Pages
+
+Start Page Ledgers with the pages most likely to hurt the system if misunderstood.
+
+## First Wave
+
+```text
+boxes
+automation
+delegations
+settings
+intake
+```
+
+Why these first:
+
+```markdown
+### `boxes`
+
+Displays Client Boxes, Staff Boxes, and orchestrator state. Can visually imply truth if not careful.
+
+### `automation`
+
+Can persist workflows, triggers, hooks, state, and automation behavior.
+
+### `delegations`
+
+Can submit/rewrite/delete drafts and potentially trigger target-aware actions.
+
+### `settings`
+
+Can save credentials, settings, theme, and model/provider configuration.
+
+### `intake`
+
+Can ingest documents, create report state, run Q&A, and influence knowledge surfaces.
+```
+
+## Second Wave
+
+```text
+analytics
+activity
+briefing
+grid
+clients
+leads
+contacts
+venues
+coworkers
+```
+
+Start where risk is highest.
+
+---
+
+# 10. Example Page Record — `boxes`
+
+This should be seeded first because it connects directly to Client Boxes.
+
+````markdown
+# Page Ledger — boxes
+
+Last updated: 2026-04-28  
+Route: `boxes`  
+Primary component: `BoxesScreen`  
+Owner file: `screens.jsx`  
+Page status: active / generated-view / high-risk  
+Risk level: high  
+Related sitemap section: Comeketo Page-Asset Source Of Truth — boxes  
+Related widgets: Boxes dossier renderer, template preview, delegation handoff action  
+Related APIs:
+- `/api/boxes/list`
+- `/api/boxes/<id>`
+- `/api/boxes/<id>/html`
+- `/api/boxes/<id>/template/<slug>`
+
+## 1. Page Purpose
+
+The `boxes` page is a dossier/read surface for Box data.
+
+It displays selected Client Boxes, Staff Boxes, and generated orchestrator state in a single UI surface.
+
+It helps operators and agents inspect client/staff context, completeness, comms, profile, plan, alerts, and possible handoff actions.
+
+## 2. User / Operator Use Case
+
+The operator uses this page to understand what a Box contains and whether it is ready, stale, incomplete, or needs action.
+
+For Client Boxes, this page should help answer:
+
+- What is in the client box?
+- Is it complete?
+- What state does it show?
+- What plan/alerts exist?
+- What source files back this display?
+- Is this view fresh or generated?
+- Does this need a handoff/delegation?
+
+## 3. Route + Render Ownership
+
+Route:
+`boxes`
+
+Primary owner:
+`screens.jsx` / `BoxesScreen`
+
+Backend/API owner:
+`server.py` endpoints under `/api/boxes/*`
+
+Page ownership source:
+page-asset sitemap.
+
+## 4. Data Sources
+
+Reads:
+
+- `Auto/Client Boxes`
+- `Auto/Staff Boxes`
+- `Auto/orchestrator/state`
+- loader data from `mission_control_loader.js` if applicable
+
+## 5. APIs
+
+- `/api/boxes/list`
+- `/api/boxes/<id>`
+- `/api/boxes/<id>/html`
+- `/api/boxes/<id>/template/<slug>`
+
+## 6. Writes / Side Effects
+
+Expected default:
+read/display only.
+
+Possible side effects:
+optional delegation draft handoff actions.
+
+Important:
+The page should not directly rewrite canonical Client Box truth unless a future explicit edit workflow is built and documented.
+
+## 7. Source-of-Truth Rules
+
+Canonical client truth lives in:
+
+```text
+Auto/Client Boxes/<Client Name>/
+````
+
+Canonical staff truth lives in:
+
+```text
+Auto/Staff Boxes/
+```
+
+Generated/rendered state may live in:
+
+```text
+Auto/orchestrator/state
+```
+
+The Boxes page is not the source of truth.
+
+If displayed client data is wrong, check the Client Box and generator before changing the page.
+
+## 8. Widgets On This Page
+
+Initial widgets/panels may include:
+
+* box list
+* selected box dossier
+* source file sections
+* HTML preview
+* template preview
+* completeness/status indicators
+* delegation handoff action
+
+Each high-risk widget should later get a Widget Ledger entry if it writes data or affects approvals.
+
+## 9. Supported States
+
+The page should support:
+
+* loading box list
+* no boxes found
+* selected box loading
+* selected box loaded
+* box missing required files
+* source file missing
+* generated HTML unavailable
+* API error
+* stale generated state
+* read-only display
+* delegation handoff available
+* delegation handoff error/success, if implemented
+
+## 10. Empty / Error / Loading States
+
+The page should not silently show blank panels.
+
+Every empty state should say what is missing:
+
+* no boxes found
+* no selected box
+* source file unavailable
+* generated preview unavailable
+* API error
+* stale state warning if known
+
+## 11. Page-Specific Guardrails
+
+* Do not imply generated state is canonical.
+* Do not allow display fixes by editing generated output manually.
+* Do not show enrichment as customer-facing truth without classification.
+* Do not trigger delegation handoff without explicit operator action.
+* If future editing is added, it must obey Client Box source-of-truth rules.
+
+## 12. Page Done Gate
+
+A change to this page is not done until:
+
+* page-asset sitemap updated
+* Asset / Widget Map updated if dependencies changed
+* Source-of-Truth Ledger updated if page authority changed
+* Widget Ledgers updated for new high-risk widgets
+* verification performed or honestly marked unavailable
+
+## 13. Verification Checklist
+
+* `/api/boxes/list` returns expected list.
+* selecting a box loads expected source files.
+* Client Box displayed data matches actual files.
+* generated preview is labeled as generated.
+* missing file state is readable.
+* no write occurs during read-only navigation.
+* delegation handoff, if used, writes only expected draft/handoff target.
+
+## 14. Open Page Problems
+
+Seed possible issues:
+
+* Need clearer source/freshness labeling.
+* Need explicit canonical/generated distinction.
+* Need local handling for allowed-to-know layer once implemented.
+* Need verify whether delegation handoff side effects are fully mapped.
+
+## 15. Recent Page Changes
+
+Start empty or seed from sitemap history.
+
+## 16. Related Ledgers / Files
+
+* Page-Asset Sitemap
+* Asset / Widget Map Ledger
+* Source-of-Truth Ledger
+* Client Boxes Directory Config
+* File Contents Ledger
+* Open Problems Ledger
+
+````
+
+The sitemap already says the `boxes` page reads `Auto/Client Boxes`, `Auto/Staff Boxes`, and `Auto/orchestrator/state`, and that page/route/data-binding work must update the sitemap before completion. :contentReference[oaicite:3]{index=3}
+
+---
+
+# 11. Example Page Record — `automation`
+
+```markdown
+# Page Ledger — automation
+
+Route: `automation`  
+Primary component: `AutomationShell`  
+Owner file: `automation.jsx`  
+Page status: active / write-capable / high-risk  
+Risk level: high  
+
+## Page Purpose
+
+The automation page manages workflow graph authoring, triggers, hooks, subagents, state, catalog edges, and automation surfaces.
+
+## Data Sources
+
+Reads:
+
+- workflow list/get endpoints
+- trigger list endpoints
+- catalog edges
+- agent plans/hooks/state
+- status APIs
+
+## APIs
+
+Examples from sitemap:
+
+- `/api/workflows/list`
+- `/api/workflows/save`
+- `/api/workflows/get`
+- `/api/triggers/list`
+- `/api/triggers/save`
+- `/api/triggers/delete`
+- `/api/catalog/edges/list|get|save|delete|bump_usage`
+
+## Writes / Side Effects
+
+High-risk writes:
+
+- workflow persistence
+- trigger persistence
+- catalog edge persistence
+- plan/hook/state changes
+- activity ledger events
+
+## Guardrails
+
+- Do not treat visual graph changes as harmless.
+- Every write path needs clear storage target.
+- Trigger changes should be auditable.
+- Scheduled/customer-facing automation must obey guardrails.
+
+## Done Gate
+
+A change to automation page behavior is not done until:
+
+- sitemap updated
+- Asset / Widget Map updated
+- Connections Ledger updated if external service dependency changes
+- Source-of-Truth Ledger updated if workflow authority changes
+- Audit/Open Problems updated for risky unresolved behavior
+````
+
+The sitemap identifies the automation page as a workflow/subagent/trigger/hook/state surface with multiple persistence APIs and side effects. 
+
+---
+
+# 12. Example Page Record — `delegations`
+
+```markdown
+# Page Ledger — delegations
+
+Route: `delegations`  
+Primary component: `DelegationsScreen`  
+Owner file: `screens.jsx`  
+Page status: active / write-capable / high-risk  
+Risk level: high  
+
+## Page Purpose
+
+The delegations page is the draft-first handoff and approval surface.
+
+It handles draft queue, run timeline, channel picker, final-edit preview, rewrite/undo, and target-aware submission flows.
+
+## APIs
+
+Examples:
+
+- `/api/delegate`
+- `/api/delegate/<id>`
+- `/api/delegations/drafts`
+- draft create/update/delete/submit/rewrite/undo endpoints
+- `/api/status`
+
+## Writes / Side Effects
+
+- creates delegation drafts
+- updates drafts
+- deletes drafts
+- submits drafts
+- may create run files/events
+- may eventually write to external channels or target systems
+
+## Guardrails
+
+- Draft submit must be explicit.
+- Target/channel should be visible before send.
+- External-write actions should be approval-gated.
+- If customer-facing delegation ever exists, inbox guardrails apply.
+
+## Done Gate
+
+Page changes must update sitemap. Write/approval behavior changes should update Asset / Widget Map, Connections Ledger if external targets change, and Audit/Open Problems if risk remains.
+```
+
+The sitemap defines Delegations as a draft-first handoff page with approval controls, channel picker cards, run timeline, and write approval gates. 
+
+---
+
+# 13. Page Done Gate
+
+Every page ledger should include a page-specific Done Gate, but the global Page Ledger should define the default.
+
+```markdown
+## 6. Page Done Gate
+
+A page change is done only when:
+
+- [ ] route still maps correctly
+- [ ] primary component ownership is clear
+- [ ] visible widgets are accounted for
+- [ ] data sources are documented
+- [ ] APIs are documented
+- [ ] writes / side effects are documented
+- [ ] source-of-truth assumptions are clear
+- [ ] empty/loading/error states are not broken
+- [ ] page-asset sitemap is updated
+- [ ] Asset / Widget Map is updated if dependencies changed
+- [ ] Page Ledger is updated if page purpose/data/side effects changed
+- [ ] verification was performed or limitations are recorded
+```
+
+For this repo, the existing sitemap already makes page/route/data-binding updates mandatory before work is complete. 
+
+---
+
+# 14. Page State Standards
+
+Each page should define supported states.
+
+Standard page states:
+
+```markdown
+## 7. Page State Standards
+
+Each page should specify whether it supports:
+
+- loading
+- loaded
+- empty
+- missing source
+- stale data
+- permission/access error
+- API error
+- partial data
+- generated preview unavailable
+- write pending
+- write success
+- write failure
+- read-only mode
+- dangerous action confirmation
+```
+
+High-risk pages must not fail silently.
+
+For example, `boxes` should distinguish:
+
+```text
+Client Box missing
+vs
+Client Box present but incomplete
+vs
+orchestrator generated state stale
+vs
+API error
+```
+
+---
+
+# 15. Page Verification Standards
+
+Default verification checklist:
+
+```markdown
+## 8. Page Verification Standards
+
+When changing a page, verify:
+
+- route loads
+- primary page state renders
+- expected data appears
+- empty state works
+- API error does not crash page
+- writes go to expected target
+- no unexpected side effects occur
+- page still matches sitemap
+- source-of-truth assumptions remain true
+```
+
+If verification cannot be done:
+
+```markdown
+Record what was not verified and why.
+```
+
+No fake green checks.
+
+---
+
+# 16. Recommended `PAGE_LEDGER.json` Shape
+
+```json
+{
+  "ledger_type": "page",
+  "version": "0.1.0",
+  "last_updated": "2026-04-28",
+  "core_rule": "A page is not done until its purpose, data, source truth, states, side effects, and Done Gate are clear.",
+  "page_status_labels": [
+    "active",
+    "read-only",
+    "write-capable",
+    "high-risk",
+    "generated-view",
+    "source-editing",
+    "experimental",
+    "legacy",
+    "needs-audit"
+  ],
+  "pages": [
+    {
+      "route": "boxes",
+      "primary_component": "BoxesScreen",
+      "owner_file": "screens.jsx",
+      "status": ["active", "generated-view", "high-risk"],
+      "page_ledger": "LEDGERS/PAGES/boxes.md",
+      "data_sources": [
+        "Auto/Client Boxes",
+        "Auto/Staff Boxes",
+        "Auto/orchestrator/state"
+      ],
+      "apis": [
+        "/api/boxes/list",
+        "/api/boxes/<id>",
+        "/api/boxes/<id>/html",
+        "/api/boxes/<id>/template/<slug>"
+      ],
+      "source_of_truth": [
+        "Auto/Client Boxes for client truth",
+        "Auto/Staff Boxes for staff truth",
+        "Auto/orchestrator/state for generated state"
+      ],
+      "side_effects": [
+        "optional delegation handoff action"
+      ],
+      "risk_level": "high",
+      "done_gate": [
+        "page-asset sitemap updated",
+        "Asset / Widget Map updated if dependencies changed",
+        "Source-of-Truth Ledger updated if authority changed"
+      ]
+    },
+    {
+      "route": "automation",
+      "primary_component": "AutomationShell",
+      "owner_file": "automation.jsx",
+      "status": ["active", "write-capable", "high-risk"],
+      "page_ledger": "LEDGERS/PAGES/automation.md",
+      "risk_level": "high"
+    }
+  ]
+}
+```
+
+This JSON can later feed a page dashboard.
+
+---
+
+# 17. Suggested Visual Layer
+
+Create:
+
+```text
+/LEDGERS/VISUALS/page_ledger_pattern.mmd
+/LEDGERS/VISUALS/page_state_flow.mmd
+/LEDGERS/VISUALS/boxes_page_flow.mmd
+/LEDGERS/VISUALS/high_risk_page_map.mmd
+```
+
+Example Page Ledger pattern:
+
+```mermaid
+flowchart TD
+  Page[Page / Route] --> Component[Primary Component]
+  Page --> Data[Data Sources]
+  Page --> APIs[APIs]
+  Page --> Widgets[Widgets]
+  Page --> States[Supported States]
+  Page --> SideEffects[Writes / Side Effects]
+  Data --> Truth[Source-of-Truth Rules]
+  SideEffects --> Done[Page Done Gate]
+  Widgets --> WidgetLedgers[Widget Ledgers if high-risk]
+```
+
+Example Boxes page flow:
+
+```mermaid
+flowchart LR
+  ClientBoxes[Auto/Client Boxes: Canonical] --> API[/api/boxes/*]
+  StaffBoxes[Auto/Staff Boxes: Canonical] --> API
+  Orchestrator[Auto/orchestrator/state: Generated] --> API
+  API --> BoxesPage[BoxesScreen]
+  BoxesPage --> Dossier[Dossier View]
+  BoxesPage --> Handoff[Optional Delegation Handoff]
+```
+
+Example page state flow:
+
+```mermaid
+flowchart TD
+  Load[Route Loads] --> Fetch[Fetch Page Data]
+  Fetch --> Success{Success?}
+  Success -->|Yes| Data{Data Present?}
+  Success -->|No| Error[API Error State]
+  Data -->|Yes| Render[Render Page]
+  Data -->|No| Empty[Empty State]
+  Render --> Stale{Stale/Generated?}
+  Stale -->|Yes| Label[Show Source/Freshness Label]
+  Stale -->|No| Ready[Ready]
+```
+
+---
+
+# 18. Relationship to Page-Asset Sitemap
+
+This is the most important relationship.
+
+The Page Ledger should not replace the existing sitemap.
+
+The sitemap is the current operational page/source-of-truth file. It maps route index, asset ownership, APIs, side effects, change checklists, history, and last verified fields. It also states that page, route behavior, or data-binding work is not complete until the relevant sitemap areas are updated. 
+
+The Page Ledger should say:
+
+```markdown
+The sitemap is the operational page ownership map.
+The Page Ledger gives each page a local dossier and deeper continuity.
+When they conflict, audit and update both; do not let them drift.
+```
+
+---
+
+# 19. Relationship to Asset / Widget Map
+
+The Asset / Widget Map gives the global view.
+
+The Page Ledger gives the page-specific view.
+
+Example:
+
+```text
+Asset / Widget Map:
+BoxesScreen reads Client Boxes and orchestrator state.
+
+Page Ledger:
+Boxes page must show missing/stale/generated states and must not imply generated state is canonical.
+```
+
+The Asset / Widget Map answers “what connects?”
+The Page Ledger answers “how should this page behave?”
+
+---
+
+# 20. Relationship to Widget Ledger
+
+A Page Ledger lists widgets on the page.
+
+A Widget Ledger deep-dives into a complex widget.
+
+Example:
+
+```text
+Page Ledger — automation:
+Lists workflow graph, trigger panel, hooks panel, state panel.
+
+Widget Ledger — workflow graph:
+Details graph data model, save behavior, node/edge schema, side effects, validation, common bugs.
+```
+
+Create Widget Ledgers only where complexity justifies it.
+
+---
+
+# 21. Relationship to Source-of-Truth Ledger
+
+Each Page Ledger should include source-of-truth rules.
+
+Example for `boxes`:
+
+```text
+Displayed client facts:
+source = Auto/Client Boxes
+
+Generated HTML:
+source = renderer output, not canonical truth
+
+Client plan:
+source = Client Box plan, but plan is subordinate to comms/state/guardrails
+```
+
+The Source-of-Truth Ledger owns the global authority rules.
+The Page Ledger applies them locally.
+
+---
+
+# 22. Relationship to Open Problems
+
+Each Page Ledger can hold local page problems.
+
+If a problem affects many pages or a global pattern, promote it to Open Problems Ledger.
+
+Example:
+
+```text
+Local page problem:
+Boxes page needs better stale-state label.
+
+Global open problem:
+UI pages do not consistently distinguish canonical vs generated data.
+```
+
+---
+
+# 23. Relationship to Audit Ledger
+
+Page audits should create/update Page Ledger entries.
+
+Example:
+
+```text
+Audit:
+Boxes page source/display audit.
+
+Updates:
+- Audit Ledger entry
+- Page Ledger boxes.md
+- Asset / Widget Map if dependencies changed
+- Open Problems if unresolved page risks remain
+```
+
+---
+
+# 24. Page Change Done Gate
+
+Update the Page Ledger when:
+
+```markdown
+- page purpose changes
+- route changes
+- primary component changes
+- data source changes
+- API dependency changes
+- side effects change
+- supported states change
+- source-of-truth assumptions change
+- high-risk widgets are added/removed
+- page is audited
+- page-specific open problems are found or resolved
+```
+
+Do not update for tiny visual polish unless it affects page ownership, data, source truth, states, or Done Gate.
+
+---
+
+# 25. What Opus Should Build First
+
+Give Opus this build order:
+
+```text
+1. Create /LEDGERS/PAGE_LEDGER.md.
+2. Create /LEDGERS/PAGE_LEDGER.json.
+3. Create /LEDGERS/PAGES/ directory.
+4. Add link to /LEDGERS/INDEX.md.
+5. Add link to /LEDGERS/ASSET_WIDGET_MAP.md if it exists.
+6. Add link to /LEDGERS/DEFINITION_OF_DONE.md if it exists.
+7. Add link to the existing page-asset sitemap.
+8. Create /LEDGERS/VISUALS/page_ledger_pattern.mmd.
+9. Create /LEDGERS/VISUALS/boxes_page_flow.mmd.
+10. Add Page Entry Format.
+11. Add Page Status Labels.
+12. Add Page Registry seeded from the sitemap.
+13. Create first page records:
+    - /LEDGERS/PAGES/boxes.md
+    - /LEDGERS/PAGES/automation.md
+    - /LEDGERS/PAGES/delegations.md
+    - /LEDGERS/PAGES/settings.md
+    - /LEDGERS/PAGES/intake.md
+14. Keep records useful but not bloated.
+15. Commit with message: "Add page ledger".
+```
+
+Important instruction:
+
+```text
+Do not duplicate the entire sitemap.
+Use it as the operational page ownership source and link to it.
+```
+
+---
+
+# 26. Quality Bar
+
+The Page Ledger succeeds if future agents can answer:
+
+* What is this page for?
+* What route owns it?
+* What component renders it?
+* What data does it read?
+* What APIs does it call?
+* What can it write?
+* What side effects can it trigger?
+* What source of truth does it trust?
+* What states should it support?
+* What does done mean for this page?
+* What page-specific problems are open?
+* What changed recently?
+
+It fails if:
+
+* it duplicates the sitemap line-by-line
+* it ignores side effects
+* it does not identify source truth
+* it tracks tiny visual details instead of page responsibilities
+* high-risk pages lack ledgers
+* page changes keep happening without updating it
+* it does not connect to Widget Ledgers
+
+This ledger should make pages safe to modify.
+
+---
+
+# 27. Final Operating Rule
+
+The Page Ledger should end with this:
+
+```markdown
+A page is not just a screen.
+
+A page is a contract between route, component, data, state, source truth, side effects, and user expectation.
+
+Change the page, update the contract.
+```
+
+---
+

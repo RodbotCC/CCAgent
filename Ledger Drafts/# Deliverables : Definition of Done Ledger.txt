@@ -1,0 +1,1043 @@
+# Deliverables / Definition of Done Ledger — Project-Wide Implementation Outline
+
+## 0. Purpose
+
+The **Deliverables / Definition of Done Ledger** defines what “done” means across the project.
+
+It protects the project from the most common false finish:
+
+> “The code changed, so the work is done.”
+
+In this build style, that is not enough.
+
+A feature may not be done until the source-of-truth files are updated.
+A page may not be done until the page-asset sitemap is updated.
+A Client Box may not be done until the plan, guardrails, state, and audit marker are aligned.
+A workflow may not be done until the relevant ledgers, visual maps, and handoff notes are updated.
+
+The uploaded ledger plan says this ledger can exist globally, by phase, by page, by widget, by feature, or anywhere that needs a clear completion standard. It should answer what must exist before a phase, page, widget, or integration is complete, and what ledgers, maps, visualizations, checks, and cleanup are required. 
+
+This ledger turns the project’s **55 / 45 build rhythm** into an actual operating system:
+
+* 55% offense: build the thing.
+* 45% defense: make sure the thing survives.
+
+---
+
+# 1. Core Operating Principle
+
+The Definition of Done Ledger should enforce this rule:
+
+> Done means the system changed and the system’s memory changed with it.
+
+The project should not accept “done” as a vibe.
+
+Done should be checkable.
+
+Not every tiny edit needs every ledger updated. But every meaningful change should leave the relevant continuity surface current enough that future agents can understand, verify, rebuild, or safely continue the work.
+
+The short rule:
+
+```text id="c3jg9f"
+If it changed behavior, ownership, truth, workflow, risk, or future context, it needs a Done Gate.
+```
+
+---
+
+# 2. Recommended Location
+
+Create it in the central ledger directory:
+
+```text id="6hgm84"
+/LEDGERS/
+  DEFINITION_OF_DONE.md
+  DEFINITION_OF_DONE.json
+  INDEX.md
+  VISUALS/
+    done_gate_flow.mmd
+    55_45_build_rhythm.mmd
+```
+
+Recommended final path:
+
+```text id="6m2ysd"
+/LEDGERS/DEFINITION_OF_DONE.md
+/LEDGERS/DEFINITION_OF_DONE.json
+```
+
+The Global Ledger should link to it as the project-wide Done Gate.
+
+The North Star Ledger should reference it because “defense as first-class build activity” is one of the North Star goals.
+
+---
+
+# 3. Role in the Ledger System
+
+The Definition of Done Ledger sits between philosophy and execution.
+
+```text id="u99yr4"
+North Star Ledger
+  └── What outcomes matter?
+
+Definition of Done Ledger
+  └── What must be true before work counts as complete?
+
+Audit Ledger
+  └── Did completed work actually meet the Done Gate?
+
+Phase Ledger
+  └── What is done for this milestone?
+
+Page / Widget Ledgers
+  └── What is done for this specific surface?
+
+Client Box Audit Markers
+  └── What is done for this client box pass?
+```
+
+It should be used by:
+
+* agents before closing a task
+* audits
+* PR reviews
+* page work
+* widget work
+* automation changes
+* Client Box cleanup
+* ledger creation
+* refactors
+* source-of-truth changes
+
+---
+
+# 4. What This Ledger Owns
+
+## Owns
+
+* global definition of done
+* category-specific Done Gates
+* completion checklists
+* required ledger updates
+* required sitemap updates
+* required audit markers
+* verification expectations
+* cleanup expectations
+* handoff expectations
+* 55 / 45 build rhythm
+* rules for when a task is not actually done
+
+## Does not own
+
+* all current tasks
+* all open problems
+* all phase deliverables
+* page-specific asset details
+* every test command
+* every client-specific audit detail
+
+Those belong in Phase Ledgers, Open Problems Ledgers, Page Ledgers, Widget Ledgers, local Box ledgers, and audit markers.
+
+This ledger defines the **standard**.
+Local ledgers apply the standard.
+
+---
+
+# 5. Recommended `DEFINITION_OF_DONE.md` Structure
+
+Use stable headings.
+
+```markdown id="ru60p1"
+# Deliverables / Definition of Done Ledger
+
+Last updated:
+Maintainer:
+Status:
+Read when:
+Core Done Rule:
+
+## 1. Core Definition of Done
+## 2. 55 / 45 Build Rhythm
+## 3. Universal Done Gate
+## 4. Done Gates by Work Type
+## 5. Ledger Update Matrix
+## 6. Verification Requirements
+## 7. Handoff Requirements
+## 8. What Does Not Count as Done
+## 9. Local Done Gates
+## 10. Audit Integration
+## 11. Update Rules
+```
+
+The file should be practical.
+
+It should feel like a checklist system, not an essay.
+
+---
+
+# 6. Section-by-Section Implementation
+
+## 6.1 Header Block
+
+Example:
+
+```markdown id="8zvbl3"
+# Deliverables / Definition of Done Ledger
+
+Last updated: 2026-04-28
+Maintainer: Jake / Tech Support / Project agents
+Status: Active
+Read when: closing tasks, auditing work, changing pages/widgets/source truth/client boxes/automation
+Core Done Rule: Work is not done until the affected system and its memory are both updated.
+```
+
+This should tell agents immediately why the file exists.
+
+---
+
+## 6.2 Core Definition of Done
+
+Purpose: define the universal standard.
+
+Example:
+
+```markdown id="bkskoy"
+## 1. Core Definition of Done
+
+A meaningful task is done only when:
+
+1. The intended change has been made.
+2. The correct source of truth was changed, not merely a generated surface.
+3. The affected system still works or the remaining risk is clearly recorded.
+4. Relevant ledgers, maps, or local Box files are updated.
+5. Any changed page, route, data binding, or visible asset has its sitemap/page ledger updated.
+6. Any new risk, open problem, or unresolved follow-up is recorded.
+7. Any future agent needing context can find it in the repo.
+8. The change is committed to GitHub, unless intentionally held locally.
+```
+
+Short version:
+
+```markdown id="xa8pwi"
+Build the thing. Verify the thing. Record the thing. Hand off the thing.
+```
+
+---
+
+# 7. 55 / 45 Build Rhythm
+
+Purpose: make the user’s defense/offense rhythm actionable.
+
+Example:
+
+```markdown id="o052me"
+## 2. 55 / 45 Build Rhythm
+
+The project follows a 55 / 45 build rhythm.
+
+### 55% Offense
+
+Offense means creating or changing:
+
+- features
+- pages
+- widgets
+- APIs
+- automations
+- workflows
+- client plans
+- renderers
+- integrations
+- scripts
+- models
+- data pipelines
+
+### 45% Defense
+
+Defense means preserving the system:
+
+- updating ledgers
+- updating source-of-truth maps
+- cleaning stale assumptions
+- verifying routes and APIs
+- writing audit markers
+- recording decisions
+- logging open problems
+- updating visual maps
+- adding handoff notes
+- keeping GitHub current
+- reducing future confusion
+
+A build that remembers itself compounds.
+A build that does not remember itself rots.
+```
+
+This section should give permission to spend real time on defensive work.
+
+---
+
+# 8. Universal Done Gate
+
+Purpose: one global checklist for all meaningful tasks.
+
+Example:
+
+```markdown id="wval5m"
+## 3. Universal Done Gate
+
+Before calling work done, answer:
+
+- [ ] Did I change the correct source of truth?
+- [ ] Did I avoid editing generated output as canonical truth?
+- [ ] Did I check whether any guardrail or source rule applies?
+- [ ] Did I update any affected ledger, map, sitemap, or Box note?
+- [ ] Did I record unresolved problems?
+- [ ] Did I leave enough context for the next agent?
+- [ ] Did I run or describe verification?
+- [ ] Did I commit/push or clearly state why not?
+```
+
+Add a stronger version for agents:
+
+```markdown id="slmfpn"
+If any answer is “no,” the work may still be useful, but it is not fully done.
+```
+
+---
+
+# 9. Done Gates by Work Type
+
+This is the most important section.
+
+Each work type should have a mini checklist.
+
+---
+
+## 9.1 Client Box Done Gate
+
+```markdown id="zyu4k1"
+### Client Box Work
+
+A Client Box pass is done when:
+
+- [ ] Required files were checked:
+  - `00_meta.json`
+  - `01_comms.md`
+  - `04_profile.md`
+  - `05_seven_day_plan.md`
+  - `09_andre_alerts.md`
+  - `client_ledger.md` if present
+- [ ] Current state was checked against the plan.
+- [ ] Calendar labels and dates were checked.
+- [ ] Reply Gate was checked.
+- [ ] Frequency Cap risk was checked.
+- [ ] Commitment language was checked.
+- [ ] Enrichment boundary was checked.
+- [ ] Customer-facing facts were checked against comms/transcripts.
+- [ ] Future sends were flattened or approval-gated if risky.
+- [ ] Any edits were narrow and local to that box.
+- [ ] An audit marker was added or updated.
+- [ ] The next recommended action is clear.
+```
+
+This is directly useful for the ongoing Client Box cleanup workflow.
+
+---
+
+## 9.2 Automation / Scheduled Fire Done Gate
+
+```markdown id="eiwugy"
+### Automation / Scheduled Fire Work
+
+Automation work is done when:
+
+- [ ] The trigger source is clear.
+- [ ] The source of truth for input data is clear.
+- [ ] Guardrails are applied before output.
+- [ ] Reply/state changes can pause or invalidate the automation.
+- [ ] Risky moves require explicit approval.
+- [ ] Logs or run summaries are written.
+- [ ] Failure mode is recorded.
+- [ ] Human review path is clear.
+- [ ] The automation does not silently make financial, pricing, scope, or enrichment-based commitments.
+- [ ] Relevant ledgers or local Box instructions are updated.
+```
+
+---
+
+## 9.3 Page / Route Done Gate
+
+This should explicitly integrate the uploaded page-asset sitemap.
+
+```markdown id="0zqb52"
+### Page / Route Work
+
+A page, route, or page data-binding change is done when:
+
+- [ ] Route still exists and maps to the expected component.
+- [ ] Primary component ownership is clear.
+- [ ] Assets on page are listed or updated.
+- [ ] Data sources are listed or updated.
+- [ ] APIs are listed or updated.
+- [ ] Side effects are listed or updated.
+- [ ] Styles/cache-busters are updated if needed.
+- [ ] The page-asset sitemap is updated.
+- [ ] Last Verified date is bumped.
+- [ ] History line is appended.
+```
+
+This matches the existing sitemap Done Gate: page, route behavior, and page data binding changes are incomplete until the sitemap is updated. That uploaded source explicitly says the relevant page section’s Asset Ownership, Change Checklist, History, and Last Verified must be updated. 
+
+---
+
+## 9.4 Widget / Component Done Gate
+
+```markdown id="u8ddck"
+### Widget / Component Work
+
+Widget work is done when:
+
+- [ ] Widget purpose is clear.
+- [ ] Render owner is clear.
+- [ ] Inputs are clear.
+- [ ] Outputs are clear.
+- [ ] APIs or model calls are clear.
+- [ ] Side effects are clear.
+- [ ] Settings that affect it are documented.
+- [ ] Dependent pages/widgets are checked.
+- [ ] Asset/widget map is updated if the widget is meaningful.
+- [ ] Visual or state regressions were checked where possible.
+```
+
+---
+
+## 9.5 Source-of-Truth Change Done Gate
+
+```markdown id="1xn9cp"
+### Source-of-Truth Change
+
+A source-of-truth change is done when:
+
+- [ ] The old source is identified.
+- [ ] The new source is identified.
+- [ ] Generated/cached surfaces are labeled.
+- [ ] Agents know what to trust first.
+- [ ] Any affected scripts/renderers/API endpoints are updated.
+- [ ] Source-of-Truth Ledger is updated.
+- [ ] Page/widget ledgers or sitemap are updated if UI is affected.
+- [ ] Migration risk is recorded.
+```
+
+---
+
+## 9.6 Ledger Creation / Ledger Edit Done Gate
+
+```markdown id="fcrvop"
+### Ledger Work
+
+Ledger work is done when:
+
+- [ ] The ledger’s purpose is clear.
+- [ ] Ownership is clear.
+- [ ] Update rules are defined.
+- [ ] Relationship to other ledgers is clear.
+- [ ] Markdown exists for humans/agents.
+- [ ] JSON exists if machine-readability is useful.
+- [ ] Visual map exists if relationships are complex.
+- [ ] The Global Ledger or Index links to it.
+- [ ] The ledger avoids duplicating another ledger’s job.
+```
+
+---
+
+## 9.7 Directory / Box Done Gate
+
+```markdown id="6c861p"
+### Directory / Box Work
+
+A directory or Box change is done when:
+
+- [ ] Directory purpose is clear.
+- [ ] What belongs there is clear.
+- [ ] What does not belong there is clear.
+- [ ] Local source-of-truth rules are clear.
+- [ ] Important files are listed.
+- [ ] Local risks or guardrails are recorded.
+- [ ] Local ledgers or orientation files are updated.
+- [ ] Global Directory Ledger is updated if the file tree shape changed.
+```
+
+---
+
+## 9.8 External Connection / API Done Gate
+
+```markdown id="5hshna"
+### External Connection / API Work
+
+Connection work is done when:
+
+- [ ] Service name and purpose are recorded.
+- [ ] Required credentials are known without exposing secrets.
+- [ ] Dependency owner is clear.
+- [ ] Failure mode is understood.
+- [ ] Billing/trial/renewal risk is recorded if relevant.
+- [ ] What breaks if it fails is recorded.
+- [ ] Connections Ledger is updated.
+- [ ] Settings Ledger is updated if user-facing configuration changed.
+```
+
+---
+
+## 9.9 Decision Done Gate
+
+```markdown id="egj5yk"
+### Decision Work
+
+A major decision is done when:
+
+- [ ] The decision is written down.
+- [ ] Why it was made is recorded.
+- [ ] Alternatives are briefly noted if useful.
+- [ ] Consequences are recorded.
+- [ ] Status is clear:
+  - final
+  - experimental
+  - under review
+  - deprecated
+- [ ] Affected systems are listed.
+- [ ] Decisions Ledger is updated.
+```
+
+---
+
+## 9.10 Open Problem Done Gate
+
+```markdown id="hsb42v"
+### Problem Discovery
+
+Finding a problem is done when:
+
+- [ ] The problem is recorded.
+- [ ] Severity or urgency is estimated.
+- [ ] Affected systems are listed.
+- [ ] Whether it was fixed, partially fixed, or left open is clear.
+- [ ] Next recommended action is clear.
+- [ ] Open Problems Ledger or local Box problem section is updated.
+```
+
+This is important because finding a problem but failing to record it forces future agents to rediscover it.
+
+---
+
+## 9.11 Reconstruction / Prompt Done Gate
+
+```markdown id="u1ofx3"
+### Rebuild / Prompt / Generation Work
+
+A generated or rebuildable system is done when:
+
+- [ ] Intent is recorded.
+- [ ] Prompt/instructions are preserved if useful.
+- [ ] Constraints are recorded.
+- [ ] Source files and output files are listed.
+- [ ] Regeneration path is clear.
+- [ ] Known mistakes to avoid are recorded.
+- [ ] Prompt / Reconstruction Ledger is updated.
+```
+
+---
+
+# 10. Ledger Update Matrix
+
+Purpose: tell agents what ledger to update based on change type.
+
+Example:
+
+```markdown id="ps697b"
+## 5. Ledger Update Matrix
+
+| If this changed... | Update this... |
+|---|---|
+| Project-wide state | Global Ledger / Temporal Continuity |
+| Current session context | Temporal Continuity |
+| Long-term goals or principles | North Star Ledger |
+| Completion requirements | Definition of Done Ledger |
+| File tree shape | File Directory Ledger |
+| Directory rules | Directory Config / Box Ledger |
+| Important file purpose | File Contents Ledger |
+| Page, route, asset, data binding | Page-Asset Sitemap / Page Ledger |
+| Widget/component behavior | Widget Ledger / Asset Map |
+| External service/API/tool | Connections Ledger |
+| Major choice | Decisions Ledger |
+| Handoff/warning/context | Communications Ledger |
+| Known issue/risk | Open Problems Ledger |
+| Build recipe/prompt | Reconstruction Ledger |
+| Tool/model research | Scout Ledger |
+| Audit results | Audit Ledger |
+| Phase/milestone state | Phase Ledger |
+| Settings/configuration | Settings Ledger |
+| Canonical data ownership | Source-of-Truth Ledger |
+| Client-specific plan/state | Client Box audit marker/local ledger |
+```
+
+This matrix should be one of the most-used parts of the file.
+
+---
+
+# 11. Verification Requirements
+
+Purpose: define what “verified” means.
+
+Example:
+
+```markdown id="3pqefq"
+## 6. Verification Requirements
+
+Verification can include:
+
+- running tests
+- running build scripts
+- opening the relevant page
+- checking generated output
+- checking JSON validity
+- checking Markdown links
+- reviewing source-of-truth files
+- checking route/component wiring
+- checking client plan against comms
+- checking guardrails against executable copy
+
+If verification is not possible, record why.
+
+Do not pretend verification happened.
+```
+
+Add a useful agent rule:
+
+```markdown id="zrhx9b"
+An honest “not verified because…” is better than a fake green check.
+```
+
+---
+
+# 12. Handoff Requirements
+
+Purpose: make sure future agents can continue.
+
+Example:
+
+```markdown id="xgqa66"
+## 7. Handoff Requirements
+
+A meaningful task should leave behind:
+
+- what changed
+- why it changed
+- what files were touched
+- what was verified
+- what remains open
+- what future agents should avoid
+- what should happen next
+
+This can live in:
+
+- Temporal Continuity Ledger
+- Communications Ledger
+- Audit Ledger
+- local Box audit marker
+- PR/commit message
+- file-local note, if appropriate
+```
+
+For GitHub work:
+
+```markdown id="112lqx"
+If committing directly to GitHub, report commit SHA(s) to the human.
+```
+
+---
+
+# 13. What Does Not Count as Done
+
+Purpose: make false completion visible.
+
+Example:
+
+```markdown id="c8ip2g"
+## 8. What Does Not Count as Done
+
+The following are not enough by themselves:
+
+- Code was edited.
+- A page looks okay once.
+- A generated file changed.
+- A plan was written but not checked against guardrails.
+- A client box has files but no state alignment.
+- A risky send was approved inside a batch without explicit risk surfacing.
+- A decision was made in chat but not recorded.
+- A bug was found but not logged.
+- A source-of-truth change was made but maps still point to the old source.
+- A local change exists but was not pushed or clearly marked local-only.
+```
+
+This section should be blunt.
+
+---
+
+# 14. Local Done Gates
+
+Purpose: explain that local areas can define stricter done.
+
+Example:
+
+```markdown id="lgndoc"
+## 9. Local Done Gates
+
+The global Done Gate is the floor.
+
+Local systems may define stricter gates.
+
+Examples:
+
+- Page-asset sitemap defines page-specific done.
+- Inbox Guardrails define send safety done.
+- Client Boxes define per-client plan/state done.
+- Orchestrator may define generated-state done.
+- Ledger Box may define memory-system done.
+- External connection ledgers may define credential/dependency done.
+
+When local and global Done Gates conflict, use the stricter requirement.
+```
+
+This allows precision without bloating the global file.
+
+---
+
+# 15. Audit Integration
+
+Purpose: connect Done to audits.
+
+Example:
+
+```markdown id="3lzdhi"
+## 10. Audit Integration
+
+Audits should check whether work met the relevant Done Gate.
+
+Each audit should record:
+
+- work reviewed
+- applicable Done Gate
+- pass/fail/partial
+- missing memory updates
+- missing verification
+- source-of-truth drift
+- open follow-ups
+- North Star alignment
+```
+
+Audit example:
+
+```text id="qftbt2"
+Audit: Brenda & Steve Client Box
+Done Gate: Client Box Work
+Status: Partial before cleanup, improved after cleanup
+Findings:
+- stale calendar labels fixed
+- commitment language gated
+- enrichment leakage reduced
+- audit marker added
+Remaining:
+- full phone transcripts not yet imported
+- allowed-to-know layer still needed
+```
+
+This makes audits actionable.
+
+---
+
+# 16. Recommended `DEFINITION_OF_DONE.json` Shape
+
+The JSON file should make Done Gates machine-readable.
+
+Example:
+
+```json id="77fx15"
+{
+  "ledger_type": "definition_of_done",
+  "version": "0.1.0",
+  "last_updated": "2026-04-28",
+  "core_done_rule": "Work is not done until the affected system and its memory are both updated.",
+  "universal_done_gate": [
+    "correct_source_of_truth_changed",
+    "generated_output_not_treated_as_canonical",
+    "guardrails_checked",
+    "affected_ledgers_updated",
+    "open_problems_recorded",
+    "handoff_context_left",
+    "verification_run_or_explained",
+    "committed_or_local_only_status_clear"
+  ],
+  "done_gates": [
+    {
+      "id": "client_box_work",
+      "name": "Client Box Work",
+      "required_checks": [
+        "required_files_checked",
+        "state_checked_against_plan",
+        "calendar_checked",
+        "reply_gate_checked",
+        "frequency_cap_checked",
+        "commitment_language_checked",
+        "enrichment_boundary_checked",
+        "customer_facts_checked_against_comms",
+        "audit_marker_added_or_updated"
+      ]
+    },
+    {
+      "id": "page_route_work",
+      "name": "Page / Route Work",
+      "required_checks": [
+        "route_maps_to_expected_component",
+        "asset_ownership_updated",
+        "data_sources_updated",
+        "apis_updated",
+        "side_effects_updated",
+        "page_asset_sitemap_updated",
+        "last_verified_bumped",
+        "history_line_added"
+      ]
+    },
+    {
+      "id": "automation_work",
+      "name": "Automation / Scheduled Fire Work",
+      "required_checks": [
+        "trigger_source_clear",
+        "input_source_of_truth_clear",
+        "guardrails_applied",
+        "reply_state_can_pause",
+        "risk_requires_approval",
+        "logs_written",
+        "failure_mode_recorded"
+      ]
+    }
+  ],
+  "ledger_update_matrix": {
+    "project_state": ["GLOBAL_LEDGER", "TEMPORAL_CONTINUITY"],
+    "page_route_asset_data_binding": ["PAGE_ASSET_SITEMAP", "PAGE_LEDGER"],
+    "client_specific_plan_state": ["CLIENT_BOX_AUDIT_MARKER", "LOCAL_BOX_LEDGER"],
+    "major_decision": ["DECISIONS_LEDGER"],
+    "open_problem": ["OPEN_PROBLEMS_LEDGER"],
+    "source_of_truth": ["SOURCE_OF_TRUTH_LEDGER"]
+  }
+}
+```
+
+This can later drive automated checklist prompts or PR templates.
+
+---
+
+# 17. Suggested Visual Layer
+
+Create:
+
+```text id="drp3r2"
+/LEDGERS/VISUALS/done_gate_flow.mmd
+/LEDGERS/VISUALS/55_45_build_rhythm.mmd
+```
+
+Example Done Gate flow:
+
+```mermaid id="4xj55f"
+flowchart TD
+  Work[Work Completed?] --> Source{Correct Source of Truth?}
+  Source -->|No| FixSource[Fix Source]
+  Source -->|Yes| Verify{Verified?}
+  Verify -->|No| Explain[Run Check or Explain Why Not]
+  Verify -->|Yes| Memory{Memory Updated?}
+  Memory -->|No| UpdateLedger[Update Ledger / Map / Box]
+  Memory -->|Yes| Open{Open Problems?}
+  Open -->|Yes| RecordProblem[Record Open Problem]
+  Open -->|No| Handoff{Handoff Clear?}
+  RecordProblem --> Handoff
+  Handoff -->|No| AddHandoff[Add Handoff Note]
+  Handoff -->|Yes| Done[Done]
+```
+
+Example 55 / 45 rhythm:
+
+```mermaid id="yaow3v"
+flowchart LR
+  Build[55% Offense: Build] --> Defense[45% Defense: Preserve]
+  Defense --> Memory[Ledgers / Maps / Tests / Handoff]
+  Memory --> Durable[Durable Momentum]
+  Durable --> Build
+```
+
+---
+
+# 18. Relationship to Existing Page-Asset Sitemap
+
+The uploaded page-asset sitemap already has a Done Gate. This ledger should not replace it.
+
+It should elevate it into the global system.
+
+Recommended text:
+
+```markdown id="h8l08r"
+The page-asset sitemap remains the operational Done Gate for page, route, and page data-binding changes.
+
+This Definition of Done Ledger points to it and treats it as mandatory for UI work.
+```
+
+This is important because the sitemap explicitly says that page/route/data-binding changes are incomplete until that file is updated. 
+
+---
+
+# 19. Relationship to Client Boxes
+
+For Client Boxes, this ledger should define the general Done Gate, while each client folder gets its own audit marker or local ledger.
+
+Pattern:
+
+```text id="1025zr"
+Global DoD:
+  Client Box pass requires audit marker.
+
+Client Box:
+  2026-04-28_audit_marker.md records what happened locally.
+```
+
+The audit marker should include:
+
+```text id="zbbd6n"
+- audit timestamp
+- files reviewed
+- files changed
+- issues found
+- what was cleaned
+- what remains open
+- whether future sends are safe / gated / paused
+```
+
+This pattern has already been used in the Brenda & Steve cleanup and should become standard.
+
+---
+
+# 20. Relationship to Risky Automation
+
+The Done Gate should be especially strict around automation.
+
+Recommended rule:
+
+```markdown id="0fp90n"
+No automation change is done if it can send, schedule, approve, price, discount, commit, or personalize without a recorded guardrail path.
+```
+
+For customer-facing automation:
+
+```markdown id="sfzdpn"
+Every executable customer-facing path must answer:
+
+- What is allowed to send?
+- What pauses it?
+- What requires approval?
+- What facts may it use?
+- What facts are internal only?
+- What gets logged?
+- What happens after reply?
+```
+
+This should be part of the automation Done Gate.
+
+---
+
+# 21. Relationship to North Star
+
+The Definition of Done Ledger should support North Star goals.
+
+Example mapping:
+
+```text id="fgexvw"
+Done Gate supports:
+- NS-01 Durable Project Memory
+- NS-06 Source-of-Truth Discipline
+- NS-09 Agent Handoff Continuity
+- NS-10 Defense as First-Class Build Activity
+```
+
+A task that closes without a Done Gate may look productive, but it can damage the project’s North Star.
+
+---
+
+# 22. What Opus Should Build First
+
+Give Opus this build order:
+
+```text id="4ydrgn"
+1. Create /LEDGERS/DEFINITION_OF_DONE.md.
+2. Create /LEDGERS/DEFINITION_OF_DONE.json.
+3. Add link to /LEDGERS/INDEX.md.
+4. Add link to /LEDGERS/GLOBAL_LEDGER.md if it exists.
+5. Add cross-reference from /LEDGERS/NORTH_STAR.md if it exists.
+6. Create /LEDGERS/VISUALS/done_gate_flow.mmd.
+7. Create /LEDGERS/VISUALS/55_45_build_rhythm.mmd.
+8. Seed the file with:
+   - Core Definition of Done
+   - 55 / 45 Build Rhythm
+   - Universal Done Gate
+   - Done Gates by Work Type
+   - Ledger Update Matrix
+   - Verification Requirements
+   - Handoff Requirements
+   - What Does Not Count as Done
+9. Explicitly reference the page-asset sitemap as mandatory for page/route/data-binding changes.
+10. Commit with message: "Add definition of done ledger".
+```
+
+---
+
+# 23. Quality Bar
+
+The Definition of Done Ledger succeeds if it makes completion legible.
+
+A future agent should be able to read it and know:
+
+* whether work is actually done
+* what checks apply
+* what ledgers must be updated
+* what verification is expected
+* what handoff is needed
+* what local Done Gates may override the global standard
+* when “code changed” is not enough
+
+It fails if:
+
+* it becomes too vague
+* agents ignore it before closing tasks
+* it does not connect to page/client/automation realities
+* it duplicates every local checklist
+* it becomes a stale ceremony
+* it makes tiny changes too heavy
+* it lets meaningful changes close without memory updates
+
+This ledger should create discipline without creating paralysis.
+
+---
+
+# 24. Final Operating Rule
+
+The Definition of Done Ledger should end with this:
+
+```markdown id="3mnu2t"
+Done is not when the model stops writing.
+
+Done is when the system can survive the change.
+
+Build the thing.
+Verify the thing.
+Record the thing.
+Hand off the thing.
+```
+
+---
+
+

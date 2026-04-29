@@ -1,0 +1,300 @@
+{
+  "ledger_type": "box",
+  "version": "0.1.0",
+  "last_updated": "2026-04-29",
+  "status": "active",
+  "maintainer": "Jake / Comeketo Agent project agents",
+  "core_rule": "A meaningful directory should not be silent.",
+  "absorbed_from": "the previously-planned Directory Configuration Ledger (renamed and merged 2026-04-29 per Jake — single concept under a cleaner name)",
+  "steward_agent": {
+    "status": "not_yet_authored",
+    "future_canonical_path": "Subagent Boxes/box_ledger_subagent_package/",
+    "future_runnable_path": "CCAgentindex/agents/box_ledger_steward/",
+    "phase_when_built": "Phase B (Sub-agents)"
+  },
+  "section_map": {
+    "1": "Purpose",
+    "2": "What Counts As A Box",
+    "3": "Box Classes",
+    "4": "Box Status Labels",
+    "5": "The Standard BOX.md Template",
+    "6": "BOX.md vs DIRECTORY.md",
+    "7": "Local Source-of-Truth Rules",
+    "8": "Local Done Gate Rules",
+    "9": "Local Agent Protocol",
+    "10": "Recommended First Boxes",
+    "11": "Stamping Rhythm + Box Lifecycle",
+    "12": "Common Mistakes",
+    "13": "Visualization Index",
+    "14": "Update Rules",
+    "15": "Relationships To Other Ledgers",
+    "15.5": "Stamped Boxes Registry",
+    "16": "Final Operating Rule"
+  },
+  "what_counts_as_a_box": {
+    "criteria_any_one_of": [
+      "owns a major system",
+      "contains canonical source-of-truth files",
+      "contains generated files agents might accidentally edit",
+      "has local rules or guardrails",
+      "has multiple important subfolders sharing local context",
+      "is frequently edited by agents",
+      "has caused confusion before",
+      "connects to external services",
+      "contains client/customer data",
+      "contains automation or scheduled-task behavior",
+      "contains UI route/page/widget ownership",
+      "requires a local Done Gate",
+      "has local open problems or audit history"
+    ],
+    "two_or_more_means_clearly_a_box": true,
+    "one_borderline_means_use_DIRECTORY_md": true,
+    "zero_means_no_orientation_file": true
+  },
+  "box_classes": [
+    {"class": "client", "description": "Per-client memory and operating substrate", "example": "Auto/Client Boxes/Brenda & Steve/"},
+    {"class": "staff", "description": "Per-staff voice/profile substrate", "example": "Auto/Staff Boxes/Andre/"},
+    {"class": "orchestrator", "description": "Runtime/render/state layer", "example": "Auto/orchestrator/"},
+    {"class": "inbox-skill", "description": "Inbox skill + guardrails", "example": "Auto/comeketo-inbox/"},
+    {"class": "app-ui", "description": "UI source/route/component substrate", "example": "project root, page-specific subdirs"},
+    {"class": "automation", "description": "Scheduled/triggered automation logic", "example": "future automation Boxes"},
+    {"class": "ledger", "description": "Project-level ledger directory", "example": "LEDGERS/"},
+    {"class": "bedrock", "description": "App-owned filesystem state", "example": "CCAgentindex/"},
+    {"class": "subagent-package", "description": "Draft or runnable sub-agent config", "example": "/Subagent Boxes/<name>/, CCAgentindex/agents/<name>/"},
+    {"class": "reference", "description": "Read-mostly reference material", "example": "Ledger Drafts/, rawdata/"},
+    {"class": "other", "description": "Anything not yet classed (require a note explaining why)", "example": null}
+  ],
+  "box_status_labels": [
+    {"label": "canonical", "meaning": "source of truth lives here"},
+    {"label": "active", "meaning": "current working system"},
+    {"label": "generated", "meaning": "output from scripts/renderers/sweeps"},
+    {"label": "mixed", "meaning": "contains both source and generated files"},
+    {"label": "legacy", "meaning": "old but may still contain useful references"},
+    {"label": "archive", "meaning": "historical; do not use as current truth"},
+    {"label": "experimental", "meaning": "not production truth"},
+    {"label": "deprecated", "meaning": "should not receive new work"},
+    {"label": "external", "meaning": "vendor/imported/dependency-owned"},
+    {"label": "sensitive", "meaning": "contains credentials, private data, or risky client info"}
+  ],
+  "labels_can_compose": true,
+  "label_examples": {
+    "Auto/Client Boxes/": ["canonical", "active", "sensitive"],
+    "Auto/orchestrator/": ["active", "mixed"],
+    "Auto/orchestrator/state/": ["generated"],
+    "Auto/comeketo-inbox/": ["canonical", "active"],
+    "LEDGERS/": ["canonical", "active"],
+    "Auto/Boxes/": ["mixed", "needs-verification"],
+    "CCAgentindex/Rodbot/": ["legacy", "archive"]
+  },
+  "standard_box_md": {
+    "template_path": "LEDGERS/LOCAL_TEMPLATE/BOX_LEDGER_TEMPLATE.md",
+    "filename": "BOX.md",
+    "required_header_fields": [
+      "Last updated",
+      "Maintainer",
+      "Path",
+      "Box class",
+      "Status"
+    ],
+    "required_sections": [
+      "Where Am I?",
+      "What This Box Owns",
+      "What This Box Does Not Own",
+      "Source-of-Truth Inside This Box",
+      "Files That Matter",
+      "Important Subdirectories",
+      "Generated / Do-Not-Edit Areas",
+      "Local Operating Rules",
+      "What Should Never Happen Here",
+      "Local Agent Protocol",
+      "Local Done Gate",
+      "Recent Local Changes",
+      "Open Local Problems",
+      "Next Handoff Notes",
+      "Ledgers That Apply Locally"
+    ],
+    "required_footer": "Update Rules For This Box Ledger"
+  },
+  "orientation_file_options": [
+    {"option": "BOX.md", "when": "directory is a full Box per Section 2", "template": "LEDGERS/LOCAL_TEMPLATE/BOX_LEDGER_TEMPLATE.md"},
+    {"option": "DIRECTORY.md", "when": "directory is meaningful but doesn't yet warrant a full Box", "template": "LEDGERS/LOCAL_TEMPLATE/DIRECTORY_ORIENTATION_TEMPLATE.md"},
+    {"option": "(nothing)", "when": "directory is generated, ignored, or trivially obvious", "template": null}
+  ],
+  "promotion_path": {
+    "DIRECTORY_md_to_BOX_md_when": [
+      "directory starts owning canonical truth",
+      "develops its own source-of-truth rules",
+      "develops its own forbidden actions",
+      "develops a local Done Gate beyond the global one",
+      "more than one project-level ledger applies locally"
+    ]
+  },
+  "non_orientation_local_files": [
+    {"file": "AGENTS.md / CLAUDE.md", "purpose": "agent-specific instructions for subprocesses", "coexists_with_BOX_md": true},
+    {"file": "<YYYY-MM-DD>_audit_marker.md", "purpose": "per-event audit markers", "coexists_with_BOX_md": true},
+    {"file": "client_ledger.md and similar running logs", "purpose": "local content owned by the Box", "coexists_with_BOX_md": true}
+  ],
+  "local_source_of_truth_pattern": {
+    "required": true,
+    "must_declare": ["canonical here", "generated here", "trust order", "conflict resolution rule"],
+    "examples": {
+      "client_box": [
+        "01b_comms_verbatim.md and comms/*.json (full Close.com record)",
+        "01_comms.md (curated exec summary)",
+        "00_meta.json (structured metadata)",
+        "client_ledger.md (running operator log)",
+        "operator-approved notes",
+        "04_profile.md / *_enrichment.md (internal strategy ONLY, NOT customer-facing truth)"
+      ],
+      "orchestrator": {
+        "canonical": ["scripts", "renderer logic", "ready-check logic"],
+        "generated": ["state/*.html", "state/*.json", "state/*.csv", "state/runs/*.json"],
+        "conflict_rule": "Fix the source data or generator first, then regenerate. Do not hand-edit generated state."
+      }
+    }
+  },
+  "local_done_gate_pattern": {
+    "universal_checks": [
+      "correct local source was changed (not generated output)",
+      "generated files were not edited as if source",
+      "local operating rules were followed",
+      "forbidden actions were not taken",
+      "relevant project-level ledgers were updated (per DEC-2026-04-29-003)",
+      "local Recent Changes section is updated",
+      "local Open Local Problems is updated if a problem was found",
+      "handoff/audit note left if needed",
+      "activity.jsonl appended for non-trivial changes"
+    ],
+    "class_specific_extensions": {
+      "client": [
+        "If strategy or state changed, audit marker (YYYY-MM-DD_audit_marker.md) was created or updated",
+        "If a plan was edited, 'Audit-cleaned: <date>' line is on the plan file",
+        "If a reply was received, plan was reviewed for staleness (per DEC-2026-04-28-004)"
+      ],
+      "app-ui": [
+        "page_asset_sitemap.md was updated in the same unit of work (per DEC-2026-04-28-007)"
+      ],
+      "ledger": [
+        "TCL Section 1 / Section 3 was updated if structural change occurred (per DEC-2026-04-29-003)",
+        "Global Ledger Section 12 was updated if major move",
+        "Index updated if a new ledger row landed"
+      ],
+      "subagent-package": [
+        "If graduating to runnable form, both /Subagent Boxes/<name>/ and CCAgentindex/agents/<name>/ are in sync",
+        "activity.jsonl appended on every run"
+      ]
+    }
+  },
+  "local_agent_protocol": [
+    "Read this BOX.md fully.",
+    "Read linked project-level ledgers if relevant (Global, Temporal Continuity, Decisions).",
+    "Read the local source-of-truth files in trust order.",
+    "Identify whether the target file is source or generated.",
+    "Check local guardrails and forbidden actions.",
+    "Make the smallest safe change.",
+    "Verify the change (run a check, view output, read diff) — or explain why verification was not possible.",
+    "Update local memory (Recent Local Changes, Open Local Problems).",
+    "Update project-level ledgers if the change affects global understanding.",
+    "Append to activity.jsonl for non-trivial changes.",
+    "Leave a handoff note if the next agent needs context."
+  ],
+  "recommended_first_boxes": {
+    "first_wave": [
+      "LEDGERS/BOX.md",
+      "Auto/Client Boxes/BOX.md",
+      "Auto/orchestrator/BOX.md",
+      "Auto/comeketo-inbox/BOX.md",
+      "CCAgentindex/BOX.md",
+      "project root BOX.md (covers app-ui)"
+    ],
+    "second_wave": [
+      "Auto/Staff Boxes/BOX.md",
+      "Auto/Onboard Scripts/BOX.md",
+      "Subagent Boxes/BOX.md",
+      "Ledger Drafts/BOX.md"
+    ],
+    "third_wave": [
+      "Per-client BOX.md only for high-value or complex clients",
+      "Brenda & Steve and Hugo Casillas qualify"
+    ],
+    "do_not_stamp": [
+      "node_modules/",
+      "__pycache__/",
+      ".git/",
+      ".logs/",
+      ".claude/",
+      "one-off generated output folders (e.g., Auto/orchestrator/state/)",
+      "empty placeholder folders",
+      "_vaults/<domain>/ dormant folders",
+      "per-event audit markers"
+    ]
+  },
+  "box_lifecycle": ["created", "active", "audited", "retired"],
+  "lifecycle_rules": {
+    "created": "stamp landed; required sections present; minimal content",
+    "active": "in regular use; content matches reality",
+    "audited": "latest pass confirmed accuracy; audit timestamp on the BOX.md or in a dated marker",
+    "retired": "directory no longer used; BOX.md kept with Status: retired YYYY-MM-DD and a final note. Not deleted — preserves rebuild instructions."
+  },
+  "common_mistakes": [
+    "Treating a folder as a Box without need",
+    "Letting a Box's purpose drift",
+    "Treating a local exception as a global rule",
+    "Editing generated output instead of the generator",
+    "Making agents infer source-of-truth from scattered files",
+    "Overloading the Global Ledger with details that belong in a local Box",
+    "Creating local rules that contradict the Global Ledger",
+    "Forgetting that directories can contain sensitive data",
+    "Stamping every directory",
+    "Treating the BOX.md as static"
+  ],
+  "relationships": {
+    "triad_spine": {
+      "decision_id": "DEC-2026-04-29-001",
+      "role": "this ledger operationalizes the Box leg",
+      "other_legs": {
+        "Ledger leg": "project-level ledgers under LEDGERS/ + per-Box ledgers (sections inside each BOX.md)",
+        "Sub-agent leg": "/Subagent Boxes/ (draft) -> CCAgentindex/agents/ (runnable, Phase B) -> Subagent Boxes (Phase C)"
+      }
+    },
+    "file_directory_ledger": {
+      "separation": "FDL maps what directories exist; Box Ledger defines which ones should have a BOX.md and what it must contain"
+    },
+    "decisions_ledger": {
+      "operationalizes": [
+        {"decision_id": "DEC-2026-04-28-003", "via": "the 28 Client Boxes' BOX.md files enforce the trust order"},
+        {"decision_id": "DEC-2026-04-28-006", "via": "Auto/Client Boxes/ Box owns canonical truth; UI Box only displays"},
+        {"decision_id": "DEC-2026-04-28-007", "via": "app-ui Box class extends its Local Done Gate to require sitemap updates"},
+        {"decision_id": "DEC-2026-04-29-001", "via": "this entire ledger is the operational form of that decision"},
+        {"decision_id": "DEC-2026-04-29-003", "via": "Local Agent Protocol enforces it at the Box level"}
+      ]
+    },
+    "communications_ledger": {
+      "local_equivalent": "each Box's Recent Local Changes and Next Handoff Notes",
+      "promotion_threshold": "local-context messages stay in the Box; project-wide messages get promoted to Communications"
+    },
+    "open_problems_ledger": {
+      "local_equivalent": "each Box's Open Local Problems",
+      "mirroring": "local-only problems stay local; project-wide problems get a PROB- ID and live in both places (with the Box pointing to the global PROB)"
+    },
+    "source_of_truth_ledger_planned": {
+      "relationship": "each Box's Section 4 (Source-of-Truth Inside This Box) is the local implementation of those project-wide rules"
+    },
+    "definition_of_done_ledger_planned": {
+      "relationship": "each Box's Section 11 (Local Done Gate) is the per-Box specialization of those standards"
+    }
+  },
+  "stamped_boxes_registry": [],
+  "visuals": [
+    {
+      "name": "box_orientation_flow",
+      "path": "LEDGERS/VISUALS/box_orientation_flow.mmd",
+      "purpose": "Agent enters directory -> reads BOX.md -> identifies truth -> checks rules -> edits -> applies Local Done Gate"
+    },
+    {
+      "name": "box_hierarchy",
+      "path": "LEDGERS/VISUALS/box_hierarchy.mmd",
+      "purpose": "Global Ledger -> File Directory Ledger -> Box Ledger -> per-class BOX.md instances"
+    }
+  ]
+}

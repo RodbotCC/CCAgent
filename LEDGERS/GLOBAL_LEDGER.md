@@ -1,12 +1,13 @@
 # Global Ledger
 
-Last updated: 2026-04-28 (Global Ledger Steward automation landed)
+Last updated: 2026-04-29 (post Cowork housekeeping — directory consolidation + Audit dropped from build queue + Communications Ledger queued)
 Maintainer: Jake / Comeketo Agent project agents
 Repository: [RodbotCC/CCAgent](https://github.com/RodbotCC/CCAgent)
 Default branch: `main`
-Current phase: Client Boxes + Automation Safety Hardening — Ledger system buildout (Phases 1–5 complete; first ledger steward automation active)
-Current project state: Active build; live-ish automation; guardrail and continuity hardening in progress
-Read-first status: **Mandatory before meaningful edits.**
+Current phase: **Cleanup phase.** Plumbing-first build was scrapped under owner pressure (Rodrigo); UI rebuilt from working pieces; Auto/ payload symlinked into bedrock. Ledger Phases 1–5 + first steward live. Bedrock itself (`CCAgentindex/`) was bootstrapped on the fly and needs triad-based reconciliation (PROB-016, deferred until ledger + sub-agent buildouts settle).
+Architectural spine: **Box + Ledger + Sub-agent triad.** Anything stateful gets all three. Legibility > build speed.
+Current project state: Active build under cleanup discipline. Not greenfield. The triad is currently lopsided — more Boxes than Ledgers, more Ledgers than Sub-agents — and filling that grid is the dominant verb.
+Read-first status: **Mandatory before meaningful edits.** Then read [`TEMPORAL_CONTINUITY.md`](TEMPORAL_CONTINUITY.md) for current moment, then [`OPEN_PROBLEMS_LEDGER.md`](OPEN_PROBLEMS_LEDGER.md) (esp. PROB-016).
 
 > The repo is not just code. The repo is the memory of the build.
 
@@ -267,12 +268,11 @@ The Global Ledger is the world map. Local ledgers are neighborhood maps.
 | File Contents | important file responsibilities | planned |
 | Asset / Widget Map | pages, widgets, APIs, data flow | partially active — `page_asset_sitemap.md` is the live UI map |
 | Connections | external systems and services | planned |
-| Decisions | major choices and why | planned |
-| Communications | handoffs, warnings, notes | planned |
-| Open Problems | known unfinished work | planned |
+| Decisions | major choices and why | **active (2026-04-29)** ([`DECISIONS_LEDGER.md`](DECISIONS_LEDGER.md) + [`.json`](DECISIONS_LEDGER.json)) — 12 active decisions, 1 needs-review, 5 promoted from Communications |
+| Communications | handoffs, warnings, lessons, preferences, attempts, cross-system coordination | **active (2026-04-29)** ([`COMMUNICATIONS_LEDGER.md`](COMMUNICATIONS_LEDGER.md) + [`.json`](COMMUNICATIONS_LEDGER.json)) — 18 seeded entries |
 | Prompt / Reconstruction | how important things were built | planned |
 | Scout | tool/model/workflow research | planned |
-| Audit | audit findings and follow-up | planned |
+| Audit | audit findings and follow-up | **out-of-scope (2026-04-29)** — removed from build queue; coverage absorbed by Open Problems / Decisions / Communications / per-Box ledgers |
 | Phase | current milestone state | planned |
 | Page Ledgers | page-specific memory (one per route) | planned |
 | Widget Ledgers | widget-specific memory | planned |
@@ -360,6 +360,14 @@ Short version: **if the system changed, the system's memory changes with it.**
 
 ## 12. Recently Changed
 
+### 2026-04-29
+
+- **Phase 7: Decisions Ledger created.** Added [`DECISIONS_LEDGER.md`](DECISIONS_LEDGER.md) + [`DECISIONS_LEDGER.json`](DECISIONS_LEDGER.json) + [`VISUALS/decision_dependency_map.mmd`](VISUALS/decision_dependency_map.mmd) + [`VISUALS/decision_timeline.mmd`](VISUALS/decision_timeline.mmd). 12 active decisions: 8 from spec (GitHub source-of-truth, FileTree-over-RAG, Client Boxes canonical, plans-are-strategy-drafts, risky-moves-need-isolated-approval, Boxes-page-display-only, sitemap-Done-Gate, one-ledger-at-a-time) + 4 today (triad spine, three-phase build, TCL/GL update discipline, Audit-out-of-scope). Each decision carries status / confidence / scope / context / rationale / alternatives / consequences / do-not-undo-casually / review-trigger / North Star alignment. 5 Communications entries promoted in (`COMM-2026-04-28-001`, `COMM-2026-04-28-003`, `COMM-2026-04-29-001`, `COMM-2026-04-29-003`, `COMM-2026-04-29-005`) with `Status: promoted` markers and pointers. 1 decision needing review seeded (Approval UI / Risk Card Standard, related to DEC-005). Steward agent not yet authored — Phase B work, will live at `/Subagent Boxes/decisions_subagent_package/`.
+- **Phase 6: Communications Ledger created.** Added [`COMMUNICATIONS_LEDGER.md`](COMMUNICATIONS_LEDGER.md) + [`COMMUNICATIONS_LEDGER.json`](COMMUNICATIONS_LEDGER.json) + [`VISUALS/handoff_flow.mmd`](VISUALS/handoff_flow.mmd) + [`VISUALS/communication_lifecycle.mmd`](VISUALS/communication_lifecycle.mmd) + [`VISUALS/communications_timeline.mmd`](VISUALS/communications_timeline.mmd). 18 seeded entries: 5 active handoff notes (ledger build rhythm, client-box cleanup rhythm, Brenda fee-waiver lesson, cleanup-phase build arc, three-phase build discipline), 3 warnings (local Git drift, plans-may-predate-guardrails, bedrock reconciliation deferred), 3 preferences (preferred ledger style, safe movement, triad spine), 4 lessons (sitting-there-is-state, automation-can-be-personal, wholesome-vs-creepy, TCL/GL drift is the failure mode), 1 abandoned attempt (plumbing-first build pivot), 2 cross-system notes (client-box state flow, page work Done Gate). Steward agent not yet authored — will live at `/Subagent Boxes/communications_subagent_package/` when Phase B starts.
+- **Cowork housekeeping pass.** `/Ledger Drafts/` (19 .txt outlines) and `/Subagent Boxes/` (5 draft sub-agent packages) consolidated as new top-level directories. Sub-agent packages moved from repo root. Audit Ledger removed from build queue (covered by Open Problems / Decisions / Communications / per-Box ledgers); draft kept in `Ledger Drafts/` as reference. Three-phase build discipline codified: Phase A Ledgers (current) → Phase B Sub-agents → Phase C Subagent Boxes.
+- **Triad spine codified as the architectural rule.** Box + Ledger + Sub-agent. Anything stateful gets all three. Captured in TCL §1, §3, §5 carry-forward, and as `COMM-2026-04-29-001`.
+- **PROB-2026-04-28-016 logged earlier today (Claude Code catch-up session).** Bedrock reconciliation deferred until ledger + sub-agent buildouts complete.
+
 ### 2026-04-28
 
 - **Global Ledger Steward automation landed.** Promoted the draft `global_ledger_subagent_package/` into canonical steward materials at `LEDGERS/AGENTS/global_ledger_steward/` and a runnable app agent at `CCAgentindex/agents/global_ledger_steward/`. The agent runs through `POST /api/agents/global_ledger_steward/run`, has local write authority scoped to ledger memory files, appends one activity line per run, and writes receipts under `CCAgentindex/_ledger/ledger_steward_runs/`. This is the first live steward in the planned ledger-agent pattern; sibling Temporal, North Star, File Directory, and Open Problems packages remain draft until promoted.
@@ -385,12 +393,14 @@ For finer-grained history, see `git log` and `CCAgentindex/_ledger/activity.json
 
 ## 13. Next Handoff Notes
 
-**Current preferred workflow:** one ledger at a time. Phases 1–5 (Global + Temporal Continuity + North Star + File Directory + Open Problems) have landed. The Global Ledger Steward is now runnable for global-memory maintenance sweeps. Next ledger awaits Jake's signal — Phase 6 likely Source-of-Truth (encodes rules already summarized in §4 + NS-06 + FDL §6), Definition of Done, or Decisions. See `LEDGERS/INDEX.md`.
+**Current preferred workflow:** one ledger at a time. Phases 1–7 (Global + Temporal Continuity + North Star + File Directory + Open Problems + Communications + Decisions) have landed. The Global Ledger Steward is the only runnable steward today; the other 5 packages live as drafts at `/Subagent Boxes/`. Audit Ledger was dropped from the build queue. Next ledger awaits Jake's signal — likely Source-of-Truth or Definition of Done. See `LEDGERS/INDEX.md`.
 
-**Read order:** Global Ledger → Temporal Continuity Ledger → North Star Ledger (when planning) → File Directory Ledger (when navigating) → Open Problems Ledger (before starting work — what's broken or risky in the area you're about to touch?) → relevant Box / local ledger → work.
+**Read order:** Global Ledger → Temporal Continuity Ledger → Communications Ledger (warnings + handoffs + preferences for this session) → Decisions Ledger (settled rules — read before reversing any architectural choice) → North Star Ledger (when planning) → File Directory Ledger (when navigating) → Open Problems Ledger (before starting work — what's broken or risky in the area you're about to touch?) → relevant Box / local ledger → work.
 
 - **Global** wins for permanent identity and rules.
 - **Temporal Continuity** wins for current working state.
+- **Communications** is the durable handoff channel: read at session start for active warnings, preferences, and lessons; write at session end for anything the next agent needs to hear.
+- **Decisions** records settled rules: read before reversing architecture, citing rationale, or running an audit pass. 12 active decisions covering source-of-truth, memory architecture, client truth, send safety, UI Done Gate, workflow, and the triad spine.
 - **North Star** is the purpose layer: read it when planning major work, auditing changes, or resolving tradeoffs.
 - **File Directory** is the city map: read it when locating files, editing unfamiliar areas, or onboarding.
 - **Open Problems** is the protection system: read it before starting work to avoid rediscovering what we already know is broken.
@@ -439,23 +449,28 @@ Active ledgers (this directory):
 - [`LEDGERS/FILE_DIRECTORY_LEDGER.json`](FILE_DIRECTORY_LEDGER.json) — structured mirror with all directories + open problems surfaced.
 - [`LEDGERS/OPEN_PROBLEMS_LEDGER.md`](OPEN_PROBLEMS_LEDGER.md) — 13 active problems with stable IDs, status, severity/urgency, workarounds, close criteria. **Read this before starting work in any area to avoid rediscovering known issues.**
 - [`LEDGERS/OPEN_PROBLEMS_LEDGER.json`](OPEN_PROBLEMS_LEDGER.json) — structured mirror including blocked, partially-fixed, recurring patterns, recently-closed.
+- [`LEDGERS/COMMUNICATIONS_LEDGER.md`](COMMUNICATIONS_LEDGER.md) — how agents talk across time: handoffs, warnings, preferences, lessons, attempts, cross-system coordination. 18 seeded entries. **Read at session start and end.**
+- [`LEDGERS/COMMUNICATIONS_LEDGER.json`](COMMUNICATIONS_LEDGER.json) — structured mirror with all entries, types, promotion paths, archive policy, counts.
+- [`LEDGERS/DECISIONS_LEDGER.md`](DECISIONS_LEDGER.md) — settled project rules. 12 active decisions with stable IDs, status, confidence, scope, rationale, alternatives, consequences, do-not-undo-casually, review triggers. **Read before reversing any architectural choice.**
+- [`LEDGERS/DECISIONS_LEDGER.json`](DECISIONS_LEDGER.json) — structured mirror with all decisions, dependencies, Communications promotions, decisions-needing-review.
 
 Planned ledgers (not yet created — see INDEX.md for build order):
 
 - `LEDGERS/SOURCE_OF_TRUTH.md`
 - `LEDGERS/DEFINITION_OF_DONE.md`
-- `LEDGERS/DIRECTORY.md`
-- `LEDGERS/OPEN_PROBLEMS.md`
-- `LEDGERS/DECISIONS.md`
-- `LEDGERS/COMMUNICATIONS.md`
 - `LEDGERS/CONNECTIONS.md`
 - `LEDGERS/PROMPT_RECONSTRUCTION.md`
 - `LEDGERS/SCOUT.md`
-- `LEDGERS/AUDIT.md`
 - `LEDGERS/PHASE.md`
 - `LEDGERS/SETTINGS.md`
+- `LEDGERS/FILE_CONTENTS.md`
+- `LEDGERS/ASSET_WIDGET_MAP.md`
 - `LEDGERS/PAGES/<route>.md` (one per UI route)
 - `LEDGERS/WIDGETS/<widget>.md` (one per major widget)
+- Per-directory `BOX.md` and `DIRECTORY_ORIENTATION.md` stamps from `LOCAL_TEMPLATE/`
+
+**Out of scope (removed from build queue 2026-04-29):**
+- ~~`LEDGERS/AUDIT.md`~~ — coverage absorbed by Open Problems, Decisions, Communications, per-Box ledgers.
 
 ---
 

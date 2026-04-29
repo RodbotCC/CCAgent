@@ -1,7 +1,7 @@
 {
   "ledger_type": "global",
   "version": "0.1.0",
-  "last_updated": "2026-04-28",
+  "last_updated": "2026-04-29",
   "last_updated_note": "Global Ledger Steward automation landed",
   "maintainer": "Jake / Comeketo Agent project agents",
   "repository": {
@@ -12,7 +12,7 @@
   },
   "source_of_truth": "GitHub",
   "working_copy_root": "/Users/jakeaaron/Downloads/CC Agent",
-  "current_phase": "Client Boxes + Automation Safety Hardening — Ledger system buildout (Phases 1–5 complete; first ledger steward automation active)",
+  "current_phase": "Client Boxes + Automation Safety Hardening \u2014 Ledger system buildout (Phases 1\u20135 complete; first ledger steward automation active)",
   "current_state": "active_build",
   "read_first": true,
   "core_principles": [
@@ -29,7 +29,15 @@
       "path": "Auto/Client Boxes",
       "status": "active",
       "count": 28,
-      "key_assets": ["00_meta.json", "01_comms.md", "01b_comms_verbatim.md", "comms/", "04_profile.md", "05_seven_day_plan.md", "client_ledger.md"]
+      "key_assets": [
+        "00_meta.json",
+        "01_comms.md",
+        "01b_comms_verbatim.md",
+        "comms/",
+        "04_profile.md",
+        "05_seven_day_plan.md",
+        "client_ledger.md"
+      ]
     },
     {
       "id": "orchestrator",
@@ -37,7 +45,13 @@
       "role": "runtime/render/state layer",
       "path": "Auto/orchestrator",
       "status": "active",
-      "key_assets": ["wiring/automations.md", "state/master_ledger.csv", "state/today.html", "render_lead.py", "bin/comms_state_sweep.py"]
+      "key_assets": [
+        "wiring/automations.md",
+        "state/master_ledger.csv",
+        "state/today.html",
+        "render_lead.py",
+        "bin/comms_state_sweep.py"
+      ]
     },
     {
       "id": "boxes_page",
@@ -46,15 +60,27 @@
       "render_component": "BoxesScreen in screens.jsx",
       "data_source": "Auto/Client Boxes, Auto/Staff Boxes, Auto/orchestrator/state/*.html",
       "status": "active",
-      "specialized_renderers": ["hugo_casillas", "brenda_steve"]
+      "specialized_renderers": [
+        "hugo_casillas",
+        "brenda_steve"
+      ]
     },
     {
       "id": "inbox_guardrails",
       "name": "Inbox Guardrails",
       "role": "safety contract for sends and Close inbox work",
-      "paths": ["Auto/comeketo-inbox/", "Guardrails.html", "comeketo-guardrails-agent.md"],
+      "paths": [
+        "Auto/comeketo-inbox/",
+        "Guardrails.html",
+        "comeketo-guardrails-agent.md"
+      ],
       "status": "active",
-      "overrides": ["seven_day_plan", "profile", "enrichment", "automation_momentum"]
+      "overrides": [
+        "seven_day_plan",
+        "profile",
+        "enrichment",
+        "automation_momentum"
+      ]
     },
     {
       "id": "ledgers",
@@ -62,14 +88,22 @@
       "role": "project memory system",
       "path": "LEDGERS",
       "status": "active",
-      "phase": "Phases 1–5 — Global + Temporal Continuity + North Star + File Directory + Open Problems landed; global_ledger_steward automation active",
-      "steward_agents": ["LEDGERS/AGENTS/global_ledger_steward/", "CCAgentindex/agents/global_ledger_steward/"]
+      "phase": "Phases 1\u20135 \u2014 Global + Temporal Continuity + North Star + File Directory + Open Problems landed; global_ledger_steward automation active",
+      "steward_agents": [
+        "LEDGERS/AGENTS/global_ledger_steward/",
+        "CCAgentindex/agents/global_ledger_steward/"
+      ]
     },
     {
       "id": "meta_harness",
       "name": "Meta Harness",
       "role": "agent workflow layer",
-      "paths": ["CLAUDE.md", "AGENT.md", "page_asset_sitemap.md", "LEDGERS/GLOBAL_LEDGER.md"],
+      "paths": [
+        "CLAUDE.md",
+        "AGENT.md",
+        "page_asset_sitemap.md",
+        "LEDGERS/GLOBAL_LEDGER.md"
+      ],
       "status": "active"
     },
     {
@@ -78,8 +112,20 @@
       "role": "the only filesystem state the app owns",
       "path": "CCAgentindex",
       "status": "active",
-      "surviving_domains": ["people", "venues", "_ledger", "_inbox", "indexes"],
-      "retired_domains": ["projects", "threads", "commitments", "knowledge", "Rodbot"]
+      "surviving_domains": [
+        "people",
+        "venues",
+        "_ledger",
+        "_inbox",
+        "indexes"
+      ],
+      "retired_domains": [
+        "projects",
+        "threads",
+        "commitments",
+        "knowledge",
+        "Rodbot"
+      ]
     },
     {
       "id": "pieces_memory",
@@ -127,7 +173,12 @@
       "summary": "Create global and local memory layers for durable project continuity.",
       "status": "in_progress",
       "phase": "Phases 1-5 complete; first steward automation active",
-      "next_ledgers": ["source_of_truth", "definition_of_done", "decisions", "audit"]
+      "next_ledgers": [
+        "source_of_truth",
+        "definition_of_done",
+        "decisions",
+        "audit"
+      ]
     },
     {
       "id": "boxes_page_integration",
@@ -165,7 +216,7 @@
     },
     {
       "id": "github_local_drift",
-      "summary": "Working tree currently dirty (modified pieces_sweeps.jsonl + untracked Flávia Benson .txt). Always git status before direct GitHub writes.",
+      "summary": "Working tree currently dirty (modified pieces_sweeps.jsonl + untracked Fl\u00e1via Benson .txt). Always git status before direct GitHub writes.",
       "status": "active",
       "as_of": "2026-04-28"
     },
@@ -189,7 +240,7 @@
       "00_meta.json",
       "client_ledger.md",
       "approved operator notes",
-      "04_profile.md and *_enrichment.md (internal strategy only — not customer-facing truth)"
+      "04_profile.md and *_enrichment.md (internal strategy only \u2014 not customer-facing truth)"
     ],
     "generated_outputs": "Views, not primary truth, unless explicitly marked canonical.",
     "plans": "Strategy drafts. Subordinate to comms, state, guardrails, replies, approvals.",
@@ -198,57 +249,194 @@
     "activity_ledger": "CCAgentindex/_ledger/activity.jsonl is append-only audit trail."
   },
   "ledger_index": [
-    {"id": "global", "path": "LEDGERS/GLOBAL_LEDGER.md", "status": "active"},
-    {"id": "global_state_mirror", "path": "LEDGERS/GLOBAL_LEDGER.json", "status": "active"},
-    {"id": "ledger_index", "path": "LEDGERS/INDEX.md", "status": "active"},
-    {"id": "temporal_continuity", "path": "LEDGERS/TEMPORAL_CONTINUITY.md", "status": "active"},
-    {"id": "temporal_continuity_state_mirror", "path": "LEDGERS/TEMPORAL_CONTINUITY.json", "status": "active"},
-    {"id": "north_star", "path": "LEDGERS/NORTH_STAR.md", "status": "active"},
-    {"id": "north_star_state_mirror", "path": "LEDGERS/NORTH_STAR.json", "status": "active"},
-    {"id": "source_of_truth", "path": "LEDGERS/SOURCE_OF_TRUTH.md", "status": "planned"},
-    {"id": "definition_of_done", "path": "LEDGERS/DEFINITION_OF_DONE.md", "status": "planned"},
-    {"id": "file_directory", "path": "LEDGERS/FILE_DIRECTORY_LEDGER.md", "status": "active"},
-    {"id": "file_directory_state_mirror", "path": "LEDGERS/FILE_DIRECTORY_LEDGER.json", "status": "active"},
-    {"id": "open_problems", "path": "LEDGERS/OPEN_PROBLEMS_LEDGER.md", "status": "active"},
-    {"id": "open_problems_state_mirror", "path": "LEDGERS/OPEN_PROBLEMS_LEDGER.json", "status": "active"},
-    {"id": "global_ledger_steward_package", "path": "LEDGERS/AGENTS/global_ledger_steward/", "status": "active"},
-    {"id": "global_ledger_steward_app_agent", "path": "CCAgentindex/agents/global_ledger_steward/", "status": "active", "scope": "Runnable app agent for scoped Global Ledger maintenance sweeps"},
-    {"id": "decisions", "path": "LEDGERS/DECISIONS.md", "status": "planned"},
-    {"id": "communications", "path": "LEDGERS/COMMUNICATIONS.md", "status": "planned"},
-    {"id": "connections", "path": "LEDGERS/CONNECTIONS.md", "status": "planned"},
-    {"id": "prompt_reconstruction", "path": "LEDGERS/PROMPT_RECONSTRUCTION.md", "status": "planned"},
-    {"id": "scout", "path": "LEDGERS/SCOUT.md", "status": "planned"},
-    {"id": "audit", "path": "LEDGERS/AUDIT.md", "status": "planned"},
-    {"id": "phase", "path": "LEDGERS/PHASE.md", "status": "planned"},
-    {"id": "settings", "path": "LEDGERS/SETTINGS.md", "status": "planned"},
-    {"id": "page_asset_sitemap", "path": "page_asset_sitemap.md", "status": "active", "scope": "UI Done Gate"},
-    {"id": "page_ledgers", "path": "LEDGERS/PAGES/", "status": "planned"},
-    {"id": "widget_ledgers", "path": "LEDGERS/WIDGETS/", "status": "planned"}
+    {
+      "id": "global",
+      "path": "LEDGERS/GLOBAL_LEDGER.md",
+      "status": "active"
+    },
+    {
+      "id": "global_state_mirror",
+      "path": "LEDGERS/GLOBAL_LEDGER.json",
+      "status": "active"
+    },
+    {
+      "id": "ledger_index",
+      "path": "LEDGERS/INDEX.md",
+      "status": "active"
+    },
+    {
+      "id": "temporal_continuity",
+      "path": "LEDGERS/TEMPORAL_CONTINUITY.md",
+      "status": "active"
+    },
+    {
+      "id": "temporal_continuity_state_mirror",
+      "path": "LEDGERS/TEMPORAL_CONTINUITY.json",
+      "status": "active"
+    },
+    {
+      "id": "north_star",
+      "path": "LEDGERS/NORTH_STAR.md",
+      "status": "active"
+    },
+    {
+      "id": "north_star_state_mirror",
+      "path": "LEDGERS/NORTH_STAR.json",
+      "status": "active"
+    },
+    {
+      "id": "source_of_truth",
+      "path": "LEDGERS/SOURCE_OF_TRUTH.md",
+      "status": "planned"
+    },
+    {
+      "id": "definition_of_done",
+      "path": "LEDGERS/DEFINITION_OF_DONE.md",
+      "status": "planned"
+    },
+    {
+      "id": "file_directory",
+      "path": "LEDGERS/FILE_DIRECTORY_LEDGER.md",
+      "status": "active"
+    },
+    {
+      "id": "file_directory_state_mirror",
+      "path": "LEDGERS/FILE_DIRECTORY_LEDGER.json",
+      "status": "active"
+    },
+    {
+      "id": "open_problems",
+      "path": "LEDGERS/OPEN_PROBLEMS_LEDGER.md",
+      "status": "active"
+    },
+    {
+      "id": "open_problems_state_mirror",
+      "path": "LEDGERS/OPEN_PROBLEMS_LEDGER.json",
+      "status": "active"
+    },
+    {
+      "id": "global_ledger_steward_package",
+      "path": "LEDGERS/AGENTS/global_ledger_steward/",
+      "status": "active"
+    },
+    {
+      "id": "global_ledger_steward_app_agent",
+      "path": "CCAgentindex/agents/global_ledger_steward/",
+      "status": "active",
+      "scope": "Runnable app agent for scoped Global Ledger maintenance sweeps"
+    },
+    {
+      "id": "decisions",
+      "path": "LEDGERS/DECISIONS_LEDGER.md",
+      "status": "active",
+      "activated_on": "2026-04-29"
+    },
+    {
+      "id": "communications",
+      "path": "LEDGERS/COMMUNICATIONS_LEDGER.md",
+      "status": "active",
+      "activated_on": "2026-04-29"
+    },
+    {
+      "id": "connections",
+      "path": "LEDGERS/CONNECTIONS.md",
+      "status": "planned"
+    },
+    {
+      "id": "prompt_reconstruction",
+      "path": "LEDGERS/PROMPT_RECONSTRUCTION.md",
+      "status": "planned"
+    },
+    {
+      "id": "scout",
+      "path": "LEDGERS/SCOUT.md",
+      "status": "planned"
+    },
+    {
+      "id": "audit",
+      "path": "LEDGERS/AUDIT.md",
+      "status": "out-of-scope",
+      "removed_on": "2026-04-29",
+      "removal_reason": "covered by Open Problems / Decisions / Communications / per-Box ledgers (DEC-2026-04-29-004)"
+    },
+    {
+      "id": "phase",
+      "path": "LEDGERS/PHASE.md",
+      "status": "planned"
+    },
+    {
+      "id": "settings",
+      "path": "LEDGERS/SETTINGS.md",
+      "status": "planned"
+    },
+    {
+      "id": "page_asset_sitemap",
+      "path": "page_asset_sitemap.md",
+      "status": "active",
+      "scope": "UI Done Gate"
+    },
+    {
+      "id": "page_ledgers",
+      "path": "LEDGERS/PAGES/",
+      "status": "planned"
+    },
+    {
+      "id": "widget_ledgers",
+      "path": "LEDGERS/WIDGETS/",
+      "status": "planned"
+    }
   ],
-  "ui_routes": ["grid", "settings", "leads", "clients", "coworkers", "contacts", "briefing", "activity", "automation", "intake", "analytics"],
-  "retired_routes": ["memory", "prediction", "commitments", "commitment_detail", "inbox", "inbox_detail", "calendar", "Rodbot", "projects", "tables", "table_new", "table_detail", "delegations", "chat"],
+  "ui_routes": [
+    "grid",
+    "settings",
+    "leads",
+    "clients",
+    "coworkers",
+    "contacts",
+    "briefing",
+    "activity",
+    "automation",
+    "intake",
+    "analytics"
+  ],
+  "retired_routes": [
+    "memory",
+    "prediction",
+    "commitments",
+    "commitment_detail",
+    "inbox",
+    "inbox_detail",
+    "calendar",
+    "Rodbot",
+    "projects",
+    "tables",
+    "table_new",
+    "table_detail",
+    "delegations",
+    "chat"
+  ],
   "last_handoff": {
     "as_of": "2026-04-28",
-      "completed_this_session": [
-        "Global Ledger Steward automation (canonical package + runnable app agent + receipt directory)",
-        "Phase 1: Global Ledger (GLOBAL_LEDGER.md + .json + INDEX.md + 3 visuals + 2 templates)",
-        "Phase 2: Temporal Continuity Ledger (TEMPORAL_CONTINUITY.md + .json + 2 visuals)",
-        "Phase 3: North Star Ledger (NORTH_STAR.md + .json + 2 visuals; 10 NS goals, anti-goals, tradeoff rules, audit questions, Wholesome Enrichment, Client Automation North Star)",
-        "Phase 4: File Directory Ledger (FILE_DIRECTORY_LEDGER.md + .json + 2 visuals)",
-        "Phase 5: Open Problems Ledger (OPEN_PROBLEMS_LEDGER.md + .json + 3 visuals)",
-        "Verbatim comms backfill across all 28 client boxes (582 raw payloads)",
+    "completed_this_session": [
+      "Global Ledger Steward automation (canonical package + runnable app agent + receipt directory)",
+      "Phase 1: Global Ledger (GLOBAL_LEDGER.md + .json + INDEX.md + 3 visuals + 2 templates)",
+      "Phase 2: Temporal Continuity Ledger (TEMPORAL_CONTINUITY.md + .json + 2 visuals)",
+      "Phase 3: North Star Ledger (NORTH_STAR.md + .json + 2 visuals; 10 NS goals, anti-goals, tradeoff rules, audit questions, Wholesome Enrichment, Client Automation North Star)",
+      "Phase 4: File Directory Ledger (FILE_DIRECTORY_LEDGER.md + .json + 2 visuals)",
+      "Phase 5: Open Problems Ledger (OPEN_PROBLEMS_LEDGER.md + .json + 3 visuals)",
+      "Verbatim comms backfill across all 28 client boxes (582 raw payloads)",
       "Read-first wiring in CLAUDE.md, AGENT.md, README.md",
       "page_asset_sitemap.md updated for verbatim comms"
     ],
     "next_actor_priorities": [
       "Use global_ledger_steward for global-memory maintenance sweeps; audit-only mode first when drift risk is unclear.",
-      "Wait for Jake's signal on Phase 6 ledger — likely Source-of-Truth, Definition of Done, or Decisions.",
+      "Wait for Jake's signal on Phase 6 ledger \u2014 likely Source-of-Truth, Definition of Done, or Decisions.",
       "Continue one-box-at-a-time client box hardening (Brenda template, 27 boxes remaining).",
       "Wire 01b_comms_verbatim.md into Boxes UI as a second comms tab when ready."
     ],
     "cautions": [
-      "Working tree dirty — coordinate with Jake before any GitHub push.",
-      "Don't bundle pre-existing dirty files (pieces_sweeps.jsonl, Flávia Benson.txt) with this session's commits without confirming.",
+      "Working tree dirty \u2014 coordinate with Jake before any GitHub push.",
+      "Don't bundle pre-existing dirty files (pieces_sweeps.jsonl, Fl\u00e1via Benson.txt) with this session's commits without confirming.",
       "Plans authored before guardrail enforcement may carry unsafe executable copy.",
       "Close API key was env-only and not persisted; refresh requires Jake.",
       "Auto/ symlink writes are outside main repo's git scope."

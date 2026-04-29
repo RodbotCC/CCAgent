@@ -1,0 +1,1036 @@
+# Prompt / Reconstruction Ledger — Project-Wide Implementation Outline
+
+## 0. Purpose
+
+The **Prompt / Reconstruction Ledger** records how important parts of the system were created, regenerated, rebuilt, or conceptually shaped.
+
+It is not just chat history.
+
+It is rebuild memory.
+
+The uploaded ledger plan describes this ledger as the place that captures the intent, instructions, constraints, reasoning, and rough recipe behind major parts of the system so they can be rebuilt, regenerated, audited, or upgraded later. It should answer what we were trying to build, what instructions shaped it, what constraints mattered, what should be preserved if rebuilt, what should not be repeated, what files/tools/APIs/models/ledgers were involved, and how a future agent could recreate it. 
+
+That is the heart of it:
+
+> Code is the artifact.
+> The Reconstruction Ledger is the recipe.
+
+This ledger makes the project reconstructable.
+
+---
+
+# 1. Core Operating Principle
+
+The Prompt / Reconstruction Ledger should enforce this rule:
+
+> If a future agent may need to rebuild it, preserve the recipe.
+
+The project should not depend on invisible generation history.
+
+If a page, workflow, Client Box plan, data pipeline, automation, ledger system, or UI pattern was created through a prompt-driven process, the project should preserve enough context to recreate it later with a better model, a safer process, or a new implementation.
+
+The goal is not to save every prompt.
+
+The goal is to preserve the instructions and constraints that shaped important artifacts.
+
+---
+
+# 2. Recommended Location
+
+Create it in the central ledger directory:
+
+```text id="wu0mvi"
+/LEDGERS/
+  RECONSTRUCTION_LEDGER.md
+  RECONSTRUCTION_LEDGER.json
+  INDEX.md
+  RECONSTRUCTION/
+    ledger_system/
+    client_boxes/
+    boxes_page/
+    inbox_guardrails/
+    automation/
+  VISUALS/
+    reconstruction_flow.mmd
+    artifact_recipe_map.mmd
+```
+
+Recommended final core files:
+
+```text id="dgfw44"
+/LEDGERS/RECONSTRUCTION_LEDGER.md
+/LEDGERS/RECONSTRUCTION_LEDGER.json
+```
+
+For longer recipes, use subfolders:
+
+```text id="1eef40"
+/LEDGERS/RECONSTRUCTION/<system>/<recipe>.md
+```
+
+This keeps the main ledger readable while preserving detail.
+
+---
+
+# 3. Role in the Ledger System
+
+The Reconstruction Ledger is closely tied to Decisions, Communications, Audit, and File Contents.
+
+```text id="ie52ag"
+Decisions Ledger
+  └── Why did we choose this direction?
+
+Reconstruction Ledger
+  └── How would we rebuild this artifact/system?
+
+File Contents Ledger
+  └── What files does the artifact use?
+
+Audit Ledger
+  └── What did review find after it was built?
+
+Prompt / Reconstruction Ledger
+  └── What prompt, constraints, recipe, and model context produced it?
+```
+
+This ledger turns ephemeral generation into durable capability.
+
+---
+
+# 4. What This Ledger Owns
+
+## Owns
+
+* build recipes
+* generation prompts or summarized prompt instructions
+* reconstruction instructions
+* artifact intent
+* constraints used during generation
+* source files involved
+* output files created
+* model/tool context where useful
+* known mistakes to avoid on rebuild
+* regeneration triggers
+* preservation requirements
+* upgrade paths
+* links to commits and audits
+
+## Does not own
+
+* every chat message
+* every tiny code change
+* every local task
+* full implementation docs for every file
+* every design decision
+* all open problems
+* all source-of-truth rules
+
+Those belong in Communications, Decisions, File Contents, Open Problems, Source-of-Truth, and local Box files.
+
+This ledger should preserve reconstruction value, not transcript noise.
+
+---
+
+# 5. Recommended `RECONSTRUCTION_LEDGER.md` Structure
+
+Use stable headings:
+
+```markdown id="9nnndh"
+# Prompt / Reconstruction Ledger
+
+Last updated:
+Maintainer:
+Status:
+Read when:
+Core rule:
+
+## 1. Purpose
+## 2. Reconstruction Entry Format
+## 3. What Deserves Reconstruction Memory
+## 4. Active Reconstruction Recipes
+## 5. Artifact Recipe Index
+## 6. Prompt Preservation Rules
+## 7. Rebuild Quality Rules
+## 8. Known Regeneration Risks
+## 9. Reconstruction Archives
+## 10. Visualization Index
+## 11. Update Rules
+```
+
+This ledger should act like a recipe index.
+
+---
+
+# 6. Reconstruction Entry Format
+
+Use stable IDs.
+
+Recommended ID format:
+
+```text id="x61f3k"
+RECON-YYYY-MM-DD-###
+```
+
+Example:
+
+```text id="wm4gxn"
+RECON-2026-04-28-001-ledger-system
+```
+
+Template:
+
+```markdown id="55v407"
+## RECON-YYYY-MM-DD-### — <Artifact/System Name>
+
+Status:
+Created:
+Updated:
+Artifact type:
+Affected systems:
+Source files:
+Output files:
+Related decisions:
+Related ledgers:
+Related commits:
+Model/tool context:
+Owner:
+
+### Intent
+
+What were we trying to build?
+
+### Inputs
+
+What files, text, data, context, prompts, examples, or constraints shaped it?
+
+### Constraints
+
+What rules mattered?
+
+### Build / Generation Recipe
+
+How would a future agent recreate or regenerate this?
+
+### Preservation Requirements
+
+What must survive a rebuild?
+
+### Known Mistakes To Avoid
+
+What should not be repeated?
+
+### Verification / Acceptance
+
+How do we know the rebuilt version is acceptable?
+
+### Upgrade Path
+
+How could this be rebuilt better later?
+
+### History
+
+- YYYY-MM-DD — note
+```
+
+Not every entry needs a raw prompt. Often a clean recipe is better.
+
+---
+
+# 7. What Deserves Reconstruction Memory
+
+Not everything needs an entry.
+
+Create a reconstruction entry when the work is:
+
+```markdown id="pk8kzt"
+## 3. What Deserves Reconstruction Memory
+
+Record reconstruction memory for:
+
+- generated pages or UI systems
+- generated Client Box plans
+- guardrail systems
+- ledger system architecture
+- automation workflows
+- prompt-heavy artifacts
+- complex refactors
+- data pipelines
+- generated reports
+- model-authored docs that become source-of-truth
+- templates used repeatedly
+- systems likely to be regenerated with better models
+- anything expensive or dangerous to recreate from scratch
+```
+
+Do not record:
+
+```markdown id="8nkwuw"
+- tiny edits
+- ordinary typo fixes
+- one-off small changes
+- raw chat logs with no rebuild value
+- secrets
+```
+
+---
+
+# 8. Active Reconstruction Recipes — Seed List
+
+The project should seed these based on current work.
+
+## 8.1 Ledger System Reconstruction Recipe
+
+```markdown id="lyerlg"
+## RECON-2026-04-28-001 — Ledger System
+
+Status: active  
+Created: 2026-04-28  
+Artifact type: project memory architecture  
+Affected systems: `/LEDGERS`, agent workflow, GitHub continuity, Boxes  
+Source files: user-provided “Ledger System: Big Rough List”  
+Output files:
+- `GLOBAL_LEDGER.md`
+- `TEMPORAL_CONTINUITY.md`
+- `NORTH_STAR.md`
+- `DEFINITION_OF_DONE.md`
+- `FILE_DIRECTORY_LEDGER.md`
+- `DIRECTORY_CONFIGURATION_LEDGER.md`
+- `FILE_CONTENTS_LEDGER.md`
+- `ASSET_WIDGET_MAP.md`
+- `CONNECTIONS_LEDGER.md`
+- `DECISIONS_LEDGER.md`
+- `COMMUNICATIONS_LEDGER.md`
+- `OPEN_PROBLEMS_LEDGER.md`
+- `RECONSTRUCTION_LEDGER.md`
+- remaining ledgers as implemented
+
+Related decisions:
+- GitHub is source of truth
+- FileTree orchestration over RAG memory
+- Work proceeds one ledger at a time
+
+### Intent
+
+Create a durable GitHub-backed memory system for the entire project, with global and local ledgers, visual maps, Done Gates, source-of-truth clarity, and future-agent continuity.
+
+### Inputs
+
+- User’s rough list of ledger types.
+- User philosophy: repo is memory of the build.
+- User preference: broad, high-level, implementation-ready outlines.
+- User workflow: one ledger at a time; user types `P` to proceed.
+- Existing Comeketo page-asset sitemap.
+- Inbox guardrails and Client Box lessons.
+
+### Constraints
+
+- GitHub is source of truth.
+- Local file tree is working copy.
+- Avoid overfitting to one implementation.
+- Use markdown + JSON + visual maps.
+- Ledgers should be useful, not ceremonial.
+- Do not duplicate local ledgers into global ledgers.
+- Keep local complexity inside Boxes where appropriate.
+
+### Build / Generation Recipe
+
+For each ledger:
+
+1. Define purpose.
+2. Define core operating principle.
+3. Recommend file location.
+4. Explain role in ledger system.
+5. Define what it owns and does not own.
+6. Propose Markdown structure.
+7. Propose JSON structure.
+8. Propose visual layer.
+9. Explain relationships to other ledgers.
+10. Give Opus implementation steps.
+11. Define quality bar.
+12. End with final operating rule.
+
+### Preservation Requirements
+
+Future rebuilds must preserve:
+
+- GitHub as source of truth.
+- FileTree orchestration.
+- Boxes as local memory.
+- Done Gate.
+- 55 / 45 build rhythm.
+- North Star alignment.
+- source-of-truth discipline.
+- visual maps beside text ledgers.
+- one-ledger-at-a-time implementation rhythm unless user changes it.
+
+### Known Mistakes To Avoid
+
+- Building all ledgers as shallow generic docs.
+- Making the Global Ledger too bloated.
+- Duplicating sitemap details instead of linking.
+- Turning Open Problems into a generic task list.
+- Storing secrets in Connections Ledger.
+- Treating plans as send authority.
+- Forgetting local Box layer.
+
+### Verification / Acceptance
+
+The ledger system is acceptable when:
+
+- first-wave ledgers exist in `/LEDGERS`
+- each has Markdown and JSON where useful
+- `INDEX.md` links all ledgers
+- visual maps exist for graph-heavy ledgers
+- Global Ledger defines read-first workflow
+- Done Gate is applied to future changes
+```
+
+This entry is the rebuild recipe for the whole ledger push.
+
+---
+
+## 8.2 Client Box Cleanup Reconstruction Recipe
+
+```markdown id="0j6p5l"
+## RECON-2026-04-28-002 — Client Box Audit / Cleanup Pass
+
+Status: active  
+Created: 2026-04-28  
+Artifact type: repeatable audit workflow  
+Affected systems: `Auto/Client Boxes`, inbox guardrails, scheduled fires  
+Output pattern: cleaned plan/alerts + audit marker  
+
+### Intent
+
+Create a repeatable workflow for auditing and cleaning Client Boxes one at a time so automation can create safe movement without blindly trusting stale or risky plan text.
+
+### Inputs
+
+For each Client Box:
+
+- `00_meta.json`
+- `01_comms.md`
+- full transcripts when available
+- `04_profile.md`
+- `05_seven_day_plan.md`
+- `09_andre_alerts.md`
+- `client_ledger.md`
+- Inbox Guardrails
+- page/source maps if UI is affected
+
+### Constraints
+
+- Work one box at a time.
+- Report findings before moving on unless user authorizes cleanup.
+- Do not treat plan as send license.
+- Check calendar reality.
+- Check reply gate.
+- Check frequency cap.
+- Check commitment language.
+- Check enrichment boundary.
+- Check customer-facing facts against comms/transcripts.
+- Leave audit marker after cleanup.
+- Do not globally rewrite automation for one client’s local issue unless pattern is systemic.
+
+### Build / Generation Recipe
+
+For each box:
+
+1. Confirm required files exist.
+2. Read meta and current state.
+3. Read comms and transcript truth.
+4. Read profile but treat as internal strategy.
+5. Read seven-day plan and alerts.
+6. Check client ledger freshness.
+7. Compare plan timing to actual dates.
+8. Flag risky moves:
+   - fee waiver
+   - discount
+   - no charge
+   - guest-count promise
+   - pricing guarantee
+   - scope expansion
+   - enrichment-based personalization
+9. Flatten future copy or gate risky moves.
+10. Align alerts with plan.
+11. Leave audit marker with timestamp, files reviewed, files changed, issues found, remaining risks.
+12. Report summary and commit SHAs if GitHub writes occur.
+
+### Preservation Requirements
+
+- Human-approved historical sends remain history.
+- Future risky language must require approval.
+- Client-specific lessons remain in the client Box.
+- Systemic lessons move to Open Problems / Decisions / Guardrails.
+
+### Known Mistakes To Avoid
+
+- Rewriting history.
+- Deleting useful strategy instead of making it internal-only.
+- Treating enrichment as customer-facing truth.
+- Fixing generated state instead of source files.
+- Forgetting audit marker.
+```
+
+This recipe is immediately useful for continuing Client Box work.
+
+---
+
+## 8.3 Allowed-To-Know Layer Reconstruction Recipe
+
+````markdown id="924pbq"
+## RECON-2026-04-28-003 — Allowed-To-Know / Allowed-To-Say Layer
+
+Status: planned  
+Created: 2026-04-28  
+Artifact type: safety/source-of-truth schema  
+Affected systems: Client Boxes, inbox automation, scheduled fires, enrichment, profiles  
+
+### Intent
+
+Create a formal layer in each Client Box that separates what the system knows internally from what it may safely use in customer-facing copy.
+
+### Inputs
+
+- full comms
+- phone transcripts
+- `01_comms.md`
+- `04_profile.md`
+- enrichment outputs
+- Inbox Guardrails
+- human approval notes
+- Client Box audits
+
+### Proposed Categories
+
+- `client_shared`: facts directly shared by the client in SMS/email/call/intake
+- `operator_shared`: facts Andre/Rhonna logged from real conversation
+- `safe_operational`: event details safe to use
+- `internal_strategy`: enrichment or inference for internal tone only
+- `protected`: never use customer-facing
+- `unverified`: do not use until confirmed
+- `approval_required`: may be used only with explicit approval
+- `risky_action`: actions like fee waivers/discounts/scope promises
+
+### Possible Files
+
+```text
+Auto/Client Boxes/<Name>/allowed_to_use.md
+Auto/Client Boxes/<Name>/allowed_to_use.json
+Auto/Client Boxes/<Name>/protected_facts.md
+Auto/Client Boxes/<Name>/approval_required.md
+````
+
+### Build / Generation Recipe
+
+1. Parse `01_comms.md` and transcripts.
+2. Extract client-shared facts with citations to comms/transcript line/activity.
+3. Extract operational event facts.
+4. Identify enrichment/profile claims.
+5. Classify each fact.
+6. Generate `allowed_to_use.md/json`.
+7. Require scheduled-fire composition to use only allowed facts unless approval exists.
+8. Store approval references when risky facts/actions are cleared.
+
+### Preservation Requirements
+
+* Do not erase enrichment; classify it.
+* Do not let internal strategy leak into copy.
+* Do not use facts without provenance.
+* Co-decider facts count if shared on the thread/call.
+
+````
+
+This will become a major safety unlock.
+
+---
+
+## 8.4 Boxes Page Reconstruction Recipe
+
+```markdown id="9nbng9"
+## RECON-2026-04-28-004 — Boxes Page / Client Dossier Surface
+
+Status: planned / needs repo inspection  
+Artifact type: UI/data surface  
+Affected systems: Boxes page, Client Boxes, Staff Boxes, orchestrator state, page-asset sitemap  
+
+### Intent
+
+Reconstruct or improve the Boxes page as a truthful read/display surface over Box data, without letting UI become canonical truth.
+
+### Inputs
+
+- page-asset sitemap
+- `screens.jsx`
+- `/api/boxes/*`
+- `Auto/Client Boxes`
+- `Auto/Staff Boxes`
+- `Auto/orchestrator/state`
+- Asset / Widget Map
+- Source-of-Truth Ledger
+
+### Constraints
+
+- Boxes page is display/read layer.
+- Client Boxes are canonical client truth.
+- Generated orchestrator state must be labeled as generated.
+- Page changes must update sitemap.
+- High-risk handoff actions must be clearly separated from display.
+
+### Build / Generation Recipe
+
+1. Inspect current Boxes page implementation.
+2. Map data sources.
+3. Map APIs.
+4. Verify display fields trace to canonical files.
+5. Add source/freshness indicators where useful.
+6. Keep delegation handoffs explicit.
+7. Update sitemap and Asset / Widget Map after changes.
+
+### Known Mistakes To Avoid
+
+- Writing client truth into UI state.
+- Hiding stale generated state.
+- Editing generated HTML instead of source renderer.
+````
+
+---
+
+# 9. Prompt Preservation Rules
+
+This ledger should define when raw prompts should be saved.
+
+```markdown id="9zo8r2"
+## 6. Prompt Preservation Rules
+
+Preserve raw prompts only when they have rebuild value.
+
+Prefer clean reconstruction recipes over massive raw chat dumps.
+
+Save:
+
+- original high-level instructions
+- critical constraints
+- examples that shaped the output
+- prompts that can regenerate an artifact
+- model-specific caveats if relevant
+
+Do not save:
+
+- secrets
+- private tokens
+- irrelevant chat
+- emotional back-and-forth with no rebuild value
+- huge transcripts unless they are source data and belong elsewhere
+```
+
+A good reconstruction entry should make raw prompt history optional.
+
+---
+
+# 10. Rebuild Quality Rules
+
+```markdown id="rlahtl"
+## 7. Rebuild Quality Rules
+
+A good reconstruction recipe should let a future agent:
+
+- understand intent
+- gather inputs
+- preserve constraints
+- avoid known mistakes
+- regenerate the artifact
+- verify the result
+- know what ledgers/maps need updating
+- know when not to rebuild
+```
+
+Add:
+
+```markdown id="w6ylh0"
+Do not rebuild blindly from old prompts if current state, guardrails, or source-of-truth rules have changed.
+```
+
+This matters for Client Boxes and automation.
+
+---
+
+# 11. Known Regeneration Risks
+
+Seed these risks:
+
+```markdown id="4q84xf"
+## 8. Known Regeneration Risks
+
+### Risk: old prompts may predate current guardrails
+
+Any prompt that generated seven-day plans before Inbox Guardrails v2.0 may produce unsafe commitment language or enrichment leakage.
+
+### Risk: model may over-personalize from enrichment
+
+Regeneration must respect allowed-to-know constraints.
+
+### Risk: generated UI may drift from sitemap
+
+Any regenerated page must update the page-asset sitemap.
+
+### Risk: ledger regeneration may become generic
+
+Ledgers must preserve the project’s actual philosophy, not generic documentation templates.
+
+### Risk: local source truth may change
+
+Before regenerating artifacts, check current Source-of-Truth Ledger and local Box configs.
+```
+
+---
+
+# 12. Artifact Recipe Index
+
+Purpose: quick lookup.
+
+Example:
+
+```markdown id="hnbbyc"
+## 5. Artifact Recipe Index
+
+| ID | Artifact/System | Status | Path / Outputs | Notes |
+|---|---|---|---|---|
+| RECON-2026-04-28-001 | Ledger System | active | `/LEDGERS/*` | one-ledger-at-a-time buildout |
+| RECON-2026-04-28-002 | Client Box Audit/Cleanup | active | `Auto/Client Boxes/<Name>/*` | audit marker required |
+| RECON-2026-04-28-003 | Allowed-To-Know Layer | planned | client box allowed facts files | urgent safety unlock |
+| RECON-2026-04-28-004 | Boxes Page | planned | `screens.jsx`, `/api/boxes/*`, sitemap | display layer only |
+```
+
+---
+
+# 13. Recommended `RECONSTRUCTION_LEDGER.json` Shape
+
+```json id="sxqckv"
+{
+  "ledger_type": "prompt_reconstruction",
+  "version": "0.1.0",
+  "last_updated": "2026-04-28",
+  "core_rule": "If a future agent may need to rebuild it, preserve the recipe.",
+  "recipes": [
+    {
+      "id": "RECON-2026-04-28-001",
+      "title": "Ledger System",
+      "status": "active",
+      "artifact_type": "project_memory_architecture",
+      "affected_systems": ["LEDGERS", "agent workflow", "GitHub continuity", "Boxes"],
+      "intent": "Create a durable GitHub-backed memory system for the entire project.",
+      "inputs": [
+        "user-provided Ledger System rough list",
+        "GitHub source-of-truth philosophy",
+        "FileTree orchestration preference",
+        "Comeketo page-asset sitemap",
+        "Inbox guardrails",
+        "Client Box lessons"
+      ],
+      "constraints": [
+        "GitHub is source of truth",
+        "avoid overfitting",
+        "use markdown JSON and visual maps",
+        "ledgers should be useful not ceremonial",
+        "local complexity belongs in Boxes"
+      ],
+      "outputs": [
+        "GLOBAL_LEDGER.md",
+        "TEMPORAL_CONTINUITY.md",
+        "NORTH_STAR.md",
+        "DEFINITION_OF_DONE.md"
+      ],
+      "preservation_requirements": [
+        "Done Gate",
+        "55/45 build rhythm",
+        "source-of-truth discipline",
+        "visual maps beside text ledgers",
+        "one-ledger-at-a-time rhythm"
+      ]
+    },
+    {
+      "id": "RECON-2026-04-28-002",
+      "title": "Client Box Audit / Cleanup Pass",
+      "status": "active",
+      "artifact_type": "repeatable_audit_workflow",
+      "affected_systems": ["Auto/Client Boxes", "Inbox Guardrails", "scheduled fires"],
+      "intent": "Audit and clean Client Boxes one at a time for safer automation movement.",
+      "outputs": ["cleaned plan", "cleaned alerts", "audit marker"],
+      "known_mistakes_to_avoid": [
+        "rewriting history",
+        "treating enrichment as customer-facing truth",
+        "forgetting audit marker"
+      ]
+    }
+  ],
+  "prompt_preservation_rules": {
+    "save_when": [
+      "prompt has rebuild value",
+      "prompt defines critical constraints",
+      "prompt can regenerate artifact"
+    ],
+    "do_not_save": [
+      "secrets",
+      "irrelevant chat",
+      "huge transcripts that belong as source data elsewhere"
+    ]
+  }
+}
+```
+
+This can later drive a “rebuild this system” tool.
+
+---
+
+# 14. Suggested Visual Layer
+
+Create:
+
+```text id="k92lql"
+/LEDGERS/VISUALS/reconstruction_flow.mmd
+/LEDGERS/VISUALS/artifact_recipe_map.mmd
+/LEDGERS/VISUALS/prompt_to_artifact_flow.mmd
+```
+
+Example reconstruction flow:
+
+```mermaid id="4e06ma"
+flowchart TD
+  Intent[Intent] --> Inputs[Inputs / Source Files]
+  Inputs --> Constraints[Constraints / Decisions / Guardrails]
+  Constraints --> Recipe[Build Recipe]
+  Recipe --> Artifact[Artifact / Files]
+  Artifact --> Verify[Verification / Acceptance]
+  Verify --> Ledger[Record Reconstruction Entry]
+  Ledger --> Future[Future Rebuild / Upgrade]
+```
+
+Example artifact map:
+
+```mermaid id="wpmocy"
+flowchart TD
+  RoughList[User Ledger Rough List] --> LedgerRecipe[RECON Ledger System Recipe]
+  LedgerRecipe --> Global[Global Ledger]
+  LedgerRecipe --> Temporal[Temporal Ledger]
+  LedgerRecipe --> NorthStar[North Star Ledger]
+  LedgerRecipe --> Done[Definition of Done]
+  LedgerRecipe --> Directory[Directory Ledgers]
+
+  Comms[Client Comms + Transcripts] --> ClientRecipe[Client Box Cleanup Recipe]
+  Guardrails[Inbox Guardrails] --> ClientRecipe
+  ClientRecipe --> CleanPlan[Cleaned 7-Day Plan]
+  ClientRecipe --> AuditMarker[Audit Marker]
+```
+
+---
+
+# 15. Relationship to Decisions Ledger
+
+Decisions explain why.
+
+Reconstruction explains how to rebuild.
+
+Example:
+
+```text id="uhv71r"
+Decision:
+Use FileTree orchestration over RAG memory.
+
+Reconstruction:
+Here is how to generate the ledgers and Boxes that make FileTree orchestration real.
+```
+
+Reconstruction entries should link to decisions that shaped them.
+
+---
+
+# 16. Relationship to Communications Ledger
+
+Communications may contain instructions or handoffs that later become reconstruction recipes.
+
+Example:
+
+```text id="fwhbmr"
+Communication:
+User wants ledger outlines one at a time.
+
+Reconstruction:
+Ledger System recipe includes one-ledger-at-a-time generation structure.
+```
+
+Do not leave rebuild instructions only in Communications if they become repeatable.
+
+Promote them here.
+
+---
+
+# 17. Relationship to Audit Ledger
+
+Audits can trigger reconstruction updates.
+
+Example:
+
+```text id="dwn7yj"
+Audit finds:
+Generated Client Box plans repeatedly include risky language.
+
+Reconstruction update:
+Modify Client Box plan generation recipe to include guardrail compile/check step.
+```
+
+The Reconstruction Ledger should evolve when audits reveal generation flaws.
+
+---
+
+# 18. Relationship to Open Problems Ledger
+
+Some reconstruction work may remain incomplete.
+
+Example:
+
+```text id="izjnh1"
+Open Problem:
+Allowed-To-Know layer not implemented.
+
+Reconstruction Recipe:
+Allowed-To-Know layer planned recipe exists, but status remains planned.
+```
+
+Open Problems tracks unresolved state.
+Reconstruction tracks how to build once ready.
+
+---
+
+# 19. Relationship to Client Boxes
+
+Client Box plans are often generated.
+
+That makes reconstruction memory important.
+
+Each major client plan generation/rewrite can eventually leave a local recipe or note:
+
+```text id="sljqqy"
+Auto/Client Boxes/<Name>/reconstruction.md
+```
+
+Or in audit marker:
+
+```text id="54ua8l"
+Generated from:
+- comms through date X
+- transcript Y
+- profile Z
+- guardrails version 2.0
+- approval notes A/B
+```
+
+For now, the global recipe can define the pattern.
+
+---
+
+# 20. Relationship to Prompt Privacy / Safety
+
+Do not store raw prompts that include:
+
+* secrets
+* private credentials
+* irrelevant sensitive information
+* unneeded client data beyond what belongs in the client Box
+* model chain-of-thought
+* internal reasoning traces that are not useful rebuild instructions
+
+Use summarized reconstruction instructions instead.
+
+The ledger should preserve **rebuildable intent**, not private scratchpad.
+
+---
+
+# 21. Reconstruction Done Gate
+
+A generated or prompt-shaped artifact is done when:
+
+```markdown id="6d6ll8"
+- [ ] intent is recorded
+- [ ] key inputs are listed
+- [ ] constraints are listed
+- [ ] generated outputs are listed
+- [ ] known mistakes to avoid are recorded
+- [ ] verification/acceptance is defined
+- [ ] related decisions are linked
+- [ ] future rebuild path is clear
+```
+
+For large generated systems, this is mandatory.
+
+---
+
+# 22. What Opus Should Build First
+
+Give Opus this build order:
+
+```text id="qkjwb9"
+1. Create /LEDGERS/RECONSTRUCTION_LEDGER.md.
+2. Create /LEDGERS/RECONSTRUCTION_LEDGER.json.
+3. Create /LEDGERS/RECONSTRUCTION/ directory.
+4. Add link to /LEDGERS/INDEX.md.
+5. Add link to /LEDGERS/DECISIONS_LEDGER.md if it exists.
+6. Add link to /LEDGERS/COMMUNICATIONS_LEDGER.md if it exists.
+7. Add link to /LEDGERS/OPEN_PROBLEMS_LEDGER.md if it exists.
+8. Create /LEDGERS/VISUALS/reconstruction_flow.mmd.
+9. Create /LEDGERS/VISUALS/artifact_recipe_map.mmd.
+10. Add Reconstruction Entry Format.
+11. Add Prompt Preservation Rules.
+12. Add Rebuild Quality Rules.
+13. Seed recipes:
+    - Ledger System
+    - Client Box Audit / Cleanup Pass
+    - Allowed-To-Know Layer
+    - Boxes Page / Client Dossier Surface
+14. Commit with message: "Add prompt reconstruction ledger".
+```
+
+---
+
+# 23. Quality Bar
+
+The Reconstruction Ledger succeeds if future agents can answer:
+
+* What were we trying to build?
+* What instructions shaped it?
+* What constraints mattered?
+* What files and tools were involved?
+* What should survive a rebuild?
+* What should not be repeated?
+* How can this be regenerated with a better model later?
+* How do we verify the rebuilt artifact?
+* Which decisions shaped the recipe?
+
+It fails if:
+
+* it becomes raw chat dump storage
+* it omits constraints
+* it omits known mistakes
+* it cannot actually help rebuild anything
+* it stores secrets
+* it duplicates Decisions or Audit without adding rebuild value
+* it is not updated after generation patterns change
+
+This ledger should make the project recoverable, upgradeable, and less dependent on memory.
+
+---
+
+# 24. Final Operating Rule
+
+The Reconstruction Ledger should end with this:
+
+```markdown id="ccvwje"
+The artifact is what exists.
+
+The reconstruction ledger is how to make it exist again.
+
+Preserve the recipe, not the noise.
+```
+
+---
+

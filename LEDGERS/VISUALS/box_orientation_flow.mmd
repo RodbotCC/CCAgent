@@ -1,0 +1,41 @@
+%% Box Ledger — Box Orientation Flow
+%% Agent enters a directory and follows this flow before doing meaningful work.
+
+flowchart TD
+    Enter["Agent enters directory"] --> BoxCheck{BOX.md exists?}
+
+    BoxCheck -->|Yes| ReadBox["Read BOX.md fully"]:::active
+    BoxCheck -->|No, lighter file exists| ReadDir["Read DIRECTORY.md"]:::lighter
+    BoxCheck -->|No orientation file| FDL["Check File Directory Ledger<br/>and parent BOX.md"]:::fallback
+
+    ReadDir --> NeedsBox{Should this be<br/>a full Box?<br/>(see Section 2 criteria)}
+    NeedsBox -->|Yes| Promote["Promote DIRECTORY.md → BOX.md<br/>using LOCAL_TEMPLATE/BOX_LEDGER_TEMPLATE.md"]:::action
+    NeedsBox -->|No| Continue1["Use the lighter orientation"]
+
+    Promote --> ReadBox
+    Continue1 --> ProtocolLight["Apply lighter local protocol"]
+    FDL --> ReadParent["Locate the nearest parent Box"]
+    ReadParent --> ReadBox
+
+    ReadBox --> Truth["Identify Source-of-Truth (§4 of BOX.md)"]
+    Truth --> Generated{File is<br/>generated?}
+    Generated -->|Yes| Refuse["Don't hand-edit.<br/>Fix the generator instead."]:::warning
+    Generated -->|No| Rules["Check Local Operating Rules (§6)<br/>and Forbidden Actions (§7)"]
+
+    Rules --> Forbidden{Action is<br/>forbidden?}
+    Forbidden -->|Yes| Stop["Stop. Surface to operator<br/>or escalate to Open Problems."]:::warning
+    Forbidden -->|No| Edit["Make the smallest safe change"]:::active
+
+    Edit --> Verify["Verify (run check / view diff / test)"]
+    Verify --> Record["Update Recent Local Changes (§9)<br/>+ Open Local Problems if found (§10)"]
+    Record --> DoneGate["Apply Local Done Gate (§11)"]
+    DoneGate --> Sync["Update project-level ledgers<br/>per DEC-2026-04-29-003<br/>(same unit of work)"]:::sync
+    Sync --> Activity["Append to activity.jsonl"]
+    Activity --> Handoff["Leave handoff note if<br/>next agent needs context (§12)"]
+
+    classDef active fill:#10b981,stroke:#047857,color:#fff
+    classDef lighter fill:#a7f3d0,stroke:#10b981,color:#064e3b
+    classDef fallback fill:#fde68a,stroke:#f59e0b,color:#78350f
+    classDef action fill:#7c3aed,stroke:#5b21b6,color:#fff
+    classDef warning fill:#fee2e2,stroke:#dc2626,color:#7f1d1d,stroke-width:2px
+    classDef sync fill:#fbbf24,stroke:#b45309,color:#78350f,stroke-width:2px

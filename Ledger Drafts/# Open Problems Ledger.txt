@@ -1,0 +1,1234 @@
+# Open Problems Ledger — Project-Wide Implementation Outline
+
+## 0. Purpose
+
+The **Open Problems Ledger** tracks what is broken, incomplete, risky, unresolved, unclear, blocked, partially fixed, or repeatedly rediscovered.
+
+It is the project’s durable “not solved yet” memory.
+
+The uploaded ledger plan says problems should not disappear just because a session ends. This ledger should answer what is broken, incomplete, risky, blocked, partially fixed, unresolved, or worth revisiting later. It should be used aggressively, because if a known problem is not recorded, the system will waste time finding it again. 
+
+That is the core job:
+
+> Known problems should not have to be rediscovered.
+
+This ledger is not a shame file.
+
+It is a protection system.
+
+A project this complex will always have open problems. The danger is not having problems. The danger is losing track of them.
+
+---
+
+# 1. Core Operating Principle
+
+The Open Problems Ledger should enforce this rule:
+
+> If a problem is known but not fixed, record it.
+
+A problem can be:
+
+* a bug
+* a stale file
+* a risky plan
+* an unclear source of truth
+* a missing decision
+* a fragile workflow
+* an unsafe automation path
+* an unresolved design question
+* a partial implementation
+* an unverified dependency
+* a confusing directory
+* a local/GitHub drift issue
+* a repeated mistake
+* a “we need to revisit this” note
+
+If it matters and remains unresolved, it belongs here or in a local Box-level problem section.
+
+---
+
+# 2. Recommended Location
+
+Create it in the central ledger directory:
+
+```text id="397umo"
+/LEDGERS/
+  OPEN_PROBLEMS_LEDGER.md
+  OPEN_PROBLEMS_LEDGER.json
+  INDEX.md
+  VISUALS/
+    open_problems_board.mmd
+    problem_lifecycle.mmd
+    risk_heatmap.mmd
+```
+
+Recommended final path:
+
+```text id="6s866r"
+/LEDGERS/OPEN_PROBLEMS_LEDGER.md
+/LEDGERS/OPEN_PROBLEMS_LEDGER.json
+```
+
+The Global Ledger, Temporal Continuity Ledger, Communications Ledger, Audit Ledger, and Definition of Done Ledger should all link to it.
+
+---
+
+# 3. Role in the Ledger System
+
+The Open Problems Ledger sits beside Decisions, Communications, and Audit.
+
+```text id="0u9du3"
+Communications Ledger
+  └── What should future agents hear?
+
+Open Problems Ledger
+  └── What remains unresolved?
+
+Decisions Ledger
+  └── What has been decided?
+
+Audit Ledger
+  └── What was reviewed and what did we find?
+
+Temporal Continuity Ledger
+  └── Which problems matter right now?
+```
+
+Important distinction:
+
+```text id="4h0swz"
+Communication:
+"Be careful — plans may predate guardrails."
+
+Open Problem:
+"Audit all active Client Box plans for guardrail drift."
+
+Decision:
+"Risky sales moves require isolated approval."
+
+Audit:
+"Brenda & Steve plan had stale dates and ungated fee-waiver language."
+```
+
+The Open Problems Ledger tracks the unresolved work.
+
+---
+
+# 4. What This Ledger Owns
+
+## Owns
+
+* known bugs
+* unresolved risks
+* incomplete implementations
+* blocked work
+* unclear questions
+* stale files needing cleanup
+* partial fixes
+* repeated failure patterns
+* missing ledgers/maps
+* missing source-of-truth definitions
+* unverified external dependencies
+* local problems with global impact
+* problems discovered in audits
+* review-needed items
+
+## Does not own
+
+* settled decisions
+* full audit reports
+* every task
+* full project roadmap
+* all current state
+* every local client detail
+* every chat note
+* implementation recipes
+
+Those belong in Decisions, Audit, Phase, Temporal Continuity, Client Boxes, Communications, and Reconstruction ledgers.
+
+This ledger should be a live board of unresolved issues, not a generic task manager.
+
+---
+
+# 5. Recommended `OPEN_PROBLEMS_LEDGER.md` Structure
+
+Use stable headings:
+
+```markdown id="v9vff6"
+# Open Problems Ledger
+
+Last updated:
+Maintainer:
+Status:
+Read when:
+Core rule:
+
+## 1. Purpose
+## 2. Problem Entry Format
+## 3. Problem Status Labels
+## 4. Severity / Urgency Scale
+## 5. Active Open Problems
+## 6. Problems By System
+## 7. Blocked Problems
+## 8. Partially Fixed Problems
+## 9. Recurring / Rediscovered Problems
+## 10. Recently Closed Problems
+## 11. Problem Lifecycle
+## 12. Visualization Index
+## 13. Update Rules
+```
+
+This should be easy to scan quickly.
+
+---
+
+# 6. Problem Entry Format
+
+Use stable IDs.
+
+Recommended ID format:
+
+```text id="j4o64o"
+PROB-YYYY-MM-DD-###
+```
+
+Example:
+
+```text id="qevtnj"
+PROB-2026-04-28-001
+```
+
+Problem template:
+
+```markdown id="dj2p5e"
+## PROB-YYYY-MM-DD-### — <Short Problem Title>
+
+Status:
+Severity:
+Urgency:
+Discovered:
+Discovered by:
+Affected systems:
+Related files:
+Related ledgers:
+Owner:
+Blocked by:
+
+### Problem
+
+What is wrong, incomplete, risky, or unclear.
+
+### Evidence
+
+How we know this is a problem.
+
+### Impact
+
+What breaks or becomes risky if this remains open.
+
+### Current Workaround
+
+How to operate safely until fixed.
+
+### Recommended Next Action
+
+What should happen next.
+
+### Close Criteria
+
+What must be true before this problem can be closed.
+
+### History
+
+- YYYY-MM-DD — note
+```
+
+Every problem should have close criteria.
+
+Without close criteria, problems become vague anxiety.
+
+---
+
+# 7. Problem Status Labels
+
+Standardize statuses.
+
+```markdown id="aqs6n1"
+## 3. Problem Status Labels
+
+Use one:
+
+- `open`: known and not fixed
+- `triaged`: understood enough to prioritize
+- `in-progress`: currently being worked
+- `blocked`: cannot proceed until something happens
+- `partial`: partially fixed but not closed
+- `needs-decision`: requires a decision before work
+- `needs-audit`: requires review/investigation
+- `needs-verification`: likely fixed but not verified
+- `closed`: fixed or no longer relevant
+- `wont-fix`: acknowledged and intentionally not fixed
+```
+
+Add optional tags:
+
+```text id="xyw129"
+tags:
+- safety
+- client-box
+- automation
+- UI
+- source-of-truth
+- git
+- connection
+- ledger
+- generated-state
+- enrichment
+- approval
+```
+
+Tags make the ledger easier to filter.
+
+---
+
+# 8. Severity / Urgency Scale
+
+Separate severity from urgency.
+
+```markdown id="oa8g0r"
+## 4. Severity / Urgency Scale
+
+### Severity
+
+- `critical`: can cause customer-facing harm, data loss, unsafe sends, credential exposure, or broken core workflow
+- `high`: can cause major confusion, stale state, wrong source-of-truth edits, or broken automation
+- `medium`: important but bounded; workarounds exist
+- `low`: cleanup, clarity, polish, or future improvement
+
+### Urgency
+
+- `now`: should be addressed before further related work
+- `soon`: should be addressed in current phase
+- `later`: important but not blocking current work
+- `watch`: monitor; no immediate action
+```
+
+Example:
+
+```text id="sgzuhb"
+Problem: unapproved fee-waiver automation path
+Severity: critical
+Urgency: now
+```
+
+This prevents every problem from becoming equally loud.
+
+---
+
+# 9. Active Open Problems — Seed List
+
+Based on the current project state, Opus should seed these initial problems.
+
+## 9.1 Allowed-to-Know Constraint Not Implemented
+
+```markdown id="ui4fgx"
+## PROB-2026-04-28-001 — Allowed-To-Know Constraint Not Implemented
+
+Status: open  
+Severity: critical  
+Urgency: now  
+Discovered: 2026-04-28  
+Discovered by: user + audit conversation  
+Affected systems: Client Boxes, inbox automation, scheduled fires, profile/enrichment, customer-facing copy  
+Related files: `Auto/Client Boxes/<Name>/01_comms.md`, `04_profile.md`, `05_seven_day_plan.md`, future allowed-to-use files  
+Related ledgers: Source-of-Truth, Client Boxes, Audit, Decisions  
+Owner: TBD  
+Blocked by: schema/design decision  
+
+### Problem
+
+The system does not yet have a formal layer that separates:
+
+- facts the client actually shared
+- facts from transcripts/comms
+- enrichment-only internal strategy
+- protected/off-limits facts
+- unverified facts
+- approval-required facts/actions
+
+### Evidence
+
+Brenda & Steve highlighted the risk: enrichment-derived context was useful internally but could leak into customer-facing copy. The user explicitly said the project needs a “what we’re allowed to know” type of constraint.
+
+### Impact
+
+Without this layer, automation may surface creepy or unsupported personalization, misuse enrichment, or treat internal strategy as customer-facing truth.
+
+### Current Workaround
+
+During Client Box audits, manually flatten outbound copy and only use facts traceable to comms/transcripts or explicit approval.
+
+### Recommended Next Action
+
+Design a Client Box-level `allowed_to_use` schema and workflow.
+
+Possible files:
+- `allowed_to_use.md`
+- `allowed_to_use.json`
+- `protected_facts.md`
+- `approval_required.md`
+
+### Close Criteria
+
+- Schema exists.
+- At least one Client Box uses it.
+- Scheduled-fire/read protocol knows to check it.
+- Guardrails reference it.
+```
+
+This is likely one of the most important open problems.
+
+---
+
+## 9.2 Active Client Boxes Need Guardrail Audit
+
+```markdown id="d65qcy"
+## PROB-2026-04-28-002 — Active Client Boxes Need Guardrail Audit
+
+Status: in-progress  
+Severity: high  
+Urgency: soon  
+Discovered: 2026-04-28  
+Affected systems: Client Boxes, scheduled fires, inbox guardrails  
+Related files: `05_seven_day_plan.md`, `09_andre_alerts.md`, `01_comms.md`, `client_ledger.md`  
+Owner: user + agent workflow  
+
+### Problem
+
+Active Client Box plans may have been written before current guardrails were fully enforced. They may contain stale dates, risky commitment language, enrichment leakage, or send assumptions that no longer pass safety rules.
+
+### Evidence
+
+Brenda & Steve had stale weekday/date drift and ungated fee-waiver/no-charge language.
+
+### Impact
+
+Future scheduled fires could surface or send unsafe copy if plans are trusted blindly.
+
+### Current Workaround
+
+Audit one Client Box at a time. Clean plan/alerts if approved. Leave audit marker.
+
+### Recommended Next Action
+
+Continue with remaining active boxes:
+- Hugo Casillas
+- Daphney & Frankie
+- Dawn M Denton
+- Eliana Lopes
+- Elizabeth & Peter
+- Emanuella Andrade
+- Esther Manu
+- Flávia Benson
+- Flaviane Mesquita
+
+Exclude for now:
+- Danielle Paulson
+- Holley Michelizza / similar spelling, per user note
+
+### Close Criteria
+
+All active Client Boxes have been audited, cleaned if needed, and marked with audit files.
+```
+
+---
+
+## 9.3 Approval UI Does Not Yet Isolate Risky Moves
+
+```markdown id="t6rs1u"
+## PROB-2026-04-28-003 — Approval Flow Does Not Yet Isolate Risky Moves
+
+Status: open  
+Severity: critical  
+Urgency: soon  
+Affected systems: approval surfaces, inbox automation, scheduled fires, Delegations/Boxes if used for review  
+Related decisions: DEC-2026-04-28-005 Risky Sales Moves Require Isolated Approval  
+
+### Problem
+
+Risky moves can be approved as part of a batch without enough explicit friction. The system needs a clear approval-card pattern for financial, pricing, scope, enrichment, or high-risk personalization moves.
+
+### Evidence
+
+The Brenda & Steve fee-waiver move was technically approved by the user, but the user was approving many clients quickly while being rushed.
+
+### Impact
+
+The system can make strategically plausible but authority-sensitive moves without the human fully noticing the risk.
+
+### Current Workaround
+
+During plan cleanup, flatten risky future moves or mark them approval-required.
+
+### Recommended Next Action
+
+Design explicit risk approval cards with required confirmations such as:
+- `APPROVE FEE WAIVER`
+- `APPROVE ENRICHMENT USE`
+- `APPROVE PRICE COMMITMENT`
+- `APPROVE SCOPE PROMISE`
+
+### Close Criteria
+
+- Approval-card standard exists.
+- Risk categories are defined.
+- Approval is logged.
+- Scheduled fires check approval before risky sends.
+```
+
+---
+
+## 9.4 GitHub Direct Writes Can Conflict With Local Unpushed Work
+
+```markdown id="b6dqgk"
+## PROB-2026-04-28-004 — GitHub Direct Writes Can Conflict With Local Unpushed Work
+
+Status: open  
+Severity: medium  
+Urgency: soon  
+Affected systems: GitHub workflow, agent writes, user local repo  
+Related ledgers: Connections, Communications, Decisions  
+
+### Problem
+
+Agents may write directly to GitHub while the user has local unpushed work.
+
+### Evidence
+
+After Brenda & Steve cleanup commits, the user realized they had local work not yet pushed and asked how to avoid messing up agent commits.
+
+### Impact
+
+The user may face merge conflicts, rebase confusion, or accidental overwrites if branch workflow is unclear.
+
+### Current Workaround
+
+Use safe Git process:
+- create branch
+- commit local work
+- fetch
+- rebase or merge remote
+- avoid force-pushing main
+
+### Recommended Next Action
+
+Define standard branch workflow for agent writes:
+- direct-to-main only when user confirms local tree is clean
+- otherwise agent writes to branch/PR
+- report commit SHAs
+- avoid force pushes
+
+### Close Criteria
+
+- Git workflow policy recorded.
+- Agents know when to write direct-to-main vs branch.
+- Connections/Communications ledgers updated.
+```
+
+---
+
+## 9.5 Full Phone Transcripts Not Yet Integrated
+
+````markdown id="xj7k9z"
+## PROB-2026-04-28-005 — Full Phone Transcripts Not Yet Integrated Into Client Boxes
+
+Status: open  
+Severity: high  
+Urgency: soon  
+Affected systems: Client Boxes, allowed-to-know facts, plan rewrites, comms truth  
+Related files: `01_comms.md`, future transcript files, allowed-to-use layer  
+
+### Problem
+
+The Client Boxes currently have comms summaries, but full phone transcripts are still being gathered/imported.
+
+### Evidence
+
+The user said they are running the same clients through automation to grab the full comms, including full phone transcripts.
+
+### Impact
+
+Plans and allowed-to-use fact layers may be incomplete until transcripts land. Important facts may be missing or only summarized.
+
+### Current Workaround
+
+Use existing `01_comms.md` conservatively. Avoid surfacing facts not clearly present in comms.
+
+### Recommended Next Action
+
+Define transcript import location and schema.
+
+Possible structure:
+```text
+Auto/Client Boxes/<Name>/transcripts/
+  call_YYYY-MM-DD_<activity_id>.md
+````
+
+Then regenerate allowed-to-use facts and plan validity.
+
+### Close Criteria
+
+* Transcript location defined.
+* At least one transcript imported.
+* Client Box read protocol updated.
+* Plan rewrite trigger defined when new transcript lands.
+
+````
+
+---
+
+## 9.6 Plan Rewrite Trigger After Inbound Needs Formalization
+
+```markdown id="ut8jd8"
+## PROB-2026-04-28-006 — Plan Rewrite Trigger After Inbound Needs Formalization
+
+Status: open  
+Severity: high  
+Urgency: soon  
+Affected systems: Client Boxes, comms_state_sweep, scheduled fires, state ledger  
+
+### Problem
+
+The project agrees conceptually that any meaningful client tap/reply can invalidate the current seven-day plan, but the rewrite trigger and workflow are not formalized.
+
+### Evidence
+
+The user said that as soon as any tap happens, the next state update should trigger a rewrite/check/manual confirmation of the seven-day plan.
+
+### Impact
+
+Automation may continue from an old plan after the client’s state has changed.
+
+### Current Workaround
+
+Manual audits and reply gate.
+
+### Recommended Next Action
+
+Create state transition:
+
+```text
+new_inbound_detected
+→ active_cadence = paused
+→ plan_status = stale
+→ generate inbound summary
+→ rewrite plan
+→ manual confirmation required
+````
+
+### Close Criteria
+
+* Plan status field or marker exists.
+* Sweep can mark plan stale.
+* Scheduled fire checks plan freshness.
+* Manual confirmation path exists.
+
+````
+
+---
+
+## 9.7 Historical Inbound Detection May Be Noisy
+
+```markdown id="ltw083"
+## PROB-2026-04-28-007 — Historical Inbound Detection May Be Noisy
+
+Status: needs-audit  
+Severity: medium  
+Urgency: soon  
+Affected systems: comms_state_sweep, client_ledger.md, reply gate, Client Boxes  
+
+### Problem
+
+State sweep may mark “new inbound this cycle” when importing historical inbound activities, not necessarily fresh post-cadence replies.
+
+### Evidence
+
+Brenda & Steve `client_ledger.md` showed “New inbound this cycle: True,” but listed inbound items from April 19, before cadence start.
+
+### Impact
+
+The system may create false operator-review alerts or confuse plan pause logic.
+
+### Current Workaround
+
+Check timestamps against `cadence_started_at` before treating inbound as fresh.
+
+### Recommended Next Action
+
+Audit `comms_state_sweep.py` inbound detection logic.
+
+### Close Criteria
+
+- Sweep differentiates newly imported historical activities from new post-cadence inbound.
+- Client ledger labels are clear.
+- Reply gate uses correct timestamp logic.
+````
+
+---
+
+## 9.8 Ledger System Not Yet Implemented
+
+```markdown id="6g6b1d"
+## PROB-2026-04-28-008 — Ledger System Not Yet Implemented In Repo
+
+Status: in-progress  
+Severity: medium  
+Urgency: soon  
+Affected systems: ledgers, global continuity, Opus handoff  
+
+### Problem
+
+The ledger system is being designed, but the actual files may not yet exist in the repo until Opus implements them.
+
+### Evidence
+
+Current workflow is producing implementation outlines one ledger at a time.
+
+### Impact
+
+Future agents may still lack durable repo-backed continuity until implementation happens.
+
+### Current Workaround
+
+Continue producing outlines and hand them to Opus.
+
+### Recommended Next Action
+
+Opus creates `/LEDGERS` and implements first-wave ledgers.
+
+### Close Criteria
+
+- Global Ledger exists.
+- Temporal Continuity Ledger exists.
+- Index exists.
+- First-wave ledgers are linked.
+- Agent read-first workflow points to them.
+```
+
+---
+
+## 9.9 Supabase / Optional Connections Need Verification
+
+```markdown id="k1qe37"
+## PROB-2026-04-28-009 — Optional Connections Need Verification
+
+Status: needs-verification  
+Severity: low  
+Urgency: later  
+Affected systems: Connections Ledger, Settings Ledger, app runtime  
+
+### Problem
+
+Some services are available as connectors or mentioned in environment context, but may not actually be active project dependencies.
+
+### Evidence
+
+Supabase and other connectors may be available, but actual repo usage needs inspection.
+
+### Impact
+
+Connections Ledger could hallucinate dependencies if not verified.
+
+### Current Workaround
+
+Mark unverified services as `needs verification`.
+
+### Recommended Next Action
+
+Inspect repo imports, config files, `.env.example`, server endpoints, and docs.
+
+### Close Criteria
+
+Each optional service is marked active, optional, or not used based on evidence.
+```
+
+---
+
+# 10. Problems By System
+
+Purpose: make browsing easier.
+
+Example:
+
+```markdown id="3yy8dq"
+## 6. Problems By System
+
+### Client Boxes
+
+- PROB-001 Allowed-To-Know Constraint Not Implemented
+- PROB-002 Active Client Boxes Need Guardrail Audit
+- PROB-005 Full Phone Transcripts Not Yet Integrated
+- PROB-006 Plan Rewrite Trigger After Inbound Needs Formalization
+- PROB-007 Historical Inbound Detection May Be Noisy
+
+### Automation / Approval
+
+- PROB-003 Approval Flow Does Not Yet Isolate Risky Moves
+- PROB-006 Plan Rewrite Trigger After Inbound Needs Formalization
+
+### Git / Repo Workflow
+
+- PROB-004 GitHub Direct Writes Can Conflict With Local Unpushed Work
+
+### Ledgers
+
+- PROB-008 Ledger System Not Yet Implemented In Repo
+
+### Connections
+
+- PROB-009 Optional Connections Need Verification
+```
+
+This index helps agents jump to relevant problems.
+
+---
+
+# 11. Blocked Problems
+
+Purpose: identify what cannot move yet.
+
+Example:
+
+```markdown id="bkiluc"
+## 7. Blocked Problems
+
+| Problem | Blocked By | Next Unblock |
+|---|---|---|
+| PROB-001 Allowed-To-Know Constraint | schema decision | design Source-of-Truth / allowed facts layer |
+| PROB-005 Full Transcripts | transcript import output | define path once files arrive |
+| PROB-003 Approval Cards | UI/workflow decision | design approval-card standard |
+```
+
+Blocked problems should not disappear. They should wait visibly.
+
+---
+
+# 12. Partially Fixed Problems
+
+Purpose: avoid false closure.
+
+Example:
+
+```markdown id="9u0zon"
+## 8. Partially Fixed Problems
+
+### Brenda & Steve Plan Risk
+
+Status:
+partially fixed locally
+
+What was fixed:
+- stale schedule labels
+- future fee/no-charge language gated
+- future enrichment leakage reduced
+- audit marker added
+
+What remains open:
+- full transcripts not imported
+- allowed-to-know layer not implemented
+- global approval-card workflow not implemented
+```
+
+This is useful because local cleanup can reduce risk without solving the systemic problem.
+
+---
+
+# 13. Recurring / Rediscovered Problems
+
+Purpose: catch patterns.
+
+Example:
+
+```markdown id="paqm6m"
+## 9. Recurring / Rediscovered Problems
+
+### Source vs surface confusion
+
+Pattern:
+Agents may confuse UI/generation surfaces with canonical source files.
+
+Systems affected:
+- Boxes page
+- orchestrator state
+- Client Boxes
+- page-asset sitemap
+
+Preventive ledgers:
+- File Directory Ledger
+- Source-of-Truth Ledger
+- Asset / Widget Map
+```
+
+```markdown id="5m85l4"
+### Plans becoming stale
+
+Pattern:
+Plans are written at one moment, then time/client replies/guardrails change.
+
+Systems affected:
+- seven-day plans
+- scheduled fires
+- client state
+
+Preventive approach:
+plan freshness markers, reply gate, rewrite trigger, audit markers.
+```
+
+Recurring problems often become design requirements.
+
+---
+
+# 14. Recently Closed Problems
+
+Purpose: keep history visible without cluttering active list.
+
+Example:
+
+```markdown id="u7oxqy"
+## 10. Recently Closed Problems
+
+No closed problems yet.
+
+When closing a problem, move it here with:
+- close date
+- what fixed it
+- verification evidence
+- related commit or audit marker
+```
+
+Closed does not mean forgotten.
+
+It means resolved enough not to remain active.
+
+---
+
+# 15. Problem Lifecycle
+
+Define the lifecycle.
+
+```markdown id="d6sw8s"
+## 11. Problem Lifecycle
+
+Problem discovered
+→ record it
+→ triage severity/urgency
+→ assign system/owner if possible
+→ define workaround
+→ define close criteria
+→ work/fix/audit
+→ verify
+→ close or mark partial
+→ archive if no longer useful
+```
+
+Mermaid:
+
+```mermaid id="dc4a68"
+flowchart TD
+  Found[Problem Found] --> Record[Record Problem]
+  Record --> Triage[Triage Severity / Urgency]
+  Triage --> Workaround[Define Workaround]
+  Workaround --> Next[Recommended Next Action]
+  Next --> Fixed{Fixed?}
+  Fixed -->|No| Open[Keep Open / Blocked / Partial]
+  Fixed -->|Yes| Verify[Verify]
+  Verify --> Close[Close With Evidence]
+```
+
+---
+
+# 16. Recommended `OPEN_PROBLEMS_LEDGER.json` Shape
+
+```json id="jrwi08"
+{
+  "ledger_type": "open_problems",
+  "version": "0.1.0",
+  "last_updated": "2026-04-28",
+  "status_labels": [
+    "open",
+    "triaged",
+    "in-progress",
+    "blocked",
+    "partial",
+    "needs-decision",
+    "needs-audit",
+    "needs-verification",
+    "closed",
+    "wont-fix"
+  ],
+  "severity_labels": ["critical", "high", "medium", "low"],
+  "urgency_labels": ["now", "soon", "later", "watch"],
+  "problems": [
+    {
+      "id": "PROB-2026-04-28-001",
+      "title": "Allowed-To-Know Constraint Not Implemented",
+      "status": "open",
+      "severity": "critical",
+      "urgency": "now",
+      "affected_systems": [
+        "Client Boxes",
+        "inbox automation",
+        "scheduled fires",
+        "profile/enrichment",
+        "customer-facing copy"
+      ],
+      "problem": "The system does not yet formally separate client-shared facts, transcript facts, enrichment-only strategy, protected facts, unverified facts, and approval-required facts/actions.",
+      "impact": "Automation may misuse enrichment or surface unsupported personalization.",
+      "current_workaround": "Manually flatten outbound copy and use only facts traceable to comms/transcripts or explicit approval.",
+      "recommended_next_action": "Design Client Box-level allowed-to-use schema and workflow.",
+      "close_criteria": [
+        "schema exists",
+        "at least one Client Box uses it",
+        "scheduled-fire protocol checks it",
+        "guardrails reference it"
+      ],
+      "tags": ["client-box", "enrichment", "source-of-truth", "safety"]
+    },
+    {
+      "id": "PROB-2026-04-28-004",
+      "title": "GitHub Direct Writes Can Conflict With Local Unpushed Work",
+      "status": "open",
+      "severity": "medium",
+      "urgency": "soon",
+      "affected_systems": ["GitHub workflow", "agent writes", "user local repo"],
+      "problem": "Agents may write directly to GitHub while the user has local unpushed work.",
+      "current_workaround": "Use branch/rebase workflow and avoid force-pushing main.",
+      "recommended_next_action": "Define standard branch workflow for agent writes.",
+      "tags": ["git", "workflow", "agent-handoff"]
+    }
+  ]
+}
+```
+
+This can later drive an open-problems board.
+
+---
+
+# 17. Suggested Visual Layer
+
+Create:
+
+```text id="4k87v7"
+/LEDGERS/VISUALS/open_problems_board.mmd
+/LEDGERS/VISUALS/problem_lifecycle.mmd
+/LEDGERS/VISUALS/risk_heatmap.mmd
+```
+
+Example board:
+
+```mermaid id="0sszoc"
+flowchart LR
+  Now[Now / Critical] --> P1[Allowed-To-Know Constraint]
+  Now --> P3[Approval Flow Risk]
+
+  Soon[Soon / High] --> P2[Client Box Guardrail Audit]
+  Soon --> P5[Full Transcripts Integration]
+  Soon --> P6[Plan Rewrite Trigger]
+  Soon --> P7[Historical Inbound Noise]
+
+  Later[Later / Low] --> P9[Optional Connections Verification]
+```
+
+Example system risk graph:
+
+```mermaid id="0hdd2h"
+flowchart TD
+  Enrichment[Enrichment] --> P1[Allowed-To-Know Missing]
+  P1 --> Copy[Customer-Facing Copy Risk]
+
+  Comms[Comms / Transcripts] --> P5[Transcripts Not Integrated]
+  P5 --> Plan[Plan Incomplete]
+
+  Sweep[State Sweep] --> P7[Historical Inbound Noise]
+  P7 --> ReplyGate[Reply Gate Confusion]
+
+  Approval[Batch Approval] --> P3[Risk Not Isolated]
+  P3 --> Sends[Unsafe Commitments]
+```
+
+---
+
+# 18. Relationship to Audit Ledger
+
+Audits should create open problems when they find issues that remain unresolved.
+
+Example:
+
+```text id="wxeq06"
+Audit finds:
+Hugo plan has stale date labels.
+
+If fixed immediately:
+record in Audit Ledger.
+
+If not fixed:
+create Open Problem or local Client Box problem.
+```
+
+Open Problems should cite audits when possible.
+
+---
+
+# 19. Relationship to Communications Ledger
+
+Communications can point to problems, but Open Problems owns tracking.
+
+Example:
+
+```text id="yec8u3"
+Communication:
+"Plans may predate guardrails."
+
+Open Problem:
+"Audit active Client Boxes for guardrail drift."
+```
+
+When a communication becomes trackable work, promote it here.
+
+---
+
+# 20. Relationship to Decisions Ledger
+
+Some problems need decisions.
+
+Example:
+
+```text id="g340bi"
+Problem:
+Allowed-to-know schema not implemented.
+
+Decision needed:
+Where does allowed-to-use live and what categories does it use?
+```
+
+When decided, update Decisions Ledger and then continue problem closure.
+
+---
+
+# 21. Relationship to Definition of Done
+
+A meaningful task is not done if it discovers an open problem and fails to record it.
+
+Definition of Done should reference:
+
+```markdown id="0x51gg"
+If you found a problem and did not fix it, record it in Open Problems or a local Box.
+```
+
+This turns problem discovery into durable progress.
+
+---
+
+# 22. Local vs Global Problems
+
+Not every problem belongs globally.
+
+Use this rule:
+
+```text id="2duj1v"
+If the problem affects one folder/client only, record it locally.
+If it affects a pattern, workflow, source-of-truth rule, safety posture, or multiple systems, record it globally.
+```
+
+Examples:
+
+```text id="384vqh"
+Local:
+Brenda & Steve plan needed cleanup → local audit marker.
+
+Global:
+Many Client Box plans may predate guardrails → Open Problems Ledger.
+```
+
+This keeps the global ledger from becoming noisy.
+
+---
+
+# 23. What Opus Should Build First
+
+Give Opus this build order:
+
+```text id="1loewg"
+1. Create /LEDGERS/OPEN_PROBLEMS_LEDGER.md.
+2. Create /LEDGERS/OPEN_PROBLEMS_LEDGER.json.
+3. Add link to /LEDGERS/INDEX.md.
+4. Add link to /LEDGERS/GLOBAL_LEDGER.md if it exists.
+5. Add link to /LEDGERS/TEMPORAL_CONTINUITY.md if it exists.
+6. Add link to /LEDGERS/COMMUNICATIONS_LEDGER.md if it exists.
+7. Add link to /LEDGERS/DEFINITION_OF_DONE.md if it exists.
+8. Create /LEDGERS/VISUALS/problem_lifecycle.mmd.
+9. Create /LEDGERS/VISUALS/open_problems_board.mmd.
+10. Add Problem Entry Format.
+11. Add Status/Severity/Urgency labels.
+12. Seed active problems:
+    - Allowed-To-Know Constraint Not Implemented
+    - Active Client Boxes Need Guardrail Audit
+    - Approval Flow Does Not Yet Isolate Risky Moves
+    - GitHub Direct Writes Can Conflict With Local Unpushed Work
+    - Full Phone Transcripts Not Yet Integrated
+    - Plan Rewrite Trigger After Inbound Needs Formalization
+    - Historical Inbound Detection May Be Noisy
+    - Ledger System Not Yet Implemented In Repo
+    - Optional Connections Need Verification
+13. Add Problems By System.
+14. Add Blocked / Partially Fixed sections.
+15. Commit with message: "Add open problems ledger".
+```
+
+---
+
+# 24. Quality Bar
+
+The Open Problems Ledger succeeds if future agents can answer:
+
+* What is currently broken?
+* What is incomplete?
+* What is risky?
+* What needs a decision?
+* What is blocked?
+* What was partially fixed?
+* What keeps getting rediscovered?
+* What is the workaround?
+* What would close the problem?
+* Which system owns the problem?
+
+It fails if:
+
+* problems stay in chat only
+* it becomes a generic task list
+* problems lack close criteria
+* severity/urgency are missing
+* closed problems are not verified
+* local-only problems clutter the global ledger
+* future agents rediscover the same issues repeatedly
+* scary problems are softened into vague notes
+
+This ledger should make unresolved work visible, not overwhelming.
+
+---
+
+# 25. Final Operating Rule
+
+The Open Problems Ledger should end with this:
+
+```markdown id="922ccw"
+A known problem that is not recorded becomes future confusion.
+
+If it is broken, name it.
+If it is risky, classify it.
+If it is blocked, say why.
+If it is fixed, prove it.
+```
+
+---
+

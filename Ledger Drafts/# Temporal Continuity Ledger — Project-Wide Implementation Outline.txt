@@ -1,0 +1,1066 @@
+# Temporal Continuity Ledger — Project-Wide Implementation Outline
+
+## 0. Purpose
+
+The **Temporal Continuity Ledger** is the project’s living “what is true right now?” memory.
+
+The Global Ledger explains the whole world of the project.
+
+The Temporal Continuity Ledger explains the **current moment** inside that world.
+
+It tracks what recently changed, what is currently active, what assumptions are carrying forward, what risks are open, what should not be forgotten, and what context future agents need so they do not restart from zero.
+
+This is one of the project’s core anti-amnesia ledgers.
+
+The uploaded ledger plan describes it as the ledger that preserves current state, active assumptions, recent changes, important context, and continuity between sessions. It should answer what changed recently, what is true now, what needs to carry forward, and what would be expensive or dangerous to rediscover. 
+
+The Temporal Continuity Ledger is not a changelog.
+
+It is a **handoff spine across time**.
+
+---
+
+# 1. Core Operating Principle
+
+The Temporal Continuity Ledger should enforce this rule:
+
+> Every meaningful work session should leave the next session less blind.
+
+The project should never rely on a future model remembering the chat.
+
+It should not rely on local-only notes.
+
+It should not rely on a human re-explaining the whole context every time.
+
+If a fact, warning, assumption, decision-in-motion, active task, or fragile context matters to the next session, it belongs in the Temporal Continuity Ledger or in a linked local continuity file.
+
+The goal is not to record everything.
+
+The goal is to preserve what would be costly, risky, or annoying to rediscover.
+
+---
+
+# 2. Recommended Location
+
+Create it beside the Global Ledger:
+
+```text
+/LEDGERS/
+  GLOBAL_LEDGER.md
+  TEMPORAL_CONTINUITY.md
+  TEMPORAL_CONTINUITY.json
+  INDEX.md
+```
+
+Recommended final path:
+
+```text
+/LEDGERS/TEMPORAL_CONTINUITY.md
+/LEDGERS/TEMPORAL_CONTINUITY.json
+```
+
+This should be easy for agents to find immediately after reading the Global Ledger.
+
+The Global Ledger should link to this file in its “Read First” and “Ledger System Map” sections.
+
+---
+
+# 3. Role in the Ledger System
+
+The Temporal Continuity Ledger sits directly under the Global Ledger.
+
+```text
+Global Ledger
+  └── What is this project?
+  └── What are the major systems?
+  └── What rules govern the whole build?
+
+Temporal Continuity Ledger
+  └── What is true right now?
+  └── What just changed?
+  └── What is active?
+  └── What must carry forward?
+  └── What should the next agent know before continuing?
+```
+
+If the Global Ledger is the constitution, the Temporal Continuity Ledger is the current field report.
+
+---
+
+# 4. What This Ledger Owns
+
+The Temporal Continuity Ledger owns the current working state across sessions.
+
+## Owns
+
+* current active project state
+* recent meaningful changes
+* active workstreams
+* current operating assumptions
+* active risks that need near-term attention
+* current human instructions/preferences
+* session handoff notes
+* current blockers
+* pending next actions
+* “do not forget” warnings
+* recent audit findings that affect the next steps
+* state transitions between phases or workflows
+* cross-system context that is not local to one folder
+
+## Does not own
+
+* every historical change
+* full decision rationale
+* detailed local file maps
+* permanent architecture rules
+* full open-problem inventory
+* implementation recipes
+* page/widget ownership details
+* exhaustive task tracking
+
+Those belong elsewhere:
+
+```text
+Decisions Ledger          → why choices were made
+Open Problems Ledger      → known unresolved problems
+Audit Ledger              → formal audit findings
+Directory Ledger          → file tree shape
+Page / Widget Ledgers     → local UI ownership
+Reconstruction Ledger     → how something was built
+Global Ledger             → durable project-wide identity/rules
+```
+
+The Temporal Continuity Ledger should stay light enough to read before every session.
+
+---
+
+# 5. Required Files
+
+## 5.1 Markdown File
+
+```text
+/LEDGERS/TEMPORAL_CONTINUITY.md
+```
+
+Human-readable, agent-readable, narrative.
+
+## 5.2 JSON File
+
+```text
+/LEDGERS/TEMPORAL_CONTINUITY.json
+```
+
+Machine-readable current-state mirror.
+
+## 5.3 Optional Archive
+
+Eventually, if the file grows too large:
+
+```text
+/LEDGERS/ARCHIVE/TEMPORAL/
+  2026-04.md
+  2026-05.md
+```
+
+But do not start with archive complexity unless needed.
+
+The primary file should always show the current state first.
+
+---
+
+# 6. Recommended `TEMPORAL_CONTINUITY.md` Structure
+
+Use stable headings.
+
+```markdown
+# Temporal Continuity Ledger
+
+Last updated:
+Updated by:
+Current project moment:
+Current phase:
+Next recommended read:
+Continuity status:
+
+## 1. Current Snapshot
+## 2. Active Workstreams
+## 3. Recent Meaningful Changes
+## 4. Active Assumptions
+## 5. Carry-Forward Context
+## 6. Current Risks / Fragile Areas
+## 7. Current Human Preferences / Instructions
+## 8. Open Threads Needing Follow-Up
+## 9. Recently Touched Systems
+## 10. Next Agent Handoff
+## 11. Session Log
+## 12. Update Rules
+```
+
+The top third should be enough for a future agent to become useful quickly.
+
+---
+
+# 7. Section-by-Section Implementation
+
+## 7.1 Header Block
+
+Purpose: quick orientation.
+
+Example:
+
+```markdown
+# Temporal Continuity Ledger
+
+Last updated: 2026-04-28 02:05 AM ET
+Updated by: Tech Support / ChatGPT session
+Current project moment: Ledger system design + Client Box safety hardening
+Current phase: Early automation proof with safety cleanup
+Next recommended read: /LEDGERS/GLOBAL_LEDGER.md, then relevant Box
+Continuity status: Active
+```
+
+This header should change frequently.
+
+Do not let it become ceremonial.
+
+---
+
+## 7.2 Current Snapshot
+
+Purpose: tell the next agent what is true now in plain language.
+
+Example:
+
+```markdown
+## 1. Current Snapshot
+
+The project is in an active build phase around Comeketo automation, Client Boxes, inbox guardrails, and ledger-backed continuity.
+
+Current emphasis:
+- Make automation show visible movement.
+- Keep early sends safer than the first aggressive plans.
+- Audit and clean Client Boxes one at a time.
+- Build the ledger system one ledger at a time.
+- Treat GitHub as the source of truth.
+- Avoid global rewrites when local Box-level fixes are enough.
+```
+
+This section is not a historical timeline.
+
+It is the current operating picture.
+
+---
+
+## 7.3 Active Workstreams
+
+Purpose: show what is currently in motion.
+
+Example:
+
+```markdown
+## 2. Active Workstreams
+
+### 2.1 Ledger System Buildout
+
+Status: active  
+Current step: Global Ledger outline completed; Temporal Continuity Ledger outline in progress.  
+Workflow: user types `P` to proceed to the next ledger.
+
+### 2.2 Client Box Audit / Cleanup
+
+Status: active  
+Current method: one client box at a time. Read, audit, clean if approved, leave audit marker.  
+Completed: Brenda & Steve cleaned and audit marker added.  
+Next likely candidates: Hugo, Daphney & Frankie, Dawn M Denton, Eliana Lopes, Elizabeth & Peter, Emanuella Andrade, Esther Manu, Flávia Benson, Flaviane Mesquita.  
+Excluded for now: Danielle Paulson, Holley Michelizza.
+
+### 2.3 Allowed-To-Know Constraints
+
+Status: conceptual but urgent  
+Need: separate comms-confirmed facts from enrichment-only/internal strategy and protected/off-limits context.
+
+### 2.4 GitHub / Local Drift Safety
+
+Status: active caution  
+Need: avoid overwriting local unpushed work when writing directly to GitHub.
+```
+
+Keep each workstream short.
+
+If a workstream needs detail, link to a Phase Ledger, Open Problems Ledger, or local Box.
+
+---
+
+## 7.4 Recent Meaningful Changes
+
+Purpose: record what changed recently in human terms.
+
+Example:
+
+```markdown
+## 3. Recent Meaningful Changes
+
+### 2026-04-28
+
+- Clarified that Client Boxes are canonical per-client truth.
+- Clarified that Boxes page is a UI/read surface, not the source of client truth.
+- Reviewed Inbox Guardrails v2.0 and accepted them as send safety contract.
+- Audited Brenda & Steve client box.
+- Cleaned Brenda & Steve `05_seven_day_plan.md`.
+- Cleaned Brenda & Steve `09_andre_alerts.md`.
+- Added Brenda & Steve audit marker.
+- Identified high-risk batch approval problem: risky moves can be technically approved but not sufficiently isolated.
+- Established safer early automation posture: movement, but no unapproved big swings.
+- Began ledger implementation flow.
+```
+
+This is not Git history.
+
+This is continuity history.
+
+It should capture meaning, not every file diff.
+
+---
+
+## 7.5 Active Assumptions
+
+Purpose: capture assumptions currently guiding the work.
+
+This is critical because assumptions silently shape agent behavior.
+
+Example:
+
+```markdown
+## 4. Active Assumptions
+
+- GitHub should be treated as durable source of truth.
+- Local machine may contain unpushed work, so direct GitHub writes require caution.
+- The project prefers FileTree orchestration over RAG-style memory.
+- Boxes are the preferred local memory structure.
+- Seven-day plans are strategy drafts, not unconditional send licenses.
+- Client replies invalidate or at least pause existing plans until reviewed.
+- Enrichment is allowed for internal strategy but must not leak into customer-facing copy unless grounded in comms or explicitly approved.
+- Comeketo currently wants visible automation movement, but the user wants to keep the system safer and more controlled.
+- Early automation should use boring-safe movement before aggressive rescue plays.
+```
+
+Assumptions should be reviewed often.
+
+If an assumption becomes a decision, move it to the Decisions Ledger.
+
+If an assumption becomes wrong, update it immediately.
+
+---
+
+## 7.6 Carry-Forward Context
+
+Purpose: preserve the stuff the next session really needs.
+
+This section is different from active assumptions. It is more conversational, memory-like, and context-heavy.
+
+Example:
+
+```markdown
+## 5. Carry-Forward Context
+
+The user is trying to build a durable GitHub-backed memory system where agents can continue work without relying on chat history. They care deeply about ledgers, boxes, visual maps, and source-of-truth clarity.
+
+The user is under pressure to show Comeketo that automation is moving, but they are worried the system may act too aggressively. They want a posture that preserves momentum while reducing unsafe autonomy.
+
+The Brenda & Steve case is the key lesson:
+- The fee-waiver move may have been strategically correct.
+- The problem was that the risk was not isolated enough during batch approval.
+- Future risky moves should become explicit approval cards, not hidden inside normal batch approvals.
+
+The user wants to proceed through ledger design one at a time. When the user types `P`, produce the next ledger outline.
+```
+
+This is where you preserve the “vibe that matters,” but in a disciplined way.
+
+---
+
+## 7.7 Current Risks / Fragile Areas
+
+Purpose: make near-term risks impossible to miss.
+
+Example:
+
+```markdown
+## 6. Current Risks / Fragile Areas
+
+### Risk: Plan / guardrail contradiction
+
+Some plans may contain copy written before guardrails were enforced. Audit each plan before trusting it.
+
+### Risk: Batch approval hides dangerous moves
+
+Fee waivers, discounts, pricing claims, guest-count promises, and enrichment-based personalization should require isolated approval.
+
+### Risk: Reply invalidates plan
+
+If a lead replies, the plan should be paused and possibly rewritten.
+
+### Risk: Enrichment boundary
+
+Client profiles may contain useful but non-customer-facing facts. The system needs an allowed-to-know / allowed-to-say layer.
+
+### Risk: GitHub writes vs local work
+
+The human may have unpushed local work. Direct GitHub commits can create rebase/merge complexity.
+
+### Risk: Generated UI confidence
+
+The Boxes page may display old or partial source data. It should be treated as a view, not as the canonical truth.
+```
+
+This section can later feed the Open Problems Ledger.
+
+The Temporal version should list what matters **right now**.
+
+---
+
+## 7.8 Current Human Preferences / Instructions
+
+Purpose: preserve user preferences that affect future work.
+
+Example:
+
+```markdown
+## 7. Current Human Preferences / Instructions
+
+- User wants one ledger at a time.
+- User will type `P` to proceed to the next ledger.
+- User prefers broad, gorgeous, implementation-ready outlines.
+- User wants Opus to implement from these outlines.
+- User prefers rough operating philosophy that does not overfit to a single implementation.
+- User values markdown + JSON + visual maps.
+- User values GitHub-backed continuity over local-only memory.
+- User wants Client Box work done one box at a time.
+- User does not want risky writes without awareness.
+- For early Comeketo automation, user wants safe movement over aggressive cleverness.
+```
+
+These are extremely valuable for future agents.
+
+If the user changes preferences, update this section.
+
+---
+
+## 7.9 Open Threads Needing Follow-Up
+
+Purpose: capture dangling threads.
+
+Example:
+
+```markdown
+## 8. Open Threads Needing Follow-Up
+
+### Ledger system
+
+Continue ledger outlines in order:
+1. Global Ledger — done as outline
+2. Temporal Continuity Ledger — current
+3. North Star Ledger — next
+4. Deliverables / Definition of Done Ledger
+5. File Directory Ledger
+...
+
+### Client Boxes
+
+Need to continue auditing:
+- Hugo Casillas
+- Daphney & Frankie
+- Dawn M Denton
+- Eliana Lopes
+- Elizabeth & Peter
+- Emanuella Andrade
+- Esther Manu
+- Flávia Benson
+- Flaviane Mesquita
+
+### Allowed-to-know layer
+
+Need design and implementation:
+- comms-confirmed facts
+- enrichment-only strategy
+- protected/off-limits facts
+- unverified facts
+- approval-required facts/actions
+
+### Git workflow
+
+Need settle safer pattern for direct GitHub agent writes while user has local unpushed work.
+```
+
+This is not a full task manager.
+
+It is the “don’t drop these threads” section.
+
+---
+
+## 7.10 Recently Touched Systems
+
+Purpose: help the next agent understand what areas may have changed recently.
+
+Example:
+
+```markdown
+## 9. Recently Touched Systems
+
+### Auto/Client Boxes/Brenda & Steve
+
+Touched:
+- `05_seven_day_plan.md`
+- `09_andre_alerts.md`
+- `2026-04-28_audit_marker.md`
+
+Reason:
+Cleaned stale calendar labels, gated risky commitment language, reduced enrichment leakage risk.
+
+### Ledger System
+
+Touched conceptually:
+- Global Ledger outline
+- Temporal Continuity Ledger outline
+
+Reason:
+Beginning durable project memory implementation.
+
+### Boxes Page
+
+Reviewed conceptually:
+- Page is a read/display layer over Client Boxes and orchestrator state.
+- Not canonical client truth.
+```
+
+This section should link to actual files when possible.
+
+---
+
+## 7.11 Next Agent Handoff
+
+Purpose: the most useful section for continuation.
+
+Example:
+
+```markdown
+## 10. Next Agent Handoff
+
+If continuing ledger design:
+- Wait for user to type `P`.
+- Produce the next ledger outline.
+- Keep the style broad, implementation-ready, and beautiful.
+- Do not jump ahead or implement unless asked.
+
+If continuing Client Box cleanup:
+- Work one box at a time.
+- Read the full box before changing.
+- Look for stale calendar labels, reply-gate issues, risky commitment language, enrichment leakage, missing comms, missing state, and plan/guardrail contradictions.
+- If cleaning, leave an audit marker.
+- Keep future automation safe but still useful.
+
+If doing GitHub writes:
+- Remember the user may have local unpushed work.
+- Prefer narrow commits.
+- Report commit SHAs.
+- Avoid force-push assumptions.
+```
+
+This should be the “wake up and continue” block.
+
+---
+
+## 7.12 Session Log
+
+Purpose: preserve session-level continuity without becoming messy.
+
+Use short entries.
+
+Example:
+
+```markdown
+## 11. Session Log
+
+### 2026-04-28 — Early AM
+
+Summary:
+User and agent clarified ledger architecture and Client Box safety posture.
+
+Important outcomes:
+- Global Ledger outline produced.
+- Temporal Continuity Ledger outline produced.
+- Brenda & Steve cleanup completed.
+- Risk posture clarified: risky moves should be approval cards, not batch-hidden sends.
+- User wants to proceed one ledger at a time using `P`.
+
+Carry forward:
+Continue with North Star Ledger next.
+```
+
+Session logs should be concise.
+
+Archive old entries when the file grows.
+
+---
+
+## 7.13 Update Rules
+
+Purpose: define when to update this ledger.
+
+Example:
+
+```markdown
+## 12. Update Rules
+
+Update this ledger when:
+
+- a meaningful work session ends
+- current project state changes
+- active workstreams change
+- a major risk becomes active or is resolved
+- user gives a durable instruction/preference
+- a new carry-forward assumption appears
+- a box/page/system is recently touched in a way future agents should know
+- a thread is left open for later
+- a session produces important context not captured elsewhere
+```
+
+Also define when **not** to update:
+
+```markdown
+Do not update this ledger for tiny edits that have no continuity impact.
+Do not duplicate detailed local ledgers.
+Do not use this as a dumping ground for every task.
+```
+
+---
+
+# 8. Recommended `TEMPORAL_CONTINUITY.json` Shape
+
+The JSON file should represent current state in a form scripts can read.
+
+Example:
+
+```json
+{
+  "ledger_type": "temporal_continuity",
+  "version": "0.1.0",
+  "last_updated": "2026-04-28T02:05:00-04:00",
+  "current_project_moment": "Ledger system design + Client Box safety hardening",
+  "current_phase": "Early automation proof with safety cleanup",
+  "continuity_status": "active",
+  "active_workstreams": [
+    {
+      "id": "ledger_system_buildout",
+      "status": "active",
+      "current_step": "Temporal Continuity Ledger outline",
+      "next_step": "North Star Ledger"
+    },
+    {
+      "id": "client_box_audit_cleanup",
+      "status": "active",
+      "current_method": "one box at a time",
+      "completed": ["Brenda & Steve"],
+      "excluded_for_now": ["Danielle Paulson", "Holley Michelizza"]
+    },
+    {
+      "id": "allowed_to_know_constraints",
+      "status": "needed",
+      "summary": "Separate comms-confirmed facts from enrichment-only/internal/protected facts."
+    }
+  ],
+  "active_assumptions": [
+    "GitHub is the durable source of truth.",
+    "Local machine may contain unpushed work.",
+    "Plans are subordinate to comms, state, guardrails, and approvals.",
+    "Client replies pause or invalidate current plans.",
+    "Early automation should prioritize safe movement."
+  ],
+  "active_risks": [
+    {
+      "id": "plan_guardrail_contradiction",
+      "severity": "high",
+      "summary": "Some plans may contain unsafe executable copy written before guardrails were fully enforced."
+    },
+    {
+      "id": "batch_approval_risk",
+      "severity": "high",
+      "summary": "Risky moves can be missed during rushed batch approval."
+    },
+    {
+      "id": "github_local_drift",
+      "severity": "medium",
+      "summary": "Direct GitHub commits can conflict with local unpushed work."
+    }
+  ],
+  "human_preferences": [
+    "Proceed one ledger at a time.",
+    "User types P to continue to next ledger.",
+    "Outlines should be implementation-ready but not overfit.",
+    "Use markdown, JSON, and visualization where helpful.",
+    "Audit Client Boxes one at a time."
+  ],
+  "next_handoff": {
+    "if_user_types_p": "Proceed to North Star Ledger.",
+    "if_client_box_work_resumes": "Audit one box at a time and leave marker after changes."
+  },
+  "recently_touched": [
+    {
+      "path": "Auto/Client Boxes/Brenda & Steve",
+      "summary": "Cleaned seven-day plan and alerts; added audit marker."
+    }
+  ]
+}
+```
+
+The JSON is not meant to replace the Markdown.
+
+It exists so automation can answer:
+
+* What phase are we in?
+* What workstreams are active?
+* What risks are active?
+* What should happen next?
+* What has been recently touched?
+
+---
+
+# 9. Temporal Continuity Update Workflow
+
+At the end of a meaningful session, an agent should run this mental checklist:
+
+```text
+Did the current project state change?
+Did the active workstream change?
+Did the user give a preference that should carry forward?
+Did we touch a system future agents should know about?
+Did we discover a risk?
+Did we leave something unfinished?
+Did we create a handoff instruction?
+```
+
+If yes, update the Temporal Continuity Ledger.
+
+Suggested end-of-session protocol:
+
+```text
+1. Update Current Snapshot if needed.
+2. Update Active Workstreams.
+3. Add Recent Meaningful Changes.
+4. Add or remove Active Assumptions.
+5. Add Carry-Forward Context.
+6. Add Current Risks if needed.
+7. Update Next Agent Handoff.
+8. Append short Session Log entry.
+9. Commit changes.
+```
+
+This should take minutes, not hours.
+
+The Temporal Continuity Ledger should be fast enough that agents actually use it.
+
+---
+
+# 10. Relationship to the Global Ledger
+
+The Global Ledger should link to Temporal Continuity as:
+
+```markdown
+Temporal Continuity Ledger:
+Current project moment, active assumptions, recent changes, active risks, and next handoff.
+```
+
+The Temporal Continuity Ledger should link back to Global Ledger as:
+
+```markdown
+Read this after the Global Ledger. If the Global Ledger tells you what this project is, this file tells you where the project currently is in time.
+```
+
+If they conflict:
+
+* Global Ledger wins for permanent project identity and rules.
+* Temporal Continuity wins for current working state.
+
+Example:
+
+```text
+Global Ledger says:
+Client Boxes are canonical per-client memory.
+
+Temporal Continuity says:
+Currently auditing Client Boxes one at a time, Brenda & Steve completed, Hugo likely next.
+```
+
+Both are true. They operate at different altitude.
+
+---
+
+# 11. Relationship to Boxes
+
+Each important Box can have its own local temporal continuity file.
+
+Example:
+
+```text
+Auto/Client Boxes/Brenda & Steve/
+  client_ledger.md
+  2026-04-28_audit_marker.md
+  BOX_CONTINUITY.md       optional later
+
+Auto/orchestrator/
+  BOX_CONTINUITY.md       optional later
+```
+
+Global temporal continuity should not duplicate every local detail.
+
+Instead:
+
+```markdown
+Recently touched: Brenda & Steve box. See local audit marker.
+```
+
+The pattern should be:
+
+```text
+Project Temporal Continuity
+  └── remembers what areas changed and why
+
+Local Box Continuity
+  └── remembers local state, local risks, local handoff
+```
+
+This protects the global ledger from becoming too heavy.
+
+---
+
+# 12. Relationship to Client Boxes
+
+For Client Boxes specifically, temporal continuity matters a lot because client state changes over time.
+
+Every client box eventually needs its own state rhythm:
+
+```text
+Comms changed
+  → state updates
+  → plan validity checked
+  → allowed-to-know facts updated
+  → next move recalculated
+  → approval requirements checked
+  → audit marker/handoff left if touched
+```
+
+The global Temporal Continuity Ledger should only track cross-client context, such as:
+
+```markdown
+The Client Box audit workflow is active.
+Brenda & Steve was cleaned first.
+Future boxes should be flattened for safe movement.
+Allowed-to-know constraints need implementation.
+```
+
+Individual client details belong inside their boxes.
+
+---
+
+# 13. Relationship to GitHub / Local Drift
+
+The Temporal Continuity Ledger should explicitly record Git workflow state when relevant.
+
+Because agents may write to GitHub while the user has local unpushed work, the ledger should have a small current Git posture section.
+
+Example:
+
+```markdown
+## Current Git Posture
+
+- Direct GitHub writes happened during Brenda & Steve cleanup.
+- User may have local unpushed work.
+- Before further direct GitHub writes, consider branch strategy or ask whether to continue direct-to-main.
+- Avoid force-push assumptions.
+```
+
+This does not need to be permanent.
+
+It should exist while the risk is active.
+
+---
+
+# 14. Relationship to “Sitting There”
+
+This ledger should recognize that “nothing happened” can still be a state.
+
+That matters for automation.
+
+Example:
+
+```markdown
+## Inactivity as State
+
+If a client, workstream, or system is intentionally waiting, record it as waiting.
+
+Waiting is not absence.
+
+Examples:
+- waiting for client reply
+- waiting for state sweep
+- waiting for manual approval
+- waiting for Git sync
+- waiting for next ledger command
+- waiting for full transcripts
+```
+
+This is a beautiful fit for your Box architecture.
+
+Agents often mistake silence for missing context.
+
+The Temporal Continuity Ledger should teach them that silence can be meaningful.
+
+---
+
+# 15. Relationship to Plans
+
+The Temporal Continuity Ledger should encode this rule:
+
+```markdown
+Plans age.
+
+Any plan that depends on time, client state, or external response has a freshness window.
+```
+
+For client plans:
+
+```text
+No reply:
+  plan may remain valid if dates and guardrails still pass.
+
+Reply received:
+  plan is stale until reviewed.
+
+New transcript imported:
+  plan may need rewrite.
+
+Guardrails changed:
+  plan must be re-audited.
+
+Approval status changed:
+  future risky moves must be rechecked.
+```
+
+This prevents stale plans from quietly staying alive.
+
+---
+
+# 16. Suggested Visual Layer
+
+Add a temporal flow diagram.
+
+File:
+
+```text
+/LEDGERS/VISUALS/temporal_continuity_flow.mmd
+```
+
+Example Mermaid:
+
+```mermaid
+flowchart TD
+  S[Session Starts] --> G[Read Global Ledger]
+  G --> T[Read Temporal Continuity Ledger]
+  T --> B[Read Relevant Box / Local Ledger]
+  B --> W[Do Work]
+  W --> C{Did Meaningful State Change?}
+  C -->|No| E[End Session]
+  C -->|Yes| U[Update Temporal Continuity]
+  U --> L[Update Local Ledgers if Needed]
+  L --> H[Leave Handoff]
+  H --> Git[Commit / Push to GitHub]
+```
+
+Add a client-state temporal diagram later:
+
+```mermaid
+flowchart TD
+  Plan[Seven-Day Plan] --> Move[Next Scheduled Move]
+  Comms[New Comms / Transcript] --> State[State Update]
+  State --> Check{Plan Still Valid?}
+  Check -->|Yes| Guardrails[Run Guardrails]
+  Check -->|No| Rewrite[Rewrite Plan + Manual Confirm]
+  Guardrails --> Approval{Risky Move?}
+  Approval -->|No| Surface[Surface / Send]
+  Approval -->|Yes| Human[Explicit Human Approval]
+```
+
+Visuals should support comprehension, not become the source of truth.
+
+Text remains durable memory.
+Visualization gives the human shape.
+
+---
+
+# 17. What Opus Should Build First
+
+Give Opus this build order:
+
+```text
+1. Create /LEDGERS/TEMPORAL_CONTINUITY.md.
+2. Create /LEDGERS/TEMPORAL_CONTINUITY.json.
+3. Add a link to Temporal Continuity from /LEDGERS/GLOBAL_LEDGER.md if Global Ledger exists.
+4. Add a link from /LEDGERS/INDEX.md.
+5. Add /LEDGERS/VISUALS/temporal_continuity_flow.mmd.
+6. Seed the ledger with the current project moment:
+   - ledger system buildout active
+   - Client Box cleanup active
+   - Brenda & Steve completed
+   - allowed-to-know constraints needed
+   - early automation safety posture active
+   - user proceeds with `P`
+7. Do not create a giant task manager.
+8. Keep the file readable before every session.
+9. Commit with message: "Add temporal continuity ledger".
+```
+
+---
+
+# 18. Quality Bar
+
+The Temporal Continuity Ledger succeeds if a future agent can read it and quickly understand:
+
+* what is happening now
+* what just changed
+* what workstreams are active
+* what assumptions are guiding the work
+* what risks are currently alive
+* what the user wants next
+* what should not be forgotten
+* where to continue
+
+It fails if:
+
+* it becomes a full changelog
+* it becomes stale
+* it duplicates every other ledger
+* it does not preserve active assumptions
+* it hides current risks
+* it omits user preferences
+* it is too long to read at session start
+* it does not tell the next agent what to do
+
+The file should feel like opening the cockpit log before taking over the aircraft.
+
+---
+
+# 19. Final Operating Rule
+
+The Temporal Continuity Ledger should end with this:
+
+```markdown
+The project should not wake up confused.
+
+Every meaningful session should leave the next session with a clearer current state, fewer rediscovered problems, and a safer path forward.
+
+If the project changed in time, record the change in time.
+```
+
+---
+
+

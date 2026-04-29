@@ -1,0 +1,1659 @@
+# Widget Ledger — Project-Wide Implementation Outline
+
+## 0. Purpose
+
+The **Widget Ledger** tracks a specific component, panel, card, tool, renderer, control, or interaction surface when that widget is important enough to deserve its own memory.
+
+The Page Ledger explains a whole page.
+
+The Widget Ledger explains the meaningful pieces inside that page.
+
+The uploaded ledger plan says a Widget Ledger should track what a widget does, where it renders, what owns it, what it reads, what it writes, what it can trigger, what settings affect it, what APIs/models/services it uses, what depends on it, and what done means for that widget. It should exist for widgets with data flow, API calls, side effects, model calls, state, settings, or dependencies. 
+
+This is especially important in this project because some “widgets” are not harmless UI.
+
+A widget might:
+
+* save credentials
+* submit a delegation
+* trigger an automation
+* render generated state as if it were truth
+* rewrite a draft
+* ingest files
+* display client strategy
+* approve a risky move
+* send or prepare customer-facing copy
+
+The Widget Ledger makes those surfaces safe to understand and change.
+
+---
+
+# 1. Core Operating Principle
+
+The Widget Ledger should enforce this rule:
+
+> A widget is not just what it looks like. A widget is what it reads, writes, trusts, triggers, and can break.
+
+A future agent should be able to open a Widget Ledger and answer:
+
+* What does this widget do?
+* Where does it render?
+* What page owns it?
+* What file owns it?
+* What data does it read?
+* What data does it write?
+* What APIs does it call?
+* What side effects can it trigger?
+* What source of truth does it trust?
+* What settings affect it?
+* What user states does it support?
+* What can break if it changes?
+* What must be updated when it changes?
+
+A small-looking widget can be a large operational contract.
+
+This ledger makes that contract explicit.
+
+---
+
+# 2. Recommended Location
+
+Create a widget-ledger directory:
+
+```text
+/LEDGERS/
+  WIDGET_LEDGER.md
+  WIDGET_LEDGER.json
+  WIDGETS/
+    boxes_dossier_renderer.md
+    automation_workflow_graph.md
+    delegation_approval_controls.md
+    settings_credential_editor.md
+    intake_ingest_panel.md
+    markdown_renderer.md
+  VISUALS/
+    widget_ledger_pattern.mmd
+    widget_dependency_flow.mmd
+    high_risk_widget_map.mmd
+```
+
+Recommended core files:
+
+```text
+/LEDGERS/WIDGET_LEDGER.md
+/LEDGERS/WIDGET_LEDGER.json
+```
+
+Recommended widget-specific records:
+
+```text
+/LEDGERS/WIDGETS/<widget_slug>.md
+```
+
+The main Widget Ledger is the index and standard.
+
+Each `/LEDGERS/WIDGETS/*.md` file is the local widget dossier.
+
+---
+
+# 3. Role in the Ledger System
+
+The Widget Ledger sits under Page Ledger and Asset / Widget Map.
+
+```text
+Asset / Widget Map
+  └── global map of pages, widgets, APIs, data, side effects
+
+Page Ledger
+  └── page-specific purpose, states, source truth, APIs, side effects
+
+Widget Ledger
+  └── widget-specific behavior, reads, writes, state, risks, settings, Done Gate
+```
+
+Useful mental model:
+
+```text
+Page Ledger = room map
+Widget Ledger = machinery label
+```
+
+Some widgets are just furniture.
+
+Some widgets are machinery.
+
+Only the machinery needs a ledger.
+
+---
+
+# 4. What This Ledger Owns
+
+## Owns
+
+* widget purpose
+* render locations
+* owning page
+* owning file/component
+* props/state/data contract
+* API calls
+* model/tool calls
+* external service dependencies
+* writes and side effects
+* source-of-truth assumptions
+* user states
+* approval requirements
+* guardrails
+* settings dependencies
+* known failure modes
+* verification checklist
+* widget-specific Done Gate
+* dependency notes
+* recent widget changes
+* open widget problems
+
+## Does not own
+
+* entire page behavior
+* every CSS detail
+* every tiny presentational component
+* global source-of-truth rules
+* backend implementation details
+* all page API documentation
+* every reusable component
+
+Those belong in Page Ledger, File Contents Ledger, Source-of-Truth Ledger, Asset / Widget Map, code comments, and API docs.
+
+The Widget Ledger should focus on meaningful, stateful, risky, or confusing widgets.
+
+---
+
+# 5. Which Widgets Deserve Ledgers
+
+Do **not** create a ledger for every tiny UI element.
+
+Create a Widget Ledger when a widget:
+
+```text
+- reads important data
+- writes data
+- calls APIs
+- triggers side effects
+- submits approvals
+- touches credentials
+- interacts with external services
+- renders generated or source-of-truth-sensitive data
+- is shared across many pages
+- has complex state
+- has model/AI behavior
+- affects customer-facing actions
+- is frequently misunderstood
+- has caused bugs before
+```
+
+High-priority candidates:
+
+```text
+Boxes dossier renderer
+Automation workflow graph
+Delegation approval controls
+Settings credential editor
+Intake ingest panel
+Shared Markdown renderer
+Risk approval card, once built
+Allowed-to-know fact panel, once built
+Scheduled-fire review card, once built
+```
+
+This is a selective ledger.
+
+Quality matters more than coverage.
+
+---
+
+# 6. Recommended `WIDGET_LEDGER.md` Structure
+
+Use stable headings:
+
+```markdown
+# Widget Ledger
+
+Last updated:
+Maintainer:
+Status:
+Read when:
+Core rule:
+
+## 1. Purpose
+## 2. Widget Entry Format
+## 3. Widget Status Labels
+## 4. Widget Registry
+## 5. High-Risk Widget Index
+## 6. Widget Done Gate
+## 7. Widget State Standards
+## 8. Widget Verification Standards
+## 9. Widget Records Index
+## 10. Visualization Index
+## 11. Update Rules
+```
+
+The main file should stay short.
+
+Detailed widget records should live in `/LEDGERS/WIDGETS/`.
+
+---
+
+# 7. Widget Entry Format
+
+Each widget record should use a stable template.
+
+```markdown
+# Widget Ledger — <Widget Name>
+
+Last updated:
+Widget ID:
+Widget name:
+Status:
+Risk level:
+Renders on:
+Owning page:
+Owner file:
+Owner component:
+Related APIs:
+Related settings:
+Related source-of-truth entries:
+Related ledgers:
+
+## 1. Widget Purpose
+## 2. Render Locations
+## 3. Ownership
+## 4. Inputs / Reads
+## 5. Outputs / Writes
+## 6. APIs / Tools / Models
+## 7. Side Effects
+## 8. Source-of-Truth Rules
+## 9. State Model
+## 10. User Actions
+## 11. Guardrails / Approval Rules
+## 12. Settings / Configuration
+## 13. Dependencies
+## 14. Known Failure Modes
+## 15. Widget Done Gate
+## 16. Verification Checklist
+## 17. Open Widget Problems
+## 18. Recent Widget Changes
+## 19. Related Files / Ledgers
+```
+
+This is the deep local memory for one widget.
+
+---
+
+# 8. Widget Status Labels
+
+```markdown
+## 3. Widget Status Labels
+
+Use one or more:
+
+- `active`: currently used
+- `shared`: used across multiple pages
+- `read-only`: displays data only
+- `write-capable`: can persist or mutate data
+- `approval-capable`: can approve or submit actions
+- `external-action`: can trigger an external service/channel
+- `customer-facing-risk`: can affect customer-facing content/actions
+- `credential-sensitive`: handles or displays credentials/settings
+- `generated-view`: displays generated or cached state
+- `source-editing`: edits canonical source data
+- `high-risk`: changes can create serious side effects
+- `needs-audit`: widget needs review
+- `experimental`: not stable
+- `legacy`: avoid new work unless audited
+```
+
+Examples:
+
+```text
+Boxes dossier renderer       active + generated-view + high-risk
+Automation workflow graph    active + write-capable + high-risk
+Delegation approval controls active + approval-capable + external-action + high-risk
+Settings credential editor   active + credential-sensitive + write-capable + high-risk
+Shared Markdown renderer     active + shared + high-risk
+```
+
+---
+
+# 9. Widget Registry
+
+The main Widget Ledger should include a registry.
+
+```markdown
+## 4. Widget Registry
+
+| Widget | Renders On | Owner File | Status | Risk | Widget Ledger |
+|---|---|---|---|---|---|
+| Boxes dossier renderer | `boxes` | `screens.jsx` | active / generated-view | high | `WIDGETS/boxes_dossier_renderer.md` |
+| Automation workflow graph | `automation` | `automation.jsx` | active / write-capable | high | `WIDGETS/automation_workflow_graph.md` |
+| Delegation approval controls | `delegations` | `screens.jsx` | active / approval-capable | high | `WIDGETS/delegation_approval_controls.md` |
+| Settings credential editor | `settings` | `screens.jsx` / `server.py` APIs | active / credential-sensitive | high | `WIDGETS/settings_credential_editor.md` |
+| Intake ingest panel | `intake` | `screens.jsx` | active / write-capable | medium/high | `WIDGETS/intake_ingest_panel.md` |
+| Shared Markdown renderer | multiple | `components.jsx` | active / shared | high | `WIDGETS/markdown_renderer.md` |
+```
+
+Opus should verify actual component names from the repo before finalizing.
+
+---
+
+# 10. High-Risk Widget Index
+
+Purpose: make dangerous widgets impossible to miss.
+
+```markdown
+## 5. High-Risk Widget Index
+
+### Delegation approval controls
+
+Risk:
+Can submit or rewrite drafts and potentially trigger external target actions.
+
+Needs:
+Approval rules, target visibility, write logs, rollback/handoff clarity.
+
+### Automation workflow graph
+
+Risk:
+Can change persisted automation behavior.
+
+Needs:
+Clear write targets, trigger/workflow validation, audit trail.
+
+### Settings credential editor
+
+Risk:
+Can save or clear sensitive runtime credentials.
+
+Needs:
+Masking, allowlist, no raw secret exposure, verification checks.
+
+### Boxes dossier renderer
+
+Risk:
+Can visually imply generated or derived data is canonical truth.
+
+Needs:
+Source/freshness labels, canonical/generated distinction.
+
+### Shared Markdown renderer
+
+Risk:
+Used across many pages; sanitizer/rendering changes can affect previews, reports, chat, dossiers, and handoff text.
+
+Needs:
+Cross-page verification after changes.
+
+### Future Risk Approval Card
+
+Risk:
+Will control whether risky customer-facing moves get approved.
+
+Needs:
+Explicit risk class, exact approved wording/action, approval log, expiry/reuse rules.
+```
+
+---
+
+# 11. Example Widget Record — Boxes Dossier Renderer
+
+```markdown
+# Widget Ledger — Boxes Dossier Renderer
+
+Last updated: 2026-04-28
+Widget ID: `boxes_dossier_renderer`
+Widget name: Boxes dossier renderer
+Status: active / generated-view / high-risk
+Risk level: high
+Renders on: `boxes`
+Owning page: Boxes Page
+Owner file: `screens.jsx`
+Owner component: `BoxesScreen` or child component, verify actual name
+Related APIs:
+- `/api/boxes/list`
+- `/api/boxes/<id>`
+- `/api/boxes/<id>/html`
+- `/api/boxes/<id>/template/<slug>`
+Related source-of-truth entries:
+- Client Boxes canonical truth
+- Staff Boxes canonical truth
+- Orchestrator generated state
+
+## 1. Widget Purpose
+
+Displays a selected Box dossier in the UI.
+
+For Client Boxes, it should help the operator inspect the client’s memory/state package: comms, profile, plan, alerts, completeness, generated previews, and related handoff actions.
+
+## 2. Render Locations
+
+Primary render location:
+- `boxes` route
+
+Related page:
+- `/LEDGERS/PAGES/boxes.md`
+
+## 3. Ownership
+
+Frontend owner:
+- `screens.jsx`
+
+Backend/API owner:
+- `server.py` `/api/boxes/*` endpoints
+
+Canonical data owner:
+- `Auto/Client Boxes/<Name>/`
+- `Auto/Staff Boxes/`
+
+Generated data owner:
+- `Auto/orchestrator/state`
+
+## 4. Inputs / Reads
+
+Reads:
+
+- box list
+- selected box metadata
+- source file contents
+- generated HTML preview
+- template preview
+- completeness/readiness information
+- possibly delegation handoff metadata
+
+## 5. Outputs / Writes
+
+Default expected behavior:
+- no direct writes to canonical Client Boxes
+
+Possible write:
+- optional delegation draft/handoff action, if enabled
+
+If future editing is added:
+- must be documented as source-editing and gated by Client Box source-of-truth rules.
+
+## 6. APIs / Tools / Models
+
+APIs:
+
+- `/api/boxes/list`
+- `/api/boxes/<id>`
+- `/api/boxes/<id>/html`
+- `/api/boxes/<id>/template/<slug>`
+
+No model calls expected unless future summarization or rewrite actions are added.
+
+## 7. Side Effects
+
+Expected:
+- read-only display
+
+Possible:
+- delegation draft creation through explicit action
+
+Not allowed silently:
+- rewriting client plans
+- editing generated state
+- sending customer-facing messages
+- approving risky moves
+
+## 8. Source-of-Truth Rules
+
+The widget must not imply that UI display is canonical.
+
+For client data:
+- canonical source is `Auto/Client Boxes/<Name>/`
+
+For generated preview:
+- source is generated/rendered state, not canonical truth
+
+If displayed data looks wrong:
+1. check Client Box source files
+2. check generator/orchestrator state
+3. then check widget rendering
+
+## 9. State Model
+
+Supported states should include:
+
+- loading list
+- list loaded
+- no boxes found
+- selected box loading
+- selected box loaded
+- selected box missing files
+- selected generated preview unavailable
+- stale generated state warning
+- API error
+- delegation handoff pending/success/error, if handoff exists
+
+## 10. User Actions
+
+Possible actions:
+
+- select a box
+- view source sections
+- view generated HTML/template preview
+- trigger handoff/delegation, if present
+
+Future possible actions:
+- edit box file
+- mark audit status
+- approve next move
+
+Any future write action must get a new Widget Ledger update.
+
+## 11. Guardrails / Approval Rules
+
+- Do not confuse generated state with source truth.
+- Do not allow customer-facing actions without explicit approval.
+- Do not surface enrichment-only facts as customer-facing allowed facts unless allowed-to-know layer supports it.
+- Do not edit `client_ledger.md` as if it were source.
+
+## 12. Settings / Configuration
+
+Potential settings:
+
+- selected box ID
+- read-only/edit mode, if implemented
+- generated preview enabled/disabled
+- template preview enabled/disabled
+
+Verify actual settings from code.
+
+## 13. Dependencies
+
+Depends on:
+
+- `screens.jsx`
+- `server.py`
+- `/api/boxes/*`
+- `Auto/Client Boxes`
+- `Auto/Staff Boxes`
+- `Auto/orchestrator/state`
+- page-asset sitemap
+- Asset / Widget Map
+
+Depended on by:
+
+- operator review flow
+- Client Box audit workflow
+- possible delegation workflow
+
+## 14. Known Failure Modes
+
+- Displays stale generated state without warning.
+- Displays derived state as if canonical.
+- Missing file renders as blank instead of explicit missing state.
+- Handoff action writes unexpected target.
+- UI bug causes operator to trust incomplete Client Box.
+
+## 15. Widget Done Gate
+
+A change to this widget is not done until:
+
+- source/read/write behavior is documented
+- page-asset sitemap updated if page/data binding changes
+- Asset / Widget Map updated if dependencies changed
+- Page Ledger `boxes.md` updated if page behavior changed
+- Source-of-Truth Ledger updated if authority assumptions changed
+- verification performed against at least one known box
+
+## 16. Verification Checklist
+
+- load boxes list
+- select known Client Box
+- compare displayed file sections to actual source files
+- verify generated preview is labeled as generated
+- verify missing source file state
+- verify no write occurs during read-only navigation
+- verify handoff action writes only expected target, if tested
+
+## 17. Open Widget Problems
+
+- Need clearer source/freshness labels.
+- Need integration with allowed-to-know layer once implemented.
+- Need verify actual component breakdown in repo.
+
+## 18. Recent Widget Changes
+
+Seed from sitemap/history when available.
+
+## 19. Related Files / Ledgers
+
+- `/LEDGERS/PAGES/boxes.md`
+- `/LEDGERS/ASSET_WIDGET_MAP.md`
+- `/LEDGERS/SOURCE_OF_TRUTH.md`
+- `/LEDGERS/FILE_CONTENTS_LEDGER.md`
+- page-asset sitemap
+```
+
+The existing sitemap says the `boxes` page reads `Auto/Client Boxes`, `Auto/Staff Boxes`, and `Auto/orchestrator/state`, and exposes `/api/boxes/*` APIs, so this widget must preserve the display-vs-source distinction. 
+
+---
+
+# 12. Example Widget Record — Delegation Approval Controls
+
+```markdown
+# Widget Ledger — Delegation Approval Controls
+
+Last updated: 2026-04-28
+Widget ID: `delegation_approval_controls`
+Status: active / approval-capable / write-capable / high-risk
+Risk level: high
+Renders on: `delegations`
+Owning page: Delegations Page
+Owner file: `screens.jsx`, verify actual component name
+
+## 1. Widget Purpose
+
+Controls draft approval, submission, rewrite, undo, deletion, and target-aware delegation actions.
+
+This widget is high-risk because approval controls can turn draft content into actual workflow/output actions.
+
+## 2. Render Locations
+
+- `delegations` route
+
+## 3. Ownership
+
+Frontend:
+- `screens.jsx`
+
+Backend:
+- `server.py` delegation endpoints
+
+## 4. Inputs / Reads
+
+Reads:
+
+- draft queue
+- selected draft
+- draft content
+- channel/target options
+- run timeline
+- status
+- rewrite/undo state
+
+## 5. Outputs / Writes
+
+May write:
+
+- draft updates
+- draft deletion
+- draft submission
+- rewrite output
+- undo state
+- delegation run/event files
+
+## 6. APIs / Tools / Models
+
+Possible APIs:
+
+- `/api/delegate`
+- `/api/delegate/<id>`
+- `/api/delegations/drafts`
+- draft create/update/delete/submit/rewrite/undo endpoints
+- `/api/status`
+
+Rewrite may use model/tool flow if implemented.
+
+## 7. Side Effects
+
+High.
+
+Can:
+
+- submit a draft
+- trigger a delegation run
+- route content to a target/channel
+- create durable event logs
+- potentially cause external writes if connected
+
+## 8. Source-of-Truth Rules
+
+Drafts should have a clear storage location.
+
+Run outputs should be logs, not canonical source unless explicitly declared.
+
+If a draft is generated from another source, the widget should preserve source/context.
+
+## 9. State Model
+
+States:
+
+- loading drafts
+- no drafts
+- draft selected
+- editing draft
+- rewrite pending
+- rewrite complete
+- undo available
+- submit confirmation
+- submit pending
+- submit success
+- submit failure
+- target missing
+- approval required
+
+## 10. User Actions
+
+- select draft
+- edit draft
+- rewrite
+- undo
+- delete
+- submit
+- choose target/channel
+- inspect run timeline
+
+## 11. Guardrails / Approval Rules
+
+- Submit must be explicit.
+- Target must be visible before submission.
+- High-risk/customer-facing target requires additional approval.
+- Rewrites must not silently change approved meaning.
+- If a draft contains risky commitments, approval card logic should apply.
+
+## 12. Settings / Configuration
+
+Possible settings:
+
+- available targets/channels
+- approval mode
+- rewrite model
+- default channel
+- allowed write targets
+
+## 13. Dependencies
+
+Depends on:
+
+- Delegations Page
+- server delegation APIs
+- status API
+- Connections Ledger for external targets
+- Settings Ledger for configurable channels/credentials
+
+## 14. Known Failure Modes
+
+- user submits to wrong target
+- draft rewritten after approval without reapproval
+- target/channel hidden or unclear
+- external write happens without clear confirmation
+- run log not written
+
+## 15. Widget Done Gate
+
+Changes are not done until:
+
+- API/write targets documented
+- side effects mapped
+- approval behavior verified
+- target visibility verified
+- Asset / Widget Map updated
+- Page Ledger updated
+- Connections Ledger updated if target dependencies change
+
+## 16. Verification Checklist
+
+- list drafts
+- select draft
+- edit draft
+- test rewrite without submit if safe
+- verify submit confirmation shows target
+- verify write lands in expected draft/run location
+- do not test external write unless explicitly authorized
+
+## 17. Open Widget Problems
+
+- Need exact component/API confirmation.
+- Need target-specific approval policy.
+- Need risk approval card integration.
+```
+
+The sitemap describes Delegations as a draft-first handoff and approval surface with channel picker cards, run timeline, final-edit preview, and write approval gates, which is exactly why it deserves a Widget Ledger. 
+
+---
+
+# 13. Example Widget Record — Settings Credential Editor
+
+```markdown
+# Widget Ledger — Settings Credential Editor
+
+Last updated: 2026-04-28
+Widget ID: `settings_credential_editor`
+Status: active / credential-sensitive / write-capable / high-risk
+Risk level: high
+Renders on: `settings`
+Owning page: Settings Page
+Owner file: `screens.jsx` and server credential APIs, verify exact implementation
+
+## 1. Widget Purpose
+
+Allows operator to view, save, clear, or test configured credentials/settings for external services.
+
+## 2. Render Locations
+
+- `settings` route
+
+## 3. Ownership
+
+Frontend:
+- `SettingsScreen`
+
+Backend:
+- `server.py` settings/credential endpoints
+
+## 4. Inputs / Reads
+
+Reads:
+
+- current settings status
+- masked credential presence
+- model/provider settings
+- MCP credential state
+- possibly Pieces status
+
+## 5. Outputs / Writes
+
+Writes:
+
+- credentials/settings to approved storage
+- clears credentials/settings
+- maybe localStorage preferences
+- maybe `.env` allowlisted values through server
+
+## 6. APIs / Tools / Models
+
+Likely APIs from sitemap:
+
+- `/api/status`
+- `/api/settings/*`
+- `/api/settings/mcp_credentials/*`
+- `/api/model/*`
+- `/api/pieces/status`
+
+Verify exact endpoints.
+
+## 7. Side Effects
+
+High.
+
+Can change runtime service availability.
+
+Can break Close, Slack, model, MCP, Pieces, or other integration behavior if misconfigured.
+
+## 8. Source-of-Truth Rules
+
+Credentials must not be stored in ledgers.
+
+Ledger may name variable names and locations, never values.
+
+The source of credential truth is the runtime secret/config location, usually `.env`, platform connector, or secure settings store.
+
+## 9. State Model
+
+States:
+
+- loading settings
+- credential present masked
+- credential missing
+- save pending
+- save success
+- save failed
+- clear pending
+- clear success
+- test pending
+- test success/failure
+- invalid value
+- permission denied
+
+## 10. User Actions
+
+- edit setting
+- save credential
+- clear credential
+- test connection
+- choose model/provider
+- reset to default
+
+## 11. Guardrails / Approval Rules
+
+- Never display raw secret after save.
+- Never write credentials outside allowlisted keys.
+- Never commit `.env` secrets.
+- Credential test should use safe read/status checks.
+- Destructive clear should confirm.
+
+## 12. Settings / Configuration
+
+This widget is itself controlled by Settings Ledger.
+
+All editable settings should be listed there.
+
+## 13. Dependencies
+
+Depends on:
+
+- Settings Page
+- `server.py`
+- `.env` / secret store
+- Connections Ledger
+- Settings Ledger
+
+## 14. Known Failure Modes
+
+- raw secret displayed in UI/logs
+- credential saved to wrong key
+- credential cleared without confirmation
+- connection test causes side effects
+- settings UI says saved but backend failed
+
+## 15. Widget Done Gate
+
+Changes are not done until:
+
+- no raw secrets exposed
+- allowlist confirmed
+- Connections Ledger updated if service changed
+- Settings Ledger updated if configurable option changed
+- verification uses safe read/status checks
+- failure states visible
+
+## 16. Verification Checklist
+
+- masked credential state displays correctly
+- missing credential state displays correctly
+- save writes only expected key
+- clear requires confirmation
+- test uses safe check
+- no secret appears in logs, screenshots, ledgers, or committed files
+```
+
+The sitemap lists settings as including status, MCP credential save/clear, model provider operations, localStorage writes, and `.env`-style credential handling, so this is one of the project’s highest-risk widgets. 
+
+---
+
+# 14. Example Widget Record — Shared Markdown Renderer
+
+```markdown
+# Widget Ledger — Shared Markdown Renderer
+
+Last updated: 2026-04-28
+Widget ID: `markdown_renderer`
+Status: active / shared / high-risk
+Risk level: high
+Renders on: multiple pages
+Owner file: `components.jsx`
+
+## 1. Widget Purpose
+
+Renders markdown content across pages such as reports, chat, dossiers, previews, handoffs, and possibly generated outputs.
+
+## 2. Render Locations
+
+Multiple pages.
+
+Exact usage should be discovered by searching for the component import/use.
+
+## 3. Ownership
+
+Owner file:
+- `components.jsx`
+
+Dependencies:
+- `marked`
+- `DOMPurify`, according to sitemap
+
+## 4. Inputs / Reads
+
+Reads:
+
+- markdown strings
+- generated responses
+- report bodies
+- dossier text
+- preview content
+- handoff drafts
+
+## 5. Outputs / Writes
+
+No direct writes.
+
+Outputs rendered HTML.
+
+## 6. APIs / Tools / Models
+
+No direct API expected.
+
+May render model-generated content from other surfaces.
+
+## 7. Side Effects
+
+No persistence side effects, but high display/security effect.
+
+Sanitization/rendering changes can affect many pages.
+
+## 8. Source-of-Truth Rules
+
+Rendered markdown is display.
+
+It does not make generated text canonical.
+
+If rendering source-generated content, the source remains the original file/API/data store.
+
+## 9. State Model
+
+Usually stateless.
+
+May need to handle:
+
+- empty content
+- invalid markdown
+- sanitized HTML
+- links
+- code blocks
+- tables
+- unsafe HTML stripped
+
+## 10. User Actions
+
+Usually none, unless links/copy buttons exist.
+
+## 11. Guardrails / Approval Rules
+
+- Preserve sanitization.
+- Do not allow unsafe raw HTML.
+- Be careful with links and embedded content.
+- Changing this widget requires cross-page review.
+
+## 12. Settings / Configuration
+
+Potential:
+
+- markdown options
+- sanitize options
+- link behavior
+- code block rendering
+
+Verify actual code.
+
+## 13. Dependencies
+
+Depends on:
+
+- `components.jsx`
+- `marked`
+- `DOMPurify`
+
+Depended on by:
+
+- multiple pages and previews
+
+## 14. Known Failure Modes
+
+- XSS/sanitization regression
+- broken markdown rendering across pages
+- code blocks or links render incorrectly
+- generated content appears more authoritative than it is
+- one-page fix breaks another page
+
+## 15. Widget Done Gate
+
+Changes are not done until:
+
+- pages using renderer are identified
+- sanitization behavior preserved
+- representative pages checked
+- File Contents Ledger updated if role changes
+- Asset / Widget Map updated if render behavior changes globally
+
+## 16. Verification Checklist
+
+- render basic markdown
+- render links
+- render code block
+- render table if supported
+- verify unsafe HTML sanitized
+- check at least two pages that use the renderer
+```
+
+The sitemap identifies the shared Markdown renderer in `components.jsx` using `marked` and `DOMPurify`, which makes it shared and security-sensitive. 
+
+---
+
+# 15. Future Widget Record — Risk Approval Card
+
+This widget likely does not exist yet, but it should get a ledger as soon as it does.
+
+```markdown
+# Widget Ledger — Risk Approval Card
+
+Status: planned
+Risk level: critical
+Renders on: future approval surfaces, Delegations, Boxes, scheduled fire review
+Purpose: isolate approval for risky customer-facing moves
+
+## Required Behavior
+
+The card must show:
+
+- risk category
+- exact risky language/action
+- source plan/client
+- why it is risky
+- required confirmation
+- approval expiry/reuse rules
+- approval log target
+- what happens if rejected
+- safer alternative
+
+## Risk Categories
+
+- fee waiver
+- discount
+- no-charge language
+- guest-count promise
+- pricing guarantee
+- scope expansion
+- enrichment-based personalization
+- unverified claim
+- customer-facing send
+
+## Done Gate
+
+This widget is not done until:
+
+- approval is explicit
+- approval is logged
+- approval is tied to exact wording/action
+- batch approval cannot silently approve it
+- scheduled fires can check approval status
+```
+
+This should be created when the approval-card system starts.
+
+---
+
+# 16. Widget Done Gate
+
+Global default:
+
+```markdown
+## 6. Widget Done Gate
+
+A meaningful widget change is done only when:
+
+- [ ] widget purpose remains clear
+- [ ] render locations are known
+- [ ] owner page/file is known
+- [ ] reads are documented
+- [ ] writes are documented
+- [ ] APIs/tools/models are documented
+- [ ] side effects are documented
+- [ ] source-of-truth assumptions are clear
+- [ ] settings/config dependencies are clear
+- [ ] state/error/empty behavior is considered
+- [ ] guardrails/approval rules are preserved
+- [ ] affected Page Ledger updated if needed
+- [ ] Asset / Widget Map updated if dependency changed
+- [ ] Source-of-Truth Ledger updated if authority changed
+- [ ] verification performed or honestly marked unavailable
+```
+
+For high-risk widgets:
+
+```markdown
+High-risk widget changes require extra review.
+
+Do not merge/change blindly if the widget can:
+- write data
+- approve actions
+- touch credentials
+- trigger external services
+- influence customer-facing sends
+- display generated state as truth
+```
+
+---
+
+# 17. Widget State Standards
+
+Every meaningful widget should define states.
+
+```markdown
+## 7. Widget State Standards
+
+A widget should define whether it supports:
+
+- loading
+- loaded
+- empty
+- missing source
+- stale data
+- validation error
+- API error
+- permission error
+- write pending
+- write success
+- write failure
+- confirmation required
+- approval required
+- read-only mode
+- disabled mode
+```
+
+High-risk widgets need explicit failure states.
+
+A dangerous widget should not fail silently.
+
+---
+
+# 18. Widget Verification Standards
+
+Default verification:
+
+```markdown
+## 8. Widget Verification Standards
+
+When changing a widget, verify:
+
+- it renders in every expected location
+- expected data appears
+- empty state works
+- error state works
+- write action goes to expected target
+- no unexpected side effect occurs
+- source-of-truth assumptions remain valid
+- guardrails/approval rules still apply
+- related pages still work
+```
+
+For shared widgets:
+
+```markdown
+Verify at least two independent usage locations.
+```
+
+For credential widgets:
+
+```markdown
+Verify no raw secret is exposed.
+```
+
+For approval widgets:
+
+```markdown
+Verify risky action cannot be approved accidentally.
+```
+
+---
+
+# 19. Recommended `WIDGET_LEDGER.json` Shape
+
+```json
+{
+  "ledger_type": "widget",
+  "version": "0.1.0",
+  "last_updated": "2026-04-28",
+  "core_rule": "A widget is what it reads, writes, trusts, triggers, and can break.",
+  "widget_status_labels": [
+    "active",
+    "shared",
+    "read-only",
+    "write-capable",
+    "approval-capable",
+    "external-action",
+    "customer-facing-risk",
+    "credential-sensitive",
+    "generated-view",
+    "source-editing",
+    "high-risk",
+    "needs-audit",
+    "experimental",
+    "legacy"
+  ],
+  "widgets": [
+    {
+      "id": "boxes_dossier_renderer",
+      "name": "Boxes dossier renderer",
+      "status": ["active", "generated-view", "high-risk"],
+      "renders_on": ["boxes"],
+      "owner_file": "screens.jsx",
+      "related_apis": [
+        "/api/boxes/list",
+        "/api/boxes/<id>",
+        "/api/boxes/<id>/html",
+        "/api/boxes/<id>/template/<slug>"
+      ],
+      "reads": [
+        "Auto/Client Boxes",
+        "Auto/Staff Boxes",
+        "Auto/orchestrator/state"
+      ],
+      "writes": [
+        "optional delegation draft handoff if enabled"
+      ],
+      "source_of_truth": [
+        "Auto/Client Boxes for client truth",
+        "Auto/Staff Boxes for staff truth",
+        "Auto/orchestrator/state for generated state"
+      ],
+      "risk_level": "high",
+      "ledger_path": "LEDGERS/WIDGETS/boxes_dossier_renderer.md"
+    },
+    {
+      "id": "delegation_approval_controls",
+      "name": "Delegation approval controls",
+      "status": ["active", "approval-capable", "write-capable", "high-risk"],
+      "renders_on": ["delegations"],
+      "owner_file": "screens.jsx",
+      "risk_level": "high",
+      "ledger_path": "LEDGERS/WIDGETS/delegation_approval_controls.md"
+    },
+    {
+      "id": "markdown_renderer",
+      "name": "Shared Markdown renderer",
+      "status": ["active", "shared", "high-risk"],
+      "owner_file": "components.jsx",
+      "dependencies": ["marked", "DOMPurify"],
+      "risk_level": "high",
+      "ledger_path": "LEDGERS/WIDGETS/markdown_renderer.md"
+    }
+  ]
+}
+```
+
+This JSON can power widget maps and future checks.
+
+---
+
+# 20. Suggested Visual Layer
+
+Create:
+
+```text
+/LEDGERS/VISUALS/widget_ledger_pattern.mmd
+/LEDGERS/VISUALS/widget_dependency_flow.mmd
+/LEDGERS/VISUALS/high_risk_widget_map.mmd
+```
+
+Example widget dependency flow:
+
+```mermaid
+flowchart TD
+  Widget[Widget] --> Page[Owning Page]
+  Widget --> Owner[Owner File / Component]
+  Widget --> Reads[Reads Data]
+  Widget --> Writes[Writes Data]
+  Widget --> APIs[APIs / Tools / Models]
+  Widget --> Truth[Source-of-Truth Rules]
+  Widget --> State[State Model]
+  Widget --> Effects[Side Effects]
+  Effects --> Gate[Guardrails / Approval]
+  Gate --> Done[Widget Done Gate]
+```
+
+Example high-risk widget map:
+
+```mermaid
+flowchart TD
+  HighRisk[High-Risk Widgets]
+
+  HighRisk --> Boxes[Boxes Dossier Renderer]
+  HighRisk --> Auto[Automation Workflow Graph]
+  HighRisk --> Delegation[Delegation Approval Controls]
+  HighRisk --> Settings[Settings Credential Editor]
+  HighRisk --> Intake[Intake Ingest Panel]
+  HighRisk --> Markdown[Shared Markdown Renderer]
+  HighRisk --> RiskCard[Future Risk Approval Card]
+
+  Boxes --> TruthRisk[Truth Display Risk]
+  Auto --> AutomationRisk[Automation Mutation Risk]
+  Delegation --> ExternalRisk[External Action Risk]
+  Settings --> SecretRisk[Credential Risk]
+  Intake --> KnowledgeRisk[Knowledge Ingestion Risk]
+  Markdown --> RenderRisk[Sanitization/Display Risk]
+  RiskCard --> ApprovalRisk[Risk Approval Risk]
+```
+
+---
+
+# 21. Relationship to Page Ledger
+
+A Page Ledger should list widgets.
+
+A Widget Ledger should explain the complex widgets.
+
+Example:
+
+```text
+Page Ledger — boxes:
+Lists dossier renderer, template preview, handoff action.
+
+Widget Ledger — boxes_dossier_renderer:
+Explains exact reads, source truth, state, side effects, verification.
+```
+
+Do not put every widget detail inside the Page Ledger.
+
+---
+
+# 22. Relationship to Asset / Widget Map
+
+The Asset / Widget Map is the global registry.
+
+The Widget Ledger is the detailed record.
+
+```text
+Asset / Widget Map:
+BoxesScreen uses Boxes dossier renderer.
+
+Widget Ledger:
+Boxes dossier renderer reads Client Boxes, generated orchestrator state, supports stale/missing states, and must not imply generated truth.
+```
+
+The Asset / Widget Map should link to widget ledgers.
+
+---
+
+# 23. Relationship to Source-of-Truth Ledger
+
+Widgets need local source-of-truth rules.
+
+The Source-of-Truth Ledger owns the global rules.
+
+Example:
+
+```text
+Widget:
+Boxes dossier renderer displays `client_ledger.md`.
+
+Source-of-Truth Ledger:
+`client_ledger.md` is generated/derived; canonical comms live in `01_comms.md` and transcripts.
+```
+
+If a widget starts editing canonical data, both ledgers need updates.
+
+---
+
+# 24. Relationship to Settings Ledger
+
+Some widgets are settings-dependent.
+
+Example:
+
+```text
+Settings credential editor:
+it is itself part of Settings Ledger.
+
+Automation workflow graph:
+may depend on model/provider settings.
+
+Shared Markdown renderer:
+may depend on markdown/sanitizer options if configurable.
+```
+
+If a setting affects widget behavior, document it.
+
+---
+
+# 25. Relationship to Connections Ledger
+
+Widgets that call external services must link to Connections.
+
+Examples:
+
+```text
+Settings credential editor → Connections Ledger
+Delegation approval controls → Connections Ledger for targets/channels
+Automation workflow graph → Connections Ledger if triggers call external systems
+Intake ingest panel → Connections Ledger if OCR/model/file services are external
+```
+
+If a widget introduces a new external dependency, update Connections.
+
+---
+
+# 26. Relationship to Audit Ledger
+
+High-risk widgets should be audited.
+
+Audit should check:
+
+```text
+reads
+writes
+side effects
+source truth
+approval rules
+state handling
+verification
+```
+
+Audit findings update:
+
+```text
+Audit Ledger
+Open Problems Ledger
+Widget Ledger
+Page Ledger
+Asset / Widget Map
+```
+
+---
+
+# 27. Widget Change Done Gate
+
+Update this ledger when:
+
+```markdown
+- a high-risk widget is created
+- a widget starts reading new data
+- a widget starts writing data
+- a widget starts calling a new API/model/tool
+- a widget triggers a new side effect
+- a widget source-of-truth assumption changes
+- a widget’s approval behavior changes
+- a widget becomes shared across pages
+- a shared widget’s rendering/sanitization behavior changes
+- a widget is audited
+- a widget problem is discovered or resolved
+```
+
+Do not update for tiny style-only changes unless they alter state, behavior, side effects, or user expectation.
+
+---
+
+# 28. What Opus Should Build First
+
+Give Opus this build order:
+
+```text
+1. Create /LEDGERS/WIDGET_LEDGER.md.
+2. Create /LEDGERS/WIDGET_LEDGER.json.
+3. Create /LEDGERS/WIDGETS/ directory.
+4. Add link to /LEDGERS/INDEX.md.
+5. Add link to /LEDGERS/ASSET_WIDGET_MAP.md if it exists.
+6. Add link to /LEDGERS/PAGE_LEDGER.md if it exists.
+7. Add link to /LEDGERS/SOURCE_OF_TRUTH.md if it exists.
+8. Create /LEDGERS/VISUALS/widget_ledger_pattern.mmd.
+9. Create /LEDGERS/VISUALS/high_risk_widget_map.mmd.
+10. Add Widget Entry Format.
+11. Add Widget Status Labels.
+12. Add Widget Registry.
+13. Create first widget records:
+    - /LEDGERS/WIDGETS/boxes_dossier_renderer.md
+    - /LEDGERS/WIDGETS/delegation_approval_controls.md
+    - /LEDGERS/WIDGETS/settings_credential_editor.md
+    - /LEDGERS/WIDGETS/markdown_renderer.md
+14. Add planned record placeholder for:
+    - risk_approval_card.md
+15. Do not create ledgers for tiny presentational components.
+16. Commit with message: "Add widget ledger".
+```
+
+Important instruction:
+
+```text
+Opus must inspect actual component names before finalizing owner component fields.
+If unsure, mark `needs verification` instead of inventing names.
+```
+
+---
+
+# 29. Quality Bar
+
+The Widget Ledger succeeds if future agents can answer:
+
+* What does this widget do?
+* Where does it render?
+* What owns it?
+* What does it read?
+* What does it write?
+* What APIs/tools/models does it use?
+* What source truth does it trust?
+* What side effects can it trigger?
+* What settings affect it?
+* What states does it support?
+* What could break if it changes?
+* What does done mean for this widget?
+
+It fails if:
+
+* every tiny UI element gets a bloated ledger
+* high-risk widgets lack records
+* side effects are not documented
+* source-of-truth assumptions are missing
+* shared widgets are changed without cross-page verification
+* approval/credential widgets are treated like normal UI
+* widget ledgers duplicate page ledgers instead of deepening them
+
+This ledger should make risky widgets safe to change.
+
+---
+
+# 30. Final Operating Rule
+
+The Widget Ledger should end with this:
+
+```markdown
+A widget is not just a component.
+
+It is a behavior surface.
+
+Before changing it, know what it reads.
+Before trusting it, know what it writes.
+Before approving it, know what it can trigger.
+```
+
+---
+
+

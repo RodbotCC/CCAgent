@@ -1,0 +1,29 @@
+%% Communications Ledger — Handoff Routing Decision Tree
+%% When you have important future context, where does it go?
+
+flowchart TD
+    Session["Agent Session<br/>finds context worth preserving"] --> Important{Important to<br/>future work?}
+    Important -->|No| Drop["Let it stay in chat<br/>(not durable, not needed)"]:::skip
+    Important -->|Yes| Type{What kind of<br/>context is it?}
+
+    Type -->|Settled choice<br/>or rule| Decisions["Decisions Ledger<br/>(planned)"]:::planned
+    Type -->|Unresolved issue<br/>or risky area| OpenProblems["Open Problems Ledger<br/>OPEN_PROBLEMS_LEDGER.md"]:::active
+    Type -->|Current state<br/>at this moment| Temporal["Temporal Continuity Ledger<br/>TEMPORAL_CONTINUITY.md"]:::active
+    Type -->|Ownership rule| SourceOfTruth["Source-of-Truth Ledger<br/>(planned)"]:::planned
+    Type -->|Local to one Box<br/>or directory| LocalBox["Per-Box ledger<br/>Auto/Client Boxes/&lt;Name&gt;/<br/>or BOX.md"]:::active
+    Type -->|Message · warning · handoff<br/>preference · lesson · attempt| Comm["Communications Ledger<br/>COMMUNICATIONS_LEDGER.md"]:::self
+
+    Comm --> ReadByFuture["Future agent reads it<br/>at session start"]:::active
+    ReadByFuture --> Acted{Note is<br/>resolved?}
+    Acted -->|No| Stay["Stay active"]
+    Acted -->|Yes| Promote{Promote to<br/>another ledger?}
+    Promote -->|Settled rule| Decisions
+    Promote -->|Unresolved| OpenProblems
+    Promote -->|Local| LocalBox
+    Promote -->|None| Archive["Section 10<br/>Archived Communications"]:::archive
+
+    classDef self fill:#7c3aed,stroke:#5b21b6,color:#fff,stroke-width:3px
+    classDef active fill:#10b981,stroke:#047857,color:#fff
+    classDef planned fill:#e0e7ff,stroke:#6366f1,color:#1e1b4b,stroke-dasharray: 4 3
+    classDef archive fill:#9ca3af,stroke:#4b5563,color:#fff
+    classDef skip fill:#f3f4f6,stroke:#9ca3af,color:#6b7280

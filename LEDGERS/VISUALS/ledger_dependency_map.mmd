@@ -21,9 +21,9 @@ flowchart LR
     GL --> SET["Settings Ledger"]:::planned
 
     GL --> DEC["Decisions Ledger"]:::planned
-    GL --> COMM["Communications Ledger"]:::planned
+    GL --> COMM["Communications Ledger<br/>(LEDGERS/COMMUNICATIONS_LEDGER.md)"]:::active
     GL --> OP["Open Problems Ledger"]:::planned
-    GL --> AUD["Audit Ledger"]:::planned
+    GL --> AUD["Audit Ledger<br/>(out-of-scope 2026-04-29)"]:::outofscope
     GL --> PR["Prompt / Reconstruction Ledger"]:::planned
     GL --> SCT["Scout Ledger"]:::planned
 
@@ -36,11 +36,13 @@ flowchart LR
 
     SOT -.->|expands rules in| GL
     DOD -.->|expands gates in| GL
-    OP -.->|fed by| AUD
     DEC -.->|cross-references| OP
+    COMM -.->|promotes settled rules to| DEC
+    COMM -.->|promotes unresolved issues to| OP
     PAGES -.->|register with| AWM
     PAGES -.->|register with| SITEMAP
 
     classDef active fill:#7c3aed,stroke:#5b21b6,color:#fff,stroke-width:2px
     classDef planned fill:#e0e7ff,stroke:#6366f1,color:#1e1b4b,stroke-dasharray: 4 3
     classDef live fill:#10b981,stroke:#047857,color:#fff
+    classDef outofscope fill:#9ca3af,stroke:#4b5563,color:#fff,stroke-dasharray: 2 2

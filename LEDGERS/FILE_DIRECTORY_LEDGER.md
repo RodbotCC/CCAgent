@@ -48,13 +48,15 @@ This ledger is the project's **city map**. Local Box files are **neighborhood si
 
 ## 3. Top-Level Directory Map
 
-This is what actually exists at `/Users/jakeaaron/Downloads/CC Agent/` as of 2026-04-28. Every path here was confirmed by inspection. Do not invent additions.
+This is what actually exists at `/Users/jakeaaron/Downloads/CC Agent/` as of 2026-04-29 (post-housekeeping). Every path here was confirmed by inspection. Do not invent additions.
 
 | Path | Status | Owns | Read-First / Notes |
 |---|---|---|---|
 | `Auto/` | active (mixed canonical + runtime + duplicates) | Comeketo automation, Client Boxes, Staff Boxes, orchestrator, inbox skill, scripts, design assets | See §4.1; symlink target `/Users/jakeaaron/Desktop/Auto/`; orchestrator owns this — write only with explicit team authorization |
 | `CCAgentindex/` | active | App bedrock — the only filesystem state the app owns | `indexes/index.json` is loader authority; see §4.2 |
 | `LEDGERS/` | active / canonical | Project-wide memory and continuity layer | [`GLOBAL_LEDGER.md`](GLOBAL_LEDGER.md) read-first; this directory |
+| `Ledger Drafts/` | **active reference (added 2026-04-29)** | 19 hand-drafted `.txt` outlines — Jake's spine for unbuilt ledgers | **Read the matching outline before authoring any new ledger.** Moved here from `~/Documents/` 2026-04-29. Includes `# Audit Ledger.txt` (kept as reference even though Audit is out-of-scope for build). |
+| `Subagent Boxes/` | **active reference (added 2026-04-29)** | 5 draft sub-agent packages (file_directory, global_ledger, north_star, open_problems, temporal_continuity) awaiting promotion to runnable app agents | Moved here 2026-04-29 from repo root. Canonical *active* steward materials still live at `LEDGERS/AGENTS/<name>/`. Runnable form: `CCAgentindex/agents/<name>/`. |
 | `docs/` | active (partial) | Connector docs + an outdated copy of the sitemap | `connectors.md` is current; `docs/page_asset_sitemap.md` is **stale** — use root-level `page_asset_sitemap.md` |
 | `rawdata/` | active reference | CSV/MD imports from external sources (sales playbook, scoreboards, venue index, partnership program docs) | Read-only reference data; do not treat as canonical app state |
 | `Onboard Scripts/` (top-level) | active **superset** | 31 build/analytics scripts (includes 7 `analytics_*.py` not present in `Auto/Onboard Scripts/`) | Authoritative copy; see §10 wrong-turn about the duplicate |

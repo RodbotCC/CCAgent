@@ -1,0 +1,928 @@
+# Communications Ledger — Project-Wide Implementation Outline
+
+## 0. Purpose
+
+The **Communications Ledger** records important messages, warnings, handoffs, coordination notes, operator preferences, and context that needs to survive across agents and sessions.
+
+It is not the same as the Decisions Ledger.
+
+The Decisions Ledger records settled choices.
+The Communications Ledger records continuity messages.
+
+The uploaded ledger plan describes the Communications Ledger as the place for handoffs between agents, warnings to future agents, human preferences, fragile areas, follow-up notes, “do not repeat this” lessons, unfinished explanations, project boundaries, and notes about what was attempted. It is how agents talk across time. 
+
+That phrase is the heart of it:
+
+> The Communications Ledger is how agents talk across time.
+
+The project needs a durable place for the kind of information that is too important to lose but not formal enough to become a decision, source-of-truth rule, or open problem.
+
+---
+
+# 1. Core Operating Principle
+
+The Communications Ledger should enforce this rule:
+
+> If a future agent needs to hear it, leave it where they can find it.
+
+Chat scroll is not enough.
+
+A warning in one session should not vanish before the next session.
+
+A human preference should not have to be re-explained every day.
+
+A half-finished attempt should not be rediscovered from scratch.
+
+A local risk should not become invisible just because no one had time to fix it.
+
+The Communications Ledger is the project’s durable handoff channel.
+
+---
+
+# 2. Recommended Location
+
+Create it in the central ledger directory:
+
+```text id="d65r5v"
+/LEDGERS/
+  COMMUNICATIONS_LEDGER.md
+  COMMUNICATIONS_LEDGER.json
+  INDEX.md
+  VISUALS/
+    communications_timeline.mmd
+    handoff_flow.mmd
+```
+
+Recommended final path:
+
+```text id="vk83fb"
+/LEDGERS/COMMUNICATIONS_LEDGER.md
+/LEDGERS/COMMUNICATIONS_LEDGER.json
+```
+
+The Global Ledger and Temporal Continuity Ledger should link to it.
+
+Local Boxes may have their own local communication/handoff notes, but this global ledger should capture project-wide and cross-system communications.
+
+---
+
+# 3. Role in the Ledger System
+
+The Communications Ledger sits beside Temporal Continuity and Decisions.
+
+```text id="kkku1i"
+Temporal Continuity Ledger
+  └── What is true right now?
+
+Decisions Ledger
+  └── What was decided and why?
+
+Communications Ledger
+  └── What should future agents/humans be told?
+
+Open Problems Ledger
+  └── What remains unresolved?
+
+Audit Ledger
+  └── What was reviewed and found?
+```
+
+Important distinctions:
+
+```text id="3sfl90"
+Communication:
+"Be careful: the user may have unpushed local work."
+
+Decision:
+"GitHub is the source of truth."
+
+Open Problem:
+"We need a safer branch workflow for direct GitHub writes."
+
+Temporal Continuity:
+"Direct GitHub writes happened during Brenda & Steve cleanup."
+```
+
+The same event may create entries in multiple ledgers, but each ledger stores a different layer of meaning.
+
+---
+
+# 4. What This Ledger Owns
+
+## Owns
+
+* cross-agent handoff notes
+* warnings
+* human preferences
+* session-to-session messages
+* “do not repeat this” lessons
+* unfinished explanations
+* project boundary reminders
+* context notes that are not formal decisions
+* notes about what was attempted
+* coordination between local and global work
+* “tell the next agent” messages
+* operator/user tone and workflow preferences
+* fragile-process warnings
+
+## Does not own
+
+* settled architectural decisions
+* all open bugs
+* full audit reports
+* full changelogs
+* file ownership maps
+* source-of-truth authority
+* every chat message
+* every local client communication
+
+Those belong in Decisions, Open Problems, Audit, Temporal Continuity, File Directory, Source-of-Truth, and Client Box comms.
+
+This ledger should be high-signal.
+
+Not every message belongs here.
+
+Only communications with durable future value.
+
+---
+
+# 5. Recommended `COMMUNICATIONS_LEDGER.md` Structure
+
+Use stable headings:
+
+```markdown id="n0r49y"
+# Communications Ledger
+
+Last updated:
+Maintainer:
+Status:
+Read when:
+Core rule:
+
+## 1. Purpose
+## 2. Communication Entry Format
+## 3. Communication Types
+## 4. Active Handoff Notes
+## 5. Warnings To Future Agents
+## 6. Human Preferences / Working Style Notes
+## 7. Lessons Learned
+## 8. Attempted / Abandoned Work Notes
+## 9. Cross-System Coordination Notes
+## 10. Archived Communications
+## 11. Visualization Index
+## 12. Update Rules
+```
+
+This ledger should be readable and humane.
+
+It is the “please don’t lose this” file.
+
+---
+
+# 6. Communication Entry Format
+
+Use stable IDs.
+
+Recommended ID format:
+
+```text id="056bim"
+COMM-YYYY-MM-DD-###
+```
+
+Example:
+
+```text id="bnbjac"
+COMM-2026-04-28-001
+```
+
+Entry template:
+
+```markdown id="ev0t2j"
+## COMM-YYYY-MM-DD-### — <Short Title>
+
+Date:
+From:
+To:
+Type:
+Status:
+Affected systems:
+Related ledgers:
+Priority:
+
+### Message
+
+The actual handoff/warning/context.
+
+### Why It Matters
+
+Why future agents should care.
+
+### Suggested Action
+
+What to do with this information.
+
+### Expiry / Review
+
+When this note can be archived or removed.
+```
+
+Keep entries concise.
+
+If the note becomes a settled rule, promote it to Decisions or Source-of-Truth.
+
+If it becomes an unresolved issue, promote it to Open Problems.
+
+---
+
+# 7. Communication Types
+
+Standardize types.
+
+```markdown id="iyz10b"
+## 3. Communication Types
+
+Use one or more:
+
+- `handoff`: something the next agent needs to continue
+- `warning`: something dangerous or fragile
+- `preference`: human/operator preference
+- `lesson`: what was learned from a mistake or near-miss
+- `attempt`: what was tried and what happened
+- `boundary`: what not to do
+- `coordination`: cross-system note
+- `review-note`: something to revisit
+- `local-context`: context tied to a specific directory or Box
+- `git-note`: branch/commit/local-vs-remote warning
+```
+
+Types make the ledger searchable.
+
+---
+
+# 8. Active Handoff Notes
+
+Purpose: current important messages to future agents.
+
+Seed examples:
+
+```markdown id="5c8tql"
+## 4. Active Handoff Notes
+
+### COMM-2026-04-28-001 — Ledger Build Rhythm
+
+Date: 2026-04-28  
+From: User  
+To: Future agents / Opus  
+Type: handoff  
+Status: active  
+Priority: high  
+Affected systems: ledgers  
+
+#### Message
+
+The user wants ledger outlines produced and implemented one at a time. The user types `P` to proceed to the next ledger.
+
+#### Why It Matters
+
+This prevents the ledger system from becoming shallow or overwhelming. Do not jump ahead unless the user changes the rhythm.
+
+#### Suggested Action
+
+Continue ledger outlines in order. After Communications Ledger, proceed to Open Problems Ledger when user types `P`.
+
+#### Expiry / Review
+
+Review after first wave of ledgers is implemented.
+```
+
+---
+
+## 8.1 Client Box Cleanup Rhythm
+
+```markdown id="o0pq8s"
+### COMM-2026-04-28-002 — Client Box Cleanup Rhythm
+
+Date: 2026-04-28  
+From: User  
+To: Future agents  
+Type: handoff  
+Status: active  
+Priority: high  
+Affected systems: Client Boxes, inbox automation, guardrails  
+
+#### Message
+
+Client Box audits should happen one box at a time. Read the box, report findings, clean if approved, leave an audit marker, then proceed to the next.
+
+#### Why It Matters
+
+Each client has local context. One client’s risks should not cause broad global rewrites unless the pattern is truly systemic.
+
+#### Suggested Action
+
+For each client box, check comms, state, profile, seven-day plan, alerts, ledger, guardrails, calendar drift, risky commitments, enrichment boundary, and plan validity.
+
+#### Expiry / Review
+
+Review after the first batch of active Client Boxes is audited.
+```
+
+---
+
+## 8.2 Brenda & Steve Lesson
+
+```markdown id="mhzqtk"
+### COMM-2026-04-28-003 — Brenda & Steve Fee-Waiver Lesson
+
+Date: 2026-04-28  
+From: User + audit session  
+To: Future agents  
+Type: lesson / warning  
+Status: active  
+Priority: high  
+Affected systems: Client Boxes, approval flow, inbox automation  
+
+#### Message
+
+The Brenda & Steve fee-waiver move may have been strategically correct, but it was too risky to be hidden inside a rushed batch approval flow. Future risky moves should be isolated and explicitly approved.
+
+#### Why It Matters
+
+Good sales judgment and safe automation are different. A move can be smart but still require explicit human ownership.
+
+#### Suggested Action
+
+When a plan contains fee waivers, no-charge language, discounts, guest-count promises, pricing commitments, or enrichment-based personalization, convert it into an approval-required card or flatten the copy.
+
+#### Expiry / Review
+
+Review after approval-card workflow exists.
+```
+
+---
+
+# 9. Warnings To Future Agents
+
+Purpose: warning board.
+
+Examples:
+
+```markdown id="jy5yl3"
+## 5. Warnings To Future Agents
+
+### COMM-2026-04-28-004 — Watch For Local Git Drift
+
+Date: 2026-04-28  
+From: User + GitHub write session  
+To: Future agents  
+Type: warning / git-note  
+Status: active  
+Priority: high  
+Affected systems: GitHub, local repo, agent writes  
+
+#### Message
+
+The user may have local unpushed work while agents are writing directly to GitHub.
+
+#### Why It Matters
+
+Direct commits to GitHub can create conflicts or require rebase/merge before the user can push local work.
+
+#### Suggested Action
+
+Before further direct writes, consider asking whether to continue direct-to-main, use a branch, or wait for the user to sync. Never force-push main.
+
+#### Expiry / Review
+
+Can be archived once a stable branch workflow is adopted.
+```
+
+---
+
+## 9.1 Guardrail Drift Warning
+
+```markdown id="71r95u"
+### COMM-2026-04-28-005 — Plans May Predate Guardrails
+
+Date: 2026-04-28  
+From: audit session  
+To: Future agents  
+Type: warning  
+Status: active  
+Priority: high  
+Affected systems: Client Boxes, seven-day plans, scheduled fires  
+
+#### Message
+
+Some seven-day plans may have been written before the current inbox guardrails were fully enforced.
+
+#### Why It Matters
+
+Plans may contain stale dates, risky commitment language, enrichment leakage, or unsafe send assumptions.
+
+#### Suggested Action
+
+Before trusting any plan, audit it against current comms, state, and guardrails.
+
+#### Expiry / Review
+
+Can be downgraded after all active Client Boxes have been audited.
+```
+
+---
+
+# 10. Human Preferences / Working Style Notes
+
+This is important for continuity.
+
+Example:
+
+```markdown id="zqyeux"
+## 6. Human Preferences / Working Style Notes
+
+### COMM-2026-04-28-006 — Preferred Ledger Writing Style
+
+Date: 2026-04-28  
+From: User  
+To: Future agents  
+Type: preference  
+Status: active  
+Priority: medium  
+Affected systems: ledgers, Opus handoff  
+
+#### Message
+
+User prefers ledger architecture writeups that are broad, gorgeous, implementation-ready, and high-level enough that agents do not overfit to a single implementation.
+
+#### Why It Matters
+
+The outlines are meant to be handed to Opus for implementation. They should be structured and actionable without becoming brittle.
+
+#### Suggested Action
+
+Keep future ledger outlines elegant, practical, and implementation-oriented. Avoid narrow overengineering unless asked.
+```
+
+---
+
+## 10.1 Automation Safety Preference
+
+```markdown id="zkltnt"
+### COMM-2026-04-28-007 — Safe Movement Preference
+
+Date: 2026-04-28  
+From: User  
+To: Future agents  
+Type: preference / boundary  
+Status: active  
+Priority: high  
+Affected systems: Comeketo automation, Client Boxes, inbox work  
+
+#### Message
+
+Comeketo wants to see automation movement, but the user wants the early system to be careful. Prefer safe movement over aggressive cleverness while trust is being established.
+
+#### Why It Matters
+
+The company wants proof that automation is working, but the user is trying to prevent unsafe autonomy.
+
+#### Suggested Action
+
+Flatten risky plans unless the risky move is explicitly approved. Use polite nudges, clear next-step asks, reply-aware handling, and guardrail checks.
+```
+
+---
+
+# 11. Lessons Learned
+
+Purpose: durable project learning.
+
+Examples:
+
+```markdown id="q15t5g"
+## 7. Lessons Learned
+
+### Lesson: Sitting There Is State
+
+Silence, waiting, holding, and watching are not absence. They are states.
+
+This matters for:
+- Client Boxes
+- scheduled fires
+- reply gates
+- plan validity
+- temporal continuity
+
+Future systems should represent waiting states explicitly.
+```
+
+```markdown id="qeze4f"
+### Lesson: Automation Can Become More Personal
+
+The goal is not generic drip automation. The goal is automation that remembers what people said, respects their context, and helps Andre show up prepared.
+
+Wholesome enrichment is allowed for internal understanding. Creepy personalization is not.
+```
+
+These lessons are not necessarily formal decisions yet, but they should be carried forward.
+
+Some may later become North Star principles or Decisions.
+
+---
+
+# 12. Attempted / Abandoned Work Notes
+
+Purpose: prevent repeated failed attempts.
+
+Example template:
+
+```markdown id="fslp9m"
+## 8. Attempted / Abandoned Work Notes
+
+### COMM-YYYY-MM-DD-### — <Attempt Title>
+
+Date:
+Type: attempt
+Status:
+Affected systems:
+
+#### What Was Attempted
+
+...
+
+#### Result
+
+...
+
+#### Why It Was Stopped / Changed
+
+...
+
+#### What Future Agents Should Know
+
+...
+```
+
+Seed only if there are real attempts to record.
+
+Current candidate:
+
+```markdown id="2a675j"
+No major abandoned implementation attempts recorded yet.
+```
+
+Do not invent failed attempts.
+
+---
+
+# 13. Cross-System Coordination Notes
+
+Purpose: preserve notes that touch multiple systems.
+
+Examples:
+
+```markdown id="djwxz3"
+## 9. Cross-System Coordination Notes
+
+### Client Box State Flow
+
+Client comms and transcripts feed state. State affects plan validity. Plan validity affects scheduled fires. Scheduled fires must obey guardrails. UI Boxes page displays the state but does not own it.
+
+Systems involved:
+- Close
+- Client Boxes
+- comms_state_sweep
+- inbox guardrails
+- scheduled fires
+- Boxes page
+- ledgers
+```
+
+```markdown id="1bqpgw"
+### Page Work Done Gate
+
+Any page, route, or page data-binding change must update the page-asset sitemap. This is already defined by the sitemap and should be treated as mandatory. :contentReference[oaicite:1]{index=1}
+```
+
+Cross-system notes may later become decision records, source-of-truth rules, or asset/widget map entries.
+
+---
+
+# 14. Archived Communications
+
+Purpose: keep active section clean.
+
+```markdown id="4vdydn"
+## 10. Archived Communications
+
+Move resolved or expired communications here when:
+
+- the warning no longer applies
+- the handoff has been completed
+- the preference has been promoted to a decision
+- the issue moved to Open Problems
+- the local context moved into a Box
+```
+
+Archive entries should remain searchable but not clutter active handoffs.
+
+---
+
+# 15. Recommended `COMMUNICATIONS_LEDGER.json` Shape
+
+```json id="m1o52i"
+{
+  "ledger_type": "communications",
+  "version": "0.1.0",
+  "last_updated": "2026-04-28",
+  "communication_types": [
+    "handoff",
+    "warning",
+    "preference",
+    "lesson",
+    "attempt",
+    "boundary",
+    "coordination",
+    "review-note",
+    "local-context",
+    "git-note"
+  ],
+  "active_entries": [
+    {
+      "id": "COMM-2026-04-28-001",
+      "title": "Ledger Build Rhythm",
+      "date": "2026-04-28",
+      "from": "User",
+      "to": "Future agents / Opus",
+      "types": ["handoff"],
+      "status": "active",
+      "priority": "high",
+      "affected_systems": ["ledgers"],
+      "message": "The user wants ledger outlines produced and implemented one at a time. The user types P to proceed to the next ledger.",
+      "suggested_action": "Continue ledger outlines in order."
+    },
+    {
+      "id": "COMM-2026-04-28-004",
+      "title": "Watch For Local Git Drift",
+      "date": "2026-04-28",
+      "types": ["warning", "git-note"],
+      "status": "active",
+      "priority": "high",
+      "affected_systems": ["GitHub", "local repo", "agent writes"],
+      "message": "The user may have local unpushed work while agents are writing directly to GitHub.",
+      "suggested_action": "Avoid force-push. Consider branch workflow or ask before direct writes."
+    }
+  ],
+  "archive_policy": {
+    "archive_when": [
+      "warning no longer applies",
+      "handoff completed",
+      "preference promoted to decision",
+      "issue moved to Open Problems",
+      "context moved into local Box"
+    ]
+  }
+}
+```
+
+This JSON can later power a handoff dashboard or “read active warnings” tool.
+
+---
+
+# 16. Suggested Visual Layer
+
+Create:
+
+```text id="xz23tb"
+/LEDGERS/VISUALS/communications_timeline.mmd
+/LEDGERS/VISUALS/handoff_flow.mmd
+/LEDGERS/VISUALS/communication_promotion_flow.mmd
+```
+
+Example handoff flow:
+
+```mermaid id="a4mmtn"
+flowchart TD
+  Session[Agent Session] --> Finding{Important Future Context?}
+  Finding -->|No| End[No Ledger Entry]
+  Finding -->|Yes| Type{What Kind?}
+
+  Type -->|Settled Choice| Decision[Decisions Ledger]
+  Type -->|Unresolved Issue| Problem[Open Problems Ledger]
+  Type -->|Audit Finding| Audit[Audit Ledger]
+  Type -->|Current State| Temporal[Temporal Continuity]
+  Type -->|Message / Warning / Handoff| Comm[Communications Ledger]
+
+  Comm --> Future[Future Agent Reads It]
+```
+
+Example communication lifecycle:
+
+```mermaid id="clyzjc"
+flowchart LR
+  Active[Active Communication] --> Resolved{Resolved?}
+  Resolved -->|No| Keep[Keep Active]
+  Resolved -->|Yes| Promote{Promote?}
+  Promote -->|Decision| Decisions[Decisions Ledger]
+  Promote -->|Problem| Problems[Open Problems Ledger]
+  Promote -->|Local Context| Box[Local BOX.md]
+  Promote -->|No| Archive[Archived Communications]
+```
+
+---
+
+# 17. Relationship to Temporal Continuity
+
+Temporal Continuity answers:
+
+```text id="tt3qco"
+What is true right now?
+```
+
+Communications answers:
+
+```text id="5z3n5c"
+What does the next agent need to hear?
+```
+
+They overlap, but they should not duplicate everything.
+
+Example:
+
+```text id="ecg0ul"
+Temporal Continuity:
+Client Box cleanup is active. Brenda & Steve done.
+
+Communications:
+When cleaning Client Boxes, check for plan/guardrail contradictions and leave audit markers.
+```
+
+Temporal is state.
+Communications is message.
+
+---
+
+# 18. Relationship to Decisions
+
+If a communication becomes a settled rule, promote it.
+
+Example:
+
+```text id="hh4djk"
+Communication:
+"Be careful with risky moves in batch approval."
+
+Decision:
+"Risky sales moves require isolated approval."
+```
+
+After promotion, the communication can remain as background lesson or be archived.
+
+---
+
+# 19. Relationship to Open Problems
+
+If a communication describes an unresolved thing, promote it to Open Problems.
+
+Example:
+
+```text id="xewi4j"
+Communication:
+"We need an allowed-to-know constraint."
+
+Open Problem:
+"Design schema and workflow for allowed-to-know facts across Client Boxes."
+```
+
+The Communications Ledger can mention the issue, but the Open Problems Ledger should own tracking it.
+
+---
+
+# 20. Relationship to Local Boxes
+
+Some communications are local.
+
+Example:
+
+```text id="1t4ktw"
+"Brenda & Steve plan was cleaned on 2026-04-28."
+```
+
+That belongs primarily in:
+
+```text id="5sb2h7"
+Auto/Client Boxes/Brenda & Steve/2026-04-28_audit_marker.md
+```
+
+The global Communications Ledger should only mention it if the lesson is project-wide:
+
+```text id="rs74r4"
+Fee-waiver lesson applies to all Client Boxes.
+```
+
+This keeps the global ledger clean.
+
+---
+
+# 21. Communication Change Done Gate
+
+Update this ledger when:
+
+```markdown id="6tb5ia"
+- a future agent needs a warning
+- user gives a durable preference
+- a session leaves an important handoff
+- an attempted approach fails or is abandoned
+- a cross-system coordination note emerges
+- a repeated mistake needs a warning
+- a local issue has project-wide implications
+- an active communication becomes resolved and should be archived
+```
+
+Do **not** update it for:
+
+```markdown id="mvi40e"
+- every chat exchange
+- every small implementation detail
+- information better suited to Decisions, Open Problems, or Audit
+- local-only notes that belong inside a Box
+```
+
+---
+
+# 22. What Opus Should Build First
+
+Give Opus this build order:
+
+```text id="j86z2j"
+1. Create /LEDGERS/COMMUNICATIONS_LEDGER.md.
+2. Create /LEDGERS/COMMUNICATIONS_LEDGER.json.
+3. Add link to /LEDGERS/INDEX.md.
+4. Add link to /LEDGERS/GLOBAL_LEDGER.md if it exists.
+5. Add link to /LEDGERS/TEMPORAL_CONTINUITY.md if it exists.
+6. Add link to /LEDGERS/DECISIONS_LEDGER.md if it exists.
+7. Create /LEDGERS/VISUALS/communications_timeline.mmd.
+8. Create /LEDGERS/VISUALS/handoff_flow.mmd.
+9. Add Communication Entry Format.
+10. Add Communication Types.
+11. Seed active entries:
+    - Ledger build rhythm
+    - Client Box cleanup rhythm
+    - Brenda & Steve fee-waiver lesson
+    - Watch for local Git drift
+    - Plans may predate guardrails
+    - Preferred ledger writing style
+    - Safe movement preference
+12. Add Lessons Learned:
+    - Sitting there is state
+    - Automation can become more personal
+    - Wholesome enrichment versus creepy personalization
+13. Add archive policy.
+14. Commit with message: "Add communications ledger".
+```
+
+---
+
+# 23. Quality Bar
+
+The Communications Ledger succeeds if future agents can answer:
+
+* What warnings should I know?
+* What did the human ask future agents to remember?
+* What handoff notes are active?
+* What preferences should shape my work?
+* What lessons should not be repeated?
+* What was attempted and why did it stop?
+* Which notes should be promoted to decisions, problems, or audits?
+* What can be archived?
+
+It fails if:
+
+* it becomes a dump of every chat message
+* it duplicates Temporal Continuity
+* it records decisions without promoting them
+* it hides unresolved issues that belong in Open Problems
+* it is not read during handoff
+* active warnings go stale
+* future agents still miss important human preferences
+
+This ledger should feel like a trusted message board across time.
+
+---
+
+# 24. Final Operating Rule
+
+The Communications Ledger should end with this:
+
+```markdown id="w29cv9"
+Agents cannot remember what was never written down.
+
+If the next agent needs to hear it, leave the message.
+
+If the message becomes a rule, promote it.
+If it becomes a problem, track it.
+If it becomes local, move it into the Box.
+```
+
+---
+
