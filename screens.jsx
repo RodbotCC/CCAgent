@@ -354,6 +354,17 @@ function SettingsScreen({ tweaks, setTweaks, go, onReset }) {
   const [credMeta, setCredMeta] = useState({});
   const [credDraft, setCredDraft] = useState({});
   const [credBusy, setCredBusy] = useState("");
+  const browserUse = {
+    resultLimit: 8,
+    detail: "standard",
+    includeLinks: true,
+    screenshots: true,
+    ...((tweaks && tweaks.browserUse) || {}),
+  };
+  const setBrowserUse = (patch) => setTweaks({
+    ...tweaks,
+    browserUse: { ...browserUse, ...patch },
+  });
 
   const refreshStatus = useCallback(async () => {
     setStatusBusy(true);
@@ -498,6 +509,58 @@ function SettingsScreen({ tweaks, setTweaks, go, onReset }) {
           <div />
           <div className="ctrl">
             <div className={"toggle" + (tweaks.promptEnhance ? " on" : "")} onClick={() => setTweaks({...tweaks, promptEnhance: !tweaks.promptEnhance})} />
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2>Browser use</h2>
+        <div className="opt">
+          <div>
+            <div className="lbl">Headless result count</div>
+            <div className="desc">How many links or video results the quiet `browser use` worker returns to chat.</div>
+          </div>
+          <div />
+          <div className="ctrl">
+            <div className="segmented">
+              {[5, 8, 12, 20].map(n => (
+                <button key={n} className={Number(browserUse.resultLimit) === n ? "on" : ""} onClick={() => setBrowserUse({ resultLimit: n })}>{n}</button>
+              ))}
+            </div>
+          </div>
+        </div>
+        <div className="opt">
+          <div>
+            <div className="lbl">Headless detail</div>
+            <div className="desc">Brief returns tight scan lines. Standard includes links. Deep keeps any readable descriptions too.</div>
+          </div>
+          <div />
+          <div className="ctrl">
+            <div className="segmented">
+              {["brief", "standard", "deep"].map(level => (
+                <button key={level} className={browserUse.detail === level ? "on" : ""} onClick={() => setBrowserUse({ detail: level })}>{level}</button>
+              ))}
+            </div>
+          </div>
+        </div>
+        <div className="opt">
+          <div>
+            <div className="lbl">Return links</div>
+            <div className="desc">Include source URLs in the headless summary panel.</div>
+          </div>
+          <div />
+          <div className="ctrl">
+            <div className={"toggle" + (browserUse.includeLinks ? " on" : "")} onClick={() => setBrowserUse({ includeLinks: !browserUse.includeLinks })} />
+          </div>
+        </div>
+        <div className="opt">
+          <div>
+            <div className="lbl">Save screenshots</div>
+            <div className="desc">Store a viewport screenshot for each headless browser job under `output/playwright/`.</div>
+          </div>
+          <div />
+          <div className="ctrl">
+            <div className={"toggle" + (browserUse.screenshots ? " on" : "")} onClick={() => setBrowserUse({ screenshots: !browserUse.screenshots })} />
           </div>
         </div>
       </section>
@@ -4291,7 +4354,7 @@ function DelegationsScreen({ go }) {
   );
 }
 
-function BoxesScreen({ go }) {
+function BoxesScreen({ go, selectId }) {
   const STARTER_LEADS = useMemo(() => ([
     "hugo_casillas",
     "brenda_steve",
@@ -4335,8 +4398,14 @@ function BoxesScreen({ go }) {
       setGrouped(d.grouped || {});
       setMismatch(d.mismatch || { unmatched_box_ids: [], unmatched_people: [] });
       if (!selectedId && Array.isArray(d.boxes) && d.boxes.length) {
+        // Honor an explicit incoming selectId (e.g., from "Open in Boxes →" on
+        // the Intake page) before falling back to the starter heuristic.
+        const incoming = selectId ? d.boxes.find((b) => b.id === selectId) : null;
         const starter = d.boxes.find((b) => STARTER_LEADS.some((s) => slugNorm(b.name).startsWith(s)));
-        setSelectedId((starter || d.boxes[0]).id);
+        setSelectedId((incoming || starter || d.boxes[0]).id);
+        if (incoming && (incoming.kind || "lead") !== kindFilter) {
+          setKindFilter(incoming.kind || "lead");
+        }
       }
     } catch (e) {
       setErr(e.message || String(e));
@@ -4711,8 +4780,17 @@ function BoxesScreen({ go }) {
 
   const buildBoxMenuItems = (b) => {
     if (!b) return [];
-    return [
+    const items = [
       { label: "Open box detail", icon: "↗", onClick: () => { setSelectedId(b.id); setShowRoster(false); } },
+    ];
+    if ((b.source_kind || "") === "client_box") {
+      items.push({
+        label: "Open as Intake Report →",
+        icon: "▤",
+        onClick: () => { go.push("intake", { openSlug: b.id }); },
+      });
+    }
+    items.push(
       { label: "Copy box id", icon: "⧉", onClick: () => copyToClipboard(b.id) },
       { label: "Copy folder path", icon: "⧉", onClick: () => copyToClipboard(b.folder_rel) },
       {
@@ -4728,7 +4806,8 @@ function BoxesScreen({ go }) {
           go.push("delegations");
         },
       },
-    ];
+    );
+    return items;
   };
 
   const buildPanelMenuItems = (p) => {
@@ -4939,11 +5018,16 @@ function BoxesScreen({ go }) {
   );
 }
 
-function IntakeScreen({ go }) {
+function IntakeScreen({ go, openSlug }) {
   // Local "view mode" — list of reports, or one report's detail. Using
   // local state (not the router) so back-button behavior here is a simple
-  // toggle.
-  const [activeSlug, setActiveSlug] = useState(null);
+  // toggle. An openSlug prop (from "Open as Intake Report →" on the Boxes
+  // page) opens that report directly on first mount.
+  const [activeSlug, setActiveSlug] = useState(openSlug || null);
+  useEffect(() => {
+    if (openSlug && openSlug !== activeSlug) setActiveSlug(openSlug);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [openSlug]);
   if (activeSlug) {
     return <IntakeReportDetail slug={activeSlug} onBack={() => setActiveSlug(null)} go={go}/>;
   }
@@ -4953,6 +5037,7 @@ function IntakeScreen({ go }) {
 // ─── Reports list ──────────────────────────────────────────────────────
 function IntakeReportsList({ onPick, go }) {
   const [items, setItems]   = useState([]);
+  const [boxReports, setBoxReports] = useState([]);
   const [loading, setLoading] = useState(true);
   const [err, setErr] = useState(null);
   const [showCreate, setShowCreate] = useState(false);
@@ -4965,6 +5050,7 @@ function IntakeReportsList({ onPick, go }) {
     setLoading(true); setErr(null);
     fetchJson("/api/reports/list").then(d => {
       setItems(d.items || []);
+      setBoxReports(d.box_reports || []);
     }).catch(e => setErr(e.message)).finally(() => setLoading(false));
   }, []);
   useEffect(() => { refresh(); }, [refresh]);
@@ -5026,15 +5112,60 @@ function IntakeReportsList({ onPick, go }) {
 
   const buildReportMenuItems = (r) => {
     if (!r) return [];
-    return [
-      { label: "Open report", icon: "↗", onClick: () => onPick(r.slug) },
-      { divider: true },
-      { label: "Copy report name", icon: "⧉", onClick: () => copyToClipboard(r.name || "") },
-      { label: "Copy report slug", icon: "⧉", onClick: () => copyToClipboard(r.slug || "") },
-      { label: "Copy quick stats", icon: "⧉", onClick: () => copyToClipboard(`${r.name || r.slug}: ${r.doc_count || 0} docs, ${r.qa_count || 0} answers`) },
-      { divider: true },
-      { label: "Delete report", icon: "✕", danger: true, onClick: () => deleteReportFromList(r) },
+    const isBox = r.source === "box_synthesis";
+    const items = [
+      { label: isBox ? "Open box report" : "Open report", icon: "↗", onClick: () => onPick(r.slug) },
     ];
+    if (isBox) {
+      items.push({ label: "Open in Boxes →", icon: "▤", onClick: () => go && go.push && go.push("boxes", { selectId: r.slug }) });
+    }
+    items.push(
+      { divider: true },
+      { label: "Copy name", icon: "⧉", onClick: () => copyToClipboard(r.name || "") },
+      { label: "Copy slug", icon: "⧉", onClick: () => copyToClipboard(r.slug || "") },
+      { label: "Copy quick stats", icon: "⧉", onClick: () => copyToClipboard(`${r.name || r.slug}: ${r.doc_count || 0} docs, ${r.qa_count || 0} answers`) },
+    );
+    if (!isBox) {
+      items.push(
+        { divider: true },
+        { label: "Delete report", icon: "✕", danger: true, onClick: () => deleteReportFromList(r) },
+      );
+    }
+    return items;
+  };
+
+  const renderCard = (r) => {
+    const isBox = r.source === "box_synthesis";
+    return (
+      <button
+        key={r.slug}
+        className={"ix-card" + (isBox ? " ix-card-box" : "")}
+        onClick={() => onPick(r.slug)}
+        onContextMenu={(e) => openListContextMenu(e, r)}
+        title="Right-click for actions"
+      >
+        {isBox && (
+          <div className="ix-card-eyebrow" style={{ fontFamily: "var(--mono)", fontSize: 9, textTransform: "uppercase", letterSpacing: "0.1em", color: "var(--muted-2)", marginBottom: 6 }}>
+            box · {r.kind || "lead"}
+          </div>
+        )}
+        <div className="ix-card-name">{r.name}</div>
+        {(r.doc_types || []).length > 0 && (
+          <div className="ix-card-types">
+            {r.doc_types.slice(0, 6).map(t => (
+              <span key={t} className={"ix-doctype ix-doctype-" + t}>{t}</span>
+            ))}
+          </div>
+        )}
+        <div className="ix-card-meta">
+          <span><b>{r.doc_count}</b> {r.doc_count === 1 ? "doc" : "docs"}</span>
+          <span>·</span>
+          <span><b>{r.qa_count}</b> {r.qa_count === 1 ? "answer" : "answers"}</span>
+          <span>·</span>
+          <span className="ix-card-time">{_ixFmtRelative(r.updated_at)}</span>
+        </div>
+      </button>
+    );
   };
 
   return (
@@ -5091,7 +5222,7 @@ function IntakeReportsList({ onPick, go }) {
       {!loading && err && (
         <div className="ix-error">✕ {err}</div>
       )}
-      {!loading && !err && items.length === 0 && (
+      {!loading && !err && items.length === 0 && boxReports.length === 0 && (
         <div className="ix-empty">
           <div className="ix-empty-mark">∅</div>
           <h2 className="ix-empty-title">No reports yet.</h2>
@@ -5101,33 +5232,30 @@ function IntakeReportsList({ onPick, go }) {
           <button className="btn primary" onClick={() => setShowCreate(true)}>+ create your first report</button>
         </div>
       )}
+      {!loading && !err && boxReports.length > 0 && (
+        <div className="ix-section">
+          <div className="ix-section-head" style={{ display: "flex", alignItems: "baseline", gap: 12, padding: "0 0 10px", borderBottom: "1px solid var(--rule)", marginBottom: 18 }}>
+            <h2 style={{ fontFamily: "var(--serif)", fontSize: 18, fontWeight: 500, margin: 0, letterSpacing: "-0.01em" }}>Box Reports<span style={{ color: "var(--muted-2)" }}>.</span></h2>
+            <span style={{ fontFamily: "var(--mono)", fontSize: 10, textTransform: "uppercase", letterSpacing: "0.08em", color: "var(--muted-2)" }}>auto · one per client box · ask the box anything</span>
+            <span style={{ marginLeft: "auto", fontFamily: "var(--mono)", fontSize: 11, color: "var(--muted)" }}>{boxReports.length}</span>
+          </div>
+          <div className="ix-grid">
+            {boxReports.map(renderCard)}
+          </div>
+        </div>
+      )}
       {!loading && !err && items.length > 0 && (
-        <div className="ix-grid">
-          {items.map(r => (
-            <button
-              key={r.slug}
-              className="ix-card"
-              onClick={() => onPick(r.slug)}
-              onContextMenu={(e) => openListContextMenu(e, r)}
-              title="Right-click for actions"
-            >
-              <div className="ix-card-name">{r.name}</div>
-              {(r.doc_types || []).length > 0 && (
-                <div className="ix-card-types">
-                  {r.doc_types.slice(0, 6).map(t => (
-                    <span key={t} className={"ix-doctype ix-doctype-" + t}>{t}</span>
-                  ))}
-                </div>
-              )}
-              <div className="ix-card-meta">
-                <span><b>{r.doc_count}</b> {r.doc_count === 1 ? "doc" : "docs"}</span>
-                <span>·</span>
-                <span><b>{r.qa_count}</b> {r.qa_count === 1 ? "answer" : "answers"}</span>
-                <span>·</span>
-                <span className="ix-card-time">{_ixFmtRelative(r.updated_at)}</span>
-              </div>
-            </button>
-          ))}
+        <div className="ix-section" style={{ marginTop: boxReports.length > 0 ? 36 : 0 }}>
+          {boxReports.length > 0 && (
+            <div className="ix-section-head" style={{ display: "flex", alignItems: "baseline", gap: 12, padding: "0 0 10px", borderBottom: "1px solid var(--rule)", marginBottom: 18 }}>
+              <h2 style={{ fontFamily: "var(--serif)", fontSize: 18, fontWeight: 500, margin: 0, letterSpacing: "-0.01em" }}>Workspaces<span style={{ color: "var(--muted-2)" }}>.</span></h2>
+              <span style={{ fontFamily: "var(--mono)", fontSize: 10, textTransform: "uppercase", letterSpacing: "0.08em", color: "var(--muted-2)" }}>manual · drop anything, ask anything</span>
+              <span style={{ marginLeft: "auto", fontFamily: "var(--mono)", fontSize: 11, color: "var(--muted)" }}>{items.length}</span>
+            </div>
+          )}
+          <div className="ix-grid">
+            {items.map(renderCard)}
+          </div>
         </div>
       )}
 
@@ -5204,7 +5332,11 @@ function IntakeDocumentCard({ doc, onDelete, onContextMenu }) {
           <button className="ix-doc-toggle" onClick={() => setExpanded(e => !e)} title={expanded ? "collapse" : "expand"}>
             {expanded ? "▾" : "▸"}
           </button>
-          <button className="ix-doc-x" onClick={onDelete} title="Remove">✕</button>
+          {onDelete ? (
+            <button className="ix-doc-x" onClick={onDelete} title="Remove">✕</button>
+          ) : (
+            <span className="ix-doc-x" title="This file lives in the box; manage it from the Boxes page" style={{ opacity: 0.3, cursor: "not-allowed" }}>✕</span>
+          )}
         </div>
       </div>
 
@@ -5567,6 +5699,8 @@ function IntakeReportDetail({ slug, onBack, go }) {
   const docs = report.documents || [];
   const conversation = report.conversation || [];
   const ingestingArr = Object.entries(ingesting);
+  const isBoxReport = report.source === "box_synthesis";
+  const boxId = isBoxReport ? (report.box && report.box.id) || report.slug : null;
 
   const SUGGESTIONS = [
     "Summarize what's in these documents.",
@@ -5585,12 +5719,27 @@ function IntakeReportDetail({ slug, onBack, go }) {
         <button className="ix-back" onClick={onBack}>← reports</button>
         <div className="ix-detail-title-wrap">
           <div className="ix-eyebrow">
-            intake report · {docs.length} {docs.length === 1 ? "doc" : "docs"} · {conversation.length} {conversation.length === 1 ? "answer" : "answers"}
+            {isBoxReport ? "box report" : "intake report"} · {docs.length} {docs.length === 1 ? "doc" : "docs"} · {conversation.length} {conversation.length === 1 ? "answer" : "answers"}
           </div>
           <h1 className="ix-detail-title">{report.name}</h1>
           {report.description && <div className="ix-lede">{report.description}</div>}
+          {isBoxReport && (
+            <div style={{ marginTop: 6, fontFamily: "var(--mono)", fontSize: 11, color: "var(--muted)" }}>
+              synthesized from <code>{(report.box && report.box.folder_rel) || ""}</code> · drops land in <code>intake_drops/</code>
+            </div>
+          )}
         </div>
-        <button className="ix-x" onClick={deleteReport} title="Delete this report">delete</button>
+        {isBoxReport ? (
+          <button
+            className="btn ghost"
+            onClick={() => go && go.push && go.push("boxes", { selectId: boxId })}
+            title="Open this box in the Boxes page"
+          >
+            open in boxes →
+          </button>
+        ) : (
+          <button className="ix-x" onClick={deleteReport} title="Delete this report">delete</button>
+        )}
       </header>
 
       {/* Drop zone */}
@@ -5634,7 +5783,7 @@ function IntakeReportDetail({ slug, onBack, go }) {
               <IntakeDocumentCard
                 key={d.id}
                 doc={d}
-                onDelete={() => deleteDoc(d.id)}
+                onDelete={isBoxReport ? null : () => deleteDoc(d.id)}
                 onContextMenu={(e) => openDocContextMenu(e, d)}
               />
             ))}

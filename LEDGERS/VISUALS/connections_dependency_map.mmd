@@ -1,0 +1,84 @@
+%% Connections Ledger — service dependency + blast-radius map
+%% Color = side-effect risk if it goes down or fires wrong.
+%% Solid = active dependency. Dotted = planned / not-in-use. Reference: CONNECTIONS.md §4.
+
+flowchart LR
+
+  subgraph Cloud ["CLOUD / PLATFORM"]
+    direction TB
+    Close[Close API<br/>CLOSE_API_KEY]
+    ClickUp[ClickUp API<br/>CLICKUP_API_TOKEN]
+    Slack[Slack API<br/>SLACK_BOT_TOKEN<br/>· token format issue ·]
+    Twilio[Twilio API<br/>WhatsApp + SMS]
+    OpenAI[OpenAI API<br/>OPENAI_API_KEY]
+    GitHub[GitHub<br/>local Git auth]
+    GCal[Google Calendar<br/>· planned ·]
+    Email[Email · Gmail/SMTP<br/>· planned ·]
+  end
+
+  subgraph Local ["LOCAL"]
+    direction TB
+    Env[.env file]
+    Server[server.py<br/>local app server]
+    Pieces[PiecesOS<br/>localhost:39300]
+    Cowork[Cowork Scheduled Tasks]
+    ClaudeCLI[claude CLI subprocess]
+    BrowserUse[Browser Use Tool<br/>BROWSER_USE_PAYLOAD]
+  end
+
+  subgraph Project ["WHAT THESE POWER"]
+    direction TB
+    Sweep[comms_state_sweep]
+    Boxes[Client Boxes<br/>28 active]
+    Inbox[Inbox automation +<br/>guardrails]
+    Activity[Activity screen]
+    Briefing[Briefing ribbon]
+    Delegations[Delegations channels<br/>connectors.js]
+    Chat[/Chat / API/]
+    Reports[Intake reports]
+    Fires[Scheduled fires<br/>customer-facing]
+  end
+
+  %% Critical paths (active)
+  Env ==> Server
+  Server ==> Close
+  Server ==> ClickUp
+  Server ==> Slack
+  Server ==> Twilio
+  Server ==> OpenAI
+  Server ==> Pieces
+  Server ==> ClaudeCLI
+  Server ==> BrowserUse
+
+  Close ==> Sweep
+  Sweep ==> Boxes
+  Boxes ==> Inbox
+  Inbox ==> Twilio
+  Inbox ==> Close
+  Cowork ==> Fires
+  Fires ==> Inbox
+  Pieces ==> Activity
+  Pieces ==> Briefing
+  ClickUp ==> Delegations
+  Slack ==> Delegations
+  Twilio ==> Delegations
+  ClaudeCLI ==> Delegations
+  OpenAI ==> Chat
+  OpenAI ==> Reports
+  GitHub ==> Project
+
+  %% Planned (dotted)
+  GCal -. when wired .-> Inbox
+  Email -. when wired .-> Delegations
+
+  classDef critical fill:#ffe9e9,stroke:#a33,stroke-width:2px;
+  classDef active fill:#dcefff,stroke:#2a5a8a,stroke-width:1px;
+  classDef customerFacing fill:#fff7d6,stroke:#b08a00,stroke-width:2px;
+  classDef local fill:#dcffd6,stroke:#2a8a2a,stroke-width:1px;
+  classDef planned fill:#f0f0f0,stroke:#999,stroke-dasharray: 4 4;
+
+  class Close,GitHub,Server critical;
+  class ClickUp,OpenAI active;
+  class Twilio,Inbox,Fires customerFacing;
+  class Pieces,Cowork,ClaudeCLI,BrowserUse,Env,Slack local;
+  class GCal,Email planned;

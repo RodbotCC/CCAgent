@@ -1,0 +1,199 @@
+{
+  "ledger_type": "source_of_truth",
+  "version": "0.1.0",
+  "envelope_v": "1",
+  "tier": "global",
+  "last_updated": "2026-04-29",
+  "phase": "Phase 11 of ledger system buildout — first ledger authored under DEC-2026-04-29-013 envelope-aware rule",
+  "status": "active",
+  "maintainer": "Jake / Comeketo Agent project agents",
+  "core_rule": "Before changing information, know where the truth lives.",
+  "tiebreaker_authority": "When source-of-truth rules conflict across surfaces, this ledger wins.",
+  "steward_agent": {
+    "status": "not_yet_authored",
+    "future_canonical_path": "Subagent Boxes/source_of_truth_subagent_package/",
+    "future_runnable_path": "CCAgentindex/agents/source_of_truth_steward/",
+    "phase_when_built": "Phase B (Sub-agents)"
+  },
+  "universal_trust_ordering": [
+    {"rank": 1, "kind": "system of record", "examples": ["GitHub RodbotCC/CCAgent main", "Close.com API", "PiecesOS"]},
+    {"rank": 2, "kind": "verbatim record (local mirror)", "examples": ["01b_comms_verbatim.md", "comms/<type>_<date>_<id>.json", "_ledger/activity.jsonl"]},
+    {"rank": 3, "kind": "curated record (local)", "examples": ["01_comms.md", "00_meta.json", "client_ledger.md"]},
+    {"rank": 4, "kind": "approved operator notes", "examples": ["<YYYY-MM-DD>_audit_marker.md", "explicit handoff notes"]},
+    {"rank": 5, "kind": "strategy / planning documents (internal-only, never customer-facing)", "examples": ["05_seven_day_plan.md", "04_profile.md", "*_enrichment.md"]},
+    {"rank": 6, "kind": "generated views", "examples": ["today.html", "master_ledger.csv", "dashboards", "UI render output"]}
+  ],
+  "trust_orderings_by_domain": {
+    "client_truth": [
+      {"rank": 1, "source": "Close.com (direct API)"},
+      {"rank": 2, "source": "Auto/Client Boxes/<Name>/01b_comms_verbatim.md"},
+      {"rank": 3, "source": "Auto/Client Boxes/<Name>/comms/<type>_<date>_<id>.json"},
+      {"rank": 4, "source": "Auto/Client Boxes/<Name>/01_comms.md"},
+      {"rank": 5, "source": "Auto/Client Boxes/<Name>/00_meta.json"},
+      {"rank": 6, "source": "Auto/Client Boxes/<Name>/client_ledger.md"},
+      {"rank": 7, "source": "Auto/Client Boxes/<Name>/<YYYY-MM-DD>_audit_marker.md"},
+      {"rank": 8, "source": "Auto/Client Boxes/<Name>/04_profile.md, *_enrichment.md", "rule": "INTERNAL ONLY — never customer-facing"},
+      {"rank": 9, "source": "Auto/Client Boxes/<Name>/05_seven_day_plan.md", "rule": "STRATEGY DRAFT — subordinate to all above"}
+    ],
+    "page_ui_truth": [
+      {"rank": 1, "source": "screens.jsx / app.jsx / *.js source files"},
+      {"rank": 2, "source": "page_asset_sitemap.md (canonical UI Done Gate)"},
+      {"rank": 3, "source": "LEDGERS/PAGES/<route>.md (planned)"},
+      {"rank": 4, "source": "LEDGERS/WIDGETS/<widget>.md (planned)"}
+    ],
+    "project_state_truth": [
+      {"rank": 1, "source": "GitHub RodbotCC/CCAgent main"},
+      {"rank": 2, "source": "local working copy /Users/jakeaaron/Downloads/CC Agent/"},
+      {"rank": 3, "source": "LEDGERS/GLOBAL_LEDGER.md §2 Current World State"},
+      {"rank": 4, "source": "LEDGERS/TEMPORAL_CONTINUITY.md §1 Current Snapshot"},
+      {"rank": 5, "source": "git log / git status / _ledger/activity.jsonl"}
+    ],
+    "settled_rules_truth": [
+      {"rank": 1, "source": "DECISIONS_LEDGER.md — active entries"},
+      {"rank": 2, "source": "DECISIONS_LEDGER.md — under-review entries"},
+      {"rank": 3, "source": "COMMUNICATIONS_LEDGER.md — entries with Status: promoted"},
+      {"rank": 4, "source": "COMMUNICATIONS_LEDGER.md — other active entries"}
+    ],
+    "external_system_truth": [
+      {"rank": 1, "source": "the service's own API/UI"},
+      {"rank": 2, "source": "local mirror in the file tree"},
+      {"rank": 3, "source": "generated views/reports"}
+    ]
+  },
+  "generated_vs_canonical": {
+    "binding_rules": [
+      "If a file looks generated, find the generator before editing.",
+      "Editing generated output as if it were canonical is a Done-Gate failure.",
+      "today.html and master_ledger.csv are views of state, not state itself.",
+      "Cache-busted JS bundle references inside Secretary.html are managed by bumping numbers, not by editing the bundles."
+    ],
+    "authoritative_list": "FILE_DIRECTORY_LEDGER.md §6"
+  },
+  "plans_vs_comms": {
+    "rule": "The plan is not truth. The box is truth.",
+    "decision_lock": "DEC-2026-04-28-004",
+    "global_ledger_section": "§4.5",
+    "implications": [
+      "A plan does not override guardrails, current state, replies, approvals, or comms.",
+      "A meaningful client reply makes a plan stale until reviewed.",
+      "Plans authored before guardrail enforcement may carry unsafe executable copy — re-validate before plan-driven sends."
+    ]
+  },
+  "allowed_to_know_schema": {
+    "purpose": "Closes the schema-design portion of PROB-2026-04-28-001. The four-bucket Wholesome Enrichment model becomes a per-Client-Box schema automation can read.",
+    "buckets": {
+      "comms_confirmed": {
+        "definition": "Facts the client actually said in comms (Close transcripts, emails, SMS, WhatsApp, calls, voicemails).",
+        "customer_facing": true,
+        "approval_needed": false
+      },
+      "internal_strategy": {
+        "definition": "Useful internal context for planning — pulled from enrichment, profile, public sources.",
+        "customer_facing": false,
+        "approval_needed": "to promote to customer-facing",
+        "rule": "May shape phrasing but never quoted."
+      },
+      "protected": {
+        "definition": "Off-limits facts (sensitive personal info, household composition specifics, religious/political affiliation, immigration status, medical, etc.).",
+        "customer_facing": false,
+        "approval_needed": "hard refusal — never customer-facing even with approval"
+      },
+      "approval_required": {
+        "definition": "Operator-decided facts or actions that need a human green-light before any send (fee waivers, discounts, pricing claims, scope promises, guarantees, guest-count commitments).",
+        "customer_facing": "only after approval",
+        "approval_needed": true,
+        "rule": "Isolated approval card per DEC-2026-04-28-005 — never batched."
+      }
+    },
+    "per_box_implementation_contract": {
+      "files": ["allowed_to_use.md", "allowed_to_use.json"],
+      "json_shape": {
+        "box": "<box id>",
+        "version": "1",
+        "last_updated": "<ISO date>",
+        "buckets": {
+          "comms_confirmed": [{"fact": "<text>", "source": "<comms file + activity id>", "ts": "<ISO>"}],
+          "internal_strategy": [{"fact": "<text>", "source": "<file + line>", "may_shape": ["tone", "topic_choice"], "may_quote": false}],
+          "protected": [{"fact": "<text>", "source": "<file + line>", "reason": "<NS-04 / Wholesome Enrichment / privacy>"}],
+          "approval_required": [{"action": "<text>", "approver": "<role/name>", "approved": false, "approved_on": null}]
+        }
+      },
+      "rules": [
+        "A fact lives in exactly one bucket. If it's both confirmed and sensitive, the protected bucket wins.",
+        "Customer-facing copy may reference items from comms_confirmed and approval_required (only when approved: true).",
+        "Customer-facing copy may not reference items from internal_strategy directly — only let strategy items shape phrasing.",
+        "Items in protected never appear in any send, ever, regardless of approval.",
+        "A new fact discovered during a session lands in internal_strategy by default. Promotion to comms_confirmed requires a citable comms source."
+      ]
+    },
+    "prob_2026_04_28_001_status": {
+      "before": "open / blocked-by-schema-design",
+      "after": "partial / blocked-by-implementation",
+      "first_close_criterion_met": "Schema exists",
+      "remaining_close_criteria": [
+        "At least one Client Box uses it",
+        "Scheduled-fire / read protocol checks it before composing",
+        "Inbox guardrails reference it",
+        "Wholesome Enrichment principle in NORTH_STAR.md §6 mechanically enforced"
+      ]
+    }
+  },
+  "conflict_resolution": [
+    "Walk the universal ordering. Higher rank wins.",
+    "If both sources are at the same rank, prefer the more recent.",
+    "If both equally recent, prefer the one closer to the original system of record.",
+    "If still ambiguous, mark as Open Problems entry (PROB-YYYY-MM-DD-XXX) and either escalate or proceed with the safer view.",
+    "Never silently merge. Log which one you picked and why."
+  ],
+  "update_protocol_when_truth_shifts": {
+    "trigger": "Promoting a file from generated → canonical, or demoting from canonical → generated.",
+    "done_gate": "DEFINITION_OF_DONE.md §5.5 (Source-of-Truth Change Done Gate)",
+    "required_updates": [
+      "this ledger §3 per-domain table for the affected domain",
+      "FILE_DIRECTORY_LEDGER.md §6",
+      "GLOBAL_LEDGER.md §4 (point at this ledger; do not duplicate)",
+      "DECISIONS_LEDGER.md if affects more than one Box",
+      "affected Box manifests (box.json.source_of_truth.{primary,generated})",
+      "OPEN_PROBLEMS_LEDGER.md if migration carries risk"
+    ]
+  },
+  "relationship_to_box_bus": {
+    "manifest_field": "box.json.source_of_truth.{primary,generated}",
+    "rule_owner": "this ledger",
+    "wire_shape_owner": "BOX_BUS_LEDGER.md §2.1",
+    "validation_rule": "A Box's primary must be a file ranked at the top of its domain's trust ordering. A Box's generated list must include every owned file classified as derived under §3.6."
+  },
+  "north_star_alignment": {
+    "directly_supports": ["NS-01", "NS-04", "NS-06", "NS-09", "NS-10"],
+    "indirectly_supports": ["NS-02", "NS-07", "Wholesome Enrichment principle"]
+  },
+  "related_ledgers": {
+    "global_summary": "GLOBAL_LEDGER.md §4 (8 headline rules — should reference this ledger as canonical home from Phase 11 forward)",
+    "north_star_principle": "NORTH_STAR.md NS-06",
+    "completion_gate": "DEFINITION_OF_DONE.md §5.5",
+    "canonical_vs_generated_paths": "FILE_DIRECTORY_LEDGER.md §6",
+    "open_problem_resolved_partially": "OPEN_PROBLEMS_LEDGER.md PROB-2026-04-28-001",
+    "box_concept": "BOX_LEDGER.md",
+    "box_wire_shape": "BOX_BUS_LEDGER.md §2.1",
+    "decisions_depending_on_this_authority": [
+      "DEC-2026-04-28-001 (GitHub source-of-truth)",
+      "DEC-2026-04-28-003 (Client Boxes canonical)",
+      "DEC-2026-04-28-004 (plans-are-strategy-drafts)",
+      "DEC-2026-04-29-007 (sitemap-Done-Gate)"
+    ]
+  },
+  "visuals": [
+    "VISUALS/source_of_truth_flow.mmd"
+  ],
+  "update_triggers": [
+    "new domain added that needs its own trust ordering",
+    "existing domain's trust ordering shifts",
+    "Allowed-To-Know schema gains a new bucket or rule",
+    "new external system added (cross-link Connections Ledger when it lands)",
+    "Decisions Ledger entry creates a new source-of-truth claim",
+    "conflict-resolution rules need to expand"
+  ],
+  "history": [
+    {"date": "2026-04-29", "event": "Phase 11 — initial creation. First ledger authored under DEC-2026-04-29-013 envelope-aware rule (declares tier: global, references BOX_BUS_LEDGER §2.1). Consolidated rules from Global §4, NS-06, FDL §6, DoD §5.5, and Wholesome Enrichment principle. Allowed-To-Know schema codified — closes PROB-2026-04-28-001 schema-design close-criterion. Companion files: SOURCE_OF_TRUTH.json, VISUALS/source_of_truth_flow.mmd. Companion Communications entry: COMM-2026-04-29-008."}
+  ]
+}

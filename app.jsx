@@ -471,13 +471,13 @@ function App() {
   } else if (route.name === "automation") {
     screen = <AutomationShell go={go} tab={route.tab || "workflows"} loadSlug={route.load} />;
   } else if (route.name === "intake") {
-    screen = <IntakeScreen go={go} />;
+    screen = <IntakeScreen go={go} openSlug={route.openSlug} />;
   } else if (route.name === "analytics") {
     screen = <AnalyticsScreen go={go} />;
   } else if (route.name === "delegations") {
     screen = <DelegationsScreen go={go} />;
   } else if (route.name === "boxes") {
-    screen = <BoxesScreen go={go} />;
+    screen = <BoxesScreen go={go} selectId={route.selectId} />;
   } else {
     screen = null;
     setTimeout(() => setHistory([{ name: "grid", gridId: "morning" }]), 0);

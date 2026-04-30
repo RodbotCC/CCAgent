@@ -4,7 +4,7 @@ This is the roster of every ledger planned for the project. The Global Ledger is
 
 > The first file an agent reads before doing meaningful work is `GLOBAL_LEDGER.md`. This index tells you what's next.
 
-Last updated: 2026-04-29 (post Cowork housekeeping — directory consolidation + Audit dropped from build queue + Communications Ledger queued)
+Last updated: 2026-04-29 (Phase 14 — Asset/Widget Map landed; cross-page widget catalog + API→page mapping)
 
 > **Where the source material lives (2026-04-29):**
 > - **Outline drafts** for unbuilt ledgers: `/Users/jakeaaron/Downloads/CC Agent/Ledger Drafts/` (19 `.txt` files). Read the matching outline before authoring any new ledger.
@@ -42,9 +42,15 @@ Last updated: 2026-04-29 (post Cowork housekeeping — directory consolidation +
 
 | Ledger | Path | Status | Owns |
 |---|---|---|---|
-| Source-of-Truth Ledger | `LEDGERS/SOURCE_OF_TRUTH.md` | planned | Which system owns which truth. Detailed expansion of Global §4. |
-| Definition of Done Ledger | `LEDGERS/DEFINITION_OF_DONE.md` | planned | Completion standards by surface (UI, ledger, box, automation). |
-| Page-Asset Sitemap | `page_asset_sitemap.md` (project root) | **active** | UI Done Gate. Page/route/binding ownership. |
+| Source-of-Truth Ledger | `LEDGERS/SOURCE_OF_TRUTH.md` | **active** | Universal trust ordering + per-domain trust orderings + Allowed-To-Know 4-bucket schema (closes PROB-001 schema-design criterion) + conflict resolution + update protocol. **First ledger authored under `DEC-2026-04-29-013` envelope-aware rule** — tier: global. |
+| Source-of-Truth (JSON mirror) | `LEDGERS/SOURCE_OF_TRUTH.json` | **active** | Machine-readable mirror of trust orderings + allowed-to-know schema. |
+| Definition of Done Ledger | `LEDGERS/DEFINITION_OF_DONE.md` | **active** | Completion standards by surface (UI, ledger, box, automation). Universal Done Gate + 11 work-type Done Gates + Ledger Update Matrix. |
+| Definition of Done (JSON mirror) | `LEDGERS/DEFINITION_OF_DONE.json` | **active** | Machine-readable mirror of all gates + matrix + NS alignment. |
+| Box Ledger | `LEDGERS/BOX_LEDGER.md` | **active** | Defines what a Box is — concept, classes, status labels, BOX.md vs DIRECTORY.md, Local Agent Protocol, stamping rhythm, Box lifecycle. |
+| Box Ledger (JSON mirror) | `LEDGERS/BOX_LEDGER.json` | **active** | Machine-readable mirror of Box concept. |
+| Box Bus Ledger | `LEDGERS/BOX_BUS_LEDGER.md` | **active (schema-only)** | Defines how Boxes connect — `box.json` manifest schema, ledger envelope, 3 routing tiers, 3 interpreter tiers, cycle policy, "what's a Box" binding rule, two worked examples. **Runtime deferred to Phase C** under `DEC-2026-04-29-013`. |
+| Box Bus Ledger (JSON mirror) | `LEDGERS/BOX_BUS_LEDGER.json` | **active (schema-only)** | Machine-readable mirror of manifest + envelope + tier model + interpreter model + cycle policy. |
+| Page-Asset Sitemap | `page_asset_sitemap.md` (project root) | **active** | UI Done Gate. Page/route/binding ownership. Pointed at by Definition of Done §5.3. |
 
 ---
 
@@ -56,11 +62,14 @@ Last updated: 2026-04-29 (post Cowork housekeeping — directory consolidation +
 | File Directory (JSON mirror) | `LEDGERS/FILE_DIRECTORY_LEDGER.json` | **active** | Structured mirror of every directory + open_problems_to_log[]. |
 | Directory Configuration template | `LEDGERS/LOCAL_TEMPLATE/DIRECTORY_ORIENTATION_TEMPLATE.md` | **active** | Template stamp for "you are here" files in any directory. |
 | Box Ledger template | `LEDGERS/LOCAL_TEMPLATE/BOX_LEDGER_TEMPLATE.md` | **active** | Template stamp for any new Box. |
-| File Contents Ledger | `LEDGERS/FILE_CONTENTS.md` | planned | Important file responsibilities. |
-| Asset / Widget Map | `LEDGERS/ASSET_WIDGET_MAP.md` | planned | Pages, widgets, APIs, data flow. (Partially live in `page_asset_sitemap.md`.) |
+| File Contents Ledger | `LEDGERS/FILE_CONTENTS.md` | **active** | Per-file role inventory — ~78 load-bearing files across 10 categories (ledger, runtime-frontend, runtime-backend, meta-harness, orchestrator, inbox-skill, bedrock-index, client-box-convention, staff-box-convention, template). What each file owns, depends on, gets updated alongside, common mistakes. |
+| File Contents (JSON mirror) | `LEDGERS/FILE_CONTENTS.json` | **active** | Machine-readable mirror — structured per-file entries. Indexable by category / type / related ledgers. |
+| Asset / Widget Map | `LEDGERS/ASSET_WIDGET_MAP.md` | **active** | Cross-page widget catalog (7 categories) + API→page mapping (10 endpoint groups) + shared services registry (10 `window.*` objects) + cross-page state (7 localStorage keys + 3 events) + change-radius hints. Sitemap remains canonical per-page truth. **Tier: domain.** |
+| Asset / Widget Map (JSON mirror) | `LEDGERS/ASSET_WIDGET_MAP.json` | **active** | Machine-readable mirror — pages[], shared_widgets, api_to_page_mapping, shared_services, cross_page_state, change_radius. |
 | Page Ledgers | `LEDGERS/PAGES/<route>.md` | planned | One per surviving UI route: grid, settings, leads, clients, coworkers, contacts, briefing, activity, automation, intake, analytics. |
 | Widget Ledgers | `LEDGERS/WIDGETS/<widget>.md` | planned | One per major widget. |
-| Connections Ledger | `LEDGERS/CONNECTIONS.md` | planned | External systems and services (Close, Pieces, Twilio, Slack, Google, ClickUp, Supabase). |
+| Connections Ledger | `LEDGERS/CONNECTIONS.md` | **active** | External-system inventory: 11 active services + 2 planned + 3 not-in-use, all evidence-checked. Per-service contracts (credentials/failure modes/verification/billing/fallback). **First domain-tier ledger.** Closed PROB-2026-04-28-009. |
+| Connections (JSON mirror) | `LEDGERS/CONNECTIONS.json` | **active** | Machine-readable mirror — per-service entries with full operational fields. |
 | Settings Ledger | `LEDGERS/SETTINGS.md` | planned | Configurable options and feature flags. |
 
 ---
@@ -105,29 +114,47 @@ Mermaid `.mmd` files under `LEDGERS/VISUALS/`:
 | Communications timeline (seeded entries chronological) | `LEDGERS/VISUALS/communications_timeline.mmd` | **active** |
 | Decision dependency map (how decisions depend on each other) | `LEDGERS/VISUALS/decision_dependency_map.mmd` | **active** |
 | Decision timeline (chronological view of all 12 decisions) | `LEDGERS/VISUALS/decision_timeline.mmd` | **active** |
+| Done Gate flow (Universal Done Gate decision tree) | `LEDGERS/VISUALS/done_gate_flow.mmd` | **active** |
+| 55 / 45 build rhythm (offense/defense feedback loop) | `LEDGERS/VISUALS/build_rhythm_55_45.mmd` | **active** |
+| Box Bus topology (Global / Domain / Local with example boxes + fan-out) | `LEDGERS/VISUALS/box_bus_topology.mmd` | **active** |
+| Interpreter tiers (T1 / T2 / T3 dispatch flow) | `LEDGERS/VISUALS/interpreter_tiers.mmd` | **active** |
+| Envelope routing flow (emit → validate → route → interpret → record) | `LEDGERS/VISUALS/envelope_routing_flow.mmd` | **active** |
+| Source-of-truth flow (per-domain decision tree → conflict resolution walk) | `LEDGERS/VISUALS/source_of_truth_flow.mmd` | **active** |
+| Connections dependency map (Cloud → Local → Project blast-radius) | `LEDGERS/VISUALS/connections_dependency_map.mmd` | **active** |
+| File contents index (5-cluster roll-up + cross-cluster dependency arrows) | `LEDGERS/VISUALS/file_contents_index.mmd` | **active** |
+| Page-widget dependency map (14 pages → shared widgets → services → APIs) | `LEDGERS/VISUALS/page_widget_dependency.mmd` | **active** |
+| Box hierarchy map | `LEDGERS/VISUALS/box_hierarchy.mmd` | **active** |
+| Box orientation flow | `LEDGERS/VISUALS/box_orientation_flow.mmd` | **active** |
 | Page / API / data-flow map | `LEDGERS/VISUALS/page_api_dataflow.mmd` | planned |
 | Source-of-truth flow | `LEDGERS/VISUALS/source_of_truth_flow.mmd` | planned |
-| Box hierarchy map | `LEDGERS/VISUALS/box_hierarchy.mmd` | planned |
 
 ---
 
-## Suggested build order (Phase 6 onward)
+## Suggested build order (Phase 15 onward)
 
-Phases 1–5 are complete: Global Ledger (constitution), Temporal Continuity (cockpit log), North Star (compass), File Directory (city map), Open Problems (protection system). The first steward automation is also active: `global_ledger_steward` can run local ledger-maintenance sweeps through the app agent path. The order below is a recommendation — pick by what's most painful next.
+Phases 1–14 are complete: Global, Temporal Continuity, North Star, File Directory, Open Problems, Communications, Decisions, Box Ledger, Definition of Done, Box Bus Ledger, Source-of-Truth, Connections, File Contents, **Asset/Widget Map**. The first steward automation is also active: `global_ledger_steward` can run local ledger-maintenance sweeps through the app agent path. The order below is a recommendation — pick by what's most painful next.
 
-1. **Source-of-Truth Ledger** — encodes rules already summarized in Global §4 + NS-06 + FDL §6 + OPL recurring patterns. Would unblock PROB-001 (allowed-to-know schema) and reduce PROB-010 risk.
-2. **Definition of Done Ledger** — locks in "if the system changed, the system memory changes with it" per surface; references North Star goals + OPL close-criteria pattern. Pairs naturally with Source-of-Truth.
+1. ~~**Source-of-Truth Ledger**~~ — **landed 2026-04-29 (Phase 11)**. First ledger authored under DEC-2026-04-29-013 envelope-aware rule. PROB-001 schema-design criterion satisfied. Now live at `LEDGERS/SOURCE_OF_TRUTH.md`.
+2. ~~**Connections Ledger**~~ — **landed 2026-04-29 (Phase 12)**. First domain-tier ledger. PROB-2026-04-28-009 closed. Now live at `LEDGERS/CONNECTIONS.md`.
+3. ~~**File Contents Ledger**~~ — **landed 2026-04-29 (Phase 13)**. ~78 file entries across 10 categories. Now live at `LEDGERS/FILE_CONTENTS.md`.
+4. ~~**Asset / Widget Map**~~ — **landed 2026-04-29 (Phase 14)**. Cross-page widget catalog + API→page mapping. Now live at `LEDGERS/ASSET_WIDGET_MAP.md`.
+2. ~~**Box Bus Ledger**~~ — **landed 2026-04-29 (Phase 10)**. Schema only; runtime deferred to Phase C. Now live at `LEDGERS/BOX_BUS_LEDGER.md` with `DEC-2026-04-29-013` as the architectural lock.
+3. ~~**Definition of Done Ledger**~~ — **landed 2026-04-29 (Phase 9)**. Universal Done Gate + 11 work-type gates + Ledger Update Matrix. Now live at `LEDGERS/DEFINITION_OF_DONE.md`.
 3. ~~**Decisions Ledger**~~ — **landed 2026-04-29 (Phase 7)**. 12 active decisions. Now live at `LEDGERS/DECISIONS_LEDGER.md`. 5 Communications entries promoted in.
 4. ~~**Audit Ledger**~~ — **out of scope as of 2026-04-29.** Removed from build queue per Jake; audit-shaped findings will land in Open Problems, Decisions, Communications, or per-Box ledgers as appropriate.
 5. ~~**Communications Ledger**~~ — **landed 2026-04-29 (Phase 6)**. How agents talk across time. Now live at `LEDGERS/COMMUNICATIONS_LEDGER.md` with 18 seeded entries.
-6. **Directory Configuration files** — stamp the project tree using `DIRECTORY_ORIENTATION_TEMPLATE.md`. FDL names where they should live; this fills them in.
-7. **Phase Ledger** — name the current phase and its exit criteria.
-8. **Page Ledgers** (one per surviving route) — start with `boxes`, then `analytics`, `automation`, `intake`.
-9. **Connections Ledger** — encode external-system contract (Close, Pieces, Twilio, Slack, Google, ClickUp, Supabase). Pairs with closing PROB-009.
-10. **Prompt / Reconstruction Ledger**, **Scout Ledger** — slower-moving, build as content arrives.
-11. **Widget Ledgers** + **Settings Ledger** — last, mostly stable patterns from Page Ledgers.
+6. ~~**Box Ledger**~~ — **landed 2026-04-29 (Phase 8)**. Defines the Box concept project-wide. Subsumed the planned "Directory Configuration Ledger." Now live at `LEDGERS/BOX_LEDGER.md`.
+7. **Phase Ledger** — name the current phase and its exit criteria. Pairs with DoD §11 (Phase Ledger row).
+8. **Connections Ledger** — encode external-system contract (Close, Pieces, Twilio, Slack, Google, ClickUp, Supabase). Pairs with closing PROB-009 + DoD §5.8.
+9. **Page Ledgers** (one per surviving route) — start with `boxes`, then `analytics`, `automation`, `intake`. Each must satisfy DoD §5.3.
+10. **File Contents Ledger** — important file responsibilities. Smaller, but unblocks per-page ledgers.
+11. **Asset / Widget Map** + **Widget Ledgers** + **Settings Ledger** — patterns from Page Ledgers. Each must satisfy DoD §5.4.
+12. **Prompt / Reconstruction Ledger**, **Scout Ledger** — slower-moving, build as content arrives.
+13. **Directory Configuration files (per-directory stamps)** — stamp the project tree using `DIRECTORY_ORIENTATION_TEMPLATE.md` per `BOX_LEDGER.md` rules.
 
-**Three-phase build discipline (Jake, 2026-04-29):** Phase A — finish all Ledgers (current). Phase B — finish all Sub-agents (graduate `/Subagent Boxes/` packages into runnable app agents). Phase C — build Subagent Boxes (boxes of ledgers controlled by sub-agent configurations).
+**Three-phase build discipline (Jake, 2026-04-29):** Phase A — finish all Ledgers (current). Phase B — finish all Sub-agents (graduate `/Subagent Boxes/` packages into runnable app agents). Phase C — build Subagent Boxes + the **Box Bus runtime** (router, propagation ledger, T1/T2/T3 interpreters, validation/cycle enforcement) per `BOX_BUS_LEDGER.md`.
+
+**Envelope-aware authoring (from Phase 11 onward):** every new ledger declares its tier (`global` / `domain` / `local`) and entry kind aligned to the envelope schema in `BOX_BUS_LEDGER.md` §2.2. Every new Box ships with a `box.json` manifest stub. No runtime to consume them yet — but zero migration debt at Phase C.
 
 ---
 

@@ -2,7 +2,7 @@
   "ledger_type": "global",
   "version": "0.1.0",
   "last_updated": "2026-04-29",
-  "last_updated_note": "Global Ledger Steward automation landed",
+  "last_updated_note": "Phase 14 — Asset / Widget Map landed (cross-page widget catalog + API → page mapping)",
   "maintainer": "Jake / Comeketo Agent project agents",
   "repository": {
     "host": "github",
@@ -12,7 +12,7 @@
   },
   "source_of_truth": "GitHub",
   "working_copy_root": "/Users/jakeaaron/Downloads/CC Agent",
-  "current_phase": "Client Boxes + Automation Safety Hardening \u2014 Ledger system buildout (Phases 1\u20135 complete; first ledger steward automation active)",
+  "current_phase": "Client Boxes + Automation Safety Hardening — Ledger system buildout (Phases 1–5 complete; first ledger steward automation active)",
   "current_state": "active_build",
   "read_first": true,
   "core_principles": [
@@ -88,7 +88,7 @@
       "role": "project memory system",
       "path": "LEDGERS",
       "status": "active",
-      "phase": "Phases 1\u20135 \u2014 Global + Temporal Continuity + North Star + File Directory + Open Problems landed; global_ledger_steward automation active",
+      "phase": "Phases 1–5 — Global + Temporal Continuity + North Star + File Directory + Open Problems landed; global_ledger_steward automation active",
       "steward_agents": [
         "LEDGERS/AGENTS/global_ledger_steward/",
         "CCAgentindex/agents/global_ledger_steward/"
@@ -216,7 +216,7 @@
     },
     {
       "id": "github_local_drift",
-      "summary": "Working tree currently dirty (modified pieces_sweeps.jsonl + untracked Fl\u00e1via Benson .txt). Always git status before direct GitHub writes.",
+      "summary": "Working tree currently dirty (modified pieces_sweeps.jsonl + untracked Flávia Benson .txt). Always git status before direct GitHub writes.",
       "status": "active",
       "as_of": "2026-04-28"
     },
@@ -240,7 +240,7 @@
       "00_meta.json",
       "client_ledger.md",
       "approved operator notes",
-      "04_profile.md and *_enrichment.md (internal strategy only \u2014 not customer-facing truth)"
+      "04_profile.md and *_enrichment.md (internal strategy only — not customer-facing truth)"
     ],
     "generated_outputs": "Views, not primary truth, unless explicitly marked canonical.",
     "plans": "Strategy drafts. Subordinate to comms, state, guardrails, replies, approvals.",
@@ -287,12 +287,48 @@
     {
       "id": "source_of_truth",
       "path": "LEDGERS/SOURCE_OF_TRUTH.md",
-      "status": "planned"
+      "status": "active",
+      "activated_on": "2026-04-29",
+      "scope": "Universal trust ordering + per-domain trust orderings + Allowed-To-Know schema (4-bucket) + conflict resolution + update protocol. First ledger authored under DEC-2026-04-29-013 envelope-aware rule; tier: global."
     },
     {
       "id": "definition_of_done",
       "path": "LEDGERS/DEFINITION_OF_DONE.md",
-      "status": "planned"
+      "status": "active",
+      "activated_on": "2026-04-29",
+      "scope": "Universal Done Gate + 11 work-type gates + Ledger Update Matrix + 55/45 build rhythm"
+    },
+    {
+      "id": "definition_of_done_state_mirror",
+      "path": "LEDGERS/DEFINITION_OF_DONE.json",
+      "status": "active",
+      "activated_on": "2026-04-29"
+    },
+    {
+      "id": "box_ledger",
+      "path": "LEDGERS/BOX_LEDGER.md",
+      "status": "active",
+      "activated_on": "2026-04-29",
+      "scope": "Defines what a Box is project-wide. Subsumes the planned Directory Configuration Ledger."
+    },
+    {
+      "id": "box_ledger_state_mirror",
+      "path": "LEDGERS/BOX_LEDGER.json",
+      "status": "active",
+      "activated_on": "2026-04-29"
+    },
+    {
+      "id": "box_bus",
+      "path": "LEDGERS/BOX_BUS_LEDGER.md",
+      "status": "active (schema-only)",
+      "activated_on": "2026-04-29",
+      "scope": "Reactive Box Network architecture — manifest schema + envelope + 3 routing tiers + 3 interpreter tiers + cycle policy. Runtime deferred to Phase C per DEC-2026-04-29-013."
+    },
+    {
+      "id": "box_bus_state_mirror",
+      "path": "LEDGERS/BOX_BUS_LEDGER.json",
+      "status": "active (schema-only)",
+      "activated_on": "2026-04-29"
     },
     {
       "id": "file_directory",
@@ -340,7 +376,9 @@
     {
       "id": "connections",
       "path": "LEDGERS/CONNECTIONS.md",
-      "status": "planned"
+      "status": "active",
+      "activated_on": "2026-04-29",
+      "scope": "External-system inventory + per-service contracts (credentials/failure modes/verification/billing/fallback). First DOMAIN-tier ledger. Closed PROB-2026-04-28-009."
     },
     {
       "id": "prompt_reconstruction",
@@ -384,6 +422,44 @@
       "id": "widget_ledgers",
       "path": "LEDGERS/WIDGETS/",
       "status": "planned"
+    },
+    {
+      "id": "source_of_truth_state_mirror",
+      "path": "LEDGERS/SOURCE_OF_TRUTH.json",
+      "status": "active",
+      "activated_on": "2026-04-29"
+    },
+    {
+      "id": "connections_state_mirror",
+      "path": "LEDGERS/CONNECTIONS.json",
+      "status": "active",
+      "activated_on": "2026-04-29"
+    },
+    {
+      "id": "file_contents",
+      "path": "LEDGERS/FILE_CONTENTS.md",
+      "status": "active",
+      "activated_on": "2026-04-29",
+      "scope": "Per-file role inventory — ~78 entries across 10 categories."
+    },
+    {
+      "id": "file_contents_state_mirror",
+      "path": "LEDGERS/FILE_CONTENTS.json",
+      "status": "active",
+      "activated_on": "2026-04-29"
+    },
+    {
+      "id": "asset_widget_map",
+      "path": "LEDGERS/ASSET_WIDGET_MAP.md",
+      "status": "active",
+      "activated_on": "2026-04-29",
+      "scope": "Cross-page widget catalog + API→page mapping + shared services + cross-page state. Tier: domain."
+    },
+    {
+      "id": "asset_widget_map_state_mirror",
+      "path": "LEDGERS/ASSET_WIDGET_MAP.json",
+      "status": "active",
+      "activated_on": "2026-04-29"
     }
   ],
   "ui_routes": [
@@ -430,13 +506,13 @@
     ],
     "next_actor_priorities": [
       "Use global_ledger_steward for global-memory maintenance sweeps; audit-only mode first when drift risk is unclear.",
-      "Wait for Jake's signal on Phase 6 ledger \u2014 likely Source-of-Truth, Definition of Done, or Decisions.",
+      "Wait for Jake's signal on Phase 6 ledger — likely Source-of-Truth, Definition of Done, or Decisions.",
       "Continue one-box-at-a-time client box hardening (Brenda template, 27 boxes remaining).",
       "Wire 01b_comms_verbatim.md into Boxes UI as a second comms tab when ready."
     ],
     "cautions": [
-      "Working tree dirty \u2014 coordinate with Jake before any GitHub push.",
-      "Don't bundle pre-existing dirty files (pieces_sweeps.jsonl, Fl\u00e1via Benson.txt) with this session's commits without confirming.",
+      "Working tree dirty — coordinate with Jake before any GitHub push.",
+      "Don't bundle pre-existing dirty files (pieces_sweeps.jsonl, Flávia Benson.txt) with this session's commits without confirming.",
       "Plans authored before guardrail enforcement may carry unsafe executable copy.",
       "Close API key was env-only and not persisted; refresh requires Jake.",
       "Auto/ symlink writes are outside main repo's git scope."

@@ -1,6 +1,6 @@
 # Communications Ledger
 
-Last updated: 2026-04-29 (initial creation — Phase 6 of ledger system buildout)
+Last updated: 2026-04-29 (Phase 9 — appended COMM-2026-04-29-006 for Definition of Done landing + Box Ledger registration fix)
 Maintainer: Jake / Comeketo Agent project agents
 Status: **active**
 Read when: starting a session, finishing a session, planning work that affects another agent, leaving a warning, recording a preference, hitting a fragile area, or noticing a "the next agent should know this" moment.
@@ -289,6 +289,47 @@ When asked to build something with state, confirm which phase the project is in 
 #### Expiry / Review
 
 Review on Phase A completion. The order may stay or evolve based on what's painful when Phase B starts.
+
+---
+
+### COMM-2026-04-29-006 — Definition of Done Is Now The Closing Authority
+
+Date: 2026-04-29
+From: Cowork session (Phase 9 ledger build, autonomous next-pick under Jake's "you make the call" delegation)
+To: Future agents — every Phase A ledger build, every Phase B sub-agent graduation, every Page Ledger pass.
+Type: `handoff`, `preference`, `coordination`
+Status: **active**
+Priority: high
+Affected systems: ledger system, page work, automation, Client Boxes, every meaningful task
+Related ledgers: [`DEFINITION_OF_DONE.md`](DEFINITION_OF_DONE.md), [`DECISIONS_LEDGER.md`](DECISIONS_LEDGER.md) (DEC-2026-04-29-007 sitemap-Done-Gate), [`page_asset_sitemap.md`](../page_asset_sitemap.md), [`BOX_LEDGER.md`](BOX_LEDGER.md)
+Promote when: a steward agent for DoD is built (Phase B), at which point this entry archives — the steward enforces the gate automatically.
+
+#### Message
+
+The **Definition of Done Ledger** is now live (`LEDGERS/DEFINITION_OF_DONE.md`). It encodes the project's eight-question Universal Done Gate, eleven work-type sub-gates, and the "if X changed, update Y" Ledger Update Matrix. **The page-asset sitemap remains the canonical UI Done Gate** — DoD §5.3 explicitly elevates and points at it; it is not replaced.
+
+Two cross-references future agents must internalize:
+
+- **Every new ledger** must satisfy DoD §5.6 (Ledger Creation Done Gate). That means: md + json sibling + Mermaid visual if relationships are complex + INDEX flip + Global §8 + §14 link list + TCL phase bump. Do not call a ledger done if any of those are missing.
+- **Every page/route/data-binding change** must satisfy DoD §5.3, which restates the existing sitemap rule. Do not call a UI change done if `page_asset_sitemap.md` Asset Ownership / Change Checklist / History / Last Verified are stale.
+
+This session also fixed a hygiene gap: the **Box Ledger** (Phase 8, landed earlier today) was already on disk but was not yet registered in `INDEX.md`, `GLOBAL_LEDGER.md §8`, or `GLOBAL_LEDGER.md §14`. All four are now consistent.
+
+#### Why It Matters
+
+DoD is the rule the project keeps almost-following but didn't have a single home for. Without a stable home, the rule decays — agents cite "the Done Gate" without being able to point at it, and false-finishes accumulate. This ledger lets a reviewer (human or agent) point at a numbered gate and ask, "show me." That is what makes 55/45 build rhythm checkable instead of aspirational.
+
+#### Suggested Action
+
+Before closing **any** meaningful task: open DoD §4 (Universal Done Gate) and the matching §5 sub-gate, and walk the checklist. If something fails, decide between (a) finishing it, (b) recording it in Open Problems with a concrete close-criterion, or (c) recording it in Communications as a deliberate carry-forward. "I'll come back to it" is not one of the three options.
+
+When **authoring a new ledger**: read DoD §5.6 first. The Ledger Update Matrix in §6 is the fastest "what do I touch?" reference in the project.
+
+When **building a sub-agent in Phase B** for an existing ledger: the steward's job is to enforce that ledger's Done Gate plus the cross-ledger updates DoD §6 specifies. That is what graduates a draft package to "live."
+
+#### Expiry / Review
+
+Archive when DoD steward is built (Phase B). Review fields if a new work-type Done Gate is needed (e.g., Subagent Box Done Gate when Phase C starts) — that's a §5 addition, not a new ledger.
 
 ---
 

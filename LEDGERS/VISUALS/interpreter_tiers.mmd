@@ -1,0 +1,37 @@
+%% Box Bus Ledger — Interpreter tier dispatch
+%% T1 deterministic / T2 small-LLM / T3 full sub-agent. Default T1.
+%% Without tiering the bus turns into a meter that runs constantly.
+
+flowchart TD
+  Start([Ledger entry arrives at subscriber Box]) --> Read[Read subscription.interpreter<br/>default = T1]
+
+  Read --> Decide{Which tier?}
+
+  Decide -->|T1 ~80%| T1[T1: schema-mapper<br/>deterministic rule<br/>~0ms · $0]
+  Decide -->|T2 ~15%| T2[T2: template-summarizer<br/>small/cheap LLM<br/>~1s · low cost]
+  Decide -->|T3 ~5%| T3[T3: full sub-agent<br/>Phase B/C steward<br/>seconds–minutes · high cost]
+
+  T1 --> Write1[Write to subscription.write_target<br/>append one line / one row]
+  T2 --> Write2[Write to subscription.write_target<br/>NL framing per Box]
+  T3 --> Write3[Write to subscription.write_target<br/>full re-evaluation in Box context]
+
+  Write1 --> Log[Append to propagation.jsonl<br/>route resolved · interpreter · duration · cost]
+  Write2 --> Log
+  Write3 --> Log
+
+  Log --> Emit{Did write trigger<br/>a Box-internal event<br/>declared in emits[]?}
+  Emit -->|Yes| Republish[Emit envelope onto bus<br/>· cycle check enforced ·]
+  Emit -->|No| Done([Done — local consequence recorded])
+  Republish --> Done
+
+  classDef t1 fill:#dcffd6,stroke:#2a8a2a,stroke-width:1px;
+  classDef t2 fill:#fff7d6,stroke:#b08a00,stroke-width:1px;
+  classDef t3 fill:#ffe9e9,stroke:#a33,stroke-width:1px;
+  classDef proc fill:#dcefff,stroke:#2a5a8a,stroke-width:1px;
+  classDef terminal fill:#f0f0f0,stroke:#666,stroke-width:2px;
+
+  class T1,Write1 t1;
+  class T2,Write2 t2;
+  class T3,Write3 t3;
+  class Read,Decide,Log,Emit,Republish proc;
+  class Start,Done terminal;

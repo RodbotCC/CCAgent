@@ -1,0 +1,411 @@
+{
+  "ledger_type": "definition_of_done",
+  "version": "0.1.0",
+  "last_updated": "2026-04-29",
+  "status": "active",
+  "phase": "Phase 9 of ledger system buildout",
+  "maintainer": "Jake / Comeketo Agent project agents",
+  "core_done_rule": "Done means the system changed and the system's memory changed with it.",
+  "short_rule": "Build the thing. Verify the thing. Record the thing. Hand off the thing.",
+  "triage_rule": "If the change altered behavior, ownership, truth, workflow, risk, or future context — it needs a Done Gate.",
+  "steward_agent": {
+    "status": "not_yet_authored",
+    "future_canonical_path": "Subagent Boxes/definition_of_done_subagent_package/",
+    "future_runnable_path": "CCAgentindex/agents/definition_of_done_steward/",
+    "phase_when_built": "Phase B (Sub-agents)"
+  },
+  "build_rhythm_55_45": {
+    "offense_55": [
+      "features",
+      "pages",
+      "widgets",
+      "APIs / routes / automations / workflows",
+      "client plans",
+      "renderers",
+      "integrations",
+      "scripts",
+      "models",
+      "data pipelines",
+      "new sub-agents / new ledgers / new Boxes"
+    ],
+    "defense_45": [
+      "updating ledgers",
+      "updating source-of-truth maps and page_asset_sitemap.md",
+      "cleaning stale assumptions",
+      "verifying routes / APIs",
+      "writing audit markers in Client Boxes",
+      "recording decisions in the Decisions Ledger",
+      "logging open problems",
+      "updating Mermaid visuals",
+      "adding handoff notes to the Communications Ledger",
+      "keeping GitHub current and clean"
+    ],
+    "principle": "A build that remembers itself compounds. A build that does not remember itself rots."
+  },
+  "universal_done_gate": [
+    "correct_source_of_truth_changed",
+    "generated_output_not_treated_as_canonical",
+    "guardrails_and_source_of_truth_rules_checked",
+    "affected_ledgers_maps_or_box_notes_updated",
+    "open_problems_recorded",
+    "handoff_context_left",
+    "verification_run_or_explained",
+    "commit_done_and_push_status_clear"
+  ],
+  "done_gates": [
+    {
+      "id": "client_box_work",
+      "name": "Client Box Work",
+      "section": "5.1",
+      "required_checks": [
+        "required_files_checked",
+        "state_checked_against_plan",
+        "calendar_reality_checked",
+        "reply_gate_checked",
+        "frequency_cap_checked",
+        "commitment_language_checked",
+        "enrichment_boundary_checked",
+        "customer_facts_verified_against_verbatim_comms",
+        "future_sends_flattened_or_approval_gated_if_risky",
+        "audit_marker_added_or_updated",
+        "next_action_written_down"
+      ]
+    },
+    {
+      "id": "automation_work",
+      "name": "Automation / Scheduled Fire Work",
+      "section": "5.2",
+      "required_checks": [
+        "trigger_source_clear",
+        "input_source_of_truth_clear",
+        "guardrails_applied_before_output",
+        "reply_or_state_can_pause_run",
+        "risky_moves_require_isolated_approval",
+        "logs_written",
+        "failure_mode_recorded",
+        "human_review_path_clear",
+        "no_silent_financial_pricing_scope_or_enrichment_commitments",
+        "ledgers_and_local_box_notes_updated"
+      ]
+    },
+    {
+      "id": "page_route_work",
+      "name": "Page / Route Work",
+      "section": "5.3",
+      "canonical_surface": "page_asset_sitemap.md",
+      "required_checks": [
+        "route_maps_to_expected_component",
+        "primary_component_ownership_clear",
+        "asset_ownership_updated",
+        "data_sources_updated",
+        "apis_updated",
+        "side_effects_updated",
+        "cache_busters_bumped_in_secretary_html_if_needed",
+        "page_asset_sitemap_updated",
+        "history_line_appended",
+        "last_verified_bumped"
+      ]
+    },
+    {
+      "id": "widget_work",
+      "name": "Widget / Component Work",
+      "section": "5.4",
+      "required_checks": [
+        "widget_purpose_clear",
+        "render_owner_clear",
+        "inputs_outputs_apis_model_calls_clear",
+        "side_effects_documented",
+        "settings_recorded",
+        "dependent_pages_widgets_checked",
+        "asset_widget_map_updated_or_sitemap_fallback",
+        "visual_or_state_regressions_spot_checked"
+      ]
+    },
+    {
+      "id": "source_of_truth_change",
+      "name": "Source-of-Truth Change",
+      "section": "5.5",
+      "required_checks": [
+        "old_source_identified",
+        "new_source_identified",
+        "generated_or_cached_surfaces_labeled",
+        "read_order_documented",
+        "scripts_renderers_apis_updated",
+        "source_of_truth_ledger_updated_or_global_section_4_updated",
+        "page_widget_ledgers_or_sitemap_updated_if_ui_affected",
+        "migration_risk_recorded_in_open_problems"
+      ]
+    },
+    {
+      "id": "ledger_work",
+      "name": "Ledger Creation / Ledger Edit Work",
+      "section": "5.6",
+      "required_checks": [
+        "purpose_clear",
+        "owns_and_does_not_own_explicit",
+        "update_rules_defined",
+        "relationship_to_other_ledgers_clear",
+        "markdown_exists",
+        "json_sibling_exists_if_useful",
+        "mermaid_visual_exists_if_relationships_complex",
+        "index_md_updated",
+        "global_ledger_section_8_and_14_updated",
+        "temporal_continuity_updated_if_phase_advanced",
+        "no_duplication_of_other_ledger_jobs"
+      ]
+    },
+    {
+      "id": "box_directory_work",
+      "name": "Box / Directory Work",
+      "section": "5.7",
+      "required_checks": [
+        "directory_or_box_purpose_clear",
+        "what_belongs_clear",
+        "what_does_not_belong_clear",
+        "local_source_of_truth_rules_documented",
+        "important_files_listed",
+        "local_risks_or_guardrails_recorded",
+        "local_ledgers_or_box_md_or_directory_md_updated",
+        "file_directory_ledger_updated_if_tree_shape_changed",
+        "box_ledger_definitions_still_apply_or_extended",
+        "box_json_manifest_stub_present_or_planned"
+      ],
+      "phase_a_note": "manifest stub is soft until Phase C runtime lands; new Boxes from Phase 10 onward should ship with a stub even if subscribes/emits start empty"
+    },
+    {
+      "id": "external_connection_work",
+      "name": "External Connection / API Work",
+      "section": "5.8",
+      "required_checks": [
+        "service_name_and_purpose_recorded",
+        "credentials_known_without_exposing_secrets",
+        "dependency_owner_clear",
+        "failure_mode_understood",
+        "billing_trial_renewal_risk_recorded_if_relevant",
+        "what_breaks_if_service_fails_recorded",
+        "connections_ledger_updated_or_global_3_tcl_fallback",
+        "settings_ledger_updated_if_user_facing_changed"
+      ]
+    },
+    {
+      "id": "decision_work",
+      "name": "Decision Work",
+      "section": "5.9",
+      "required_checks": [
+        "decision_written_with_stable_id",
+        "rationale_recorded",
+        "alternatives_briefly_noted",
+        "consequences_recorded",
+        "status_clear",
+        "affected_systems_listed",
+        "decisions_ledger_md_and_json_updated",
+        "communications_promotion_marked_if_applicable"
+      ]
+    },
+    {
+      "id": "open_problem_discovery",
+      "name": "Open Problem Discovery",
+      "section": "5.10",
+      "required_checks": [
+        "problem_recorded_with_stable_id",
+        "severity_and_urgency_estimated",
+        "affected_systems_listed",
+        "fix_status_clear",
+        "next_action_clear",
+        "open_problems_ledger_updated",
+        "discovery_noted_in_parent_task_handoff_if_mid_task"
+      ]
+    },
+    {
+      "id": "reconstruction_work",
+      "name": "Reconstruction / Prompt / Generation Work",
+      "section": "5.11",
+      "required_checks": [
+        "intent_recorded",
+        "prompt_or_instructions_preserved_if_useful",
+        "constraints_recorded",
+        "source_and_output_files_listed",
+        "regeneration_path_clear",
+        "known_mistakes_to_avoid_recorded",
+        "prompt_reconstruction_ledger_updated"
+      ]
+    }
+  ],
+  "ledger_update_matrix": {
+    "project_state_or_identity_or_rules": [
+      "GLOBAL_LEDGER.md",
+      "GLOBAL_LEDGER.json"
+    ],
+    "current_session_or_recent_changes_or_carry_forward": [
+      "TEMPORAL_CONTINUITY.md",
+      "TEMPORAL_CONTINUITY.json"
+    ],
+    "long_term_goals_or_principles_or_anti_goals": [
+      "NORTH_STAR.md",
+      "NORTH_STAR.json"
+    ],
+    "completion_requirements": [
+      "DEFINITION_OF_DONE.md",
+      "DEFINITION_OF_DONE.json"
+    ],
+    "file_tree_shape": [
+      "FILE_DIRECTORY_LEDGER.md",
+      "FILE_DIRECTORY_LEDGER.json"
+    ],
+    "directory_rules_or_box_concept": [
+      "BOX_LEDGER.md",
+      "per-BOX.md"
+    ],
+    "important_file_purpose": [
+      "FILE_CONTENTS.md (planned)"
+    ],
+    "page_route_asset_data_binding": [
+      "page_asset_sitemap.md",
+      "PAGES/<route>.md (planned)"
+    ],
+    "widget_or_component_behavior": [
+      "WIDGETS/<widget>.md (planned)",
+      "ASSET_WIDGET_MAP.md (planned)"
+    ],
+    "external_service_or_api": [
+      "CONNECTIONS.md (planned)"
+    ],
+    "major_decision": [
+      "DECISIONS_LEDGER.md",
+      "DECISIONS_LEDGER.json"
+    ],
+    "handoff_or_warning_or_lesson": [
+      "COMMUNICATIONS_LEDGER.md",
+      "COMMUNICATIONS_LEDGER.json"
+    ],
+    "known_issue_or_risk_or_blocker": [
+      "OPEN_PROBLEMS_LEDGER.md",
+      "OPEN_PROBLEMS_LEDGER.json"
+    ],
+    "build_recipe_or_prompt": [
+      "PROMPT_RECONSTRUCTION.md (planned)"
+    ],
+    "tool_or_model_research": [
+      "SCOUT.md (planned)"
+    ],
+    "phase_or_milestone_state": [
+      "PHASE.md (planned)"
+    ],
+    "settings_or_configuration": [
+      "SETTINGS.md (planned)"
+    ],
+    "canonical_data_ownership_rule": [
+      "SOURCE_OF_TRUTH.md (planned)"
+    ],
+    "client_specific_plan_or_state": [
+      "per-Box client_ledger.md",
+      "per-Box <date>_audit_marker.md"
+    ],
+    "any_non_trivial_delegation": [
+      "CCAgentindex/_ledger/activity.jsonl"
+    ]
+  },
+  "audit_ledger_status": {
+    "status": "out_of_scope",
+    "decided": "2026-04-29",
+    "decision_id": "DEC-2026-04-29-012",
+    "coverage_now_in": [
+      "OPEN_PROBLEMS_LEDGER",
+      "DECISIONS_LEDGER",
+      "COMMUNICATIONS_LEDGER",
+      "per-Box ledgers"
+    ],
+    "draft_kept_at": "Ledger Drafts/# Audit Ledger.txt"
+  },
+  "local_done_gates_stricter_overrides": [
+    {
+      "surface": "page_asset_sitemap.md",
+      "owns": "page-specific completion (Asset Ownership, Change Checklist, History, Last Verified)"
+    },
+    {
+      "surface": "Auto/comeketo-inbox/ + Guardrails.html + comeketo-guardrails-agent.md",
+      "owns": "send-safety completion"
+    },
+    {
+      "surface": "Client Boxes (Auto/Client Boxes/<Name>/)",
+      "owns": "per-client plan / state / audit marker completion"
+    },
+    {
+      "surface": "Auto/orchestrator/",
+      "owns": "generated-state completion"
+    },
+    {
+      "surface": "LEDGERS/",
+      "owns": "memory-system completion"
+    },
+    {
+      "surface": "External connection ledgers (planned)",
+      "owns": "credential / dependency completion"
+    },
+    {
+      "surface": "BOX_LEDGER.md + per-BOX.md",
+      "owns": "per-Box source-of-truth and Done Gate"
+    }
+  ],
+  "what_does_not_count_as_done": [
+    "code_was_edited",
+    "page_looks_okay_once",
+    "generated_file_changed",
+    "plan_written_but_not_checked_against_guardrails",
+    "client_box_files_present_but_state_misaligned",
+    "risky_send_approved_inside_batch_without_isolation",
+    "decision_made_in_chat_but_not_recorded",
+    "bug_found_but_not_logged",
+    "source_of_truth_changed_but_maps_point_to_old_source",
+    "local_change_unpushed_and_not_marked_local_only",
+    "new_ledger_authored_but_index_md_or_global_section_8_not_updated",
+    "new_visual_created_but_visualization_index_not_updated"
+  ],
+  "north_star_alignment": {
+    "directly_supports": [
+      "NS-01",
+      "NS-06",
+      "NS-09",
+      "NS-10"
+    ],
+    "indirectly_supports": [
+      "NS-02",
+      "NS-04",
+      "NS-07"
+    ]
+  },
+  "related_ledgers": {
+    "philosophy": "NORTH_STAR.md",
+    "settled_rules": "DECISIONS_LEDGER.md",
+    "known_broken": "OPEN_PROBLEMS_LEDGER.md",
+    "handoffs": "COMMUNICATIONS_LEDGER.md",
+    "phase_state_planned": "PHASE.md",
+    "ui_done_gate_canonical": "page_asset_sitemap.md",
+    "box_concept": "BOX_LEDGER.md",
+    "audit_records": "out_of_scope_2026-04-29 — coverage absorbed by Open Problems / Decisions / Communications / per-Box",
+    "box_wire_shape": "BOX_BUS_LEDGER.md (manifest schema, envelope, tier model)",
+    "architectural_lock": "DECISIONS_LEDGER.md (DEC-2026-04-29-013)"
+  },
+  "visuals": [
+    "VISUALS/done_gate_flow.mmd",
+    "VISUALS/build_rhythm_55_45.mmd"
+  ],
+  "update_triggers": [
+    "new_work_type_done_gate_needed",
+    "existing_done_gate_too_loose_or_strict_or_missing_field",
+    "new_ledger_authored",
+    "new_local_stricter_gate_created",
+    "north_star_goal_added_retired_or_renamed",
+    "new_false_finish_pattern_observed"
+  ],
+  "history": [
+    {
+      "date": "2026-04-29",
+      "event": "Phase 9 — initial creation. Ingested from Ledger Drafts/# Deliverables : Definition of Done Ledger.txt with adjustments: Audit Ledger references re-pointed at Open Problems / Decisions / Communications / per-Box (Audit dropped from build queue 2026-04-29); Box Ledger and Triad references added (DEC-2026-04-29-001); page-asset sitemap elevated as canonical UI Done Gate; sitemap-Done-Gate decision (DEC-2026-04-29-007) referenced explicitly."
+    },
+    {
+      "date": "2026-04-29",
+      "event": "Phase 10 — §5.7 (Box/Directory Work) gained 'box_json_manifest_stub_present_or_planned' check (soft today, hard at Phase C). related_ledgers updated to point at BOX_BUS_LEDGER.md and DEC-2026-04-29-013."
+    }
+  ]
+}

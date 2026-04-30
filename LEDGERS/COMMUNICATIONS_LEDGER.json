@@ -2,6 +2,7 @@
   "ledger_type": "communications",
   "version": "0.1.0",
   "last_updated": "2026-04-29",
+  "last_updated_note": "Phase 14 — appended COMM-2026-04-29-011 for Asset/Widget Map landing",
   "status": "active",
   "maintainer": "Jake / Comeketo Agent project agents",
   "core_rule": "If a future agent needs to hear it, leave it where they can find it.",
@@ -334,7 +335,7 @@
       "promote_when": "Decisions Ledger lands -> promote as a settled architecture decision",
       "message": "Architectural spine is the Box + Ledger + Sub-agent triad. Anything stateful gets all three. Box = unit of state. Ledger = legible memory. Sub-agent = operator. Standing rule: legibility is more important than the build itself. Code without a corresponding Ledger entry is debt to repay.",
       "suggested_action": "Before designing anything stateful, ask: where is the Box? where is the Ledger? where will the Sub-agent live? If any answer is 'we'll figure that out later', stop and figure it out now.",
-      "expiry_review": "Promote to Decisions Ledger when that ledger lands. Currently a Communication only because Decisions doesn't exist yet \u2014 but the rule itself is settled.",
+      "expiry_review": "Promote to Decisions Ledger when that ledger lands. Currently a Communication only because Decisions doesn't exist yet — but the rule itself is settled.",
       "promoted_to": "DEC-2026-04-29-001",
       "promoted_on": "2026-04-29",
       "archive_after": "one full session cycle per Communications Ledger Section 12"
@@ -368,8 +369,282 @@
       "future_agents_should_know": [
         "Bedrock layout (CCAgentindex/) carries the bootstrapped-era 32-subdir shape from this attempt. PROB-016 owns the eventual reconciliation.",
         "Six bedrock subdirs are aliases into Auto/: Boxes, Client Boxes, Staff Boxes, comeketo-inbox, Onboard Scripts, orchestrator. This was the salvage path from the pivot.",
-        "The 5 draft sub-agent packages at /Subagent Boxes/ are surviving plumbing-first work. They are the Phase B starting point \u2014 not greenfield.",
+        "The 5 draft sub-agent packages at /Subagent Boxes/ are surviving plumbing-first work. They are the Phase B starting point — not greenfield.",
         "Lesson is not 'plumbing-first is wrong.' Lesson is that owner pressure can collide with depth-first plans, and the rebuild should preserve as much of the prior spine as possible."
+      ]
+    },
+    {
+      "id": "COMM-2026-04-29-006",
+      "section": 4,
+      "title": "Definition of Done Is Now The Closing Authority",
+      "date": "2026-04-29",
+      "from": "Cowork session (Phase 9 ledger build, autonomous next-pick under Jake's 'you make the call' delegation)",
+      "to": "Future agents — every Phase A ledger build, every Phase B sub-agent graduation, every Page Ledger pass.",
+      "types": [
+        "handoff",
+        "preference",
+        "coordination"
+      ],
+      "status": "active",
+      "priority": "high",
+      "affected_systems": [
+        "ledger system",
+        "page work",
+        "automation",
+        "Client Boxes",
+        "every meaningful task"
+      ],
+      "related_ledgers": [
+        "DEFINITION_OF_DONE.md",
+        "DECISIONS_LEDGER.md (DEC-2026-04-29-007 sitemap-Done-Gate)",
+        "page_asset_sitemap.md",
+        "BOX_LEDGER.md"
+      ],
+      "promote_when": "a steward agent for DoD is built (Phase B), at which point this entry archives — the steward enforces the gate automatically",
+      "summary": "Definition of Done Ledger is now live. Universal Done Gate (8 questions) + 11 work-type sub-gates + Ledger Update Matrix. Page-asset sitemap remains canonical UI Done Gate (DoD §5.3 elevates it, does not replace it). Every new ledger must satisfy DoD §5.6. Box Ledger registration gap (Phase 8 landed earlier today but not yet indexed) was fixed in the same sprint.",
+      "suggested_action": "Before closing any meaningful task: walk DoD §4 Universal Done Gate plus the matching §5 sub-gate. When authoring a new ledger: read DoD §5.6 first, use §6 Ledger Update Matrix as the fastest 'what do I touch?' reference. When building a Phase B steward: the steward's job is to enforce its ledger's Done Gate plus DoD §6 cross-ledger updates.",
+      "expiry_review": "Archive when DoD steward is built (Phase B). Review §5 if a new work-type Done Gate is needed (e.g., Subagent Box Done Gate when Phase C starts).",
+      "ledger_creation_sprint_log": [
+        "Authored DEFINITION_OF_DONE.md (16 sections, 11 work-type Done Gates, Ledger Update Matrix)",
+        "Authored DEFINITION_OF_DONE.json (universal_done_gate, done_gates[], ledger_update_matrix, NS alignment, what_does_not_count_as_done)",
+        "Created VISUALS/done_gate_flow.mmd (Mermaid decision tree)",
+        "Created VISUALS/build_rhythm_55_45.mmd (offense/defense feedback loop)",
+        "Updated INDEX.md (DoD active, Box Ledger active rows added, build order recalibrated to Phase 10+)",
+        "Updated GLOBAL_LEDGER.md §8 / §11 / §12 / §13 / §14 / §15",
+        "Updated GLOBAL_LEDGER.json (definition_of_done active, box_ledger active, last_updated bumped)",
+        "Updated TEMPORAL_CONTINUITY.md §1 + §2.1 (Phase 9 step, 9 active ledgers)",
+        "Updated TEMPORAL_CONTINUITY.json (current_project_moment, current_step, last_completed)",
+        "Appended this Communications entry",
+        "Will append delegation_write event to CCAgentindex/_ledger/activity.jsonl"
+      ]
+    },
+    {
+      "id": "COMM-2026-04-29-007",
+      "title": "Box Bus Ledger Landed — Schema-Only Architectural Lock",
+      "section": 4,
+      "date": "2026-04-29",
+      "from": "Cowork session (Phase 10 ledger build, with explicit pushback against deferring the architecture)",
+      "to": "Future agents — every Phase 11 ledger build, every new Box authored, every Phase B sub-agent graduation, every Phase C runtime contributor.",
+      "types": [
+        "handoff",
+        "preference",
+        "coordination"
+      ],
+      "status": "active",
+      "priority": "high",
+      "affected_systems": [
+        "every stateful entity in the project",
+        "the eventual bus runtime (Phase C)",
+        "every ledger authored from this point forward",
+        "every Box authored from this point forward",
+        "page work (analytics-snapshot Box pattern reserved)"
+      ],
+      "related_ledgers": [
+        "BOX_BUS_LEDGER.md",
+        "BOX_LEDGER.md",
+        "DEFINITION_OF_DONE.md",
+        "DECISIONS_LEDGER.md (DEC-2026-04-29-013)",
+        "DECISIONS_LEDGER.md (DEC-2026-04-29-008 — narrowed, not superseded)"
+      ],
+      "promote_when": "Phase C runtime ships and the bus is consuming envelopes — at that point this entry archives because the running system enforces what this entry asks for.",
+      "summary": "Box Bus Ledger is now live. SCHEMA ONLY — no router, no propagation ledger, no interpreters, no validation runtime. DEC-2026-04-29-013 locks the architecture and DEC-2026-04-29-008's runtime deferral still binds. What this gives every future contributor: a written target for manifest shape (box.json), envelope shape, routing tiers (Global/Domain/Local), interpreter tiers (T1/T2/T3), cycle policy (hard refusal), and 'what's a Box / what's not' rule. Two worked examples ship with the ledger: Hugo Casillas (Client Box) and Analytics Source Channels Snapshot Box. Box Ledger now points at Bus Ledger for the manifest schema; DoD §5.7 added a manifest-stub check (soft today, hard at Phase C).",
+      "suggested_action": "When authoring a new ledger from Phase 11 onward: declare its tier (global/domain/local) and entry kind aligned to the envelope schema in BOX_BUS_LEDGER.md §2.2. When stamping a new Box: ship a box.json manifest stub even if subscribes[] and emits[] start empty. When building Phase B steward agents: include manifest authoring for the steward's target ledger as part of graduation. DO NOT ship runtime (router, propagation ledger, interpreters, validation enforcement) during Phase A. If runtime feels tempting, route the urge into Open Problems Ledger or Communications Ledger — not into code.",
+      "expiry_review": "Archive when Phase C runtime ships and validates the schema in production. Review fields if a foreseen-but-unspecified manifest field is needed (e.g., during real Box authoring it turns out subscribes[] needs a 'priority' field) — that's a BOX_BUS_LEDGER schema update + possibly a new Decision.",
+      "ledger_creation_sprint_log": [
+        "Authored BOX_BUS_LEDGER.md (14 sections — manifest schema, envelope schema, scope grammar, tier model, interpreter tiers, cycle policy, what-is-a-Box rule, 2 worked examples, build sequence, validation rules, relationships, NS alignment)",
+        "Authored BOX_BUS_LEDGER.json (manifest_schema, envelope_schema, scope_grammar, tier_model, interpreter_tiers, cycle_policy, what_is_a_box, validation_rules_for_phase_c, build_sequence, worked_examples, trickle_down_proof)",
+        "Created VISUALS/box_bus_topology.mmd (Global/Domain/Local with example boxes + fan-out)",
+        "Created VISUALS/interpreter_tiers.mmd (T1/T2/T3 dispatch flow)",
+        "Created VISUALS/envelope_routing_flow.mmd (emit → validate → route → interpret → record)",
+        "Added DEC-2026-04-29-013 to DECISIONS_LEDGER.md + JSON (architectural lock; narrows DEC-2026-04-29-008)",
+        "Updated BOX_LEDGER.md (concept vs wire shape blockquote pointing at Bus Ledger)",
+        "Updated DEFINITION_OF_DONE.md §5.7 (manifest-stub check, soft today / hard at Phase C) + Update Matrix row for box wire shape",
+        "Updated DEFINITION_OF_DONE.json (box_directory_work gate gained box_json_manifest_stub_present_or_planned + phase_a_note)",
+        "Updated INDEX.md (Bus Ledger active rows added; build order recalibrated to Phase 11+; envelope-aware authoring rule)",
+        "Updated GLOBAL_LEDGER.md §8 / §11 / §12 / §13 / §14 / §15 (Bus Ledger registered; visuals indexed; envelope-aware rule documented)",
+        "Updated GLOBAL_LEDGER.json mirror",
+        "Updated TEMPORAL_CONTINUITY.md + JSON (Phase 10 step, 10 active ledgers, envelope-aware rule)",
+        "Appended this Communications entry",
+        "Appended ledger_phase_landed event to CCAgentindex/_ledger/activity.jsonl"
+      ]
+    },
+    {
+      "id": "COMM-2026-04-29-008",
+      "title": "Source-of-Truth Ledger Landed — First Envelope-Aware Ledger",
+      "section": 4,
+      "date": "2026-04-29",
+      "from": "Cowork session (Phase 11, autonomous next-pick)",
+      "to": "Future agents — every customer-facing send, every Client Box audit, every Phase B steward graduation, every Phase C runtime contributor.",
+      "types": [
+        "handoff",
+        "preference",
+        "coordination"
+      ],
+      "status": "active",
+      "priority": "high",
+      "affected_systems": [
+        "every Client Box (allowed_to_use schema applies)",
+        "inbox automation",
+        "scheduled fires",
+        "Boxes UI page (renderer can now honor allowed_to_use)",
+        "the eventual bus runtime — manifests' source_of_truth fields validate against §3 trust orderings"
+      ],
+      "related_ledgers": [
+        "SOURCE_OF_TRUTH.md",
+        "OPEN_PROBLEMS_LEDGER.md (PROB-2026-04-28-001 — partial)",
+        "BOX_BUS_LEDGER.md §2.1 (manifest source_of_truth field rule-bound here)",
+        "GLOBAL_LEDGER.md §4 (now points at SOURCE_OF_TRUTH as canonical home)",
+        "DECISIONS_LEDGER.md (DEC-2026-04-29-013 envelope-aware authoring rule)"
+      ],
+      "promote_when": "Allowed-To-Know schema gets implemented in at least 3 Client Boxes — at that point this entry archives because the implementation provides its own audit trail.",
+      "summary": "Source-of-Truth Ledger is now live. Consolidated rules from Global §4, NS-06, FDL §6, DoD §5.5 into one canonical home. Universal trust ordering + per-domain orderings (Client / Page / Project state / Settled rules / External system / Generated-vs-canonical / Plans-vs-comms). Allowed-To-Know four-bucket schema (comms_confirmed / internal_strategy / protected / approval_required) with per-Box implementation contract — this closes the schema-design close-criterion of PROB-2026-04-28-001 (status open→partial). First ledger authored under DEC-2026-04-29-013 envelope-aware rule: declares tier=global, cross-references BOX_BUS_LEDGER §2.1 for manifest source_of_truth field semantics.",
+      "suggested_action": "Before authoring customer-facing copy: walk SOURCE_OF_TRUTH §3.1 client trust ordering + §4 allowed-to-know schema. When stamping a new Client Box: include allowed_to_use.json stub per §4.2 contract (start with empty buckets — populate as facts emerge). When source-of-truth ownership shifts: walk §6 update protocol (DoD §5.5 Done Gate). When two surfaces disagree: walk §5 conflict resolution — never silently merge. Hugo Casillas is the natural test case for first allowed_to_use.json implementation (most enrichment, oldest active cadence).",
+      "expiry_review": "Archive when allowed_to_use.json is implemented in at least 3 Client Boxes and one read-path honors it. Review §3 trust orderings if a new domain emerges (e.g., when Connections Ledger lands, external systems get their own per-service orderings).",
+      "ledger_creation_sprint_log": [
+        "Authored SOURCE_OF_TRUTH.md (11 sections — universal ordering, per-domain orderings, generated-vs-canonical, plans-vs-comms, Allowed-To-Know 4-bucket schema with per-Box JSON contract, conflict resolution, update protocol, Box Bus relationship, NS alignment)",
+        "Authored SOURCE_OF_TRUTH.json (universal_trust_ordering[], trust_orderings_by_domain{}, allowed_to_know_schema{}, conflict_resolution[], update_protocol_when_truth_shifts{}, relationship_to_box_bus{})",
+        "Created VISUALS/source_of_truth_flow.mmd (decision tree per domain → conflict resolution walk)",
+        "Updated OPEN_PROBLEMS_LEDGER.md PROB-001 (status open→partial; first close-criterion ✅; blocker shifted from schema-design to implementation)",
+        "Updated OPEN_PROBLEMS_LEDGER.json mirror (PROB-001 status, history, last_updated)",
+        "Will update INDEX.md (SoT active rows; build order recalibrated to Phase 12+)",
+        "Will update GLOBAL_LEDGER.md §8 / §11 / §12 / §13 / §14 / §15 + JSON mirror",
+        "Will update TEMPORAL_CONTINUITY.md + JSON",
+        "Appended this Communications entry",
+        "Will append ledger_phase_landed event to CCAgentindex/_ledger/activity.jsonl"
+      ]
+    },
+    {
+      "id": "COMM-2026-04-29-009",
+      "title": "Connections Ledger Landed — First Domain-Tier Ledger",
+      "section": 4,
+      "date": "2026-04-29",
+      "from": "Cowork session (Phase 12, autonomous next-pick)",
+      "to": "Future agents — every credential rotation, every new connector, every Box authoring service subscriptions.",
+      "types": [
+        "handoff",
+        "preference",
+        "coordination"
+      ],
+      "status": "active",
+      "priority": "high",
+      "affected_systems": [
+        "every external service (Close, ClickUp, Slack, Twilio, OpenAI, Pieces, Cowork, Claude Code, Browser Use)",
+        "/.env credential management",
+        "connectors.js channel registry",
+        "Box manifests' subscribes[] for service domains",
+        "future Settings Ledger UI"
+      ],
+      "related_ledgers": [
+        "CONNECTIONS.md",
+        "SOURCE_OF_TRUTH.md §3.5 (trust ordering for external systems)",
+        "DEFINITION_OF_DONE.md §5.8 (this ledger's §10 is local-stricter)",
+        "BOX_BUS_LEDGER.md §2.1 (manifest subscribes[] field)",
+        "OPEN_PROBLEMS_LEDGER.md PROB-2026-04-28-009 (CLOSED)"
+      ],
+      "promote_when": "Settings Ledger lands and starts owning the UI-configurable surface — at that point this entry archives because the joint operation is documented elsewhere.",
+      "summary": "Connections Ledger is now live. First DOMAIN-tier ledger (proves envelope-aware authoring works beyond global). 14 services classified active + 2 planned + 3 not-in-use, every classification grep-evidenced against server.py + .env + connectors.js + docs/connectors.md. Twilio (which the draft outline missed) is registered with full WhatsApp + SMS credential map. Slack token-format issue (xapp- vs xoxb-) is flagged as an open problem candidate. PROB-2026-04-28-009 (optional connections need verification) is CLOSED. No raw secrets in the ledger — only env var names and locations.",
+      "suggested_action": "Before adding a new service: read CONNECTIONS §10 Done Gate first. Before declaring a Box subscribes[] entry: confirm the service is active (not planned/not-in-use/needs-verification). When a service starts misbehaving: walk CONNECTIONS §6 Failure Mode Map. When rotating a credential: update the env var name only if it changed; never the value.",
+      "expiry_review": "Archive when Settings Ledger lands. Review §4 service registry quarterly to catch drift.",
+      "ledger_creation_sprint_log": [
+        "Read draft outline + PROB-009 + SoT §3.5 to orient",
+        "Grep-audited server.py imports, .env keys, connectors.js, docs/connectors.md to ground every status label",
+        "Authored CONNECTIONS.md (14 sections — status labels, 17 service cards across 5 categories, credentials table, failure mode map, verification playbook, billing watch, local-vs-cloud, local-stricter Done Gate, Box Bus relationship)",
+        "Authored CONNECTIONS.json (envelope-aware: tier=domain, envelope_v=1; structured per-service entries with all operational fields)",
+        "Created VISUALS/connections_dependency_map.mmd (Cloud → Local → Project blast-radius graph)",
+        "Closed PROB-2026-04-28-009 in OPEN_PROBLEMS_LEDGER.md + JSON",
+        "Updated INDEX.md (Connections active rows; build order to Phase 13+)",
+        "Updated GLOBAL_LEDGER.md §8 / §12 / §13 / §14 + JSON mirror",
+        "Updated TEMPORAL_CONTINUITY.md + JSON",
+        "Appended this Communications entry",
+        "Appended ledger_phase_landed + open_problem_status_change events to activity.jsonl"
+      ]
+    },
+    {
+      "id": "COMM-2026-04-29-010",
+      "title": "File Contents Ledger Landed — ~78 File Entries",
+      "section": 4,
+      "date": "2026-04-29",
+      "from": "Cowork session (Phase 13, Jake's call: 'if we actually fill it out, that's a hugely valuable resource')",
+      "to": "Future agents — every onboarding session, every audit, every time you touch an unfamiliar file.",
+      "types": [
+        "handoff",
+        "preference",
+        "coordination"
+      ],
+      "status": "active",
+      "priority": "high",
+      "affected_systems": [
+        "every load-bearing file in the project",
+        "agent onboarding",
+        "file-level audit",
+        "future Page Ledgers / Widget Ledgers (will reference this one)",
+        "Phase B sub-agent graduation (steward agents will read this)"
+      ],
+      "related_ledgers": [
+        "FILE_CONTENTS.md",
+        "FILE_DIRECTORY_LEDGER.md (where vs what split)",
+        "BOX_LEDGER.md (concept) + BOX_BUS_LEDGER.md (wire shape)",
+        "SOURCE_OF_TRUTH.md §3 (per-domain trust orderings reference per-file ranks)",
+        "CONNECTIONS.md (services → which files use them)"
+      ],
+      "promote_when": "the ledger is comprehensive enough that grep-onboarding stops happening — at that point a steward can audit drift rather than seed.",
+      "summary": "File Contents Ledger is now live. ~78 load-bearing files across 10 categories. Each entry: purpose (one paragraph), owns, type label (canonical/generated/template/etc), edit guidance, dependencies, companion-file rules, common mistakes, verification, related ledgers/decisions. Categories: 13 ledgers, 17 runtime-frontend, 1 runtime-backend, 8 meta-harness, 11 orchestrator, 5 inbox-skill, 4 bedrock-index, 16 client-box-convention, 1 staff-box-convention, 2 templates. Tier: global. Cross-references SoT trust orderings (per-Box file ranks 1-9), DoD §5.5 + §5.7 Done Gates, Connections (services → which files use them), Decisions (file-level rules), Open Problems (file-level issues like PROB-2026-04-28-010).",
+      "suggested_action": "Before editing an unfamiliar file: check FILE_CONTENTS for its entry. When adding a new file that meets §2 inclusion rule: add an entry. When promoting/demoting a file (canonical ↔ generated): trigger SoT §6 update protocol AND update its entry here. Default to NOT adding entries for utility/leaf files — the inclusion rule exists to keep signal high.",
+      "expiry_review": "Archive when steward agent is built and starts auditing drift instead of seeding.",
+      "ledger_creation_sprint_log": [
+        "Read draft outline + scanned root JS/JSX/Python/HTML + Auto/orchestrator/bin + Auto/comeketo-inbox + CCAgentindex/ structure",
+        "Authored FILE_CONTENTS.md (18 sections: purpose, inclusion rule, entry format, 10 file categories, ~78 substantive entries, update protocol, ledger relationships, NS alignment)",
+        "Authored FILE_CONTENTS.json (envelope-aware: tier=global, envelope_v=1; structured per-file entries with purpose/category/type/companion_updates/common_mistakes/related_decisions; category_counts roll-up)",
+        "Created VISUALS/file_contents_index.mmd (5-cluster roll-up + cross-cluster dependency arrows)",
+        "Updated INDEX.md (FileContents active rows; build order to Phase 14+)",
+        "Updated GLOBAL_LEDGER.md §8 / §12 / §13 / §14 + JSON mirror",
+        "Updated TEMPORAL_CONTINUITY.md + JSON",
+        "Appended this Communications entry",
+        "Appended ledger_phase_landed event to activity.jsonl"
+      ]
+    },
+    {
+      "id": "COMM-2026-04-29-011",
+      "title": "Asset/Widget Map Landed — Cross-Page UI Catalog",
+      "section": 4,
+      "date": "2026-04-29",
+      "from": "Cowork session (Phase 14, autonomous next-pick)",
+      "to": "Future agents — every UI change, every new widget, every new endpoint that powers a page.",
+      "types": [
+        "handoff",
+        "preference",
+        "coordination"
+      ],
+      "status": "active",
+      "priority": "high",
+      "affected_systems": [
+        "every UI page",
+        "shared widgets in components.jsx",
+        "/api/* endpoints (page-consumer mapping)",
+        "window.* services (cross-page registry)",
+        "localStorage keys (cross-page state)",
+        "future Page Ledgers (per-route deep memory)"
+      ],
+      "related_ledgers": [
+        "ASSET_WIDGET_MAP.md",
+        "page_asset_sitemap.md (CANONICAL per-page UI Done Gate — wins on per-page detail)",
+        "FILE_CONTENTS.md (file roles — pairs with this for UI-level)",
+        "CONNECTIONS.md (services → which pages use them)",
+        "DEFINITION_OF_DONE.md §5.3 (Page) + §5.4 (Widget)",
+        "DECISIONS_LEDGER.md DEC-2026-04-29-007 (sitemap-Done-Gate)"
+      ],
+      "promote_when": "Page Ledgers land for every route — at that point per-page deep memory lives there and this ledger trims to pure cross-cutting catalog.",
+      "summary": "Asset/Widget Map is now live. Cross-page catalog covering 14 routes: shared widgets (7 categories — chrome, overlays, useContextMenu, People-page primitive, Box specialized renderers, markdown rendering, connectors picker), API → page mapping (10 endpoint groups → which pages consume them), shared services registry (10 window.* objects), cross-page state (7 localStorage keys + 3 window events), change-radius hints (10 'when you change X, recheck Y' rules). Tier: domain. The sitemap remains canonical per-page truth (DEC-2026-04-29-007); this ledger lives one altitude up.",
+      "suggested_action": "Before changing a shared widget: walk §3 to find affected pages. Before changing an API endpoint: walk §4 to find affected pages. When a single page changes with no cross-page impact: update the sitemap ONLY, not this ledger. When a widget moves single-page → multi-page: promote it to §3 here. When you touch lucide.js / styles.css / Secretary.html: bump cache-busters per DEC-2026-04-29-007.",
+      "expiry_review": "Archive when Page Ledgers are authored for every route — at that point per-page deep memory lives there. Review §5 if a new window.* service is created or a SecretaryX naming convention shifts.",
+      "ledger_creation_sprint_log": [
+        "Read draft outline + sitemap (478 lines, 14 page sections) + screens.jsx structure",
+        "Authored ASSET_WIDGET_MAP.md (13 sections — purpose, page index, shared widgets, API mapping, services, cross-page state, change radius, sitemap relationship, when to update, ledger relationships)",
+        "Authored ASSET_WIDGET_MAP.json (envelope-aware tier=domain; structured pages[]/shared_widgets/api_to_page_mapping/shared_services/cross_page_state/change_radius)",
+        "Created VISUALS/page_widget_dependency.mmd (4-cluster: Pages → SharedWidgets → Services → APIs with reuse arrows)",
+        "Updated INDEX.md, GLOBAL_LEDGER.md §8/§12/§13/§14/§15 + JSON, TCL md+json",
+        "Appended this Communications entry",
+        "Appended ledger_phase_landed event to activity.jsonl"
       ]
     }
   ],
@@ -533,14 +808,14 @@
     }
   ],
   "counts": {
-    "active_handoff_notes": 5,
+    "active_handoff_notes": 10,
     "warnings": 3,
     "preferences": 3,
-    "lessons": 4,
+    "lessons": 1,
     "attempts_abandoned": 1,
     "cross_system_notes": 2,
     "archived": 0,
-    "total_seeded_entries": 18
+    "total_seeded_entries": 24
   },
   "promotion_log": [
     {

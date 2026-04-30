@@ -16,6 +16,7 @@ Usage:
   python3 server.py [port]        # default 3422
 """
 import base64
+import hashlib
 import html
 import io
 import json
@@ -857,6 +858,9 @@ class Handler(SimpleHTTPRequestHandler):
         if p.startswith("/api/delegate/"):
             rid = p[len("/api/delegate/"):]
             return self._delegate_read(rid)
+        if p.startswith("/api/browser_use/jobs/"):
+            job_id = p[len("/api/browser_use/jobs/"):]
+            return self._browser_use_job_get(job_id)
         if p.startswith("/api/ledger/"):
             # GET /api/ledger/<name>  → read the named ledger
             name = p.split("/", 3)[3]
@@ -3239,7 +3243,61 @@ class Handler(SimpleHTTPRequestHandler):
                 "updated_at":   rep.get("last_modified") or rep.get("created_at"),
             })
         out.sort(key=lambda r: r.get("last_modified") or "", reverse=True)
-        return self._json({"ok": True, "reports": out, "items": out})
+
+        # Box Reports — synthesized views over Auto/Client Boxes/<Name>/.
+        # One entry per client box. No file copy; doc counts come from the
+        # live folder. Conversation counts come from _box_conversations/<id>.jsonl.
+        box_out = []
+        try:
+            cat = self._boxes_catalog()
+        except Exception:
+            cat = {"boxes": []}
+        for b in cat.get("boxes", []):
+            if (b.get("source_kind") or "") != "client_box":
+                continue
+            folder = Path(b.get("folder_abs") or "")
+            if not folder.exists():
+                continue
+            doc_types = []
+            doc_count = 0
+            newest_mtime = 0.0
+            for fp in self._box_report_iter_files(folder):
+                doc_count += 1
+                try:
+                    newest_mtime = max(newest_mtime, fp.stat().st_mtime)
+                except Exception:
+                    pass
+                t = self._reports_doc_type_from_mime(self._box_report_mime_for(fp), fp.name)
+                if t not in doc_types:
+                    doc_types.append(t)
+            qa_count = 0
+            qa_path = self._box_report_conversation_path(b.get("id") or "")
+            if qa_path.exists():
+                try:
+                    qa_count = sum(1 for line in qa_path.read_text(encoding="utf-8").splitlines() if line.strip())
+                except Exception:
+                    qa_count = 0
+            last_modified = (
+                datetime.fromtimestamp(newest_mtime, tz=timezone.utc).isoformat().replace("+00:00", "Z")
+                if newest_mtime else None
+            )
+            box_out.append({
+                "slug":          b.get("id"),
+                "name":          b.get("name") or b.get("folder_name") or b.get("id"),
+                "kind":          b.get("kind") or "lead",
+                "source_kind":   b.get("source_kind"),
+                "doc_count":     doc_count,
+                "doc_types":     doc_types,
+                "qa_count":      qa_count,
+                "conversation_count": qa_count,
+                "created_at":    None,
+                "last_modified": last_modified,
+                "updated_at":    last_modified,
+                "source":        "box_synthesis",
+                "folder_rel":    b.get("folder_rel"),
+            })
+        box_out.sort(key=lambda r: r.get("last_modified") or "", reverse=True)
+        return self._json({"ok": True, "reports": out, "items": out, "box_reports": box_out})
 
     def _reports_create(self, body):
         try:
@@ -3250,6 +3308,13 @@ class Handler(SimpleHTTPRequestHandler):
         if not name:
             return self._json({"ok": False, "error": "missing name"}, code=400)
         slug = self._reports_slug_from_name(name)
+        # Refuse workspace slugs that collide with a Client Box id — those
+        # are reserved as Box Report identities.
+        if self._box_report_lookup(slug) is not None:
+            return self._json({
+                "ok": False,
+                "error": f"slug '{slug}' collides with a Client Box; pick a different name",
+            }, code=409)
         d = self._reports_root() / slug
         d.mkdir(parents=True, exist_ok=True)
         (d / "documents").mkdir(parents=True, exist_ok=True)
@@ -3278,6 +3343,17 @@ class Handler(SimpleHTTPRequestHandler):
         slug = (qs.get("slug") or [""])[0]
         if not self._reports_slug_ok(slug):
             return self._json({"ok": False, "error": "bad slug"}, code=400)
+        # Box Report path: synthesize on the fly from the box folder. No
+        # report.json is read or written; conversation history lives at
+        # _box_conversations/<box_id>.jsonl.
+        box = self._box_report_lookup(slug)
+        if box is not None:
+            report = self._box_report_synthesize(box)
+            if report is None:
+                return self._json({"ok": False, "error": "box folder missing"}, code=404)
+            report["conversation"] = self._box_report_read_conversation(slug)
+            return self._json({"ok": True, "report": report})
+        # Workspace path: existing behavior, unchanged.
         report, _d, err = self._reports_load(slug)
         if err:
             return self._json({"ok": False, "error": err}, code=404)
@@ -3287,6 +3363,10 @@ class Handler(SimpleHTTPRequestHandler):
     def _reports_ingest(self, slug, body):
         if not self._reports_slug_ok(slug):
             return self._json({"ok": False, "error": "bad slug"}, code=400)
+        # Box Report ingest: write into Auto/Client Boxes/<Name>/intake_drops/
+        box = self._box_report_lookup(slug)
+        if box is not None:
+            return self._box_report_ingest(box, body)
         try:
             payload = json.loads(body.decode("utf-8")) if body else {}
         except Exception as e:
@@ -3369,9 +3449,19 @@ class Handler(SimpleHTTPRequestHandler):
         if not question:
             return self._json({"ok": False, "error": "missing question"}, code=400)
 
-        report, _d, err = self._reports_load(slug)
-        if err:
-            return self._json({"ok": False, "error": err}, code=404)
+        # Box Report ask: synthesize a report on the fly. Conversation history
+        # lives at _box_conversations/<box_id>.jsonl. The ask path itself is
+        # the same generic prompt assembly as workspace reports — Phase 1 keeps
+        # the path simple; box-aware agent config is a Phase 2 concern.
+        box_report_box = self._box_report_lookup(slug)
+        if box_report_box is not None:
+            report = self._box_report_synthesize(box_report_box)
+            if report is None:
+                return self._json({"ok": False, "error": "box folder missing"}, code=404)
+        else:
+            report, _d, err = self._reports_load(slug)
+            if err:
+                return self._json({"ok": False, "error": err}, code=404)
         documents = report.get("documents") or []
 
         # Build the document corpus for the model.
@@ -3441,13 +3531,19 @@ class Handler(SimpleHTTPRequestHandler):
         if thinking_trace:     qa["thinking_trace"]  = thinking_trace
         if thinking_model:     qa["thinking_model"]  = thinking_model
 
-        self._reports_append_qa(slug, qa)
-        # Bump last_modified on the report.
-        report["last_modified"] = now
-        self._reports_save(slug, report)
+        if box_report_box is not None:
+            self._box_report_append_qa(slug, qa)
+            ask_kind = "box_report_ask"
+        else:
+            self._reports_append_qa(slug, qa)
+            # Bump last_modified on the workspace report only — box reports
+            # derive last_modified from folder mtime on every read.
+            report["last_modified"] = now
+            self._reports_save(slug, report)
+            ask_kind = "report_ask"
         self._activity_ledger_write({
             "ts": now,
-            "kind": "report_ask",
+            "kind": ask_kind,
             "actor": "ui",
             "slug": slug,
             "qa_id": qa["id"],
@@ -3461,6 +3557,13 @@ class Handler(SimpleHTTPRequestHandler):
             return self._json({"ok": False, "error": "bad slug"}, code=400)
         if not re.fullmatch(r"[A-Za-z0-9_]+", doc_id or ""):
             return self._json({"ok": False, "error": "bad doc id"}, code=400)
+        # Box Report documents are not deletable from Intake — the box owns
+        # the file. Operators manage box files from the Boxes page.
+        if self._box_report_lookup(slug) is not None:
+            return self._json({
+                "ok": False,
+                "error": "box report documents live in the box; delete from the Boxes page instead",
+            }, code=405)
         report, d, err = self._reports_load(slug)
         if err:
             return self._json({"ok": False, "error": err}, code=404)
@@ -3504,6 +3607,9 @@ class Handler(SimpleHTTPRequestHandler):
         slug = (payload.get("slug") or "").strip()
         if not self._reports_slug_ok(slug):
             return self._json({"ok": False, "error": "bad slug"}, code=400)
+        # Box reports cannot be deleted via Intake — they exist iff their box exists.
+        if self._box_report_lookup(slug) is not None:
+            return self._json({"ok": False, "error": "box reports cannot be deleted from Intake"}, code=405)
         d = self._reports_root() / slug
         if not d.exists():
             return self._json({"ok": False, "error": "not found"}, code=404)
@@ -3518,6 +3624,300 @@ class Handler(SimpleHTTPRequestHandler):
             "slug": slug,
         })
         return self._json({"ok": True})
+
+    # ════════════════════ BOX REPORTS (synthesized view) ═════════════════════
+    # A Box Report is a synthesized view over a Client Box folder
+    # (Auto/Client Boxes/<Name>/). No report.json is written into the box; the
+    # documents[] payload is rebuilt on every read. Conversation history lives
+    # at CCAgentindex/reports/_box_conversations/<box_id>.jsonl so it survives
+    # box renames/removals without polluting the workspace reports list.
+    #
+    # Identity: a Box Report's slug == the box id from /api/boxes/list (e.g.,
+    # "box_hugo_casillas" or a person_id like "hugo_casillas"). Detection is
+    # by lookup against the live boxes catalog — no synthetic prefix.
+
+    _BOX_REPORT_SKIP_DIRS = {"comms"}              # raw close.com payloads — too noisy
+    _BOX_REPORT_INCLUDE_DIRS = {"intake_drops"}    # user-uploaded files via Intake
+    _BOX_REPORT_DOC_TEXT_CAP = 200_000
+
+    def _box_report_lookup(self, slug):
+        """Return the client_box catalog row for `slug`, or None.
+        Staff boxes are intentionally excluded in Phase 1.
+        """
+        if not slug:
+            return None
+        try:
+            cat = self._boxes_catalog()
+        except Exception:
+            return None
+        for b in cat.get("boxes", []):
+            if (b.get("source_kind") or "") != "client_box":
+                continue
+            if (b.get("id") or "") == slug:
+                return b
+        return None
+
+    def _box_report_conversation_path(self, box_id):
+        return self._reports_root() / "_box_conversations" / f"{box_id}.jsonl"
+
+    def _box_report_read_conversation(self, box_id):
+        p = self._box_report_conversation_path(box_id)
+        if not p.exists(): return []
+        out = []
+        try:
+            with p.open("r", encoding="utf-8") as fh:
+                for line in fh:
+                    line = line.strip()
+                    if not line: continue
+                    try: out.append(json.loads(line))
+                    except Exception: pass
+        except Exception:
+            pass
+        return out
+
+    def _box_report_append_qa(self, box_id, qa):
+        p = self._box_report_conversation_path(box_id)
+        p.parent.mkdir(parents=True, exist_ok=True)
+        with p.open("a", encoding="utf-8") as fh:
+            fh.write(json.dumps(qa, ensure_ascii=False) + "\n")
+
+    def _box_report_iter_files(self, folder):
+        """Yield Path objects for files that should appear as documents.
+        Includes folder root + intake_drops/. Skips comms/, hidden files,
+        and anything outside the include set."""
+        if not folder.exists():
+            return
+        # Root files
+        for child in sorted(folder.iterdir(), key=lambda p: p.name.lower()):
+            if child.name.startswith("."):
+                continue
+            if child.is_file():
+                yield child
+        # Whitelisted subdirectories
+        for sub_name in sorted(self._BOX_REPORT_INCLUDE_DIRS):
+            sub = folder / sub_name
+            if not sub.exists() or not sub.is_dir():
+                continue
+            for child in sorted(sub.rglob("*"), key=lambda p: str(p).lower()):
+                if child.name.startswith("."):
+                    continue
+                if child.is_file():
+                    yield child
+
+    def _box_report_doc_id(self, folder, file_path):
+        """Stable id from the path relative to the box folder."""
+        try:
+            rel = str(file_path.relative_to(folder))
+        except ValueError:
+            rel = file_path.name
+        h = hashlib.sha1(rel.encode("utf-8")).hexdigest()[:10]
+        return f"box_doc_{h}"
+
+    def _box_report_mime_for(self, file_path):
+        ext = file_path.suffix.lower().lstrip(".")
+        # Extension → mime mapping mirroring _reports_ext_from in reverse.
+        ext_to_mime = {
+            "md": "text/markdown", "markdown": "text/markdown",
+            "txt": "text/plain", "log": "text/plain",
+            "json": "application/json", "jsonl": "application/json",
+            "csv": "text/csv", "tsv": "text/tab-separated-values",
+            "html": "text/html", "htm": "text/html",
+            "yaml": "text/plain", "yml": "text/plain",
+            "xml": "text/xml", "toml": "text/plain", "ini": "text/plain",
+            "pdf": "application/pdf",
+            "png": "image/png", "jpg": "image/jpeg", "jpeg": "image/jpeg",
+            "gif": "image/gif", "webp": "image/webp", "svg": "image/svg+xml",
+            "heic": "image/heic", "heif": "image/heif",
+            "xlsx": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            "xls":  "application/vnd.ms-excel",
+            "docx": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+            "doc":  "application/msword",
+        }
+        return ext_to_mime.get(ext, "application/octet-stream")
+
+    def _box_report_extract_text(self, file_path, mime):
+        """Cheap text extraction for synthesis. Skips OCR (would re-OCR every
+        page load) — images get a binary placeholder instead. PDFs/xlsx/docx
+        delegate to the existing extract helpers when raw bytes are loaded.
+        """
+        textish_ext = {
+            "md", "markdown", "txt", "csv", "tsv", "json", "jsonl",
+            "log", "yaml", "yml", "xml", "html", "htm", "toml", "ini", "env",
+            "js", "jsx", "ts", "tsx", "py", "rb", "go", "rs", "java", "kt",
+            "swift", "c", "cpp", "h", "hpp", "cs", "php", "sh", "sql",
+        }
+        ext = file_path.suffix.lower().lstrip(".")
+        m = (mime or "").lower()
+        try:
+            size = file_path.stat().st_size
+        except Exception:
+            size = 0
+        if m.startswith("text/") or m in ("application/json", "application/javascript", "text/javascript") or ext in textish_ext:
+            return _safe_text_read(file_path, max_chars=self._BOX_REPORT_DOC_TEXT_CAP)
+        if m.startswith("image/"):
+            return f"[image: {file_path.name}, {size} bytes] — OCR skipped during synthesis (open in Boxes for visual review)."
+        # For pdf/xlsx/docx, defer to the heavier extractor on read. This is
+        # cheap because most boxes have no such files; client boxes are mostly
+        # markdown + json.
+        try:
+            raw = file_path.read_bytes()
+        except Exception as e:
+            return f"[read failed: {e}]"
+        text, _err = self._reports_extract_text(raw, mime, file_path.name, stored_path=file_path)
+        if text and len(text) > self._BOX_REPORT_DOC_TEXT_CAP:
+            text = text[:self._BOX_REPORT_DOC_TEXT_CAP] + "\n\n[... truncated ...]"
+        return text or f"[binary: {file_path.name}, {mime}, {size} bytes]"
+
+    def _box_report_synthesize(self, box):
+        """Build a report dict from a client_box catalog row.
+        Shape matches workspace report.json so IntakeReportDetail can render
+        it unchanged. Documents are read on demand; nothing is written into
+        the box folder.
+        """
+        folder = Path(box.get("folder_abs") or "")
+        if not folder.exists():
+            return None
+        documents = []
+        newest_mtime = 0.0
+        for fp in self._box_report_iter_files(folder):
+            try:
+                stat = fp.stat()
+            except Exception:
+                continue
+            newest_mtime = max(newest_mtime, stat.st_mtime)
+            mime = self._box_report_mime_for(fp)
+            text = self._box_report_extract_text(fp, mime)
+            try:
+                rel_to_here = str(fp.relative_to(HERE))
+            except ValueError:
+                rel_to_here = str(fp)
+            try:
+                rel_to_box = str(fp.relative_to(folder))
+            except ValueError:
+                rel_to_box = fp.name
+            doc = {
+                "id":             self._box_report_doc_id(folder, fp),
+                "filename":       fp.name,
+                "mime":           mime,
+                "type":           self._reports_doc_type_from_mime(mime, fp.name),
+                "size":           int(stat.st_size),
+                "uploaded_at":    datetime.fromtimestamp(stat.st_mtime, tz=timezone.utc).isoformat().replace("+00:00", "Z"),
+                "extracted_text": text or "",
+                "summary":        (text or "")[:200].strip().replace("\n", " "),
+                "stored_path":    rel_to_here,
+                "rel_to_box":     rel_to_box,
+                "source":         "box_synthesis",
+            }
+            documents.append(doc)
+
+        last_modified = (
+            datetime.fromtimestamp(newest_mtime, tz=timezone.utc).isoformat().replace("+00:00", "Z")
+            if newest_mtime else None
+        )
+        # created_at: prefer harvested_at from box meta if present, else the
+        # folder's ctime, else last_modified.
+        meta = box.get("meta") or {}
+        harvested = meta.get("harvested_at")
+        if harvested:
+            created_at = harvested
+        else:
+            try:
+                created_at = datetime.fromtimestamp(folder.stat().st_ctime, tz=timezone.utc).isoformat().replace("+00:00", "Z")
+            except Exception:
+                created_at = last_modified
+
+        return {
+            "slug":          box.get("id"),
+            "name":          box.get("name") or box.get("folder_name") or box.get("id"),
+            "description":   None,
+            "created_at":    created_at,
+            "last_modified": last_modified,
+            "documents":     documents,
+            "source":        "box_synthesis",
+            "box": {
+                "id":           box.get("id"),
+                "kind":         box.get("kind"),
+                "source_kind":  box.get("source_kind"),
+                "folder_rel":   box.get("folder_rel"),
+                "person_id":    box.get("person_id"),
+            },
+        }
+
+    def _box_report_ingest(self, box, body):
+        """Drop a file into Auto/Client Boxes/<Name>/intake_drops/ so the next
+        synthesis pass picks it up automatically."""
+        try:
+            payload = json.loads(body.decode("utf-8")) if body else {}
+        except Exception as e:
+            return self._json({"ok": False, "error": f"bad json: {e}"}, code=400)
+        upload_path = (payload.get("upload_path") or "").strip()
+        mime        = (payload.get("mime") or "application/octet-stream").strip()
+        filename    = (payload.get("filename") or "file").strip()
+        if not upload_path:
+            return self._json({"ok": False, "error": "missing upload_path"}, code=400)
+        src = Path(upload_path)
+        if not src.exists():
+            return self._json({"ok": False, "error": f"upload not found at {upload_path}"}, code=404)
+
+        folder = Path(box.get("folder_abs") or "")
+        if not folder.exists():
+            return self._json({"ok": False, "error": "box folder missing"}, code=404)
+        drops = folder / "intake_drops"
+        try:
+            drops.mkdir(parents=True, exist_ok=True)
+        except Exception as e:
+            return self._json({"ok": False, "error": f"could not create intake_drops: {e}"}, code=500)
+
+        # Sanitize filename, then dedupe with a short suffix on collision.
+        safe_name = re.sub(r"[^A-Za-z0-9._\- ]+", "_", filename).strip() or "file"
+        target = drops / safe_name
+        if target.exists():
+            stem = target.stem
+            ext = target.suffix
+            target = drops / f"{stem}_{uuid.uuid4().hex[:6]}{ext}"
+
+        try:
+            raw = src.read_bytes()
+            target.write_bytes(raw)
+        except Exception as e:
+            return self._json({"ok": False, "error": f"write failed: {e}"}, code=500)
+
+        now = _iso_now()
+        try:
+            rel_to_here = str(target.relative_to(HERE))
+        except ValueError:
+            rel_to_here = str(target)
+        self._activity_ledger_write({
+            "ts": now,
+            "kind": "intake_drop",
+            "actor": "ui",
+            "slug": box.get("id"),
+            "target": rel_to_here,
+            "filename": safe_name,
+            "mime": mime,
+            "size": len(raw),
+        })
+        # Synthesize the new doc descriptor so the UI can render it immediately.
+        doc_mime = mime or self._box_report_mime_for(target)
+        text = self._box_report_extract_text(target, doc_mime)
+        try:
+            rel_to_box = str(target.relative_to(folder))
+        except ValueError:
+            rel_to_box = target.name
+        doc_entry = {
+            "id":             self._box_report_doc_id(folder, target),
+            "filename":       target.name,
+            "mime":           doc_mime,
+            "type":           self._reports_doc_type_from_mime(doc_mime, target.name),
+            "size":           len(raw),
+            "uploaded_at":    now,
+            "extracted_text": (text or "")[:self._BOX_REPORT_DOC_TEXT_CAP],
+            "summary":        (text or "")[:200].strip().replace("\n", " "),
+            "stored_path":    rel_to_here,
+            "rel_to_box":     rel_to_box,
+            "source":         "box_synthesis",
+        }
+        return self._json({"ok": True, "document": doc_entry})
 
     def _api_or_404(self):
         p = self._api_path()
@@ -3587,6 +3987,20 @@ class Handler(SimpleHTTPRequestHandler):
             # model and a read-only sandbox so only the selected CLI handles the turn.
             length = int(self.headers.get("Content-Length") or 0)
             return self._codex_cli_generate(self.rfile.read(length) if length else b"")
+        if p == "/api/computer_use/handoff":
+            # Local desktop bridge: copy a structured prompt and paste/send it
+            # into the already-open Codex Desktop app, where Computer Use lives.
+            length = int(self.headers.get("Content-Length") or 0)
+            return self._computer_use_handoff(self.rfile.read(length) if length else b"")
+        if p == "/api/browser_use/handoff":
+            # Background browser bridge: run a headless Playwright job and
+            # let the chat rail poll the job result without stealing focus.
+            length = int(self.headers.get("Content-Length") or 0)
+            return self._browser_use_handoff(self.rfile.read(length) if length else b"")
+        if p == "/api/browser_open/handoff":
+            # Visible browser bridge: open Chrome/browser for the operator.
+            length = int(self.headers.get("Content-Length") or 0)
+            return self._browser_open_handoff(self.rfile.read(length) if length else b"")
         if p == "/api/chat/send":
             # Multi-turn chat. Client sends full transcript each turn; we
             # relay to the active provider. Server is a pure relay — all
@@ -4408,6 +4822,277 @@ class Handler(SimpleHTTPRequestHandler):
                 "stderr": stderr[-2000:] if stderr else "",
             }, code=502 if "exit" in err else 504 if "timeout" in err else 500)
         return self._json({"ok": True, "output_text": text.strip()})
+
+    def _computer_use_handoff_prompt(self, payload):
+        text = (payload.get("text") or payload.get("message") or "").strip()
+        context = payload.get("context") or {}
+        source = payload.get("source") or {}
+        attachments = payload.get("attachments") or []
+        lines = [
+            "CCAgent computer use handoff",
+            "",
+            "Source: Comeketo Agent local app",
+            f"Route: {source.get('route') or context.get('route') or 'grid'}",
+            f"Surface: {source.get('surface') or context.get('surface') or 'chat_rail'}",
+            "",
+            "Request:",
+            text,
+        ]
+        if attachments:
+            lines += ["", "Attachments visible in Comeketo Agent draft:"]
+            for item in attachments[:12]:
+                name = item.get("original_filename") or item.get("filename") or "attachment"
+                path = item.get("path") or item.get("url") or ""
+                lines.append(f"- {name}{(' - ' + path) if path else ''}")
+        lines += [
+            "",
+            "Use Computer Use when it helps. Work from the currently open desktop/browser state, then report the result back here.",
+        ]
+        return "\n".join(lines).strip() + "\n"
+
+    def _computer_use_handoff(self, body):
+        try:
+            payload = json.loads(body.decode("utf-8")) if body else {}
+        except Exception as e:
+            return self._json({"ok": False, "error": f"bad json: {e}"}, code=400)
+        text = (payload.get("text") or payload.get("message") or "").strip()
+        if not text:
+            return self._json({"ok": False, "error": "missing text"}, code=400)
+
+        prompt = self._computer_use_handoff_prompt(payload)
+        if payload.get("dry_run"):
+            return self._json({"ok": True, "dry_run": True, "prompt": prompt})
+
+        if sys.platform != "darwin":
+            return self._json({"ok": False, "error": "computer use handoff is macOS-only"}, code=409)
+        if not shutil.which("pbcopy") or not shutil.which("osascript"):
+            return self._json({"ok": False, "error": "pbcopy or osascript unavailable"}, code=503)
+
+        try:
+            subprocess.run(["pbcopy"], input=prompt, text=True, check=True, timeout=3)
+            script = [
+                'try',
+                '  tell application id "com.openai.codex" to activate',
+                'on error',
+                '  tell application "Codex" to activate',
+                'end try',
+                'delay 0.25',
+                'tell application "System Events"',
+                '  keystroke "v" using command down',
+                '  delay 0.12',
+                '  key code 36',
+                'end tell',
+            ]
+            proc = subprocess.run(
+                ["osascript"] + sum([["-e", line] for line in script], []),
+                capture_output=True, text=True, timeout=8,
+            )
+            if proc.returncode != 0:
+                detail = ((proc.stderr or "") + "\n" + (proc.stdout or "")).strip()
+                return self._json({
+                    "ok": False,
+                    "error": "desktop handoff failed",
+                    "detail": detail[-2000:],
+                    "hint": "Open Codex Desktop and allow Accessibility automation for the app running server.py.",
+                }, code=502)
+
+            now = _iso_now()
+            self._activity_ledger_write({
+                "ts": now,
+                "kind": "computer_use_handoff",
+                "actor": "ui",
+                "action": "paste_and_send_to_codex_desktop",
+                "target": "Codex Desktop",
+                "notes": text[:220],
+            })
+            return self._json({"ok": True, "sent": True, "ts": now})
+        except subprocess.TimeoutExpired:
+            return self._json({"ok": False, "error": "desktop handoff timed out"}, code=504)
+        except Exception as e:
+            return self._json({"ok": False, "error": f"{type(e).__name__}: {e}"}, code=500)
+
+    def _browser_use_jobs_dir(self):
+        return HERE / "CCAgentindex" / "_ledger" / "browser_use_jobs"
+
+    def _browser_use_job_path(self, job_id):
+        safe = re.sub(r"[^A-Za-z0-9_-]", "", str(job_id or ""))[:80]
+        if not safe:
+            return None
+        return self._browser_use_jobs_dir() / f"{safe}.json"
+
+    def _browser_use_job_write(self, job):
+        path = self._browser_use_job_path(job.get("job_id"))
+        if not path:
+            return
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(json.dumps(job, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+
+    def _browser_use_job_read(self, job_id):
+        path = self._browser_use_job_path(job_id)
+        if not path or not path.exists():
+            return None
+        try:
+            return json.loads(path.read_text(encoding="utf-8"))
+        except Exception:
+            return None
+
+    def _browser_use_job_get(self, job_id):
+        job = self._browser_use_job_read(job_id)
+        if not job:
+            return self._json({"ok": False, "error": "browser use job not found"}, code=404)
+        return self._json({"ok": True, "job": job})
+
+    def _browser_pick_target_url(self, text):
+        raw = str(text or "")
+        m = re.search(r"https?://[^\s)]+", raw, flags=re.I)
+        if m:
+            return m.group(0)
+        lower = raw.lower()
+        if re.search(r"\bai news\b", raw, flags=re.I):
+            query = "AI news"
+        else:
+            query = re.sub(
+                r"\b(open up|open|go to|search|look up|find|show me|let'?s see what'?s new in|let us see what is new in|what'?s new in|what is new in)\b",
+                " ",
+                raw,
+                flags=re.I,
+            )
+            query = re.sub(r"\bgoogle chrome\b", " ", query, flags=re.I)
+            query = re.sub(r"\byoutube\b", " ", query, flags=re.I)
+            query = re.sub(r"\s+", " ", query).strip() or "AI news"
+        if "youtube" in lower or "video" in lower:
+            return "https://www.youtube.com/results?search_query=" + urllib.parse.quote_plus(query) + "&sp=CAI%253D"
+        return "https://www.google.com/search?q=" + urllib.parse.quote_plus(query)
+
+    def _browser_open_handoff(self, body):
+        try:
+            payload = json.loads(body.decode("utf-8")) if body else {}
+        except Exception as e:
+            return self._json({"ok": False, "error": f"bad json: {e}"}, code=400)
+        text = (payload.get("text") or payload.get("message") or "").strip()
+        if not text:
+            return self._json({"ok": False, "error": "missing text"}, code=400)
+        url = self._browser_pick_target_url(text)
+        if payload.get("dry_run"):
+            return self._json({"ok": True, "dry_run": True, "url": url})
+        try:
+            if sys.platform == "darwin":
+                proc = subprocess.run(["open", "-a", "Google Chrome", url], capture_output=True, text=True, timeout=8)
+                if proc.returncode != 0:
+                    proc = subprocess.run(["open", url], capture_output=True, text=True, timeout=8)
+            else:
+                opener = shutil.which("xdg-open")
+                if not opener:
+                    return self._json({"ok": False, "error": "no browser opener available"}, code=503)
+                proc = subprocess.run([opener, url], capture_output=True, text=True, timeout=8)
+            if proc.returncode != 0:
+                detail = ((proc.stderr or "") + "\n" + (proc.stdout or "")).strip()
+                return self._json({"ok": False, "error": "open browser failed", "detail": detail[-1200:]}, code=502)
+            now = _iso_now()
+            self._activity_ledger_write({
+                "ts": now,
+                "kind": "browser_open_handoff",
+                "actor": "ui",
+                "action": "open_visible_browser",
+                "target": url,
+                "notes": text[:220],
+            })
+            return self._json({"ok": True, "url": url, "ts": now})
+        except subprocess.TimeoutExpired:
+            return self._json({"ok": False, "error": "open browser timed out"}, code=504)
+        except Exception as e:
+            return self._json({"ok": False, "error": f"{type(e).__name__}: {e}"}, code=500)
+
+    def _browser_use_handoff(self, body):
+        try:
+            payload = json.loads(body.decode("utf-8")) if body else {}
+        except Exception as e:
+            return self._json({"ok": False, "error": f"bad json: {e}"}, code=400)
+        text = (payload.get("text") or payload.get("message") or "").strip()
+        if not text:
+            return self._json({"ok": False, "error": "missing text"}, code=400)
+        if not shutil.which("node"):
+            return self._json({"ok": False, "error": "node unavailable"}, code=503)
+
+        job_id = "bu_" + uuid.uuid4().hex[:10]
+        now = _iso_now()
+        job = {
+            "ok": True,
+            "job_id": job_id,
+            "status": "running",
+            "created_at": now,
+            "updated_at": now,
+            "text": text,
+            "source": payload.get("source") or {},
+            "result": None,
+            "error": None,
+        }
+        self._browser_use_job_write(job)
+        threading.Thread(
+            target=self._browser_use_worker,
+            args=(job_id, payload),
+            name=f"browser-use-{job_id}",
+            daemon=True,
+        ).start()
+        return self._json({"ok": True, "job": job})
+
+    def _browser_use_worker(self, job_id, payload):
+        job = self._browser_use_job_read(job_id) or {"job_id": job_id, "status": "running"}
+        text = (payload.get("text") or payload.get("message") or "").strip()
+        script_path = HERE / "scripts" / "browser_use_worker.js"
+        screenshot_rel = Path("output") / "playwright" / f"{job_id}.png"
+        settings = payload.get("settings") or {}
+        screenshot_path = HERE / screenshot_rel if settings.get("screenshots", True) is not False else None
+        env_payload = {
+            "text": text,
+            "source": payload.get("source") or {},
+            "context": payload.get("context") or {},
+            "settings": settings,
+            "screenshot_path": str(screenshot_path) if screenshot_path else "",
+        }
+        try:
+            proc = subprocess.run(
+                ["node", str(script_path)],
+                input="",
+                capture_output=True,
+                text=True,
+                timeout=int(payload.get("timeout") or 75),
+                env={**os.environ, "BROWSER_USE_PAYLOAD": json.dumps(env_payload, ensure_ascii=False)},
+                cwd=str(HERE),
+            )
+            now = _iso_now()
+            if proc.returncode != 0:
+                job.update({
+                    "status": "failed",
+                    "updated_at": now,
+                    "error": ((proc.stderr or "") + "\n" + (proc.stdout or "")).strip()[-3000:],
+                })
+            else:
+                out = (proc.stdout or "").strip().splitlines()[-1] if (proc.stdout or "").strip() else "{}"
+                result = json.loads(out)
+                if screenshot_path:
+                    result["screenshot_url"] = "/" + str(screenshot_rel).replace("\\", "/")
+                job.update({
+                    "status": "done",
+                    "updated_at": now,
+                    "result": result,
+                    "error": None,
+                })
+                self._activity_ledger_write({
+                    "ts": now,
+                    "kind": "browser_use_handoff",
+                    "actor": "ui",
+                    "action": "run_headless_playwright",
+                    "target": result.get("url") or "browser",
+                    "notes": text[:220],
+                })
+            self._browser_use_job_write(job)
+        except subprocess.TimeoutExpired:
+            job.update({"status": "failed", "updated_at": _iso_now(), "error": "browser use timed out"})
+            self._browser_use_job_write(job)
+        except Exception as e:
+            job.update({"status": "failed", "updated_at": _iso_now(), "error": f"{type(e).__name__}: {e}"})
+            self._browser_use_job_write(job)
 
     # ────── Delegation: Claude Code as a subprocess ─────────────────────
     # Comeketo Agent dispatches a prompt; we spawn `claude -p` in a background

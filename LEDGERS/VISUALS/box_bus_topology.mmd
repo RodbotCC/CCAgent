@@ -1,0 +1,62 @@
+%% Box Bus Ledger — Reactive Box Network topology
+%% Three tiers (Global / Domain / Local). Trickle-down direction. Subscribe + Emit edges.
+%% Schema-only at this point. Runtime deferred to Phase C per DEC-2026-04-29-013.
+
+flowchart TB
+
+  subgraph GLOBAL ["GLOBAL TIER<br/>(fans out to every box w/ subscribes: global)"]
+    direction LR
+    GL[Global Ledger]
+    TCL[Temporal Continuity]
+    NS[North Star]
+    DEC[Decisions]
+    OP[Open Problems]
+    COMM[Communications]
+    DOD[Definition of Done]
+    BOXL[Box Ledger]
+    BBL[Box Bus Ledger<br/>· this file ·]
+    FDL[File Directory]
+    SOT[Source-of-Truth<br/>· planned ·]
+  end
+
+  subgraph DOMAIN ["DOMAIN TIER<br/>(fans out within a domain only)"]
+    direction LR
+    SITEMAP[Page-Asset Sitemap]
+    CONN[Connections<br/>· planned ·]
+    PHASE[Phase<br/>· planned ·]
+    ANA[ANALYTICS_&lt;name&gt;<br/>· planned per snapshot ·]
+    GUARD[Inbox Guardrails<br/>· planned ·]
+  end
+
+  subgraph LOCAL ["LOCAL TIER<br/>(stays in the box; emits up only via declared escalation)"]
+    direction LR
+    HUGO[Hugo Box<br/>client_ledger.md]
+    BRENDA[Brenda & Steve Box<br/>client_ledger.md]
+    SC[Source Channels<br/>Snapshot Box<br/>run_log.jsonl]
+    LR_BOX[... 28 Client Boxes ...]
+  end
+
+  %% trickle-down (always allowed, default fan-out)
+  GLOBAL ==>|subscribe / fan-out| DOMAIN
+  GLOBAL ==>|subscribe / fan-out| LOCAL
+  DOMAIN ==>|subscribe / fan-out| LOCAL
+
+  %% upward emission (only via declared escalation in box.json emits[])
+  LOCAL -.->|escalate via emits[]| DOMAIN
+  LOCAL -.->|escalate via emits[]| GLOBAL
+  DOMAIN -.->|escalate via emits[]| GLOBAL
+
+  %% example: analytics snapshot fan-out
+  SC -. emits per_lead_template_emitted .-> HUGO
+  SC -. emits per_lead_template_emitted .-> BRENDA
+  SC -. emits per_lead_template_emitted .-> LR_BOX
+
+  classDef globalT fill:#dcefff,stroke:#2a5a8a,stroke-width:2px;
+  classDef domainT fill:#fff7d6,stroke:#b08a00,stroke-width:2px;
+  classDef localT fill:#dcffd6,stroke:#2a8a2a,stroke-width:2px;
+  classDef self fill:#ffe9b5,stroke:#a36a00,stroke-width:3px;
+
+  class GL,TCL,NS,DEC,OP,COMM,DOD,BOXL,FDL,SOT globalT;
+  class SITEMAP,CONN,PHASE,ANA,GUARD domainT;
+  class HUGO,BRENDA,SC,LR_BOX localT;
+  class BBL self;

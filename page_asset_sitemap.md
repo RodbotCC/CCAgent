@@ -57,7 +57,7 @@ Source: `app.jsx` (`KNOWN_SCREENS` and route switch)
   - AI status banner
   - **IdeasTray** (left column — 4–5 briefing-sourced ideas, click-to-discuss → chat)
   - **QuickCapture** (compact "drop an idea" widget below IdeasTray, ⌘/Ctrl+Enter → inbox; optional voice via Web Speech API)
-  - **ChatRail** (right pane — uplifted with attachments, dropzone, animated thinking trace, **+ connector quick-tag row** for Slack/GitHub/Close/ClickUp routing)
+  - **ChatRail** (right pane — uplifted with attachments, dropzone, animated thinking trace, **+ connector quick-tag row** for Slack/GitHub/Close/ClickUp routing, `computer use` desktop handoff, `browser use` background Playwright jobs, and `open browser` visible Chrome handoff)
 - Asset Ownership:
   - Grid cards + frame: render in `components.jsx` (`Grid`, `FrontPage`), routed in `app.jsx`.
   - Grid content data: `window.SECRETARY_DATA.grids`, `gridHistory` in localStorage (`secretary.gridHistory`), `window.SecretaryActions.generateGrid/refineCell/regenerateFromSweep/regenerateFromFrameReject`.
@@ -67,18 +67,23 @@ Source: `app.jsx` (`KNOWN_SCREENS` and route switch)
   - **IdeasTray** (`components.jsx` `IdeasTray` + `BriefingIdea`): pulls 4–5 talking points from `window.MissionControl.dailyBriefing.body`. Two-phase load: regex-extracted bullets paint instantly via `extractBriefingIdeas`; `curateBriefingIdeasViaAI` then calls `window.SecretaryAI.ask` for AI-curated short titles. AI result cached in localStorage as `comeketo.briefingIdeas.<slug>`. Click sends `Let's talk about: {title}` into the chat rail.
   - **QuickCapture** (`components.jsx` `QuickCapture`): minimal sticky-note widget that mirrors the chat composer's structure (header bar with controls, hairline divider, input area). On submit calls `window.SecretaryInbox.append({kind:"note", text, source:{screen:"home", widget:"quick_capture"}})`. Optional voice input uses `window.SpeechRecognition || window.webkitSpeechRecognition` and is hidden when unsupported.
   - Styles: `styles.css` grid classes (`grid-stage`, `cell`, `grid-head`, chips/buttons), plus `ideas-tray-*` + `briefing-idea` (left column), `quick-capture` + `qc-*` (capture widget), and the `front-viewport.ideas-mode` overrides that fix chat composer cutoff at 100% zoom.
-  - Side effects: ledger/memory logs via `window.SecretaryLedger` and `window.SecretaryMemory`; cell retire endpoint writes server ledgers; QuickCapture writes to `CCAgentindex/_inbox/inbox.jsonl` via `SecretaryInbox.append`.
+  - Side effects: ledger/memory logs via `window.SecretaryLedger` and `window.SecretaryMemory`; cell retire endpoint writes server ledgers; QuickCapture writes to `CCAgentindex/_inbox/inbox.jsonl` via `SecretaryInbox.append`; ChatRail `computer use` calls `/api/computer_use/handoff` to paste/send the composer draft into the open Codex Desktop app via local macOS automation and append a `computer_use_handoff` activity event; ChatRail `browser use` calls `/api/browser_use/handoff`, polls `/api/browser_use/jobs/<id>`, writes job receipts under `CCAgentindex/_ledger/browser_use_jobs/`, screenshots under `output/playwright/`, and appends `browser_use_handoff` on successful completion; ChatRail `open browser` calls `/api/browser_open/handoff` to open the inferred URL/search in visible Chrome and append `browser_open_handoff`.
 - Change Checklist:
   - `app.jsx`
   - `components.jsx` (FrontPage, ChatRail, IdeasTray, BriefingIdea, QuickCapture, extractBriefingIdeas, curateBriefingIdeasViaAI, readCachedIdeas/writeCachedIdeas)
   - `styles.css` (grid classes + ideas-tray + briefing-idea + quick-capture + front-viewport.ideas-mode height/min-height/sticky overrides)
   - `inbox.js` (SecretaryInbox.append — QuickCapture writes go through here)
   - `mission_control_loader.js` (briefing payload — IdeasTray reads `MissionControl.dailyBriefing`; Pieces fetches gated 2026-04-28)
-  - `server.py` (`/api/cells/*`, `/api/claude_code/generate`, `/api/grid_affinity` if behavior changed; `/api/inbox/append` for QuickCapture writes)
+  - `server.py` (`/api/cells/*`, `/api/claude_code/generate`, `/api/computer_use/handoff`, `/api/browser_use/handoff`, `/api/browser_use/jobs/<id>`, `/api/browser_open/handoff`, `/api/grid_affinity` if behavior changed; `/api/inbox/append` for QuickCapture writes)
   - `ai_instructions.js` (chat prompt assembler — `piecesBlock()` returns null 2026-04-28)
   - `Secretary.html` (cache-busters)
-- Last Verified: 2026-04-28
+- Last Verified: 2026-04-30
 - History:
+  - 2026-04-30 computer-use bridge: added a `computer use` pill to the ChatRail route row. It sends the current composer draft to `/api/computer_use/handoff`, which copies a structured handoff prompt to the macOS clipboard, activates Codex Desktop, pastes, and presses Return. Successful handoffs append `computer_use_handoff` to `CCAgentindex/_ledger/activity.jsonl`. Cache-bust: `components.jsx` 64→65.
+  - 2026-04-30 route row polish: changed Slack/GitHub/Close/ClickUp quick-tags from small circular icon buttons to the same labeled pill treatment as `computer use` and `browser use`. Handoff confirmations now render as neutral tool bubbles instead of red system bubbles, include the exact prompt sent, and skip the assistant-turn delegation footnote. Cache-bust: `components.jsx` 66→67.
+  - 2026-04-30 tool panel + pill polish: route pills now share identical idle/active border logic, and browser/computer/open-browser receipts render as markdown tool cards with quoted prompts and compact labeled links instead of raw URL spillover. Cache-bust: `components.jsx` 68→69.
+  - 2026-04-30 visible browser split: kept `browser use` as the quiet/headless reporter and added `open browser` as the visible Chrome handoff for watch/read flows. `browser use` now reads Settings defaults for result count, detail, link inclusion, and screenshots. Cache-bust: `components.jsx` 67→68.
+  - 2026-04-30 browser-use bridge: added a sibling `browser use` pill to the ChatRail route row. It starts a headless Playwright worker through `/api/browser_use/handoff`, polls `/api/browser_use/jobs/<id>`, and posts the result summary back into the chat rail without focusing Codex Desktop or stealing the user's screen. Worker script lives at `scripts/browser_use_worker.js`; screenshots land in `output/playwright/`. Cache-bust: `components.jsx` 65→66.
   - 2026-04-28 chat context cleanup + connector quick-tags: (a) Removed Pieces from chat context window — `piecesBlock()` in `ai_instructions.js` returns null; `primePiecesFromLedger()` and `sweepPieces()` in `mission_control_loader.js` no-op. Pieces UI on Activity page untouched. Saves chat context budget; chat now grounds entirely in CCAgentindex bedrock (which now includes the 6 Auto/ symlinks made earlier today: Boxes, Client Boxes, comeketo-inbox, Onboard Scripts, orchestrator, Staff Boxes). (b) Added connector quick-tag row above ChatRail input on FrontPage. Four round icon buttons: Slack (`slack`), GitHub (`git-branch`), Close (`target`), ClickUp (`clipboard-list`). Click toggles `@<connector>` tag in/out of draft; active tags show with filled background. Phase 1 = visual + intent-tagging. Phase 2 (deferred): wire to MCP server for actual sends. Cache-busts: `mission_control_loader.js` 9→10, `ai_instructions.js` 11→12, `components.jsx` 63→64.
   - 2026-04-25 initial mapping.
   - 2026-04-25 IdeasTray rewrite: replaced the dense ChoiceBlock cards (kind eyebrow + chip + serif headline + subtitle + refine button) with quiet `BriefingIdea` rows (7px accent dot + sans-serif title only, max 5 items). Source moved from grid.cells/chat-extracted bullets to the daily briefing markdown via `extractBriefingIdeas` (regex fast path) and `curateBriefingIdeasViaAI` (AI-curated short titles, cached in localStorage by briefing slug). Click sends "Let's talk about: {title}" to chat. Removed the auto-extract-bullets-from-chat-replies effect that was creating noise. Sweep button forces a fresh AI curation pass.
@@ -161,19 +166,21 @@ Source: `app.jsx` (`KNOWN_SCREENS` and route switch)
   - Theme/density/language toggles
   - AI provider/key/model controls
   - Demo mode and chat enhancement toggles
+  - Browser use defaults (headless result count, detail level, link inclusion, screenshot capture)
   - Pieces model selector
   - MCP server / delegation target status registry (GitHub, ClickUp, Close, Claude Code, Codex CLI, Cursor)
   - Credential editor for MCP/connector keys (masked save/clear flow to `.env`)
 - Asset Ownership:
   - Render: `screens.jsx` `SettingsScreen`, `IntelligencePanel`.
   - Data: `tweaks` state in `app.jsx` persisted to localStorage `secretary.tweaks`.
-  - API: `GET /api/status`, `POST /api/claude_code/generate`, `POST /api/codex_cli/generate`, `GET /api/settings/mcp_credentials`, `POST /api/settings/mcp_credentials/save`.
+  - API: `GET /api/status`, `POST /api/claude_code/generate`, `POST /api/codex_cli/generate`, `POST /api/browser_use/handoff`, `POST /api/browser_open/handoff`, `GET /api/settings/mcp_credentials`, `POST /api/settings/mcp_credentials/save`.
   - Integrations: `window.SecretaryAI`, `window.Comeketoi18n`.
   - Styles: settings classes in `styles.css`.
   - Side effects: writes localStorage values; no direct destructive server write from toggles.
-- Change Checklist: `app.jsx`, `screens.jsx`, `server.py` (`/api/status`, `/api/claude_code/generate`, `/api/codex_cli/generate`, `/api/chat/send` provider routing), `ai.js`, `chat.js`, `i18n.js`, `styles.css`, `Secretary.html` cache-busters.
-- Last Verified: 2026-04-28
+- Change Checklist: `app.jsx`, `screens.jsx`, `server.py` (`/api/status`, `/api/claude_code/generate`, `/api/codex_cli/generate`, `/api/chat/send` provider routing, browser-use handoff endpoints), `ai.js`, `chat.js`, `i18n.js`, `styles.css`, `Secretary.html` cache-busters.
+- Last Verified: 2026-04-30
 - History:
+  - 2026-04-30 browser-use settings: added a Browser use section with localStorage-backed defaults for headless result count, detail level, return-links toggle, and screenshot capture. These settings feed the ChatRail `browser use` worker; `open browser` remains a visible Chrome handoff. Cache-bust: `screens.jsx` 95→96.
   - 2026-04-28 Codex CLI provider: added `codex_cli` as a third Intelligence provider beside Claude Code and OpenAI. Settings now shows a three-way selector and a selected-CLI binary row; choosing Codex uses local `codex exec` with the selected GPT model and read-only sandbox, while choosing Claude uses local `claude -p`. The single `tweaks.aiProvider` value makes the routes mutually exclusive: only the selected provider receives chat/test/generate prompts. `/api/status` now reports `codex_cli_available` + `codex_cli_path`; `/api/codex_cli/generate` was added; `/api/chat/send` accepts `provider:"codex_cli"` and `chat.js` forwards the selected model. Cache-busts: `ai.js` 5→6, `chat.js` 9→10, `screens.jsx` 93→94, `app.jsx` 51→52.
   - 2026-04-25 initial mapping.
   - 2026-04-25 great trim: stripped density/frames/gestures/prediction/auto-commit/memory rows from `SettingsScreen` + `TweaksPanel`. Remaining knobs: theme, demo mode, language, intelligence panel (api key + provider + model), prompt-enhance, pieces model, reset.
@@ -297,23 +304,29 @@ Source: `app.jsx` (`KNOWN_SCREENS` and route switch)
 
 ## Page: `intake`
 
-- Entry Points: topbar intake chip.
+- Entry Points: topbar intake chip; "Open as Intake Report →" right-click action on a Client Box card in the Boxes page (passes `openSlug` route param).
 - Primary Screen Component: `IntakeScreen` in `screens.jsx` (`IntakeReportsList`/`IntakeReportDetail`).
 - Assets On Page:
-  - Reports list with create modal
+  - Reports list — split into **Box Reports** (auto, one per Client Box) and **Workspaces** (manual smorgasbord)
+  - Create modal (Workspaces only — Box Reports are auto-derived from their boxes)
   - Report detail dropzone and document cards
   - Report Q&A panel
+  - Box-Report-only header pill: "open in boxes →" handoff to the Boxes page
 - Asset Ownership:
-  - Render: `screens.jsx` intake components.
+  - Render: `screens.jsx` intake components (`IntakeScreen`, `IntakeReportsList`, `IntakeReportDetail`, `IntakeDocumentCard`).
+  - Router/nav: `app.jsx` passes `openSlug` route param into `IntakeScreen`.
   - API:
-    - list/create/delete/get reports: `/api/reports/list|create|delete|get`
-    - ingest flow: `/api/attachments/upload`, `/api/reports/<slug>/ingest`
-    - ask flow: `/api/reports/<slug>/ask`
-    - document delete: `/api/reports/<slug>/documents/<id>/delete`
+    - list (Workspaces + Box Reports): `/api/reports/list` returns `{items, box_reports}`
+    - create (Workspaces only): `/api/reports/create` (refuses slugs that collide with Client Box ids)
+    - delete (Workspaces only): `/api/reports/delete` (Box Reports return 405 — they exist iff their box exists)
+    - get: `/api/reports/get?slug=<slug>` — synthesizes from `Auto/Client Boxes/<Name>/` when slug matches a client_box id, else loads workspace `report.json`
+    - ingest: `/api/attachments/upload` then `/api/reports/<slug>/ingest` — Box-Report ingests write into `Auto/Client Boxes/<Name>/intake_drops/<file>`
+    - ask: `/api/reports/<slug>/ask` — generic ask path for both kinds (box-aware agent config is deferred to Phase 2)
+    - document delete: `/api/reports/<slug>/documents/<id>/delete` — workspace only; Box-Report docs return 405 with guidance
   - Styles: `ix-*` classes in `styles.css`.
-  - Side effects: report/document persistence and Q&A history updates.
-- Change Checklist: `screens.jsx`, `chat.js` attachment helpers (if shared), `server.py` (`/api/reports/*`, `/api/attachments/upload`), `styles.css`, `Secretary.html` (cache-bust when JS/CSS changes).
-- Last Verified: 2026-04-27
+  - Side effects: workspace report/document persistence + Q&A history (workspaces); for Box Reports, file drops land in the box folder and conversation history is written to `CCAgentindex/reports/_box_conversations/<box_id>.jsonl`. Box Reports are read-on-demand — no `report.json` is written into Client Boxes.
+- Change Checklist: `screens.jsx`, `app.jsx` (route param wiring), `server.py` (`/api/reports/*`, `_box_report_*` helpers), `styles.css`, `Secretary.html` (cache-bust when JS/CSS changes), `LEDGERS/DECISIONS_LEDGER.*`, `LEDGERS/GLOBAL_LEDGER.md` §12 if architecture shifts.
+- Last Verified: 2026-04-29
 - History:
   - 2026-04-25 initial mapping.
   - 2026-04-25 great trim: removed `onAddCommitment` prop and any commitment-creation code paths; main intake import flow intact.
@@ -321,6 +334,7 @@ Source: `app.jsx` (`KNOWN_SCREENS` and route switch)
   - 2026-04-27 right-click polish pass: added context menus across intake surfaces using shared `useContextMenu`/`ContextMenu` primitives. `IntakeReportsList` cards now expose open/copy/delete actions; `IntakeReportDetail` document cards now expose ask-from-doc/open-source/copy/remove actions; Q&A entries now expose re-ask/copy actions. Cache-bust: `screens.jsx` 72→73 in `Secretary.html`.
   - 2026-04-27 delegations handoff wiring: intake right-click menus now include `Send ... to delegations` actions for report documents and Q&A turns, creating editable delegation drafts before execution. Cache-bust: `screens.jsx` 75→76.
   - 2026-04-27 preprocess model sync: report Q&A preprocessor (`/api/chat/preprocess`) now receives the selected Settings model and carries that model through thinking-trace metadata, removing hardcoded mini defaults in intake ask flow. Cache-bust: `screens.jsx` 92→93.
+  - 2026-04-29 Phase 1 Intake → Box unification: every Client Box is now addressable from Intake as a Box Report. Reports list splits into Box Reports (top, auto, 28 entries) and Workspaces (below, manual). Box Reports are synthesized on every read from `Auto/Client Boxes/<Name>/` — no `report.json` written into the box, no drift surface. Slug = box id (e.g., `hugo_casillas`). The `client_box__hugo_casillas` style prefix from the draft was dropped in favor of the existing box-id directly because all client-box ids are already unique within the catalog. Ingest into a Box Report writes to `Auto/Client Boxes/<Name>/intake_drops/<file>`. Conversation history lives at `CCAgentindex/reports/_box_conversations/<box_id>.jsonl`. The ask path is unchanged generic — box-aware agent-config plumbing is deferred to Phase 2 (per the plan in `LEDGERS/Drafts/intake_box_unification_plan.md`). Server changes: new `_box_report_lookup`, `_box_report_synthesize`, `_box_report_ingest`, `_box_report_*_conversation` helpers in `server.py`; branches in `_reports_get`/`_reports_ask`/`_reports_ingest`/`_reports_doc_delete`/`_reports_create`/`_reports_delete`. Frontend changes: `IntakeReportsList` renders two sections; `IntakeReportDetail` shows "box report" eyebrow, "open in boxes →" handoff, and disables delete X on synthesized doc cards; `IntakeScreen` honors `openSlug` route param. Cross-nav: Boxes-page right-click on a Client Box now exposes "Open as Intake Report →" which navigates to `intake` with `openSlug=<box_id>`. Cache-busts: `screens.jsx` 94→95, `app.jsx` 52→53.
 
 ## Page: `delegations`
 
@@ -390,8 +404,9 @@ Source: `app.jsx` (`KNOWN_SCREENS` and route switch)
   - Styles: `.boxes-*` classes in `styles.css` plus existing `ix-*` primitives.
   - Side effects: read-only filesystem discovery of `Auto` directory; optional delegation draft creation via `sendToDelegationsDraft` from box menu actions.
 - Change Checklist: `server.py`, `mission_control_loader.js`, `app.jsx`, `components.jsx`, `screens.jsx`, `styles.css`, `Secretary.html`, `page_asset_sitemap.md`.
-- Last Verified: 2026-04-28
+- Last Verified: 2026-04-29
 - History:
+  - 2026-04-29 Intake handoff + selectId honoring: Boxes page right-click on a Client Box exposes "Open as Intake Report →" (navigates to `intake` with `openSlug=<box_id>`). `BoxesScreen` now accepts a `selectId` prop (wired through `app.jsx` from `route.selectId`) so the reverse handoff from Intake's "open in boxes →" button lands directly on the chosen box. Symmetric to the Intake-page changes from the same Phase 1 pass. Cache-busts: `screens.jsx` 94→95, `app.jsx` 52→53.
   - 2026-04-28 verbatim comms backfill: pulled full Close.com conversation history for all 28 client boxes via direct `api.close.com/api/v1` access (calls with `recording_transcript`/`voicemail_transcript`, meetings with `transcripts`, emails with `body_text`/`body_html`, sms, whatsapp, email_threads). Per-box outputs: `01b_comms_verbatim.md` (chronological narrative, ~10–62KB per lead) and `comms/<type>_<YYYY-MM-DD>_<id>.json` raw payloads (8–43 files per lead). Existing `01_comms.md` summaries left untouched. Closes the gap where André's call content was previously summary-only — speaker-labeled transcripts now ground every assertion. Pull script lives at `outputs/pull_full_comms.py` (one-shot; not yet promoted into the bedrock). Total: 582 raw activity payloads pulled across 28 leads; 0 boxes missing.
   - 2026-04-27 initial boxes runtime pass: introduced direct Auto-source APIs and a new top-level Boxes page. Server now parses canonical stage files (`00_meta`, `01_comms`, `04_profile`, `05_seven_day_plan`, optional logic/skills/alerts/ledger), resolves html demos (orchestrator + per-box), and reports mismatch diagnostics. Frontend adds topbar route, MissionControl boxes hydration, right-click actions, and live preview iframe. Cache-busts: `styles` 80→81, `mission_control_loader` 8→9, `components` 62→63, `screens` 81→82, `app` 50→51.
   - 2026-04-27 boxes layout simplification pass: removed the separate html side panel and merged navigation/content into one main panel. Added page-card launcher mode (`pages`) so html files open in-panel as native pages, with quick back-to-cards flow and no extra split panes. Cache-busts: `styles` 81→82, `screens` 82→83.

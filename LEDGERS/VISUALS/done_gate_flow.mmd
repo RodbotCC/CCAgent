@@ -1,0 +1,41 @@
+%% Definition of Done — Universal Done Gate flow
+%% Read in concert with LEDGERS/DEFINITION_OF_DONE.md §4 + §5.
+%% Any "no" in this flow means the work is not yet done — even if the code changed.
+
+flowchart TD
+  Start([Meaningful change made]) --> Source{Correct source<br/>of truth changed?}
+  Source -->|No| FixSource[Edit canonical source<br/>not generated surface]
+  FixSource --> Source
+  Source -->|Yes| Guard{Guardrails &<br/>source-of-truth<br/>rules checked?}
+
+  Guard -->|No| ApplyGuard[Re-check Guardrails.html /<br/>comeketo-inbox skill /<br/>Global §4 rules]
+  ApplyGuard --> Guard
+  Guard -->|Yes| Verify{Verification run<br/>or honestly explained?}
+
+  Verify -->|No| Explain[Run a check OR record<br/>'not verified because…'<br/>in Open Problems]
+  Explain --> Verify
+  Verify -->|Yes| Memory{Affected ledgers / maps /<br/>Box notes updated?}
+
+  Memory -->|No| UpdateLedger[Update relevant ledger<br/>per §6 Update Matrix]
+  UpdateLedger --> Memory
+  Memory -->|Yes| Open{Open problems<br/>recorded?}
+
+  Open -->|Yes / new found| RecordProblem[Append PROB-YYYY-MM-DD-###<br/>to Open Problems Ledger]
+  RecordProblem --> Handoff
+  Open -->|None / already logged| Handoff{Handoff context<br/>left in repo?}
+
+  Handoff -->|No| AddHandoff[Communications Ledger entry<br/>or Temporal Continuity update<br/>or per-Box audit marker]
+  AddHandoff --> Handoff
+  Handoff -->|Yes| Commit{Committed?<br/>Push status clear?}
+
+  Commit -->|No| DoCommit[Commit. Decide push vs<br/>local-only with Jake.]
+  DoCommit --> Commit
+  Commit -->|Yes| Done([DONE])
+
+  classDef gate fill:#fff7d6,stroke:#b08a00,stroke-width:1px;
+  classDef fix fill:#ffe9e9,stroke:#a33,stroke-width:1px;
+  classDef terminal fill:#dcffd6,stroke:#2a8a2a,stroke-width:2px;
+
+  class Source,Guard,Verify,Memory,Open,Handoff,Commit gate;
+  class FixSource,ApplyGuard,Explain,UpdateLedger,RecordProblem,AddHandoff,DoCommit fix;
+  class Start,Done terminal;

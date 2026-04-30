@@ -21,7 +21,11 @@
     "deprecated",
     "rejected"
   ],
-  "confidence_levels": ["high", "medium", "low"],
+  "confidence_levels": [
+    "high",
+    "medium",
+    "low"
+  ],
   "scopes": [
     "global",
     "local",
@@ -50,16 +54,40 @@
       "scope": "global",
       "date": "2026-04-28",
       "decider": "User / project owner",
-      "affected_systems": ["all repo-backed systems", "ledgers", "agents", "Client Boxes", "automation"],
-      "related_north_star_goals": ["NS-01", "NS-02", "NS-09", "NS-10"],
-      "related_ledgers": ["GLOBAL_LEDGER.md (Section 4.1)", "SOURCE_OF_TRUTH (planned)"],
+      "affected_systems": [
+        "all repo-backed systems",
+        "ledgers",
+        "agents",
+        "Client Boxes",
+        "automation"
+      ],
+      "related_north_star_goals": [
+        "NS-01",
+        "NS-02",
+        "NS-09",
+        "NS-10"
+      ],
+      "related_ledgers": [
+        "GLOBAL_LEDGER.md (Section 4.1)",
+        "SOURCE_OF_TRUTH (planned)"
+      ],
       "supersedes": null,
       "superseded_by": null,
       "decision": "GitHub (RodbotCC/CCAgent, branch main) is the durable source of truth for the project. The local file tree is the working copy.",
       "context": "The project needs continuity across agents, tools, MCP servers, local machines, and future sessions. Local-only state and chat history are not durable enough.",
       "rationale": "GitHub gives the project shared, versioned, inspectable memory. It lets other agents and tools connect through Git instead of relying on the user's local machine.",
-      "alternatives_considered": ["Local-only file tree", "Chat history as memory", "RAG/vector memory as primary continuity", "Scattered docs outside repo"],
-      "consequences": ["Important project memory belongs in repo files.", "Ledgers must be committed.", "Direct GitHub writes must consider unpushed local work.", "The repo IS the memory of the build."],
+      "alternatives_considered": [
+        "Local-only file tree",
+        "Chat history as memory",
+        "RAG/vector memory as primary continuity",
+        "Scattered docs outside repo"
+      ],
+      "consequences": [
+        "Important project memory belongs in repo files.",
+        "Ledgers must be committed.",
+        "Direct GitHub writes must consider unpushed local work.",
+        "The repo IS the memory of the build."
+      ],
       "do_not_undo_casually": "Do not move core continuity back into chat-only or local-only memory without explicit review.",
       "review_trigger": "Revisit only if GitHub stops being accessible or another versioned source-of-truth system replaces it."
     },
@@ -72,16 +100,41 @@
       "scope": "global",
       "date": "2026-04-28",
       "decider": "User / project owner",
-      "affected_systems": ["ledgers", "Boxes", "meta harness", "agent workflow", "memory architecture"],
-      "related_north_star_goals": ["NS-01", "NS-02", "NS-03", "NS-09"],
-      "related_ledgers": ["GLOBAL_LEDGER.md (Section 1)", "NORTH_STAR.md (NS-01)"],
+      "affected_systems": [
+        "ledgers",
+        "Boxes",
+        "meta harness",
+        "agent workflow",
+        "memory architecture"
+      ],
+      "related_north_star_goals": [
+        "NS-01",
+        "NS-02",
+        "NS-03",
+        "NS-09"
+      ],
+      "related_ledgers": [
+        "GLOBAL_LEDGER.md (Section 1)",
+        "NORTH_STAR.md (NS-01)"
+      ],
       "supersedes": null,
       "superseded_by": null,
       "decision": "The project uses FileTree orchestration as its primary memory and coordination model — not RAG / vector memory.",
       "context": "The user wants durable, inspectable, directory-aware continuity.",
       "rationale": "FileTree orchestration gives agents explicit, versioned, local context. Easier to audit, rebuild, hand off, and reason about than vague retrieval.",
-      "alternatives_considered": ["RAG/vector memory as primary", "Chat history as continuity", "Ad hoc docs", "Monolithic global memory file", "Database-backed memory"],
-      "consequences": ["Important memory belongs in files.", "Directories should become Boxes when meaningful.", "Local context lives near files it governs.", "Pieces.app stays as secondary memory backend, not primary."],
+      "alternatives_considered": [
+        "RAG/vector memory as primary",
+        "Chat history as continuity",
+        "Ad hoc docs",
+        "Monolithic global memory file",
+        "Database-backed memory"
+      ],
+      "consequences": [
+        "Important memory belongs in files.",
+        "Directories should become Boxes when meaningful.",
+        "Local context lives near files it governs.",
+        "Pieces.app stays as secondary memory backend, not primary."
+      ],
       "do_not_undo_casually": "Do not replace Box / local-file continuity with hidden memory without review.",
       "review_trigger": "Revisit only if a hybrid retrieval layer is added as a helper while keeping file tree as source of truth."
     },
@@ -94,9 +147,22 @@
       "scope": "client automation",
       "date": "2026-04-28",
       "decider": "User / project owner",
-      "affected_systems": ["Client Boxes", "Boxes page", "orchestrator", "scheduled fires", "inbox automation"],
-      "related_north_star_goals": ["NS-03", "NS-04", "NS-06"],
-      "related_ledgers": ["GLOBAL_LEDGER.md (Section 4.3)", "OPEN_PROBLEMS_LEDGER.md (PROB-001)"],
+      "affected_systems": [
+        "Client Boxes",
+        "Boxes page",
+        "orchestrator",
+        "scheduled fires",
+        "inbox automation"
+      ],
+      "related_north_star_goals": [
+        "NS-03",
+        "NS-04",
+        "NS-06"
+      ],
+      "related_ledgers": [
+        "GLOBAL_LEDGER.md (Section 4.3)",
+        "OPEN_PROBLEMS_LEDGER.md (PROB-001)"
+      ],
       "supersedes": null,
       "superseded_by": null,
       "decision": "Auto/Client Boxes/<Name>/ is the canonical per-client memory and operating substrate. The Boxes page and orchestrator state are read / render / generation layers over that substrate.",
@@ -110,8 +176,17 @@
       ],
       "context": "There was confusion about whether the boxes UI/page or Auto/Boxes umbrella was the actual client truth.",
       "rationale": "Client-specific complexity should live inside the client's own Box. One client's constraints should not force global automation rewrites.",
-      "alternatives_considered": ["Boxes page as source", "Orchestrator state as source", "Centralized global automation", "Database-backed client truth"],
-      "consequences": ["Client-specific edits happen in the relevant Client Box.", "Boxes page is never canonical client truth.", "Allowed-To-Know layer (PROB-001) will live inside each Client Box."],
+      "alternatives_considered": [
+        "Boxes page as source",
+        "Orchestrator state as source",
+        "Centralized global automation",
+        "Database-backed client truth"
+      ],
+      "consequences": [
+        "Client-specific edits happen in the relevant Client Box.",
+        "Boxes page is never canonical client truth.",
+        "Allowed-To-Know layer (PROB-001) will live inside each Client Box."
+      ],
       "do_not_undo_casually": "Do not make UI or generated dashboard state the canonical source for client truth without explicit migration.",
       "review_trigger": "Revisit only if a database-backed canonical client layer is intentionally introduced."
     },
@@ -124,16 +199,37 @@
       "scope": "automation safety",
       "date": "2026-04-28",
       "decider": "User / project owner",
-      "affected_systems": ["Client Boxes", "scheduled fires", "inbox automation", "guardrails"],
-      "related_north_star_goals": ["NS-04", "NS-05", "NS-06"],
-      "related_ledgers": ["OPEN_PROBLEMS_LEDGER.md (PROB-002)", "COMMUNICATIONS_LEDGER.md (COMM-2026-04-28-005)"],
+      "affected_systems": [
+        "Client Boxes",
+        "scheduled fires",
+        "inbox automation",
+        "guardrails"
+      ],
+      "related_north_star_goals": [
+        "NS-04",
+        "NS-05",
+        "NS-06"
+      ],
+      "related_ledgers": [
+        "OPEN_PROBLEMS_LEDGER.md (PROB-002)",
+        "COMMUNICATIONS_LEDGER.md (COMM-2026-04-28-005)"
+      ],
       "supersedes": null,
       "superseded_by": null,
       "decision": "A seven-day plan is a strategy draft. It does not authorize sending by itself. Reply received -> plan is stale.",
       "context": "Some plans were written before guardrails were fully enforced. The Brenda & Steve audit revealed plans with stale dates, risky commitment language, and enrichment leakage.",
       "rationale": "Plans age. Replies, transcripts, state sweeps, and updated guardrails can invalidate a previously good plan.",
-      "alternatives_considered": ["Treat plan text as send authority", "Disable plans entirely", "Require manual rewrite before every move"],
-      "consequences": ["Scheduled fires must treat plans as input, not authority.", "If a lead replies, plan is stale.", "Plan audits check for stale dates, risky commitments, enrichment leakage.", "Brenda's plan now opens with Audit-cleaned line — that's the template."],
+      "alternatives_considered": [
+        "Treat plan text as send authority",
+        "Disable plans entirely",
+        "Require manual rewrite before every move"
+      ],
+      "consequences": [
+        "Scheduled fires must treat plans as input, not authority.",
+        "If a lead replies, plan is stale.",
+        "Plan audits check for stale dates, risky commitments, enrichment leakage.",
+        "Brenda's plan now opens with Audit-cleaned line — that's the template."
+      ],
       "do_not_undo_casually": "Do not allow automation to send directly from plan text without guardrail validation.",
       "review_trigger": "Revisit if a formal plan compiler / validator is built that enforces all gates before execution."
     },
@@ -146,9 +242,21 @@
       "scope": "send safety",
       "date": "2026-04-28",
       "decider": "User / project owner",
-      "affected_systems": ["inbox automation", "approval surfaces", "Client Boxes", "scheduled fires"],
-      "related_north_star_goals": ["NS-04", "NS-05", "NS-06"],
-      "related_ledgers": ["OPEN_PROBLEMS_LEDGER.md (PROB-003)", "COMMUNICATIONS_LEDGER.md (COMM-2026-04-28-003 promoted from)"],
+      "affected_systems": [
+        "inbox automation",
+        "approval surfaces",
+        "Client Boxes",
+        "scheduled fires"
+      ],
+      "related_north_star_goals": [
+        "NS-04",
+        "NS-05",
+        "NS-06"
+      ],
+      "related_ledgers": [
+        "OPEN_PROBLEMS_LEDGER.md (PROB-003)",
+        "COMMUNICATIONS_LEDGER.md (COMM-2026-04-28-003 promoted from)"
+      ],
       "supersedes": null,
       "superseded_by": null,
       "promoted_from": "COMM-2026-04-28-003",
@@ -166,8 +274,17 @@
       ],
       "context": "The Brenda & Steve fee-waiver move may have been strategically correct, but it was approved in a rushed batch context and did not receive enough isolated risk friction.",
       "rationale": "Good sales judgment and safe automation are not the same thing. A human should explicitly own financial, pricing, scope, or risky personalization commitments.",
-      "alternatives_considered": ["Ban all risky moves", "Allow risky moves inside normal batch approval", "Auto-send if plan says so"],
-      "consequences": ["Risky moves should become explicit approval cards.", "Approval cards should name the risk clearly.", "Batch approval should not hide financial / scope commitments.", "Approval UI specifics still under review (see decisions_needing_review)."],
+      "alternatives_considered": [
+        "Ban all risky moves",
+        "Allow risky moves inside normal batch approval",
+        "Auto-send if plan says so"
+      ],
+      "consequences": [
+        "Risky moves should become explicit approval cards.",
+        "Approval cards should name the risk clearly.",
+        "Batch approval should not hide financial / scope commitments.",
+        "Approval UI specifics still under review (see decisions_needing_review)."
+      ],
       "do_not_undo_casually": "Do not let risky commitments ship as ordinary follow-up copy without explicit approval.",
       "review_trigger": "Revisit after approval UI supports isolated risk confirmations robustly."
     },
@@ -180,16 +297,36 @@
       "scope": "UI / source truth",
       "date": "2026-04-28",
       "decider": "User / project owner",
-      "affected_systems": ["Boxes page", "Client Boxes", "orchestrator state", "page-asset sitemap"],
-      "related_north_star_goals": ["NS-06", "NS-08"],
-      "related_ledgers": ["GLOBAL_LEDGER.md (Section 4.6)", "SOURCE_OF_TRUTH (planned)"],
+      "affected_systems": [
+        "Boxes page",
+        "Client Boxes",
+        "orchestrator state",
+        "page-asset sitemap"
+      ],
+      "related_north_star_goals": [
+        "NS-06",
+        "NS-08"
+      ],
+      "related_ledgers": [
+        "GLOBAL_LEDGER.md (Section 4.6)",
+        "SOURCE_OF_TRUTH (planned)"
+      ],
       "supersedes": null,
       "superseded_by": null,
       "decision": "The boxes route / page is a UI read / display surface over Client Boxes, Staff Boxes, and orchestrator state. It does not own canonical client truth.",
       "context": "The sitemap says the Boxes page reads Auto/Client Boxes, Auto/Staff Boxes, Auto/orchestrator/state, and exposes a single-surface dossier view. That could visually imply ownership if not documented.",
       "rationale": "UI should make truth visible, not become truth accidentally.",
-      "alternatives_considered": ["Boxes page as canonical source", "Orchestrator state as canonical", "Hide source distinction"],
-      "consequences": ["Fix client truth in Client Boxes.", "Fix generated state through sources / generators.", "Page changes update sitemap (DEC-007).", "Boxes page should communicate source freshness."],
+      "alternatives_considered": [
+        "Boxes page as canonical source",
+        "Orchestrator state as canonical",
+        "Hide source distinction"
+      ],
+      "consequences": [
+        "Fix client truth in Client Boxes.",
+        "Fix generated state through sources / generators.",
+        "Page changes update sitemap (DEC-007).",
+        "Boxes page should communicate source freshness."
+      ],
       "do_not_undo_casually": "Do not write client truth into the Boxes page layer without source-of-truth migration.",
       "review_trigger": "Revisit if a database or app-native canonical Box store replaces file-based Client Boxes."
     },
@@ -202,17 +339,51 @@
       "scope": "UI Done Gate",
       "date": "2026-04-28",
       "decider": "Existing project policy / accepted into ledger system",
-      "affected_systems": ["UI pages", "routes", "APIs", "page data binding", "sitemap"],
-      "related_north_star_goals": ["NS-06", "NS-08", "NS-10"],
-      "related_ledgers": ["CLAUDE.md Section 5.5", "GLOBAL_LEDGER.md (Section 4.7)", "ASSET_WIDGET_MAP (planned)"],
+      "affected_systems": [
+        "UI pages",
+        "routes",
+        "APIs",
+        "page data binding",
+        "sitemap"
+      ],
+      "related_north_star_goals": [
+        "NS-06",
+        "NS-08",
+        "NS-10"
+      ],
+      "related_ledgers": [
+        "CLAUDE.md Section 5.5",
+        "GLOBAL_LEDGER.md (Section 4.7)",
+        "ASSET_WIDGET_MAP (planned)"
+      ],
       "supersedes": null,
       "superseded_by": null,
       "decision": "Any task that changes a page, route behavior, or page data binding is not complete until page_asset_sitemap.md is updated.",
       "context": "The Comeketo Page-Asset Source Of Truth already defines this mandatory Done Gate. Formalized into the ledger system 2026-04-28.",
       "rationale": "Page behavior and data ownership drift quickly if not recorded.",
-      "alternatives_considered": ["Code diffs only", "Sitemap updated occasionally", "Comments in code"],
-      "consequences": ["UI / page work includes sitemap update in same unit of work.", "Asset / Widget Map links to sitemap rather than duplicating it.", "Audits can fail page work if sitemap is stale."],
-      "surviving_routes": ["grid", "settings", "leads", "clients", "coworkers", "contacts", "briefing", "activity", "automation", "intake", "analytics"],
+      "alternatives_considered": [
+        "Code diffs only",
+        "Sitemap updated occasionally",
+        "Comments in code"
+      ],
+      "consequences": [
+        "UI / page work includes sitemap update in same unit of work.",
+        "Asset / Widget Map links to sitemap rather than duplicating it.",
+        "Audits can fail page work if sitemap is stale."
+      ],
+      "surviving_routes": [
+        "grid",
+        "settings",
+        "leads",
+        "clients",
+        "coworkers",
+        "contacts",
+        "briefing",
+        "activity",
+        "automation",
+        "intake",
+        "analytics"
+      ],
       "do_not_undo_casually": "Do not remove this Done Gate without replacing it with an equal or stronger page ownership system.",
       "review_trigger": "Revisit only if Page Ledgers or an automated page map supersede the sitemap."
     },
@@ -225,17 +396,36 @@
       "scope": "workflow",
       "date": "2026-04-28",
       "decider": "User",
-      "affected_systems": ["ledger implementation workflow", "agent handoff", "INDEX.md build order"],
-      "related_north_star_goals": ["NS-01", "NS-09", "NS-10"],
-      "related_ledgers": ["INDEX.md", "COMMUNICATIONS_LEDGER.md (COMM-2026-04-28-001 promoted from)"],
+      "affected_systems": [
+        "ledger implementation workflow",
+        "agent handoff",
+        "INDEX.md build order"
+      ],
+      "related_north_star_goals": [
+        "NS-01",
+        "NS-09",
+        "NS-10"
+      ],
+      "related_ledgers": [
+        "INDEX.md",
+        "COMMUNICATIONS_LEDGER.md (COMM-2026-04-28-001 promoted from)"
+      ],
       "supersedes": null,
       "superseded_by": null,
       "promoted_from": "COMM-2026-04-28-001",
       "decision": "The ledger system is designed and implemented one ledger at a time. The user signals (typically by typing P) to proceed to the next.",
       "context": "The ledger system is large (~22 planned ledgers). Implementing it all at once would be too broad and would create shallow files.",
       "rationale": "One-ledger-at-a-time keeps focus, creates rhythm, and lets the user hand clean implementation outlines to the building agent.",
-      "alternatives_considered": ["Build all in one pass", "Code without design", "Only a global README"],
-      "consequences": ["Each ledger gets a dedicated outline at /Ledger Drafts/.", "Implementation evolves without overwhelming repo.", "Build order tracked in INDEX.md."],
+      "alternatives_considered": [
+        "Build all in one pass",
+        "Code without design",
+        "Only a global README"
+      ],
+      "consequences": [
+        "Each ledger gets a dedicated outline at /Ledger Drafts/.",
+        "Implementation evolves without overwhelming repo.",
+        "Build order tracked in INDEX.md."
+      ],
       "do_not_undo_casually": "Do not attempt a massive all-ledgers rewrite unless the user explicitly changes workflow.",
       "review_trigger": "Revisit after first wave of ledgers is implemented."
     },
@@ -248,9 +438,26 @@
       "scope": "global / architectural",
       "date": "2026-04-29",
       "decider": "User / project owner",
-      "affected_systems": ["every stateful entity", "Client Boxes", "Staff Boxes", "ledgers", "sub-agents", "future state-bearing systems"],
-      "related_north_star_goals": ["NS-01", "NS-02", "NS-03", "NS-09", "NS-10"],
-      "related_ledgers": ["GLOBAL_LEDGER.md (Section 3)", "TEMPORAL_CONTINUITY.md (Section 1)", "COMMUNICATIONS_LEDGER.md (COMM-2026-04-29-001 promoted from)"],
+      "affected_systems": [
+        "every stateful entity",
+        "Client Boxes",
+        "Staff Boxes",
+        "ledgers",
+        "sub-agents",
+        "future state-bearing systems"
+      ],
+      "related_north_star_goals": [
+        "NS-01",
+        "NS-02",
+        "NS-03",
+        "NS-09",
+        "NS-10"
+      ],
+      "related_ledgers": [
+        "GLOBAL_LEDGER.md (Section 3)",
+        "TEMPORAL_CONTINUITY.md (Section 1)",
+        "COMMUNICATIONS_LEDGER.md (COMM-2026-04-29-001 promoted from)"
+      ],
       "supersedes": null,
       "superseded_by": null,
       "promoted_from": "COMM-2026-04-29-001",
@@ -264,7 +471,13 @@
       "jake_exact_words": "For everything that we build we cannot be lazy about the legibility. I am actually more concerned about the legibility than the build.",
       "context": "After the plumbing-first attempt was scrapped under demo pressure (see COMM-2026-04-28-008), the architectural spine wasn't formally named. On 2026-04-29 the triad was codified as the rule organizing everything stateful.",
       "rationale": "Ledgers without Boxes are floating memory. Boxes without Ledgers are illegible state. Sub-agents without either are operators with no memory. Skipping any leg produces a system that cannot continue itself across agents.",
-      "alternatives_considered": ["Boxes-only", "Ledgers-only", "Sub-agents-only", "Two-leg systems", "Centralized state without Boxes"],
+      "alternatives_considered": [
+        "Boxes-only",
+        "Ledgers-only",
+        "Sub-agents-only",
+        "Two-leg systems",
+        "Centralized state without Boxes"
+      ],
       "consequences": [
         "Before designing anything stateful, ask: Where is the Box? Where is the Ledger? Where will the Sub-agent live?",
         "The triad is currently lopsided (more Boxes than Ledgers, more Ledgers than Sub-agents).",
@@ -283,9 +496,22 @@
       "scope": "workflow",
       "date": "2026-04-29",
       "decider": "User",
-      "affected_systems": ["ledger system", "sub-agent system", "bedrock", "build planning"],
-      "related_north_star_goals": ["NS-01", "NS-09", "NS-10"],
-      "related_ledgers": ["INDEX.md", "TEMPORAL_CONTINUITY.md (Section 1)", "COMMUNICATIONS_LEDGER.md (COMM-2026-04-29-003 promoted from)"],
+      "affected_systems": [
+        "ledger system",
+        "sub-agent system",
+        "bedrock",
+        "build planning"
+      ],
+      "related_north_star_goals": [
+        "NS-01",
+        "NS-09",
+        "NS-10"
+      ],
+      "related_ledgers": [
+        "INDEX.md",
+        "TEMPORAL_CONTINUITY.md (Section 1)",
+        "COMMUNICATIONS_LEDGER.md (COMM-2026-04-29-003 promoted from)"
+      ],
       "supersedes": null,
       "superseded_by": null,
       "promoted_from": "COMM-2026-04-29-003",
@@ -309,8 +535,17 @@
       },
       "context": "After the rebuild, the triad needed to be filled in a specific order to avoid producing partial systems.",
       "rationale": "Ledgers without sub-agents are static memory. Sub-agents without ledgers have nowhere to write. Subagent Boxes require both prior layers.",
-      "alternatives_considered": ["All-three-in-parallel", "Sub-agents-first", "Subagent-Boxes-first", "B before A"],
-      "consequences": ["Confirm phase before proposing structure.", "Phase A pattern: build the ledger only, note sub-agent home as placeholder.", "PROB-016 blocked on Phase A + Phase B completion."],
+      "alternatives_considered": [
+        "All-three-in-parallel",
+        "Sub-agents-first",
+        "Subagent-Boxes-first",
+        "B before A"
+      ],
+      "consequences": [
+        "Confirm phase before proposing structure.",
+        "Phase A pattern: build the ledger only, note sub-agent home as placeholder.",
+        "PROB-016 blocked on Phase A + Phase B completion."
+      ],
       "do_not_undo_casually": "Do not skip phases. Do not parallelize without explicit user approval.",
       "review_trigger": "Review on Phase A completion."
     },
@@ -323,9 +558,23 @@
       "scope": "meta / workflow",
       "date": "2026-04-29",
       "decider": "User / project owner",
-      "affected_systems": ["every change touching project state", "every cold-starting agent", "TCL", "GL", "activity.jsonl"],
-      "related_north_star_goals": ["NS-01", "NS-09", "NS-10"],
-      "related_ledgers": ["TEMPORAL_CONTINUITY.md", "GLOBAL_LEDGER.md", "COMMUNICATIONS_LEDGER.md (COMM-2026-04-29-005 promoted from)"],
+      "affected_systems": [
+        "every change touching project state",
+        "every cold-starting agent",
+        "TCL",
+        "GL",
+        "activity.jsonl"
+      ],
+      "related_north_star_goals": [
+        "NS-01",
+        "NS-09",
+        "NS-10"
+      ],
+      "related_ledgers": [
+        "TEMPORAL_CONTINUITY.md",
+        "GLOBAL_LEDGER.md",
+        "COMMUNICATIONS_LEDGER.md (COMM-2026-04-29-005 promoted from)"
+      ],
       "supersedes": null,
       "superseded_by": null,
       "promoted_from": "COMM-2026-04-29-005",
@@ -341,8 +590,18 @@
       "context": "Failure mode happened during a Cowork -> Claude Code -> Cowork handoff on 2026-04-29: a Cowork session read a TCL written ~24 hours earlier and had no idea about that day's catch-up work.",
       "jake_exact_words": "The ledger is more important than the actual work. Literally everything needs to be ledgered.",
       "rationale": "The fix is not smarter agents — it's discipline. Orientation surfaces ARE the agent. If they're stale, the agent is stale.",
-      "alternatives_considered": ["Periodic ledger sweeps", "Steward-agent-only updates", "Manual end-of-session checklist", "Auto-generated TCL from git log"],
-      "consequences": ["Every non-trivial work session ends with a TCL/GL update.", "Header dates are bumped accurately and frequently.", "Cold-starting agents can trust TCL/GL as current.", "global_ledger_steward verifies drift but does not replace this discipline."],
+      "alternatives_considered": [
+        "Periodic ledger sweeps",
+        "Steward-agent-only updates",
+        "Manual end-of-session checklist",
+        "Auto-generated TCL from git log"
+      ],
+      "consequences": [
+        "Every non-trivial work session ends with a TCL/GL update.",
+        "Header dates are bumped accurately and frequently.",
+        "Cold-starting agents can trust TCL/GL as current.",
+        "global_ledger_steward verifies drift but does not replace this discipline."
+      ],
       "do_not_undo_casually": "Do not adopt patterns that defer ledger updates to 'later' or to a separate commit. Same unit of work, every time.",
       "review_trigger": "Does not expire. This is the meta-rule that keeps every other ledger usable."
     },
@@ -355,9 +614,22 @@
       "scope": "meta / scope",
       "date": "2026-04-29",
       "decider": "User",
-      "affected_systems": ["ledger system", "build queue", "future audit-shaped findings"],
-      "related_north_star_goals": ["NS-09", "NS-10"],
-      "related_ledgers": ["INDEX.md", "OPEN_PROBLEMS_LEDGER.md", "DECISIONS_LEDGER.md (this)", "COMMUNICATIONS_LEDGER.md", "per-Box ledgers"],
+      "affected_systems": [
+        "ledger system",
+        "build queue",
+        "future audit-shaped findings"
+      ],
+      "related_north_star_goals": [
+        "NS-09",
+        "NS-10"
+      ],
+      "related_ledgers": [
+        "INDEX.md",
+        "OPEN_PROBLEMS_LEDGER.md",
+        "DECISIONS_LEDGER.md (this)",
+        "COMMUNICATIONS_LEDGER.md",
+        "per-Box ledgers"
+      ],
       "supersedes": null,
       "superseded_by": null,
       "decision": "The Audit Ledger is removed from the build queue. Audit-shaped findings will land in Open Problems, Decisions, Communications, or per-Box ledgers as appropriate.",
@@ -370,7 +642,12 @@
       "context": "After Communications Ledger landed and OPL had been live for a day, Jake observed that audit findings naturally distribute across the three sibling ledgers + per-Box ledgers. A dedicated Audit Ledger would duplicate coverage already provided.",
       "jake_exact_words": "I don't think we're ever going to need that. It's basically covered in the other things.",
       "rationale": "Standalone Audit Ledger would create three failure modes: coverage overlap, discoverability cost, maintenance overhead.",
-      "alternatives_considered": ["Build a thin Audit Ledger that cross-references", "Keep planned but defer indefinitely", "Build Audit fully", "Delete the draft outline"],
+      "alternatives_considered": [
+        "Build a thin Audit Ledger that cross-references",
+        "Keep planned but defer indefinitely",
+        "Build Audit fully",
+        "Delete the draft outline"
+      ],
       "consequences": [
         "INDEX.md row marked out-of-scope (2026-04-29).",
         "GLOBAL_LEDGER Section 8 Audit row marked similarly.",
@@ -381,6 +658,238 @@
       ],
       "do_not_undo_casually": "Confidence is medium because this decision is hours old. If a future agent finds audit findings genuinely don't fit any of the four homes, it's worth re-opening this question. Don't reverse without that evidence.",
       "review_trigger": "Revisit if a future audit pattern doesn't fit Open Problems / Decisions / Communications / per-Box; or if audit-shaped reporting becomes a frequent operator-facing need (compliance, regulatory); or if volume makes per-ledger distribution painful."
+    },
+    {
+      "id": "DEC-2026-04-29-005",
+      "slug": "box-reports-are-synthesized-views",
+      "title": "Box Reports Are Synthesized Views, Not Copies",
+      "status": "active",
+      "confidence": "high",
+      "scope": "architecture / Intake-Box",
+      "date": "2026-04-29",
+      "decider": "User (with assistant proposal)",
+      "affected_systems": [
+        "Intake page",
+        "Boxes page",
+        "server _box_report_* helpers",
+        "Client Box folders"
+      ],
+      "related_north_star_goals": [
+        "NS-01",
+        "NS-02",
+        "NS-03"
+      ],
+      "related_ledgers": [
+        "Global Ledger §3"
+      ],
+      "supersedes": null,
+      "superseded_by": null,
+      "decision": "A Box Report is a synthesized view over Auto/Client Boxes/<Name>/. The server reads the box folder on every /api/reports/get call and assembles a documents[] payload from the live files. No report.json is written into the box folder. Q&A history lives at CCAgentindex/reports/_box_conversations/<box_id>.jsonl.",
+      "context": "The 2026-04-27 manual brenda_and_steve workspace already proved the pattern by accident — its documents were a hand-curated copy of Brenda's box files. Phase 1 of the Intake → Box unification asked: real report.json mirror, or rebuild on read?",
+      "rationale": "A copy creates a drift surface — two records of the same content diverging silently. Synthesis has no drift surface. Triad-aligned (DEC-2026-04-29-001): the Box is the unit of state; an Intake-side report cannot be a parallel Box.",
+      "alternatives_considered": [
+        "Persisted mirror inside each box folder — rejected (drift)",
+        "Persisted mirror outside the box under CCAgentindex/reports/<box_id>/ — rejected (same drift; pollutes workspace list)",
+        "Hybrid mirror with mtime invalidation — rejected for Phase 1 (extra moving parts before measurement justifies them)"
+      ],
+      "consequences": [
+        "Box-Report ingest writes into Auto/Client Boxes/<Name>/intake_drops/<file>",
+        "Box-Report doc deletion from Intake is forbidden (HTTP 405)",
+        "Auto/ symlink is written through only for intake_drops/; documented as exception in page_asset_sitemap.md",
+        "Future analytics/page/agent-as-box work should default to the same posture"
+      ],
+      "do_not_undo_casually": "Do not introduce a persisted Box Report mirror without first measuring read cost and demonstrating a cache strategy. Drift is the failure mode; performance has not been the failure mode.",
+      "review_trigger": "Synthesis latency materially affects Intake page loads; or a future architecture requires a stable identifier for Box Report content that can't be derived on read."
+    },
+    {
+      "id": "DEC-2026-04-29-006",
+      "slug": "one-identity-per-box-across-the-app",
+      "title": "One Identity Per Box Across The App (slug = box id)",
+      "status": "active",
+      "confidence": "high",
+      "scope": "identity / routing",
+      "date": "2026-04-29",
+      "decider": "User (with assistant proposal)",
+      "affected_systems": [
+        "Intake routing",
+        "Boxes routing",
+        "future ledger references",
+        "future cross-page nav"
+      ],
+      "related_north_star_goals": [
+        "NS-01",
+        "NS-09"
+      ],
+      "related_ledgers": [
+        "Global Ledger §3"
+      ],
+      "supersedes": null,
+      "superseded_by": null,
+      "decision": "A Box Report's slug is the box id from /api/boxes/list, with no synthetic prefix. The earlier draft's client_box__ prefix was dropped because every existing client-box id is already unique within the catalog. Workspace slugs that collide with a Client Box id are refused at create (HTTP 409).",
+      "context": "Cross-page navigation between Intake and Boxes needs to refer to the same entity by the same name. Two identities would force a translation table on every link, every menu item, and every ledger reference.",
+      "rationale": "One identity = trivial cross-nav (go.push('intake', { openSlug: id }) and go.push('boxes', { selectId: id }) both work because the slug is the id). Future ledger entries that mention a box stay stable across surfaces.",
+      "alternatives_considered": [
+        "client_box__<id> prefix (the original draft) — rejected (redundant; lookup already resolves uniquely)",
+        "Separate Box-Report slug minted at creation — rejected (translation table; doubles the namespace)"
+      ],
+      "consequences": [
+        "POST /api/reports/create rejects any workspace slug that matches a Client Box id (HTTP 409)",
+        "All 5 existing workspaces are safe (no collision)",
+        "Box rename = id change = orphans the corresponding _box_conversations/<old_id>.jsonl; acceptable for Phase 1"
+      ],
+      "do_not_undo_casually": "Adding a translation layer between box ids and report slugs would force every cross-surface reference to be rewritten. Don't introduce a separate identity space without a concrete need.",
+      "review_trigger": "A Client Box ever needs to project multiple report views (e.g., 'lite' vs 'full'); or a privacy/access-control requirement makes the box id unsafe to expose at the URL layer."
+    },
+    {
+      "id": "DEC-2026-04-29-007",
+      "slug": "box-reports-refresh-on-read",
+      "title": "Box Reports Refresh On Read",
+      "status": "active",
+      "confidence": "high",
+      "scope": "architecture / perf",
+      "date": "2026-04-29",
+      "decider": "User (with assistant proposal)",
+      "affected_systems": [
+        "server _box_report_synthesize",
+        "_reports_list",
+        "_reports_get"
+      ],
+      "related_north_star_goals": [
+        "NS-02"
+      ],
+      "related_ledgers": [
+        "Global Ledger §11 (Done Gate)"
+      ],
+      "supersedes": null,
+      "superseded_by": null,
+      "decision": "Every /api/reports/get?slug=<box_id> and /api/reports/list call re-reads the live Client Box folder. No cache, no debounce, no invalidation flag. Workspaces keep using their stored report.json.",
+      "context": "DEC-2026-04-29-005 left freshness open: re-read or cache. Phase 1 picks the simplest answer that avoids stale-cache bugs.",
+      "rationale": "Cheap (~28 boxes × ~10 files = sub-100ms). Correct (no stale-cache bug class). Reversible (a 5s TTL cache later is a single-function change with no schema migration).",
+      "alternatives_considered": [
+        "mtime-based cache — rejected for Phase 1 (small win, more code paths)",
+        "Persistent cache file — rejected (same drift problem 005 is trying to avoid)"
+      ],
+      "consequences": [
+        "Box Reports always reflect what's in the box folder right now",
+        "If list-endpoint latency becomes a UX problem, the agreed remediation is in-memory TTL cache, not persisted state"
+      ],
+      "do_not_undo_casually": "Don't add caching speculatively. Measure first.",
+      "review_trigger": "Intake page load time becomes user-visibly slow on production; or Client Box count grows past ~200."
+    },
+    {
+      "id": "DEC-2026-04-29-008",
+      "slug": "phase-1-intake-box-is-read-mostly",
+      "title": "Phase 1 Intake → Box Is Read-Mostly (no agent-config plumbing yet)",
+      "status": "active",
+      "confidence": "high",
+      "scope": "scope / phasing",
+      "date": "2026-04-29",
+      "decider": "User",
+      "affected_systems": [
+        "Intake ask path",
+        "future per-box AGENTS.md plumbing",
+        "deferred reactive box-bus design"
+      ],
+      "related_north_star_goals": [
+        "NS-09",
+        "NS-10"
+      ],
+      "related_ledgers": [
+        "Global Ledger §6",
+        "DEC-2026-04-28-008"
+      ],
+      "supersedes": null,
+      "superseded_by": "(future Phase 2 decision — TBD)",
+      "decision": "Phase 1 ships read-only synthesis, the Reports list split, and box-folder ingest. It does NOT plumb each box's AGENTS.md into the /api/reports/<slug>/ask system prompt, build per-box analytics templates, or start any reactive-box-bus / ledger trickle-down work.",
+      "context": "The bigger architecture (every state-bearing surface becomes a box; ledgers route entries downstream to subscribed boxes; sub-agents per box interpret incoming entries) is the right ultimate frame and the hardest piece in the project. Building it before the ledger system and sub-agent fleet are stable would force re-wiring on every new ledger and every new sub-agent.",
+      "rationale": "Cleanup-phase rule (DEC-2026-04-28-008): one ledger at a time. Same posture for architecture: one major surface at a time. Phase 1 surfaces have zero dependencies on agent-config plumbing or the bus and ship cleanly today. Phase 2 (per-box AGENTS.md) can ship later without disturbing Phase 1.",
+      "alternatives_considered": [
+        "Ship Phase 1 + agent-config plumbing together — rejected (stretches scope; risks the today-value)",
+        "Ship Phase 1 + analytics-as-box — rejected (analytics templates need ledger system further along)",
+        "Defer Phase 1 entirely until the bus is ready — rejected (forfeits today's value)"
+      ],
+      "consequences": [
+        "Intake ask on a Box Report uses the same generic prompt assembly as Workspaces",
+        "Hugo's existing AGENTS.md is read as a document but not honored as an operating contract — yet",
+        "Phase 2 scope: read AGENTS.md / CLAUDE.md / 06_logic.md / 07_skills_used.md / 08_automations.md when present; fold into ask system prompt; fall back to generic client-box assistant prompt",
+        "Reactive box-bus / ledger trickle-down deferred until ledger taxonomy and stewards are stable; lands as its own Decisions Ledger entry when shipped"
+      ],
+      "do_not_undo_casually": "Do not start Phase 2/3 work or the bus design while Phase A (ledgers) of DEC-2026-04-29-002 is in flight. The phasing rule is the protection against half-finished architecture.",
+      "review_trigger": "Phase A of DEC-2026-04-29-002 completes (planned ledgers active, stewards landed); or a user-facing need requires box-aware ask before then."
+    },
+    {
+      "id": "DEC-2026-04-29-013",
+      "slug": "reactive-box-network-schema-only",
+      "title": "Reactive Box Network Is The Target Architecture (schema only; runtime deferred to Phase C)",
+      "status": "active",
+      "confidence": "high",
+      "scope": "global / architectural",
+      "date": "2026-04-29",
+      "decider": "User (Jake) — autonomous-call delegated to Cowork session",
+      "affected_systems": [
+        "every stateful entity in the project",
+        "the eventual bus runtime",
+        "every ledger authored from this point forward",
+        "every Box authored from this point forward"
+      ],
+      "related_north_star_goals": [
+        "NS-01",
+        "NS-02",
+        "NS-04",
+        "NS-09",
+        "NS-10"
+      ],
+      "related_ledgers": [
+        "BOX_BUS_LEDGER.md",
+        "BOX_LEDGER.md",
+        "DEFINITION_OF_DONE.md",
+        "DEC-2026-04-29-001 (Triad Spine)",
+        "DEC-2026-04-29-002 (Three-Phase Build)",
+        "DEC-2026-04-29-008 (Phase 1 Intake-Box read-mostly)"
+      ],
+      "supersedes": null,
+      "superseded_by": null,
+      "narrows": "DEC-2026-04-29-008 — carves the schema seam out of the deferred work while preserving the runtime deferral",
+      "decision": "The project's target architecture is a reactive network of Boxes connected by a routed Ledger bus. The architecture is specified now (Phase 0, this session) in BOX_BUS_LEDGER.md. The runtime — router daemon (or post-write hook), propagation ledger, T1/T2/T3 interpreters, validation enforcement, cycle enforcement — is deferred to Phase C of DEC-2026-04-29-002. Phase 0 ships schema and rules only: box.json manifest schema, ledger envelope schema, three routing tiers (Global / Domain / Local), three interpreter tiers (T1 deterministic / T2 small-LLM / T3 full sub-agent), hard-refusal cycle policy, what-is-a-Box binding rule, and two worked examples (Hugo Casillas Client Box + Analytics Source Channels Snapshot Box).",
+      "context": "Architecture first sketched in chat during 2026-04-29 Phase 1 Intake → Box session and intentionally deferred (DEC-2026-04-29-008) because building runtime before ledger taxonomy and sub-agent fleet stabilize would force re-wiring on every new ledger and every new sub-agent. Today's update: Phase 9 (Definition of Done) closed the most foundational completion-rules gap; 9 ledgers are now active out of ~19 planned. Without a written architectural target, every remaining ledger risks being authored without the bus shape in mind — creating migration debt at Phase C. Writing the schema down now (a Phase A activity — markdown ledger) gives every future ledger and Box a target. Writing runtime would still violate DEC-2026-04-29-008 and is held.",
+      "rationale": [
+        "Schema first / routing second / interpreters third / runtime last. The hard-but-cheap part is the schema.",
+        "Triad spine compatibility (DEC-2026-04-29-001): Box Ledger owns the concept; Box Bus Ledger owns the wire shape; Definition of Done owns the completion gate; Decisions Ledger owns the architectural lock.",
+        "Migration debt avoidance: every ledger and Box authored between today and Phase C ships envelope-aware. When runtime lands, no migration pass required.",
+        "Anti-half-finished discipline: this Decision narrows DEC-2026-04-29-008 by carving the schema seam out of deferred work while preserving runtime deferral.",
+        "Auditability: a written architecture is reviewable by every future agent. Chat-history architecture is not."
+      ],
+      "alternatives_considered": [
+        "Defer schema along with runtime — rejected: every future ledger and Box would be authored guessing at a target.",
+        "Ship schema + T1-only runtime now — rejected: re-touching cost is exactly what DEC-2026-04-29-008 prevents.",
+        "Wait until Phase C and author schema + runtime together — rejected: ~19 ledgers and ~40 Boxes would need migration.",
+        "Author schema in chat / docs / a Decisions Ledger row only — rejected: design is large enough to need its own ledger with worked examples and visuals.",
+        "Different name (Event Bus Ledger, Subscription Network Ledger) — picked Box Bus Ledger because the unit of state on both ends is a Box."
+      ],
+      "consequences": [
+        "Phase A continues with envelope-aware ledgers — every remaining Phase A ledger declares its tier at authoring.",
+        "Box Ledger gets cross-reference: concept lives there, manifest shape lives in Box Bus Ledger.",
+        "Definition of Done §5.7 gains manifest-shape compliance check — soft today (no runtime), hard at Phase C.",
+        "No runtime work permitted in Phase A — router, propagation ledger, interpreters, validation, cycle enforcement all deferred to Phase C.",
+        "Phase B steward agents author manifests for their target ledgers/systems as part of graduation.",
+        "Phase C+1 backfill authors manifests for 28 Client Boxes + 10 Staff Boxes + orchestrator + inbox-skill + ledger directory + app-ui root.",
+        "Open Problems Ledger absorbs any pre-Phase-C architectural risks.",
+        "analytics-snapshot Box kind reserved for Phase C+1 when each analytics script becomes a Box."
+      ],
+      "do_not_undo_casually": "Do not ship runtime (router, propagation ledger, interpreters, validation enforcement) during Phase A. The schema-only seam is the entire point. If runtime feels tempting, route the urge into Open Problems or Communications — not into code. DEC-2026-04-29-008's Do Not Undo Casually still binds against runtime. Do not change the manifest schema, envelope schema, tier model, or cycle policy without an explicit Decisions Ledger update.",
+      "review_trigger": [
+        "Phase A completes (all planned ledgers active, stewards landed for load-bearing ones) — unblocks Phase B + Phase C runtime work.",
+        "A foreseen-but-unspecified field is needed in box.json or envelope — review whether new Decision or BOX_BUS_LEDGER update is enough.",
+        "A new tier proposed beyond Global / Domain / Local — Decision-level change.",
+        "A new interpreter tier proposed beyond T1 / T2 / T3 — Decision-level change.",
+        "Cycle policy challenged (real use case for declared cycles) — currently hard-refusal; would be Decision-level change."
+      ],
+      "history": [
+        {
+          "date": "2026-04-29",
+          "event": "created. Phase 0 schema shipped same day at BOX_BUS_LEDGER.md + BOX_BUS_LEDGER.json + three Mermaid visuals (box_bus_topology, interpreter_tiers, envelope_routing_flow). Box Ledger and Definition of Done updated to point at it. Companion Communications entry: COMM-2026-04-29-007."
+        }
+      ]
     }
   ],
   "deprecated_or_reversed_decisions": [],
@@ -402,25 +911,112 @@
     }
   ],
   "decision_dependencies": {
-    "DEC-2026-04-28-001": {"foundation_for": ["DEC-2026-04-28-002", "DEC-2026-04-28-008", "DEC-2026-04-29-003"]},
-    "DEC-2026-04-28-002": {"depends_on": ["DEC-2026-04-28-001"], "presupposed_by": ["DEC-2026-04-28-003", "DEC-2026-04-29-001"]},
-    "DEC-2026-04-28-003": {"depends_on": ["DEC-2026-04-28-002"], "reinforced_by": ["DEC-2026-04-29-001"]},
-    "DEC-2026-04-28-004": {"depends_on": ["DEC-2026-04-28-003"]},
-    "DEC-2026-04-28-005": {"depends_on": ["DEC-2026-04-28-004"]},
-    "DEC-2026-04-28-006": {"depends_on": ["DEC-2026-04-28-003"]},
-    "DEC-2026-04-28-007": {"supports": ["DEC-2026-04-28-006"]},
-    "DEC-2026-04-28-008": {"depends_on": ["DEC-2026-04-28-001"], "becomes_phase_a_of": ["DEC-2026-04-29-002"]},
-    "DEC-2026-04-29-001": {"depends_on": ["DEC-2026-04-28-002"]},
-    "DEC-2026-04-29-002": {"depends_on": ["DEC-2026-04-29-001"], "contains": ["DEC-2026-04-28-008"]},
-    "DEC-2026-04-29-003": {"depends_on": ["DEC-2026-04-28-001"], "enforced_by_every_other_decision": true},
-    "DEC-2026-04-29-004": {"depends_on": ["DEC-2026-04-28-008", "OPEN_PROBLEMS_LEDGER", "DECISIONS_LEDGER", "COMMUNICATIONS_LEDGER"]}
+    "DEC-2026-04-28-001": {
+      "foundation_for": [
+        "DEC-2026-04-28-002",
+        "DEC-2026-04-28-008",
+        "DEC-2026-04-29-003"
+      ]
+    },
+    "DEC-2026-04-28-002": {
+      "depends_on": [
+        "DEC-2026-04-28-001"
+      ],
+      "presupposed_by": [
+        "DEC-2026-04-28-003",
+        "DEC-2026-04-29-001"
+      ]
+    },
+    "DEC-2026-04-28-003": {
+      "depends_on": [
+        "DEC-2026-04-28-002"
+      ],
+      "reinforced_by": [
+        "DEC-2026-04-29-001"
+      ]
+    },
+    "DEC-2026-04-28-004": {
+      "depends_on": [
+        "DEC-2026-04-28-003"
+      ]
+    },
+    "DEC-2026-04-28-005": {
+      "depends_on": [
+        "DEC-2026-04-28-004"
+      ]
+    },
+    "DEC-2026-04-28-006": {
+      "depends_on": [
+        "DEC-2026-04-28-003"
+      ]
+    },
+    "DEC-2026-04-28-007": {
+      "supports": [
+        "DEC-2026-04-28-006"
+      ]
+    },
+    "DEC-2026-04-28-008": {
+      "depends_on": [
+        "DEC-2026-04-28-001"
+      ],
+      "becomes_phase_a_of": [
+        "DEC-2026-04-29-002"
+      ]
+    },
+    "DEC-2026-04-29-001": {
+      "depends_on": [
+        "DEC-2026-04-28-002"
+      ]
+    },
+    "DEC-2026-04-29-002": {
+      "depends_on": [
+        "DEC-2026-04-29-001"
+      ],
+      "contains": [
+        "DEC-2026-04-28-008"
+      ]
+    },
+    "DEC-2026-04-29-003": {
+      "depends_on": [
+        "DEC-2026-04-28-001"
+      ],
+      "enforced_by_every_other_decision": true
+    },
+    "DEC-2026-04-29-004": {
+      "depends_on": [
+        "DEC-2026-04-28-008",
+        "OPEN_PROBLEMS_LEDGER",
+        "DECISIONS_LEDGER",
+        "COMMUNICATIONS_LEDGER"
+      ]
+    }
   },
   "promotions_from_communications_ledger": [
-    {"comm_id": "COMM-2026-04-28-001", "promoted_to": "DEC-2026-04-28-008", "promotion_date": "2026-04-29"},
-    {"comm_id": "COMM-2026-04-28-003", "promoted_to": "DEC-2026-04-28-005", "promotion_date": "2026-04-29"},
-    {"comm_id": "COMM-2026-04-29-001", "promoted_to": "DEC-2026-04-29-001", "promotion_date": "2026-04-29"},
-    {"comm_id": "COMM-2026-04-29-003", "promoted_to": "DEC-2026-04-29-002", "promotion_date": "2026-04-29"},
-    {"comm_id": "COMM-2026-04-29-005", "promoted_to": "DEC-2026-04-29-003", "promotion_date": "2026-04-29"}
+    {
+      "comm_id": "COMM-2026-04-28-001",
+      "promoted_to": "DEC-2026-04-28-008",
+      "promotion_date": "2026-04-29"
+    },
+    {
+      "comm_id": "COMM-2026-04-28-003",
+      "promoted_to": "DEC-2026-04-28-005",
+      "promotion_date": "2026-04-29"
+    },
+    {
+      "comm_id": "COMM-2026-04-29-001",
+      "promoted_to": "DEC-2026-04-29-001",
+      "promotion_date": "2026-04-29"
+    },
+    {
+      "comm_id": "COMM-2026-04-29-003",
+      "promoted_to": "DEC-2026-04-29-002",
+      "promotion_date": "2026-04-29"
+    },
+    {
+      "comm_id": "COMM-2026-04-29-005",
+      "promoted_to": "DEC-2026-04-29-003",
+      "promotion_date": "2026-04-29"
+    }
   ],
   "visuals": [
     {
@@ -444,6 +1040,20 @@
     "rejected": 0,
     "needs_review": 1,
     "promoted_from_communications": 5,
-    "north_star_coverage": ["NS-01", "NS-02", "NS-03", "NS-04", "NS-05", "NS-06", "NS-08", "NS-09", "NS-10"]
-  }
+    "north_star_coverage": [
+      "NS-01",
+      "NS-02",
+      "NS-03",
+      "NS-04",
+      "NS-05",
+      "NS-06",
+      "NS-08",
+      "NS-09",
+      "NS-10"
+    ],
+    "active": 16,
+    "total": 16,
+    "total_active_decisions": 17
+  },
+  "last_updated_note": "Phase 10 — added DEC-2026-04-29-013 Reactive Box Network architectural lock; companion BOX_BUS_LEDGER landed"
 }

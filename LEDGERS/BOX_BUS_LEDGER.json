@@ -1,0 +1,255 @@
+{
+  "ledger_type": "box_bus",
+  "version": "0.1.0",
+  "envelope_v": "1",
+  "last_updated": "2026-04-29",
+  "phase": "Phase 10 of ledger system buildout",
+  "status": "active (schema-only — runtime deferred)",
+  "maintainer": "Jake / Comeketo Agent project agents",
+  "core_rule": "Architecture lives in the file tree before it lives in code.",
+  "runtime_status": {
+    "router": "deferred to Phase C",
+    "propagation_ledger": "deferred to Phase C — will live at CCAgentindex/_ledger/propagation.jsonl",
+    "interpreters_T1": "deferred to Phase C",
+    "interpreters_T2": "deferred to Phase C",
+    "interpreters_T3": "deferred to Phase C (depends on Phase B sub-agent fleet)",
+    "validation": "deferred to Phase C — rules specified in §10"
+  },
+  "decision_lock": "DEC-2026-04-29-013",
+  "steward_agent": {
+    "status": "not_yet_authored",
+    "future_canonical_path": "Subagent Boxes/box_bus_subagent_package/",
+    "future_runnable_path": "CCAgentindex/agents/box_bus_steward/",
+    "phase_when_built": "Phase B (Sub-agents) — will likely co-evolve with Phase C runtime"
+  },
+  "manifest_schema": {
+    "filename": "box.json",
+    "required_fields": [
+      "id",
+      "slug",
+      "kind",
+      "name",
+      "owns",
+      "source_of_truth",
+      "subscribes",
+      "emits",
+      "agent_config",
+      "ledger_local",
+      "version"
+    ],
+    "kind_enum": [
+      "client",
+      "staff",
+      "orchestrator",
+      "inbox-skill",
+      "app-ui",
+      "automation",
+      "ledger",
+      "bedrock",
+      "analytics-snapshot",
+      "page",
+      "subagent-package",
+      "reference"
+    ],
+    "field_rules": {
+      "id": "stable forever",
+      "slug": "may rename",
+      "name": "human-readable, may change",
+      "owns": "every path under the Box's authority",
+      "source_of_truth.primary": "single canonical file or path",
+      "source_of_truth.generated": "list of paths that are views, not state",
+      "subscribes[].interpreter": "default T1 if omitted",
+      "agent_config.tier_default": "default interpreter tier for the Box (default T1)"
+    },
+    "new_kind_requires": "Decisions Ledger entry"
+  },
+  "envelope_schema": {
+    "required_fields": ["id", "ts", "ledger", "tier", "kind", "scope", "payload", "envelope_v"],
+    "optional_fields": ["routes_hint", "source_box"],
+    "rules": {
+      "tier": "must match the ledger's tier",
+      "scope": "must parse against the §2.3 grammar",
+      "source_box": "required when emitted by automation; null for human-authored entries",
+      "payload": "preserves the ledger's existing schema unchanged",
+      "id_uniqueness": "unique within (ledger, day)"
+    }
+  },
+  "scope_grammar": {
+    "patterns": [
+      {"pattern": "*", "meaning": "every Box"},
+      {"pattern": "kind:<kind>", "meaning": "every Box of that kind"},
+      {"pattern": "domain:<domain>", "meaning": "every Box in a domain"},
+      {"pattern": "box:<id>", "meaning": "one specific Box"},
+      {"pattern": "tier:<tier>", "meaning": "every Box subscribed at that tier"}
+    ],
+    "operators": ["not", "and", "or"]
+  },
+  "tier_model": {
+    "global": {
+      "examples": [
+        "GLOBAL_LEDGER",
+        "TEMPORAL_CONTINUITY",
+        "NORTH_STAR",
+        "DECISIONS_LEDGER",
+        "OPEN_PROBLEMS_LEDGER",
+        "COMMUNICATIONS_LEDGER",
+        "DEFINITION_OF_DONE",
+        "BOX_LEDGER",
+        "BOX_BUS_LEDGER",
+        "FILE_DIRECTORY_LEDGER",
+        "SOURCE_OF_TRUTH (planned)"
+      ],
+      "routing_posture": "fans out to every Box whose manifest declares subscribes: global; default for all client/staff/page boxes"
+    },
+    "domain": {
+      "examples": [
+        "page_asset_sitemap",
+        "CONNECTIONS (planned)",
+        "PHASE (planned)",
+        "ANALYTICS_<name> (planned per snapshot domain)",
+        "INBOX_GUARDRAILS (planned)"
+      ],
+      "routing_posture": "fans out only to Boxes within that domain"
+    },
+    "local": {
+      "examples": [
+        "client_ledger.md (per-Box)",
+        "<date>_audit_marker.md (per-Box)",
+        "per-snapshot run logs",
+        "per-automation run logs"
+      ],
+      "routing_posture": "stays inside the Box; emits up only via declared escalation rules"
+    },
+    "trickle_down_directions": {
+      "always_allowed": ["GLOBAL→DOMAIN", "GLOBAL→LOCAL", "DOMAIN→LOCAL"],
+      "only_via_declared_escalation": ["LOCAL→DOMAIN", "LOCAL→GLOBAL", "DOMAIN→GLOBAL"]
+    }
+  },
+  "interpreter_tiers": {
+    "T1": {
+      "name": "schema-mapper",
+      "cost": "$0",
+      "speed": "~0ms",
+      "use_for": "deterministic rule-based routing",
+      "expected_traffic_share": "~80%",
+      "default": true
+    },
+    "T2": {
+      "name": "template-summarizer",
+      "cost": "low",
+      "speed": "~1s",
+      "use_for": "small/cheap LLM for natural-language framing per Box",
+      "expected_traffic_share": "~15%",
+      "default": false
+    },
+    "T3": {
+      "name": "full sub-agent",
+      "cost": "high",
+      "speed": "seconds–minutes",
+      "use_for": "Phase B/C steward agents — entries that genuinely need judgment in Box context",
+      "expected_traffic_share": "~5%",
+      "default": false
+    }
+  },
+  "cycle_policy": {
+    "rule": "hard refusal at the router",
+    "rationale": "declared cycles with max-depth produce subtle bugs at scale; the router only needs a DAG",
+    "fallback_for_intentional_round_trips": "express as two separate routes via a Domain ledger",
+    "logged_to": "CCAgentindex/_ledger/propagation.jsonl (Phase C)"
+  },
+  "what_is_a_box": {
+    "yes_if_any": [
+      "owns canonical state that survives a restart",
+      "other Boxes interpret events from it",
+      "runs automation on a trigger or schedule",
+      "carries source-of-truth claims",
+      "has its own approval or guardrail rules",
+      "produces snapshots that other parts of the system depend on"
+    ],
+    "no_if": [
+      "ephemeral UI state, transient caches, per-request session data",
+      "only generated output and the generator lives in a Box of its own",
+      "third-party dependencies (node_modules, __pycache__)",
+      "leaf folder whose parent already owns a Box that covers it"
+    ],
+    "binding_rule": "if it has memory that future work depends on, it's a Box",
+    "decision_lock": "DEC-2026-04-29-013"
+  },
+  "validation_rules_for_phase_c": [
+    "envelope shape valid (required fields, tier enum, ISO8601 ts, id unique within ledger+day)",
+    "tier matches ledger's declared tier",
+    "scope parses against §2.3 grammar",
+    "no cycle introduced (source_box not transitively in resolved subscriber set)",
+    "subscriber filter parses — malformed filters block the Box loudly",
+    "routes_hint (if present) is a subset of resolved subscribers",
+    "validation failure logs to propagation.jsonl and emits validation_failure back to source_box"
+  ],
+  "build_sequence": [
+    {"phase": "Phase 0 — Schema (this ledger)", "lands": "manifest schema, envelope schema, tier model, interpreter tier model, cycle policy, what's-a-Box rule, two worked examples", "when": "2026-04-29 (today)"},
+    {"phase": "Phase A continues — envelope-aware ledgers", "lands": "every new ledger declares tier and entry-kind aligned to envelope, even though no router consumes them yet", "when": "Phase A current; ~10 ledgers left"},
+    {"phase": "Phase B — steward agents author manifests", "lands": "each draft sub-agent package at /Subagent Boxes/ that graduates also authors a box.json for its target ledger or system", "when": "Phase B"},
+    {"phase": "Phase C — runtime lands", "lands": "router daemon (or post-write hook), propagation ledger, T1 mappers, T2 summarizers, T3 sub-agent dispatch, validation on emit, cycle enforcement", "when": "Phase C"},
+    {"phase": "Phase C+1 — backfill", "lands": "manifests authored for existing Boxes (28 client + 10 staff + orchestrator + inbox-skill + ledger + app-ui)", "when": "Phase C"}
+  ],
+  "worked_examples": [
+    {
+      "name": "Hugo Casillas Client Box",
+      "id": "client_box:hugo_casillas",
+      "kind": "client",
+      "exists_today": true,
+      "purpose": "Real Box that exists today; manifest is the contract — runtime is deferred. Demonstrates how a Client Box subscribes to Decisions, Open Problems, Inbox Guardrails, and Analytics, and emits audit markers + escalations.",
+      "subscriptions_count": 4,
+      "emits_count": 2
+    },
+    {
+      "name": "Analytics Source Channels Snapshot Box",
+      "id": "analytics_snapshot:source_channels",
+      "kind": "analytics-snapshot",
+      "exists_today": false,
+      "exists_today_note": "the analytics script exists at Onboard Scripts/analytics_source_channels.py; the Box wrapping is the Phase C+1 graduation",
+      "purpose": "Demonstrates how an analytics script becomes a first-class Box — manifest declares ownership, subscriptions, emits, and a local run log. Per-lead emits fan out to every Client Box automatically.",
+      "subscriptions_count": 1,
+      "emits_count": 2
+    }
+  ],
+  "trickle_down_proof": {
+    "scenario": "analytics_source_channels.py runs",
+    "fan_out_chain": [
+      "emits 'snapshot_refreshed' event with scope: domain:analytics",
+      "emits 'per_lead_template_emitted' events with scope: kind:client",
+      "Hugo Box's subscription with filter 'scope:box:hugo_casillas' matches → T1 mapper writes to Hugo's client_ledger.md",
+      "Brenda & Steve Box's subscription matches → T1 mapper writes to their client_ledger.md",
+      "all 28 Client Boxes updated automatically",
+      "no human intervention; entire fan-out logged in _ledger/propagation.jsonl"
+    ],
+    "phase_a_note": "this fan-out doesn't run yet — Phase C work. The schema in this ledger says exactly how it will run when it does."
+  },
+  "north_star_alignment": {
+    "directly_supports": ["NS-01", "NS-02", "NS-04", "NS-09", "NS-10"],
+    "indirectly_supports": ["NS-06", "NS-07"]
+  },
+  "related_ledgers": {
+    "box_concept": "BOX_LEDGER.md",
+    "completion_gate": "DEFINITION_OF_DONE.md (§5.7 — Box / Directory Work)",
+    "architectural_lock": "DECISIONS_LEDGER.md (DEC-2026-04-29-013)",
+    "ui_done_gate_canonical": "page_asset_sitemap.md",
+    "phase_state": "TEMPORAL_CONTINUITY.md (Phase A current; Phase C is when runtime lands)"
+  },
+  "visuals": [
+    "VISUALS/box_bus_topology.mmd",
+    "VISUALS/interpreter_tiers.mmd",
+    "VISUALS/envelope_routing_flow.mmd"
+  ],
+  "update_triggers": [
+    "new kind added to manifest",
+    "new tier needed (currently Global/Domain/Local stable)",
+    "cycle policy changes (currently hard-refusal)",
+    "new interpreter tier needed",
+    "envelope schema gains a required field (bump envelope_v)",
+    "new scope-expression operator needed",
+    "Phase B/C runtime work adds binding constraints not foreseen here"
+  ],
+  "history": [
+    {"date": "2026-04-29", "event": "Phase 10 — initial creation. Architecture spec only; runtime deferred to Phase C per DEC-2026-04-29-013. Two worked examples (Hugo Client Box + Analytics Source Channels Snapshot Box). Six routing rules + ten validation rules specified. Companion files: box_bus_topology.mmd, interpreter_tiers.mmd, envelope_routing_flow.mmd."}
+  ]
+}

@@ -2,23 +2,26 @@
 
 const { useState, useEffect, useRef, useMemo, useCallback } = React;
 
+// Labels mirror app.jsx KNOWN_SCREENS exactly. If a route is added/removed
+// in app.jsx, update this map. Lookups fall back to the route name (`|| h.name`)
+// so a missing entry is non-fatal — but the map is meant to be the canonical
+// list of routes the breadcrumb knows about. Last sync: 2026-04-30 (PROB-011
+// session cleanup — retired-route labels removed: memory, prediction,
+// commitments, inbox, chat, calendar, rodbot, projects).
 const SCREEN_LABELS = {
   grid: "grid",
   settings: "settings",
-  memory: "memory",
-  prediction: "prediction",
-  commitments: "commitments",
-  inbox: "inbox",
+  leads: "leads",
+  clients: "clients",
+  coworkers: "coworkers",
   contacts: "contacts",
+  venues: "venues",
   briefing: "briefing",
-  delegations: "delegations",
-  chat: "chat",
-  calendar: "calendar",
-  rodbot: "Rodbot",
-  projects: "projects",
-  activity: "activity",
-  analytics: "analytics",
   automation: "automation",
+  activity: "activity",
+  intake: "intake",
+  analytics: "analytics",
+  delegations: "delegations",
   boxes: "boxes",
 };
 
@@ -723,6 +726,8 @@ function ChatRail({ go, gridGenerate, aiBusy }) {
   const [activeId, setActiveId] = useState(() => (CHAT ? (CHAT.activeId() || (CHAT.all()[0] && CHAT.all()[0].id)) : null));
   const [draft, setDraft] = useState("");
   const [busy, setBusy] = useState(false);
+  const [computerUseBusy, setComputerUseBusy] = useState(false);
+  const [browserUseBusy, setBrowserUseBusy] = useState(false);
   const scrollRef = useRef(null);
 
   // Attachments — ported from ChatScreen so the homepage rail can finally
@@ -818,6 +823,171 @@ function ChatRail({ go, gridGenerate, aiBusy }) {
     }
   };
 
+  const appendToolPanel = (text) => {
+    if (!CHAT || !CHAT.appendTurn || !text) return null;
+    let cid = activeId;
+    if (!cid) {
+      const c = CHAT.newChat("Tool handoffs");
+      cid = c.id;
+      setActiveId(cid);
+    }
+    return CHAT.appendTurn(cid, "tool", String(text));
+  };
+
+  const handoffPanelText = (label, body) => [
+    `**${label} sent**`,
+    "",
+    "**Prompt**",
+    String(body || "").trim().split("\n").map(line => `> ${line}`).join("\n"),
+  ].join("\n");
+
+  const browserResultPanelText = (result) => {
+    const items = Array.isArray(result.items) ? result.items : [];
+    const lines = [
+      "**browser use done**",
+      result.title ? `_${result.title}_` : null,
+      result.url ? `[opened page](${result.url})` : null,
+      "",
+    ].filter(Boolean);
+    if (items.length) {
+      items.slice(0, 12).forEach((item, idx) => {
+        const title = item.title || item.text || item.url || `result ${idx + 1}`;
+        const link = item.url ? `[${title}](${item.url})` : title;
+        const meta = [
+          item.channel,
+          ...(Array.isArray(item.metadata) ? item.metadata : []),
+        ].filter(Boolean).join(" · ");
+        lines.push(`${idx + 1}. ${link}${meta ? `\n   ${meta}` : ""}`);
+        if (item.description) lines.push(`   ${item.description}`);
+      });
+      return lines.join("\n");
+    }
+    if (result.summary) return [...lines, result.summary].join("\n");
+    return [...lines, "No readable browser results came back."].join("\n");
+  };
+
+  const browserUseSettings = () => {
+    try {
+      const tweaks = JSON.parse(localStorage.getItem("secretary.tweaks") || "{}");
+      return {
+        resultLimit: 8,
+        detail: "standard",
+        includeLinks: true,
+        screenshots: true,
+        ...(tweaks.browserUse || {}),
+      };
+    } catch {
+      return { resultLimit: 8, detail: "standard", includeLinks: true, screenshots: true };
+    }
+  };
+
+  const routePillStyle = ({ active=false, enabled=true, busy=false } = {}) => ({
+    background: active || busy ? "var(--paper-2)" : "transparent",
+    border: "1px solid " + (active ? "var(--ink-3)" : "var(--rule-2)"),
+    borderRadius:999, minHeight:26, cursor: enabled && !busy ? "pointer" : "default",
+    display:"inline-flex", alignItems:"center", justifyContent:"center", gap:5,
+    color: active ? "var(--ink-1)" : enabled ? "var(--ink-3)" : "var(--ink-4)", padding:"0 9px",
+    fontFamily:"var(--font-mono)", fontSize:9, textTransform:"lowercase",
+    opacity: busy ? 0.72 : 1,
+    transition:"all 120ms ease",
+  });
+
+  const sendToComputerUse = async () => {
+    const body = String(draft || "").trim();
+    if (!body || computerUseBusy) return;
+    setComputerUseBusy(true);
+    try {
+      const res = await fetch("/api/computer_use/handoff", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          text: body,
+          attachments,
+          source: { surface: "chat_rail", route: "grid", chat_id: activeId },
+          context: { from: "composer_draft" },
+        }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok || !data.ok) throw new Error(data.error || data.detail || `handoff failed (${res.status})`);
+      appendToolPanel(handoffPanelText("computer use", body));
+      setDraft("");
+    } catch (e) {
+      alert("Computer use handoff failed: " + (e.message || e));
+    } finally {
+      setComputerUseBusy(false);
+    }
+  };
+
+  const pollBrowserUseJob = async (jobId) => {
+    for (let i = 0; i < 45; i++) {
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      const res = await fetch(`/api/browser_use/jobs/${encodeURIComponent(jobId)}`);
+      const data = await res.json().catch(() => ({}));
+      const job = data.job || {};
+      if (job.status === "done") return job;
+      if (job.status === "failed") throw new Error(job.error || "browser use failed");
+    }
+    throw new Error("browser use still running");
+  };
+
+  const sendToBrowserUse = async () => {
+    const body = String(draft || "").trim();
+    if (!body || browserUseBusy) return;
+    setBrowserUseBusy(true);
+    try {
+      const res = await fetch("/api/browser_use/handoff", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          text: body,
+          settings: browserUseSettings(),
+          source: { surface: "chat_rail", route: "grid", chat_id: activeId },
+          context: { from: "composer_draft" },
+        }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok || !data.ok) throw new Error(data.error || `browser use failed (${res.status})`);
+      appendToolPanel(handoffPanelText("browser use", body));
+      setDraft("");
+      const job = await pollBrowserUseJob(data.job && data.job.job_id);
+      const result = job.result || {};
+      appendToolPanel(browserResultPanelText(result));
+    } catch (e) {
+      alert("Browser use failed: " + (e.message || e));
+    } finally {
+      setBrowserUseBusy(false);
+    }
+  };
+
+  const sendToOpenBrowser = async () => {
+    const body = String(draft || "").trim();
+    if (!body) return;
+    try {
+      const res = await fetch("/api/browser_open/handoff", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          text: body,
+          source: { surface: "chat_rail", route: "grid", chat_id: activeId },
+          context: { from: "composer_draft" },
+        }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok || !data.ok) throw new Error(data.error || data.detail || `open browser failed (${res.status})`);
+      appendToolPanel([
+        "**open browser sent**",
+        "",
+        "**Prompt**",
+        ...body.split("\n").map(line => `> ${line}`),
+        "",
+        data.url ? `[opened page](${data.url})` : "Opened browser.",
+      ].join("\n"));
+      setDraft("");
+    } catch (e) {
+      alert("Open browser failed: " + (e.message || e));
+    }
+  };
+
   // Detect regen/regenerate-style intent. If the user asks for a new grid,
   // pipe the rest of the message (everything after the directive word) into
   // onGenerate as the intent, and echo a system turn instead of calling the
@@ -908,6 +1078,7 @@ function ChatRail({ go, gridGenerate, aiBusy }) {
           {turns.map((t, i) => {
             const mine = t.role === "user";
             const sys  = t.role === "system";
+            const tool = t.role === "tool";
             // Turn content is either a string (legacy / assistant replies)
             // or an array of parts [{type:"text",text},{type:"image",url,...}]
             // when the user attached images. Split so rendering stays safe.
@@ -934,7 +1105,7 @@ function ChatRail({ go, gridGenerate, aiBusy }) {
                       ? <div className="chat-rail-bubble">{text}</div>
                       : <Markdown text={text} className="chat-rail-bubble chat-md"/>
                   )}
-                  {!mine && !sys && text && (
+                  {!mine && !sys && !tool && text && (
                     <button
                       className="chat-footnote"
                       onClick={() => sendToDelegations(text)}
@@ -1040,10 +1211,10 @@ function ChatRail({ go, gridGenerate, aiBusy }) {
         }}>
           <span style={{fontFamily:"var(--font-mono)", textTransform:"uppercase", fontSize:9, opacity:0.7}}>route via</span>
           {[
-            { tag: "@slack",   icon: "slack",          title: "Slack — tag this turn for Slack routing" },
-            { tag: "@github",  icon: "git-branch",     title: "GitHub — tag this turn for repo work" },
-            { tag: "@close",   icon: "target",         title: "Close — tag this turn for CRM action" },
-            { tag: "@clickup", icon: "clipboard-list", title: "ClickUp — tag this turn for task creation" },
+            { tag: "@slack",   label: "slack",   icon: "slack",          title: "Slack — tag this turn for Slack routing" },
+            { tag: "@github",  label: "github",  icon: "git-branch",     title: "GitHub — tag this turn for repo work" },
+            { tag: "@close",   label: "close",   icon: "target",         title: "Close — tag this turn for CRM action" },
+            { tag: "@clickup", label: "clickup", icon: "clipboard-list", title: "ClickUp — tag this turn for task creation" },
           ].map(c => {
             const active = draft.includes(c.tag);
             return (
@@ -1056,19 +1227,40 @@ function ChatRail({ go, gridGenerate, aiBusy }) {
                   });
                 }}
                 title={c.title}
-                style={{
-                  background: active ? "var(--paper-2)" : "transparent",
-                  border: "1px solid " + (active ? "var(--ink-3)" : "var(--rule)"),
-                  borderRadius:"50%", width:26, height:26, cursor:"pointer",
-                  display:"inline-flex", alignItems:"center", justifyContent:"center",
-                  color: active ? "var(--ink-1)" : "var(--ink-3)", padding:0,
-                  transition:"all 120ms ease",
-                }}
+                style={routePillStyle({ active, enabled: true })}
               >
                 <Icon name={c.icon} size={11}/>
+                <span>{c.label}</span>
               </button>
             );
           })}
+          <button
+            onClick={sendToComputerUse}
+            disabled={!draft.trim() || computerUseBusy}
+            title="Hand off this draft to the desktop computer-use runner"
+            style={routePillStyle({ enabled: !!draft.trim(), busy: computerUseBusy })}
+          >
+            <Icon name="terminal" size={11}/>
+            <span>computer use</span>
+          </button>
+          <button
+            onClick={sendToBrowserUse}
+            disabled={!draft.trim() || browserUseBusy}
+            title="Run this draft through a background browser worker"
+            style={routePillStyle({ enabled: !!draft.trim(), busy: browserUseBusy })}
+          >
+            <Icon name="search" size={11}/>
+            <span>browser use</span>
+          </button>
+          <button
+            onClick={sendToOpenBrowser}
+            disabled={!draft.trim()}
+            title="Open this request in the visible browser"
+            style={routePillStyle({ enabled: !!draft.trim() })}
+          >
+            <Icon name="external-link" size={11}/>
+            <span>open browser</span>
+          </button>
         </div>
 
         <div className="chat-rail-input">

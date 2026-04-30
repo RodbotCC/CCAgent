@@ -1,0 +1,192 @@
+{
+  "ledger_type": "asset_widget_map",
+  "version": "0.1.0",
+  "envelope_v": "1",
+  "tier": "domain",
+  "last_updated": "2026-04-29",
+  "phase": "Phase 14 of ledger system buildout",
+  "status": "active",
+  "maintainer": "Jake / Comeketo Agent project agents",
+  "core_rule": "The sitemap is canonical for per-page operational truth. This ledger is the cross-cutting map.",
+  "canonical_per_page_truth": "page_asset_sitemap.md",
+  "steward_agent": {
+    "status": "not_yet_authored",
+    "future_canonical_path": "Subagent Boxes/asset_widget_map_subagent_package/",
+    "future_runnable_path": "CCAgentindex/agents/asset_widget_map_steward/",
+    "phase_when_built": "Phase B (Sub-agents)"
+  },
+  "pages": [
+    {"id": "grid", "primary_screen": "FrontPage (app.jsx)", "purpose": "App home — 3x3 decision grid + IdeasTray + QuickCapture + ChatRail"},
+    {"id": "automation", "primary_screen": "AutomationScreen (automation.jsx)", "purpose": "Workflow display + trigger surfaces + manual-fire UI"},
+    {"id": "activity", "primary_screen": "ActivityScreen (screens.jsx)", "purpose": "Pieces sweeps + tools catalog + ask panel"},
+    {"id": "settings", "primary_screen": "SettingsScreen (screens.jsx)", "purpose": "Connector credentials + feature flags + provider picker"},
+    {"id": "leads", "primary_screen": "LeadsScreen (screens.jsx)", "purpose": "People page filtered to kind:lead (28 records)"},
+    {"id": "clients", "primary_screen": "ClientsScreen (screens.jsx)", "purpose": "People page filtered to kind:client"},
+    {"id": "coworkers", "primary_screen": "CoworkersScreen (screens.jsx)", "purpose": "People page filtered to kind:coworker (10 staff)"},
+    {"id": "contacts", "primary_screen": "ContactsScreen (screens.jsx)", "purpose": "People page filtered to kind:contact"},
+    {"id": "venues", "primary_screen": "VenuesScreen (screens.jsx)", "purpose": "Venues domain (30 records, kind:venue)"},
+    {"id": "briefing", "primary_screen": "BriefingScreen (screens.jsx)", "purpose": "Daily briefing ribbon + Pieces-fed digest"},
+    {"id": "intake", "primary_screen": "IntakeScreen (screens.jsx)", "purpose": "Reports list (Box Reports auto + Workspaces manual) + ask panel"},
+    {"id": "delegations", "primary_screen": "DelegationsScreen (screens.jsx)", "purpose": "Channel-picker delegation drafts + run timeline"},
+    {"id": "boxes", "primary_screen": "BoxesScreen (screens.jsx)", "purpose": "Client/Staff Box reader + dossier renderer + specialized renderers"},
+    {"id": "analytics", "primary_screen": "AnalyticsScreen (screens.jsx)", "purpose": "Conversation Intelligence flag-bearer page"}
+  ],
+  "shared_widgets": {
+    "layout_chrome_every_page": [
+      {"name": "Topbar", "defined_in": "components.jsx"},
+      {"name": "BottomStrip", "defined_in": "components.jsx"},
+      {"name": "Route breadcrumbs", "defined_in": "components.jsx"}
+    ],
+    "cross_page_overlays": [
+      {"name": "FullscreenCell", "defined_in": "components.jsx", "used_by": ["grid", "others"]},
+      {"name": "TweaksPanel", "defined_in": "components.jsx", "used_by": ["grid", "settings"], "reads": "localStorage.secretary.tweaks"},
+      {"name": "EditWithRodbotOverlay", "defined_in": "components.jsx", "used_by": ["grid", "boxes"]},
+      {"name": "AIBanner", "defined_in": "components.jsx", "used_by": ["every page"]}
+    ],
+    "context_menu_useContextMenu": {
+      "defined_in": "components.jsx",
+      "items_shape": "[{ label, icon, onClick, danger, disabled, shortcut, divider, keepOpen }]",
+      "wired_on": ["grid (CellContextMenu)", "leads", "clients", "coworkers", "contacts", "venues", "intake (cards)", "delegations (cards + rows)", "boxes (list + html demos)"],
+      "pattern": "useContextMenu() + onContextMenu={...} + menu.render(buildItemsFor(target), title)"
+    },
+    "people_page_primitive": {
+      "screens_using": ["leads", "clients", "coworkers", "contacts", "venues"],
+      "skeleton": "list + profile pane + contact rows + right-click menu",
+      "data_sources": ["MissionControl.people (filtered by kind:)", "MissionControl.venues (for venues)"],
+      "change_radius": "all 5 routes affected by primitive changes"
+    },
+    "box_specialized_renderers": {
+      "registered": ["hugo_casillas", "brenda_steve"],
+      "generic_fallback": "boxes-md-rich (covers the other 26)",
+      "where_to_register": "BoxesScreen + BOX_LEDGER.md per-Client conventions"
+    },
+    "markdown_dossier_rendering": {
+      "name": "boxes-md-rich",
+      "purpose": "design-kit cards, admonition styling, narrative-card flow",
+      "reusable_on": "any future page needing structured markdown rendering"
+    },
+    "connectors_picker": {
+      "defined_in": "connectors.js",
+      "exposes_via": "window.SecretaryConnectors",
+      "channels": ["claude_code", "clickup", "slack", "email", "whatsapp", "sms", "note", "internal", "open_url"],
+      "consumed_by": ["delegations", "grid (ChatRail quick-tag)", "intake (send-section-to-delegations)", "boxes (right-click handoff)"],
+      "change_radius": "4 pages"
+    }
+  },
+  "api_to_page_mapping": {
+    "universal_health": {
+      "/api/status": ["every page (readiness checks)"]
+    },
+    "boxes_domain": {
+      "GET /api/boxes/list": ["boxes"],
+      "GET /api/boxes/<id>": ["boxes", "intake (Box Report synthesis)"],
+      "GET /api/boxes/<id>/html": ["boxes"],
+      "GET /api/boxes/<id>/template/<slug>": ["boxes"]
+    },
+    "reports_intake": {
+      "GET /api/reports/list": ["intake"],
+      "GET /api/reports/get?slug=<id>": ["intake (Box Report or Workspace)"],
+      "POST /api/reports/ask": ["intake"],
+      "POST /api/reports/ingest": ["intake"]
+    },
+    "people_venues": {
+      "GET /api/people/list": ["leads", "clients", "coworkers", "contacts"],
+      "GET /api/venues/list": ["venues"]
+    },
+    "pieces": {
+      "GET /api/pieces/status": ["activity", "briefing"],
+      "GET /api/pieces/sweeps": ["activity"],
+      "GET /api/pieces/sweeps/latest": ["activity", "briefing"],
+      "POST /api/pieces/sweep": ["activity"],
+      "POST /api/pieces/ask": ["activity", "briefing"]
+    },
+    "delegations_connectors": {
+      "POST /api/delegate": ["delegations", "grid (ChatRail)", "intake", "boxes"],
+      "POST /api/clickup/rescan": ["delegations", "settings"],
+      "POST /api/clickup/*": ["delegations"]
+    },
+    "settings": {
+      "POST /api/settings/mcp_credentials": ["settings"],
+      "GET /api/settings/*": ["settings"]
+    },
+    "chat": {
+      "POST /api/chat/*": ["grid (ChatRail)", "intake (ask)"]
+    },
+    "agents_runnable": {
+      "POST /api/agents/<name>/run": ["delegations (when wired)", "grid (ChatRail handoff)", "boxes (per-Box steward when authored)"]
+    },
+    "activity_log_read": {
+      "_ledger/activity.jsonl (file read)": ["activity", "briefing"]
+    }
+  },
+  "shared_services_window": [
+    {"service": "window.MissionControl", "defined_in": "mission_control_loader.js", "read_by": "every screen", "owns": "bedrock data: people, venues, boxes, boxesById, boxesGrouped, boxesMismatch, workflows, triggers, agent_plans, hooks, catalog_edges"},
+    {"service": "window.SecretaryAI", "defined_in": "ai.js", "read_by": ["grid (ChatRail)", "intake (ask)"], "owns": "LLM orchestration"},
+    {"service": "window.SecretaryActions", "defined_in": "ai_actions.js", "read_by": "every screen with chat", "owns": "tool/action handlers"},
+    {"service": "window.SecretaryMemory", "defined_in": "(legacy name; Pieces-backed)", "read_by": ["activity", "briefing", "grid"], "owns": "memory recall"},
+    {"service": "window.SecretaryLedger", "defined_in": "(internal)", "read_by": "every screen", "owns": "activity / event log helpers"},
+    {"service": "window.SecretaryInbox", "defined_in": "(internal)", "read_by": ["grid (QuickCapture)", "inbox surfaces"], "owns": "inbox writes"},
+    {"service": "window.SecretaryDelegator", "defined_in": "delegator.js", "read_by": ["grid", "delegations", "intake", "boxes"], "owns": "delegation flow"},
+    {"service": "window.SecretaryConnectors", "defined_in": "connectors.js", "read_by": ["grid", "delegations", "intake", "boxes"], "owns": "channel catalog + send"},
+    {"service": "window.Rodbot", "defined_in": "(internal; legacy name)", "read_by": ["grid (Edit-with-Rodbot overlay)"], "owns": "overlay-driven edits"},
+    {"service": "window.MissionControlRefreshBoxes", "defined_in": "mission_control_loader.js", "read_by": ["boxes"], "owns": "re-hydrate Box data"}
+  ],
+  "stable_internal_naming_rule": "Internal API names like SecretaryX are stable for compatibility — these are not user-facing and survive across ledger phases.",
+  "cross_page_state": {
+    "localStorage_keys": {
+      "secretary.tweaks": {"read_by": ["grid", "settings"], "owns": "user preferences (incl. piecesModel, promptEnhance)"},
+      "secretary.gridHistory": {"read_by": ["grid"], "owns": "grid generation history"},
+      "secretary.gridOverrides": {"read_by": ["grid"], "owns": "per-cell overrides"},
+      "secretary.commitments": {"read_by": ["grid (legacy)"], "owns": "deprecated — commitments page retired Apr 2026 trim"},
+      "secretary.history.v2": {"read_by": ["grid", "chat"], "owns": "conversation history"},
+      "secretary.refineStack": {"read_by": ["grid"], "owns": "refine-loop state"},
+      "comeketo.briefingIdeas.<slug>": {"read_by": ["grid (IdeasTray)", "briefing"], "owns": "AI-curated ideas cache per briefing slug"}
+    },
+    "localStorage_rule": "Acceptable in project's own React/HTML files but NOT inside Cowork artifacts (per CLAUDE.md <artifacts> block).",
+    "window_events": [
+      {"event": "comeketoagent:language", "emitter": "language flip in Topbar", "listeners": "every screen with i18n strings"},
+      {"event": "missioncontrol:loaded", "emitter": "mission_control_loader.js", "listeners": "every screen needing MissionControl ready"},
+      {"event": "missioncontrol:error", "emitter": "mission_control_loader.js", "listeners": "error surfaces"}
+    ]
+  },
+  "change_radius_hints": [
+    {"if_you_change": "useContextMenu hook in components.jsx", "recheck": ["grid", "leads", "clients", "coworkers", "contacts", "venues", "intake", "delegations", "boxes"]},
+    {"if_you_change": "Topbar / BottomStrip", "recheck": ["every page (chrome)"]},
+    {"if_you_change": "People-page primitive", "recheck": ["leads", "clients", "coworkers", "contacts", "venues"]},
+    {"if_you_change": "connectors.js channel catalog", "recheck": ["delegations", "grid (ChatRail)", "intake", "boxes"]},
+    {"if_you_change": "mission_control_loader.js", "recheck": ["every page that reads MissionControl.* (effectively all)"]},
+    {"if_you_change": "ai_instructions.js system-prompt assembly", "recheck": ["grid ChatRail", "intake ask"]},
+    {"if_you_change": "any new /api/* endpoint", "recheck": ["the page that calls it", "sitemap entry", "CONNECTIONS.md if external"]},
+    {"if_you_change": "lucide.js icons", "recheck": ["every page (bump cache-buster)"]},
+    {"if_you_change": "styles.css", "recheck": ["every page (bump cache-buster)"]},
+    {"if_you_change": "any JS/CSS file", "rule": "every JS/CSS edit must bump its ?v= in Secretary.html (DEC-2026-04-29-007)"}
+  ],
+  "update_triggers": [
+    "new page / route added",
+    "widget moves single-page → multi-page",
+    "new /api/* endpoint with ≥1 page consumer",
+    "new window.SecretaryX service",
+    "new shared localStorage key",
+    "new window event",
+    "cross-page side effect introduced"
+  ],
+  "single_page_only_rule": "If a single page changes with no cross-page impact, update the sitemap only — NOT this ledger.",
+  "north_star_alignment": {
+    "directly_supports": ["NS-02", "NS-09", "NS-10"],
+    "indirectly_supports": ["NS-01", "NS-06", "NS-07"]
+  },
+  "related_ledgers": {
+    "canonical_per_page_truth": "page_asset_sitemap.md (DEC-2026-04-29-007)",
+    "file_roles": "FILE_CONTENTS.md",
+    "external_services": "CONNECTIONS.md",
+    "ui_decisions": "DECISIONS_LEDGER.md",
+    "page_truth_ordering": "SOURCE_OF_TRUTH.md §3.2",
+    "page_done_gate": "DEFINITION_OF_DONE.md §5.3",
+    "widget_done_gate": "DEFINITION_OF_DONE.md §5.4",
+    "future_per_page_deep_memory": "LEDGERS/PAGES/<route>.md (planned)"
+  },
+  "visuals": ["VISUALS/page_widget_dependency.mmd"],
+  "history": [
+    {"date": "2026-04-29", "event": "Phase 14 — initial creation. 14-page index + cross-page widget catalog (7 categories) + API → page mapping (10 endpoint groups) + 10 shared window.* services + 7 cross-page localStorage keys + 3 window events + 10 change-radius hints. Tier: domain. Cross-references sitemap as canonical UI Done Gate. Companion files: ASSET_WIDGET_MAP.json, VISUALS/page_widget_dependency.mmd. Companion Communications entry: COMM-2026-04-29-011."}
+  ]
+}

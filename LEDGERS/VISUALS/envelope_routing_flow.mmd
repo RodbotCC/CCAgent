@@ -1,0 +1,40 @@
+%% Box Bus Ledger — Envelope routing flow
+%% emit → validate → resolve subscribers → cycle check → dispatch interpreters → record
+%% Phase 0 specifies the flow; Phase C builds the running system.
+
+flowchart TD
+  Box[Source Box<br/>declares event in emits[]] --> Wrap[Wrap payload in envelope<br/>id · ts · ledger · tier · kind · scope · source_box]
+
+  Wrap --> Validate{Validate envelope}
+  Validate -->|fail| ValFail[Log validation_failed<br/>to propagation.jsonl<br/>+ emit back to source_box]
+  ValFail --> StopFail([Drop entry])
+
+  Validate -->|pass| Persist[Persist to ledger file<br/>append-only]
+
+  Persist --> Resolve[Router consults<br/>subscription index<br/>built from all box.json]
+
+  Resolve --> CycleCheck{Cycle check<br/>source_box not in<br/>resolved chain?}
+  CycleCheck -->|cycle| Block[Log cycle_blocked<br/>to propagation.jsonl<br/>drop affected routes]
+  Block --> StopCycle([Partial fan-out · cycle routes dropped])
+
+  CycleCheck -->|no cycle| Subscribers{Any subscribers<br/>match scope/filter?}
+  Subscribers -->|none| NoOp([No fan-out · entry persisted only])
+  Subscribers -->|yes| Dispatch[Dispatch one interpretation job<br/>per subscriber Box]
+
+  Dispatch --> Tiers[See interpreter_tiers.mmd<br/>T1 / T2 / T3 per subscription]
+
+  Tiers --> Receipt[Append per-route receipt<br/>to propagation.jsonl]
+
+  Receipt --> Done([Fan-out complete · audit trail durable])
+
+  classDef phase0 fill:#dcefff,stroke:#2a5a8a,stroke-width:1px;
+  classDef gate fill:#fff7d6,stroke:#b08a00,stroke-width:1px;
+  classDef fail fill:#ffe9e9,stroke:#a33,stroke-width:1px;
+  classDef terminal fill:#dcffd6,stroke:#2a8a2a,stroke-width:2px;
+  classDef terminalNeutral fill:#f0f0f0,stroke:#666,stroke-width:2px;
+
+  class Box,Wrap,Persist,Resolve,Dispatch,Tiers,Receipt phase0;
+  class Validate,CycleCheck,Subscribers gate;
+  class ValFail,Block fail;
+  class Done terminal;
+  class StopFail,StopCycle,NoOp terminalNeutral;

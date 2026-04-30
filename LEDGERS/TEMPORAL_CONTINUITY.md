@@ -1,6 +1,6 @@
 # Temporal Continuity Ledger
 
-Last updated: 2026-04-29 (post Cowork housekeeping — directory consolidation, Audit dropped from build queue, Communications Ledger queued)
+Last updated: 2026-04-29 (Phase 14 — Asset/Widget Map landed; cross-page UI catalog)
 Updated by: Jake (orchestrator) + Claude (Code, Opus 4.7 1M context — separate from Cowork sessions)
 Current project moment: **Cleanup phase.** Plumbing-first build was scrapped under owner pressure; UI rebuilt from working pieces; Auto/ payload symlinked into bedrock. Ledger Phases 1–5 + first steward agent are live, but the *bedrock itself* (`CCAgentindex/`) was bootstrapped on the fly and now needs triad-based reconciliation — deferred per PROB-2026-04-28-016 until ledger and sub-agent buildout settles.
 Current phase: **Cleanup + ledger/sub-agent buildout completion.** Not greenfield.
@@ -37,7 +37,7 @@ The project is **3 days in, mid-buildout, in cleanup phase** on the Comeketo Age
 - 10 Staff Boxes
 - 5 sub-agent packages consolidated at **`/Subagent Boxes/`** (file_directory, global_ledger, north_star, open_problems, temporal_continuity) — moved from repo root 2026-04-29. These are *draft* packages awaiting promotion to runnable app agents under `CCAgentindex/agents/<name>/`. The canonical *active* steward materials still live at `LEDGERS/AGENTS/<name>/`.
 - 3 runnable app agents (`andre_escalation_ladder`, `global_ledger_steward`, `inbox_triage`)
-- **7 active project ledgers** (Global, Temporal Continuity, North Star, File Directory, Open Problems, Communications, **Decisions** — landed 2026-04-29 Phase 7) + 19 outline drafts at **`/Ledger Drafts/`** (moved from `~/Documents/` 2026-04-29) waiting to be ingested. **Read the matching `.txt` outline before authoring any new ledger.**
+- **14 active project ledgers** (Global, Temporal Continuity, North Star, File Directory, Open Problems, Communications, Decisions, Box Ledger, Definition of Done, Box Bus Ledger, Source-of-Truth, Connections, File Contents, **Asset/Widget Map** — Phase 14, all 2026-04-29) + 19 outline drafts at **`/Ledger Drafts/`**. **Read the matching `.txt` outline before authoring any new ledger.** Every new ledger must satisfy DoD §5.6 + envelope-aware. Source-of-Truth (P11) = first global-tier; Connections (P12) = first domain-tier; File Contents (P13) = first project-wide file inventory; Asset/Widget Map (P14) = first cross-cutting UI catalog. The "where do I start with this file?" gap is closed; the "if I change this widget, what breaks?" gap is closed.
 - **Audit Ledger removed from build queue (2026-04-29)** — covered by Open Problems / Decisions / Communications / per-Box ledgers. Draft `# Audit Ledger.txt` stays in `Ledger Drafts/` as reference; not deleted.
 - Triad is **lopsided**: more Boxes than Ledgers, more Ledgers than Sub-agents. Filling that grid is the dominant verb.
 
@@ -62,11 +62,12 @@ The project is **3 days in, mid-buildout, in cleanup phase** on the Comeketo Age
 ### 2.1 Ledger System Buildout
 
 Status: **active**
-Current step: Phase 5 Open Problems Ledger landed, then `global_ledger_steward` was promoted from draft package to runnable app agent.
-Just completed: Phases 1–5 — Global + Temporal Continuity + North Star + File Directory + Open Problems — plus first steward automation. The 5 open problems FDL surfaced are now formal entries (PROB-010 through 014); the 9 spec problems are also recorded (PROB-001 through 009 with PROB-008 already closed because Phases 1–4 met its close criteria). `global_ledger_steward` now runs through `POST /api/agents/global_ledger_steward/run`, writes scoped local ledger updates, appends activity, and stores receipts under `CCAgentindex/_ledger/ledger_steward_runs/`.
-Workflow: user signals to proceed to the next ledger (typically by uploading next spec or saying "P").
-Next likely Phase 6: Source-of-Truth (encodes Global §4 + NS-06 + FDL §6), Definition of Done, or Decisions.
-Build order tracked in [`INDEX.md`](INDEX.md).
+Current step: Phase 14 — **Asset/Widget Map** landed. Cross-page widget catalog + API→page mapping + shared services + change-radius hints. Sits one altitude above the page-asset sitemap (sitemap remains canonical per-page truth).
+Just completed (2026-04-29 sprint): Phases 6–14 in rapid succession — Communications (P6), Decisions (P7), Box Ledger (P8), DoD (P9), Box Bus (P10), Source-of-Truth (P11), Connections (P12), File Contents (P13), Asset/Widget Map (P14). **14 active ledgers total.** Architectural lock at DEC-2026-04-29-013 holds: every future ledger declares its tier; runtime stays deferred to Phase C. Four real envelope-aware precedents now exist: Source-of-Truth (global), Connections (domain), File Contents (global), Asset/Widget Map (domain).
+Just completed (prior, 2026-04-28): Phases 1–5 — Global + Temporal Continuity + North Star + File Directory + Open Problems — plus first steward automation. The 5 open problems FDL surfaced are now formal entries (PROB-010 through 014); the 9 spec problems are also recorded (PROB-001 through 009 with PROB-008 already closed). `global_ledger_steward` runs through `POST /api/agents/global_ledger_steward/run`, writes scoped local ledger updates, appends activity, and stores receipts under `CCAgentindex/_ledger/ledger_steward_runs/`.
+Workflow: user signals to proceed to the next ledger (typically by uploading the next spec or saying "P"). With Phases 1–9 done, this session decided autonomously per Jake's "you make the call" delegation.
+Next candidates (Phase 10): **Source-of-Truth** (no draft outline — author from Global §4 + DoD §5.5; would close PROB-001 and reduce PROB-010 risk), **Phase Ledger** (small, pairs with DoD §11), or **Connections Ledger** (closes PROB-009, pairs with DoD §5.8).
+Build order tracked in [`INDEX.md`](INDEX.md). Every new ledger must satisfy DoD §5.6.
 
 ### 2.2 Client Box Audit / Cleanup
 
@@ -101,6 +102,30 @@ Posture: hard gates exist in the comeketo-inbox skill at `Auto/comeketo-inbox/`.
 ---
 
 ## 3. Recent Meaningful Changes
+
+### 2026-04-30 (Cowork session — Prime Directive landed + first polish bundle + PROB-011 closed)
+
+Parallel session running while another Cowork agent authored ledger drafts. Stayed in a polish/cleanup lane to avoid collision.
+
+- **CLAUDE.md gained a Prime Directive preamble.** Above §0 (the existing Read-first-Global-Ledger block), a new ⛰️ PRIME DIRECTIVE section makes ledger discipline the explicit top-priority obligation — non-negotiable, supersedes momentum and "too small to log" instincts. The block contains: principle statement, read-list of 6 ledgers (Global, Temporal Continuity, Open Problems, Decisions, Communications, local Box) to consult before any meaningful action, update-list of 9 sites (activity.jsonl, sitemap, TCL §3/§10/§11, GL §2/§6/§12/§13, OPL, Decisions, Communications, local Box ledgers, indexes/index.json), the cardinal-sin framing about ledger drift, and the hard rule "no time for ledgers means no time for the change." Triggered by Jake's explicit ask: *"make sure you are updating those ledgers like my life depends on it."* The six operational disciplines below the new section preserved unchanged.
+- **PROB-2026-04-28-011 closed via redirect-stub.** Cowork sandbox lacks `unlink()` permission on the user's mounted folder, so the stale duplicate at `docs/page_asset_sitemap.md` was overwritten in place with a 9-line redirect notice pointing to the canonical root. Close criterion explicitly accepted "redirect-only" so this satisfies it. OPL §5 stub left in place pointing at §10 Recently Closed; OPL §6 Documentation Drift line struck-through; JSON mirror flipped to `status:closed` with `closed:2026-04-30` and history append. Both .md and .json bumped `Last updated`.
+- **`SCREEN_LABELS` dead-code cleanup in `components.jsx`.** Map now mirrors `app.jsx KNOWN_SCREENS` exactly. Removed 8 retired-route labels (memory, prediction, commitments, inbox, chat, calendar, rodbot, projects — all retired in the Apr 2026 great trim but their labels were left behind). Added 5 previously-missing live-route labels (leads, clients, coworkers, venues, intake). UI behavior unchanged — lookups already had `|| h.name` fallback. Header comment added pointing back to KNOWN_SCREENS as canonical. Cache-bust bumped: `components.jsx 69→70` in `Secretary.html`.
+- **Activity ledger received 5 new entries** for this session: `claude_md_update`, `code_cleanup`, `cache_bust`, `open_problem_status_change` (PROB-011 close), `redirect_stub_write`.
+
+Files touched this session:
+- `CLAUDE.md` (Prime Directive section added)
+- `components.jsx` (SCREEN_LABELS rewritten + header comment)
+- `Secretary.html` (cache-bust 69→70)
+- `docs/page_asset_sitemap.md` (overwritten as redirect stub)
+- `LEDGERS/OPEN_PROBLEMS_LEDGER.md` (header bump, §5 stub, full §10 closure entry, §6 strikethrough)
+- `LEDGERS/OPEN_PROBLEMS_LEDGER.json` (status flip + history append + last_updated bump)
+- `LEDGERS/TEMPORAL_CONTINUITY.md` (this update)
+- `CCAgentindex/_ledger/activity.jsonl` (5 appended lines)
+- Cowork-session memory files: `feedback_ledger_prime_directive.md`, `project_box_evolved_form.md` (with `MEMORY.md` index updated)
+
+**Lesson worth keeping:** Cowork sandbox cannot delete files in the mounted user folder. Workaround for "delete-shaped" close criteria is to overwrite with a redirect/deprecation stub. Worth phrasing future close criteria as "either delete OR clearly redirect-only" so the criterion is achievable from any actor's permission level.
+
+---
 
 ### 2026-04-29 (Cowork session — directory consolidation + Audit dropped + Communications Ledger queued)
 
@@ -413,6 +438,23 @@ This is the "wake up and continue" block.
 ---
 
 ## 11. Session Log
+
+### 2026-04-30 — Cowork session (parallel polish lane)
+
+**Summary:** Prime Directive landed in CLAUDE.md, first polish-bundle work shipped while another Cowork agent authored ledger drafts.
+
+**Important outcomes:**
+- CLAUDE.md now opens with a ⛰️ PRIME DIRECTIVE block elevating ledger discipline above all else. Read-list of 6 ledgers + update-list of 9 sites + cardinal-sin framing. Triggered by Jake's explicit "make sure you are updating those ledgers like my life depends on it."
+- PROB-2026-04-28-011 closed via redirect-stub at `docs/page_asset_sitemap.md`. Sandbox can't delete; close criterion accepted "redirect-only." OPL .md and .json both updated; counts moved 13→12 active and 1→2 closed.
+- `SCREEN_LABELS` cleanup in `components.jsx` — 8 retired-route labels removed, 5 missing live-route labels added. Cache-bust `components.jsx 69→70` in `Secretary.html`.
+- Activity ledger received 5 new entries this session.
+- Saved 2 Cowork-session memory files (Prime Directive feedback + Box-evolved-form project memory).
+
+**Carry forward:**
+- Other Cowork agent has been busy: 5 new ledgers (BOX_BUS, SOURCE_OF_TRUTH, DEFINITION_OF_DONE, CONNECTIONS, plus the Drafts directory) landed today, and the OPL header note suggests PROB-009 was closed too. Read those before touching adjacent areas.
+- Don't push without explicit go-ahead — working tree is heavily modified by both agents.
+- New lesson: Cowork sandbox cannot delete files in mounted folders. Phrase future close-criteria as "delete OR redirect-stub" so they're achievable from any actor's permission level.
+- Polish-bundle queue still has open items: cache-bust full audit (Secretary.html ↔ sitemap History claims), route↔sitemap section coverage, PROB-009 may already be closed but verify, unused-script-include audit in `Secretary.html`.
 
 ### 2026-04-28 — Late-night through early-AM session
 

@@ -1,0 +1,76 @@
+%% File Contents Ledger — category roll-up + cross-cluster dependency arrows
+%% Numbers in parens = entry count per cluster. Reference: FILE_CONTENTS.md §4.
+
+flowchart TB
+  Project((Comeketo Agent project<br/>~78 file entries))
+
+  Project --> Ledgers
+  Project --> Runtime
+  Project --> Meta
+  Project --> Auto
+  Project --> Bedrock
+
+  subgraph Ledgers ["LEDGERS — project memory (13)"]
+    direction LR
+    L1[Global · TCL · NorthStar]
+    L2[FileDir · OpenProb · Comm]
+    L3[Decisions · DoD · Box]
+    L4[BoxBus · SoT · Connections]
+    L5[FileContents<br/>· this file ·]
+    L6[INDEX]
+  end
+
+  subgraph Runtime ["RUNTIME (18)"]
+    direction LR
+    Front[runtime-frontend (17)<br/>app.jsx · screens.jsx · components.jsx<br/>connectors.js · ai_*.js · server.py · etc.]
+    Back[runtime-backend (1)<br/>server.py]
+  end
+
+  subgraph Meta ["META-HARNESS (8)"]
+    direction LR
+    M1[CLAUDE.md · AGENT.md · AGENTS.md]
+    M2[page_asset_sitemap.md]
+    M3[Guardrails.html · comeketo-guardrails-agent.md]
+    M4[README · skills_index · CLAUDE_NOTES]
+  end
+
+  subgraph Auto ["AUTO/ — automation + boxes (33)"]
+    direction TB
+    Orch[orchestrator (11)<br/>bin/* + render_lead.py + state/*]
+    Inbox[comeketo-inbox skill (5)<br/>SKILL.md + scripts + assets]
+    ClientBox[Client Box convention (16)<br/>00_meta · 01_comms · 01b_verbatim<br/>04_profile · 05_seven_day_plan<br/>09_andre_alerts · client_ledger · etc.]
+    StaffBox[Staff Box convention (1)<br/>10 boxes share the shape]
+  end
+
+  subgraph Bedrock ["CCAgentindex/ (4)"]
+    direction LR
+    Idx[indexes/index.json<br/>· loader authority ·]
+    Activity[_ledger/activity.jsonl<br/>· append-only audit trail ·]
+    Inb[_inbox/inbox.jsonl]
+    Agents[agents/&lt;name&gt;/<br/>runnable app agents]
+  end
+
+  %% Cross-cluster dependencies (key flows)
+  Front -. reads .-> Idx
+  Back -. proxies .-> Inbox
+  Back -. proxies .-> Orch
+  Orch -. writes to .-> ClientBox
+  Inbox -. enforces guardrails on .-> ClientBox
+  Meta -. governs .-> Front
+  Meta -. governs .-> Back
+  Meta -. governs .-> Auto
+  Ledgers -. read by all .-> Project
+
+  classDef ledger fill:#dcefff,stroke:#2a5a8a,stroke-width:1px;
+  classDef runtime fill:#fff7d6,stroke:#b08a00,stroke-width:1px;
+  classDef meta fill:#dcffd6,stroke:#2a8a2a,stroke-width:1px;
+  classDef auto fill:#ffe9b5,stroke:#a36a00,stroke-width:1px;
+  classDef bedrock fill:#f0e6ff,stroke:#5a3a8a,stroke-width:1px;
+  classDef self fill:#ffe9e9,stroke:#a33,stroke-width:2px;
+
+  class L1,L2,L3,L4,L6 ledger;
+  class L5 self;
+  class Front,Back runtime;
+  class M1,M2,M3,M4 meta;
+  class Orch,Inbox,ClientBox,StaffBox auto;
+  class Idx,Activity,Inb,Agents bedrock;

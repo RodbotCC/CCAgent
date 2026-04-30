@@ -1,0 +1,43 @@
+{
+  "ok": true,
+  "job_id": "bu_179c356461",
+  "status": "done",
+  "created_at": "2026-04-30T17:24:29.566205+00:00",
+  "updated_at": "2026-04-30T17:24:33.634791+00:00",
+  "text": "Hey, what's the newest information going on in the AI world right now?",
+  "source": {
+    "surface": "chat_rail",
+    "route": "grid",
+    "chat_id": "chat_molptxpx_yfhv"
+  },
+  "result": {
+    "ok": true,
+    "kind": "web",
+    "query": "Hey, what's the newest information going on in the AI world right now?",
+    "url": "https://www.google.com/sorry/index?continue=https://www.google.com/search%3Fq%3DHey%252C%2520what%2527s%2520the%2520newest%2520information%2520going%2520on%2520in%2520the%2520AI%2520world%2520right%2520now%253F%26sei%3DT5Dzae60IYvIwN4PmtOi-Qg&q=EgQ0fBlbGM-gzs8GIjA_QoU--jmT2LHaPOoJM_89A0olCirhDBMthC-c5peT3-2hLxUgcx9Atzk8wc9Z5AMyAVJaAUM",
+    "title": "https://www.google.com/search?q=Hey%2C%20what%27s%20the%20newest%20information%20going%20on%20in%20the%20AI%20world%20right%20now%3F&sei=T5Dzae60IYvIwN4PmtOi-Qg",
+    "settings": {
+      "resultLimit": 8,
+      "detail": "standard",
+      "includeLinks": true
+    },
+    "items": [
+      {
+        "text": "Why did this happen?",
+        "url": "https://www.google.com/sorry/index?continue=https://www.google.com/search%3Fq%3DHey%252C%2520what%2527s%2520the%2520newest%2520information%2520going%2520on%2520in%2520the%2520AI%2520world%2520right%2520now%253F%26sei%3DT5Dzae60IYvIwN4PmtOi-Qg&q=EgQ0fBlbGM-gzs8GIjA_QoU--jmT2LHaPOoJM_89A0olCirhDBMthC-c5peT3-2hLxUgcx9Atzk8wc9Z5AMyAVJaAUM#"
+      },
+      {
+        "text": "Terms of Service",
+        "url": "https://www.google.com/policies/terms/"
+      },
+      {
+        "text": "Learn more",
+        "url": "https://support.google.com/websearch/answer/86640"
+      }
+    ],
+    "summary": "1. Why did this happen?\n   https://www.google.com/sorry/index?continue=https://www.google.com/search%3Fq%3DHey%252C%2520what%2527s%2520the%2520newest%2520information%2520going%2520on%2520in%2520the%2520AI%2520world%2520right%2520now%253F%26sei%3DT5Dzae60IYvIwN4PmtOi-Qg&q=EgQ0fBlbGM-gzs8GIjA_QoU--jmT2LHaPOoJM_89A0olCirhDBMthC-c5peT3-2hLxUgcx9Atzk8wc9Z5AMyAVJaAUM#\n2. Terms of Service\n   https://www.google.com/policies/terms/\n3. Learn more\n   https://support.google.com/websearch/answer/86640",
+    "screenshot_path": "/Users/jakeaaron/Downloads/CC Agent/output/playwright/bu_179c356461.png",
+    "screenshot_url": "/output/playwright/bu_179c356461.png"
+  },
+  "error": null
+}

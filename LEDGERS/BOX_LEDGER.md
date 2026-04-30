@@ -1,6 +1,6 @@
 # Box Ledger
 
-Last updated: 2026-04-29 (initial creation — Phase 8 of ledger system buildout)
+Last updated: 2026-04-29 (Phase 10 — cross-references Box Bus Ledger for manifest schema; concept/wire-shape ownership split)
 Maintainer: Jake / Comeketo Agent project agents
 Status: **active**
 Read when: deciding whether a directory should be a Box, stamping a new BOX.md, designing the local memory layer for a directory, or auditing a Box's discipline.
@@ -12,6 +12,8 @@ Steward agent: not yet authored. Phase B work — when written it lands at `/Sub
 > The Global Ledger is the world map. The File Directory Ledger is the city map. The Box Ledger is the rule that makes every meaningful neighborhood self-explaining.
 >
 > If a directory matters, it should say what it is, what it owns, what it trusts, what it forbids, and how to leave it better than you found it.
+
+> **Concept vs wire shape (2026-04-29):** This ledger owns the **concept** of a Box — what counts as one, what classes exist, what status labels apply, what the Local Agent Protocol is. The **wire shape** (the `box.json` manifest schema, the ledger envelope, routing tiers, interpreter tiers, cycle policy) lives in [`BOX_BUS_LEDGER.md`](BOX_BUS_LEDGER.md), authored Phase 10 under `DEC-2026-04-29-013`. **For the manifest schema, read the Bus Ledger.** The runtime that consumes manifests is deferred to Phase C; the schema is canonical now.
 
 ---
 

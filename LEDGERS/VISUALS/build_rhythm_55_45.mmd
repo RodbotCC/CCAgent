@@ -1,0 +1,43 @@
+%% Definition of Done — 55 / 45 build rhythm
+%% Both halves are first-class. Defense is not overhead.
+%% A build that remembers itself compounds. A build that does not remember itself rots.
+
+flowchart LR
+  subgraph Offense ["55% OFFENSE — build it"]
+    direction TB
+    O1[Features / pages / widgets]
+    O2[APIs · routes · automations]
+    O3[Client plans · renderers]
+    O4[Integrations · scripts · models]
+    O5[New sub-agents · ledgers · Boxes]
+  end
+
+  subgraph Defense ["45% DEFENSE — preserve it"]
+    direction TB
+    D1[Update ledgers]
+    D2[Update page_asset_sitemap.md +<br/>source-of-truth maps]
+    D3[Verify routes / APIs still wire]
+    D4[Write Client Box audit markers]
+    D5[Record decisions · log open problems]
+    D6[Update Mermaid visuals]
+    D7[Communications Ledger handoffs]
+    D8[Keep GitHub current and clean]
+  end
+
+  Offense --> Defense
+  Defense --> Compound([Durable momentum])
+  Compound --> Offense
+
+  Skip[Skip Defense] -.->|short term| FastShip([Ships fast])
+  FastShip -.->|over time| Rot([System rot:<br/>stale memory ·<br/>rediscovered bugs ·<br/>contradicted plans])
+  Rot -.->|costs reappear| Offense
+
+  classDef offense fill:#dcefff,stroke:#2a5a8a,stroke-width:1px;
+  classDef defense fill:#fff7d6,stroke:#b08a00,stroke-width:1px;
+  classDef good fill:#dcffd6,stroke:#2a8a2a,stroke-width:2px;
+  classDef bad fill:#ffe9e9,stroke:#a33,stroke-width:1px;
+
+  class O1,O2,O3,O4,O5 offense;
+  class D1,D2,D3,D4,D5,D6,D7,D8 defense;
+  class Compound good;
+  class Skip,FastShip,Rot bad;

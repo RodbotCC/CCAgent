@@ -1,10 +1,11 @@
 {
   "ledger_type": "temporal_continuity",
   "version": "0.1.0",
-  "last_updated": "2026-04-28T11:40:00Z",
-  "last_updated_local_approx": "2026-04-28 ~07:40 AM ET",
+  "last_updated": "2026-04-29",
+  "last_updated_local_approx": "2026-04-29",
+  "last_updated_note": "Phase 14 — Asset/Widget Map landed; cross-page widget catalog + API→page mapping",
   "updated_by": "Jake (orchestrator) + Claude (Cowork)",
-  "current_project_moment": "Ledger system buildout Phase 5 is complete and the first runnable ledger steward (global_ledger_steward) has landed. Open Problems joins Global (P1), Temporal Continuity (P2), North Star (P3), and File Directory (P4); 13 active problems + 1 closed. The Global Ledger Steward now runs through POST /api/agents/global_ledger_steward/run with scoped local write authority, receipt output, and activity logging.",
+  "current_project_moment": "Ledger system buildout Phases 1–14 complete. 14 active ledgers (Global, Temporal Continuity, North Star, File Directory, Open Problems, Communications, Decisions, Box Ledger, Definition of Done, Box Bus Ledger, Source-of-Truth, Connections, File Contents, Asset/Widget Map). Asset/Widget Map sits one altitude above the page-asset sitemap — sitemap is canonical per-page truth (UI Done Gate); this ledger is the cross-cutting map (shared widgets, API → page mapping, shared services, change-radius hints). Next-up candidates: Phase Ledger (small, tier: global), Page Ledgers (one per route, tier: domain), or Settings Ledger (tier: global, pairs with CONNECTIONS).",
   "current_phase": "Early automation proof with safety cleanup",
   "continuity_status": "active",
   "next_recommended_read": [
@@ -16,18 +17,34 @@
     {
       "id": "ledger_system_buildout",
       "status": "active",
-      "current_step": "Phase 5 Open Problems Ledger landed; first steward automation active",
-      "last_completed": "Phases 1-5 — Global + Temporal Continuity + North Star + File Directory + Open Problems — plus global_ledger_steward app agent",
-      "next_step_candidates": ["source_of_truth", "definition_of_done", "decisions", "audit"],
-      "workflow": "user types P (or uploads next ledger spec) to proceed; use global_ledger_steward for global-memory maintenance sweeps",
+      "current_step": "Phase 14 — Asset/Widget Map landed (cross-page widget catalog + API→page mapping; tier: domain)",
+      "last_completed": "Phases 1-14 — adds AssetWidgetMap to the 13 prior ledgers",
+      "next_step_candidates": [
+        "phase",
+        "page_ledgers",
+        "settings"
+      ],
+      "workflow": "user types P (or uploads next ledger spec) to proceed; or delegates the call to Claude. Every new ledger must satisfy DEFINITION_OF_DONE §5.6 AND ship envelope-aware per BOX_BUS_LEDGER §2.2.",
       "build_order_authority": "LEDGERS/INDEX.md"
     },
     {
       "id": "client_box_audit_cleanup",
       "status": "active",
       "current_method": "one box at a time. read, audit, clean if approved, leave audit marker, stamp BOX_LEDGER_TEMPLATE if graduating to full Box",
-      "completed": ["Brenda & Steve"],
-      "next_likely_candidates": ["Hugo Casillas", "Daphney & Frankie", "Dawn M Denton", "Eliana Lopes", "Elizabeth & Peter", "Emanuella Andrade", "Esther Manu", "Flávia Benson", "Flaviane Mesquita"]
+      "completed": [
+        "Brenda & Steve"
+      ],
+      "next_likely_candidates": [
+        "Hugo Casillas",
+        "Daphney & Frankie",
+        "Dawn M Denton",
+        "Eliana Lopes",
+        "Elizabeth & Peter",
+        "Emanuella Andrade",
+        "Esther Manu",
+        "Flávia Benson",
+        "Flaviane Mesquita"
+      ]
     },
     {
       "id": "verbatim_comms_coverage",
@@ -165,22 +182,60 @@
   "current_git_posture": {
     "branch": "main",
     "last_3_commits": [
-      {"sha": "8461f5d", "subject": "April 28 sync — verbatim comms, intelligence layer, draft delegations"},
-      {"sha": "0a46a3b", "subject": "Add Brenda & Steve audit marker"},
-      {"sha": "bec920d", "subject": "Clean Brenda & Steve alert schedule after audit"}
+      {
+        "sha": "8461f5d",
+        "subject": "April 28 sync — verbatim comms, intelligence layer, draft delegations"
+      },
+      {
+        "sha": "0a46a3b",
+        "subject": "Add Brenda & Steve audit marker"
+      },
+      {
+        "sha": "bec920d",
+        "subject": "Clean Brenda & Steve alert schedule after audit"
+      }
     ],
-    "uncommitted_this_session": ["LEDGERS/", "CCAgentindex/agents/global_ledger_steward/", "CCAgentindex/_ledger/ledger_steward_runs/", "CLAUDE.md", "AGENT.md", "README.md", "CCAgentindex/_ledger/activity.jsonl"],
-    "uncommitted_pre_existing": ["CCAgentindex/_ledger/pieces_sweeps.jsonl", "Auto/Client Boxes/Flávia Benson/Flávia Benson.txt"],
+    "uncommitted_this_session": [
+      "LEDGERS/",
+      "CCAgentindex/agents/global_ledger_steward/",
+      "CCAgentindex/_ledger/ledger_steward_runs/",
+      "CLAUDE.md",
+      "AGENT.md",
+      "README.md",
+      "CCAgentindex/_ledger/activity.jsonl"
+    ],
+    "uncommitted_pre_existing": [
+      "CCAgentindex/_ledger/pieces_sweeps.jsonl",
+      "Auto/Client Boxes/Flávia Benson/Flávia Benson.txt"
+    ],
     "auto_alias_writes_scope": "Today's verbatim backfill wrote through Auto/ symlink to /Users/jakeaaron/Desktop/Auto/ — outside this repo's filesystem scope.",
     "rule": "Jake controls commit and push timing. Local commits are fine if requested; push only with go-ahead. Don't bundle pre-existing dirty files with this session's commits without confirming."
   },
   "inactivity_as_state": [
-    {"id": "verbatim_ui_binding", "waiting_on": "renderer work after design system finalizes"},
-    {"id": "allowed_to_know_layer", "waiting_on": "design assignment"},
-    {"id": "client_box_audits", "waiting_on": "one-at-a-time queue progression (27 boxes remaining)"},
-    {"id": "next_ledger_phase", "waiting_on": "Jake's signal"},
-    {"id": "session_commit_push", "waiting_on": "Jake's go-ahead"},
-    {"id": "close_api_key_refresh", "waiting_on": "Not currently scheduled — Jake re-supplies if needed"}
+    {
+      "id": "verbatim_ui_binding",
+      "waiting_on": "renderer work after design system finalizes"
+    },
+    {
+      "id": "allowed_to_know_layer",
+      "waiting_on": "design assignment"
+    },
+    {
+      "id": "client_box_audits",
+      "waiting_on": "one-at-a-time queue progression (27 boxes remaining)"
+    },
+    {
+      "id": "next_ledger_phase",
+      "waiting_on": "Jake's signal"
+    },
+    {
+      "id": "session_commit_push",
+      "waiting_on": "Jake's go-ahead"
+    },
+    {
+      "id": "close_api_key_refresh",
+      "waiting_on": "Not currently scheduled — Jake re-supplies if needed"
+    }
   ],
   "plan_aging_rules": {
     "no_reply": "Plan may remain valid if dates and guardrails still pass.",

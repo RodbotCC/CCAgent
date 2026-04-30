@@ -1,0 +1,130 @@
+%% Asset / Widget Map — pages → shared widgets → APIs / services
+%% Reference: ASSET_WIDGET_MAP.md §3 + §4 + §5.
+%% Solid = active dependency. Dotted = optional / occasional.
+
+flowchart LR
+
+  subgraph Pages ["14 ROUTES (app.jsx KNOWN_SCREENS)"]
+    direction TB
+    Grid[grid<br/>FrontPage]
+    Auto[automation]
+    Activity[activity]
+    Settings[settings]
+    Leads[leads]
+    Clients[clients]
+    Coworkers[coworkers]
+    Contacts[contacts]
+    Venues[venues]
+    Briefing[briefing]
+    Intake[intake]
+    Delegations[delegations]
+    Boxes[boxes]
+    Analytics[analytics]
+  end
+
+  subgraph SharedWidgets ["SHARED WIDGETS (components.jsx)"]
+    direction TB
+    Chrome[Topbar · BottomStrip · breadcrumbs<br/>· every page ·]
+    CtxMenu[useContextMenu hook<br/>+ ContextMenu component]
+    Overlays[FullscreenCell · TweaksPanel<br/>EditWithRodbotOverlay · AIBanner]
+    PeoplePrim[People-page primitive<br/>list + profile + contacts]
+    BoxRender[boxes-md-rich +<br/>specialized renderers<br/>hugo · brenda]
+    ConnPicker[SecretaryConnectors<br/>9 channels]
+  end
+
+  subgraph Services ["window.* SERVICES"]
+    direction TB
+    MC[window.MissionControl<br/>· hydrated by loader ·]
+    AI[SecretaryAI · SecretaryActions]
+    Mem[SecretaryMemory<br/>· Pieces-backed ·]
+    Deleg[SecretaryDelegator]
+  end
+
+  subgraph APIs ["/api/* ENDPOINTS"]
+    direction TB
+    StatusAPI[/api/status<br/>universal/]
+    BoxesAPI[/api/boxes/*]
+    ReportsAPI[/api/reports/*]
+    PeopleAPI[/api/people/list<br/>/api/venues/list]
+    PiecesAPI[/api/pieces/*]
+    DelegAPI[/api/delegate]
+    SettingsAPI[/api/settings/*]
+    ChatAPI[/api/chat/*]
+    AgentsAPI[/api/agents/&lt;name&gt;/run]
+  end
+
+  %% Layout chrome — every page
+  Pages -.-> Chrome
+
+  %% Right-click menu — many pages
+  Grid --> CtxMenu
+  Leads --> CtxMenu
+  Clients --> CtxMenu
+  Coworkers --> CtxMenu
+  Contacts --> CtxMenu
+  Venues --> CtxMenu
+  Intake --> CtxMenu
+  Delegations --> CtxMenu
+  Boxes --> CtxMenu
+
+  %% Overlays — grid-centric but reused
+  Grid --> Overlays
+  Settings --> Overlays
+  Boxes --> Overlays
+
+  %% People-page primitive — 5 pages
+  Leads --> PeoplePrim
+  Clients --> PeoplePrim
+  Coworkers --> PeoplePrim
+  Contacts --> PeoplePrim
+  Venues --> PeoplePrim
+
+  %% Box rendering — boxes only
+  Boxes --> BoxRender
+
+  %% Connectors picker — 4 pages
+  Grid --> ConnPicker
+  Intake --> ConnPicker
+  Boxes --> ConnPicker
+  Delegations --> ConnPicker
+
+  %% Services
+  Pages -.-> MC
+  Grid --> AI
+  Intake --> AI
+  Activity --> Mem
+  Briefing --> Mem
+  Grid -.-> Mem
+  ConnPicker --> Deleg
+
+  %% APIs
+  Pages -.-> StatusAPI
+  Boxes --> BoxesAPI
+  Intake --> BoxesAPI
+  Intake --> ReportsAPI
+  Leads --> PeopleAPI
+  Clients --> PeopleAPI
+  Coworkers --> PeopleAPI
+  Contacts --> PeopleAPI
+  Venues --> PeopleAPI
+  Activity --> PiecesAPI
+  Briefing --> PiecesAPI
+  Delegations --> DelegAPI
+  Grid --> DelegAPI
+  Intake --> DelegAPI
+  Boxes --> DelegAPI
+  Settings --> SettingsAPI
+  Grid --> ChatAPI
+  Intake --> ChatAPI
+  Delegations -.-> AgentsAPI
+  Boxes -.-> AgentsAPI
+
+  classDef page fill:#dcefff,stroke:#2a5a8a,stroke-width:1px;
+  classDef widget fill:#fff7d6,stroke:#b08a00,stroke-width:1px;
+  classDef service fill:#dcffd6,stroke:#2a8a2a,stroke-width:1px;
+  classDef api fill:#ffe9b5,stroke:#a36a00,stroke-width:1px;
+
+  class Grid,Auto,Activity,Settings,Leads,Clients,Coworkers,Contacts,Venues,Briefing,Intake,Delegations,Boxes,Analytics page;
+  class Chrome,CtxMenu,Overlays,PeoplePrim,BoxRender,ConnPicker widget;
+  class MC,AI,Mem,Deleg service;
+  class StatusAPI,BoxesAPI,ReportsAPI,PeopleAPI,PiecesAPI,DelegAPI,SettingsAPI,ChatAPI,AgentsAPI api;

@@ -1,6 +1,6 @@
 # Decisions Ledger
 
-Last updated: 2026-04-29 (initial creation — Phase 7 of ledger system buildout)
+Last updated: 2026-04-29 (Phase 10 — added DEC-2026-04-29-013 Reactive Box Network architectural lock; companion BOX_BUS_LEDGER landed)
 Maintainer: Jake / Comeketo Agent project agents
 Status: **active**
 Read when: starting major work, auditing changes, considering reversing an architectural choice, citing rationale, resolving tradeoffs, or running an audit pass.
@@ -154,8 +154,13 @@ Quick index for skimming. Full records in §5.
 | DEC-2026-04-29-002 | Three-Phase Build Discipline (A → B → C) | active | high | workflow | ledgers, sub-agents, Subagent Boxes |
 | DEC-2026-04-29-003 | TCL/GL Update Discipline (Same Unit Of Work) | active | high | meta / workflow | every change touching project state |
 | DEC-2026-04-29-004 | Audit Ledger Removed From Build Queue | active | medium | meta / scope | ledger system |
+| DEC-2026-04-29-005 | Box Reports Are Synthesized Views, Not Copies | active | high | architecture / Intake-Box | Intake page, Boxes page, server `_box_report_*` |
+| DEC-2026-04-29-006 | One Identity Per Box Across The App (slug = box id) | active | high | identity / routing | Intake, Boxes, ledgers |
+| DEC-2026-04-29-007 | Box Reports Refresh On Read | active | high | architecture / perf | server `_box_report_synthesize` |
+| DEC-2026-04-29-008 | Phase 1 Intake → Box Is Read-Mostly (no agent-config plumbing yet) | active | high | scope / phasing | Intake ask path, Boxes |
+| DEC-2026-04-29-013 | Reactive Box Network Is The Target Architecture (schema only; runtime deferred to Phase C) | active | high | global / architectural | every stateful entity in the project; future bus runtime |
 
-12 active decisions. 0 superseded. 0 deprecated.
+16 active decisions. 0 superseded. 0 deprecated.
 
 ---
 
@@ -873,6 +878,294 @@ Revisit if:
 ##### History
 
 - 2026-04-29 — created.
+
+---
+
+### 2026-04-29 (Phase 1 Intake → Box unification)
+
+#### DEC-2026-04-29-005 — Box Reports Are Synthesized Views, Not Copies
+
+Status: **active**
+Confidence: high
+Scope: architecture / Intake-Box
+Date: 2026-04-29
+Decider: User (with assistant proposal)
+Affected systems: Intake page, Boxes page, server `_box_report_*` helpers, Client Box folders
+Related North Star goals: NS-01, NS-02, NS-03
+Related ledgers: Global Ledger §3, Open Problems (none new), Communications (none yet)
+Supersedes: none
+Superseded by: none
+
+##### Decision
+
+A Box Report is a **synthesized view** over `Auto/Client Boxes/<Name>/`. The server reads the box folder on every `/api/reports/get` call and assembles a `documents[]` payload from the live files. **No `report.json` is written into the box folder.** The Box Report has no separate persistent representation — only the Q&A history (kept at `CCAgentindex/reports/_box_conversations/<box_id>.jsonl`) lives outside the box.
+
+##### Context
+
+The 2026-04-27 manual `brenda_and_steve` workspace already proved the pattern by accident — its documents were a hand-curated copy of Brenda's box files. Phase 1 of the Intake → Box unification asked: should every Client Box get a real `report.json` mirror, or be rebuilt on read? The plan in `LEDGERS/Drafts/intake_box_unification_plan.md` proposed synthesis. This decision locks it.
+
+##### Rationale
+
+A copy creates a drift surface — two records of the same content diverging silently. A synthesized view has no drift surface: there is exactly one source of truth per Client Box, the box folder itself. Triad-aligned (DEC-2026-04-29-001): the **Box** is the unit of state; an Intake-side report cannot be a parallel Box.
+
+Walking 28 box folders on each list call is milliseconds in practice. If profiling ever shows otherwise, a small in-memory cache (≤5s TTL) is the correct response — not a persisted mirror.
+
+##### Alternatives Considered
+
+- Persisted mirror (`report.json` inside each box folder) — rejected: drift surface; doubles write paths.
+- Persisted mirror outside the box (under `CCAgentindex/reports/<box_id>/`) — rejected: same drift problem, plus pollutes the workspace reports list.
+- Hybrid (mirror with mtime-based invalidation) — rejected for Phase 1: extra moving parts before measurement justifies them.
+
+##### Consequences
+
+- File drops via Intake on a Box Report write into `Auto/Client Boxes/<Name>/intake_drops/<file>` — the box stays the only writer of canonical content.
+- Box Report document deletion from Intake is forbidden (returns 405 with guidance to manage from the Boxes page).
+- The `Auto/` symlink is written through *only* for `intake_drops/`. Per CLAUDE.md §1 this is normally guarded; Phase 1 documents this exception in `page_asset_sitemap.md` history.
+- Future analytics-as-box / page-as-box / agent-as-box work should default to the same posture: **state lives in the box; UI surfaces are views.**
+
+##### Do Not Undo Casually
+
+Do not introduce a persisted Box Report mirror without first measuring read cost and demonstrating the cache strategy. Drift is the failure mode; performance has not been the failure mode.
+
+##### Review Trigger
+
+- Profiling shows synthesis latency materially affects Intake page loads.
+- A future architecture (e.g., box-bus / ledger trickle-down) requires a stable identifier for Box Report content that can't be derived on read.
+
+##### History
+
+- 2026-04-29 — created. Locked alongside the Phase 1 implementation in `screens.jsx` / `app.jsx` / `server.py`.
+
+---
+
+#### DEC-2026-04-29-006 — One Identity Per Box Across The App (slug = box id)
+
+Status: **active**
+Confidence: high
+Scope: identity / routing
+Date: 2026-04-29
+Decider: User (with assistant proposal)
+Affected systems: Intake routing, Boxes routing, future ledger references, future cross-page nav
+Related North Star goals: NS-01, NS-09
+Related ledgers: Global Ledger §3
+Supersedes: none
+Superseded by: none
+
+##### Decision
+
+A Box Report's slug is **the box `id` from `/api/boxes/list`**, with no synthetic prefix. Identities like `hugo_casillas`, `brenda_steve`, or `box_<norm>` for unmatched folders flow through every surface unchanged. Workspace slugs are forbidden from colliding with a Client Box id (`/api/reports/create` returns 409 on collision).
+
+The earlier draft (`LEDGERS/Drafts/intake_box_unification_plan.md`) proposed a `client_box__` prefix; that was dropped in implementation because every existing client-box id is already unique within the catalog and the prefix added no information.
+
+##### Context
+
+Cross-page navigation between Intake and Boxes needs to refer to the same entity by the same name. Two competing identities (a box id + a Box Report slug derived from it) would force every link, every menu item, and every ledger reference to maintain a translation table.
+
+##### Rationale
+
+One identity = trivial cross-nav (`go.push("intake", { openSlug: b.id })` and `go.push("boxes", { selectId: r.slug })` both work because the slug *is* the id). It also keeps future ledger entries that mention a box stable across surfaces — a Decisions Ledger reference to `hugo_casillas` is unambiguous whether the reader is looking at Intake or Boxes.
+
+##### Alternatives Considered
+
+- `client_box__<id>` prefix (the original draft) — rejected: redundant; lookup already resolves uniquely.
+- Separate Box Report slug minted at creation time — rejected: introduces a translation table, breaks cross-nav, doubles the namespace.
+
+##### Consequences
+
+- `/api/reports/create` rejects any workspace slug that matches a Client Box id (HTTP 409). The 5 existing workspaces (`a`, `demo`, `multi_data_test`, `snap_benefits`, `brenda_and_steve`) are all safe — none collide.
+- Future per-box analytics, per-box agent runs, and per-box ledger references can all key off the same id.
+- If a Client Box is renamed (folder rename), its id changes, which orphans the corresponding `_box_conversations/<old_id>.jsonl`. Acceptable for Phase 1; revisit with a migration helper if/when box renames become common.
+
+##### Do Not Undo Casually
+
+Adding a translation layer between box ids and report slugs would force every cross-surface reference to be rewritten. Don't introduce a separate identity space without a concrete need it solves.
+
+##### Review Trigger
+
+- A Client Box ever needs to project multiple report views (e.g., "lite" vs "full") — would justify a slug suffix on the report side.
+- A privacy/access-control requirement makes the box id unsafe to expose at the URL layer.
+
+##### History
+
+- 2026-04-29 — created.
+
+---
+
+#### DEC-2026-04-29-007 — Box Reports Refresh On Read
+
+Status: **active**
+Confidence: high
+Scope: architecture / perf
+Date: 2026-04-29
+Decider: User (with assistant proposal)
+Affected systems: server `_box_report_synthesize`, `_reports_list`, `_reports_get`
+Related North Star goals: NS-02
+Related ledgers: Global Ledger §11 (Done Gate)
+Supersedes: none
+Superseded by: none
+
+##### Decision
+
+Every `/api/reports/get?slug=<box_id>` and `/api/reports/list` call re-reads the live Client Box folder. There is no cache, no debounce, no invalidation flag. Workspaces continue to use their stored `report.json`; Box Reports do not.
+
+##### Context
+
+The synthesized-view decision (DEC-2026-04-29-005) leaves a freshness question open: re-read or cache? Phase 1 picks the simplest answer that avoids a class of bugs.
+
+##### Rationale
+
+- Cheap: walking ~25 markdown/json files per box, summing to ~28 boxes × ~10 files for the list endpoint, is sub-100ms even on cold disk.
+- Correct: no stale-cache class of bugs.
+- Reversible: adding a 5-second TTL cache later is a single-function change with no schema migration.
+
+##### Alternatives Considered
+
+- mtime-based cache (re-read only when the box folder mtime changes) — rejected for Phase 1: small win, more code paths, more failure modes.
+- Persistent cache (`box_report.cache.json`) — rejected: same drift problem the synthesized-view decision is trying to avoid.
+
+##### Consequences
+
+- Box Reports always reflect what's in the box folder right now.
+- If list-endpoint latency ever becomes a UX problem, the agreed remediation is a small in-memory TTL cache, not persisted state.
+
+##### Do Not Undo Casually
+
+Don't add caching speculatively. Measure first.
+
+##### Review Trigger
+
+- Intake page load time on the production box becomes user-visibly slow.
+- The number of Client Boxes grows past ~200 (each new box adds a few ms to the list endpoint).
+
+##### History
+
+- 2026-04-29 — created.
+
+---
+
+#### DEC-2026-04-29-008 — Phase 1 Intake → Box Is Read-Mostly (no agent-config plumbing yet)
+
+Status: **active**
+Confidence: high
+Scope: scope / phasing
+Date: 2026-04-29
+Decider: User
+Affected systems: Intake ask path, future per-box AGENTS.md plumbing, the deferred reactive box-bus design
+Related North Star goals: NS-09, NS-10
+Related ledgers: Global Ledger §6 (Active Workstreams), Communications (none new), DEC-2026-04-28-008 (one ledger at a time)
+Supersedes: none
+Superseded by: (future Phase 2 decision — TBD)
+
+##### Decision
+
+Phase 1 of the Intake → Box unification ships read-only synthesis, the Reports list split, and box-folder ingest. **It explicitly does not** plumb each box's `AGENTS.md` into the `/api/reports/<slug>/ask` system prompt, build per-box analytics templates, or start any reactive-box-bus / ledger trickle-down work. The ask path stays the existing generic prompt assembly.
+
+##### Context
+
+The bigger architecture discussed in this session (every state-bearing surface becomes a box; ledgers route entries downstream to subscribed boxes; sub-agents per box interpret incoming entries) is the right ultimate frame. It is also the **hardest** piece in the project. Building it before the ledger system and sub-agent fleet are stable would force re-wiring on every new ledger and every new sub-agent — exactly the half-finished state the cleanup phase is supposed to prevent.
+
+##### Rationale
+
+- **Cleanup-phase rule** (DEC-2026-04-28-008): one ledger at a time. The same posture applies to architecture: one major surface at a time.
+- The Phase 1 surfaces (Reports list split, synthesized view, box-folder ingest) have **zero** dependencies on agent-config plumbing or the bus. They ship cleanly today.
+- The bigger architecture has **many** dependencies on ledgers and sub-agents that do not yet exist at sufficient depth. Building the bus before the engines = wiring without engines.
+- Phase 2 (per-box `AGENTS.md` → ask system prompt) is the natural next step and can ship without disturbing Phase 1's surfaces.
+
+##### Alternatives Considered
+
+- Ship Phase 1 + agent-config plumbing together — rejected: stretches scope; adds risk to a phase whose value is "talk to the box, today."
+- Ship Phase 1 + analytics-as-box — rejected: analytics templates need per-box data shapes that require the ledger system to be further along.
+- Defer Phase 1 entirely until the bus is ready — rejected: forfeits the ~1 day of value from "talk to the box, today."
+
+##### Consequences
+
+- Intake ask on a Box Report uses the same generic prompt assembly as Workspaces. Hugo's existing `AGENTS.md` is read as a document but not honored as an operating contract — yet.
+- Phase 2 work scope: read `AGENTS.md` (and possibly `CLAUDE.md`, `06_logic.md`, `07_skills_used.md`, `08_automations.md`) when present, fold them into the ask system prompt, fall back to a generic "client-box assistant" prompt otherwise.
+- Phase 3+ work scope: per-box analytics templates; only after the ledger system can carry per-box state stably.
+- Reactive box-bus / ledger trickle-down: deferred until the ledger taxonomy and steward agents are stable. This is the design captured in this session's chat history; it should land as its own Decisions Ledger entry when it ships.
+
+##### Do Not Undo Casually
+
+Do not start Phase 2/3 work or the bus design while Phase A (ledgers) of DEC-2026-04-29-002 is in flight. The phasing rule is the protection against half-finished architecture.
+
+##### Review Trigger
+
+- Phase A of DEC-2026-04-29-002 completes (all planned ledgers active, stewards landed for the load-bearing ones).
+- A user-facing need emerges that requires box-aware ask behavior before then (e.g., a box's `06_logic.md` materially changes how an answer should be phrased and a generic prompt produces wrong output).
+
+##### History
+
+- 2026-04-29 — created. Phase 1 implementation shipped same day.
+
+---
+
+#### DEC-2026-04-29-013 — Reactive Box Network Is The Target Architecture (schema only; runtime deferred to Phase C)
+
+Status: **active**
+Confidence: high
+Scope: global / architectural
+Date: 2026-04-29
+Decider: User (Jake) — autonomous-call delegated to Cowork session
+Affected systems: every stateful entity in the project; the eventual bus runtime; every ledger authored from this point forward; every Box authored from this point forward
+Related North Star goals: NS-01, NS-02, NS-04, NS-09, NS-10
+Related ledgers: [`BOX_BUS_LEDGER.md`](BOX_BUS_LEDGER.md), [`BOX_LEDGER.md`](BOX_LEDGER.md), [`DEFINITION_OF_DONE.md`](DEFINITION_OF_DONE.md), DEC-2026-04-29-001 (Triad Spine), DEC-2026-04-29-002 (Three-Phase Build), DEC-2026-04-29-008 (Phase 1 Intake-Box read-mostly)
+Supersedes: none
+Superseded by: none — narrows DEC-2026-04-29-008's scope rather than replacing it
+
+##### Decision
+
+The project's target architecture is a **reactive network of Boxes connected by a routed Ledger bus**. The architecture is **specified now** (Phase 0, this session) in [`BOX_BUS_LEDGER.md`](BOX_BUS_LEDGER.md). The **runtime** — router daemon (or post-write hook), propagation ledger, T1/T2/T3 interpreters, validation enforcement, cycle enforcement — is **deferred to Phase C** of `DEC-2026-04-29-002`. Phase 0 ships schema and rules only: `box.json` manifest schema, ledger envelope schema, three routing tiers (Global / Domain / Local), three interpreter tiers (T1 deterministic / T2 small-LLM / T3 full sub-agent), hard-refusal cycle policy, "what is a Box / what is not" binding rule, and two worked examples (Hugo Casillas Client Box + Analytics Source Channels Snapshot Box).
+
+##### Context
+
+The architecture was first sketched in chat during the 2026-04-29 Phase 1 Intake → Box session and intentionally deferred (`DEC-2026-04-29-008`) because building runtime before the ledger taxonomy and sub-agent fleet stabilize would force re-wiring on every new ledger and every new sub-agent — exactly the half-finished state the cleanup phase was meant to prevent.
+
+Today's update: Phase 9 (Definition of Done) closed the most foundational completion-rules gap; 9 ledgers are now active out of ~19 planned; all ledgers from here on out will be authored. Without a written architectural target, every one of those remaining ledgers risks being authored without the bus shape in mind — creating migration debt at Phase C. Writing the **schema** down now (a Phase A activity — it's a markdown ledger) gives every future ledger and every future Box a target to align against. Writing the **runtime** would still violate `DEC-2026-04-29-008` and is held.
+
+##### Rationale
+
+- **Schema first / routing second / interpreters third / runtime last.** The hard-but-cheap part is the schema. Authoring it during Phase A is correct; authoring runtime during Phase A is not.
+- **Triad spine compatibility (`DEC-2026-04-29-001`).** Box Ledger owns the *concept*. Box Bus Ledger owns the *wire shape*. Definition of Done owns the *completion gate*. Decisions Ledger owns the *architectural lock*. Each leg has a distinct, non-overlapping responsibility.
+- **Migration debt avoidance.** Every ledger and every Box authored between today and Phase C ships envelope-aware. When runtime lands, no migration pass is required.
+- **Anti-half-finished discipline.** This Decision *narrows* DEC-2026-04-29-008 by carving the schema seam out of the deferred work, while explicitly preserving the runtime deferral. DEC-008's "Do Not Undo Casually" still binds against runtime work during Phase A.
+- **Auditability.** A written architecture is reviewable by every future agent. Chat-history architecture is not.
+
+##### Alternatives Considered
+
+- **Defer the schema along with the runtime.** Rejected: every future ledger and every future Box would be authored guessing at a target. Migration debt compounds with each addition.
+- **Ship schema + T1-only runtime now.** Rejected: the moment runtime ships, every new ledger requires re-touching the router and the subscription index. The cost shape is exactly what `DEC-2026-04-29-008` was designed to prevent.
+- **Wait until Phase C and author schema + runtime together.** Rejected: by Phase C the project will have ~19 ledgers and ~40 Boxes authored without alignment to a target. Migration would be substantial.
+- **Author schema in chat / docs / a Decisions Ledger entry only.** Rejected: the Bus design is large enough to deserve its own ledger with worked examples and Mermaid visuals; folding it into a Decision row buries the architecture.
+- **Use a different name (e.g., "Event Bus Ledger," "Subscription Network Ledger").** Considered. Picked "Box Bus Ledger" because the unit of state on both ends of a route is a Box, and the bus carries Box-bound events.
+
+##### Consequences
+
+- **Phase A continues with envelope-aware ledgers.** Every remaining Phase A ledger (Source-of-Truth, Phase, Connections, Page Ledgers, etc.) declares its tier (`global` / `domain` / `local`) at authoring time. The envelope schema becomes the standard wrapper.
+- **Box Ledger gets a §X cross-reference.** Concept lives in Box Ledger; manifest shape lives in Box Bus Ledger.
+- **Definition of Done §5.7 (Box / Directory Work) gains a manifest-shape compliance check** that is **soft today** (no runtime to enforce against) and **becomes hard at Phase C** when runtime lands. Until then, manifest stubs are best-effort.
+- **No runtime work permitted in Phase A.** Router, propagation ledger, interpreters, validation enforcement, cycle enforcement — all deferred to Phase C. `DEC-2026-04-29-008`'s "Do Not Undo Casually" line still binds.
+- **Phase B steward agents (when they graduate from `/Subagent Boxes/`) author manifests for their target ledgers/systems** as part of graduation. This is how the manifest population begins without a runtime.
+- **Phase C+1 backfill** authors manifests for the 28 Client Boxes, 10 Staff Boxes, orchestrator, inbox-skill, ledger directory, and app-ui root. The 28 Client Boxes are the largest manifest-authoring task in the project.
+- **Open Problems Ledger** absorbs any pre-Phase-C architectural risks that surface (e.g., a manifest field that turns out to be insufficient).
+- **The `analytics-snapshot` Box kind** introduced today (worked example B) reserves the pattern for Phase C+1, when each analytics script becomes a Box.
+
+##### Do Not Undo Casually
+
+Do not ship runtime (router, propagation ledger, interpreters, validation enforcement) during Phase A. The schema-only seam is the entire point of this Decision. If runtime feels tempting, route the urge into Open Problems Ledger or Communications Ledger — not into code. `DEC-2026-04-29-008`'s "Do Not Undo Casually" still binds against runtime work; this Decision does not soften it.
+
+Do not change the manifest schema, envelope schema, tier model, or cycle policy without an explicit Decisions Ledger update. The schema is what makes Phase C land cleanly; drift now is migration cost later.
+
+##### Review Trigger
+
+- **Phase A completes** (all planned ledgers active, stewards landed for the load-bearing ones). Then this Decision and `DEC-2026-04-29-008` together unblock Phase B + Phase C runtime work.
+- **A foreseen-but-unspecified field is needed** in `box.json` or the envelope. Schema additions are normal; review whether the addition needs a new Decision or a `BOX_BUS_LEDGER.md` update is enough.
+- **A new tier is proposed** beyond Global / Domain / Local. That's a Decision-level change.
+- **A new interpreter tier is proposed** beyond T1 / T2 / T3. That's a Decision-level change.
+- **The cycle policy is challenged** (e.g., a real use case for declared cycles emerges). Currently hard-refusal; would be a Decision-level change.
+
+##### History
+
+- 2026-04-29 — created. Phase 0 schema shipped same day at [`BOX_BUS_LEDGER.md`](BOX_BUS_LEDGER.md) + [`BOX_BUS_LEDGER.json`](BOX_BUS_LEDGER.json) + three Mermaid visuals. Box Ledger and Definition of Done updated to point at it. Companion Communications Ledger entry: `COMM-2026-04-29-007`.
 
 ---
 

@@ -1,0 +1,393 @@
+{
+  "ledger_type": "connections",
+  "version": "0.1.0",
+  "envelope_v": "1",
+  "tier": "domain",
+  "last_updated": "2026-04-29",
+  "phase": "Phase 12 of ledger system buildout — first domain-tier ledger authored under DEC-2026-04-29-013",
+  "status": "active",
+  "maintainer": "Jake / Comeketo Agent project agents",
+  "core_rule": "If the project depends on an outside system, that dependency must be visible. Never the secret — always the location.",
+  "security_rule": "Never store raw secrets in this ledger. Allowed: service name, env var name, expected location, owner, verification steps, expiry notes, what breaks if missing.",
+  "steward_agent": {
+    "status": "not_yet_authored",
+    "future_canonical_path": "Subagent Boxes/connections_subagent_package/",
+    "future_runnable_path": "CCAgentindex/agents/connections_steward/",
+    "phase_when_built": "Phase B (Sub-agents)"
+  },
+  "status_labels": {
+    "active": "wired and used by running code; failure has real consequences",
+    "optional": "wired and used but degradation is graceful",
+    "planned": "documented intent to wire but no active integration today",
+    "not-in-use": "available as a connector or in environment but not actually wired in this repo",
+    "needs-verification": "mentioned somewhere but not yet confirmed against code"
+  },
+  "anti_rule": "Do not invent active services. If a service is available but not confirmed in the repo, mark it needs-verification or not-in-use. Hallucinated dependencies are worse than missing ones (PROB-2026-04-28-009).",
+  "connections": [
+    {
+      "id": "close",
+      "name": "Close.com CRM",
+      "category": "crm_sales_data",
+      "status": "active",
+      "required_level": "critical",
+      "owner": "Comeketo (Andre + Jake)",
+      "used_by": ["comms_state_sweep", "Client Boxes", "inbox automation", "scheduled fires", "future allowed-to-know extraction"],
+      "purpose": "Live CRM source for leads, contacts, activities (calls/SMS/email/WhatsApp), tasks, opportunities, ownership, statuses. Source-of-truth for client comms per SOURCE_OF_TRUTH.md §3.1 rank 1.",
+      "credentials": {
+        "env_vars": ["CLOSE_API_KEY"],
+        "expected_location": "/.env",
+        "raw_secret_in_ledger": false,
+        "notes": "The 2026-04-28 verbatim backfill used a session-scoped key Jake never wrote down; future refreshes need the human to re-supply."
+      },
+      "data_read": ["lead records", "contact records", "activities", "tasks", "calls (with transcripts)", "opportunities", "statuses", "owners"],
+      "data_written": ["SMS / email / WhatsApp activities", "task movements", "notes", "status updates"],
+      "side_effect_risk": "very_high",
+      "failure_mode": "no live comms import; no state sweep; no customer sends; stale Client Boxes; reply gate untrustable",
+      "verification": ["safe read-only API check (fetch known lead by ID; fetch recent activities for known lead)", "NEVER test by sending a customer-facing message"],
+      "fallback": ["use last synced 01b_comms_verbatim.md and 01_comms.md (mark stale)", "manual Close review"],
+      "billing": "Comeketo subscription; rate limits handled in comms_state_sweep",
+      "related_files": ["Auto/Client Boxes/<Name>/01_comms.md", "01b_comms_verbatim.md", "comms/*.json", "Auto/orchestrator/bin/comms_state_sweep.py", "Auto/comeketo-inbox/"],
+      "related_ledgers": ["SOURCE_OF_TRUTH.md §3.1", "OPEN_PROBLEMS_LEDGER.md (multiple PROB entries)"]
+    },
+    {
+      "id": "github",
+      "name": "GitHub Repository",
+      "category": "source_control",
+      "status": "active",
+      "required_level": "critical",
+      "owner": "Repo owner (Jake)",
+      "used_by": ["every agent", "every ledger", "every continuity surface"],
+      "purpose": "Durable source of truth for code, ledgers, configs, handoff memory per SOURCE_OF_TRUTH.md §3.3 rank 1.",
+      "credentials": {
+        "env_vars": [],
+        "expected_location": "macOS Keychain / SSH key / Git credential manager",
+        "raw_secret_in_ledger": false,
+        "notes": "No GitHub API integration; all access via the git CLI."
+      },
+      "data_read": ["repository files", "commits", "branches"],
+      "data_written": ["commits", "branches", "files when authorized"],
+      "side_effect_risk": "high",
+      "failure_mode": "agents cannot read/write source of truth; continuity cannot be pushed; local/GitHub drift accumulates",
+      "verification": ["git status", "git fetch origin", "branch comparison"],
+      "fallback": ["local commit; push later when safe"],
+      "billing": "free tier sufficient today",
+      "related_decisions": ["DEC-2026-04-28-001"],
+      "project_warning": "Direct GitHub writes must always check git status first — the human may have unpushed local work (COMM-2026-04-28-004)."
+    },
+    {
+      "id": "local_app_server",
+      "name": "Local server.py Runtime",
+      "category": "app_runtime",
+      "status": "active",
+      "required_level": "critical",
+      "owner": "Jake (local environment)",
+      "used_by": ["every UI route", "every /api/* endpoint", "the entire frontend"],
+      "purpose": "Single-file stdlib HTTP server backing the UI and proxying external services.",
+      "credentials": {"reads_from": "/.env at startup", "raw_secret_in_ledger": false},
+      "failure_mode": "pages cannot load dynamic data; /api/* fails; entire UI offline",
+      "verification": ["/api/status endpoint"],
+      "fallback": ["restart server"],
+      "local_or_cloud": "local-only",
+      "related_files": ["server.py", "Secretary.html", "all .jsx/.js at root"]
+    },
+    {
+      "id": "pieces",
+      "name": "PiecesOS Memory Backend",
+      "category": "memory_intelligence",
+      "status": "active",
+      "required_level": "high",
+      "owner": "Jake (local environment)",
+      "used_by": ["Activity screen", "briefing ribbon", "/api/pieces/* endpoints"],
+      "purpose": "39 MCP tools across Ask, full-text search, vector search, batch snapshot. Sole memory backend after Rodbot great trim.",
+      "credentials": {
+        "env_vars": ["PIECES_MCP_URL", "PIECES_CHAT_LLM"],
+        "expected_location": "/.env (or defaults)",
+        "raw_secret_in_ledger": false
+      },
+      "failure_mode": "Activity screen empty; /api/pieces/* fails gracefully but visibly; sweeps unavailable",
+      "verification": ["curl http://localhost:39300/.well-known/version", "/api/pieces/status"],
+      "fallback": ["hide / degrade Pieces-specific UI"],
+      "local_or_cloud": "local-only (PiecesOS daemon)",
+      "related_files": ["server.py _pieces_* helpers", "screens.jsx Activity screen", "CLAUDE.md Pieces appendix"]
+    },
+    {
+      "id": "clickup",
+      "name": "ClickUp Workspace",
+      "category": "task_management",
+      "status": "active",
+      "required_level": "medium",
+      "owner": "Comeketo workspace",
+      "used_by": ["connectors.js ClickUp channel", "/api/clickup/* endpoints", "Delegations page"],
+      "purpose": "Task creation in team's ClickUp space when commits land via Delegations channel picker.",
+      "credentials": {
+        "env_vars": ["CLICKUP_API_TOKEN", "CLICKUP_SPACE_ID", "CLICKUP_LIST_ID"],
+        "expected_location": "/.env",
+        "raw_secret_in_ledger": false
+      },
+      "failure_mode": "ClickUp commits silently no-op; channel picker shows needs-setup or misconfigured",
+      "verification": ["/api/clickup/rescan", "/api/status for clickup_list_id presence"],
+      "fallback": ["pick a different channel in Delegations picker"],
+      "billing": "Comeketo subscription"
+    },
+    {
+      "id": "twilio",
+      "name": "Twilio (WhatsApp + SMS)",
+      "category": "communication_surfaces",
+      "status": "active",
+      "required_level": "medium",
+      "owner": "Comeketo workspace",
+      "used_by": ["connectors.js whatsapp + sms channels", "scheduled fires that target WhatsApp/SMS"],
+      "purpose": "Outbound WhatsApp and SMS to clients via Twilio (sandbox or paid).",
+      "credentials": {
+        "env_vars": ["TWILIO_ACCOUNT_SID", "TWILIO_AUTH_TOKEN", "TWILIO_API_KEY_SID", "TWILIO_API_KEY_SECRET", "TWILIO_WHATSAPP_FROM", "TWILIO_TEST_ACCOUNT_SID", "TWILIO_TEST_AUTH_TOKEN"],
+        "expected_location": "/.env",
+        "raw_secret_in_ledger": false
+      },
+      "data_written": ["WhatsApp messages", "SMS messages"],
+      "side_effect_risk": "very_high",
+      "failure_mode": "WhatsApp / SMS sends fail; channel picker shows needs-setup",
+      "verification": ["server status endpoint", "use TWILIO_TEST_* sandbox credentials — NEVER real customer"],
+      "fallback": ["switch send target to email or Slack"],
+      "billing": "per-message pricing — paid, watch the meter",
+      "security_notes": "Customer-facing; isolated approval card per DEC-2026-04-28-005."
+    },
+    {
+      "id": "slack",
+      "name": "Slack Workspace",
+      "category": "communication_surfaces",
+      "status": "active",
+      "status_caveat": "token format issue per docs/connectors.md — current token is xapp- (app-level); need xoxb- (Bot User OAuth)",
+      "required_level": "medium",
+      "owner": "Comeketo workspace",
+      "used_by": ["connectors.js Slack channel", "Delegations Slack target", "future Andre review/approval surfaces"],
+      "purpose": "DM Andre, post to team channels, alert on send failures or reply detection.",
+      "credentials": {
+        "env_vars": ["SLACK_BOT_TOKEN"],
+        "expected_location": "/.env",
+        "raw_secret_in_ledger": false
+      },
+      "failure_mode": "Slack sends fail with token mismatch; channel picker shows misconfigured",
+      "verification": ["/api/status (proxy flags xapp- vs xoxb- mismatch)", "test post to a private channel only"],
+      "fallback": ["surface alert in app's Activity screen instead"],
+      "open_problem_candidate": "token-format issue should be recorded as PROB-2026-04-29-XXX if not already"
+    },
+    {
+      "id": "openai",
+      "name": "OpenAI API",
+      "category": "model_providers",
+      "status": "active",
+      "required_level": "medium",
+      "owner": "Jake (account)",
+      "used_by": ["chat completion paths in server.py", "intake report generation"],
+      "purpose": "LLM completions for chat surface and reports.",
+      "credentials": {
+        "env_vars": ["OPENAI_API_KEY"],
+        "expected_location": "/.env",
+        "raw_secret_in_ledger": false
+      },
+      "failure_mode": "chat / reports fall back to error states",
+      "verification": ["small completion request via /api/chat/*"],
+      "fallback": ["degrade to other providers if wired"],
+      "billing": "per-token API billing — paid, watch the meter"
+    },
+    {
+      "id": "cowork_scheduled_tasks",
+      "name": "Cowork Runtime",
+      "category": "automation_runtime",
+      "status": "active",
+      "required_level": "high",
+      "owner": "Jake / Cowork environment",
+      "used_by": ["per-lead scheduled fires", "recurring comms_state_sweep", "future automation tasks"],
+      "purpose": "Runs future prompts / sessions on a schedule.",
+      "credentials": {"handled_by": "Cowork environment", "raw_secret_in_ledger": false},
+      "side_effect_risk": "very_high",
+      "failure_mode": "scheduled sends do not fire; sweeps stall; Client Boxes go stale; automation looks dead",
+      "verification": ["list scheduled tasks", "inspect recent run summaries", "check last sweep timestamp"],
+      "fallback": ["manual fire through controlled session", "pause customer-facing sends until schedule re-verified"],
+      "related_files": ["Auto/orchestrator/MANUAL_FIRE.md", "Auto/orchestrator/SYSTEM_OVERVIEW.md", "Auto/orchestrator/bin/comms_state_sweep.py"],
+      "security_notes": "Per DEC-2026-04-28-005, every scheduled fire must respect guardrails."
+    },
+    {
+      "id": "claude_code",
+      "name": "Claude Code Subprocess",
+      "category": "model_providers_runtime",
+      "status": "active",
+      "required_level": "medium",
+      "owner": "Jake (account)",
+      "used_by": ["connectors.js claude_code channel", "/api/delegate endpoint that spawns claude -p"],
+      "purpose": "Delegation channel that runs an isolated claude -p subprocess for repo-aware work.",
+      "credentials": {"handled_by": "claude CLI / user's Claude account", "raw_secret_in_ledger": false},
+      "verification": ["server probes claude binary on startup → claude_code_available in /api/status"],
+      "failure_mode": "delegations to claude_code target fail; channel shows needs-setup",
+      "fallback": ["pick a different channel"],
+      "related_files": ["connectors.js", "server.py /api/delegate handler", "CLAUDE.md"]
+    },
+    {
+      "id": "browser_use",
+      "name": "Browser Use Tool",
+      "category": "automation_runtime",
+      "status": "active",
+      "required_level": "low",
+      "owner": "Jake (workspace)",
+      "credentials": {"env_vars": ["BROWSER_USE_PAYLOAD"], "expected_location": "/.env", "raw_secret_in_ledger": false},
+      "failure_mode": "certain browser-driven workflows degrade; agent context narrower",
+      "fallback": ["manual browsing or other connectors"]
+    },
+    {
+      "id": "google_calendar",
+      "name": "Google Calendar",
+      "category": "communication_surfaces_scheduling",
+      "status": "planned",
+      "required_level": "medium (when wired)",
+      "owner": "Comeketo workspace",
+      "purpose": "Real calendar truth for tasting / consultation appointments — replaces operator-typed dates.",
+      "credentials": {"expected_type": "Google OAuth", "raw_secret_in_ledger": false},
+      "documented_in": "docs/connectors.md",
+      "open_work": ["OAuth flow", "server endpoints", "channel picker entry"]
+    },
+    {
+      "id": "email",
+      "name": "Email (Gmail / SMTP)",
+      "category": "communication_surfaces",
+      "status": "planned",
+      "required_level": "medium (when wired)",
+      "owner": "Comeketo workspace",
+      "purpose": "Email channel that doesn't go through Close (e.g., quote PDFs, post-close handoff).",
+      "credentials": {"expected_type": "Gmail API OAuth or SMTP", "raw_secret_in_ledger": false},
+      "documented_in": "docs/connectors.md"
+    },
+    {
+      "id": "supabase",
+      "name": "Supabase Backend",
+      "category": "database",
+      "status": "not-in-use",
+      "evidence_checked": "2026-04-29",
+      "evidence_notes": "no Supabase imports in server.py; no supabase references in *.jsx / *.js source. Cowork environment has Supabase MCP connector available but the repo does not use it."
+    },
+    {
+      "id": "google_drive",
+      "name": "Google Drive",
+      "category": "file_knowledge_sources",
+      "status": "not-in-use",
+      "evidence_checked": "2026-04-29",
+      "evidence_notes": "no Google Drive imports in code. Cowork environment has Google Drive MCP connector available but repo does not use it. Internal docs are mirrored into LEDGERS/, docs/, Auto/comeketo-inbox/references/ instead."
+    },
+    {
+      "id": "anthropic_api_direct",
+      "name": "Anthropic API (Direct)",
+      "category": "model_providers",
+      "status": "not-in-use",
+      "evidence_checked": "2026-04-29",
+      "evidence_notes": "no ANTHROPIC_API_KEY in env, no anthropic Python imports. Claude is reached via claude CLI subprocess (see claude_code), not via direct API."
+    }
+  ],
+  "credentials_table_summary": {
+    "active_count": 14,
+    "planned_count": 2,
+    "not_in_use_count": 3,
+    "raw_secrets_in_ledger": 0
+  },
+  "failure_mode_map": [
+    {"symptom": "Client ledgers stale", "likely": ["close", "comms_state_sweep", "cowork_scheduled_tasks"], "first_check": "last sweep timestamp + safe Close API read", "fallback": "manual Close review"},
+    {"symptom": "Activity screen empty", "likely": ["pieces"], "first_check": "/api/pieces/status; curl localhost:39300/.well-known/version", "fallback": "hide/degrade Activity panel"},
+    {"symptom": "No Slack alerts", "likely": ["slack"], "first_check": "/api/status for slack field; check token starts with xoxb-", "fallback": "surface alert in Activity instead"},
+    {"symptom": "WhatsApp/SMS sends fail", "likely": ["twilio"], "first_check": "/api/status; check Twilio creds + TWILIO_WHATSAPP_FROM", "fallback": "switch to email or Slack channel"},
+    {"symptom": "ClickUp commits silently no-op", "likely": ["clickup"], "first_check": "/api/clickup/rescan; /api/status for clickup_list_id", "fallback": "use a different Delegations channel"},
+    {"symptom": "Delegation to claude_code fails", "likely": ["claude_code"], "first_check": "/api/status for claude_code_available", "fallback": "use a different Delegations channel"},
+    {"symptom": "Pages cannot load dynamic data", "likely": ["local_app_server"], "first_check": "python3 server.py 3423; check port", "fallback": "restart server"},
+    {"symptom": "Chat responses fail", "likely": ["openai"], "first_check": "/api/status; check OPENAI_API_KEY", "fallback": "retry; check rate limits"},
+    {"symptom": "GitHub write conflict", "likely": ["github"], "first_check": "git status; git fetch origin", "fallback": "rebase locally; push when safe"},
+    {"symptom": "Scheduled fires not running", "likely": ["cowork_scheduled_tasks"], "first_check": "inspect recent run summaries; check last sweep timestamp", "fallback": "manual fire only; pause customer sends"}
+  ],
+  "verification_playbook": {
+    "safe_read_checks": [
+      "Fetch known GitHub file via git",
+      "Fetch known Close lead by ID (read-only)",
+      "Fetch recent Close activities (read-only)",
+      "/api/status (universal health)",
+      "/api/pieces/status",
+      "curl http://localhost:39300/.well-known/version",
+      "List Cowork scheduled tasks (read-only)",
+      "Read Slack workspace identity without posting"
+    ],
+    "write_checks_authorization_required": [
+      "Slack post to test channel",
+      "Close note creation on test lead",
+      "ClickUp task creation in test list",
+      "Twilio test-account send (TWILIO_TEST_*)",
+      "Workflow / trigger save",
+      "Credential save through /api/settings/mcp_credentials"
+    ],
+    "never_use_as_connection_test": [
+      "Sending customer-facing SMS / WhatsApp / email",
+      "Changing real lead status in Close",
+      "Moving real tasks in production ClickUp lists",
+      "Deleting workflows or triggers",
+      "Overwriting credentials",
+      "Pushing to main to test write access"
+    ],
+    "principle": "Testing by causing damage is not testing."
+  },
+  "billing_quota_watch": [
+    {"service": "close", "risk": "Comeketo subscription + API rate limits", "owner": "Comeketo"},
+    {"service": "openai", "risk": "per-token API billing", "owner": "Jake", "watchlist": true},
+    {"service": "twilio", "risk": "per-message pricing (WhatsApp + SMS)", "owner": "Comeketo", "watchlist": true},
+    {"service": "clickup", "risk": "workspace seat / API quota", "owner": "Comeketo"},
+    {"service": "slack", "risk": "workspace tier / app limits + token format issue", "owner": "Comeketo"},
+    {"service": "pieces", "risk": "local app — no billing", "owner": "Jake"},
+    {"service": "github", "risk": "free tier sufficient", "owner": "Jake"}
+  ],
+  "local_vs_cloud": {
+    "github_backed": ["ledgers", "code", "Client Boxes (canonical files)", "audit markers", "documentation"],
+    "local_only": ["/.env", "running server.py instance", "PiecesOS daemon", "unpushed Git commits", "local Cowork environment", "generated artifacts in CCAgentindex/_runs/, intelligence/, analytics/"],
+    "cloud_platform": ["Close API", "ClickUp API", "Slack API", "Twilio API", "OpenAI API", "Google Calendar (when wired)", "Email (when wired)"]
+  },
+  "connection_change_done_gate_local_overrides_dod_5_8": {
+    "triggers": [
+      "new external service added to /.env or connectors.js",
+      "service removed",
+      "env var renamed",
+      "service moves between active / optional / planned / not-in-use",
+      "side effect introduced (read-only → writes)",
+      "billing / quota / trial risk discovered",
+      "verification steps change",
+      "failure mode observed",
+      "local-only dependency becomes important enough to need a recipe in repo",
+      "automation starts depending on a connection",
+      "Box's box.json subscribes[] references a service for first time"
+    ]
+  },
+  "relationship_to_box_bus": {
+    "manifest_field": "box.json.subscribes[].ledger (when the ledger is a service-domain ledger like CLOSE_ACTIVITY or ANALYTICS_<name>)",
+    "rule": "A box.json cannot declare a dependency on a not-in-use or needs-verification service. Promote to active first (with verification evidence). Phase C runtime will enforce this; until then, authoring discipline."
+  },
+  "relationship_to_source_of_truth": {
+    "sot_says": "what to trust from external systems (per SOURCE_OF_TRUTH.md §3.5)",
+    "this_ledger_says": "what's wired, where credentials live, what breaks if down"
+  },
+  "north_star_alignment": {
+    "directly_supports": ["NS-04", "NS-06", "NS-09", "NS-10"],
+    "indirectly_supports": ["NS-01", "NS-02", "NS-07"]
+  },
+  "related_ledgers": {
+    "trust_ordering": "SOURCE_OF_TRUTH.md §3.5",
+    "completion_gate": "DEFINITION_OF_DONE.md §5.8 (this ledger's §10 is local-stricter)",
+    "box_concept": "BOX_LEDGER.md",
+    "box_wire_shape": "BOX_BUS_LEDGER.md §2.1",
+    "open_problem_being_closed": "OPEN_PROBLEMS_LEDGER.md PROB-2026-04-28-009 (optional connections need verification)",
+    "settings_when_built": "SETTINGS.md (planned)"
+  },
+  "visuals": [
+    "VISUALS/connections_dependency_map.mmd"
+  ],
+  "update_triggers": [
+    "§10 Done Gate fires",
+    "new service category becomes relevant",
+    "security rules change",
+    "status label needs changing",
+    "recurring failure pattern emerges (consider promoting to Open Problems)"
+  ],
+  "history": [
+    {"date": "2026-04-29", "event": "Phase 12 — initial creation. First domain-tier ledger authored under DEC-2026-04-29-013 envelope-aware rule. 11 active services + 2 planned + 3 not-in-use, all evidence-checked against server.py imports + .env contents + connectors.js + docs/connectors.md. Closes most of PROB-2026-04-28-009 (each optional service is now marked active/optional/planned/not-in-use with evidence). Companion files: CONNECTIONS.json, VISUALS/connections_dependency_map.mmd. Companion Communications entry: COMM-2026-04-29-009."}
+  ]
+}
