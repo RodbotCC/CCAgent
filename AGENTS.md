@@ -1,8 +1,63 @@
 # AGENTS.md — Comeketo Agent (project-local, authoritative)
 
-> You are the Orchestrator for **Comeketo Agent** — an administrative app built for Comeketo's internal operations. This file is authoritative for any `Codex` subprocess spawned with cwd inside this repo. It overrides the user-global `~/.Codex/AGENTS.md` when the two conflict.
+> You are the Orchestrator for **Comeketo Agent** — an administrative app built for Comeketo's internal operations. This file is authoritative for any `codex` subprocess spawned with cwd inside this repo. It overrides the user-global Codex instructions when the two conflict.
 
-This file is structured around six operational disciplines. Follow them in order on every delegation.
+This file opens with a **Prime Directive** on ledger discipline, followed by six operational disciplines. Follow them in order on every delegation. **The Prime Directive supersedes everything else when they conflict.**
+
+---
+
+## PRIME DIRECTIVE — Ledger discipline above all else
+
+> **Ledger discipline is the foundation of this project. Everything else is built on it.**
+>
+> **Before any action:** read the relevant ledgers.
+> **After any action:** update the relevant ledgers.
+>
+> This supersedes momentum, time pressure, conversational flow, and any sense that "the change is too small to log." There are no changes too small. The ledgers ARE the project. Code is what they describe.
+
+If you only have time to do one thing in a session, **update the ledgers.** Code without a corresponding ledger entry is debt. A reader of the ledgers should understand the system without opening a single source file. That is the standard. This is not aspirational — this is the daily working agreement.
+
+### What to read before any meaningful action
+
+1. [`LEDGERS/GLOBAL_LEDGER.md`](LEDGERS/GLOBAL_LEDGER.md) — project identity, world state, source-of-truth rules, Done Gate.
+2. [`LEDGERS/TEMPORAL_CONTINUITY.md`](LEDGERS/TEMPORAL_CONTINUITY.md) — current project moment, recent changes, active assumptions, next-handoff context.
+3. [`LEDGERS/OPEN_PROBLEMS_LEDGER.md`](LEDGERS/OPEN_PROBLEMS_LEDGER.md) — known broken or risky things in the area you're about to touch. Read this so you don't rediscover what we already know.
+4. [`LEDGERS/DECISIONS_LEDGER.md`](LEDGERS/DECISIONS_LEDGER.md) — settled architectural rules. Read before reversing any choice.
+5. [`LEDGERS/COMMUNICATIONS_LEDGER.md`](LEDGERS/COMMUNICATIONS_LEDGER.md) — handoffs, warnings, preferences, lessons left for future agents.
+6. The relevant local ledger or Box for the area you're working in.
+
+### What to update after any meaningful action
+
+In the **same unit of work** as the change itself — not as cleanup, not "I'll get to it":
+
+- **Always:** append one line to [`CCAgentindex/_ledger/activity.jsonl`](CCAgentindex/_ledger/activity.jsonl) — the project audit trail.
+- **If a page, route, or data binding changed:** update [`page_asset_sitemap.md`](page_asset_sitemap.md) — the UI Done Gate.
+- **If current project state shifted:** update [`LEDGERS/TEMPORAL_CONTINUITY.md`](LEDGERS/TEMPORAL_CONTINUITY.md) §3 (Recent Meaningful Changes), §10 (Next Agent Handoff), §11 (Session Log).
+- **If Global Ledger §2 / §6 / §12 / §13 drifted:** update [`LEDGERS/GLOBAL_LEDGER.md`](LEDGERS/GLOBAL_LEDGER.md). Bump `Last updated`.
+- **If you found a problem (whether or not you fixed it):** update [`LEDGERS/OPEN_PROBLEMS_LEDGER.md`](LEDGERS/OPEN_PROBLEMS_LEDGER.md). Closing a problem also updates this file.
+- **If a non-trivial architectural choice was made:** update [`LEDGERS/DECISIONS_LEDGER.md`](LEDGERS/DECISIONS_LEDGER.md).
+- **If a handoff, lesson, warning, or preference came up that future agents need:** update [`LEDGERS/COMMUNICATIONS_LEDGER.md`](LEDGERS/COMMUNICATIONS_LEDGER.md).
+- **If the change touched a Box's territory:** stamp the local Box ledger (e.g. `Auto/Client Boxes/<Name>/client_ledger.md`).
+- **If a new bedrock file was created in a loader-visible domain:** register it in [`CCAgentindex/indexes/index.json`](CCAgentindex/indexes/index.json) — otherwise the UI cannot see it.
+
+### Codex operating contract
+
+Codex is not a special exception to the ledger system. Codex should behave as another capable project agent inside the same Box + Ledger + Sub-agent triad:
+
+- Treat `AGENTS.md` as the Codex-side peer of `CLAUDE.md`; keep the two aligned when project-wide agent rules change.
+- Use the repo ledgers as shared memory, not private chat memory. If a future Claude, Cowork, Codex, or steward needs to know something, put it in the relevant ledger.
+- Prefer narrow, inspectable patches. Before editing, check the nearby source-of-truth files; after editing, leave the audit trail.
+- Respect user work in the dirty tree. Do not revert, overwrite, or clean unrelated changes.
+- When the task maps to an atom in [`LEDGERS/ATOMS.md`](LEDGERS/ATOMS.md), follow the atom protocol: claim before doing, announce the atom, complete with verification, and update both Markdown and JSON mirrors as required.
+- When the user says `P` or `p` in an atomized workstream, choose the next most load-bearing unclaimed atom and proceed without broad clarifying questions.
+
+### The cardinal sin
+
+**Ledger drift is the failure mode that wakes the next agent up confused.** A stale Temporal Continuity Ledger turns the next session into a stranger in their own project. A stale sitemap means every change to the affected page is invisibly off-the-books. A missing activity entry means the audit trail lies.
+
+Treat ledger updates as part of the same unit of work as the change itself, not as cleanup. Update them *as you go*, not at the end of the session when you're tired and tempted to skip.
+
+**If you do not have time to update the ledgers, you do not have time to make the change.** Stop, surface the constraint, and ask.
 
 ---
 

@@ -4,7 +4,7 @@ This is the roster of every ledger planned for the project. The Global Ledger is
 
 > The first file an agent reads before doing meaningful work is `GLOBAL_LEDGER.md`. This index tells you what's next.
 
-Last updated: 2026-04-29 (Phase 14 — Asset/Widget Map landed; cross-page widget catalog + API→page mapping)
+Last updated: 2026-04-30 (**Phase B steward fleet — first chain closure.** Temporal Continuity Box flipped to `active (runnable, Phase B live)` — first ledger steward to graduate fully through author → wire → smoke → flip via the unified Box pattern (ATOMs 0028 → 0029 → 0030 → 0031). 4 of 5 ledger stewards now have runnable forms; file_directory in flight by parallel agent on ATOM-0036. Earlier same-day: Atom Ledger (DEC-2026-04-30-003) + Deprecation Ledger (DEC-2026-04-30-002). 19 active ledgers + 5 unified Boxes (temporal_continuity, atoms, open_problems, north_star, file_directory, global_ledger).)
 
 > **Where the source material lives (2026-04-29):**
 > - **Outline drafts** for unbuilt ledgers: `/Users/jakeaaron/Downloads/CC Agent/Ledger Drafts/` (19 `.txt` files). Read the matching outline before authoring any new ledger.
@@ -34,7 +34,8 @@ Last updated: 2026-04-29 (Phase 14 — Asset/Widget Map landed; cross-page widge
 | North Star (JSON mirror) | `LEDGERS/NORTH_STAR.json` | **active** | Machine-readable mirror of all 10 goals + principles + anti-goals + tradeoff rules. |
 | Global Ledger Steward package | `LEDGERS/AGENTS/global_ledger_steward/` | **active** | Canonical steward configuration for protecting/updating Global Ledger + JSON mirror. |
 | Global Ledger Steward app agent | `CCAgentindex/agents/global_ledger_steward/` | **active** | Runnable app agent via `POST /api/agents/global_ledger_steward/run`; writes scoped local ledger updates and per-run receipts. |
-| Phase Ledger | `LEDGERS/PHASE.md` | planned | Current milestone state and exit criteria. |
+| Phase Ledger | `LEDGERS/PHASE.md` | **active** | Current phase + exit criteria + do-not-leak rules + transition protocol + anti-patterns. **Phase A Complete** (2026-04-29). Tier: global. |
+| Phase (JSON mirror) | `LEDGERS/PHASE.json` | **active** | Machine-readable mirror. |
 
 ---
 
@@ -66,11 +67,18 @@ Last updated: 2026-04-29 (Phase 14 — Asset/Widget Map landed; cross-page widge
 | File Contents (JSON mirror) | `LEDGERS/FILE_CONTENTS.json` | **active** | Machine-readable mirror — structured per-file entries. Indexable by category / type / related ledgers. |
 | Asset / Widget Map | `LEDGERS/ASSET_WIDGET_MAP.md` | **active** | Cross-page widget catalog (7 categories) + API→page mapping (10 endpoint groups) + shared services registry (10 `window.*` objects) + cross-page state (7 localStorage keys + 3 events) + change-radius hints. Sitemap remains canonical per-page truth. **Tier: domain.** |
 | Asset / Widget Map (JSON mirror) | `LEDGERS/ASSET_WIDGET_MAP.json` | **active** | Machine-readable mirror — pages[], shared_widgets, api_to_page_mapping, shared_services, cross_page_state, change_radius. |
-| Page Ledgers | `LEDGERS/PAGES/<route>.md` | planned | One per surviving UI route: grid, settings, leads, clients, coworkers, contacts, briefing, activity, automation, intake, analytics. |
+| Page Ledgers (directory) | `LEDGERS/PAGES/` | **partial (2 of 14)** | Per-page deep memory. Sitemap remains canonical operational truth; Page Ledgers carry the *why*. Pattern stamped at [`PAGES/_README.md`](PAGES/_README.md) with 14-page status table + authoring template. |
+| Page Ledger — `boxes` | `LEDGERS/PAGES/boxes.md` | **active** | First Page Ledger (Phase 16). 16 sections covering boxes page deep memory. **Tier: domain.** |
+| Page Ledger — `intake` | `LEDGERS/PAGES/intake.md` | **active** | Second Page Ledger (Phase 17). Captures Phase 1 unification architecture (DEC-005..008). **Tier: domain.** |
+| Page Ledger — `automation` | `LEDGERS/PAGES/automation.md` | **active** | Third Page Ledger (Phase 18). Highest-risk write surface — 5 sub-tabs (workflows / sub-agents / state / hooks / triggers). **Tier: domain.** |
+| Page Ledger — `delegations` | `LEDGERS/PAGES/delegations.md` | **active** | Fourth Page Ledger (Phase 19). Project's send chokepoint; DEC-2026-04-28-005 enforcement (two-step submit→approve). **Tier: domain.** |
+| Page Ledger — `settings` | `LEDGERS/PAGES/settings.md` | **active** | Fifth Page Ledger (Phase 20). Per-page deep memory pairs with global SETTINGS.md ledger. **Tier: domain.** |
+| Page Ledgers (remaining 9 routes) | `LEDGERS/PAGES/<route>.md` | **deferred (Phase B/C as needed)** | grid, leads, clients, coworkers, contacts, venues, briefing, activity, analytics. Per Phase A exit policy: lower-risk routes don't block Phase A close. Author when needed. |
 | Widget Ledgers | `LEDGERS/WIDGETS/<widget>.md` | planned | One per major widget. |
 | Connections Ledger | `LEDGERS/CONNECTIONS.md` | **active** | External-system inventory: 11 active services + 2 planned + 3 not-in-use, all evidence-checked. Per-service contracts (credentials/failure modes/verification/billing/fallback). **First domain-tier ledger.** Closed PROB-2026-04-28-009. |
 | Connections (JSON mirror) | `LEDGERS/CONNECTIONS.json` | **active** | Machine-readable mirror — per-service entries with full operational fields. |
-| Settings Ledger | `LEDGERS/SETTINGS.md` | planned | Configurable options and feature flags. |
+| Settings Ledger | `LEDGERS/SETTINGS.md` | **active** | User-configurable surface catalog: 11 settings across 3 persistence layers (`.env` / `localStorage.secretary.tweaks` / runtime). Demo mode + provider exclusivity + credential save/clear with audit log. **Tier: global.** Pairs with CONNECTIONS. |
+| Settings (JSON mirror) | `LEDGERS/SETTINGS.json` | **active** | Machine-readable mirror of all settings, persistence layers, and rules. |
 
 ---
 
@@ -82,9 +90,16 @@ Last updated: 2026-04-29 (Phase 14 — Asset/Widget Map landed; cross-page widge
 | Decisions (JSON mirror) | `LEDGERS/DECISIONS_LEDGER.json` | **active** | Structured mirror with all 12 decisions, dependencies, promotions from Communications, decisions-needing-review, counts. |
 | Communications Ledger | `LEDGERS/COMMUNICATIONS_LEDGER.md` | **active** | How agents talk across time: handoffs, warnings, preferences, lessons, attempted/abandoned work, cross-system coordination. 18 seeded entries (5 handoffs, 3 warnings, 3 preferences, 4 lessons, 1 attempt, 2 cross-system). **Read at session start and end.** |
 | Communications (JSON mirror) | `LEDGERS/COMMUNICATIONS_LEDGER.json` | **active** | Structured mirror with all entries, types, promotion paths, archive policy, counts. |
-| Open Problems Ledger | `LEDGERS/OPEN_PROBLEMS_LEDGER.md` | **active** | 13 active problems + 1 closed. Stable IDs (PROB-YYYY-MM-DD-###), severity/urgency separated, mandatory close criteria. **Read before starting work** to avoid rediscovering known issues. |
+| Open Problems Ledger | `LEDGERS/OPEN_PROBLEMS_LEDGER.md` | **active** | 13 active problems + 1 closed. Stable IDs (PROB-YYYY-MM-DD-###), severity/urgency separated, mandatory close criteria. **Read before starting work** to avoid rediscovering known issues. PROB-016 atomized 2026-04-30 into 26 atoms. |
 | Open Problems (JSON mirror) | `LEDGERS/OPEN_PROBLEMS_LEDGER.json` | **active** | Structured mirror with blocked, partially-fixed, recurring patterns, recently-closed. |
-| Audit Ledger | `LEDGERS/AUDIT.md` | **out-of-scope (2026-04-29)** | Removed from build queue per Jake — coverage absorbed by Open Problems, Decisions, Communications, and per-Box ledgers. Draft outline kept at `Ledger Drafts/# Audit Ledger.txt` for reference. |
+| Atom Ledger | `LEDGERS/ATOMS.md` | **active** | Operational layer below Open Problems — PROBs decompose 1:N into single-session claimable atoms. 6-state lifecycle (`available` → `claimed` → `in_progress` → `completed` \| `blocked` \| `abandoned`). Single-writer claim protocol. 4h granularity rule. Phase A proof: PROB-2026-04-28-016 atomized into 26 atoms. **Tier: global.** Authored under `DEC-2026-04-30-003`. |
+| Atoms (JSON mirror) | `LEDGERS/ATOMS.json` | **active** | Machine-readable mirror — schema, lifecycle, claim protocol, **43 seeded atoms** across 2 parent PROBs (PROB-016 = 26, PROB-005 = 17). Canonical for race resolution. |
+| Atomizer Steward Box | `LEDGERS/BOXES/atoms/` | **active (declarative; runnable form Phase B)** | Unified Box for the Atom Ledger per `DEC-2026-04-29-015`. Houses the Atomizer Steward sub-agent: scans new PROBs, proposes atoms to `DRAFTS/ATOMIZATION/`, sweeps stale claims, surfaces PROB-closure-eligible candidates. Ledger files (`ATOMS.md` + `.json`) stay at `LEDGERS/` — Box governs by `box.json` `owns[]` path reference. |
+| Temporal Continuity Box | `LEDGERS/BOXES/temporal_continuity/` | **active (runnable, Phase B live)** | First unified Box (2026-04-29). Houses Temporal Continuity Steward — runnable form authored 2026-04-30 (ATOM-0028); dispatchable via `POST /api/agents/temporal_continuity_steward/run` per the unified-Box dispatch path wired by ATOM-0029 (`_agent_resolve_prompt` helper in `server.py`); first audit_only smoke test successful 2026-04-30 (ATOM-0030, receipt at `LEDGERS/BOXES/temporal_continuity/receipts/2026-04-30_22-29-11_run_synthesized_inline_atom_0030.json`, 6 stale-surface findings on TCL itself, zero false positives). Pattern stamp for all subsequent unified Boxes. |
+| Audit Ledger | `LEDGERS/AUDIT.md` | **out-of-scope (2026-04-29)** | Removed from build queue per Jake — coverage absorbed by Open Problems, Decisions, Communications, and per-Box ledgers. Draft outline kept at `Ledger Drafts/# Audit Ledger.txt` for reference. Captured as DEPR-2026-04-30-002. |
+| Deprecation Ledger | `LEDGERS/DEPRECATION.md` | **active** | Project-wide retirement audit trail. 4-state lifecycle (candidate → deprecated → archived → purged). Pairs with Snapshot Protocol §7 for recovery surface. Cardinal rule: nothing leaves the project without a Deprecation entry and a Snapshot reference. **Tier: global.** Authored under `DEC-2026-04-30-002`. |
+| Deprecation (JSON mirror) | `LEDGERS/DEPRECATION.json` | **active** | Machine-readable mirror — entries, lifecycle, snapshot protocol, recovery procedure, anti-patterns, related ledgers. |
+| Snapshot runner | `LEDGERS/scripts/snapshot.sh` | **active (manual)** | Bash runner producing daily/weekly/monthly/manual zip archives at `_snapshots/<cadence>/`. Phase A: manual invocation. Phase C: cron / launchd via Snapshot Steward. |
 | Prompt / Reconstruction Ledger | `LEDGERS/PROMPT_RECONSTRUCTION.md` | planned | How important things were built — repeatable processes. |
 | Scout Ledger | `LEDGERS/SCOUT.md` | planned | Tool/model/workflow research notes. |
 | Activity ledger (audit trail) | `CCAgentindex/_ledger/activity.jsonl` | **active** | Append-only delegation/event log. |
@@ -123,6 +138,7 @@ Mermaid `.mmd` files under `LEDGERS/VISUALS/`:
 | Connections dependency map (Cloud → Local → Project blast-radius) | `LEDGERS/VISUALS/connections_dependency_map.mmd` | **active** |
 | File contents index (5-cluster roll-up + cross-cluster dependency arrows) | `LEDGERS/VISUALS/file_contents_index.mmd` | **active** |
 | Page-widget dependency map (14 pages → shared widgets → services → APIs) | `LEDGERS/VISUALS/page_widget_dependency.mmd` | **active** |
+| Settings surface map (Settings → categories → persistence layers → affected systems) | `LEDGERS/VISUALS/settings_surface_map.mmd` | **active** |
 | Box hierarchy map | `LEDGERS/VISUALS/box_hierarchy.mmd` | **active** |
 | Box orientation flow | `LEDGERS/VISUALS/box_orientation_flow.mmd` | **active** |
 | Page / API / data-flow map | `LEDGERS/VISUALS/page_api_dataflow.mmd` | planned |
@@ -130,14 +146,23 @@ Mermaid `.mmd` files under `LEDGERS/VISUALS/`:
 
 ---
 
-## Suggested build order (Phase 15 onward)
+## Phase A Complete — Phase B (Sub-agents) opens
 
-Phases 1–14 are complete: Global, Temporal Continuity, North Star, File Directory, Open Problems, Communications, Decisions, Box Ledger, Definition of Done, Box Bus Ledger, Source-of-Truth, Connections, File Contents, **Asset/Widget Map**. The first steward automation is also active: `global_ledger_steward` can run local ledger-maintenance sweeps through the app agent path. The order below is a recommendation — pick by what's most painful next.
+**Phase A is officially complete as of 2026-04-29 (`DEC-2026-04-29-014`).** 17 active ledgers across project-level (16) + Page Ledgers (5). High-risk Page Ledger wave authored (boxes / intake / automation / delegations / settings page). Phase Ledger closes Phase A. Phase B (Sub-agents) is now unblocked.
+
+**Phase B work** — graduate the 5 draft sub-agent packages at `/Subagent Boxes/` into runnable app agents under `CCAgentindex/agents/<name>/`. Author additional stewards for ledgers without a draft. See `PHASE.md` §4 for Phase B scope, exit criteria, and do-not-leak rules.
+
+**Phase C runtime stays deferred** per `DEC-2026-04-29-013` (Reactive Box Network — schema canonical, runtime held).
+
+### Historical build order (Phases 1–21)
 
 1. ~~**Source-of-Truth Ledger**~~ — **landed 2026-04-29 (Phase 11)**. First ledger authored under DEC-2026-04-29-013 envelope-aware rule. PROB-001 schema-design criterion satisfied. Now live at `LEDGERS/SOURCE_OF_TRUTH.md`.
 2. ~~**Connections Ledger**~~ — **landed 2026-04-29 (Phase 12)**. First domain-tier ledger. PROB-2026-04-28-009 closed. Now live at `LEDGERS/CONNECTIONS.md`.
 3. ~~**File Contents Ledger**~~ — **landed 2026-04-29 (Phase 13)**. ~78 file entries across 10 categories. Now live at `LEDGERS/FILE_CONTENTS.md`.
 4. ~~**Asset / Widget Map**~~ — **landed 2026-04-29 (Phase 14)**. Cross-page widget catalog + API→page mapping. Now live at `LEDGERS/ASSET_WIDGET_MAP.md`.
+5. ~~**Settings Ledger**~~ — **landed 2026-04-29 (Phase 15)**. User-configurable surface across 3 persistence layers. Now live at `LEDGERS/SETTINGS.md`.
+6. ~~**First Page Ledger (boxes)**~~ — **landed 2026-04-29 (Phase 16)**. Per-page deep-memory pattern established. Now live at `LEDGERS/PAGES/boxes.md`.
+7. ~~**Second Page Ledger (intake)**~~ — **landed 2026-04-29 (Phase 17)**. Phase 1 unification architecture captured. Now live at `LEDGERS/PAGES/intake.md`. Next-up: automation, delegations, settings page (high-risk wave continues).
 2. ~~**Box Bus Ledger**~~ — **landed 2026-04-29 (Phase 10)**. Schema only; runtime deferred to Phase C. Now live at `LEDGERS/BOX_BUS_LEDGER.md` with `DEC-2026-04-29-013` as the architectural lock.
 3. ~~**Definition of Done Ledger**~~ — **landed 2026-04-29 (Phase 9)**. Universal Done Gate + 11 work-type gates + Ledger Update Matrix. Now live at `LEDGERS/DEFINITION_OF_DONE.md`.
 3. ~~**Decisions Ledger**~~ — **landed 2026-04-29 (Phase 7)**. 12 active decisions. Now live at `LEDGERS/DECISIONS_LEDGER.md`. 5 Communications entries promoted in.

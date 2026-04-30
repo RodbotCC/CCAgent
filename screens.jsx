@@ -247,6 +247,11 @@ function IntelligencePanel({ tweaks, setTweaks }) {
             Choose the active brain for chat. <b>Claude Code</b> uses local <code>claude -p</code>; <b>Codex CLI</b> uses local <code>codex exec</code>; <b>OpenAI</b> uses the Responses API.
             Only the selected route receives prompts; the other CLI stays idle.
           </div>
+          {currentProvider === "openai" && (
+            <div className="desc" style={{marginTop: 6, padding: "6px 8px", border: "1px solid var(--rule-2)", borderRadius: 6, background: "var(--paper-2)", color: "var(--ink-3)", fontSize: 11}}>
+              <b>Web-mode gating active.</b> While OpenAI is selected, three Pieces-dependent surfaces hide: the <b>briefing</b> link, the <b>activity</b> page, and the live Pieces ticker on the home page. Pieces is per-machine and not reachable in hosted web mode. Switch back to Claude Code or Codex CLI to restore those surfaces. (Interim — see <code>PROB-2026-04-30-001</code>.)
+            </div>
+          )}
         </div>
         <div />
         <div className="ctrl">
@@ -6013,6 +6018,183 @@ function AnalyticsToast({ message }) {
   );
 }
 
+// ── Owner & Stage Pipeline Panel ──────────────────────────────────────────────
+// Reads /api/analytics/owner_stage (server endpoint synthesizes JSON on every
+// read from the markdown output of build_owner_stage_dashboards.py — files at
+// CCAgentindex/intelligence/sales/owner_stage/<YYYY-MM-DD>/{owner_overview.md,
+// stage_overview.md, by_owner/<owner>/dashboard.md, by_stage/.../dashboard.md}).
+// To refresh: run `python3 "Onboard Scripts/build_owner_stage_dashboards.py"`.
+// Decision rationale: see DECISIONS_LEDGER `DEC-2026-04-30-001` (server-synthesized
+// JSON pattern for build_*.py → AnalyticsScreen integrations).
+function StageRow({ stage, max, ink, bg }) {
+  const pct = max > 0 ? (stage.lead_count / max) * 100 : 0;
+  return (
+    <div style={{ marginBottom: 5 }}>
+      <div style={{ display: "flex", justifyContent: "space-between", fontFamily: "var(--mono)", fontSize: 10, color: "var(--ink)", marginBottom: 2 }}>
+        <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", flex: 1, minWidth: 0 }}>{stage.stage}</span>
+        <span style={{ color: "var(--muted)", marginLeft: 8 }}>{stage.lead_count}</span>
+      </div>
+      <div style={{ height: 4, background: "var(--card)", borderRadius: 2 }}>
+        <div style={{ height: "100%", background: bg, borderTop: `1px solid ${ink}`, borderRadius: 2, width: `${pct}%`, minWidth: pct > 0 ? 4 : 0 }} />
+      </div>
+    </div>
+  );
+}
+
+function OwnerStagePanel({ data, go }) {
+  if (!data || !data.ok) {
+    return (
+      <div style={{ padding: "20px 32px 0" }}>
+        <div style={{ background: "var(--rose-bg)", color: "var(--rose-ink)", borderRadius: 8, padding: "16px 20px", fontSize: 13 }}>
+          <b>No owner & stage dashboards loaded.</b><br />
+          <span style={{ fontSize: 11 }}>{data?.error || "/api/analytics/owner_stage returned no data."}</span>
+          <div style={{ marginTop: 8, fontSize: 11, fontFamily: "var(--mono)" }}>
+            Run: <code>python3 "Onboard Scripts/build_owner_stage_dashboards.py"</code> to generate fresh dashboards.
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  const owners = data.owners || [];
+  const stages = data.stages || [];
+  const featuredOwner = owners[0]; // currently andre_raw — only owner with leads
+  const totalLeads = data.lead_count || 0;
+  const totalActive = owners.reduce((s, o) => s + (o.active || 0), 0);
+  const totalLeadOnly = owners.reduce((s, o) => s + (o.lead_only || 0), 0);
+  const totalWon = owners.reduce((s, o) => s + (o.won || 0), 0);
+
+  const stagesActive = stages.filter(s => s.kind === "active").sort((a, b) => b.lead_count - a.lead_count);
+  const stagesLeadOnly = stages.filter(s => s.kind === "lead_only").sort((a, b) => b.lead_count - a.lead_count);
+  const maxStageCount = Math.max(...stages.map(s => s.lead_count), 1);
+
+  const urgencyColor = (u) => ({
+    high: { bg: "var(--rose-bg)", ink: "var(--rose-ink)" },
+    medium: { bg: "var(--lemon-bg)", ink: "var(--lemon-ink)" },
+    low: { bg: "var(--sage-bg)", ink: "var(--sage-ink)" },
+  })[String(u || "").toLowerCase()] || { bg: "var(--card)", ink: "var(--muted)" };
+
+  return (
+    <div style={{ padding: "20px 32px 0" }}>
+      {/* Snapshot row */}
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 10, marginBottom: 18 }}>
+        {[
+          { label: "Total leads",     value: totalLeads,    bg: "var(--card)",    ink: "var(--ink)" },
+          { label: "Active",          value: totalActive,   bg: "var(--mint-bg)", ink: "var(--mint-ink)" },
+          { label: "Lead-only",       value: totalLeadOnly, bg: "var(--sky-bg)",  ink: "var(--sky-ink)" },
+          { label: "Won",             value: totalWon,      bg: "var(--sage-bg)", ink: "var(--sage-ink)" },
+        ].map(({ label, value, bg, ink }) => (
+          <div key={label} style={{ background: bg, borderRadius: 8, padding: "14px 16px", border: "1px solid var(--rule)" }}>
+            <div style={{ fontFamily: "var(--mono)", fontSize: 9, textTransform: "uppercase", letterSpacing: "0.08em", color: "var(--muted)" }}>{label}</div>
+            <div style={{ fontFamily: "var(--serif)", fontSize: 28, fontWeight: 500, color: ink, lineHeight: 1.1, marginTop: 4 }}>{value}</div>
+          </div>
+        ))}
+      </div>
+
+      {/* Featured Owner card */}
+      {featuredOwner && (
+        <div style={{ background: "var(--lavender-bg)", borderRadius: 8, padding: "20px 22px", border: "1px solid var(--lavender-ink)", marginBottom: 18 }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: 14 }}>
+            <div>
+              <div style={{ fontFamily: "var(--mono)", fontSize: 9, textTransform: "uppercase", letterSpacing: "0.1em", color: "var(--lavender-ink)", opacity: 0.7 }}>
+                featured owner
+              </div>
+              <div style={{ fontFamily: "var(--serif)", fontSize: 24, fontWeight: 500, color: "var(--lavender-ink)", marginTop: 4 }}>
+                {featuredOwner.slug}
+              </div>
+              {featuredOwner.latest_activity && (
+                <div style={{ fontFamily: "var(--mono)", fontSize: 11, color: "var(--lavender-ink)", marginTop: 6, opacity: 0.85 }}>
+                  Latest: {featuredOwner.latest_activity}
+                </div>
+              )}
+            </div>
+            <div style={{ display: "flex", gap: 18, fontFamily: "var(--mono)", fontSize: 11, color: "var(--lavender-ink)", textAlign: "center" }}>
+              <div><b style={{ fontFamily: "var(--serif)", fontSize: 20, display: "block" }}>{featuredOwner.leads}</b>leads</div>
+              <div><b style={{ fontFamily: "var(--serif)", fontSize: 20, display: "block" }}>{featuredOwner.active}</b>active</div>
+              <div><b style={{ fontFamily: "var(--serif)", fontSize: 20, display: "block" }}>{featuredOwner.lead_only}</b>lead-only</div>
+              <div><b style={{ fontFamily: "var(--serif)", fontSize: 20, display: "block" }}>{featuredOwner.won}</b>won</div>
+              <div><b style={{ fontFamily: "var(--serif)", fontSize: 20, display: "block" }}>{featuredOwner.lost}</b>lost</div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Two-column: stages (left) | leads (right) */}
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 18, alignItems: "start" }}>
+
+        {/* Stages */}
+        <div>
+          <div style={{ fontFamily: "var(--mono)", fontSize: 10, textTransform: "uppercase", letterSpacing: "0.08em", color: "var(--muted-2)", marginBottom: 10 }}>
+            stage breakdown · {stages.length} stages
+          </div>
+
+          {stagesActive.length > 0 && (
+            <div style={{ marginBottom: 12 }}>
+              <div style={{ fontFamily: "var(--mono)", fontSize: 9, textTransform: "uppercase", letterSpacing: "0.06em", color: "var(--mint-ink)", marginBottom: 6 }}>
+                active · {stagesActive.length}
+              </div>
+              {stagesActive.map((s, i) => (
+                <StageRow key={"a"+i} stage={s} max={maxStageCount} ink="var(--mint-ink)" bg="var(--mint-bg)" />
+              ))}
+            </div>
+          )}
+
+          {stagesLeadOnly.length > 0 && (
+            <div>
+              <div style={{ fontFamily: "var(--mono)", fontSize: 9, textTransform: "uppercase", letterSpacing: "0.06em", color: "var(--sky-ink)", marginBottom: 6 }}>
+                lead-only · {stagesLeadOnly.length}
+              </div>
+              {stagesLeadOnly.map((s, i) => (
+                <StageRow key={"l"+i} stage={s} max={maxStageCount} ink="var(--sky-ink)" bg="var(--sky-bg)" />
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Leads */}
+        <div>
+          <div style={{ fontFamily: "var(--mono)", fontSize: 10, textTransform: "uppercase", letterSpacing: "0.08em", color: "var(--muted-2)", marginBottom: 10 }}>
+            leads · {(featuredOwner?.leads_detail || []).length}
+          </div>
+          {(featuredOwner?.leads_detail || []).map((lead, i) => {
+            const u = urgencyColor(lead.urgency);
+            return (
+              <div key={i} style={{ borderBottom: "1px solid var(--rule)", padding: "10px 0" }}>
+                <div style={{ display: "flex", justifyContent: "space-between", gap: 8, alignItems: "flex-start" }}>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ fontFamily: "var(--serif)", fontSize: 14, fontWeight: 500, color: "var(--ink)" }}>
+                      {lead.name}
+                    </div>
+                    <div style={{ fontFamily: "var(--mono)", fontSize: 10, color: "var(--muted)", marginTop: 2, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                      {lead.stage}
+                    </div>
+                  </div>
+                  <span style={{ background: u.bg, color: u.ink, fontFamily: "var(--mono)", fontSize: 9, textTransform: "uppercase", letterSpacing: "0.06em", padding: "3px 8px", borderRadius: 4, flexShrink: 0 }}>
+                    {lead.urgency}
+                  </span>
+                </div>
+                <div style={{ fontFamily: "var(--mono)", fontSize: 10, color: "var(--muted-2)", marginTop: 4 }}>
+                  {lead.activity}
+                </div>
+                <div style={{ fontFamily: "var(--mono)", fontSize: 11, color: "var(--ink)", marginTop: 4, lineHeight: 1.4 }}>
+                  → {lead.action}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Footer — provenance pointer */}
+      <div style={{ marginTop: 18, marginBottom: 4, padding: "10px 14px", background: "var(--card)", borderRadius: 6, fontFamily: "var(--mono)", fontSize: 10, color: "var(--muted)" }}>
+        Data: <code>CCAgentindex/intelligence/sales/owner_stage/{data.latest_date}/</code>{" · "}
+        Source: <code>Onboard Scripts/build_owner_stage_dashboards.py</code>{" · "}
+        Re-run the script to refresh.
+      </div>
+    </div>
+  );
+}
+
 function AnalyticsScreen({ go }) {
   const [snap, setSnap] = useState(null);
   const [perf, setPerf] = useState(null);
@@ -6021,6 +6203,7 @@ function AnalyticsScreen({ go }) {
   const [revTrends, setRevTrends] = useState(null);
   const [bookingLT, setBookingLT] = useState(null);
   const [cohortData, setCohortData] = useState(null);
+  const [ownerStage, setOwnerStage] = useState(null); // owner & stage dashboards (synthesized server-side from build_owner_stage_dashboards.py output)
   const [compareOwners, setCompareOwners] = useState(null); // [ownerA, ownerB] for side-panel
   const [loading, setLoading] = useState(true);
   const [err, setErr] = useState(null);
@@ -6128,7 +6311,9 @@ function AnalyticsScreen({ go }) {
         .then(r => r.ok ? r.json() : null).catch(() => null),
       fetch(`CCAgentindex/analytics/cohort_snapshot.json?_t=${t}`)
         .then(r => r.ok ? r.json() : null).catch(() => null),
-    ]).then(([srcData, perfData, evtsData, wlData, rtData, bltData, cdData]) => {
+      fetch(`/api/analytics/owner_stage?_t=${t}`)
+        .then(r => r.ok ? r.json() : null).catch(() => null),
+    ]).then(([srcData, perfData, evtsData, wlData, rtData, bltData, cdData, osData]) => {
       setSnap(srcData);
       setPerf(perfData);
       setEvts(evtsData);
@@ -6136,6 +6321,7 @@ function AnalyticsScreen({ go }) {
       setRevTrends(rtData);
       setBookingLT(bltData);
       setCohortData(cdData);
+      setOwnerStage(osData);
       setLoading(false);
     }).catch(e => { setErr(e.message); setLoading(false); });
   }, []);
@@ -6360,6 +6546,7 @@ function AnalyticsScreen({ go }) {
           ["sources", "Source Channels"],
           ["owners", "Owner Performance"],
           ["pipeline", "Pipeline Funnel"],
+          ["owner_stage", "Pipeline by Stage"],
           ["events", "Upcoming Events"],
           ["winloss", "Win / Loss"],
           ["revenue", "Revenue & Growth"],
@@ -8121,6 +8308,11 @@ function AnalyticsScreen({ go }) {
         <div style={{ padding: "20px 32px 0" }}>
           <ConversationIntelligenceTab go={go} />
         </div>
+      )}
+
+      {/* ── Owner & Stage Pipeline tab ── */}
+      {activeTab === "owner_stage" && (
+        <OwnerStagePanel data={ownerStage} go={go} />
       )}
 
       {/* ── Spotlight badge ── */}

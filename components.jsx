@@ -145,7 +145,12 @@ function Breadcrumb({ history, go }) {
 }
 window.Breadcrumb = Breadcrumb;
 
-function Topbar({ route, history, go, stateSig, onOpenSettings, onOpenLeads, onOpenClients, onOpenCoworkers, onOpenContacts, onOpenVenues, onOpenBriefing, onOpenActivity, onOpenAutomation, onOpenIntake, onOpenAnalytics, onOpenDelegations, onOpenBoxes, onHome }) {
+function Topbar({ route, history, go, stateSig, webMode, onOpenSettings, onOpenLeads, onOpenClients, onOpenCoworkers, onOpenContacts, onOpenVenues, onOpenBriefing, onOpenActivity, onOpenAutomation, onOpenIntake, onOpenAnalytics, onOpenDelegations, onOpenBoxes, onHome }) {
+  // Web-mode gating (2026-04-30 — PROB-2026-04-30-001 interim). When OpenAI is
+  // selected as the AI provider we treat the app as if it were running in
+  // hosted web mode (no Pieces connection). The briefing chip and activity
+  // chip both hide because both surfaces are Pieces-dependent. They do not
+  // grey out — they disappear, so the topbar reads cleanly.
   return (
     <div className="topbar">
       {/* ── Row 0: brand (quiet letterhead) + context strip (quiet meta) ── */}
@@ -155,14 +160,18 @@ function Topbar({ route, history, go, stateSig, onOpenSettings, onOpenLeads, onO
         </div>
         <div className="context-strip">
           <span className="ctx-item"><b>{stateSig.mode}</b> <span className="meta-sep">·</span> {stateSig.domain}</span>
-          <span className="meta-sep">·</span>
-          <button
-            className={"chip" + (route.name === "briefing" ? " active" : "")}
-            onClick={onOpenBriefing}
-            title="briefing"
-          >
-            briefing
-          </button>
+          {!webMode && (
+            <React.Fragment>
+              <span className="meta-sep">·</span>
+              <button
+                className={"chip" + (route.name === "briefing" ? " active" : "")}
+                onClick={onOpenBriefing}
+                title="briefing"
+              >
+                briefing
+              </button>
+            </React.Fragment>
+          )}
           <button
             className={"gear" + (route.name === "settings" ? " active" : "")}
             onClick={onOpenSettings}
@@ -189,9 +198,11 @@ function Topbar({ route, history, go, stateSig, onOpenSettings, onOpenLeads, onO
             { name: "venues",    label: "venues",    icon: "map-pin",      onClick: onOpenVenues,    badge: null },
           ]}
         />
-        <button className={"chip" + (route.name === "activity" ? " active" : "")} onClick={onOpenActivity} title="Activity">
-          <Icon name="activity" size={14}/>activity
-        </button>
+        {!webMode && (
+          <button className={"chip" + (route.name === "activity" ? " active" : "")} onClick={onOpenActivity} title="Activity">
+            <Icon name="activity" size={14}/>activity
+          </button>
+        )}
         <button className={"chip" + (route.name === "intake" ? " active" : "")} onClick={onOpenIntake} title="Intake — drop receipts, invoices, notes">
           <Icon name="inbox" size={14}/>intake
         </button>
@@ -841,24 +852,60 @@ function ChatRail({ go, gridGenerate, aiBusy }) {
     String(body || "").trim().split("\n").map(line => `> ${line}`).join("\n"),
   ].join("\n");
 
+  // Browser-use done card — render a clean panel with a host badge + optional
+  // page title instead of dumping the raw URL into visible text. The full URL
+  // still backs every link as href, just doesn't show as label spillage.
+  // (Polish 2026-04-30 — Jake.)
+  const _prettyHost = (url) => {
+    try { return new URL(url).host.replace(/^www\./, ""); }
+    catch { return "page"; }
+  };
+  const _looksLikeUrl = (s) => typeof s === "string" && /^https?:\/\//i.test(s);
+  const _truncate = (s, n) => {
+    if (!s || s.length <= n) return s;
+    const cut = s.slice(0, n);
+    const sp = cut.lastIndexOf(" ");
+    return (sp > n * 0.6 ? cut.slice(0, sp) : cut) + "…";
+  };
+
   const browserResultPanelText = (result) => {
     const items = Array.isArray(result.items) ? result.items : [];
-    const lines = [
-      "**browser use done**",
-      result.title ? `_${result.title}_` : null,
-      result.url ? `[opened page](${result.url})` : null,
-      "",
-    ].filter(Boolean);
+    const lines = ["**browser use done**", ""];
+
+    // Source line — host as the visible link label, optional human title
+    // alongside (only if the title isn't itself a URL). No raw URL ever
+    // appears as visible text.
+    if (result.url) {
+      const host = _prettyHost(result.url);
+      const titleBit = result.title && !_looksLikeUrl(result.title)
+        ? ` — ${_truncate(result.title, 80)}`
+        : "";
+      lines.push(`→ opened **[${host}](${result.url})**${titleBit}`);
+      lines.push("");
+    } else if (result.title && !_looksLikeUrl(result.title)) {
+      lines.push(`_${_truncate(result.title, 100)}_`);
+      lines.push("");
+    }
+
     if (items.length) {
       items.slice(0, 12).forEach((item, idx) => {
-        const title = item.title || item.text || item.url || `result ${idx + 1}`;
-        const link = item.url ? `[${title}](${item.url})` : title;
+        // Pick a human label first (title > text). Only fall through to the
+        // URL if neither exists — and even then, render it as the host name,
+        // never the full URL string.
+        let label;
+        if (item.title && !_looksLikeUrl(item.title)) label = _truncate(item.title, 100);
+        else if (item.text  && !_looksLikeUrl(item.text))  label = _truncate(item.text, 100);
+        else if (item.url) label = _prettyHost(item.url);
+        else label = `result ${idx + 1}`;
+
+        const link = item.url ? `[${label}](${item.url})` : label;
         const meta = [
           item.channel,
+          item.url ? _prettyHost(item.url) : null,
           ...(Array.isArray(item.metadata) ? item.metadata : []),
         ].filter(Boolean).join(" · ");
         lines.push(`${idx + 1}. ${link}${meta ? `\n   ${meta}` : ""}`);
-        if (item.description) lines.push(`   ${item.description}`);
+        if (item.description) lines.push(`   ${_truncate(item.description, 200)}`);
       });
       return lines.join("\n");
     }
@@ -1087,7 +1134,7 @@ function ChatRail({ go, gridGenerate, aiBusy }) {
                                  : (typeof t.content === "string" ? t.content : "");
             const images = parts ? parts.filter(p => p.type === "image") : [];
             return (
-              <div key={i} className={"chat-rail-turn " + (mine ? "me" : sys ? "sys" : "ai")}>
+              <div key={i} className={"chat-rail-turn " + (mine ? "me" : sys ? "sys" : tool ? "tool" : "ai")}>
                 <div style={{display:"flex", flexDirection:"column", gap:4, alignItems: mine ? "flex-end" : "flex-start", maxWidth:"88%"}}>
                   {images.length > 0 && (
                     <div style={{display:"flex", flexWrap:"wrap", gap:4, justifyContent: mine ? "flex-end" : "flex-start"}}>
@@ -1234,11 +1281,16 @@ function ChatRail({ go, gridGenerate, aiBusy }) {
               </button>
             );
           })}
+          {/* Action pills (computer-use / browser-use / open-browser) — visually
+              uniform with the four tagging pills above, regardless of whether
+              the composer has draft text. The functional `disabled` HTML attr
+              still prevents firing on empty draft; this just keeps the row
+              looking unified at idle. (Polish 2026-04-30 — Jake.) */}
           <button
             onClick={sendToComputerUse}
             disabled={!draft.trim() || computerUseBusy}
-            title="Hand off this draft to the desktop computer-use runner"
-            style={routePillStyle({ enabled: !!draft.trim(), busy: computerUseBusy })}
+            title={draft.trim() ? "Hand off this draft to the desktop computer-use runner" : "Type something first, then hand it off to the desktop computer-use runner"}
+            style={routePillStyle({ enabled: true, busy: computerUseBusy })}
           >
             <Icon name="terminal" size={11}/>
             <span>computer use</span>
@@ -1246,8 +1298,8 @@ function ChatRail({ go, gridGenerate, aiBusy }) {
           <button
             onClick={sendToBrowserUse}
             disabled={!draft.trim() || browserUseBusy}
-            title="Run this draft through a background browser worker"
-            style={routePillStyle({ enabled: !!draft.trim(), busy: browserUseBusy })}
+            title={draft.trim() ? "Run this draft through a background browser worker" : "Type something first, then run it through a background browser worker"}
+            style={routePillStyle({ enabled: true, busy: browserUseBusy })}
           >
             <Icon name="search" size={11}/>
             <span>browser use</span>
@@ -1255,8 +1307,8 @@ function ChatRail({ go, gridGenerate, aiBusy }) {
           <button
             onClick={sendToOpenBrowser}
             disabled={!draft.trim()}
-            title="Open this request in the visible browser"
-            style={routePillStyle({ enabled: !!draft.trim() })}
+            title={draft.trim() ? "Open this request in the visible browser" : "Type something first, then open it in the visible browser"}
+            style={routePillStyle({ enabled: true })}
           >
             <Icon name="external-link" size={11}/>
             <span>open browser</span>
@@ -1806,7 +1858,7 @@ function TeachingStrip({ greeting, instruct, meta }) {
 function FrontPage(props) {
   const {
     grid, onCellOpen, onSweep, onFrameReject, aiBusy, canGenerate, aiConfigured,
-    historyDepth, onGenerate, onBack, onOpenSettings, go,
+    historyDepth, onGenerate, onBack, onOpenSettings, go, webMode,
   } = props;
 
   // Refinement state: null = grid mode; otherwise { cellId, type, axes, positions, children }
@@ -2088,8 +2140,13 @@ function FrontPage(props) {
       <div className="fp-head">
         {/* Live Pieces broadcast strip — defined in screens.jsx and exposed
             on window. Falls back to the static greeting when Pieces is
-            offline or empty, so the homepage NEVER goes blank. */}
-        {window.LivePiecesHeader
+            offline or empty, so the homepage NEVER goes blank.
+            Web-mode gate (2026-04-30 — PROB-2026-04-30-001 interim): when
+            the user has OpenAI selected we hide the LivePiecesHeader and
+            fall through to TeachingStrip — Pieces is per-machine and is
+            not reachable in hosted web mode, so the ticker would either
+            fail or leak the wrong machine's workstream. */}
+        {(!webMode && window.LivePiecesHeader)
           ? <window.LivePiecesHeader greeting={greeting} instruct={instruct} meta={meta} />
           : <TeachingStrip greeting={greeting} instruct={instruct} meta={meta} />}
         <FpBreadcrumb

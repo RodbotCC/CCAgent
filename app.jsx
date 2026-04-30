@@ -132,6 +132,24 @@ function App() {
 
   // --- Routing ---------------------------------------------------------------
   const KNOWN_SCREENS = ["grid", "settings", "leads", "clients", "coworkers", "contacts", "venues", "briefing", "automation", "activity", "intake", "analytics", "delegations", "boxes"];
+
+  // Web-mode capability gating (2026-04-30 — interim, against PROB-2026-04-30-001).
+  // When the AI provider is OpenAI we treat the app as if it were running in
+  // hosted web mode where Pieces is unavailable. The three Pieces-dependent
+  // surfaces hide entirely: the `briefing` route, the `activity` route, and
+  // the LivePiecesHeader ticker on the `grid` home page. The Topbar links to
+  // those routes hide too so they cannot be deep-linked into. If the user is
+  // already on a hidden route when they flip to OpenAI, the redirect effect
+  // below pushes them home so they don't land on a broken page. This is the
+  // simplest possible interim gate — a real mode/profile system per
+  // PROB-001 will eventually replace this proxy.
+  const WEB_MODE_HIDDEN_ROUTES = ["briefing", "activity"];
+  const webMode = (tweaks && tweaks.aiProvider) === "openai";
+  useEffect(() => {
+    if (webMode && WEB_MODE_HIDDEN_ROUTES.includes(route && route.name)) {
+      go.home();
+    }
+  }, [webMode, route && route.name]);
   const getGridFor = (id) => gridOverrides[id] || data.grids[id] || null;
   const validHistory = (h) => {
     if (!Array.isArray(h) || !h.length) return null;
@@ -449,6 +467,7 @@ function App() {
           onGenerate={onGenerateFromMC}
           onBack={onBackOneGeneration}
           onOpenSettings={() => go.push("settings")}
+          webMode={webMode}
         />
       </div>
     );
@@ -493,6 +512,7 @@ function App() {
         mcStatus={mcStatus}
         aiConfigured={aiConfigured}
         aiBusy={aiBusy}
+        webMode={webMode}
         onOpenSettings={() => go.push("settings")}
         onOpenLeads={() => go.push("leads")}
         onOpenClients={() => go.push("clients")}

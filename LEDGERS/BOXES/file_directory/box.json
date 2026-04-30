@@ -1,0 +1,139 @@
+{
+  "id": "ledger_box:file_directory",
+  "slug": "file_directory",
+  "kind": "ledger",
+  "name": "File Directory Ledger Box",
+  "version": "1",
+  "envelope_v": "1",
+  "tier": "global",
+  "status": "active",
+  "created_on": "2026-04-30",
+  "unified_box_pattern_decision": "DEC-2026-04-29-015",
+  "canonical_path_decision": "DEC-2026-04-30-004",
+  "promotion_atom": "ATOM-2026-04-30-0036",
+  "owns": [
+    "LEDGERS/FILE_DIRECTORY_LEDGER.md",
+    "LEDGERS/FILE_DIRECTORY_LEDGER.json",
+    "LEDGERS/BOXES/file_directory/box.json",
+    "LEDGERS/BOXES/file_directory/BOX.md",
+    "LEDGERS/BOXES/file_directory/steward/AGENTS.md",
+    "LEDGERS/BOXES/file_directory/steward/config.json",
+    "LEDGERS/BOXES/file_directory/steward/prompt.md",
+    "LEDGERS/BOXES/file_directory/receipts/"
+  ],
+  "source_of_truth": {
+    "primary": "LEDGERS/FILE_DIRECTORY_LEDGER.md",
+    "structured_mirror": "LEDGERS/FILE_DIRECTORY_LEDGER.json",
+    "generated": []
+  },
+  "subscribes": [
+    {
+      "ledger": "_ledger/activity.jsonl",
+      "tier": "global",
+      "filter": "or(kind:create_directory, kind:retire_directory, kind:rename_directory, kind:bedrock_reconciliation)",
+      "interpreter": "T1",
+      "write_target": "FILE_DIRECTORY_LEDGER.md (§3 top-level map, §4 important subdirectories, §5 ownership table, §11 changes since last sweep)",
+      "phase_c_note": "subscription is documented but not consumed until Phase C runtime lands"
+    },
+    {
+      "ledger": "OPEN_PROBLEMS_LEDGER",
+      "tier": "global",
+      "filter": "or(tag:directory, tag:cleanup, tag:source-of-truth)",
+      "interpreter": "T1",
+      "write_target": "FILE_DIRECTORY_LEDGER.md (§12 known wrong-turns, §6 Problems By System cross-ref)",
+      "phase_c_note": "deferred"
+    },
+    {
+      "ledger": "GLOBAL_LEDGER",
+      "tier": "global",
+      "filter": "scope:major_system_added_or_retired",
+      "interpreter": "T1",
+      "write_target": "FILE_DIRECTORY_LEDGER.md (§3 + §5 if directory ownership shifted)",
+      "phase_c_note": "deferred"
+    },
+    {
+      "ledger": "page_asset_sitemap",
+      "tier": "global",
+      "filter": "scope:route_added_or_retired",
+      "interpreter": "T1",
+      "write_target": "FILE_DIRECTORY_LEDGER.md (only when a new route's primary directory location changes)",
+      "phase_c_note": "deferred"
+    }
+  ],
+  "emits": [
+    {
+      "ledger": "_ledger/activity.jsonl",
+      "tier": "global",
+      "on_event": "file_directory_steward_run",
+      "envelope_kind": "steward_run",
+      "scope": "kind:ledger",
+      "phase_c_note": "emit is documented but currently fires through manual append, not bus"
+    },
+    {
+      "ledger": "OPEN_PROBLEMS_LEDGER",
+      "tier": "global",
+      "on_event": "directory_drift_detected",
+      "envelope_kind": "problem",
+      "scope": "tag:directory",
+      "phase_c_note": "Directory drift = ledger says X exists / not exists but disk disagrees. Manual today. The kind of silent cumulative drift that bites cold-starting agents."
+    },
+    {
+      "ledger": "OPEN_PROBLEMS_LEDGER",
+      "tier": "global",
+      "on_event": "wrong_turn_pattern_detected",
+      "envelope_kind": "problem",
+      "scope": "tag:directory",
+      "phase_c_note": "Pattern emerged where multiple agents edited the wrong directory because ledger's §12 wrong-turns list was incomplete. Manual today."
+    }
+  ],
+  "agent_config": {
+    "package_path": "LEDGERS/BOXES/file_directory/steward/",
+    "agents_md": "LEDGERS/BOXES/file_directory/steward/AGENTS.md",
+    "config_json": "LEDGERS/BOXES/file_directory/steward/config.json",
+    "prompt_md": "LEDGERS/BOXES/file_directory/steward/prompt.md",
+    "tier_default": "T1",
+    "guardrails": [
+      "no direct main pushes when local drift risk exists",
+      "audit_only is the safe default; local_write requires explicit dispatch",
+      "city map only — do not absorb per-file detail (that's File Contents Ledger)",
+      "do not absorb per-page detail (that's page_asset_sitemap)",
+      "stop wrong-path edits before they happen; flag and route, do not silently fix"
+    ],
+    "modes": ["audit_only", "local_write"],
+    "dispatch": "POST /api/agents/file_directory_steward/run",
+    "dispatch_status": "wired via _agent_resolve_prompt helper (ATOM-0029); awaits live HTTP smoke test (ATOM-0038) and INDEX flip (ATOM-0039)",
+    "runnable_form_path_canonical": "LEDGERS/BOXES/file_directory/steward/ (canonical per DEC-2026-04-30-004)",
+    "resolution_helper": "server.py _agent_resolve_prompt — checks legacy first, then unified Box (added in ATOM-0029). file_directory_steward has NO legacy path, so it always resolves to the unified Box."
+  },
+  "ledger_local": "LEDGERS/BOXES/file_directory/receipts/",
+  "phase_status": {
+    "phase_a": "complete (FILE_DIRECTORY_LEDGER.md + .json shipped 2026-04-28; ~32 directories enumerated)",
+    "phase_b": "in_progress (this Box stamps the unified pattern for file_directory; runnable form authored 2026-04-30 via ATOM-0036; route wiring is no-op via ATOM-0029 helper; smoke test ATOM-0038 + INDEX flip ATOM-0039 remain)",
+    "phase_c": "deferred (subscriptions/emits documented but not consumed by router; runtime held per DEC-2026-04-29-013)"
+  },
+  "related_ledgers": [
+    "BOX_LEDGER.md (concept of a Box)",
+    "BOX_BUS_LEDGER.md §2.1 (manifest schema)",
+    "DECISIONS_LEDGER.md DEC-2026-04-29-015 (unified Box pattern), DEC-2026-04-30-004 (canonical steward path)",
+    "PHASE.md §4 (Phase B scope)",
+    "OPEN_PROBLEMS_LEDGER.md PROB-2026-04-30-005 (steward sub-agent promotion — this is ATOM-0036 of that PROB)",
+    "ATOMS.md (ATOM-2026-04-30-0036 promotion record)",
+    "FILE_CONTENTS.md (per-file role inventory — file_directory_steward owns the city map; FILE_CONTENTS owns per-file roles)",
+    "page_asset_sitemap.md (UI Done Gate; file_directory_steward only flags route↔directory mismatches, doesn't own page assets)",
+    "SOURCE_OF_TRUTH.md (per-domain trust orderings — file_directory_steward enforces directory-level source-of-truth)"
+  ],
+  "history": [
+    {
+      "date": "2026-04-28",
+      "event": "Phase A — FILE_DIRECTORY_LEDGER.md + .json shipped. Sub-agent draft authored at /Subagent Boxes/file_directory_subagent_package/ pending Phase B promotion."
+    },
+    {
+      "date": "2026-04-29",
+      "event": "Unified Box pattern locked by DEC-2026-04-29-015. Draft package consolidated to /Subagent Boxes/ awaiting promotion."
+    },
+    {
+      "date": "2026-04-30",
+      "event": "ATOM-2026-04-30-0036 promotion. Built unified Box at LEDGERS/BOXES/file_directory/ following the 6-file pattern established by global_ledger Box (ATOM-0044) and temporal_continuity Box. Draft AGENTS.md and config.json copied from /Subagent Boxes/file_directory_subagent_package/ and adapted (status: draft → active; suggested_repo_path → canonical_repo_path; migration metadata added). prompt.md authored fresh modeled after global_ledger_steward/prompt.md. No legacy CCAgentindex/agents/file_directory_steward/ ever existed — this is a clean Phase B promotion, not a migration. Resolution via _agent_resolve_prompt helper (ATOM-0029): falls through legacy (not found) → resolves to unified Box prompt directly. Unblocks ATOMs 0037 (route wiring — no-op via helper), 0038 (smoke test), 0039 (INDEX flip)."
+    }
+  ]
+}

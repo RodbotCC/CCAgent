@@ -65,6 +65,23 @@ Higher rank wins. **Never invert this order.** If a generated view contradicts a
 
 The universal order applies; this section names the specific files in each domain.
 
+### 3.0 Operator-Activity Truth (added 2026-04-30, COMM-2026-04-30-007)
+
+For any question about *what the operator actually did on their machine* (sessions, durations, what they looked at, what they discussed, what they said in the moment):
+
+| Rank | Source | Notes |
+|---|---|---|
+| 1 | Pieces MCP live state at `localhost:39300` | Authoritative system of record (operator's own machine) |
+| 2 | `LEDGERS/atlas/<day-folder>/pieces_*.md` (alias to `/Users/jakeaaron/Documents/Atlas/`) | Pieces' curated workstream summaries written to disk daily — citation-rich, structured, durable |
+| 3 | `LEDGERS/atlas/<day-folder>/entries.jsonl` (when present) | Raw event-level Pieces output, finer-grained than the markdown summaries |
+| 4 | `_ledger/activity.jsonl` agent-generated entries | What the project's agents claim happened — useful for triangulation, NOT authoritative against Atlas for what the operator actually did |
+| 5 | TCL §11 Session Log entries | Agent-summary of what a session did — bound by the agent's perspective, not the operator's |
+| 6 | Chat scroll | Volatile; only useful within a single session |
+
+**Rule:** when an agent ledger writes claim work that operator-actual-activity in Atlas contradicts, **Atlas wins for what-happened**. The agent-ledger then needs reconciliation — file a PROB describing the drift, do NOT auto-resolve. See `LEDGERS/BOXES/atlas/BOX.md` §4.1 for the two-truths contract; see COMM-2026-04-30-007 for the architectural rationale.
+
+**Anti-rule:** Atlas does NOT win for "what the project decided" or "what the architecture is" — those live in the project ledgers. Atlas observes; ledgers settle. Both surfaces are load-bearing at different altitudes.
+
 ### 3.1 Client Truth
 
 For any question about a client (their pricing conversation, head count, venue, dates, decisions, blockers):

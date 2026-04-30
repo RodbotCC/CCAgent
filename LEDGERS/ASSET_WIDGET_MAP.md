@@ -1,6 +1,6 @@
 # Asset / Widget Map
 
-Last updated: 2026-04-29 (initial creation — Phase 14 of ledger system buildout; tier: domain; envelope-aware under `DEC-2026-04-29-013`)
+Last updated: 2026-04-30 (added §3.8 Analytics-page panels; new endpoint `/api/analytics/owner_stage` registered as integration pattern per `DEC-2026-04-30-001`)
 Maintainer: Jake / Comeketo Agent project agents
 Status: **active**
 Tier (Box Bus Ledger §3): **domain** — fans out only to Boxes that subscribe to UI / page domain
@@ -207,6 +207,24 @@ When an endpoint changes, these are the pages to re-test.
 | Endpoint | Pages affected |
 |---|---|
 | `POST /api/chat/*` | `grid` (ChatRail), `intake` (ask) |
+
+### 4.9a Analytics-page panels
+
+Widgets live in `screens.jsx` and read either pre-built JSON snapshots (the `analytics_*.py` family) or server-synthesized JSON (the `build_*.py` family per `DEC-2026-04-30-001`).
+
+| Endpoint / Source | Panel(s) | Producer |
+|---|---|---|
+| `CCAgentindex/analytics/source_channel_snapshot.json` (static) | Source Channels tab + AnalyticsDonut + AnalyticsLeadTable | `Onboard Scripts/analytics_source_channels.py` |
+| `CCAgentindex/analytics/seller_performance_snapshot.json` (static) | Owner Performance tab · Pipeline Funnel tab | `Onboard Scripts/analytics_seller_performance.py` |
+| `CCAgentindex/analytics/upcoming_events_snapshot.json` (static) | Upcoming Events tab | `Onboard Scripts/analytics_upcoming_events.py` |
+| `CCAgentindex/analytics/win_loss_snapshot.json` (static) | Win / Loss tab | `Onboard Scripts/analytics_win_loss.py` |
+| `CCAgentindex/analytics/revenue_trends_snapshot.json` (static) | Revenue & Growth tab | `Onboard Scripts/analytics_revenue_trends.py` |
+| `CCAgentindex/analytics/booking_lead_time_snapshot.json` (static) | Lead Time tab | `Onboard Scripts/analytics_booking_lead_time.py` |
+| `CCAgentindex/analytics/cohort_snapshot.json` (static) | Cohort Analysis tab | `Onboard Scripts/analytics_cohort_analysis.py` |
+| `GET /api/intelligence/conversation/latest` (server-read latest dated `.json`) | Conversation Intel tab + ConversationIntelligencePanel + Sparkline + ChannelBars | `Onboard Scripts/build_conversation_intelligence.py` |
+| **`GET /api/analytics/owner_stage`** (server-synthesized JSON per `DEC-2026-04-30-001`) | **Pipeline by Stage tab + OwnerStagePanel + StageRow** | **`Onboard Scripts/build_owner_stage_dashboards.py`** |
+
+When adding a new analytics panel: prefer the server-synthesized pattern for `build_*.py` integrations (no JSON sidecar in bedrock; markdown remains canonical). Update the Analytics page section in `page_asset_sitemap.md` AND this row.
 
 ### 4.9 Agents (runnable)
 

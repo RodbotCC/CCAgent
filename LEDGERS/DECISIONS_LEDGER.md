@@ -1,6 +1,6 @@
 # Decisions Ledger
 
-Last updated: 2026-04-29 (Phase 10 — added DEC-2026-04-29-013 Reactive Box Network architectural lock; companion BOX_BUS_LEDGER landed)
+Last updated: 2026-04-30 (DEC-2026-04-30-004 — canonical steward path = LEDGERS/BOXES/<name>/steward/; resolves ATOM-0027 architectural-gate atom; first claim-and-complete under the atom protocol)
 Maintainer: Jake / Comeketo Agent project agents
 Status: **active**
 Read when: starting major work, auditing changes, considering reversing an architectural choice, citing rationale, resolving tradeoffs, or running an audit pass.
@@ -159,8 +159,12 @@ Quick index for skimming. Full records in §5.
 | DEC-2026-04-29-007 | Box Reports Refresh On Read | active | high | architecture / perf | server `_box_report_synthesize` |
 | DEC-2026-04-29-008 | Phase 1 Intake → Box Is Read-Mostly (no agent-config plumbing yet) | active | high | scope / phasing | Intake ask path, Boxes |
 | DEC-2026-04-29-013 | Reactive Box Network Is The Target Architecture (schema only; runtime deferred to Phase C) | active | high | global / architectural | every stateful entity in the project; future bus runtime |
+| DEC-2026-04-30-001 | Server-synthesized JSON pattern for build_*.py → AnalyticsScreen integrations | active | high | domain / UI integration | the 19 unintegrated build_*.py scripts; future Analytics panels |
+| DEC-2026-04-30-002 | Deprecation Ledger Lives At Global Tier; Snapshot Protocol Pairs With It | active | high | global / architectural | every retirement project-wide; LEDGERS/DEPRECATION.md + _snapshots/ + future Snapshot Steward |
+| DEC-2026-04-30-003 | Atom Ledger — PROBs Decompose 1:N Into Single-Session Claimable Atoms (Global Tier) | active | high | global / architectural | every PROB; every agent claiming work; future Atomizer Steward; LEDGERS/ATOMS.md |
+| DEC-2026-04-30-004 | Canonical Steward Path = `LEDGERS/BOXES/<name>/steward/` (resolves legacy vs unified-Box fork) | active | high | global / architectural | every steward sub-agent; server.py `_agent_run`; legacy global_ledger_steward (migration follow-on); 4 unpromoted stewards |
 
-16 active decisions. 0 superseded. 0 deprecated.
+19 active decisions. 0 superseded. 0 deprecated.
 
 ---
 
@@ -1166,6 +1170,308 @@ Do not change the manifest schema, envelope schema, tier model, or cycle policy 
 ##### History
 
 - 2026-04-29 — created. Phase 0 schema shipped same day at [`BOX_BUS_LEDGER.md`](BOX_BUS_LEDGER.md) + [`BOX_BUS_LEDGER.json`](BOX_BUS_LEDGER.json) + three Mermaid visuals. Box Ledger and Definition of Done updated to point at it. Companion Communications Ledger entry: `COMM-2026-04-29-007`.
+
+---
+
+#### DEC-2026-04-30-001 — Server-synthesized JSON pattern for build_*.py → AnalyticsScreen integrations
+
+Status: **active**
+Confidence: high
+Scope: domain — UI integration pattern for Analytics page panels backed by `Onboard Scripts/build_*.py` outputs
+Tier (Box Bus): domain
+Decided: 2026-04-30
+Decided by: Jake (orchestrator) + Claude (Cowork)
+Reference implementation: `_owner_stage_latest` in `server.py` + `OwnerStagePanel` in `screens.jsx` (landed same day)
+
+##### Context
+
+The 7 `analytics_*.py` scripts in `Onboard Scripts/` write pre-built JSON snapshots to `CCAgentindex/analytics/<name>_snapshot.json`, which `AnalyticsScreen` fetches directly. That works because those scripts hit Close.com and the JSON shape is designed for the panels.
+
+The 21 `build_*.py` scripts are different: they read from `CCAgentindex/people/`, write to `CCAgentindex/intelligence/<area>/<date>.{md,json}`, and the *markdown* is the human narrative while the JSON is structured data — but **most build_*.py scripts have only produced markdown so far** (only 2 of 21 have JSON outputs in bedrock as of 2026-04-30). Future build_*.py outputs may also be markdown-only by design.
+
+When integrating `build_owner_stage_dashboards.py` (the first build_*.py → AnalyticsScreen integration), the choice of data path was forced. Three real options existed.
+
+##### Decision
+
+**The integration pattern for `build_*.py` → `AnalyticsScreen` is a server endpoint that synthesizes JSON on every read by parsing the markdown output of the build script.** No JSON sidecar is written into bedrock. The build script's markdown remains the source of truth.
+
+Concretely:
+
+- One endpoint per build_*.py script, naming convention `GET /api/analytics/<area>` (e.g. `/api/analytics/owner_stage`).
+- Endpoint walks `CCAgentindex/intelligence/<area>/`, finds latest dated subdir or sibling summary, parses the markdown, returns structured JSON.
+- Frontend panel fetches the endpoint alongside the existing analytics snapshot fetches inside `AnalyticsScreen`'s `Promise.all`.
+- Refresh path: re-run the build script to regenerate the markdown; reload the page to re-parse.
+
+##### Alternatives Considered
+
+- **Modify the build script to also emit JSON** — rejected. Scope creep into `Auto/Onboard Scripts/` (canonical location), forces a build pipeline change, doesn't help for scripts that haven't run yet, and creates two-source-of-truth risk between md and json that drift apart.
+- **Parse markdown client-side in the browser** — rejected. Fragile to format changes, hard to test, doesn't scale to 19 future integrations, ships parser code in the JSX bundle for every page load.
+- **Write a separate "synthesize JSON sidecar from existing markdown" one-shot script** — rejected. Adds a build step, requires coordination, persists synthesized state to disk creating drift risk if the markdown updates and the sidecar doesn't.
+
+##### Consequences
+
+- **Refresh latency is the file-read + parse cost** (microseconds for owner_stage; trivially cheap for any build_*.py output we'd reasonably surface).
+- **No build pipeline change** required to ship the next 19 integrations. Pattern is: write the parser + register the endpoint route + write the panel + add the tab.
+- **The build_*.py scripts can stay markdown-only** without the integration team needing to touch `Auto/Onboard Scripts/`.
+- **Source-of-truth contract is explicit:** markdown is canonical; JSON is a view. Per `SOURCE_OF_TRUTH.md` §3 trust ordering — the build script's markdown is the per-domain source-of-truth for that intelligence area. The endpoint is a synthesizer, not a writer.
+- **No new bedrock files created**, so no `indexes/index.json` registration needed for this pattern.
+- **Sets the pattern for the remaining 19 build_*.py scripts:** action_intelligence, event_ops_registry, handoff_package, lead_business_context, lead_call_dossiers, lead_deal_sheets, lead_email_thread_library, lead_memory_briefs, lead_message_library, menu_intelligence, miscommunication_intelligence, operational_intelligence, phone_call_library, pricing_scope_intelligence, recovery_intelligence, schedule_commitment_registry, seller_performance_intelligence, source_channel_intelligence, unlinked_call_library.
+
+##### Do Not Undo Casually
+
+- This decision is reversible if the integration count grows large enough that on-the-fly parsing becomes noticeable, OR if the build_*.py scripts grow JSON outputs natively.
+- Reversing means migrating to the analytics_*.py pattern (script writes a JSON sidecar to bedrock that the page fetches directly). That migration is mechanical but requires touching every endpoint and every panel.
+- Don't reverse for one slow case — fix the parser. Reverse only if the pattern becomes a measured bottleneck.
+
+##### Review Trigger
+
+- 5+ build_*.py integrations exist and one of them measurably slows the analytics page load.
+- The build_*.py scripts are migrated to emit canonical JSON natively (in which case this synthesizer pattern becomes redundant).
+- An architectural decision elevates intelligence/ outputs to be Box-shaped (Phase C+1 per `DEC-2026-04-29-013` worked example B — the `analytics-snapshot` Box kind). At that point the synthesizer pattern is replaced by Box-managed materialized views.
+
+##### History
+
+- 2026-04-30 — created. Reference implementation: `_owner_stage_latest` (server.py) + `OwnerStagePanel` (screens.jsx). First build_*.py integration: `build_owner_stage_dashboards.py` → `/api/analytics/owner_stage` → `OwnerStagePanel` in the new "Pipeline by Stage" tab. First sweep: 28 leads · 1 owner · 26 stages.
+
+---
+
+---
+
+#### DEC-2026-04-30-002 — Deprecation Ledger Lives At Global Tier; Snapshot Protocol Pairs With It
+
+Status: **active**
+Confidence: high
+Scope: global — architectural lock for every retirement event in the project (file, folder, ledger entry, route, sub-agent, Box, schema, env var, API endpoint, widget, dependency, setting)
+Tier (Box Bus): global
+Decided: 2026-04-30
+Decided by: Jake (orchestrator) + Claude (Cowork)
+Affected systems: every Box that retires content; every ledger that has rows superseded; the future Snapshot Steward; the future `LEDGERS/BOXES/deprecation/` unified Box; `_snapshots/` directory; `.gitignore`; `LEDGERS/scripts/snapshot.sh`
+Related North Star goals: NS-01 (legibility above all), NS-02 (file-tree-first), NS-09 (audit trail discipline)
+Related ledgers: `LEDGERS/DEPRECATION.md`, `LEDGERS/scripts/snapshot.sh`, `DECISIONS_LEDGER` (this entry), `COMMUNICATIONS_LEDGER`, `OPEN_PROBLEMS_LEDGER`
+Supersedes: none
+Superseded by: none
+
+##### Context
+
+Jake surfaced a gap on 2026-04-30: with Phase A complete and Phase B opening (Box buildout for ledger stewards), the project tree is starting to accumulate things that need to retire — old draft folders, superseded ledger entries, the never-built Audit Ledger, the Apr 2026 trim retirements that were captured in `CLAUDE.md` and `GLOBAL_LEDGER` but never given a formal retirement record. There was no ledger for this. There was also no recovery surface — once something was deleted, it was gone, with no way for a future agent to know what was there or pull it back.
+
+Two real architectural choices:
+
+1. **Per-Box deprecation** — each Box keeps its own deprecation list. Local audit, no cross-cutting view.
+2. **Global Deprecation Ledger** — single project-wide ledger captures every retirement, with a paired Snapshot Protocol providing the recovery surface.
+
+Snapshots themselves had no home either. Jake suggested daily/weekly zip automation. That mechanism needed to live somewhere — not as a free-floating script, but as a protocol with retention rules, naming conventions, and a relationship to the Deprecation Ledger.
+
+##### Decision
+
+**The Deprecation Ledger lives at the global tier as `LEDGERS/DEPRECATION.md` + `LEDGERS/DEPRECATION.json`.** It is paired with a **Snapshot Protocol (Deprecation Ledger §7)** that defines what is captured, on what cadence, where it lives, retention rules, recovery procedure, and health checks.
+
+Concretely:
+
+- **Tier:** global. Every Box, every ledger, every file emits deprecation candidates upstream to this ledger.
+- **Path:** `LEDGERS/DEPRECATION.md` + `LEDGERS/DEPRECATION.json`. Sits next to `DECISIONS`, `COMMUNICATIONS`, `OPEN_PROBLEMS`, `SOURCE_OF_TRUTH`, `PHASE` — the global continuity ledgers.
+- **Lifecycle:** four states (`candidate` → `deprecated` → `archived` → `purged`) with explicit promotion rules and required fields per state. Plus `reversed` and `recovered` for round-trips.
+- **Cardinal rule:** "Nothing leaves the project without a Deprecation entry and a Snapshot reference."
+- **Incoming-link audit:** mandatory before any entry promotes from `candidate` → `deprecated`. Captures references that still need updating.
+- **Snapshot Protocol:** four cadences (daily/weekly/monthly/manual) with retention rules (7/4/12/indefinite). Snapshot zips live at `_snapshots/<cadence>/` at the **project root** (not inside `CCAgentindex/`). `.gitignore` excludes `_snapshots/`.
+- **Recovery key:** `(snapshot_id, snapshot_path)` — both fields live on every Deprecation entry.
+- **Phase A:** ledger authored, manual snapshot script ships at `LEDGERS/scripts/snapshot.sh`, four backfill entries seeded (great-trim domains, Audit Ledger, sub-agent relocation, trim routes).
+- **Phase B follow-up:** unified Box pattern at `LEDGERS/BOXES/deprecation/` per `DEC-2026-04-29-015` (matches the temporal_continuity Box), with a Snapshot Steward sub-agent.
+- **Phase C runtime:** wire snapshot script to cron / launchd; hook steward into Box Bus runtime so any Box can `emit` deprecation candidates upstream.
+
+##### Alternatives Considered
+
+- **Per-Box deprecation only** — rejected. Scatters the audit trail. Future agents would need to walk every Box to know what's been retired project-wide. Recovery is hard because there's no central pointer to snapshots. Cross-cutting questions ("what did the Apr 2026 trim retire?") become impossible to answer without a global view.
+- **No deprecation ledger; rely on git history alone** — rejected. Git tells you *when* a file was deleted but not *why*, *what replaced it*, *what depends on it that's still broken*, or *whether it's recoverable from a snapshot*. Git is content-truth; deprecation needs metadata-truth.
+- **Snapshots as a separate ledger** — rejected. Snapshots are the **recovery surface** for deprecation; they have no independent purpose. Splitting them into a separate ledger creates a coordination burden ("did I update both?") and doesn't earn its complexity.
+- **Snapshots stored in `CCAgentindex/`** — rejected. Bedrock is for canonical app state. Snapshots are local-only recovery archives that should not push to GitHub. They live at project root in `_snapshots/`.
+- **Defer the entire ledger to Phase C with the runtime** — rejected. Phase B is starting now; we're already accumulating retirement debt (the four backfill entries are real). Authoring the schema + protocol now matches `DEC-2026-04-29-013` (schema canonical, runtime deferred — no migration debt later). Same pattern applied here.
+
+##### Consequences
+
+- **Single source of truth for retirements.** Anyone asking "what was deprecated and why" reads one ledger.
+- **Recovery is always answerable.** Every entry pairs with a `snapshot_id` + `snapshot_path` (or explicit `not_recoverable` reason).
+- **No silent deletion.** The cardinal rule binds every agent: deletion without entry is a violation of the Prime Directive on legibility.
+- **Phase A backfill in scope.** Four pre-existing retirements (great-trim domains, Audit Ledger, sub-agent relocation, trim routes) were captured immediately so the project starts with an honest record.
+- **Snapshot Protocol gives operational shape to "save before delete."** The `LEDGERS/scripts/snapshot.sh` runner is invokable manually today; cron-wired in Phase C.
+- **`_snapshots/` is gitignored.** Snapshots are local-only. GitHub stays the source of truth for live content; `_snapshots/` is local recovery infrastructure.
+- **Pairs with the unified Box pattern.** Phase B will land `LEDGERS/BOXES/deprecation/` to match `temporal_continuity/` — same triad shape (ledger + Box + steward).
+- **Cross-ledger coordination is explicit.** Deprecation entries cross-reference Decisions / Open Problems / Communications. Affected domain ledgers (FCL / AWM / Connections / Page Ledgers) drop their rows when something deprecates.
+
+##### Do Not Undo Casually
+
+- Don't move the Deprecation Ledger to a per-Box scheme without a Decision. The cross-cutting view is the point.
+- Don't push `_snapshots/` to GitHub. They are local recovery only. Gitignore stays.
+- Don't allow retirement without an entry. The cardinal rule is binding — even for "obvious" or "small" deletions. The audit trail compounds.
+- Don't promote past `deprecated` without the §5 incoming-link audit. Skipping the audit is how stale references get baked into the next sprint.
+
+##### Review Trigger
+
+- The ledger grows past a few hundred active entries and search/UX becomes painful (split by year? by category? evaluate then).
+- Snapshot disk pressure becomes meaningful (review retention rules and selective inclusion).
+- The Phase C Box Bus runtime ships and we want to evaluate whether per-Box `emits[]` of deprecation candidates obviates the need for human-authored entries (likely no — humans still need to *decide* to retire, the Bus just routes the candidate notifications).
+- A regulatory or compliance requirement appears that mandates a different retention regime.
+
+##### History
+
+- 2026-04-30 — created. Authored alongside `LEDGERS/DEPRECATION.md` + `LEDGERS/DEPRECATION.json` + `LEDGERS/scripts/snapshot.sh` + `_snapshots/` directory + `.gitignore` update. Four backfill entries seeded (DEPR-2026-04-30-001..004). Triggered by Jake's observation that the project tree was accumulating retirement debt without a recovery mechanism.
+
+---
+
+---
+
+#### DEC-2026-04-30-003 — Atom Ledger: PROBs Decompose 1:N Into Single-Session Claimable Atoms (Global Tier)
+
+Status: **active**
+Confidence: high
+Scope: global — architectural lock for how problems become work; binds every agent claiming or releasing work and every PROB authored from this point forward
+Tier (Box Bus): global
+Decided: 2026-04-30
+Decided by: Jake (orchestrator) + Claude (Cowork)
+Affected systems: every active PROB (13 → 13×N atoms once decomposed); every agent claiming work (Cowork sessions, Claude Code subprocesses, Codex sessions, future runnable stewards); future Atomizer Steward at `LEDGERS/BOXES/atoms/steward/`; future `/api/atoms/*` endpoints; future Atoms UI page or panel
+Related North Star goals: NS-01 (legibility above all), NS-02 (file-tree-first), NS-09 (audit trail discipline)
+Related ledgers: `LEDGERS/ATOMS.md`, `LEDGERS/OPEN_PROBLEMS_LEDGER.md`, `LEDGERS/DECISIONS_LEDGER.md` (this entry), `LEDGERS/COMMUNICATIONS_LEDGER.md`
+Supersedes: none
+Superseded by: none
+
+##### Context
+
+Jake surfaced the gap on 2026-04-30: the Open Problems Ledger has 13 active PROBs, several of which are monolithic ("32-subdir bedrock reconciliation," "audit all 28 client boxes for guardrails," "promote 5 sub-agent packages"). Every session reads them, freezes, and defers. The PROBs aren't actionable as written — they're descriptions of state, not actions.
+
+The unlock: decompose every PROB into atoms — single-session claimable units of work — with explicit acceptance criteria, effort estimates, and a claim protocol so multiple agents can work in parallel without colliding. Jake's framing: "If we have an atomized, decomposed list of all the stuff that needs to be done, then there'll be hundreds of easy problems instead of massive open problems that are impossible to deal with without knowing everything."
+
+Three real architectural choices:
+
+1. **Atoms as a separate global-tier ledger** with parent_problem_id reference — chosen.
+2. **Atoms inline inside each PROB record** (extending Open Problems with `atoms[]` array per entry).
+3. **Atoms as per-Box queues** (each Box maintains its own claimable work).
+
+##### Decision
+
+**Atoms live at the global tier as `LEDGERS/ATOMS.md` + `LEDGERS/ATOMS.json`.** PROBs decompose 1:N into atoms via mandatory `parent_problem_id` linkage. Single-writer claim protocol enables parallel agent work. The granularity rule caps atoms at 4h estimated effort; bigger gets re-decomposed.
+
+Concretely:
+
+- **Tier:** global. Every PROB feeds atoms here. Every claim/complete event hits this ledger.
+- **Schema:** `id`, `parent_problem_id` (mandatory), `title` (imperative), `description`, `acceptance_criteria` (concrete + verifiable + single-pass), `estimated_effort` (5min/15min/30min/1h/2h/4h), `status` (`available`→`claimed`→`in_progress`→`completed` plus `blocked` and `abandoned`), `tier`, `area`, `parent_chain[]`, `blocked_by[]`, `blocks[]`, `claimed_by`, `claimed_at`, `in_progress_at`, `completed_at`, `completed_by`, `verification`, `do_not_undo_casually`, `notes`.
+- **Claim protocol:** single-writer wins. Atomic update of `status` + `claimed_by` + `claimed_at` to BOTH `ATOMS.md` AND `ATOMS.json` in one unit of work. JSON is canonical for race resolution.
+- **Stale-claim rule:** `claimed > 24h` with no `in_progress_at` — any subsequent agent may release back to `available`.
+- **Granularity rule:** ≤ 4h estimated effort. Anything bigger MUST re-decompose. The whole point is breaking the freeze response to monolithic work.
+- **Acceptance criteria standard:** concrete (file/endpoint/ledger row), verifiable in one pass, tied to artifacts that exist after the session.
+- **Decomposition flow:** Phase A manual (human authors atoms from PROB close-criteria); Phase B Atomizer Steward reads new PROBs and proposes atoms to a `DRAFTS/ATOMIZATION/` review queue; Phase C atoms become Box Bus envelope citizens with `atom_completed` events routing to dependent Boxes.
+- **Phase A proof:** PROB-2026-04-28-016 (bedrock reconciliation) decomposed into 26 atoms — 2 gates + 20 directory audits + 4 propagation. Total ~21.5 estimated hours, broken into single-session pieces.
+
+##### Alternatives Considered
+
+- **Atoms inline inside each PROB record** — rejected. Open Problems is a state-of-brokenness ledger; bloating each entry with claim metadata muddles its purpose. PROB entries grow unbounded as atoms accumulate, making OPL hard to read for its actual job (severity / urgency / close criteria). Cross-PROB atom queries (e.g., "show me everything available right now") would require parsing every PROB.
+- **Per-Box atom queues** — rejected. Atoms cross-cut PROBs and PROBs cross-cut Boxes. A Client Box atom might depend on a Connections Ledger atom which depends on a Settings atom. Per-Box scatter loses the dependency graph and makes parallel work harder, not easier. Cross-Box claim collisions are also harder to detect.
+- **No new ledger; just a TaskCreate-style task list** — rejected. Tasks are session-scoped; atoms must persist across sessions and across agents. The whole architectural shape (durable, claimable, dependency-aware) requires a ledger.
+- **Defer to Phase C with the rest of the Box Bus runtime** — rejected. Same reasoning as DEC-2026-04-30-002 (Deprecation): the schema works without runtime; authoring it now means zero migration debt later, and we're already accumulating frozen PROBs.
+
+##### Consequences
+
+- **Parallel agent work becomes possible.** Multiple agents (Cowork, Claude Code, Codex, future stewards) read the `available` queue, claim distinct atoms, and ship in parallel without collision.
+- **Monolithic PROBs stop scaring agents.** PROB-016 was deferred for 2 days because it was 32 directories of unclear scope. Decomposed, it's 26 individual claims any agent can pick up.
+- **Acceptance criteria force concrete work.** "Improve X" stops being a valid task; the atom must name what file / endpoint / ledger row passes the check.
+- **Audit trail compounds.** Each `atom_completed` event lands in `_ledger/activity.jsonl`; over weeks, this becomes a dense record of exactly what got done, by whom, with what proof.
+- **The Atomizer Steward (Phase B) is now scoped.** Sub-agent watches new PROBs land, proposes atoms to a review queue, sweeps stale claims, surfaces PROB-closure-eligible candidates.
+- **Phase C runtime gets a clean target.** Atoms become first-class Box Bus envelope citizens; UI surface (Atoms panel) lands naturally near the `automation` route.
+- **Pairs with the unified Box pattern.** Phase B will land `LEDGERS/BOXES/atoms/` to match `temporal_continuity/` and `deprecation/`.
+
+##### Do Not Undo Casually
+
+- Don't move atoms inline into PROBs — the cross-cutting view is what makes parallel work possible.
+- Don't break the parent_problem_id requirement. Orphan atoms are how the ledger drifts back into "tasks" instead of "work tied to known brokenness."
+- Don't loosen the granularity rule. 4h is the cap because longer atoms reproduce the freeze response.
+- Don't bypass the claim protocol. Two agents working the same atom is the failure mode the protocol prevents.
+- Don't auto-close PROBs when their atoms complete. PROB closure is a separate human-or-steward review — atom completion is necessary but not sufficient.
+
+##### Review Trigger
+
+- The Atom Ledger grows past a few thousand entries and search/UX becomes painful (consider per-PROB rollups or year splits).
+- The stale-claim rule (24h) proves too short or too long in practice — adjust based on observed claim patterns.
+- The Phase C Box Bus runtime ships and we want to evaluate whether real-time atom dispatch obviates the manual claim step (likely no — humans still need to *decide* to take an atom; the bus just routes events).
+- A regulatory or compliance requirement appears that mandates a different audit shape.
+
+##### History
+
+- 2026-04-30 — created. Authored alongside `LEDGERS/ATOMS.md` + `LEDGERS/ATOMS.json`. PROB-2026-04-28-016 decomposed as the proof case (26 atoms, ~21.5 estimated hours of work). Triggered by Jake's observation that monolithic PROBs were freezing the project: "if we have an atomized, decomposed list of all the stuff that needs to be done, then there'll be hundreds of easy problems instead of massive open problems."
+
+---
+
+---
+
+#### DEC-2026-04-30-004 — Canonical Steward Path = `LEDGERS/BOXES/<name>/steward/` (resolves legacy vs unified-Box fork)
+
+Status: **active**
+Confidence: high
+Scope: global — architectural lock for where every ledger steward sub-agent lives and how `server.py` finds it
+Tier (Box Bus): global
+Decided: 2026-04-30
+Decided by: Claude (Cowork) under Jake's "best move you call it" delegation
+Affected systems: every ledger steward sub-agent (current: `global_ledger_steward` legacy + `temporal_continuity_steward` unified + `atomizer_steward` unified declarative); `server.py` `_agent_run` dispatcher; `LEDGERS/AGENTS/` canonical pointer directory; `CCAgentindex/agents/<name>/` legacy path; the 4 unpromoted draft stewards (file_directory, north_star, open_problems, plus the temporal_continuity runnable form)
+Related North Star goals: NS-01 (legibility above all), NS-02 (file-tree-first), NS-03 (single source of truth)
+Related ledgers: `LEDGERS/ATOMS.md` (this decision completed `ATOM-2026-04-30-0027`), `LEDGERS/BOX_LEDGER.md`, `LEDGERS/BOX_BUS_LEDGER.md`, `DECISIONS_LEDGER.md` (this entry; depends on DEC-2026-04-29-001 triad + DEC-2026-04-29-015 unified Box pattern)
+Supersedes: none — completes DEC-2026-04-29-015 by removing the path ambiguity it left open
+Superseded by: none
+
+##### Context
+
+`DEC-2026-04-29-015` established the unified Box pattern: every ledger gets a Box folder at `LEDGERS/BOXES/<name>/` containing `box.json` + `BOX.md` + `steward/` + `receipts/`. The temporal_continuity Box (2026-04-29) and the atoms Box (2026-04-30) both stamped this pattern.
+
+But the legacy steward `global_ledger_steward` was promoted to runnable BEFORE DEC-015, and lives at `CCAgentindex/agents/global_ledger_steward/`. The dispatcher (`_agent_run` in `server.py`, line 4891) reads from `CCAgentindex/agents/<name>/prompt.md`. Result: a real fork — two competing canonical paths for "where does a runnable steward live."
+
+This was surfaced as `ATOM-2026-04-30-0027` (the architectural-gate atom blocking the 16 steward-promotion atoms in PROB-2026-04-30-005). Until resolved, the project couldn't promote any of the 4 unpromoted draft stewards without choosing arbitrarily and introducing more drift.
+
+##### Decision
+
+**The canonical home for every ledger steward sub-agent is `LEDGERS/BOXES/<name>/steward/`.** The unified Box pattern from DEC-2026-04-29-015 is fully realized: ledger + Box + sub-agent live in one folder family at `LEDGERS/BOXES/<name>/`.
+
+Concretely:
+
+- **Canonical files** for each steward live at:
+  - `LEDGERS/BOXES/<name>/steward/AGENTS.md` (declarative scope)
+  - `LEDGERS/BOXES/<name>/steward/config.json` (operating config)
+  - `LEDGERS/BOXES/<name>/steward/prompt.md` (dispatch prompt)
+- **Receipts** live at `LEDGERS/BOXES/<name>/receipts/`.
+- **`LEDGERS/AGENTS/<name>/`** stays as a thin canonical-pointer directory — its files reference (or symlink to) the Box steward path. It exists for backwards compatibility with anything that already references the AGENTS path.
+- **`CCAgentindex/agents/<name>/`** is the legacy path. It survives only for `global_ledger_steward` until that agent is migrated (`ATOM-2026-04-30-0044`). New stewards do NOT use this path.
+- **`server.py` `_agent_run`** gets a fallback chain: try the legacy `CCAgentindex/agents/<name>/prompt.md` first (for backwards compatibility with `global_ledger_steward`), then fall back to `LEDGERS/BOXES/<name>/steward/prompt.md`. After `ATOM-0044` migrates `global_ledger_steward`, the legacy path may be removed entirely (its own atom + DEPR entry).
+- **Dispatch URL stays the same:** `POST /api/agents/<name>_steward/run`. The dispatcher resolves the path internally; callers don't care.
+
+##### Alternatives Considered
+
+- **Path A: Reaffirm `CCAgentindex/agents/<name>/` as canonical** — rejected. Splits the unified Box pattern (BOX.md + box.json at `LEDGERS/BOXES/`, but the runnable bits at a different path). Future agents have to look in two places. Defeats the whole point of DEC-015.
+- **Path B: Unified Box (chosen)** — fully realizes DEC-015. One home for the triad. The server change is small (one fallback line). `global_ledger_steward` migration is one follow-on atom.
+- **Path C: Hybrid — symlinks from `CCAgentindex/agents/<name>/` → `LEDGERS/BOXES/<name>/steward/`** — rejected. Symlink discipline is a maintenance burden; prone to drift; introduces a second source of truth question (is the symlink the canonical entry point or the Box?). The server fallback chain is cleaner.
+- **Path D: Defer this decision; keep ATOM-0027 open** — rejected. ATOM-0027 was blocking 16 atoms. Indefinite deferral undermines the whole atomization architecture (a queue with permanent blockers re-creates the freeze response).
+
+##### Consequences
+
+- **DEC-2026-04-29-015 (unified Box) is now fully load-bearing.** Every existing and future ledger steward must live at `LEDGERS/BOXES/<name>/steward/`.
+- **server.py `_agent_run` gets one small change** (fallback path resolution). One line of code, plus a smoke test. Lands as part of `ATOM-2026-04-30-0044` (the migration atom).
+- **`global_ledger_steward` requires migration** (`ATOM-2026-04-30-0044`). Independent of the 4 promotion chains; can be claimed in parallel.
+- **The 4 unpromoted stewards (temporal_continuity, open_problems, file_directory, north_star)** all use the unified Box pattern from the start. No legacy entanglement. ATOMS-0028..0043 are now unblocked and claimable.
+- **`LEDGERS/AGENTS/<name>/`** becomes a thin canonical-pointer / symlink directory rather than the home for full steward configs. (Or is removed entirely once the migration completes — that's a future decision.)
+- **The `CCAgentindex/` bedrock no longer holds steward operational code** once migration completes. It returns to its purpose: app-state-only filesystem (people/, venues/, _ledger/, _inbox/, indexes/, agents/ for non-steward sub-agents like andre_escalation_ladder + inbox_triage).
+- **PROB-2026-04-30-005 close-criteria simplify:** "all 5 stewards have runnable counterparts in `CCAgentindex/agents/`" gets revised to "all 5 stewards have runnable counterparts at `LEDGERS/BOXES/<name>/steward/` (or migrated symlinks for legacy)."
+
+##### Do Not Undo Casually
+
+- Don't reverse this without an explicit DEC. The path ambiguity that existed before this decision is exactly what we just removed — relitigating it produces drift.
+- Don't break `global_ledger_steward` during migration. Keep the legacy path working until the smoke test on the new path passes.
+- Don't introduce a third path for stewards. The fallback chain in `_agent_run` handles legacy + unified; nothing else.
+- Don't put non-steward sub-agents (like `andre_escalation_ladder`, `inbox_triage`) into `LEDGERS/BOXES/`. Those aren't ledger stewards; they live at `CCAgentindex/agents/` per the original triad pattern.
+
+##### Review Trigger
+
+- The fallback chain in `_agent_run` causes operational confusion (e.g., a steward exists at both paths and the dispatcher picks the wrong one). Resolve by purging the legacy path entirely.
+- A non-ledger sub-agent's home becomes unclear (the 2 existing app-level sub-agents use `CCAgentindex/agents/`; if more land, a separate decision may be needed for their canonical home).
+- Phase C Box Bus runtime ships and `subscribes[]` / `emits[]` declarations need to read from a stable path — the unified Box path becomes load-bearing for the runtime then.
+
+##### History
+
+- 2026-04-30 — created. Resolved `ATOM-2026-04-30-0027` (the architectural-gate atom blocking 16 promotion atoms in PROB-005). Companion follow-on atom `ATOM-2026-04-30-0044` authored for `global_ledger_steward` migration. The first atom in the project to be claimed and completed under the new claim protocol — proves the protocol works end-to-end.
 
 ---
 

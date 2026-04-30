@@ -841,6 +841,8 @@ class Handler(SimpleHTTPRequestHandler):
             return self._briefing_read(slug)
         if p == "/api/intelligence/conversation/latest":
             return self._conversation_intelligence_latest()
+        if p == "/api/analytics/owner_stage":
+            return self._owner_stage_latest()
         if p == "/api/agents":
             return self._agents_list()
         if p == "/api/pieces/status":
@@ -996,6 +998,206 @@ class Handler(SimpleHTTPRequestHandler):
             "mtime":   latest.stat().st_mtime,
             "payload": payload,
         })
+
+    # ────── Owner & Stage Dashboards: synthesizes JSON from build_owner_stage_dashboards.py output ─────
+    # The build script emits markdown only (`<date>/owner_overview.md`, `<date>/stage_overview.md`,
+    # `<date>/by_owner/<owner>/dashboard.md`, `<date>/by_stage/<pipeline>/<stage>/dashboard.md`).
+    # This endpoint walks the latest dated run and parses those markdown files into structured JSON
+    # for the AnalyticsScreen `OwnerStagePanel`. No JSON sidecar is written to bedrock — the markdown
+    # output of the build script remains the source of truth, parsed on every read.
+    # Pattern established 2026-04-30; reusable for future build_*.py → AnalyticsScreen integrations.
+    def _owner_stage_dir(self):
+        return HERE / "CCAgentindex" / "intelligence" / "sales" / "owner_stage"
+
+    def _owner_stage_latest(self):
+        import re
+        base = self._owner_stage_dir()
+        if not base.exists():
+            return self._json({"ok": False, "error": "directory missing", "latest_date": None})
+        date_dirs = sorted(
+            [p for p in base.iterdir() if p.is_dir() and re.match(r"^\d{4}-\d{2}-\d{2}$", p.name)],
+            key=lambda p: p.name,
+            reverse=True,
+        )
+        if not date_dirs:
+            return self._json({"ok": False, "error": "no dated runs yet", "latest_date": None})
+        latest = date_dirs[0]
+
+        out = {
+            "ok": True,
+            "latest_date": latest.name,
+            "owners": [],
+            "stages": [],
+            "owner_count": 0,
+            "stage_count": 0,
+            "lead_count": 0,
+            "mtime": None,
+        }
+
+        # The top-level sibling summary `<date>.md` carries both owner totals and
+        # stage records WITH the `(active)/(lead_only)` kind annotation. The files
+        # inside `<date>/owner_overview.md` and `<date>/stage_overview.md` have
+        # different formats and DON'T carry the kind. Use the summary file.
+        summary = base / f"{latest.name}.md"
+        if summary.exists():
+            text = summary.read_text(encoding="utf-8")
+            # Owner Overview: `- andre_raw: 28 leads (active 12 / won 0 / lost 0 / lead-only 16)`
+            ov_section = re.search(r"## Owner Overview\s*\n(.+?)(?=\n## |\Z)", text, re.DOTALL)
+            if ov_section:
+                for line in ov_section.group(1).splitlines():
+                    m = re.match(
+                        r"^- (\S+):\s*(\d+)\s*leads?\s*\(active\s*(\d+)\s*/\s*won\s*(\d+)\s*/\s*lost\s*(\d+)\s*/\s*lead-only\s*(\d+)\)",
+                        line,
+                    )
+                    if m:
+                        out["owners"].append({
+                            "slug": m.group(1),
+                            "leads": int(m.group(2)),
+                            "active": int(m.group(3)),
+                            "won": int(m.group(4)),
+                            "lost": int(m.group(5)),
+                            "lead_only": int(m.group(6)),
+                            "stage_breakdown": [],
+                            "leads_detail": [],
+                            "latest_activity": "",
+                        })
+            # Stage Overview: `- Comeketo Sales / cold_no_response_portuguese_misfire (lead_only): 3 leads across 1 owners`
+            sv_section = re.search(r"## Stage Overview\s*\n(.+?)(?=\n## |\Z)", text, re.DOTALL)
+            if sv_section:
+                for line in sv_section.group(1).splitlines():
+                    m = re.match(
+                        r"^- (.+?)\s*/\s*(\S+)\s*\((\w+)\):\s*(\d+)\s*leads?\s*across\s*(\d+)\s*owners?",
+                        line,
+                    )
+                    if m:
+                        out["stages"].append({
+                            "pipeline": m.group(1).strip(),
+                            "stage": m.group(2).strip(),
+                            "kind": m.group(3).strip(),
+                            "lead_count": int(m.group(4)),
+                            "owner_count": int(m.group(5)),
+                        })
+
+        # Fallback: if summary didn't yield owners, parse the inner owner_overview.md
+        # which uses `|` separators (`- andre_raw: 28 leads | active 12 | won 0 | lost 0 | lead-only 16`)
+        if not out["owners"]:
+            ov_inner = latest / "owner_overview.md"
+            if ov_inner.exists():
+                for line in ov_inner.read_text(encoding="utf-8").splitlines():
+                    m = re.match(
+                        r"^- (\S+):\s*(\d+)\s*leads?\s*\|\s*active\s*(\d+)\s*\|\s*won\s*(\d+)\s*\|\s*lost\s*(\d+)\s*\|\s*lead-only\s*(\d+)",
+                        line,
+                    )
+                    if m:
+                        out["owners"].append({
+                            "slug": m.group(1),
+                            "leads": int(m.group(2)),
+                            "active": int(m.group(3)),
+                            "won": int(m.group(4)),
+                            "lost": int(m.group(5)),
+                            "lead_only": int(m.group(6)),
+                            "stage_breakdown": [],
+                            "leads_detail": [],
+                            "latest_activity": "",
+                        })
+
+        # Fallback: if summary didn't yield stages, walk `<date>/by_stage/<pipeline>/<kind>__<stage>/`
+        # — kind is encoded as the directory-name prefix (`active__` or `lead_only__`).
+        if not out["stages"]:
+            by_stage = latest / "by_stage"
+            if by_stage.exists():
+                for pipeline_dir in sorted(by_stage.iterdir()):
+                    if not pipeline_dir.is_dir():
+                        continue
+                    pipeline_label = pipeline_dir.name.replace("_", " ").title()
+                    for stage_dir in sorted(pipeline_dir.iterdir()):
+                        if not stage_dir.is_dir():
+                            continue
+                        name = stage_dir.name
+                        kind = "active" if name.startswith("active__") else ("lead_only" if name.startswith("lead_only__") else "unknown")
+                        stage_slug = name.split("__", 1)[1] if "__" in name else name
+                        # Lead count: try to read the dashboard.md and extract a count
+                        lead_count = 0
+                        owner_count = 1
+                        dash = stage_dir / "dashboard.md"
+                        if dash.exists():
+                            txt = dash.read_text(encoding="utf-8")
+                            mc = re.search(r"^- Leads:\s*`?(\d+)`?", txt, re.MULTILINE)
+                            if mc:
+                                lead_count = int(mc.group(1))
+                        out["stages"].append({
+                            "pipeline": pipeline_label,
+                            "stage": stage_slug,
+                            "kind": kind,
+                            "lead_count": lead_count,
+                            "owner_count": owner_count,
+                        })
+
+        # by_owner/<slug>/dashboard.md  →  enrich owner records
+        by_owner = latest / "by_owner"
+        if by_owner.exists():
+            for owner_dir in sorted(by_owner.iterdir()):
+                if not owner_dir.is_dir():
+                    continue
+                slug = owner_dir.name
+                dashboard = owner_dir / "dashboard.md"
+                if not dashboard.exists():
+                    continue
+                text = dashboard.read_text(encoding="utf-8")
+
+                # Find or create the owner record
+                rec = next((o for o in out["owners"] if o["slug"] == slug), None)
+                if not rec:
+                    rec = {
+                        "slug": slug, "leads": 0, "active": 0, "won": 0, "lost": 0,
+                        "lead_only": 0, "stage_breakdown": [], "leads_detail": [],
+                        "latest_activity": "",
+                    }
+                    out["owners"].append(rec)
+
+                # Latest Observed Activity
+                m = re.search(r"^- Latest Observed Activity:\s*`?([^`\n]+?)`?\s*$", text, re.MULTILINE)
+                if m:
+                    rec["latest_activity"] = m.group(1).strip(" `")
+
+                # Stage Breakdown section
+                sb = re.search(r"## Stage Breakdown\s*\n(.+?)(?=\n## |\Z)", text, re.DOTALL)
+                if sb:
+                    for line in sb.group(1).splitlines():
+                        m2 = re.match(r"^- (.+?)\s*/\s*(\S+):\s*(\d+)", line)
+                        if m2:
+                            rec["stage_breakdown"].append({
+                                "pipeline": m2.group(1).strip(),
+                                "stage": m2.group(2).strip(),
+                                "count": int(m2.group(3)),
+                            })
+
+                # Leads section: each line is `- \`<activity>\` | <name> | <pipeline> / <stage> | <urgency> | <action>`
+                ld = re.search(r"## Leads\s*\n(.+?)(?=\n## |\Z)", text, re.DOTALL)
+                if ld:
+                    for line in ld.group(1).splitlines():
+                        m3 = re.match(
+                            r"^- `([^`]+)`\s*\|\s*([^|]+?)\s*\|\s*(.+?)\s*/\s*(\S+?)\s*\|\s*(\w+)\s*\|\s*(.+?)$",
+                            line,
+                        )
+                        if m3:
+                            rec["leads_detail"].append({
+                                "activity": m3.group(1).strip(),
+                                "name": m3.group(2).strip(),
+                                "pipeline": m3.group(3).strip(),
+                                "stage": m3.group(4).strip(),
+                                "urgency": m3.group(5).strip(),
+                                "action": m3.group(6).strip(),
+                            })
+
+        out["owner_count"] = len(out["owners"])
+        out["stage_count"] = len(out["stages"])
+        out["lead_count"] = sum(o["leads"] for o in out["owners"]) or sum(s["lead_count"] for s in out["stages"])
+        try:
+            out["mtime"] = (latest / "owner_overview.md").stat().st_mtime
+        except Exception:
+            out["mtime"] = None
+        return self._json(out)
 
     # ────── Accomplishments: daily rollups for the calendar/streak UI ─────
     # Files at CCAgentindex/summaries/accomplishments/YYYY-MM-DD.json
@@ -4224,32 +4426,41 @@ class Handler(SimpleHTTPRequestHandler):
         if not ENV.get("OPENAI_API_KEY"):
             return self._json({"ok": False, "error": "OPENAI_API_KEY not set on server"}, code=503)
 
-        def _openai_content(m):
+        def _openai_content(m, role):
             """Convert parts into the Responses API content-block shape.
             Text → input_text; image → input_image with base64 data URL."""
             out = []
+            text_type = "output_text" if role == "assistant" else "input_text"
             for p in _parts(m):
                 if p.get("type") == "text" and (p.get("text") or "").strip():
-                    out.append({"type": "input_text", "text": p["text"]})
+                    out.append({"type": text_type, "text": p["text"]})
                 elif p.get("type") == "image":
                     path = p.get("path") or ""
                     mime = p.get("mime") or "image/png"
                     if not path or not Path(path).exists():
                         # Fall back to a text reference if we can't read the file.
-                        out.append({"type": "input_text", "text": f"(image attached but unreadable at {path})"})
+                        out.append({"type": text_type, "text": f"(image attached but unreadable at {path})"})
                         continue
                     try:
                         data = base64.b64encode(Path(path).read_bytes()).decode("ascii")
-                        out.append({"type": "input_image", "image_url": f"data:{mime};base64,{data}"})
+                        if role == "assistant":
+                            out.append({"type": "output_text", "text": f"(assistant image omitted: {path})"})
+                        else:
+                            out.append({"type": "input_image", "image_url": f"data:{mime};base64,{data}"})
                     except Exception as e:
-                        out.append({"type": "input_text", "text": f"(image read failed: {e})"})
+                        out.append({"type": text_type, "text": f"(image read failed: {e})"})
             return out
 
         input_msgs = []
         for m in messages:
-            c = _openai_content(m)
+            # Responses API accepts conversation roles, not local UI roles like
+            # "system" or "tool" that can appear in the chat rail history.
+            role = m.get("role", "user")
+            if role not in ("user", "assistant"):
+                role = "assistant"
+            c = _openai_content(m, role)
             if not c: continue
-            input_msgs.append({"role": m.get("role","user"), "content": c})
+            input_msgs.append({"role": role, "content": c})
 
         req_body = {
             "model": payload.get("model") or "gpt-5.4-mini",
@@ -4650,39 +4861,87 @@ class Handler(SimpleHTTPRequestHandler):
 
     # ────── Sub-agent registry ────────────────────────────────────────────
     # GET /api/agents → { agents: [{name, hasPrompt, hasSpec}] }
+    # Where to look for an agent's prompt.md, in priority order.
+    # Per DEC-2026-04-30-004 the canonical steward path is the unified Box pattern
+    # (LEDGERS/BOXES/<box>/steward/), but the legacy CCAgentindex/agents/<name>/
+    # location is checked first so existing app agents (global_ledger_steward,
+    # andre_escalation_ladder, inbox_triage) keep working without migration.
+    # For ledger stewards named `<box>_steward`, the unified Box path is derived
+    # by stripping the `_steward` suffix and looking under LEDGERS/BOXES/<box>/.
+    def _agent_resolve_prompt(self, name):
+        legacy = HERE / "CCAgentindex" / "agents" / name / "prompt.md"
+        if legacy.exists():
+            return legacy, "legacy"
+        if name.endswith("_steward"):
+            box_name = name[: -len("_steward")]
+            unified = HERE / "LEDGERS" / "BOXES" / box_name / "steward" / "prompt.md"
+            if unified.exists():
+                return unified, "unified_box"
+        return None, None
+
     def _agents_list(self):
-        agents_dir = HERE / "CCAgentindex" / "agents"
-        if not agents_dir.exists():
-            return self._json({"agents": [], "count": 0})
         items = []
-        for d in sorted(agents_dir.iterdir()):
-            if not d.is_dir() or d.name.startswith("."):
-                continue
-            items.append({
-                "name": d.name,
-                "hasPrompt": (d / "prompt.md").exists(),
-                "hasSpec":   (d / "agents.md").exists(),
-            })
+        seen = set()
+
+        # Legacy path: CCAgentindex/agents/<name>/
+        agents_dir = HERE / "CCAgentindex" / "agents"
+        if agents_dir.exists():
+            for d in sorted(agents_dir.iterdir()):
+                if not d.is_dir() or d.name.startswith("."):
+                    continue
+                items.append({
+                    "name": d.name,
+                    "source": "legacy",
+                    "hasPrompt": (d / "prompt.md").exists(),
+                    "hasSpec":   (d / "agents.md").exists() or (d / "AGENTS.md").exists(),
+                })
+                seen.add(d.name)
+
+        # Unified Box path: LEDGERS/BOXES/<box>/steward/  (DEC-2026-04-30-004)
+        # Each entry surfaces as <box>_steward to match the dispatcher's name resolution.
+        boxes_dir = HERE / "LEDGERS" / "BOXES"
+        if boxes_dir.exists():
+            for box in sorted(boxes_dir.iterdir()):
+                if not box.is_dir() or box.name.startswith("."):
+                    continue
+                steward_dir = box / "steward"
+                if not steward_dir.is_dir():
+                    continue
+                agent_name = f"{box.name}_steward"
+                if agent_name in seen:
+                    continue
+                items.append({
+                    "name": agent_name,
+                    "source": "unified_box",
+                    "hasPrompt": (steward_dir / "prompt.md").exists(),
+                    "hasSpec":   (steward_dir / "AGENTS.md").exists() or (steward_dir / "agents.md").exists(),
+                })
+                seen.add(agent_name)
+
         return self._json({"agents": items, "count": len(items)})
 
     # ────── Sub-agent runner ──────────────────────────────────────────────
     # POST /api/agents/<name>/run
     #   body (optional): { "extraContext": "..." }  appended to the agent's
     #                    prompt before dispatch.
-    # Reads agents/<name>/prompt.md, dispatches through the existing delegation
-    # pipeline (same claude-p subprocess, same --disallowedTools scope guard,
-    # same ledger write). Returns { ok, request_id, status } just like
-    # /api/delegate — UI polls /api/delegate/<id> for completion.
+    # Resolves the agent's prompt.md via _agent_resolve_prompt (legacy
+    # CCAgentindex/agents/<name>/ first, then unified Box LEDGERS/BOXES/<box>/steward/).
+    # Dispatches through the existing delegation pipeline (same claude-p
+    # subprocess, same --disallowedTools scope guard, same ledger write).
+    # Returns { ok, request_id, status } just like /api/delegate — UI polls
+    # /api/delegate/<id> for completion.
     def _agent_run(self, name, body):
         import re
         if not re.fullmatch(r"[a-z][a-z0-9_]{0,48}", name or ""):
             return self._json({"ok": False, "error": "bad agent name"}, code=400)
-        agents_dir = HERE / "CCAgentindex" / "agents"
-        prompt_path = agents_dir / name / "prompt.md"
-        if not prompt_path.exists():
+        prompt_path, source = self._agent_resolve_prompt(name)
+        if prompt_path is None:
+            box_hint = ""
+            if name.endswith("_steward"):
+                box_hint = f" or LEDGERS/BOXES/{name[:-len('_steward')]}/steward/prompt.md"
             return self._json({
                 "ok": False,
-                "error": f"no prompt at agents/{name}/prompt.md",
+                "error": f"no prompt at agents/{name}/prompt.md{box_hint}",
             }, code=404)
         try:
             payload = json.loads(body.decode("utf-8")) if body else {}

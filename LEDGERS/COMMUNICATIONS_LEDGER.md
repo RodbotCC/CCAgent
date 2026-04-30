@@ -1,6 +1,6 @@
 # Communications Ledger
 
-Last updated: 2026-04-29 (Phase 9 — appended COMM-2026-04-29-006 for Definition of Done landing + Box Ledger registration fix)
+Last updated: 2026-04-30 (appended COMM-2026-04-30-007 — Atlas integrated as project ground-truth surface. New `ground_truth_source` Box class introduced; alias at LEDGERS/atlas; Atlas Sweep Steward filed at PROB-015 for Phase B graduation. Prior same-day: COMM-2026-04-30-004/005/006 promoted atom-protocol rules from auto-memory to project-wide.)
 Maintainer: Jake / Comeketo Agent project agents
 Status: **active**
 Read when: starting a session, finishing a session, planning work that affects another agent, leaving a warning, recording a preference, hitting a fragile area, or noticing a "the next agent should know this" moment.
@@ -330,6 +330,395 @@ When **building a sub-agent in Phase B** for an existing ledger: the steward's j
 #### Expiry / Review
 
 Archive when DoD steward is built (Phase B). Review fields if a new work-type Done Gate is needed (e.g., Subagent Box Done Gate when Phase C starts) — that's a §5 addition, not a new ledger.
+
+---
+
+### COMM-2026-04-30-001 — Deprecation Ledger + Snapshot Protocol Landed
+
+Date: 2026-04-30
+From: Cowork session (Phase B opener — Jake surfaced the gap directly)
+To: Future agents — every retirement event project-wide (file deletion, folder retirement, ledger entry supersession, route flip-off, sub-agent replacement, Box archival, schema change, env var removal, API endpoint removal, widget retirement, dependency drop, setting removal, vault domain pruning).
+Type: `handoff`, `preference`, `coordination`
+Status: **active**
+Priority: high
+Affected systems: every Box, every ledger, the future Snapshot Steward, the future `LEDGERS/BOXES/deprecation/` unified Box, `_snapshots/` infrastructure, `.gitignore`
+Related ledgers: [`DEPRECATION.md`](DEPRECATION.md), [`scripts/snapshot.sh`](scripts/snapshot.sh), [`DECISIONS_LEDGER.md`](DECISIONS_LEDGER.md) (DEC-2026-04-30-002 the architectural lock), [`OPEN_PROBLEMS_LEDGER.md`](OPEN_PROBLEMS_LEDGER.md), [`page_asset_sitemap.md`](../page_asset_sitemap.md)
+Promote when: a Snapshot Steward sub-agent is built (Phase B), at which point routine snapshot health checks + 30-day candidate sweeps run automatically. This entry archives at that boundary.
+
+#### Message
+
+The **Deprecation Ledger** is now live at `LEDGERS/DEPRECATION.md` + `LEDGERS/DEPRECATION.json` (tier: global). It pairs with the **Snapshot Protocol** (Deprecation §7) and the manual snapshot runner at `LEDGERS/scripts/snapshot.sh`. `_snapshots/` exists at the project root for local-only recovery archives (gitignored). Architectural lock: `DEC-2026-04-30-002`.
+
+The cardinal rule: **Nothing leaves the project without a Deprecation entry and a Snapshot reference.** This is binding the same way the Prime Directive on ledger discipline is binding — silent removal is silent debt, which is worse than bad code because the trail is gone.
+
+Four backfill entries already seeded:
+- `DEPR-2026-04-30-001` — Apr 2026 great-trim retired bedrock domains (`projects/`, `threads/`, `commitments/`, `knowledge/`)
+- `DEPR-2026-04-30-002` — Audit Ledger never-built (paired with `DEC-2026-04-29-004`)
+- `DEPR-2026-04-30-003` — Sub-agent draft package relocation (root → `/Subagent Boxes/`)
+- `DEPR-2026-04-30-004` — Apr 2026 trim retired UI routes (13 routes; `delegations` boundary case flagged)
+
+The Snapshot Protocol is wired manually today: any agent about to retire something runs `./LEDGERS/scripts/snapshot.sh manual "<reason-slug>"` first, captures the snapshot ID into the new Deprecation entry's `snapshot_id` + `snapshot_path`, then proceeds with the retirement.
+
+#### Why It Matters
+
+The project tree was already accumulating retirement debt without a record. The great-trim domains, the route reductions, the sub-agent relocation, the never-built Audit Ledger — all referenced as "retired" in `CLAUDE.md` and `GLOBAL_LEDGER` but never given a formal entry, no recovery surface, no metadata trail. Future agents would either follow stale references and 404, or worse, propose to "rebuild" what was deliberately retired.
+
+This ledger ends that pattern. Every retirement now has: what, why, when, what replaced it, where to find the last-known-good version, what depends on it that still needs to be updated, when it can move from `archived` to `purged`. Every retired thing is recoverable from a snapshot (or carries an explicit `not_recoverable` reason).
+
+It also closes the architectural symmetry that was missing: every other "what about over time" ledger exists (Decisions, Communications, Open Problems, Temporal Continuity, Phase) — Deprecation was the gap.
+
+#### Suggested Action
+
+Before retiring anything load-bearing:
+
+1. **Read this ledger** to confirm the thing isn't already in `candidate`.
+2. **Run `LEDGERS/scripts/snapshot.sh manual "<reason-slug>"`** to capture state.
+3. **Run the §5 incoming-link audit** — search the project for everything pointing at the thing being retired; decide rewrite / remove / tombstone for each.
+4. **Author the entry** in `DEPRECATION.md` §10.x and the matching JSON record. Mandatory minimums per state listed in §4.
+5. **Update affected domain ledgers** (FCL / AWM / Connections / Page Ledgers / etc.) — drop the retired thing's row.
+6. **Append `DEC-` and `COMM-` records** if the retirement reflects a Decision or warrants a handoff.
+7. **Append `_ledger/activity.jsonl`** with `kind: "deprecation_recorded"`.
+8. **Bump `Last updated`** at the top of `DEPRECATION.md`.
+
+For routine maintenance (no retirement event): periodically run `./LEDGERS/scripts/snapshot.sh daily` (or weekly/monthly per cadence). Until the Snapshot Steward is built (Phase B), this is human-driven.
+
+When **finding a retirement that was never logged**: backfill the entry. The four seeded entries are exactly this — historical retirements brought into the ledger with `recovery_difficulty: not_recoverable` or `trivial` as appropriate, and `snapshot_id: not_captured` for pre-protocol retirements.
+
+#### Expiry / Review
+
+Archive when:
+1. The Snapshot Steward sub-agent is built (Phase B) — it takes over routine snapshot invocation, candidate-staleness sweeps, and snapshot health checks.
+2. The Phase C Box Bus runtime ships and `LEDGERS/BOXES/deprecation/` is wired to receive `emits[]` candidates from any Box upstream.
+
+Review if disk pressure from `_snapshots/` becomes meaningful (revisit retention rules) or if the ledger grows past a few hundred active entries (consider splitting by year / category — but the recovery key contract holds).
+
+---
+
+### COMM-2026-04-30-002 — Atom Ledger Landed; You Can Claim Work Now
+
+Date: 2026-04-30
+From: Cowork session (Phase B momentum — Jake surfaced the unlock directly)
+To: Future agents — every Cowork session, every Claude Code subprocess, every Codex session, every runnable steward, every human reviewing the project. **This is how work gets claimed and shipped from this point forward.**
+Type: `handoff`, `preference`, `coordination`, `lesson`
+Status: **active**
+Priority: high
+Affected systems: every active PROB (currently 13); every agent claiming work; future Atomizer Steward; future `/api/atoms/*` endpoints; future Atoms UI panel
+Related ledgers: [`ATOMS.md`](ATOMS.md), [`OPEN_PROBLEMS_LEDGER.md`](OPEN_PROBLEMS_LEDGER.md), [`DECISIONS_LEDGER.md`](DECISIONS_LEDGER.md) (DEC-2026-04-30-003 architectural lock), [`DEFINITION_OF_DONE.md`](DEFINITION_OF_DONE.md)
+Promote when: the Atomizer Steward sub-agent is built (Phase B). At that boundary, this entry archives — the steward enforces the protocol automatically and the lesson becomes ambient.
+
+#### Message
+
+The **Atom Ledger** is now live at `LEDGERS/ATOMS.md` + `LEDGERS/ATOMS.json` (tier: global). It encodes the project's first parallel-work substrate: PROBs decompose 1:N into atoms; atoms have a single-writer claim protocol; multiple agents can ship in parallel without colliding. Architectural lock: `DEC-2026-04-30-003`.
+
+The unlock Jake named: **monolithic PROBs are unactionable. Atoms are claimable.** PROB-016 sat deferred for two days because "32 directories to figure out" freezes any agent. Decomposed, it's 26 atoms — any agent can pick the next available one and ship it this session.
+
+The first proof case is live: PROB-2026-04-28-016 (bedrock reconciliation) is now 26 atoms. 2 gates + 20 directory audits + 4 propagation. The dependency graph is clean: gates block audits; audits block propagation. Total ~21.5h of work, all `available`, ready to claim.
+
+The protocol is binding from now on:
+- **No work without a parent PROB.** Orphan atoms are not allowed. If you find work that doesn't trace to a PROB, file the PROB first.
+- **No claim without atomic write.** Update `status` + `claimed_by` + `claimed_at` to BOTH `ATOMS.md` and `ATOMS.json` in one unit of work. JSON is canonical for race resolution.
+- **No atom over 4h.** If your atom feels like a half-day, you have a sub-problem, not an atom. Re-decompose.
+- **No vague acceptance criteria.** "Improve X" is not valid. Concrete files, fields, endpoints, or ledger rows only.
+
+#### Why It Matters
+
+For the first time, multiple agents can work the project in parallel without stepping on each other. Cowork sessions, Claude Code subprocesses, Codex sessions, future runnable stewards — all read the same `available` queue, claim distinct atoms, and ship.
+
+This also kills the freeze response. Every session that read the Open Problems Ledger and saw "32 directories to reconcile" or "audit all 28 client boxes" felt the weight and deferred. Now the same problem is 26 single-session pieces, each with concrete acceptance criteria. Whether the work happens via Cowork, terminal, or runnable steward, the queue is the queue.
+
+The audit trail compounds: every `atom_completed` event lands in `_ledger/activity.jsonl` with `claimed_by`, `completed_by`, `verification`. Over weeks this is the densest record of exactly what got done, by whom, with what proof.
+
+#### Suggested Action
+
+**Starting a session?** Read `ATOMS.md` §10. Filter by `area` if scoped. Pick an atom with `status: available` whose `blocked_by` chain is empty. Atomically write `status: claimed` + `claimed_by` + `claimed_at` to BOTH the .md section AND the .json `atoms[]` entry. Append `_ledger/activity.jsonl` with `kind: "atom_claimed"`.
+
+**Working an atom?** Set `in_progress_at`, flip status. Do the work the atom names. When acceptance criteria pass, set `completed_at` + `completed_by` + `verification` (concrete proof — file path, commit hash, ledger row). Append `_ledger/activity.jsonl` with `kind: "atom_completed"`.
+
+**Stuck?** Either `blocked` (with `blocked_by` populated or notes naming external dep) or `abandoned` (with notes — abandonment is signal, not failure).
+
+**Authoring atoms (decomposing a PROB)?** Read the PROB end-to-end including close-criteria. List discrete actions per close-criterion. Size each (≤ 4h or split). Write atoms to ATOMS.md §10 + ATOMS.json. Cross-link from parent PROB. Append `_ledger/activity.jsonl` with `kind: "atoms_authored"`.
+
+**Decomposing more PROBs?** The remaining 12 active PROBs are still monolithic. As queue depth permits, atomize them. Don't try to do all 12 at once — that's the same anti-pattern as "author all 14 Page Ledgers at once." Pick high-pressure PROBs first (PROB-016 was first because it's high-severity and explicitly deferred).
+
+**Recognizing a stuck claim?** If you see an atom `claimed > 24h` ago with no `in_progress_at`, you may release it back to `available` and append a note. The original claimant lost their slot. This keeps the queue moving.
+
+#### Expiry / Review
+
+Archive when the Atomizer Steward sub-agent is built (Phase B follow-up). At that point the steward:
+- runs the proposed-atom flow automatically when new PROBs land
+- sweeps stale claims (>24h, no progress)
+- surfaces PROB-closure-eligible candidates when all atoms tied to a PROB's close-criteria complete
+- enforces the granularity rule by flagging proposed atoms over 4h
+
+Review if 24h stale-claim threshold proves too short or too long in observed practice, or if the Phase C runtime evaluation suggests real-time atom dispatch obviates the manual claim step.
+
+---
+
+### COMM-2026-04-30-003 — Recovery Pattern: Agent Ran Out Of Tokens Mid-Ledger-Update
+
+Date: 2026-04-30
+From: Cowork session (recovery agent — Jake routed the failed session's transcript here for completion)
+To: Future agents — every agent that picks up after another agent's session was interrupted, every operator who pastes a "did they finish?" transcript, future Atomizer Steward when it sweeps in-flight atoms.
+Type: `lesson`, `coordination`, `handoff`
+Status: **active**
+Priority: medium
+Affected systems: every Prime Directive ledger surface (activity.jsonl, sitemap, TCL, OPL §6, Decisions, Communications, Box ledger stamps), every multi-agent session boundary
+Related ledgers: [`OPEN_PROBLEMS_LEDGER`](OPEN_PROBLEMS_LEDGER.md) (where the truncated work landed), [`TEMPORAL_CONTINUITY`](TEMPORAL_CONTINUITY.md) (recovery entry recorded), [`CLAUDE.md`](../CLAUDE.md) Prime Directive write list
+Promote when: this pattern recurs ≥3 times and the diagnostic checklist becomes routine — at that point promote to a Steward agent that auto-detects truncated sessions from activity.jsonl gaps.
+
+#### Message
+
+A separate Claude Code session shipped 10 forward-looking OPL entries (PROB-2026-04-30-005..014) from Jake's paper list — but ran out of tokens mid-flight on the **activity.jsonl append**. The bash was last shown as `Running…` with no `ok` echo. Jake noticed and pasted the transcript into Cowork asking "did they finish?"
+
+**The answer was: partially.** The OPL.md and OPL.json work landed cleanly. The activity entry, the §6 By System categorization, the TCL §3 + §11 update, and the Communications entry (this one) all needed to be done by the recovery agent.
+
+**Symptoms of an interrupted ledger session:**
+- Bash command in the transcript ends in `Running…` with no follow-up output.
+- `Edit` calls show `String to replace not found` — the agent was about to retry with a re-read but didn't get there.
+- The user's message starts with "did I stop you" or "are you still going?" — they noticed silence before the agent did.
+- Activity ledger lacks the entry the agent's last visible bash was about to append.
+
+**Recovery checklist (this is the canonical sequence):**
+1. **Confirm what landed on disk.** Don't trust the transcript — `grep` the target ledger for the IDs/headers the agent claimed. Header bumps, JSON mirror counts, new entries — all verifiable.
+2. **Identify the gaps.** Walk the Prime Directive write list (`CLAUDE.md` §0 PRIME DIRECTIVE) and check each surface: activity.jsonl entry · sitemap (if page changed) · TCL §3 · TCL §11 · OPL §6 categorization · Decisions Ledger · Communications · Box ledger stamps · indexes/index.json registration.
+3. **Append the missing activity.jsonl entry first.** The audit trail is the load-bearing surface — get it back to honest before anything else.
+4. **Categorize in OPL §6 By System.** New entries that aren't categorized are invisible to operators scanning by topic — categorization is a real reader-affordance, not bureaucracy.
+5. **Update TCL §3 and §11.** Future cold-starting agents need to see this happened. Don't merge into someone else's entry — make it its own block with date + recovery context.
+6. **Add a Communications entry** if the recovery itself contains a lesson worth keeping (this entry).
+7. **Don't push to GitHub** until Jake gives explicit go-ahead — recovery commits should be reviewable.
+
+**Why the lesson matters.** Token-limit interruptions don't fail loudly. Without a recovery agent, the OPL would be in a "looks done" state with the audit trail silently broken — exactly the cardinal sin (ledger drift) that the Prime Directive is designed to prevent. **Recovery is part of ledger discipline, not a separate task.**
+
+#### Why It Matters
+
+This is the first recorded multi-agent session boundary failure recovered cleanly. Saving the pattern means the next time an agent runs out of tokens, the recovery is mechanical, not detective work. Especially valuable as more parallel agents come online (Cowork + Claude Code + Codex + future stewards) — interruption frequency goes up linearly with agent count.
+
+#### Suggested Action
+
+When a user pastes another agent's transcript and asks "did they finish?": run the Recovery Checklist above. Don't summarize what they did; verify on disk. Complete the gaps. Record the recovery in TCL so the next session sees the seam.
+
+When you yourself feel context pressure: **complete the Prime Directive write list before exploring new work.** Treat the activity.jsonl append as part of the same atomic unit as the change itself — append it FIRST after the change lands, not last.
+
+#### Expiry / Review
+
+Archive once an Atomizer Steward or recovery-detection agent automates this sweep — at that point the steward reads activity.jsonl, detects gaps where ledger writes are missing relative to ledger changes, and either auto-completes or files an atom. Until that exists, this is the human/agent protocol.
+
+Review if recovery becomes routine (≥3 occurrences) or if the gaps surface a systematic issue with how the Prime Directive write list is presented in CLAUDE.md (e.g., agents miss step 6 consistently → reorder the list).
+
+---
+
+### COMM-2026-04-30-004 — Atom Protocol: Claim Before Doing
+
+Date: 2026-04-30
+From: Cowork session (claude_cowork_session_2026-04-30_atom_0044) — promoted from agent-private auto-memory after Jake flagged the visibility gap
+To: Future agents — every agent working from the Atom Ledger queue
+Type: `preference`, `handoff`, `coordination`
+Status: **active**
+Priority: high
+Affected systems: ATOMS.md, ATOMS.json, every parallel claim attempt
+Related ledgers: [`ATOMS.md`](ATOMS.md) §3 (lifecycle states), [`DECISIONS_LEDGER.md`](DECISIONS_LEDGER.md) DEC-2026-04-30-003 (atom architecture)
+Promote when: this pattern is encoded into the Atomizer Steward's claim-resolution code path
+
+#### Message
+
+**The claim must land in the JSON before any work starts.** Protocol order is strict:
+
+1. Read the queue (ATOMS.json — canonical for race resolution per ATOM Box §4)
+2. **Claim** — atomically write `status: claimed` + `claimed_by` + `claimed_at` to ATOMS.json
+3. **Then** read the work surface (the source files, the box you're stamping, the steward you're promoting)
+4. Do the work
+5. Mark complete with `verification` populated
+
+**Do NOT load target files for an unclaimed atom.** Reading the files first wastes context if you race-lose, and risks two agents drafting the same work in parallel before realizing they collided. The atomic claim write is the only ground truth for "this atom is mine." First write wins.
+
+#### Why It Matters
+
+Today's session had two near-collisions inside ten minutes:
+- ATOM-0036 — I claimed it; another agent had been about to claim it too and pivoted to ATOM-0040 when they saw my claim land first.
+- The Atom Box explicitly designed ATOM-0044 as "no blocked_by — can be claimed in parallel" precisely so two agents could safely work side-by-side. Without the claim-first rule, that design property is wasted.
+
+Multi-agent reality is loud — typically 5–7 agents in a busy window. Race-loss is routine, not exceptional.
+
+#### Suggested Action
+
+When picking up an atom:
+1. `python3 -c "import json; ..."` (or equivalent) to read ATOMS.json
+2. Verify status is `available` and no `claimed_by`
+3. Write the claim (atomic write, JSON wins per ATOM Box §4)
+4. Re-read after the write to confirm the claim is yours (race-loss check)
+5. Then begin work
+
+If the atom claim fails because someone else got there first, **abort cleanly and pick a different atom** — don't try to negotiate.
+
+#### Expiry / Review
+
+Archive when the Atomizer Steward (Phase B) takes over claim-arbitration with a `POST /api/atoms/claim` endpoint that handles the race resolution server-side.
+
+---
+
+### COMM-2026-04-30-005 — Atom Protocol: Announce Atom Before Working It
+
+Date: 2026-04-30
+From: Jake (operator preference — established 2026-04-30 22:30Z)
+To: Future agents — every agent that claims an atom from the Atom Ledger
+Type: `preference`, `handoff`
+Status: **active**
+Priority: high
+Affected systems: every Cowork / Claude Code / Codex session that claims atoms; multi-agent coordination
+Related ledgers: [`ATOMS.md`](ATOMS.md) §3, [`COMMUNICATIONS_LEDGER`](COMMUNICATIONS_LEDGER.md) COMM-2026-04-30-004 (claim-before-doing pairs with this)
+Promote when: this rule is encoded as a steward dispatch convention or a hook fires it automatically
+
+#### Message
+
+**Lead the response with the atom claim before doing the work.** Format:
+
+> **Claiming ATOM-YYYY-MM-DD-#### — <title>**
+>
+> [optional brief reasoning: why this is most load-bearing, why it doesn't collide with other agents]
+
+Then do the work, then announce completion at the end.
+
+The announcement is **upfront**, not retrospective. The operator should be able to interrupt, redirect, or veto before the agent burns context on the wrong thing.
+
+#### Why It Matters
+
+Jake's exact words (2026-04-30): *"Every AI needs to talk about what atom they're going after before they do it, not after."*
+
+With 6+ parallel agents, the operator is reading multiple session transcripts at once. A retrospective "I just shipped X" announcement comes too late — by the time Jake sees it, the work is done. An upfront claim lets him say "actually do Y instead" before the agent burns 5–15 minutes building the wrong thing.
+
+It also makes collision-detection visual — when Jake skims three sessions and sees three "Claiming ATOM-XXXX" headers, he can spot two agents both heading for the same atom in real time.
+
+#### Suggested Action
+
+The first line of the assistant's response when starting an atom should be a **bold claim line** with the atom ID and title. No wrapper paragraph, no lead-up. Then optional one-paragraph reasoning. Then the work begins.
+
+Same applies at completion — start the wrap-up with **"ATOM-YYYY-MM-DD-#### completed"** so the operator sees the close immediately.
+
+#### Expiry / Review
+
+This is a stable operator preference. Review only if the multi-agent coordination model changes (e.g., if a single dispatcher agent does all the claim-arbitration and the human stops watching individual sessions).
+
+---
+
+### COMM-2026-04-30-007 — Atlas Integrated As Project Ground-Truth Surface
+
+Date: 2026-04-30
+From: Cowork session (claude_cowork_session_2026-04-30) following operator architectural insight from Jake
+To: Future agents — every agent that writes ledgers; every cold-starting Cowork or Claude Code session
+Type: `handoff`, `coordination`, `preference`
+Status: **active**
+Priority: high
+Affected systems: project-wide ledger discipline, source-of-truth model, drift detection, all ledger steward sub-agents
+Related ledgers: [`SOURCE_OF_TRUTH`](SOURCE_OF_TRUTH.md), [`OPEN_PROBLEMS_LEDGER`](OPEN_PROBLEMS_LEDGER.md) (PROB-2026-04-30-015 — Atlas Sweep Steward Not Yet Runnable), [`BOX_LEDGER`](BOX_LEDGER.md) (new Box class `ground_truth_source`), `LEDGERS/BOXES/atlas/BOX.md`, `LEDGERS/CONNECTIONS.md` (Pieces MCP)
+Promote when: a second `ground_truth_source` Box appears (e.g., git_history Box, slack_activity Box) — at that point the pattern moves from this COMM into a formal Decisions Ledger entry codifying the new Box class.
+
+#### Message
+
+`/Users/jakeaaron/Documents/Atlas/` — the Pieces MCP daily-folder output that's been accumulating since at least 2026-04-24 — is now an explicit **project surface**. It's aliased at `LEDGERS/atlas/` (gitignored symlink) and governed by a new Box at `LEDGERS/BOXES/atlas/`.
+
+**What Atlas is.** Pieces MCP observes the operator's actual machine activity (browser, vision, clipboard, conversations) and curates structured workstream summaries. Each morning a new daily folder is created (named e.g. `Thursday, April 30th, 2026`). Throughout the day Pieces deposits `pieces_*.md` summaries — each with TLDR, Core Tasks & Projects, Key Discussions & Decisions, Resources Reviewed, Next Steps. They cite specific file paths, ledger names, PROB-IDs, DEC-IDs by name.
+
+**Why this matters for ledger discipline.** Every project ledger is what an agent **claimed** happened. Atlas is what **actually** happened on the operator's machine. When the two disagree, that's drift — and drift is the cardinal sin the project's Prime Directive is built to prevent. Until now we had no automated fact-check; agents wrote their own claims and there was nothing to verify them against. Atlas closes that gap.
+
+**The new contract — two truths, both load-bearing:**
+
+| Surface | Wins for | Loses for |
+|---|---|---|
+| **Atlas** | "Did this happen?" "When?" "What did the operator actually do?" | "What's the rule?" "What's the architecture?" "What did we decide?" |
+| **Project ledgers** | "What's the rule?" "What did we decide?" "What's the project state?" | "What did the operator actually do today?" "What did the agents miss?" |
+
+When they disagree, **file a PROB describing the gap**. Do NOT auto-overwrite either side.
+
+**The new Box class.** This is the first `ground_truth_source` Box — kind distinct from `ledger`. It governs an external observation surface, not a project ledger. The Box owns the alias + the steward + the receipts; it does not own Atlas's contents (Pieces does). Future candidates for the same class: a `git_history` Box (observe `git log` as code-change ground truth), a `slack_activity` Box (observe Slack for team activity).
+
+**Per-relevance filter.** Atlas captures everything on the operator's machine, including non-project content (entertainment, philosophical exploration, third-party tooling research). The Atlas Sweep Steward filters for project-relevance via filename hints (`pieces_cc_agent_*`, `pieces_*_ledger_*`, etc.), TLDR keywords (CC Agent, Comeketo, ledger, atom, steward, PROB-, DEC-, etc.), and Resources Reviewed paths (anything under `/Users/jakeaaron/Downloads/CC Agent/`). Non-project summaries are noted in the receipt count but never surfaced as findings.
+
+**Surfacing taxonomy (A–F):** see `LEDGERS/BOXES/atlas/steward/AGENTS.md` §6. Concordance (A) doesn't fire writes; drift (B), handoff lessons (C), action suggestions (D), decision context (E) each have their own draft + reconcile path.
+
+**Phase status.** Box authored 2026-04-30. Steward files staged. Live dispatch path `POST /api/agents/atlas_sweep_steward/run` already supported by the `_agent_resolve_prompt` helper (added in ATOM-2026-04-30-0029) but not yet smoke-tested. Graduation work tracked at PROB-2026-04-30-015.
+
+#### Why It Matters
+
+Three concrete frictions Atlas closes:
+
+1. **Drift detection.** Until now no automated check existed. The Prime Directive's "ledger discipline above all else" rule depended on agents being honest about their own writes. Atlas adds the second pair of eyes the system needed.
+2. **Decision context preservation.** Pieces captures conversational reasoning that often doesn't survive the trip into a clean DEC entry. Atlas's "Key Discussions & Decisions" section is exactly the context that would otherwise vanish into chat scroll.
+3. **Atom backlog source.** Pieces' "Next Steps" sections are operator-generated action lists. The Atlas Sweep Steward turns those into atom candidates that wait for review at `LEDGERS/DRAFTS/ATOMIZATION/atlas_atoms_<date>.md`. This is exactly the kind of work-suggestion source the project's currently been generating manually.
+
+Jake's framing (2026-04-30): *"This is basically like a source of truth against the truth we've been writing."*
+
+#### Suggested Action
+
+For agents writing project ledgers right now (i.e., everyone reading this):
+
+- **When closing a PROB or marking a DEC settled:** glance at `LEDGERS/atlas/<today's folder>/` for any `pieces_*.md` whose TLDR mentions the same work. If Atlas describes the work meaningfully differently than your closure note, file a drift PROB before closing.
+- **At session end:** consider whether today's TCL §11 entry captures what Atlas would say about your work. If Atlas's Pieces summary for your session would be more accurate than your TCL entry, your TCL entry is wrong.
+- **For pre-decision context:** before drafting a DEC entry, scan recent Atlas folders for related discussion. The reasoning is often there in higher fidelity than chat scroll.
+
+For the eventual Atlas Sweep Steward (when it's runnable per PROB-015):
+
+- Default mode `audit_only` — write findings + drafts only. Reconcile mode requires explicit dispatch.
+- Always file PROBs for drift; never auto-resolve.
+- Always route atom candidates through `LEDGERS/DRAFTS/ATOMIZATION/` for human review before queue insertion.
+
+#### Expiry / Review
+
+This entry stays active until the Atlas Sweep Steward graduates and runs reliably for at least a week. At that point the architectural pattern can promote to a formal Decisions Ledger entry (`DEC-` for the new `ground_truth_source` Box class) and this COMM archives.
+
+Review immediately if:
+- A second `ground_truth_source` Box gets proposed (the pattern is generalizing — promote to Decisions)
+- Atlas's daily-folder naming convention changes (Pieces could shift naming, breaking the steward's parsing)
+- The operator-actual-activity that Atlas captures starts diverging from what Pieces sees (e.g., new device, multi-machine workflow) — that's a different kind of drift
+
+---
+
+### COMM-2026-04-30-006 — Atom Protocol: "P" Means Proceed To Next Load-Bearing
+
+Date: 2026-04-30
+From: Jake (operator shortcut established 2026-04-30 22:30Z)
+To: Future agents — every Cowork session
+Type: `preference`, `handoff`
+Status: **active**
+Priority: high
+Affected systems: Cowork session input handling; atom queue work
+Related ledgers: [`ATOMS.md`](ATOMS.md), COMM-2026-04-30-004 (claim-before-doing), COMM-2026-04-30-005 (announce-before-doing)
+Promote when: replaced by a richer dispatch shorthand (e.g., `P boxes` to mean "proceed but in the boxes domain")
+
+#### Message
+
+**When Jake types `P` or `p`, the agent proceeds to the next most load-bearing claimable atom and ships it.** No clarifying questions; the protocol does the work:
+
+1. Read ATOMS.json
+2. Identify currently-claimed atoms (don't collide)
+3. Identify the next most load-bearing unclaimed atom (use `do_not_undo_casually`, `blocks[]` length, parent-PROB priority as tiebreakers)
+4. Announce (per COMM-005)
+5. Claim (per COMM-004)
+6. Ship
+7. Announce completion
+
+Jake's exact words (2026-04-30): *"It would be so nice if I could just type the letter P, which means proceed to whatever the next load-bearing thing is."*
+
+#### Why It Matters
+
+Operator velocity. With 6+ parallel sessions Jake is the bottleneck on all of them — every clarifying question costs him context-switch time. A one-character shortcut lets him keep three or four agents moving without typing more than one keystroke per session.
+
+The shortcut also encodes a trust contract: the agent is supposed to make the load-bearing call autonomously, not ask "which one?" If the agent can't pick confidently, the shortcut is the wrong tool — better to ask explicitly.
+
+#### Suggested Action
+
+When the operator's message is just `P` or `p` (case-insensitive, possibly with surrounding whitespace):
+
+1. Do not ask which atom — pick.
+2. Use `do_not_undo_casually` notes as the load-bearing signal (atoms that warn about silent/cumulative drift score higher).
+3. Use `blocks[]` length as a tiebreaker — atoms that unblock more downstream work score higher.
+4. Use parent-PROB severity as a final tiebreaker.
+5. Announce, claim, ship.
+
+If the operator follows the `p` with content (e.g., `p but in the boxes area`), treat the additional content as a domain filter on the load-bearing pick.
+
+#### Expiry / Review
+
+Stable. Review only if a richer dispatch shorthand emerges or the operator workflow shifts away from atom-by-atom claiming.
 
 ---
 

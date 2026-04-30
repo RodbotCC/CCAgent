@@ -1,0 +1,192 @@
+{
+  "ledger_type": "page_ledger",
+  "page_id": "intake",
+  "version": "0.1.0",
+  "envelope_v": "1",
+  "tier": "domain",
+  "last_updated": "2026-04-29",
+  "phase": "Phase 17 of ledger system buildout — second Page Ledger",
+  "status": "active",
+  "page_status_labels": ["active", "write-capable", "medium-high-risk"],
+  "risk_level": "medium-high",
+  "sitemap_section_canonical": "page_asset_sitemap.md §intake",
+  "sitemap_done_gate_decision": "DEC-2026-04-29-007",
+  "route": "intake",
+  "primary_component": "IntakeScreen in screens.jsx (with IntakeReportsList, IntakeReportDetail, IntakeDocumentCard)",
+  "owner_file": "screens.jsx",
+  "maintainer": "Jake / Comeketo Agent project agents",
+  "page_done_gate_local_overrides_dod_5_3": true,
+  "purpose": "Document-ingest + Q&A surface for two kinds of reports: Box Reports (synthesized views over Auto/Client Boxes/<Name>/) and Workspaces (manual general-purpose). Two views one Box per DEC-2026-04-29-005..008.",
+  "is_editing_surface": false,
+  "is_writes_capable": true,
+  "report_kinds": {
+    "box_reports": {
+      "source": "Auto/Client Boxes/<Name>/",
+      "lifecycle": "exists iff their box exists",
+      "creation": "automatic (one per Client Box)",
+      "deletion": "405 — refused",
+      "refresh": "on every read (per DEC-2026-04-29-007)",
+      "slug": "= box id directly (per DEC-2026-04-29-006)",
+      "no_separate_storage": "no report.json written into box folder (per DEC-2026-04-29-005)"
+    },
+    "workspaces": {
+      "source": "CCAgentindex/reports/<slug>/report.json",
+      "lifecycle": "operator-controlled",
+      "creation": "manual via create modal (refuses slugs colliding with Client Box ids)",
+      "deletion": "operator-initiated"
+    }
+  },
+  "apis": [
+    {"endpoint": "GET /api/reports/list", "purpose": "List all reports", "shape": "{items, box_reports} — split"},
+    {"endpoint": "POST /api/reports/create", "purpose": "Create new report", "box_report_behavior": "405 — refuses slug collisions with Client Box ids", "workspace_behavior": "creates"},
+    {"endpoint": "POST /api/reports/delete", "purpose": "Delete report", "box_report_behavior": "405", "workspace_behavior": "deletes"},
+    {"endpoint": "GET /api/reports/get?slug=<id>", "purpose": "Read report", "box_report_behavior": "synthesized via _box_report_synthesize walking Auto/Client Boxes/<Name>/", "workspace_behavior": "loads report.json"},
+    {"endpoint": "POST /api/attachments/upload", "purpose": "Upload file (shared)"},
+    {"endpoint": "POST /api/reports/<slug>/ingest", "purpose": "Attach file to report", "box_report_behavior": "writes to Auto/Client Boxes/<Name>/intake_drops/<file>", "workspace_behavior": "writes to workspace doc store"},
+    {"endpoint": "POST /api/reports/<slug>/ask", "purpose": "Q&A turn", "behavior": "GENERIC ask path — box-aware agent config DEFERRED to Phase 2 per DEC-2026-04-29-008"},
+    {"endpoint": "POST /api/reports/<slug>/documents/<id>/delete", "purpose": "Delete document", "box_report_behavior": "405 with guidance", "workspace_behavior": "deletes"}
+  ],
+  "data_sources": [
+    "Auto/Client Boxes/<Name>/ (Box Reports — synthesized on every read)",
+    "CCAgentindex/reports/<slug>/report.json (Workspaces — persists to disk)",
+    "CCAgentindex/reports/_box_conversations/<box_id>.jsonl (Box Report Q&A history — append-only)",
+    "Box Report ingest drops: Auto/Client Boxes/<Name>/intake_drops/<file>"
+  ],
+  "writes_side_effects": {
+    "box_report_writes": [
+      {"action": "ingest", "target": "Auto/Client Boxes/<Name>/intake_drops/<file>", "note": "the Box stays the only writer of canonical content"},
+      {"action": "Q&A turn", "target": "CCAgentindex/reports/_box_conversations/<box_id>.jsonl (append-only)", "note": "conversation history is NOT written into the Box"},
+      {"action": "create", "result": "refused (405)"},
+      {"action": "delete", "result": "refused (405)"},
+      {"action": "document delete", "result": "refused (405) with guidance"}
+    ],
+    "workspace_writes": [
+      {"action": "create", "target": "CCAgentindex/reports/<slug>/report.json"},
+      {"action": "ingest", "target": "workspace doc store"},
+      {"action": "Q&A turn", "target": "inside report.json"},
+      {"action": "delete", "target": "removes <slug>/ directory"},
+      {"action": "document delete", "target": "removes from doc store"}
+    ],
+    "side_effect_risk": "medium-high",
+    "risk_notes": [
+      "Document ingest writes into Client Box folders, visible to orchestrator and any future scheduled fires",
+      "Q&A is paid — each ask call costs API tokens (provider per Settings tweaks.aiProvider)",
+      "Delegation handoff routes section text or Q&A turns to customer-facing channels via connectors.js"
+    ]
+  },
+  "format_support": ["pdf", "txt", "md", "csv", "json", "xlsx", "xls (with guidance fallback)", "docx", "doc (with guidance fallback)", "html", "js", "ts", "yaml", "xml", "jsonl", "image (via OCR through provider vision path)"],
+  "image_ocr_path": "uses active Settings provider (Claude Code / OpenAI / Codex CLI per tweaks.aiProvider)",
+  "ingest_concurrency": "per-report ingest lock prevents threaded write races (added 2026-04-27); client-side queue serializes uploads",
+  "source_of_truth_rules": "renders Box Reports as synthesized views with same rank ordering as Boxes page (per SOURCE_OF_TRUTH §3.1). Ingest drops are NOT in the trust ordering — they're operator-supplied context, not canonical client truth.",
+  "supported_states": [
+    {"state": "List view", "when": "initial load", "render": "split rendering — Box Reports above Workspaces"},
+    {"state": "Detail view", "when": "report selected", "render": "dropzone + document cards + Q&A panel"},
+    {"state": "Box Report detail", "when": "slug matches Client Box id", "render": "'box report' eyebrow + 'open in boxes →' pill"},
+    {"state": "Workspace detail", "when": "slug matches workspace", "render": "standard report header with create-able actions"},
+    {"state": "Empty", "when": "no reports yet", "render": "create-Workspace CTA"},
+    {"state": "Empty (Box Reports)", "when": "bedrock not loaded yet", "render": "skeleton placeholder"},
+    {"state": "Q&A in flight", "when": "ask submitted", "render": "thinking-trace metadata visible"},
+    {"state": "Q&A error", "when": "provider failure", "render": "error surface with retry"},
+    {"state": "Ingest in flight", "when": "upload+attach in progress", "render": "per-file progress; sequential queue"},
+    {"state": "Ingest collision", "when": "slug-collision attempted on create", "render": "405 with explanation"}
+  ],
+  "page_specific_guardrails": [
+    "Q&A responses must obey Allowed-To-Know boundary even though box-aware agent config is deferred (DEC-008). Operator must apply discipline manually until Phase 2.",
+    "Ingest drops do NOT become canonical content automatically. Dropped documents are reference material; the Q&A LLM can read them but they're not comms records or client-confirmed truth.",
+    "Sending Q&A turns to delegations is highest-risk write on this page. LLM output is DRAFT material — never finalized customer copy.",
+    "Box Report identity is one-to-one with Client Box id. Slug-collision refusal on /api/reports/create enforces DEC-2026-04-29-006 — don't bypass.",
+    "Box Reports are read-on-demand. Past Q&A turns can become wrong if Box state shifted — operators should NOT treat past Q&A as durable truth."
+  ],
+  "page_done_gate_required_checks": [
+    "all DoD §5.3 boxes",
+    "page_asset_sitemap.md §intake updated",
+    "if synthesized-view path changed: spot-checked against ≥3 Client Boxes (1 minimal-content, 2 normal); Box folder content reflects in synthesized payload",
+    "if new ingest path added: per-report lock holds; multi-file queue serializes; OCR fallback works for image-only files",
+    "if new Q&A capability added: cost estimated against bulk-ask scenario; provider-routing through tweaks.aiProvider honored",
+    "if right-click menu changed: cross-referenced in ASSET_WIDGET_MAP §3.3 + connectors.js for new send targets",
+    "if _box_report_* server helpers changed: confirm DEC-2026-04-29-005..008 semantics still hold",
+    "if new format added to ingest: extraction tested + Settings ledger noted if browser-use config involved",
+    "cache-busters bumped in Secretary.html",
+    "this Page Ledger §12 appended"
+  ],
+  "open_page_problems": [
+    {
+      "problem": "Box-aware agent config deferred (DEC-2026-04-29-008)",
+      "detail": "Ask path uses generic prompt assembly. Per-Box AGENTS.md / CLAUDE.md / 06_logic.md / 07_skills_used.md / 08_automations.md are NOT folded into system prompt.",
+      "impact": "Operator asking 'what should I tell Hugo?' gets generic LLM answer, not Hugo-aware one",
+      "fix": "Phase 2 work"
+    },
+    {
+      "problem": "Per-Box analytics templates deferred",
+      "detail": "Box Report detail doesn't surface client-specific analytics yet",
+      "fix": "Phase 3 per DEC-2026-04-29-008"
+    },
+    {
+      "problem": "Allowed-To-Know rendering pending",
+      "cross_ref": "PROB-2026-04-28-001 (partial)",
+      "detail": "Q&A LLM has access to profile + enrichment + plan. Without per-Box allowed_to_use.json, four-bucket model isn't enforced at Q&A time.",
+      "fix": "same fix path as Boxes page — Hugo first"
+    },
+    {
+      "problem": "Q&A cost is unbounded",
+      "detail": "No per-day or per-session cost cap on /api/reports/<slug>/ask. tweaks.demoMode blocks connector writes only — not ask calls.",
+      "consideration": "future cost-cap consideration"
+    },
+    {
+      "problem": "Box Report ingest doesn't trigger orchestrator action",
+      "detail": "Document dropped into intake_drops/ is just sitting there. No automation reads from it today.",
+      "future_warning": "if a future automation watches intake_drops/, dropping a file becomes an action — operator should know"
+    }
+  ],
+  "recent_changes_narrative": {
+    "2026_04_29_phase_1_unification": "Two-canonical-surfaces problem resolved. Box Reports synthesized over Auto/Client Boxes/<Name>/, refresh on read, slug=box_id. No drift surface; triad-aligned; one identity per Box (DEC-005..008). Cross-navigation: Boxes-page right-click → 'Open as Intake Report →'; Intake header 'open in boxes →' pill. Cache-busts: screens.jsx 94→95, app.jsx 52→53.",
+    "2026_04_27_preprocess_model_sync": "Q&A preprocessor used to default to hardcoded mini model — output drift. Fix: preprocessor receives selected Settings model + carries through thinking-trace metadata. Settings provider exclusivity rule (per SETTINGS §7) only works if every chat-shaped path honors tweaks.aiProvider + tweaks.openaiModel. Cache-bust: screens.jsx 92→93.",
+    "2026_04_27_delegations_handoff_wiring": "Right-click menus on documents and Q&A turns gained 'Send ... to delegations'. Risk increased — LLM output can route to customer-facing channels in one click. Why §9 guardrail #3 exists. Cache-bust: screens.jsx 75→76.",
+    "2026_04_27_right_click_polish": "Context menus added across IntakeReportsList cards, IntakeReportDetail document cards, Q&A entries via shared useContextMenu hook. Reusable on any page (per ASSET_WIDGET_MAP §3.3). Cache-bust: screens.jsx 72→73.",
+    "2026_04_27_ingestion_hardening": "Per-report ingest locks (server) + sequential client queue prevent threaded write races. Format support broadened (xlsx/xls, docx/doc, html, js/ts, yaml/xml/jsonl, image OCR via provider vision path). Removed friction without expanding risk. Cache-bust: screens.jsx 71→72.",
+    "2026_04_25_great_trim": "Removed onAddCommitment prop and commitment-creation paths.",
+    "2026_04_25_initial": "First sitemap entry."
+  },
+  "architectural_rationale": [
+    {"why": "Reports list is split (Box Reports + Workspaces) instead of unified", "because": "two kinds have different lifecycles. Mixing with create/delete for everything would make slug-collision refusal feel like a bug instead of an architectural property."},
+    {"why": "Box Reports are synthesized instead of stored", "because": "DEC-2026-04-29-005. Copy creates drift surface; synthesized view does not. Cost: one Box-folder walk per /api/reports/get."},
+    {"why": "slug = box id directly", "because": "DEC-2026-04-29-006. One identity per Box across the app. Synthetic prefix would mean Intake and Boxes used different identifiers for the same thing."},
+    {"why": "ask path stays generic in Phase 1", "because": "DEC-2026-04-29-008. Phasing rule protects against half-finished architecture. Plumbing AGENTS.md ad-hoc would create parallel non-bus impl that re-wiring would have to rip out."},
+    {"why": "ingest writes into Box folder instead of side store", "because": "DEC-2026-04-29-005 consequence. Box stays only writer of canonical content. intake_drops/ lives inside the Box."},
+    {"why": "right-click menus instead of inline buttons", "because": "density. Reports list, document cards, Q&A turns are dense; right-click reveals on demand. Shared useContextMenu hook makes pattern reusable."}
+  ],
+  "future_direction": {
+    "near_term_phase_2": [
+      "Plumb per-Box AGENTS.md (and probably CLAUDE.md, 06_logic.md, 07_skills_used.md, 08_automations.md) into /api/reports/<slug>/ask system prompt when slug matches Client Box id",
+      "Add per-Box analytics templates to Box Report detail view",
+      "Wire Allowed-To-Know schema into Q&A prompt — when allowed_to_use.json exists, four-bucket model folded into system prompt"
+    ],
+    "medium_term_phase_b": [
+      "Intake-page steward audits Q&A history weekly. Surfaces patterns.",
+      "Per-Box AGENTS.md becomes runnable agent's prompt, dispatched via /api/agents/<box_id>/run for richer workflows than chat allows."
+    ],
+    "long_term_phase_c": [
+      "Box Reports become window into live network",
+      "Q&A turns become routing events",
+      "Ingest into intake_drops/ emits event automations can subscribe to (per BOX_BUS §2.1)",
+      "intake_drops/ shifts from 'operator reference material' to 'automation input surface' — §9 guardrail #5 becomes load-bearing"
+    ]
+  },
+  "related_ledgers": {
+    "canonical_per_page_truth": "page_asset_sitemap.md §intake",
+    "cross_page_widget_catalog": "ASSET_WIDGET_MAP.md §3.3 + §4.3 + §3.7",
+    "file_roles": "FILE_CONTENTS.md §6 + §7 + §11",
+    "box_concept": "BOX_LEDGER.md",
+    "box_wire_shape": "BOX_BUS_LEDGER.md §2.1",
+    "trust_ordering": "SOURCE_OF_TRUTH.md §3.1 + §4 (Allowed-To-Know)",
+    "external_data_origin": "CONNECTIONS.md openai / claude_code / codex_cli (Q&A LLM provider routing per tweaks.aiProvider)",
+    "settings": "SETTINGS.md §3.3 (provider exclusivity), §3.4 (OpenAI model), §3.5 (Pieces model)",
+    "decisions": ["DEC-2026-04-29-005", "DEC-2026-04-29-006", "DEC-2026-04-29-007", "DEC-2026-04-29-008"],
+    "completion_gate": "DEFINITION_OF_DONE.md §5.3 (this Page Ledger §10 is local-stricter)",
+    "natural_pair_page": "LEDGERS/PAGES/boxes.md",
+    "open_problem": "OPEN_PROBLEMS_LEDGER.md PROB-2026-04-28-001 (partial — Allowed-To-Know rendering pending)"
+  },
+  "history": [
+    {"date": "2026-04-29", "event": "Phase 17 — initial creation. Second Page Ledger. 16-section deep-memory record covering: purpose, use case, route+render, data sources + APIs (10 endpoints documented with box-vs-workspace behavior matrices), writes/side-effects (split tables), SoT rules (Box Report rank ordering + ingest-drops-not-canonical), widgets, supported states (10 states), 5 page-specific guardrails (allowed-to-know, ingest-not-canonical, delegations-risk, identity-uniqueness, refresh-on-read), local-stricter Done Gate (10 checks), 5 open page problems (deferred config, deferred analytics, AtK pending, unbounded cost, future ingest-as-action), 7 narrative recent changes spanning 2026-04-25 → 2026-04-29 with the WHY behind each, 6 architectural rationale entries, future direction Phase 2 / Phase B / Phase C. Tier: domain. Cross-references sitemap as canonical. Companion files: intake.json, _README.md (status flipped intake → active). Companion Communications entry: COMM-2026-04-29-014."}
+  ]
+}

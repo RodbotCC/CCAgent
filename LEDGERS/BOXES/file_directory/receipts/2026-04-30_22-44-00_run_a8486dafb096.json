@@ -1,0 +1,58 @@
+{
+  "request_id": "a8486dafb096",
+  "run_at": "2026-04-30T22:44:00Z",
+  "kind": "atom_completion_audit",
+  "atom_id": "ATOM-2026-04-30-0036",
+  "atom_title": "Promote file_directory_steward \u2014 author runnable form",
+  "actor": "file_directory_steward (audit) / claude_cowork (executor)",
+  "mode": "audit_only",
+  "classification": "promotion (Phase B steward graduation, no migration since no legacy)",
+  "claim": "Promoted draft file_directory_subagent_package to runnable form at LEDGERS/BOXES/file_directory/ following the 6-file unified-Box pattern. No legacy CCAgentindex/agents/file_directory_steward/ ever existed; this is a clean Phase B promotion via _agent_resolve_prompt helper.",
+  "files_read": [
+    "Subagent Boxes/file_directory_subagent_package/AGENTS.md",
+    "Subagent Boxes/file_directory_subagent_package/file_directory_steward.config.json",
+    "Subagent Boxes/file_directory_subagent_package/README.md",
+    "LEDGERS/FILE_DIRECTORY_LEDGER.md (header for context)",
+    "LEDGERS/BOXES/global_ledger/ (full 6-file pattern reference, just shipped via ATOM-0044)",
+    "LEDGERS/BOXES/temporal_continuity/ (sibling reference)",
+    "CCAgentindex/agents/global_ledger_steward/prompt.md (prompt-shape model)"
+  ],
+  "files_written": [
+    "LEDGERS/BOXES/file_directory/box.json (NEW \u2014 manifest)",
+    "LEDGERS/BOXES/file_directory/BOX.md (NEW \u2014 orientation, 13 sections)",
+    "LEDGERS/BOXES/file_directory/steward/AGENTS.md (copied from draft + header updated to canonical)",
+    "LEDGERS/BOXES/file_directory/steward/prompt.md (NEW \u2014 authored fresh, modeled after global_ledger_steward/prompt.md)",
+    "LEDGERS/BOXES/file_directory/steward/config.json (copied from draft + status:draft->active, version 0.1.0->0.2.0, canonical_repo_path set, promoted_via_atom recorded)",
+    "LEDGERS/BOXES/file_directory/receipts/README.md (NEW \u2014 receipt format note)"
+  ],
+  "files_unchanged_intentionally": [
+    "LEDGERS/FILE_DIRECTORY_LEDGER.md (the steward maintains this; do not edit during promotion)",
+    "LEDGERS/FILE_DIRECTORY_LEDGER.json (same)",
+    "Subagent Boxes/file_directory_subagent_package/* (preserved as reference)",
+    "server.py (no changes needed; _agent_resolve_prompt already handles unified Box per ATOM-0029)"
+  ],
+  "verification": {
+    "v1_resolve_to_unified_box": "PASS \u2014 _agent_resolve_prompt('file_directory_steward') falls through legacy (none) and resolves to LEDGERS/BOXES/file_directory/steward/prompt.md",
+    "v2_no_duplicate_in_agents_list": "PASS \u2014 _agents_list returns exactly one entry source=unified_box, hasPrompt=True, hasSpec=True",
+    "v3_box_structure_complete": "PASS \u2014 all 6 required files/dirs present (box.json, BOX.md, steward/AGENTS.md, steward/prompt.md, steward/config.json, receipts/)",
+    "v4_box_json_valid": "PASS \u2014 declares kind=ledger, tier=global, status=active, unified_box_pattern_decision=DEC-2026-04-29-015, canonical_path_decision=DEC-2026-04-30-004, promotion_atom=ATOM-2026-04-30-0036, owns[] includes FDL md+json+manifest+all steward files+receipts dir",
+    "v5_config_json_adapted": "PASS \u2014 id=file_directory_steward, status flipped draft->active, version bumped to 0.2.0, canonical_repo_path set, legacy_runtime_path None (clean promotion no legacy), promoted_via_atom recorded, primary_files=[FDL.md, FDL.json], receipt_path canonical",
+    "v6_prompt_md_complete": "PASS \u2014 Dispatch line + canonical receipt path + scope reading FDL md+json + default audit_only + activity contract + no leaked legacy AGENTS path + promotion note 2026-04-30 present",
+    "v7_no_regression_other_stewards": "PASS \u2014 global_ledger_steward still resolves via legacy (ATOM-0044 preserved); temporal_continuity_steward resolves via unified_box; open_problems_steward resolves via unified_box (ATOM-0032); atoms_steward resolves via unified_box; file_directory_steward resolves via unified_box (this atom). All five appear exactly once in _agents_list with no name collisions."
+  },
+  "acceptance_criteria_check": {
+    "runnable_form_exists_with_agents_md_and_prompt_md": "PASS \u2014 both files exist + steward/config.json + box.json + BOX.md + receipts/ as bonus per the established 6-file pattern"
+  },
+  "do_not_undo_casually_honored": "PASS \u2014 FILE_DIRECTORY_LEDGER.md and .json untouched (the steward exists to maintain them, not to be created by editing them). Draft package preserved at /Subagent Boxes/file_directory_subagent_package/ for reference. No legacy CCAgentindex/agents/ files ever existed for this steward, so nothing to preserve there.",
+  "side_effects_for_other_atoms": "ATOM-0037 (route wiring) collapses to ~5min helper-verification thanks to ATOM-0029 (helper auto-resolves). ATOM-0038 (smoke test) and ATOM-0039 (INDEX flip) remain as straightforward follow-ons. The pattern is now visible to any agent picking up ATOM-0040 (north_star promotion) \u2014 same shape, no legacy, just copy-from-draft + author-fresh-prompt.",
+  "next_recommended_actions": [
+    "ATOM-0037 verify _agent_resolve_prompt resolution for file_directory_steward (this atom programmatically did it, but a separate atom can mark it formally)",
+    "ATOM-0038 live HTTP smoke test of POST /api/agents/file_directory_steward/run (requires server restart)",
+    "ATOM-0039 flip INDEX.md row for file_directory_steward to active",
+    "ATOM-0040 promote north_star_steward \u2014 same pattern, last in PROB-005 chain",
+    "Eventually: dispatch file_directory_steward in audit_only mode to do its first directory-shape audit and produce its inaugural receipt"
+  ],
+  "abstention": false,
+  "risks": [],
+  "activity_appended": true
+}

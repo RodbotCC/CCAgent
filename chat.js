@@ -271,16 +271,48 @@ window.SecretaryChat = (() => {
     // Dispatch to server which routes per provider.
     const provider = (window.SecretaryAI && window.SecretaryAI.getProvider && window.SecretaryAI.getProvider()) || "claude_code";
     const model = (window.SecretaryAI && window.SecretaryAI.getModel && window.SecretaryAI.getModel()) || "gpt-5.4-mini";
-    const res = await fetch("/api/chat/send", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ messages, system: systemPrompt, provider, model, timeout: 180 }),
-    });
-    const data = await res.json().catch(() => ({}));
-    if (!res.ok || !data.ok) {
-      const msg = data.error || `chat ${res.status}`;
-      appendTurn(chatId, "system", `(error: ${msg})`, { error: true });
-      throw new Error(msg);
+    const route = (window.SecretaryAI && window.SecretaryAI.getRoute && window.SecretaryAI.getRoute()) || null;
+
+    // Hosted/Render mode: when OpenAI is selected but there is only a browser
+    // BYOK key, use the same client-side provider path that Automation uses.
+    // The server relay cannot see localStorage keys.
+    let data = null;
+    if (provider === "openai" && route === "openai-byok-direct" && window.SecretaryAI && window.SecretaryAI.respond) {
+      const openaiMessages = messages.map(m => {
+        const role = m.role === "user" ? "user" : "assistant";
+        const parts = Array.isArray(m.content) ? m.content : [{ type: "text", text: String(m.content || "") }];
+        const text = parts
+          .filter(p => p && p.type === "text" && (p.text || "").trim())
+          .map(p => p.text.trim())
+          .join("\n")
+          .trim();
+        return text ? { role, content: text } : null;
+      }).filter(Boolean);
+      try {
+        const r = await window.SecretaryAI.respond({
+          input: openaiMessages,
+          instructions: systemPrompt,
+          model,
+          timeout: 180,
+        });
+        data = { ok: true, reply: r.text || "(empty)", provider_route: r.route || route };
+      } catch (e) {
+        const msg = e.message || String(e);
+        appendTurn(chatId, "system", `(error: ${msg})`, { error: true });
+        throw e;
+      }
+    } else {
+      const res = await fetch("/api/chat/send", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ messages, system: systemPrompt, provider, model, timeout: 180 }),
+      });
+      data = await res.json().catch(() => ({}));
+      if (!res.ok || !data.ok) {
+        const msg = data.error || `chat ${res.status}`;
+        appendTurn(chatId, "system", `(error: ${msg})`, { error: true });
+        throw new Error(msg);
+      }
     }
 
     // Wait for Pieces to land (it usually returns BEFORE the LLM does).

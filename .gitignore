@@ -15,3 +15,18 @@ __pycache__/
 
 
 /src/generated/prisma
+
+# Local snapshot archive — paired with LEDGERS/DEPRECATION.md §7.
+# Snapshots are recovery surface, not source-of-truth; they should not push to GitHub.
+_snapshots/
+
+# Cowork session memory alias — symlink to ~/Library/Application Support/Claude/.../memory
+# Per-session, target outside repo. Do not commit (absolute symlink target won't transfer).
+cowork_memory
+cowork_memory/
+
+# Atlas alias — symlink to ~/Documents/Atlas, read-only operator-machine ground truth (Pieces sweeps).
+# Per-machine, large, target outside repo. Do not commit (absolute symlink target won't transfer).
+# See LEDGERS/BOXES/atlas/BOX.md for the read-side contract.
+LEDGERS/atlas
+LEDGERS/atlas/

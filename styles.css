@@ -2007,7 +2007,7 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
 .chat-rail-empty { color: var(--ink-4); font-size: 12px; padding: 18px 4px; text-align: center; line-height: 1.5; }
 .chat-rail-turn { display: flex; }
 .chat-rail-turn.me { justify-content: flex-end; }
-.chat-rail-turn.ai, .chat-rail-turn.sys { justify-content: flex-start; }
+.chat-rail-turn.ai, .chat-rail-turn.sys, .chat-rail-turn.tool { justify-content: flex-start; }
 .chat-rail-bubble {
   max-width: 88%;
   padding: 8px 12px;
@@ -2019,6 +2019,28 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
 .chat-rail-turn.me  .chat-rail-bubble { background: var(--pastel-sky);     color: var(--pastel-sky-ink);     border: 1px solid color-mix(in oklab, var(--pastel-sky-ink) 25%, transparent); white-space: pre-wrap; }
 .chat-rail-turn.ai  .chat-rail-bubble { background: var(--paper-card-2);   color: var(--ink);                border: 1px solid var(--rule-2); }
 .chat-rail-turn.sys .chat-rail-bubble { background: var(--pastel-rose);    color: var(--pastel-rose-ink);    border: 1px solid var(--pastel-rose-ink); white-space: pre-wrap; }
+
+/* Tool turn — quiet "TOOL" eyebrow + recessed paper tone so handoff receipts
+   read as a different kind of message than AI replies. The eyebrow lives
+   inside the bubble at top-left so the row layout stays tidy. (2026-04-30) */
+.chat-rail-turn.tool .chat-rail-bubble {
+  background: var(--paper-2);
+  color: var(--ink);
+  border: 1px solid var(--rule-2);
+  position: relative;
+  padding-top: 24px;
+}
+.chat-rail-turn.tool .chat-rail-bubble::before {
+  content: "TOOL";
+  position: absolute;
+  top: 7px;
+  left: 12px;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  color: var(--ink-4);
+  text-transform: uppercase;
+}
 .chat-rail-input {
   padding: 10px 12px;
   border-top: 1px solid var(--rule);

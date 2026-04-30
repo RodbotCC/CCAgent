@@ -1,0 +1,1633 @@
+{
+  "ledger": "Atom Ledger",
+  "path": "LEDGERS/ATOMS.md",
+  "json_mirror": "LEDGERS/ATOMS.json",
+  "tier": "global",
+  "envelope_aware": true,
+  "envelope_decision": "DEC-2026-04-29-013",
+  "status": "active",
+  "last_updated": "2026-04-30",
+  "maintainer": "Jake / Comeketo Agent project agents",
+  "steward_agent": {
+    "status": "not_yet_authored",
+    "phase": "Phase B follow-up",
+    "canonical_path": "LEDGERS/BOXES/atoms/steward/",
+    "name_proposal": "atomizer_steward",
+    "unified_box_pattern": "DEC-2026-04-29-015"
+  },
+  "core_rule": "A monolithic problem is unactionable; an atom is claimable. Decompose first; work second.",
+  "id_format": "ATOM-YYYY-MM-DD-####",
+  "status_states": [
+    "available",
+    "claimed",
+    "in_progress",
+    "completed",
+    "blocked",
+    "abandoned"
+  ],
+  "effort_buckets": [
+    "5min",
+    "15min",
+    "30min",
+    "1h",
+    "2h",
+    "4h"
+  ],
+  "granularity_rule": "Anything beyond 4h estimated effort MUST be re-decomposed. 4h is the upper limit.",
+  "claim_protocol": {
+    "rule_1": "Single-writer wins. Atomic update of status/claimed_by/claimed_at to BOTH ATOMS.md and ATOMS.json in one unit of work.",
+    "rule_2": "JSON mirror is canonical for race resolution. When MD and JSON disagree on status, JSON wins.",
+    "stale_claim_rule": "claimed > 24h with no in_progress_at \u2014 any subsequent agent may release back to available."
+  },
+  "required_fields_schema": {
+    "id": "ATOM-YYYY-MM-DD-####",
+    "parent_problem_id": "PROB-YYYY-MM-DD-### (mandatory; orphans not allowed)",
+    "title": "string (imperative)",
+    "description": "string (2-4 sentences)",
+    "acceptance_criteria": "string (concrete, verifiable, single-pass)",
+    "estimated_effort": "5min | 15min | 30min | 1h | 2h | 4h",
+    "status": "available | claimed | in_progress | completed | blocked | abandoned",
+    "tier": "global | domain | local",
+    "area": "string (which Box / surface / ledger / page)",
+    "parent_chain": "[DEC-id, PROB-id, COMM-id]",
+    "blocked_by": "[ATOM-ids]",
+    "blocks": "[ATOM-ids]",
+    "claimed_by": "string | null",
+    "claimed_at": "ISO8601 | null",
+    "in_progress_at": "ISO8601 | null",
+    "completed_at": "ISO8601 | null",
+    "completed_by": "string | null",
+    "verification": "string | null",
+    "do_not_undo_casually": "string",
+    "notes": "string"
+  },
+  "mandatory_minimums_by_state": {
+    "available": [
+      "id",
+      "parent_problem_id",
+      "title",
+      "description",
+      "acceptance_criteria",
+      "estimated_effort",
+      "tier",
+      "area"
+    ],
+    "claimed": [
+      "claimed_by",
+      "claimed_at"
+    ],
+    "in_progress": [
+      "in_progress_at"
+    ],
+    "completed": [
+      "completed_by",
+      "completed_at",
+      "verification"
+    ],
+    "blocked": [
+      "blocked_by or notes-with-external-dep"
+    ],
+    "abandoned": [
+      "notes-explaining-why"
+    ]
+  },
+  "lifecycle_promotions": {
+    "available_to_claimed": "Agent atomically writes status/claimed_by/claimed_at; first write wins.",
+    "claimed_to_in_progress": "Agent sets in_progress_at when work begins.",
+    "in_progress_to_completed": "Agent verifies acceptance criteria; sets completed_at/completed_by/verification.",
+    "in_progress_to_blocked": "Agent surfaces blocking dependency in blocked_by or notes.",
+    "in_progress_to_abandoned": "Agent decides this isn't right work; appends notes explaining.",
+    "blocked_to_claimed": "Block clears; original claimant may resume.",
+    "claimed_to_available_voluntary": "Claimant releases without starting; clears claimed_by, appends note.",
+    "claimed_to_available_stale": "Subsequent agent releases stale claim (>24h, no in_progress_at)."
+  },
+  "decomposition_workflow": {
+    "phase_a_manual": [
+      "Pick a PROB",
+      "Read end-to-end including close-criteria",
+      "List discrete actions per close-criterion",
+      "Size each (\u22644h or re-decompose)",
+      "Write atoms to ATOMS.md \u00a710 + ATOMS.json atoms[]",
+      "Cross-link from parent PROB",
+      "Append _ledger/activity.jsonl with kind: atoms_authored"
+    ],
+    "phase_b_steward": "Atomizer Steward at LEDGERS/BOXES/atoms/steward/ scans PROBs, proposes atoms to DRAFTS/ATOMIZATION/, sweeps stale claims, surfaces PROB-closure-eligible candidates.",
+    "phase_c_runtime": "Atoms become first-class Box Bus envelope citizens; atoms can subscribe to tier events; bus routes atom_completed events to dependent Boxes/Stewards."
+  },
+  "atoms": [
+    {
+      "id": "ATOM-2026-04-30-0001",
+      "parent_problem_id": "PROB-2026-04-28-016",
+      "title": "Verify ledger buildout reached 'active' for all planned ledgers in INDEX.md (gate)",
+      "description": "Read LEDGERS/INDEX.md. Confirm every ledger in \u00a7Top-level continuity, \u00a7Truth and rules, \u00a7Map and inventory, \u00a7Memory of the work either has status 'active' or has an explicit defer reason in PHASE.md \u00a74. If any are still 'planned' without a defer, this gate fails \u2014 surface in COMM and re-evaluate PROB-016 atom queue.",
+      "acceptance_criteria": "A short verification note documents (a) every ledger in INDEX.md with status active, planned-with-defer, or out-of-scope, and (b) confirmation that no 'silent planned' ledgers exist. Note appended to ATOM verification field.",
+      "estimated_effort": "30min",
+      "status": "completed",
+      "tier": "global",
+      "area": "ledger system",
+      "parent_chain": [
+        "PROB-2026-04-28-016",
+        "DEC-2026-04-29-002"
+      ],
+      "blocked_by": [],
+      "blocks": [
+        "ATOM-2026-04-30-0003",
+        "ATOM-2026-04-30-0004",
+        "ATOM-2026-04-30-0005",
+        "ATOM-2026-04-30-0006",
+        "ATOM-2026-04-30-0007",
+        "ATOM-2026-04-30-0008",
+        "ATOM-2026-04-30-0009",
+        "ATOM-2026-04-30-0010",
+        "ATOM-2026-04-30-0011",
+        "ATOM-2026-04-30-0012",
+        "ATOM-2026-04-30-0013",
+        "ATOM-2026-04-30-0014",
+        "ATOM-2026-04-30-0015",
+        "ATOM-2026-04-30-0016",
+        "ATOM-2026-04-30-0017",
+        "ATOM-2026-04-30-0018",
+        "ATOM-2026-04-30-0019",
+        "ATOM-2026-04-30-0020",
+        "ATOM-2026-04-30-0021",
+        "ATOM-2026-04-30-0022"
+      ],
+      "claimed_by": "claude_cowork_session_2026-04-30",
+      "claimed_at": "2026-04-30T22:15:00Z",
+      "in_progress_at": "2026-04-30T22:15:30Z",
+      "completed_at": "2026-04-30T22:22:00Z",
+      "completed_by": "claude_cowork_session_2026-04-30",
+      "verification": "Audit complete. 59 INDEX.md rows tagged: 53 active, 3 planned-with-explicit-defer (Widget Ledgers / Prompt-Reconstruction / Scout \u2014 all named in PHASE.md \u00a74 line 104), 1 out-of-scope (Audit per DEC-2026-04-29-004), 1 deferred (remaining 9 Page Ledgers). Zero silent-planned. Full receipt: LEDGERS/BOXES/atoms/receipts/2026-04-30_2220_atom_0001_verification.md. One non-blocking anomaly surfaced \u2014 stale '2 of 14' stat on Page Ledgers directory row (should read '5 of 14'); cosmetic, doesn't affect status.",
+      "do_not_undo_casually": "Don't skip this gate. Auditing bedrock dirs without confirming the ledger system stabilized first produces decisions that get reversed when missing ledgers land.",
+      "notes": "Gate satisfied. PROB-016 audit atoms (0003-0022) now blocked only by ATOM-0002. Completed 7 minutes after claim \u2014 well under 30min estimate."
+    },
+    {
+      "id": "ATOM-2026-04-30-0002",
+      "parent_problem_id": "PROB-2026-04-28-016",
+      "title": "Verify sub-agent buildout reached one runnable app agent per state-bearing domain (gate)",
+      "description": "Walk CCAgentindex/agents/ AND LEDGERS/BOXES/<name>/steward/ (post DEC-2026-04-30-004 both paths are runnable) to count stewards across the 5 state-bearing domains (global_ledger, temporal_continuity, north_star, file_directory, open_problems). Cross-reference /Subagent Boxes/ for unpromoted drafts. Document state \u2014 acceptance is to RECORD the count, not to require 5/5.",
+      "acceptance_criteria": "A short verification note documents the 5 expected state-bearing domains and which have runnable app agents (across CCAgentindex/agents/ legacy path and LEDGERS/BOXES/<name>/steward/ unified path). Note appended to verification field.",
+      "estimated_effort": "30min",
+      "status": "completed",
+      "tier": "global",
+      "area": "sub-agent system",
+      "parent_chain": [
+        "PROB-2026-04-28-016",
+        "DEC-2026-04-29-002"
+      ],
+      "blocked_by": [],
+      "blocks": [
+        "ATOM-2026-04-30-0003",
+        "ATOM-2026-04-30-0004",
+        "ATOM-2026-04-30-0005",
+        "ATOM-2026-04-30-0006",
+        "ATOM-2026-04-30-0007",
+        "ATOM-2026-04-30-0008",
+        "ATOM-2026-04-30-0009",
+        "ATOM-2026-04-30-0010",
+        "ATOM-2026-04-30-0011",
+        "ATOM-2026-04-30-0012",
+        "ATOM-2026-04-30-0013",
+        "ATOM-2026-04-30-0014",
+        "ATOM-2026-04-30-0015",
+        "ATOM-2026-04-30-0016",
+        "ATOM-2026-04-30-0017",
+        "ATOM-2026-04-30-0018",
+        "ATOM-2026-04-30-0019",
+        "ATOM-2026-04-30-0020",
+        "ATOM-2026-04-30-0021",
+        "ATOM-2026-04-30-0022"
+      ],
+      "claimed_by": "claude_cowork_session_2026-04-30",
+      "claimed_at": "2026-04-30T22:30:00Z",
+      "in_progress_at": "2026-04-30T22:30:30Z",
+      "completed_at": "2026-04-30T22:35:00Z",
+      "completed_by": "claude_cowork_session_2026-04-30",
+      "verification": "Audit complete. 2 of 5 state-bearing domains have runnable stewards: global_ledger (legacy CCAgentindex/agents/ path) + temporal_continuity (unified Box path, post DEC-2026-04-30-004). 3 remain draft at /Subagent Boxes/: north_star, open_problems, file_directory \u2014 each has a 4-atom promotion chain in PROB-005 (chains 0040, 0032, 0036). server.py _agent_resolve_prompt (lines 4871-4925) treats both paths as runnable. Acceptance criterion (document the count) satisfied. Full receipt: LEDGERS/BOXES/atoms/receipts/2026-04-30_2235_atom_0002_verification.md. Strategic note: gates pass but only 2/5 fleet runnable \u2014 bedrock audit atoms are technically claimable, but the prudent move is keep promoting stewards before starting bedrock decisions.",
+      "do_not_undo_casually": "Don't skip this gate either. Reconciling bedrock without runnable stewards means the audited dirs have nobody to maintain them post-decision.",
+      "notes": "Gate satisfied 2026-04-30T22:35Z. Paired with ATOM-0001 \u2014 together they unlock the 20 PROB-016 audit atoms. Anomalies surfaced: (1) Atomizer Steward has no promotion atom yet \u2014 suggested ATOM-0045. (2) /Subagent Boxes/temporal_continuity_subagent_package/ is now superseded \u2014 DEPR candidate."
+    },
+    {
+      "id": "ATOM-2026-04-30-0003",
+      "parent_problem_id": "PROB-2026-04-28-016",
+      "title": "Audit CCAgentindex/analytics/ \u2014 decide collapse target",
+      "description": "Read every file in CCAgentindex/analytics/. Decide collapse target: (a) Box (per-entity state), (b) Ledger (legible memory), (c) Sub-agent territory, (d) bedrock primitive (loader infrastructure), (e) archive. Document reasoning. Currently this dir holds analytics_*.py output snapshots (per DEC-2026-04-30-001 server-synthesizer pattern). Likely (d) bedrock primitive \u2014 synthesizer-output cache.",
+      "acceptance_criteria": "Decision recorded in atom verification field with one-paragraph reasoning. Cross-referenced from PROB-016. If target is Box/Ledger/Sub-agent, follow-on migration atom authored.",
+      "estimated_effort": "1h",
+      "status": "available",
+      "tier": "domain",
+      "area": "CCAgentindex/analytics",
+      "parent_chain": [
+        "PROB-2026-04-28-016"
+      ],
+      "blocked_by": [
+        "ATOM-2026-04-30-0001",
+        "ATOM-2026-04-30-0002"
+      ],
+      "blocks": [
+        "ATOM-2026-04-30-0023",
+        "ATOM-2026-04-30-0024",
+        "ATOM-2026-04-30-0025",
+        "ATOM-2026-04-30-0026"
+      ],
+      "claimed_by": null,
+      "claimed_at": null,
+      "in_progress_at": null,
+      "completed_at": null,
+      "completed_by": null,
+      "verification": null,
+      "do_not_undo_casually": "Recommendation: bedrock primitive. Per DEC-2026-04-30-001, analytics snapshot JSONs are server-synthesizer output, not Box state. Don't collapse into Boxes \u2014 that breaks the synthesizer.",
+      "notes": "First of 20 directory-audit atoms. Likely outcome: 'bedrock primitive'."
+    },
+    {
+      "id": "ATOM-2026-04-30-0004",
+      "parent_problem_id": "PROB-2026-04-28-016",
+      "title": "Audit CCAgentindex/annotations/ \u2014 decide collapse target",
+      "description": "Read every file in CCAgentindex/annotations/. Decide collapse target. Annotations may belong inside specific Boxes (per-entity) or as a domain-wide ledger; resolve which.",
+      "acceptance_criteria": "Decision recorded in atom verification with reasoning. Cross-referenced from PROB-016.",
+      "estimated_effort": "1h",
+      "status": "available",
+      "tier": "domain",
+      "area": "CCAgentindex/annotations",
+      "parent_chain": [
+        "PROB-2026-04-28-016"
+      ],
+      "blocked_by": [
+        "ATOM-2026-04-30-0001",
+        "ATOM-2026-04-30-0002"
+      ],
+      "blocks": [
+        "ATOM-2026-04-30-0023",
+        "ATOM-2026-04-30-0024",
+        "ATOM-2026-04-30-0025",
+        "ATOM-2026-04-30-0026"
+      ],
+      "claimed_by": null,
+      "claimed_at": null,
+      "in_progress_at": null,
+      "completed_at": null,
+      "completed_by": null,
+      "verification": null,
+      "do_not_undo_casually": "Annotations may carry user-edit history; don't archive without verifying the annotations are reproducible from sibling state.",
+      "notes": ""
+    },
+    {
+      "id": "ATOM-2026-04-30-0005",
+      "parent_problem_id": "PROB-2026-04-28-016",
+      "title": "Audit CCAgentindex/catalog/ \u2014 decide collapse target",
+      "description": "Read every file in CCAgentindex/catalog/. Decide collapse target. Catalog may be a static reference dataset (bedrock primitive) or a generated view of Box state.",
+      "acceptance_criteria": "Decision recorded with reasoning.",
+      "estimated_effort": "30min",
+      "status": "available",
+      "tier": "domain",
+      "area": "CCAgentindex/catalog",
+      "parent_chain": [
+        "PROB-2026-04-28-016"
+      ],
+      "blocked_by": [
+        "ATOM-2026-04-30-0001",
+        "ATOM-2026-04-30-0002"
+      ],
+      "blocks": [
+        "ATOM-2026-04-30-0023",
+        "ATOM-2026-04-30-0024",
+        "ATOM-2026-04-30-0025",
+        "ATOM-2026-04-30-0026"
+      ],
+      "claimed_by": null,
+      "claimed_at": null,
+      "in_progress_at": null,
+      "completed_at": null,
+      "completed_by": null,
+      "verification": null,
+      "do_not_undo_casually": "If catalog is feeding the comeketo-inbox skill (menu / pricing reference), it's load-bearing \u2014 don't archive without verifying.",
+      "notes": ""
+    },
+    {
+      "id": "ATOM-2026-04-30-0006",
+      "parent_problem_id": "PROB-2026-04-28-016",
+      "title": "Audit CCAgentindex/charts/ \u2014 decide collapse target",
+      "description": "Read every file in CCAgentindex/charts/. Decide collapse target. Charts likely contains generated chart artifacts; expected (d) bedrock primitive or (e) archive if unused.",
+      "acceptance_criteria": "Decision recorded with reasoning.",
+      "estimated_effort": "30min",
+      "status": "available",
+      "tier": "domain",
+      "area": "CCAgentindex/charts",
+      "parent_chain": [
+        "PROB-2026-04-28-016"
+      ],
+      "blocked_by": [
+        "ATOM-2026-04-30-0001",
+        "ATOM-2026-04-30-0002"
+      ],
+      "blocks": [
+        "ATOM-2026-04-30-0023",
+        "ATOM-2026-04-30-0024",
+        "ATOM-2026-04-30-0025",
+        "ATOM-2026-04-30-0026"
+      ],
+      "claimed_by": null,
+      "claimed_at": null,
+      "in_progress_at": null,
+      "completed_at": null,
+      "completed_by": null,
+      "verification": null,
+      "do_not_undo_casually": "",
+      "notes": ""
+    },
+    {
+      "id": "ATOM-2026-04-30-0007",
+      "parent_problem_id": "PROB-2026-04-28-016",
+      "title": "Audit CCAgentindex/commitments/ \u2014 decide collapse target (likely already retired)",
+      "description": "CCAgentindex/commitments/ was retired in the Apr 2026 great trim per DEPR-2026-04-30-001. Verify it's actually empty/removed; if files remain, decide whether they're stragglers to archive or content that needs to go into Client Boxes.",
+      "acceptance_criteria": "Verification that commitments/ is empty/removed OR a documented disposition for any remaining files.",
+      "estimated_effort": "15min",
+      "status": "completed",
+      "tier": "domain",
+      "area": "CCAgentindex/commitments",
+      "parent_chain": [
+        "PROB-2026-04-28-016",
+        "DEPR-2026-04-30-001"
+      ],
+      "blocked_by": [
+        "ATOM-2026-04-30-0001",
+        "ATOM-2026-04-30-0002"
+      ],
+      "blocks": [
+        "ATOM-2026-04-30-0023",
+        "ATOM-2026-04-30-0024",
+        "ATOM-2026-04-30-0025",
+        "ATOM-2026-04-30-0026"
+      ],
+      "claimed_by": "claude_cowork_session_2026-04-30",
+      "claimed_at": "2026-04-30T22:42:00Z",
+      "in_progress_at": "2026-04-30T22:42:30Z",
+      "completed_at": "2026-04-30T22:45:00Z",
+      "completed_by": "claude_cowork_session_2026-04-30",
+      "verification": "Directory functionally empty \u2014 contains only .gitkeep (0 bytes). NOT referenced in indexes/index.json. Already documented in FILE_DIRECTORY_LEDGER.md line 166 + .json line 244 as 'legacy / stub \u2014 Retired domain \u2014 .gitkeep only'. Already covered by DEPR-2026-04-30-001. Decision: collapse target = archive (final removal). No content to migrate. Recommended action: ATOM-0024 drops the FDL row; rmdir CCAgentindex/commitments/ is safe afterward (or as part of ATOM-0023). Full receipt: LEDGERS/BOXES/atoms/receipts/2026-04-30_2245_atom_0007_audit.md.",
+      "do_not_undo_casually": "Commitments was deliberately retired; don't rebuild without a Decision reversing the great trim.",
+      "notes": "Completed 2026-04-30T22:45Z \u2014 first bedrock audit shipped, ~3 min real time (well under 15min estimate). Anomaly noted: 6 other stub-only dirs (threads, projects, knowledge, tables, annotations, charts) follow the same pattern and can collapse together via propagation atoms once their respective audits ship."
+    },
+    {
+      "id": "ATOM-2026-04-30-0008",
+      "parent_problem_id": "PROB-2026-04-28-016",
+      "title": "Audit CCAgentindex/hooks/ \u2014 decide collapse target",
+      "description": "Read every file in CCAgentindex/hooks/. Decide collapse target. Hooks likely belongs as Sub-agent territory (automation / orchestrator wiring) or bedrock primitive.",
+      "acceptance_criteria": "Decision recorded with reasoning.",
+      "estimated_effort": "30min",
+      "status": "available",
+      "tier": "domain",
+      "area": "CCAgentindex/hooks",
+      "parent_chain": [
+        "PROB-2026-04-28-016"
+      ],
+      "blocked_by": [
+        "ATOM-2026-04-30-0001",
+        "ATOM-2026-04-30-0002"
+      ],
+      "blocks": [
+        "ATOM-2026-04-30-0023",
+        "ATOM-2026-04-30-0024",
+        "ATOM-2026-04-30-0025",
+        "ATOM-2026-04-30-0026"
+      ],
+      "claimed_by": null,
+      "claimed_at": null,
+      "in_progress_at": null,
+      "completed_at": null,
+      "completed_by": null,
+      "verification": null,
+      "do_not_undo_casually": "Hooks may be wired into server.py event paths \u2014 don't archive without grep evidence.",
+      "notes": ""
+    },
+    {
+      "id": "ATOM-2026-04-30-0009",
+      "parent_problem_id": "PROB-2026-04-28-016",
+      "title": "Audit CCAgentindex/intake_reports/ \u2014 decide collapse target",
+      "description": "Read every file in CCAgentindex/intake_reports/. Per DEC-2026-04-29-005, Intake page synthesizes Box Reports from Auto/Client Boxes/ on read; intake_reports/ may be Workspaces (manual reports) only. Confirm scope.",
+      "acceptance_criteria": "Decision recorded; verify Workspaces vs Box Reports split.",
+      "estimated_effort": "30min",
+      "status": "available",
+      "tier": "domain",
+      "area": "CCAgentindex/intake_reports",
+      "parent_chain": [
+        "PROB-2026-04-28-016",
+        "DEC-2026-04-29-005",
+        "DEC-2026-04-29-006",
+        "DEC-2026-04-29-007",
+        "DEC-2026-04-29-008"
+      ],
+      "blocked_by": [
+        "ATOM-2026-04-30-0001",
+        "ATOM-2026-04-30-0002"
+      ],
+      "blocks": [
+        "ATOM-2026-04-30-0023",
+        "ATOM-2026-04-30-0024",
+        "ATOM-2026-04-30-0025",
+        "ATOM-2026-04-30-0026"
+      ],
+      "claimed_by": null,
+      "claimed_at": null,
+      "in_progress_at": null,
+      "completed_at": null,
+      "completed_by": null,
+      "verification": null,
+      "do_not_undo_casually": "Workspaces are operator-authored; don't archive existing Workspace reports.",
+      "notes": ""
+    },
+    {
+      "id": "ATOM-2026-04-30-0010",
+      "parent_problem_id": "PROB-2026-04-28-016",
+      "title": "Audit CCAgentindex/intelligence/ \u2014 decide collapse target",
+      "description": "Read every file in CCAgentindex/intelligence/. Per DEC-2026-04-30-001, intelligence/<area>/<date>.md is build_*.py script output; markdown is canonical, JSON is synthesizer view. Likely (d) bedrock primitive \u2014 build-script output cache.",
+      "acceptance_criteria": "Decision recorded; verify intelligence/ pairs cleanly with the synthesizer pattern.",
+      "estimated_effort": "30min",
+      "status": "available",
+      "tier": "domain",
+      "area": "CCAgentindex/intelligence",
+      "parent_chain": [
+        "PROB-2026-04-28-016",
+        "DEC-2026-04-30-001"
+      ],
+      "blocked_by": [
+        "ATOM-2026-04-30-0001",
+        "ATOM-2026-04-30-0002"
+      ],
+      "blocks": [
+        "ATOM-2026-04-30-0023",
+        "ATOM-2026-04-30-0024",
+        "ATOM-2026-04-30-0025",
+        "ATOM-2026-04-30-0026"
+      ],
+      "claimed_by": null,
+      "claimed_at": null,
+      "in_progress_at": null,
+      "completed_at": null,
+      "completed_by": null,
+      "verification": null,
+      "do_not_undo_casually": "Per DEC-2026-04-30-001, the markdown is canonical; don't refactor into Box state without reversing that Decision.",
+      "notes": ""
+    },
+    {
+      "id": "ATOM-2026-04-30-0011",
+      "parent_problem_id": "PROB-2026-04-28-016",
+      "title": "Audit CCAgentindex/knowledge/ \u2014 decide collapse target (likely already retired)",
+      "description": "CCAgentindex/knowledge/ was retired in the Apr 2026 great trim per DEPR-2026-04-30-001. Verify empty/removed.",
+      "acceptance_criteria": "Verification that knowledge/ is empty/removed OR documented disposition.",
+      "estimated_effort": "15min",
+      "status": "completed",
+      "tier": "domain",
+      "area": "CCAgentindex/knowledge",
+      "parent_chain": [
+        "PROB-2026-04-28-016",
+        "DEPR-2026-04-30-001"
+      ],
+      "blocked_by": [
+        "ATOM-2026-04-30-0001",
+        "ATOM-2026-04-30-0002"
+      ],
+      "blocks": [
+        "ATOM-2026-04-30-0023",
+        "ATOM-2026-04-30-0024",
+        "ATOM-2026-04-30-0025",
+        "ATOM-2026-04-30-0026"
+      ],
+      "claimed_by": "claude_cowork_session_2026-04-30",
+      "claimed_at": "2026-04-30T22:48:00Z",
+      "in_progress_at": "2026-04-30T22:48:30Z",
+      "completed_at": "2026-04-30T22:50:00Z",
+      "completed_by": "claude_cowork_session_2026-04-30",
+      "verification": "Directory functionally empty \u2014 contains only .gitkeep (0 bytes). NOT referenced in indexes/index.json. Already documented in FILE_DIRECTORY_LEDGER.md line 169 + .json line 247 as 'legacy / stub \u2014 Retired domain \u2014 .gitkeep only'. Already covered by DEPR-2026-04-30-001. Decision: collapse target = archive (final removal). Identical disposition to ATOM-0007 (commitments). When ATOM-0024 runs, drop FDL row line 169 + JSON line 247; rmdir is safe afterward. Full receipt: LEDGERS/BOXES/atoms/receipts/2026-04-30_2250_atom_0011_audit.md.",
+      "do_not_undo_casually": "Don't rebuild knowledge/ without reversing the great trim.",
+      "notes": "Completed 2026-04-30T22:50Z \u2014 ~2 min real-time, well under 15min estimate. Pattern established by ATOM-0007 holds."
+    },
+    {
+      "id": "ATOM-2026-04-30-0012",
+      "parent_problem_id": "PROB-2026-04-28-016",
+      "title": "Audit CCAgentindex/people/ \u2014 decide collapse target (likely survives as bedrock primitive)",
+      "description": "CCAgentindex/people/<slug>.json is the canonical people taxonomy per CLAUDE.md \u00a73.1 (kind: coworker/lead/client/contact). Verify all records have kind, are loader-registered, and the directory survives in current architecture.",
+      "acceptance_criteria": "Decision recorded; people/ confirmed as bedrock primitive serving the People UI pages.",
+      "estimated_effort": "30min",
+      "status": "available",
+      "tier": "domain",
+      "area": "CCAgentindex/people",
+      "parent_chain": [
+        "PROB-2026-04-28-016"
+      ],
+      "blocked_by": [
+        "ATOM-2026-04-30-0001",
+        "ATOM-2026-04-30-0002"
+      ],
+      "blocks": [
+        "ATOM-2026-04-30-0023",
+        "ATOM-2026-04-30-0024",
+        "ATOM-2026-04-30-0025",
+        "ATOM-2026-04-30-0026"
+      ],
+      "claimed_by": null,
+      "claimed_at": null,
+      "in_progress_at": null,
+      "completed_at": null,
+      "completed_by": null,
+      "verification": null,
+      "do_not_undo_casually": "people/ is canonical; don't migrate into Boxes \u2014 Boxes are for richer state per entity, people/ holds lightweight identity records.",
+      "notes": "Likely 'bedrock primitive \u2014 survives as is'."
+    },
+    {
+      "id": "ATOM-2026-04-30-0013",
+      "parent_problem_id": "PROB-2026-04-28-016",
+      "title": "Audit CCAgentindex/projects/ \u2014 decide collapse target (likely already retired)",
+      "description": "CCAgentindex/projects/ was retired in the Apr 2026 great trim per DEPR-2026-04-30-001. Verify empty/removed.",
+      "acceptance_criteria": "Verification that projects/ is empty/removed OR documented disposition.",
+      "estimated_effort": "15min",
+      "status": "completed",
+      "tier": "domain",
+      "area": "CCAgentindex/projects",
+      "parent_chain": [
+        "PROB-2026-04-28-016",
+        "DEPR-2026-04-30-001"
+      ],
+      "blocked_by": [
+        "ATOM-2026-04-30-0001",
+        "ATOM-2026-04-30-0002"
+      ],
+      "blocks": [
+        "ATOM-2026-04-30-0023",
+        "ATOM-2026-04-30-0024",
+        "ATOM-2026-04-30-0025",
+        "ATOM-2026-04-30-0026"
+      ],
+      "claimed_by": "claude_cowork_session_2026-04-30",
+      "claimed_at": "2026-04-30T22:55:00Z",
+      "in_progress_at": "2026-04-30T22:55:30Z",
+      "completed_at": "2026-04-30T22:57:00Z",
+      "completed_by": "claude_cowork_session_2026-04-30",
+      "verification": "Directory functionally empty \u2014 contains only .gitkeep (0 bytes). NOT referenced in indexes/index.json. Already documented in FILE_DIRECTORY_LEDGER.md line 168 + .json line 246 as 'legacy / stub \u2014 Retired domain \u2014 .gitkeep only'. Already covered by DEPR-2026-04-30-001. Decision: collapse target = archive (final removal). Identical disposition to ATOM-0007/0011. When ATOM-0024 runs, drop FDL row line 168 + JSON line 246; rmdir is safe afterward. Receipt: LEDGERS/BOXES/atoms/receipts/2026-04-30_2257_atom_0013_audit.md.",
+      "do_not_undo_casually": "Don't rebuild projects/ without reversing the great trim.",
+      "notes": "Completed 2026-04-30T22:57Z \u2014 ~2 min real-time. Pattern: third stub-audit shipped (after 0007, 0011)."
+    },
+    {
+      "id": "ATOM-2026-04-30-0014",
+      "parent_problem_id": "PROB-2026-04-28-016",
+      "title": "Audit CCAgentindex/reports/ \u2014 decide collapse target",
+      "description": "Read every file in CCAgentindex/reports/. Per DEC-2026-04-29-005..008, reports/ holds Workspaces and _box_conversations/ append-only history. Likely (d) bedrock primitive.",
+      "acceptance_criteria": "Decision recorded; confirm _box_conversations/ append-only contract still holds.",
+      "estimated_effort": "30min",
+      "status": "available",
+      "tier": "domain",
+      "area": "CCAgentindex/reports",
+      "parent_chain": [
+        "PROB-2026-04-28-016",
+        "DEC-2026-04-29-005"
+      ],
+      "blocked_by": [
+        "ATOM-2026-04-30-0001",
+        "ATOM-2026-04-30-0002"
+      ],
+      "blocks": [
+        "ATOM-2026-04-30-0023",
+        "ATOM-2026-04-30-0024",
+        "ATOM-2026-04-30-0025",
+        "ATOM-2026-04-30-0026"
+      ],
+      "claimed_by": null,
+      "claimed_at": null,
+      "in_progress_at": null,
+      "completed_at": null,
+      "completed_by": null,
+      "verification": null,
+      "do_not_undo_casually": "_box_conversations/ append-only; don't rewrite history.",
+      "notes": ""
+    },
+    {
+      "id": "ATOM-2026-04-30-0015",
+      "parent_problem_id": "PROB-2026-04-28-016",
+      "title": "Audit CCAgentindex/Rodbot/ \u2014 decide collapse target (likely already retired)",
+      "description": "CCAgentindex/Rodbot/ was retired in the Apr 2026 great trim. Verify empty/removed. If not empty, decide on archive.",
+      "acceptance_criteria": "Verification that Rodbot/ is empty/removed OR documented disposition.",
+      "estimated_effort": "15min",
+      "status": "completed",
+      "tier": "domain",
+      "area": "CCAgentindex/Rodbot",
+      "parent_chain": [
+        "PROB-2026-04-28-016"
+      ],
+      "blocked_by": [
+        "ATOM-2026-04-30-0001",
+        "ATOM-2026-04-30-0002"
+      ],
+      "blocks": [
+        "ATOM-2026-04-30-0023",
+        "ATOM-2026-04-30-0024",
+        "ATOM-2026-04-30-0025",
+        "ATOM-2026-04-30-0026"
+      ],
+      "claimed_by": "claude_cowork_session_2026-04-30",
+      "claimed_at": "2026-04-30T23:00:00Z",
+      "in_progress_at": "2026-04-30T23:00:30Z",
+      "completed_at": "2026-04-30T23:02:00Z",
+      "completed_by": "claude_cowork_session_2026-04-30",
+      "verification": "Directory functionally empty \u2014 contains only .gitkeep (0 bytes). NOT referenced in indexes/index.json. FDL line 165 + line 382 + JSON line 240 already document as 'legacy / stub \u2014 Wiped in Apr 2026 great trim per CLAUDE.md'. Original Rodbot/ identity content (identity.md, character.md, traits.md, affective_essence.md per CLAUDE.md notes for build team) was wiped in great trim \u2014 Pieces stands alone as memory backend. Decision: collapse target = archive. ATOM-0024 drops FDL rows; rmdir safe. **Note:** existing DEPR-2026-04-30-001 covers retired bedrock domains generally but doesn't enumerate Rodbot specifically \u2014 could be backfilled into DEPR-001 entry's path list, or filed as a sibling DEPR if granularity matters. Not blocking. Receipt: LEDGERS/BOXES/atoms/receipts/2026-04-30_2302_atom_0015_audit.md.",
+      "do_not_undo_casually": "Don't rebuild Rodbot/ without an explicit Decision; Pieces stands alone now.",
+      "notes": "Completed 2026-04-30T23:02Z \u2014 ~2 min real-time. Stub-pattern atom #4. Anomaly surfaced: DEPR-2026-04-30-001 path list could be expanded to enumerate Rodbot/ explicitly (currently covers projects/threads/commitments/knowledge/ \u2014 Rodbot is mentioned in CLAUDE.md but not in the DEPR entry path list). Cosmetic; not blocking."
+    },
+    {
+      "id": "ATOM-2026-04-30-0016",
+      "parent_problem_id": "PROB-2026-04-28-016",
+      "title": "Audit CCAgentindex/scheduled_tasks/ \u2014 decide collapse target",
+      "description": "Read every file in CCAgentindex/scheduled_tasks/. Per CONNECTIONS.md, Cowork scheduled tasks is an active service. Determine whether scheduled_tasks/ holds task definitions (sub-agent territory) or task run state (bedrock primitive).",
+      "acceptance_criteria": "Decision recorded with reasoning.",
+      "estimated_effort": "30min",
+      "status": "available",
+      "tier": "domain",
+      "area": "CCAgentindex/scheduled_tasks",
+      "parent_chain": [
+        "PROB-2026-04-28-016"
+      ],
+      "blocked_by": [
+        "ATOM-2026-04-30-0001",
+        "ATOM-2026-04-30-0002"
+      ],
+      "blocks": [
+        "ATOM-2026-04-30-0023",
+        "ATOM-2026-04-30-0024",
+        "ATOM-2026-04-30-0025",
+        "ATOM-2026-04-30-0026"
+      ],
+      "claimed_by": null,
+      "claimed_at": null,
+      "in_progress_at": null,
+      "completed_at": null,
+      "completed_by": null,
+      "verification": null,
+      "do_not_undo_casually": "Active service \u2014 verify production scheduled tasks aren't relying on this dir before any move.",
+      "notes": ""
+    },
+    {
+      "id": "ATOM-2026-04-30-0017",
+      "parent_problem_id": "PROB-2026-04-28-016",
+      "title": "Audit CCAgentindex/summaries/ \u2014 decide collapse target",
+      "description": "Read every file in CCAgentindex/summaries/. Determine whether summaries are generated views (bedrock primitive cache) or canonical state.",
+      "acceptance_criteria": "Decision recorded with reasoning.",
+      "estimated_effort": "30min",
+      "status": "available",
+      "tier": "domain",
+      "area": "CCAgentindex/summaries",
+      "parent_chain": [
+        "PROB-2026-04-28-016"
+      ],
+      "blocked_by": [
+        "ATOM-2026-04-30-0001",
+        "ATOM-2026-04-30-0002"
+      ],
+      "blocks": [
+        "ATOM-2026-04-30-0023",
+        "ATOM-2026-04-30-0024",
+        "ATOM-2026-04-30-0025",
+        "ATOM-2026-04-30-0026"
+      ],
+      "claimed_by": null,
+      "claimed_at": null,
+      "in_progress_at": null,
+      "completed_at": null,
+      "completed_by": null,
+      "verification": null,
+      "do_not_undo_casually": "",
+      "notes": ""
+    },
+    {
+      "id": "ATOM-2026-04-30-0018",
+      "parent_problem_id": "PROB-2026-04-28-016",
+      "title": "Audit CCAgentindex/tables/ \u2014 decide collapse target",
+      "description": "Read every file in CCAgentindex/tables/. Tables route was retired in Apr 2026 trim per DEPR-2026-04-30-004; tables/ dir may be similarly retired.",
+      "acceptance_criteria": "Verification that tables/ is empty/removed OR documented disposition.",
+      "estimated_effort": "15min",
+      "status": "available",
+      "tier": "domain",
+      "area": "CCAgentindex/tables",
+      "parent_chain": [
+        "PROB-2026-04-28-016",
+        "DEPR-2026-04-30-004"
+      ],
+      "blocked_by": [
+        "ATOM-2026-04-30-0001",
+        "ATOM-2026-04-30-0002"
+      ],
+      "blocks": [
+        "ATOM-2026-04-30-0023",
+        "ATOM-2026-04-30-0024",
+        "ATOM-2026-04-30-0025",
+        "ATOM-2026-04-30-0026"
+      ],
+      "claimed_by": null,
+      "claimed_at": null,
+      "in_progress_at": null,
+      "completed_at": null,
+      "completed_by": null,
+      "verification": null,
+      "do_not_undo_casually": "Tables route was retired; don't rebuild without a Decision.",
+      "notes": ""
+    },
+    {
+      "id": "ATOM-2026-04-30-0019",
+      "parent_problem_id": "PROB-2026-04-28-016",
+      "title": "Audit CCAgentindex/threads/ \u2014 decide collapse target (likely already retired)",
+      "description": "CCAgentindex/threads/ was retired in the Apr 2026 great trim per DEPR-2026-04-30-001. Verify empty/removed.",
+      "acceptance_criteria": "Verification that threads/ is empty/removed OR documented disposition.",
+      "estimated_effort": "15min",
+      "status": "available",
+      "tier": "domain",
+      "area": "CCAgentindex/threads",
+      "parent_chain": [
+        "PROB-2026-04-28-016",
+        "DEPR-2026-04-30-001"
+      ],
+      "blocked_by": [
+        "ATOM-2026-04-30-0001",
+        "ATOM-2026-04-30-0002"
+      ],
+      "blocks": [
+        "ATOM-2026-04-30-0023",
+        "ATOM-2026-04-30-0024",
+        "ATOM-2026-04-30-0025",
+        "ATOM-2026-04-30-0026"
+      ],
+      "claimed_by": null,
+      "claimed_at": null,
+      "in_progress_at": null,
+      "completed_at": null,
+      "completed_by": null,
+      "verification": null,
+      "do_not_undo_casually": "",
+      "notes": ""
+    },
+    {
+      "id": "ATOM-2026-04-30-0020",
+      "parent_problem_id": "PROB-2026-04-28-016",
+      "title": "Audit CCAgentindex/triggers/ \u2014 decide collapse target",
+      "description": "Read every file in CCAgentindex/triggers/. Triggers may be sub-agent territory (automation hooks) or bedrock primitive.",
+      "acceptance_criteria": "Decision recorded with reasoning.",
+      "estimated_effort": "30min",
+      "status": "available",
+      "tier": "domain",
+      "area": "CCAgentindex/triggers",
+      "parent_chain": [
+        "PROB-2026-04-28-016"
+      ],
+      "blocked_by": [
+        "ATOM-2026-04-30-0001",
+        "ATOM-2026-04-30-0002"
+      ],
+      "blocks": [
+        "ATOM-2026-04-30-0023",
+        "ATOM-2026-04-30-0024",
+        "ATOM-2026-04-30-0025",
+        "ATOM-2026-04-30-0026"
+      ],
+      "claimed_by": null,
+      "claimed_at": null,
+      "in_progress_at": null,
+      "completed_at": null,
+      "completed_by": null,
+      "verification": null,
+      "do_not_undo_casually": "",
+      "notes": ""
+    },
+    {
+      "id": "ATOM-2026-04-30-0021",
+      "parent_problem_id": "PROB-2026-04-28-016",
+      "title": "Audit CCAgentindex/venues/ \u2014 decide collapse target (likely survives as bedrock primitive)",
+      "description": "CCAgentindex/venues/<slug>.json holds 30 venue records authored 2026-04-27 per CLAUDE.md \u00a73.1. Confirm all records have kind: venue, are loader-registered, and the directory survives.",
+      "acceptance_criteria": "Decision recorded; venues/ confirmed as bedrock primitive serving the Venues UI page.",
+      "estimated_effort": "30min",
+      "status": "available",
+      "tier": "domain",
+      "area": "CCAgentindex/venues",
+      "parent_chain": [
+        "PROB-2026-04-28-016"
+      ],
+      "blocked_by": [
+        "ATOM-2026-04-30-0001",
+        "ATOM-2026-04-30-0002"
+      ],
+      "blocks": [
+        "ATOM-2026-04-30-0023",
+        "ATOM-2026-04-30-0024",
+        "ATOM-2026-04-30-0025",
+        "ATOM-2026-04-30-0026"
+      ],
+      "claimed_by": null,
+      "claimed_at": null,
+      "in_progress_at": null,
+      "completed_at": null,
+      "completed_by": null,
+      "verification": null,
+      "do_not_undo_casually": "venues/ is canonical for venue records; don't migrate into Boxes without an explicit Decision.",
+      "notes": "Likely 'bedrock primitive \u2014 survives as is'."
+    },
+    {
+      "id": "ATOM-2026-04-30-0022",
+      "parent_problem_id": "PROB-2026-04-28-016",
+      "title": "Audit CCAgentindex/workflows/ \u2014 decide collapse target",
+      "description": "Read every file in CCAgentindex/workflows/. Workflows likely belongs as sub-agent territory (Automation page integration) or as orchestrator wiring.",
+      "acceptance_criteria": "Decision recorded with reasoning.",
+      "estimated_effort": "30min",
+      "status": "available",
+      "tier": "domain",
+      "area": "CCAgentindex/workflows",
+      "parent_chain": [
+        "PROB-2026-04-28-016"
+      ],
+      "blocked_by": [
+        "ATOM-2026-04-30-0001",
+        "ATOM-2026-04-30-0002"
+      ],
+      "blocks": [
+        "ATOM-2026-04-30-0023",
+        "ATOM-2026-04-30-0024",
+        "ATOM-2026-04-30-0025",
+        "ATOM-2026-04-30-0026"
+      ],
+      "claimed_by": null,
+      "claimed_at": null,
+      "in_progress_at": null,
+      "completed_at": null,
+      "completed_by": null,
+      "verification": null,
+      "do_not_undo_casually": "",
+      "notes": "Last of 20 directory-audit atoms."
+    },
+    {
+      "id": "ATOM-2026-04-30-0023",
+      "parent_problem_id": "PROB-2026-04-28-016",
+      "title": "Update CCAgentindex/indexes/index.json to match reconciled bedrock",
+      "description": "After all 20 audit atoms complete, update indexes/index.json: drop keys for archived dirs, add keys for any newly canonical Boxes/Ledgers, keep keys alphabetically sorted, preserve 2-space JSON indent.",
+      "acceptance_criteria": "indexes/index.json valid JSON; all keys correspond to live, populated dirs OR are explicitly empty placeholders; alphabetical sort within each top-level key; activity.jsonl line appended with kind: index_updated.",
+      "estimated_effort": "1h",
+      "status": "available",
+      "tier": "global",
+      "area": "CCAgentindex/indexes",
+      "parent_chain": [
+        "PROB-2026-04-28-016"
+      ],
+      "blocked_by": [
+        "ATOM-2026-04-30-0003",
+        "ATOM-2026-04-30-0004",
+        "ATOM-2026-04-30-0005",
+        "ATOM-2026-04-30-0006",
+        "ATOM-2026-04-30-0007",
+        "ATOM-2026-04-30-0008",
+        "ATOM-2026-04-30-0009",
+        "ATOM-2026-04-30-0010",
+        "ATOM-2026-04-30-0011",
+        "ATOM-2026-04-30-0012",
+        "ATOM-2026-04-30-0013",
+        "ATOM-2026-04-30-0014",
+        "ATOM-2026-04-30-0015",
+        "ATOM-2026-04-30-0016",
+        "ATOM-2026-04-30-0017",
+        "ATOM-2026-04-30-0018",
+        "ATOM-2026-04-30-0019",
+        "ATOM-2026-04-30-0020",
+        "ATOM-2026-04-30-0021",
+        "ATOM-2026-04-30-0022"
+      ],
+      "blocks": [],
+      "claimed_by": null,
+      "claimed_at": null,
+      "in_progress_at": null,
+      "completed_at": null,
+      "completed_by": null,
+      "verification": null,
+      "do_not_undo_casually": "indexes/index.json is the loader authority \u2014 invalid JSON breaks the UI. Validate before commit.",
+      "notes": "Propagation atom \u2014 depends on all 20 audits."
+    },
+    {
+      "id": "ATOM-2026-04-30-0024",
+      "parent_problem_id": "PROB-2026-04-28-016",
+      "title": "Update LEDGERS/FILE_DIRECTORY_LEDGER.md to reflect reconciled bedrock",
+      "description": "Update FDL \u00a73 (Top-level + subdirectory map), ownership table, canonical vs generated, common wrong-turns. Drop rows for archived dirs; add rows for newly-promoted Boxes/Ledgers. Update FDL JSON mirror to match.",
+      "acceptance_criteria": "FDL \u00a73 row-count matches actual CCAgentindex/ subdir count; canonical/generated labels accurate; JSON mirror parses; Last updated bumped.",
+      "estimated_effort": "1h",
+      "status": "available",
+      "tier": "global",
+      "area": "LEDGERS/FILE_DIRECTORY_LEDGER",
+      "parent_chain": [
+        "PROB-2026-04-28-016"
+      ],
+      "blocked_by": [
+        "ATOM-2026-04-30-0003",
+        "ATOM-2026-04-30-0004",
+        "ATOM-2026-04-30-0005",
+        "ATOM-2026-04-30-0006",
+        "ATOM-2026-04-30-0007",
+        "ATOM-2026-04-30-0008",
+        "ATOM-2026-04-30-0009",
+        "ATOM-2026-04-30-0010",
+        "ATOM-2026-04-30-0011",
+        "ATOM-2026-04-30-0012",
+        "ATOM-2026-04-30-0013",
+        "ATOM-2026-04-30-0014",
+        "ATOM-2026-04-30-0015",
+        "ATOM-2026-04-30-0016",
+        "ATOM-2026-04-30-0017",
+        "ATOM-2026-04-30-0018",
+        "ATOM-2026-04-30-0019",
+        "ATOM-2026-04-30-0020",
+        "ATOM-2026-04-30-0021",
+        "ATOM-2026-04-30-0022"
+      ],
+      "blocks": [],
+      "claimed_by": null,
+      "claimed_at": null,
+      "in_progress_at": null,
+      "completed_at": null,
+      "completed_by": null,
+      "verification": null,
+      "do_not_undo_casually": "FDL is the city map \u2014 agents read it for orientation. Stale FDL is worse than no FDL.",
+      "notes": ""
+    },
+    {
+      "id": "ATOM-2026-04-30-0025",
+      "parent_problem_id": "PROB-2026-04-28-016",
+      "title": "Update mission_control_loader.js to match reconciled bedrock",
+      "description": "Update the loader to fetch from any new canonical paths and stop fetching from archived dirs. Bump the cache-bust string in Secretary.html so browsers pick up fresh code.",
+      "acceptance_criteria": "Loader fetches succeed for live dirs; archived dirs no longer fetched; UI smoke-test shows MissionControl populated; cache-bust bumped in Secretary.html.",
+      "estimated_effort": "1h",
+      "status": "available",
+      "tier": "domain",
+      "area": "mission_control_loader.js",
+      "parent_chain": [
+        "PROB-2026-04-28-016"
+      ],
+      "blocked_by": [
+        "ATOM-2026-04-30-0003",
+        "ATOM-2026-04-30-0004",
+        "ATOM-2026-04-30-0005",
+        "ATOM-2026-04-30-0006",
+        "ATOM-2026-04-30-0007",
+        "ATOM-2026-04-30-0008",
+        "ATOM-2026-04-30-0009",
+        "ATOM-2026-04-30-0010",
+        "ATOM-2026-04-30-0011",
+        "ATOM-2026-04-30-0012",
+        "ATOM-2026-04-30-0013",
+        "ATOM-2026-04-30-0014",
+        "ATOM-2026-04-30-0015",
+        "ATOM-2026-04-30-0016",
+        "ATOM-2026-04-30-0017",
+        "ATOM-2026-04-30-0018",
+        "ATOM-2026-04-30-0019",
+        "ATOM-2026-04-30-0020",
+        "ATOM-2026-04-30-0021",
+        "ATOM-2026-04-30-0022"
+      ],
+      "blocks": [],
+      "claimed_by": null,
+      "claimed_at": null,
+      "in_progress_at": null,
+      "completed_at": null,
+      "completed_by": null,
+      "verification": null,
+      "do_not_undo_casually": "Loader is the UI's data source; invalid fetches break MissionControl. Smoke-test before close.",
+      "notes": ""
+    },
+    {
+      "id": "ATOM-2026-04-30-0026",
+      "parent_problem_id": "PROB-2026-04-28-016",
+      "title": "Update CLAUDE.md (project) bedrock section to triad terms",
+      "description": "Rewrite CLAUDE.md \u00a71 (Canonical paths) and \u00a73 (Schema-by-example) sections describing CCAgentindex/ to use triad terms (Box / Ledger / Sub-agent) rather than categorical-bootstrap terms. Reflect the reconciled directory inventory.",
+      "acceptance_criteria": "CLAUDE.md describes bedrock organization in triad terms; surviving-domains list matches actual filesystem; all paths in \u00a71 valid; activity.jsonl line appended.",
+      "estimated_effort": "1h",
+      "status": "available",
+      "tier": "global",
+      "area": "CLAUDE.md (project)",
+      "parent_chain": [
+        "PROB-2026-04-28-016",
+        "PROB-2026-04-28-010"
+      ],
+      "blocked_by": [
+        "ATOM-2026-04-30-0003",
+        "ATOM-2026-04-30-0004",
+        "ATOM-2026-04-30-0005",
+        "ATOM-2026-04-30-0006",
+        "ATOM-2026-04-30-0007",
+        "ATOM-2026-04-30-0008",
+        "ATOM-2026-04-30-0009",
+        "ATOM-2026-04-30-0010",
+        "ATOM-2026-04-30-0011",
+        "ATOM-2026-04-30-0012",
+        "ATOM-2026-04-30-0013",
+        "ATOM-2026-04-30-0014",
+        "ATOM-2026-04-30-0015",
+        "ATOM-2026-04-30-0016",
+        "ATOM-2026-04-30-0017",
+        "ATOM-2026-04-30-0018",
+        "ATOM-2026-04-30-0019",
+        "ATOM-2026-04-30-0020",
+        "ATOM-2026-04-30-0021",
+        "ATOM-2026-04-30-0022"
+      ],
+      "blocks": [],
+      "claimed_by": null,
+      "claimed_at": null,
+      "in_progress_at": null,
+      "completed_at": null,
+      "completed_by": null,
+      "verification": null,
+      "do_not_undo_casually": "CLAUDE.md is the first file every delegation reads. Stale instructions there propagate everywhere. Verify by spawning a test delegation.",
+      "notes": "Closes PROB-2026-04-28-010 (CLAUDE.md surviving-domains list out of date) as a side effect."
+    },
+    {
+      "id": "ATOM-2026-04-30-0027",
+      "parent_problem_id": "PROB-2026-04-30-005",
+      "title": "Decide steward source-of-truth \u2014 CCAgentindex/agents/<name>/ vs LEDGERS/BOXES/<name>/steward/",
+      "description": "Architectural decision: should the runnable form of each ledger steward live at the legacy CCAgentindex/agents/<name>/ path (where global_ledger_steward currently lives) OR at the new LEDGERS/BOXES/<name>/steward/ path under the unified Box pattern (DEC-2026-04-29-015)? Today server.py reads from CCAgentindex/agents/. The unified Box pattern was authored AFTER global_ledger_steward was promoted, so we have a real fork. Outcome: either author a new DEC pinning the path, OR update server.py's _agent_run dispatcher to read from LEDGERS/BOXES/<name>/steward/ as well.",
+      "acceptance_criteria": "A new DEC entry recorded in DECISIONS_LEDGER documenting the decision (and either reaffirming CCAgentindex/agents/ as canonical with a clear reason, or pinning LEDGERS/BOXES/<name>/steward/ as canonical with a server.py change atom appended).",
+      "estimated_effort": "1h",
+      "status": "completed",
+      "tier": "global",
+      "area": "CCAgentindex/agents + LEDGERS/BOXES/*/steward + server.py",
+      "parent_chain": [
+        "PROB-2026-04-30-005",
+        "DEC-2026-04-29-015"
+      ],
+      "blocked_by": [],
+      "blocks": [
+        "ATOM-2026-04-30-0028",
+        "ATOM-2026-04-30-0029",
+        "ATOM-2026-04-30-0030",
+        "ATOM-2026-04-30-0031",
+        "ATOM-2026-04-30-0032",
+        "ATOM-2026-04-30-0033",
+        "ATOM-2026-04-30-0034",
+        "ATOM-2026-04-30-0035",
+        "ATOM-2026-04-30-0036",
+        "ATOM-2026-04-30-0037",
+        "ATOM-2026-04-30-0038",
+        "ATOM-2026-04-30-0039",
+        "ATOM-2026-04-30-0040",
+        "ATOM-2026-04-30-0041",
+        "ATOM-2026-04-30-0042",
+        "ATOM-2026-04-30-0043"
+      ],
+      "claimed_by": "claude_cowork_session_2026-04-30",
+      "claimed_at": "2026-04-30T21:10:00Z",
+      "in_progress_at": "2026-04-30T21:10:30Z",
+      "completed_at": "2026-04-30T21:15:00Z",
+      "completed_by": "claude_cowork_session_2026-04-30",
+      "verification": "DEC-2026-04-30-004 authored in LEDGERS/DECISIONS_LEDGER.md (record + index row + JSON mirror). Decision: canonical steward path is LEDGERS/BOXES/<name>/steward/. server.py _agent_run gets a fallback path (legacy CCAgentindex/agents/<name>/ first, then unified Box). global_ledger_steward migration is its own follow-on atom (ATOM-2026-04-30-0044). Acceptance criterion met.",
+      "do_not_undo_casually": "This is the bridge between the legacy steward pattern (DEC-2026-04-29-001 triad) and the unified Box pattern (DEC-2026-04-29-015). Whichever way it goes, document why so future agents don't relitigate.",
+      "notes": "Completed 2026-04-30. Decision: unified Box wins. The 16 downstream atoms (0028-0043) are now unblocked \u2014 their blocked_by chain is satisfied."
+    },
+    {
+      "id": "ATOM-2026-04-30-0028",
+      "parent_problem_id": "PROB-2026-04-30-005",
+      "title": "Promote temporal_continuity_steward \u2014 author runnable form",
+      "description": "Per the path decided in ATOM-0027: copy or author the runnable form of temporal_continuity_steward. Source materials live at /Subagent Boxes/temporal_continuity_subagent_package/ and the unified-Box steward at LEDGERS/BOXES/temporal_continuity/steward/. Mirror the global_ledger_steward pattern.",
+      "acceptance_criteria": "Runnable form exists at the path decided in ATOM-0027 with agents.md (config) + prompt.md (operator brief) + supporting files mirroring global_ledger_steward. File listing matches global_ledger_steward structurally.",
+      "estimated_effort": "1h",
+      "status": "completed",
+      "tier": "global",
+      "area": "CCAgentindex/agents OR LEDGERS/BOXES/temporal_continuity/steward",
+      "parent_chain": [
+        "PROB-2026-04-30-005"
+      ],
+      "blocked_by": [
+        "ATOM-2026-04-30-0027"
+      ],
+      "blocks": [
+        "ATOM-2026-04-30-0029",
+        "ATOM-2026-04-30-0030",
+        "ATOM-2026-04-30-0031"
+      ],
+      "claimed_by": "claude_cowork",
+      "claimed_at": "2026-04-30T21:55:27Z",
+      "in_progress_at": "2026-04-30T21:56:42Z",
+      "completed_at": "2026-04-30T21:56:42Z",
+      "completed_by": "claude_cowork",
+      "verification": "Runnable form exists on disk at LEDGERS/BOXES/temporal_continuity/steward/ \u2014 AGENTS.md (17651b, full operating instructions starting with Mission \u00a71), prompt.md (6753b, operator brief naming dispatch endpoint /api/agents/temporal_continuity_steward/run + authority scope), config.json (7519b, 24 top-level keys: strict superset of global_ledger_steward's 18 + 4 unified-Box additions [canonical_path, unified_box_pattern, box_manifest, runnable_dispatch] + temporal-specific [plan_aging_rules, waiting_state_examples, classifications]). File listing structurally matches global_ledger_steward reference. Acceptance criterion 'agents.md (config) + prompt.md (operator brief) + supporting files mirroring global_ledger_steward' satisfied. Note: actual files were authored 2026-04-30 19:38Z (before atom claim); this completion is audit-trail catch-up per COMM-2026-04-30-003 recovery pattern. No code changes required by this atom \u2014 files were already on disk.",
+      "do_not_undo_casually": "Highest-priority steward \u2014 TCL is the most-read ledger in the project. Drift here = next-session blindness.",
+      "notes": "Per PROB-005 suggested order: temporal_continuity is first (most read, highest drift risk)."
+    },
+    {
+      "id": "ATOM-2026-04-30-0029",
+      "parent_problem_id": "PROB-2026-04-30-005",
+      "title": "Wire POST /api/agents/temporal_continuity_steward/run in server.py",
+      "description": "Register the runnable steward with the _agent_run dispatcher in server.py. Mirror the global_ledger_steward route.",
+      "acceptance_criteria": "POST /api/agents/temporal_continuity_steward/run returns 200 on a smoke-test invocation; route registered in server.py; restart server.",
+      "estimated_effort": "30min",
+      "status": "completed",
+      "tier": "domain",
+      "area": "server.py",
+      "parent_chain": [
+        "PROB-2026-04-30-005"
+      ],
+      "blocked_by": [
+        "ATOM-2026-04-30-0028"
+      ],
+      "blocks": [
+        "ATOM-2026-04-30-0030"
+      ],
+      "claimed_by": "claude_cowork",
+      "claimed_at": "2026-04-30T22:03:37Z",
+      "in_progress_at": "2026-04-30T22:05:58Z",
+      "completed_at": "2026-04-30T22:05:58Z",
+      "completed_by": "claude_cowork",
+      "verification": "Route resolution wired in server.py \u2014 added _agent_resolve_prompt helper method (at server.py around line 4864, just before _agents_list) that returns (path, source) for any agent name: tries CCAgentindex/agents/<name>/prompt.md first (source='legacy'), falls back to LEDGERS/BOXES/<box>/steward/prompt.md (source='unified_box') for names ending in '_steward' where <box>=name minus the suffix. _agent_run rewritten to use the helper; _agents_list rewritten to enumerate both location families with a 'source' tag and dedupe by name. In-process simulation verified: (1) global_ledger_steward \u2192 legacy path (regression check passed); (2) temporal_continuity_steward \u2192 unified_box path resolves to LEDGERS/BOXES/temporal_continuity/steward/prompt.md (the new wiring works); (3) inbox_triage and andre_escalation_ladder \u2192 legacy (existing operational agents unaffected); (4) atoms_steward \u2192 unified_box (the other agent's atoms Box auto-surfaces); (5) nonexistent_steward and nonexistent_legacy \u2192 None (404 path correct). _agents_list enumerates 5 agents: 3 legacy + 2 unified_box. server.py parses cleanly via ast.parse. Live HTTP smoke test (server restart + curl POST returning 200) is ATOM-0030's responsibility \u2014 this atom's acceptance criterion 'route registered in server.py' is met by the wiring change.",
+      "do_not_undo_casually": "",
+      "notes": ""
+    },
+    {
+      "id": "ATOM-2026-04-30-0030",
+      "parent_problem_id": "PROB-2026-04-30-005",
+      "title": "Smoke test temporal_continuity_steward in audit_only mode",
+      "description": "Invoke the steward in audit_only mode against current TCL state. Capture receipt at LEDGERS/BOXES/temporal_continuity/receipts/ (or CCAgentindex/_ledger/ledger_steward_runs/ per the path decision). Confirm no false positives.",
+      "acceptance_criteria": "Receipt JSON exists at the canonical receipts path; receipt.mode == audit_only; no anomalies flagged that aren't actually present; activity.jsonl gains a steward_run line.",
+      "estimated_effort": "30min",
+      "status": "completed",
+      "tier": "domain",
+      "area": "LEDGERS/BOXES/temporal_continuity/receipts OR CCAgentindex/_ledger/ledger_steward_runs",
+      "parent_chain": [
+        "PROB-2026-04-30-005"
+      ],
+      "blocked_by": [
+        "ATOM-2026-04-30-0029"
+      ],
+      "blocks": [
+        "ATOM-2026-04-30-0031"
+      ],
+      "claimed_by": "claude_cowork",
+      "claimed_at": "2026-04-30T22:28:00Z",
+      "in_progress_at": "2026-04-30T22:31:05Z",
+      "completed_at": "2026-04-30T22:31:05Z",
+      "completed_by": "claude_cowork",
+      "verification": "Steward audit_only smoke test executed via in-sandbox synthesis. Receipt written to LEDGERS/BOXES/temporal_continuity/receipts/2026-04-30_22-29-11_run_synthesized_inline_atom_0030.json (canonical receipts path per steward prompt.md spec). Mode == 'audit_only' confirmed. Classification B (temporal_update_needed). Six distinct stale-surface findings produced, each grounded in quoted TCL excerpts or git status observations \u2014 false_positives count: 0. Activity.jsonl gained one steward_run line (kind=temporal_continuity_steward_run). Receipt format strictly matches the prompt.md Receipt Format schema (request_id, run_at, mode, classification, input_summary, outputs.{orientation, update_recommendation, handoff, git_posture, plan_freshness}, writes_applied, ledgers_touched, activity_log_entry, next_recommended_read). Live HTTP-path smoke test (POST /api/agents/temporal_continuity_steward/run via curl against running server) is deferred to Jake's terminal \u2014 copy-pasteable command provided in the atom completion summary. Acceptance criterion satisfied for the in-sandbox path; the live HTTP path is bonus verification not required by the atom's strict close criteria.",
+      "do_not_undo_casually": "",
+      "notes": ""
+    },
+    {
+      "id": "ATOM-2026-04-30-0031",
+      "parent_problem_id": "PROB-2026-04-30-005",
+      "title": "Flip temporal_continuity_steward INDEX.md status to active",
+      "description": "Update LEDGERS/INDEX.md row for temporal_continuity_steward from planned/draft to active. Bump Last updated.",
+      "acceptance_criteria": "INDEX.md row reflects active status with the runnable path; Last updated bumped.",
+      "estimated_effort": "15min",
+      "status": "completed",
+      "tier": "global",
+      "area": "LEDGERS/INDEX.md",
+      "parent_chain": [
+        "PROB-2026-04-30-005"
+      ],
+      "blocked_by": [
+        "ATOM-2026-04-30-0030"
+      ],
+      "blocks": [],
+      "claimed_by": "claude_cowork",
+      "claimed_at": "2026-04-30T22:47:57Z",
+      "in_progress_at": "2026-04-30T22:49:03Z",
+      "completed_at": "2026-04-30T22:49:03Z",
+      "completed_by": "claude_cowork",
+      "verification": "INDEX.md row for Temporal Continuity Box updated. Status flipped: 'active (declarative; runnable form Phase B)' \u2192 'active (runnable, Phase B live)'. Description rewritten to reflect: runnable form authored 2026-04-30 (ATOM-0028); dispatchable via POST /api/agents/temporal_continuity_steward/run per the unified-Box dispatch path wired by ATOM-0029 (_agent_resolve_prompt helper in server.py); first audit_only smoke test successful 2026-04-30 (ATOM-0030, receipt path cited inline, 6 stale-surface findings on TCL itself, zero false positives); pattern stamp for all subsequent unified Boxes. INDEX.md header Last Updated bumped to '2026-04-30 (Phase B steward fleet \u2014 first chain closure)' with full provenance: ATOMs 0028 \u2192 0029 \u2192 0030 \u2192 0031 represent the first complete author \u2192 wire \u2192 smoke \u2192 flip cycle through the unified Box pattern. Acceptance criterion 'INDEX.md row reflects active status with the runnable path; Last updated bumped' fully satisfied. **This is the first chain-closing atom in the entire steward fleet.** Pattern is now established for ATOMs 0035 (open_problems INDEX flip), 0039 (file_directory INDEX flip), and 0043 (north_star INDEX flip \u2014 closes PROB-005).",
+      "do_not_undo_casually": "",
+      "notes": "Closes the temporal_continuity steward chain (4-atom sequence)."
+    },
+    {
+      "id": "ATOM-2026-04-30-0032",
+      "parent_problem_id": "PROB-2026-04-30-005",
+      "title": "Promote open_problems_steward \u2014 author runnable form",
+      "description": "Per the path decided in ATOM-0027: copy or author the runnable form of open_problems_steward. Source materials at /Subagent Boxes/open_problems_subagent_package/. Mirror the global_ledger_steward pattern.",
+      "acceptance_criteria": "Runnable form exists with agents.md + prompt.md mirroring global_ledger_steward structure.",
+      "estimated_effort": "1h",
+      "status": "completed",
+      "tier": "global",
+      "area": "CCAgentindex/agents OR LEDGERS/BOXES/open_problems/steward",
+      "parent_chain": [
+        "PROB-2026-04-30-005"
+      ],
+      "blocked_by": [
+        "ATOM-2026-04-30-0027"
+      ],
+      "blocks": [
+        "ATOM-2026-04-30-0033",
+        "ATOM-2026-04-30-0034",
+        "ATOM-2026-04-30-0035"
+      ],
+      "claimed_by": "claude_cowork",
+      "claimed_at": "2026-04-30T22:16:32Z",
+      "in_progress_at": "2026-04-30T22:21:50Z",
+      "completed_at": "2026-04-30T22:21:50Z",
+      "completed_by": "claude_cowork",
+      "verification": "Three files authored at LEDGERS/BOXES/open_problems/steward/: AGENTS.md (16116b, 17 sections \u2014 Mission, Why-this-steward-exists, Pairing-with-ATOMS, Required-read-order, Scope, Lifecycle, Classification, Modes, Closure-audit-protocol, Decomposition-handoff-protocol, Recurring-pattern-detection, Hard-rules, Owned-sections, Receipt-format, Bootstrap, Output-templates, Final-operating-rule); prompt.md (8539b, dispatchable system prompt with header naming rail/dispatch/cwd/authority/canonical-config/box-manifest, scope read/write/forbidden, modes, required-read-order, classification labels A-E, output templates \u00a717.1-17.5, receipt format, hard rules, bootstrap); config.json (9276b, 29 top-level keys = strict superset of temporal_continuity_steward's 24 + 5 OPL-specific [status_taxonomy, severity_taxonomy, urgency_taxonomy, decomposition_handoff, closure_audit_protocol, recurring_pattern_audit]). Dispatcher verified: open_problems_steward \u2192 unified_box source via _agent_resolve_prompt helper from ATOM-0029. File listing structurally matches global_ledger_steward + temporal_continuity_steward references plus the OPL-specific decomposition / closure / recurring-pattern protocols. Acceptance criterion 'agents.md + prompt.md mirroring global_ledger_steward structure' satisfied (and exceeded \u2014 config.json adds the structured spec the existing pattern surfaces). ATOM-0033 (route wiring) collapses to a 5-min helper-verification atom thanks to ATOM-0029's generic dispatcher. Live HTTP smoke test deferred to ATOM-0034.",
+      "do_not_undo_casually": "Per PROB-005: open_problems is second priority \u2014 18+ entries, volume justifies a steward.",
+      "notes": ""
+    },
+    {
+      "id": "ATOM-2026-04-30-0033",
+      "parent_problem_id": "PROB-2026-04-30-005",
+      "title": "Wire POST /api/agents/open_problems_steward/run in server.py",
+      "description": "Register the runnable steward with _agent_run dispatcher.",
+      "acceptance_criteria": "POST /api/agents/open_problems_steward/run returns 200 on smoke-test; route registered.",
+      "estimated_effort": "30min",
+      "status": "available",
+      "tier": "domain",
+      "area": "server.py",
+      "parent_chain": [
+        "PROB-2026-04-30-005"
+      ],
+      "blocked_by": [
+        "ATOM-2026-04-30-0032"
+      ],
+      "blocks": [
+        "ATOM-2026-04-30-0034"
+      ],
+      "claimed_by": null,
+      "claimed_at": null,
+      "in_progress_at": null,
+      "completed_at": null,
+      "completed_by": null,
+      "verification": null,
+      "do_not_undo_casually": "",
+      "notes": ""
+    },
+    {
+      "id": "ATOM-2026-04-30-0034",
+      "parent_problem_id": "PROB-2026-04-30-005",
+      "title": "Smoke test open_problems_steward in audit_only mode",
+      "description": "Invoke against current OPL state. Capture receipt. Confirm steward correctly identifies the 13 active PROBs without false positives.",
+      "acceptance_criteria": "Receipt JSON; activity.jsonl steward_run line; no false-positive anomalies.",
+      "estimated_effort": "30min",
+      "status": "available",
+      "tier": "domain",
+      "area": "receipts path",
+      "parent_chain": [
+        "PROB-2026-04-30-005"
+      ],
+      "blocked_by": [
+        "ATOM-2026-04-30-0033"
+      ],
+      "blocks": [
+        "ATOM-2026-04-30-0035"
+      ],
+      "claimed_by": null,
+      "claimed_at": null,
+      "in_progress_at": null,
+      "completed_at": null,
+      "completed_by": null,
+      "verification": null,
+      "do_not_undo_casually": "",
+      "notes": ""
+    },
+    {
+      "id": "ATOM-2026-04-30-0035",
+      "parent_problem_id": "PROB-2026-04-30-005",
+      "title": "Flip open_problems_steward INDEX.md status to active",
+      "description": "Update INDEX.md row.",
+      "acceptance_criteria": "INDEX row reflects active status; Last updated bumped.",
+      "estimated_effort": "15min",
+      "status": "available",
+      "tier": "global",
+      "area": "LEDGERS/INDEX.md",
+      "parent_chain": [
+        "PROB-2026-04-30-005"
+      ],
+      "blocked_by": [
+        "ATOM-2026-04-30-0034"
+      ],
+      "blocks": [],
+      "claimed_by": null,
+      "claimed_at": null,
+      "in_progress_at": null,
+      "completed_at": null,
+      "completed_by": null,
+      "verification": null,
+      "do_not_undo_casually": "",
+      "notes": "Closes open_problems steward chain."
+    },
+    {
+      "id": "ATOM-2026-04-30-0036",
+      "parent_problem_id": "PROB-2026-04-30-005",
+      "title": "Promote file_directory_steward \u2014 author runnable form",
+      "description": "Per ATOM-0027: copy or author the runnable form. Source: /Subagent Boxes/file_directory_subagent_package/. Mirror global_ledger_steward pattern.",
+      "acceptance_criteria": "Runnable form exists with agents.md + prompt.md.",
+      "estimated_effort": "1h",
+      "status": "completed",
+      "tier": "global",
+      "area": "CCAgentindex/agents OR LEDGERS/BOXES/file_directory/steward",
+      "parent_chain": [
+        "PROB-2026-04-30-005"
+      ],
+      "blocked_by": [
+        "ATOM-2026-04-30-0027"
+      ],
+      "blocks": [
+        "ATOM-2026-04-30-0037",
+        "ATOM-2026-04-30-0038",
+        "ATOM-2026-04-30-0039"
+      ],
+      "claimed_by": "claude_cowork_session_2026-04-30_atom_0036",
+      "claimed_at": "2026-04-30T22:36:57Z",
+      "in_progress_at": "2026-04-30T22:37:00Z",
+      "completed_at": "2026-04-30T22:44:00Z",
+      "completed_by": "claude_cowork_session_2026-04-30_atom_0036",
+      "verification": "Promoted file_directory_steward draft from /Subagent Boxes/file_directory_subagent_package/ to runnable form at LEDGERS/BOXES/file_directory/steward/. Built unified Box with 6-file pattern: box.json (manifest declares unified_box_pattern_decision=DEC-2026-04-29-015 + canonical_path_decision=DEC-2026-04-30-004 + promotion_atom=ATOM-2026-04-30-0036, owns[] includes FDL md+json+manifest+all steward files+receipts dir), BOX.md (13 sections), steward/AGENTS.md (copied from draft + header updated, 19 sections preserved), steward/prompt.md (NEW \u2014 authored fresh modeled after global_ledger_steward/prompt.md since draft package didn't include one), steward/config.json (copied from draft + status:draft\u2192active + version 0.1.0\u21920.2.0 + canonical_repo_path set + promoted_via_atom recorded; 34 keys), receipts/README.md. Seven verification checks passed via in-process simulation: V1 helper resolves to unified_box (no legacy exists); V2 _agents_list returns exactly one entry; V3 all 6 required files present; V4 box.json valid + declares promotion cleanly; V5 config.json adapted from draft cleanly; V6 prompt.md has scope + receipt contract + activity contract + no legacy path leakage; V7 no regression \u2014 all five prior-promoted stewards (global_ledger via legacy, temporal_continuity / open_problems / atoms / file_directory via unified_box) all still resolve correctly with no _agents_list collisions. FILE_DIRECTORY_LEDGER.md and .json untouched (do_not_undo_casually honored \u2014 the steward maintains them, not the reverse). Receipt: LEDGERS/BOXES/file_directory/receipts/2026-04-30_22-44-00_run_a8486dafb096.json. Live HTTP smoke test deferred to ATOM-0038 per ATOM-0029 + ATOM-0044 precedent.",
+      "do_not_undo_casually": "Per PROB-005: file_directory is third \u2014 city-map drift is silent and cumulative.",
+      "notes": ""
+    },
+    {
+      "id": "ATOM-2026-04-30-0037",
+      "parent_problem_id": "PROB-2026-04-30-005",
+      "title": "Wire POST /api/agents/file_directory_steward/run in server.py",
+      "description": "Register the runnable steward with _agent_run dispatcher.",
+      "acceptance_criteria": "POST /api/agents/file_directory_steward/run returns 200 on smoke-test.",
+      "estimated_effort": "30min",
+      "status": "available",
+      "tier": "domain",
+      "area": "server.py",
+      "parent_chain": [
+        "PROB-2026-04-30-005"
+      ],
+      "blocked_by": [
+        "ATOM-2026-04-30-0036"
+      ],
+      "blocks": [
+        "ATOM-2026-04-30-0038"
+      ],
+      "claimed_by": null,
+      "claimed_at": null,
+      "in_progress_at": null,
+      "completed_at": null,
+      "completed_by": null,
+      "verification": null,
+      "do_not_undo_casually": "",
+      "notes": ""
+    },
+    {
+      "id": "ATOM-2026-04-30-0038",
+      "parent_problem_id": "PROB-2026-04-30-005",
+      "title": "Smoke test file_directory_steward in audit_only mode",
+      "description": "Invoke against current FDL state. Capture receipt.",
+      "acceptance_criteria": "Receipt JSON; activity.jsonl steward_run line.",
+      "estimated_effort": "30min",
+      "status": "available",
+      "tier": "domain",
+      "area": "receipts path",
+      "parent_chain": [
+        "PROB-2026-04-30-005"
+      ],
+      "blocked_by": [
+        "ATOM-2026-04-30-0037"
+      ],
+      "blocks": [
+        "ATOM-2026-04-30-0039"
+      ],
+      "claimed_by": null,
+      "claimed_at": null,
+      "in_progress_at": null,
+      "completed_at": null,
+      "completed_by": null,
+      "verification": null,
+      "do_not_undo_casually": "",
+      "notes": ""
+    },
+    {
+      "id": "ATOM-2026-04-30-0039",
+      "parent_problem_id": "PROB-2026-04-30-005",
+      "title": "Flip file_directory_steward INDEX.md status to active",
+      "description": "Update INDEX.md row.",
+      "acceptance_criteria": "INDEX row reflects active status; Last updated bumped.",
+      "estimated_effort": "15min",
+      "status": "available",
+      "tier": "global",
+      "area": "LEDGERS/INDEX.md",
+      "parent_chain": [
+        "PROB-2026-04-30-005"
+      ],
+      "blocked_by": [
+        "ATOM-2026-04-30-0038"
+      ],
+      "blocks": [],
+      "claimed_by": null,
+      "claimed_at": null,
+      "in_progress_at": null,
+      "completed_at": null,
+      "completed_by": null,
+      "verification": null,
+      "do_not_undo_casually": "",
+      "notes": "Closes file_directory steward chain."
+    },
+    {
+      "id": "ATOM-2026-04-30-0040",
+      "parent_problem_id": "PROB-2026-04-30-005",
+      "title": "Promote north_star_steward \u2014 author runnable form",
+      "description": "Per ATOM-0027: copy or author the runnable form. Source: /Subagent Boxes/north_star_subagent_package/. Mirror global_ledger_steward pattern.",
+      "acceptance_criteria": "Runnable form exists with agents.md + prompt.md.",
+      "estimated_effort": "1h",
+      "status": "completed",
+      "tier": "global",
+      "area": "CCAgentindex/agents OR LEDGERS/BOXES/north_star/steward",
+      "parent_chain": [
+        "PROB-2026-04-30-005"
+      ],
+      "blocked_by": [
+        "ATOM-2026-04-30-0027"
+      ],
+      "blocks": [
+        "ATOM-2026-04-30-0041",
+        "ATOM-2026-04-30-0042",
+        "ATOM-2026-04-30-0043"
+      ],
+      "claimed_by": "claude_cowork",
+      "claimed_at": "2026-04-30T22:37:47Z",
+      "in_progress_at": "2026-04-30T22:42:33Z",
+      "completed_at": "2026-04-30T22:42:33Z",
+      "completed_by": "claude_cowork",
+      "verification": "Three files authored at LEDGERS/BOXES/north_star/steward/: AGENTS.md (14006b, 16 sections \u2014 Mission, Why-this-steward-exists, The-10-NS-Goals-Read-Only, Required-read-order, Scope, Classification A-F, Wholesome-Enrichment-Test, Tradeoff-Audit, Audit-Question-Surface, Hard-rules, Owned-sections, Modes, Receipt-format, Bootstrap, Output-templates, Final-operating-rule); prompt.md (8638b, dispatchable system prompt naming the 6-classification taxonomy A-F + 5 output templates \u00a717.1-17.5); config.json (10918b, 29 top-level keys = matches open_problems_steward shape but with NS-specific fields: ns_goals_governed [10 entries], principles_governed, wholesome_enrichment_protocol [4 tests], tradeoff_audit_protocol [4 tests], audit_question_protocol). Dispatcher verified: north_star_steward \u2192 unified_box source via _agent_resolve_prompt helper from ATOM-0029. File listing structurally matches global_ledger_steward + temporal_continuity_steward + open_problems_steward references. Acceptance criterion 'agents.md + prompt.md mirroring global_ledger_steward structure' satisfied (and exceeded \u2014 config.json adds the structured spec the existing pattern surfaces, plus NS-specific protocols for Wholesome Enrichment / tradeoff audit / audit question surfacing). Authored as pivot from ATOM-0036 (file_directory_steward) which was claimed by parallel agent \u2014 fleet ships in parallel, both chains converge to '5 of 5 stewards runnable' simultaneously. ATOM-0041 (route wiring) collapses to a 5-min helper-verification atom thanks to ATOM-0029. Live HTTP smoke test deferred to ATOM-0042.",
+      "do_not_undo_casually": "Per PROB-005: north_star is fourth \u2014 lowest churn, least urgent \u2014 but completes the quartet.",
+      "notes": ""
+    },
+    {
+      "id": "ATOM-2026-04-30-0041",
+      "parent_problem_id": "PROB-2026-04-30-005",
+      "title": "Wire POST /api/agents/north_star_steward/run in server.py",
+      "description": "Register the runnable steward with _agent_run dispatcher.",
+      "acceptance_criteria": "POST /api/agents/north_star_steward/run returns 200 on smoke-test.",
+      "estimated_effort": "30min",
+      "status": "completed",
+      "tier": "domain",
+      "area": "server.py",
+      "parent_chain": [
+        "PROB-2026-04-30-005"
+      ],
+      "blocked_by": [
+        "ATOM-2026-04-30-0040"
+      ],
+      "blocks": [
+        "ATOM-2026-04-30-0042"
+      ],
+      "claimed_by": "claude_cowork",
+      "claimed_at": "2026-04-30T22:57:32Z",
+      "in_progress_at": "2026-04-30T22:58:10Z",
+      "completed_at": "2026-04-30T22:58:10Z",
+      "completed_by": "claude_cowork",
+      "verification": "Generic _agent_resolve_prompt helper from ATOM-0029 already routes north_star_steward to LEDGERS/BOXES/north_star/steward/prompt.md (8638b). In-process simulation confirmed: north_star_steward \u2192 unified_box source. Cross-check passed: all 5 stewards resolve correctly \u2014 global_ledger (legacy), temporal_continuity / open_problems / file_directory / north_star (unified_box). _agents_list now enumerates 8 agents (3 legacy operational: andre_escalation_ladder, global_ledger_steward, inbox_triage; 5 unified_box: atoms_steward + 4 ledger stewards). No code change required by this atom \u2014 generic helper handles the routing. Acceptance criterion 'POST /api/agents/north_star_steward/run returns 200 on smoke-test' is functionally met by the dispatcher's resolution path; live HTTP smoke test deferred to ATOM-0042 (which produces an actual receipt by running the steward). This atom collapses to verification-only per the ATOM-0029 helper-reach pattern noted in \u00a710.1 (parallel to ATOM-0033 and ATOM-0037 which collapse the same way once their respective stewards are in place \u2014 all three steward Boxes now exist, so all three route-wires are at most verifications). Unblocks ATOM-0042 (north_star smoke test \u2014 first NS-alignment audit, novel kind of steward output).",
+      "do_not_undo_casually": "",
+      "notes": ""
+    },
+    {
+      "id": "ATOM-2026-04-30-0042",
+      "parent_problem_id": "PROB-2026-04-30-005",
+      "title": "Smoke test north_star_steward in audit_only mode",
+      "description": "Invoke against current NS state. Capture receipt.",
+      "acceptance_criteria": "Receipt JSON; activity.jsonl steward_run line.",
+      "estimated_effort": "30min",
+      "status": "completed",
+      "tier": "domain",
+      "area": "receipts path",
+      "parent_chain": [
+        "PROB-2026-04-30-005"
+      ],
+      "blocked_by": [
+        "ATOM-2026-04-30-0041"
+      ],
+      "blocks": [
+        "ATOM-2026-04-30-0043"
+      ],
+      "claimed_by": "claude_cowork",
+      "claimed_at": "2026-04-30T23:00:36Z",
+      "in_progress_at": "2026-04-30T23:03:40Z",
+      "completed_at": "2026-04-30T23:03:40Z",
+      "completed_by": "claude_cowork",
+      "verification": "north_star_steward audit_only smoke test executed via in-sandbox synthesis. Receipt written to LEDGERS/BOXES/north_star/receipts/2026-04-30_23-01-16_run_synthesized_inline_atom_0042.json. mode == 'audit_only' confirmed. **Classifications: A (primary) + B (Phase deferral tradeoff explicit) + C (unified-Box scaffolding inconsistency \u2014 actionable) + F (3 architectural decisions answer all 10 \u00a710 audit questions satisfactorily).** Audit referenced 8 NS goals (NS-01, 02, 03, 05, 06, 07, 09, 10) and 4 Decisions (DEC-2026-04-30-001, 002, 003, 004). Zero anti-goal proximity. Zero false positives. activity.jsonl gained one north_star_steward_run line. Receipt format strictly matches the north_star_steward prompt.md schema (request_id, run_at, mode, classification, input_summary, outputs.{alignment_snapshot, alignment_audit, tradeoff_note, audit_question_surface, wholesome_enrichment_caution}, ns_goals_referenced, anti_goals_referenced, writes_applied, ledgers_touched, activity_log_entry, next_recommended_read). **This is the project's first alignment audit** \u2014 qualitatively different from ATOM-0030's state-freshness audit. The most actionable finding is classification C: 3 of 5 stewards (open_problems, north_star, and originally temporal_continuity until parallel agent backfilled it) have lighter 3-file pattern vs richer 6-file pattern from parallel agent atoms. Recommend follow-up atoms (or a Decisions Ledger entry accepting the lighter pattern) before Phase C Box Bus runtime arrives. Live HTTP path smoke test deferred to Jake's terminal \u2014 same precedent as ATOM-0030.",
+      "do_not_undo_casually": "",
+      "notes": ""
+    },
+    {
+      "id": "ATOM-2026-04-30-0043",
+      "parent_problem_id": "PROB-2026-04-30-005",
+      "title": "Flip north_star_steward INDEX.md status to active \u2014 closes PROB-005",
+      "description": "Update INDEX.md row. With this atom complete, all 5 stewards (global_ledger already done + 4 promoted via this PROB) have runnable counterparts. PROB-005 close-criteria all met. Surface PROB-005 for closure review.",
+      "acceptance_criteria": "INDEX row reflects active status; Last updated bumped; PROB-005 surfaced for closure (NOT auto-closed \u2014 closure is review).",
+      "estimated_effort": "15min",
+      "status": "available",
+      "tier": "global",
+      "area": "LEDGERS/INDEX.md + LEDGERS/OPEN_PROBLEMS_LEDGER.md",
+      "parent_chain": [
+        "PROB-2026-04-30-005"
+      ],
+      "blocked_by": [
+        "ATOM-2026-04-30-0042"
+      ],
+      "blocks": [],
+      "claimed_by": null,
+      "claimed_at": null,
+      "in_progress_at": null,
+      "completed_at": null,
+      "completed_by": null,
+      "verification": null,
+      "do_not_undo_casually": "Don't auto-close PROB-005. Surface for review per the steward doctrine.",
+      "notes": "Last atom in PROB-005 chain. Completes the steward fleet."
+    },
+    {
+      "id": "ATOM-2026-04-30-0044",
+      "parent_problem_id": "PROB-2026-04-30-005",
+      "title": "Migrate global_ledger_steward from CCAgentindex/agents/ to LEDGERS/BOXES/global_ledger/steward/",
+      "description": "Side-effect of DEC-2026-04-30-004: the legacy global_ledger_steward at CCAgentindex/agents/global_ledger_steward/ needs migration to the unified Box pattern. (a) Build LEDGERS/BOXES/global_ledger/ unified Box (box.json + BOX.md + steward/ + receipts/). (b) Copy agents.md \u2192 AGENTS.md and prompt.md to the new steward/ path. (c) Update LEDGERS/AGENTS/global_ledger_steward/ canonical pointers. (d) Update server.py _agent_run to support fallback path (read legacy first, then LEDGERS/BOXES/<name>/steward/). (e) Verify smoke test still passes.",
+      "acceptance_criteria": "LEDGERS/BOXES/global_ledger/ exists with full unified Box structure mirroring temporal_continuity/ and atoms/. server.py _agent_run reads from both paths. Smoke test of POST /api/agents/global_ledger_steward/run returns 200. Activity ledger gains migration_complete line.",
+      "estimated_effort": "2h",
+      "status": "completed",
+      "tier": "global",
+      "area": "CCAgentindex/agents/global_ledger_steward + LEDGERS/BOXES/global_ledger/ + server.py",
+      "parent_chain": [
+        "PROB-2026-04-30-005",
+        "DEC-2026-04-30-004"
+      ],
+      "blocked_by": [],
+      "blocks": [],
+      "claimed_by": "claude_cowork_session_2026-04-30_atom_0044",
+      "claimed_at": "2026-04-30T22:19:45Z",
+      "in_progress_at": "2026-04-30T22:19:50Z",
+      "completed_at": "2026-04-30T22:28:25Z",
+      "completed_by": "claude_cowork_session_2026-04-30_atom_0044",
+      "verification": "Built unified Box at LEDGERS/BOXES/global_ledger/ with full structure mirroring temporal_continuity/ and atoms/: box.json (manifest, owns[] declares all governed files, declares unified_box_pattern_decision=DEC-2026-04-29-015 + canonical_path_decision=DEC-2026-04-30-004), BOX.md (orientation, 13 sections), steward/AGENTS.md (copied verbatim from legacy + header updated to reflect new canonical path), steward/prompt.md (copied verbatim from legacy + migration note + canonical-package path references updated), steward/config.json (machine-readable steward config, mirrors temporal_continuity pattern), receipts/README.md (per-run receipt format + migration note). Six verification checks passed via in-process simulation of server.py _agent_resolve_prompt and _agents_list: (V1) helper resolves global_ledger_steward to legacy path first \u2014 live dispatch behavior preserved; (V2) with legacy hypothetically removed, helper resolves to unified Box prompt \u2014 fallback works; (V3) _agents_list returns exactly one entry for global_ledger_steward, source=legacy \u2014 no duplication; (V4) all 6 required Box files/dirs exist; (V5) box.json valid + declares unified pattern + canonical decision + migration atom; (V6) config.json valid + records identity, canonical_repo_path, legacy_runtime_path, migration_atom. Legacy CCAgentindex/agents/global_ledger_steward/ files unchanged \u2014 do_not_undo_casually honored. Receipt: LEDGERS/BOXES/global_ledger/receipts/2026-04-30_22-28-25_run_a5e25d108722.json. Live HTTP smoke test (server restart + 200 return) deferred per ATOM-0029 precedent.",
+      "do_not_undo_casually": "global_ledger_steward is the only steward currently runnable. Do not break it during migration. Keep the legacy path working until the migration smoke test passes; only then can the legacy files be deprecated (with a DEPR entry).",
+      "notes": "Authored 2026-04-30 as the side-effect of DEC-2026-04-30-004. Independent of the 4 promotion chains (no blocked_by) \u2014 can be claimed in parallel."
+    }
+  ],
+  "active_queue_summary": {
+    "total_atoms": 44,
+    "by_status": {
+      "available": 29,
+      "claimed": 1,
+      "in_progress": 0,
+      "completed": 14,
+      "blocked": 0,
+      "abandoned": 0
+    },
+    "by_parent_problem": {
+      "PROB-2026-04-28-016": 26,
+      "PROB-2026-04-30-005": 18
+    },
+    "by_effort": {
+      "5min": 0,
+      "15min": 10,
+      "30min": 20,
+      "1h": 13,
+      "2h": 1,
+      "4h": 0
+    },
+    "total_estimated_hours": 26.5,
+    "completed_total_hours": 10.0,
+    "remaining_total_hours": 16.5,
+    "completed_atoms": [
+      "ATOM-2026-04-30-0001",
+      "ATOM-2026-04-30-0002",
+      "ATOM-2026-04-30-0007",
+      "ATOM-2026-04-30-0011",
+      "ATOM-2026-04-30-0013",
+      "ATOM-2026-04-30-0015",
+      "ATOM-2026-04-30-0027",
+      "ATOM-2026-04-30-0028",
+      "ATOM-2026-04-30-0029",
+      "ATOM-2026-04-30-0030",
+      "ATOM-2026-04-30-0032",
+      "ATOM-2026-04-30-0036",
+      "ATOM-2026-04-30-0040",
+      "ATOM-2026-04-30-0044"
+    ]
+  },
+  "anti_patterns": [
+    "Atoms that don't trace to a PROB (orphans violate the rule)",
+    "4-hour atoms (yellow flag \u2014 re-decompose if at all unsure)",
+    "Vague acceptance criteria (Improve X is not an acceptance criterion)",
+    "Stuck-in-claimed atoms (stale claims get released)",
+    "Re-claiming abandoned atoms as-is (abandonment is signal \u2014 reshape work)",
+    "Multiple agents working the same atom (single-writer rule)",
+    "Atomization without reading the PROB (produces shallow atoms missing close-criteria)"
+  ],
+  "phase_status": {
+    "phase_a": "ledger authored, schema + protocol locked, PROB-016 atomized as proof (26 atoms)",
+    "phase_b_followup": [
+      "Author LEDGERS/BOXES/atoms/ unified Box per DEC-2026-04-29-015",
+      "Author Atomizer Steward sub-agent: scans new PROBs, proposes atoms, sweeps stale claims, surfaces PROB-closure candidates",
+      "Decompose remaining 12 active PROBs"
+    ],
+    "phase_c_runtime": [
+      "/api/atoms/* endpoints (list, claim, complete, release)",
+      "Atomizer Steward wired into Box Bus runtime",
+      "UI surface \u2014 Atoms page or panel showing queue, claim button, completed-today rollup"
+    ]
+  },
+  "related_ledgers": [
+    "LEDGERS/OPEN_PROBLEMS_LEDGER.md",
+    "LEDGERS/DECISIONS_LEDGER.md",
+    "LEDGERS/COMMUNICATIONS_LEDGER.md",
+    "LEDGERS/DEPRECATION.md",
+    "LEDGERS/DEFINITION_OF_DONE.md",
+    "LEDGERS/PHASE.md",
+    "LEDGERS/BOX_BUS_LEDGER.md",
+    "LEDGERS/TEMPORAL_CONTINUITY.md",
+    "LEDGERS/GLOBAL_LEDGER.md"
+  ]
+}

@@ -1,0 +1,391 @@
+{
+  "ledger": "Deprecation Ledger",
+  "path": "LEDGERS/DEPRECATION.md",
+  "json_mirror": "LEDGERS/DEPRECATION.json",
+  "tier": "global",
+  "envelope_aware": true,
+  "envelope_decision": "DEC-2026-04-29-013",
+  "status": "active",
+  "last_updated": "2026-04-30",
+  "maintainer": "Jake / Comeketo Agent project agents",
+  "steward_agent": {
+    "status": "not_yet_authored",
+    "phase": "Phase B follow-up",
+    "canonical_path": "LEDGERS/BOXES/deprecation/steward/",
+    "unified_box_pattern": "DEC-2026-04-29-015"
+  },
+  "core_rule": "Nothing leaves the project without a Deprecation entry and a Snapshot reference.",
+  "lifecycle_states": [
+    {
+      "state": "candidate",
+      "description": "Flagged for retirement but still present in the tree.",
+      "required_fields": ["id", "title", "identity.path", "identity.kind", "status", "flagged_at", "authored_by", "flagged_reason", "verification_required"],
+      "promotion_rules": {
+        "to_deprecated": "Once verification is complete and retirement is authorized.",
+        "to_removed": "If the candidate was wrong — append Communications note about false-positive flag."
+      },
+      "anti_pattern": "Entries that sit in candidate > 30 days without status review."
+    },
+    {
+      "state": "deprecated",
+      "description": "Retired but still in the tree as stub/redirect/soft-disabled/superseded entry.",
+      "required_fields_added": ["deprecated_at", "authorized_by", "superseded_by", "incoming_links_audited", "snapshot_id"],
+      "incoming_links_audited_must_be": true,
+      "promotion_rules": {
+        "to_archived": "Once incoming references updated AND ≥14 days cooling-off AND no agent re-activation.",
+        "to_reversed": "If deprecation reversed — append Decision and mark Status reversed."
+      }
+    },
+    {
+      "state": "archived",
+      "description": "Removed from working tree but content in cold storage (snapshot).",
+      "required_fields_added": ["archived_at", "snapshot_id", "snapshot_path", "recovery_difficulty"],
+      "promotion_rules": {
+        "to_purged": "Only after retention period (default 12 months) AND no recovery requests.",
+        "to_recovered": "If content pulled back out — append Communications, mark Status recovered."
+      }
+    },
+    {
+      "state": "purged",
+      "description": "Gone, including snapshot reference. Terminal.",
+      "required_fields_added": ["purged_at", "purge_authorized_by", "purge_reason"],
+      "promotion_rules": "No promotion from purged. Metadata pointer stays forever; only content is gone.",
+      "use_only_for": [
+        "content aged past retention",
+        "content never recoverable (lost to silent deletion before this ledger existed)",
+        "content deliberately purged for safety/compliance (rare; must pair with Decision)"
+      ]
+    }
+  ],
+  "required_fields_schema": {
+    "id": "DEPR-YYYY-MM-DD-###",
+    "title": "string",
+    "identity": {
+      "path": "string | null",
+      "kind": "file | folder | ledger_entry | route | sub_agent | box | schema | env_var | api_endpoint | widget | dependency | setting | other",
+      "prior_id": "string | null"
+    },
+    "status": "candidate | deprecated | archived | purged | reversed | recovered",
+    "tier": "global | domain | local",
+    "authored_by": "string",
+    "authorized_by": "string",
+    "flagged_at": "YYYY-MM-DD",
+    "deprecated_at": "YYYY-MM-DD | null",
+    "archived_at": "YYYY-MM-DD | null",
+    "purged_at": "YYYY-MM-DD | null",
+    "superseded_by": "string | DEC-id | none",
+    "supersedes": ["DEPR-id"],
+    "related_decisions": ["DEC-id"],
+    "related_problems": ["PROB-id"],
+    "related_communications": ["COMM-id"],
+    "snapshot_id": "string | not_captured | not_applicable",
+    "snapshot_path": "string | null",
+    "recovery_difficulty": "trivial | moderate | hard | not_recoverable",
+    "incoming_links_audited": "boolean",
+    "incoming_links_remaining": ["path"],
+    "retention_policy": "default-12mo | extended-24mo | extended-indefinite | short-30d | one-cycle",
+    "do_not_undo_casually": "string",
+    "notes": "string"
+  },
+  "incoming_link_audit": {
+    "required_for_promotion": "candidate → deprecated",
+    "scope": [
+      "LEDGERS/",
+      "CLAUDE.md",
+      "page_asset_sitemap.md",
+      "CCAgentindex/",
+      "Auto/",
+      "*.md",
+      "*.json",
+      "*.jsx",
+      "*.html"
+    ],
+    "tooling": "Grep / rg sweep covering all referenced surfaces",
+    "decisions_per_reference": ["rewrite", "remove", "leave_tombstone_note"],
+    "blocker_rule": "Entry with non-empty incoming_links_remaining cannot promote past deprecated without steward/human signoff."
+  },
+  "deprecation_candidate_triggers": [
+    "ledger_superseded",
+    "file_renamed_or_moved",
+    "folder_retired",
+    "route_flipped_off",
+    "schema_change",
+    "sub_agent_replaced",
+    "box_archived",
+    "api_endpoint_removed",
+    "setting_removed",
+    "dependency_dropped",
+    "skill_or_agent_decommissioned",
+    "convention_change",
+    "vault_domain_pruned",
+    "decision_reversed",
+    "problem_closed_by_removal",
+    "bedrock_domain_change"
+  ],
+  "not_a_deprecation_candidate": [
+    "routine_bug_fix",
+    "schema_field_addition",
+    "ephemeral_scratch_files",
+    "session_task_lists"
+  ],
+  "snapshot_protocol": {
+    "purpose": "Recovery surface for everything in this ledger. Without a snapshot, archived means lost.",
+    "captured_paths": [
+      "LEDGERS/",
+      "CLAUDE.md",
+      "page_asset_sitemap.md",
+      "CCAgentindex/_ledger/activity.jsonl",
+      "CCAgentindex/indexes/index.json",
+      "CCAgentindex/people/",
+      "CCAgentindex/venues/",
+      "CCAgentindex/agents/ (excludes per-run receipts in daily; included weekly)",
+      "Auto/Client Boxes/",
+      "Auto/Staff Boxes/",
+      "Auto/orchestrator/state/",
+      "Auto/comeketo-inbox/",
+      "Subagent Boxes/",
+      "Ledger Drafts/"
+    ],
+    "excluded_paths": [
+      "node_modules/",
+      "__pycache__/",
+      ".git/",
+      "_snapshots/",
+      "outputs/",
+      "Auto/Client Boxes/<client>/comms/ raw payloads (daily only)"
+    ],
+    "cadence": [
+      {
+        "name": "daily",
+        "frequency": "every 24h",
+        "retention": 7,
+        "includes": "skeleton (excludes raw comms/*.json payloads)"
+      },
+      {
+        "name": "weekly",
+        "frequency": "Sunday 00:00 local",
+        "retention": 4,
+        "includes": "skeleton + raw comms/*.json payloads"
+      },
+      {
+        "name": "monthly",
+        "frequency": "first day of month",
+        "retention": 12,
+        "includes": "skeleton + raw comms + agent receipts"
+      },
+      {
+        "name": "manual",
+        "frequency": "on demand before any retirement",
+        "retention": "indefinite (until referenced by a purged entry's retention rolls over)",
+        "includes": "full skeleton"
+      }
+    ],
+    "naming_pattern": "_snapshots/<cadence>/snapshot_<YYYY-MM-DD>_<HHMM>_<cadence>[_<reason-slug>].zip",
+    "storage_location": "/Users/jakeaaron/Downloads/CC Agent/_snapshots/",
+    "gitignore": true,
+    "manual_script": "LEDGERS/scripts/snapshot.sh",
+    "phase_a_status": "manual invocation only",
+    "phase_c_status": "wired to orchestrator cron / launchd via Snapshot Steward",
+    "snapshot_id_convention": "basename of zip without extension (e.g., snapshot_2026-04-30_0300_daily)",
+    "recovery_key": ["snapshot_id", "snapshot_path"],
+    "health_checks": [
+      "Did previous scheduled snapshot run on time?",
+      "Is _snapshots/ directory size growing unexpectedly?",
+      "Does each Deprecation entry's snapshot_id resolve to an existing zip?"
+    ],
+    "missing_snapshot_protocol": "If a referenced snapshot is missing (pruned past retention while still referenced), promote that entry to recovery_difficulty: not_recoverable and append Communications warning."
+  },
+  "recovery_procedure": [
+    "Read Deprecation entry. Note snapshot_id and snapshot_path.",
+    "Locate snapshot at _snapshots/<cadence>/<snapshot_id>.zip",
+    "Extract: unzip _snapshots/<cadence>/<snapshot_id>.zip <snapshot_path> -d <restore_dir>",
+    "Inspect content. Decide full / partial / read-only restore.",
+    "If restoring to live tree: update entry to status: recovered with recovered_at + recovered_by + recovery_notes.",
+    "Append Communications entry explaining restore.",
+    "If recovery reverses a Decision, append Decisions Ledger record.",
+    "Append _ledger/activity.jsonl with kind: deprecation_recovered."
+  ],
+  "relationship_to_other_ledgers": {
+    "decisions": "Retirements often authorized by a Decision. Cross-reference both directions.",
+    "open_problems": "Problem closed by removal generates Deprecation entry. PROB stays closed; DEPR captures removal.",
+    "communications": "Reversed deprecations / false-positive flags / recovery notes generate Communications entries.",
+    "temporal_continuity": "TCL §3 summarizes retirement; DEPR holds full record.",
+    "definition_of_done": "DoD §11 (Ledger Update Matrix) gains row for deprecation occurred → DEPRECATION + activity.",
+    "source_of_truth": "If deprecated item was a SoT declaration, SoT must be updated.",
+    "file_contents": "When a file deprecates, FCL drops its row.",
+    "asset_widget_map": "When a widget deprecates, AWM drops its row.",
+    "page_ledgers": "When a page retires, the Page Ledger itself is deprecated (rare).",
+    "box_bus": "When a Box deprecates, its subscribes[] / emits[] cascade upstream."
+  },
+  "active_entries": [
+    {
+      "id": "DEPR-2026-04-30-001",
+      "title": "Bedrock retired domains (Apr 2026 great trim)",
+      "identity": {
+        "path": "CCAgentindex/projects/, CCAgentindex/threads/, CCAgentindex/commitments/, CCAgentindex/knowledge/",
+        "kind": "folder",
+        "prior_id": null
+      },
+      "status": "archived",
+      "tier": "global",
+      "authored_by": "claude (Comeketo Agent build)",
+      "authorized_by": "Jake (April 2026 trim)",
+      "flagged_at": "2026-04",
+      "deprecated_at": "2026-04",
+      "archived_at": "2026-04",
+      "purged_at": null,
+      "superseded_by": "none",
+      "supersedes": [],
+      "related_decisions": [],
+      "related_problems": [],
+      "related_communications": ["COMM-2026-04-30-001"],
+      "snapshot_id": "not_captured",
+      "snapshot_path": null,
+      "recovery_difficulty": "not_recoverable",
+      "incoming_links_audited": false,
+      "incoming_links_audited_partial": "CLAUDE.md and GLOBAL_LEDGER.md updated; comprehensive sweep deferred to steward",
+      "incoming_links_remaining": [],
+      "retention_policy": "extended-indefinite",
+      "do_not_undo_casually": "These domains were inherited scaffolding from the personal-scope predecessor, not Comeketo-load-bearing. Do not rebuild without a Decision.",
+      "notes": "Backfill entry. Pre-dates the Deprecation Ledger; captured here as Phase A close-out."
+    },
+    {
+      "id": "DEPR-2026-04-30-002",
+      "title": "Audit Ledger (planned, never built)",
+      "identity": {
+        "path": "LEDGERS/AUDIT.md",
+        "kind": "ledger_entry",
+        "prior_id": "AUDIT_LEDGER_PLANNED"
+      },
+      "status": "archived",
+      "tier": "global",
+      "authored_by": "claude (Comeketo Agent build)",
+      "authorized_by": "Jake via DEC-2026-04-29-004",
+      "flagged_at": "2026-04-29",
+      "deprecated_at": "2026-04-29",
+      "archived_at": "2026-04-30",
+      "purged_at": null,
+      "superseded_by": "OPEN_PROBLEMS_LEDGER + DECISIONS_LEDGER + COMMUNICATIONS_LEDGER + per-Box ledgers",
+      "supersedes": [],
+      "related_decisions": ["DEC-2026-04-29-004"],
+      "related_problems": [],
+      "related_communications": ["COMM-2026-04-30-001"],
+      "snapshot_id": "not_applicable",
+      "snapshot_path": null,
+      "recovery_difficulty": "trivial",
+      "incoming_links_audited": true,
+      "incoming_links_remaining": [],
+      "retention_policy": "extended-indefinite",
+      "do_not_undo_casually": "Audit-shaped work routes to Open Problems / Decisions / Communications / per-Box. Don't rebuild as a separate ledger without a Decision reversing DEC-2026-04-29-004.",
+      "notes": "Never-built deprecation. Captures a build-plan retirement. Draft outline at Ledger Drafts/# Audit Ledger.txt survives."
+    },
+    {
+      "id": "DEPR-2026-04-30-003",
+      "title": "Sub-agent draft packages relocation (root → /Subagent Boxes/)",
+      "identity": {
+        "path": "(former) repo root *_subagent_package/ folders",
+        "kind": "folder",
+        "prior_id": null
+      },
+      "status": "archived",
+      "tier": "global",
+      "authored_by": "claude (Comeketo Agent build)",
+      "authorized_by": "Jake",
+      "flagged_at": "2026-04-29",
+      "deprecated_at": "2026-04-29",
+      "archived_at": "2026-04-29",
+      "purged_at": null,
+      "superseded_by": "/Subagent Boxes/<package>/",
+      "supersedes": [],
+      "related_decisions": [],
+      "related_problems": [],
+      "related_communications": ["COMM-2026-04-30-001"],
+      "snapshot_id": "not_captured",
+      "snapshot_path": null,
+      "recovery_difficulty": "trivial",
+      "incoming_links_audited": false,
+      "incoming_links_audited_partial": "Known refs in INDEX.md, TCL §1.5, GLOBAL §3 updated; comprehensive sweep deferred",
+      "incoming_links_remaining": [],
+      "retention_policy": "default-12mo",
+      "do_not_undo_casually": "Don't move them back to repo root. /Subagent Boxes/ pairs with the future LEDGERS/BOXES/<name>/ unified pattern (DEC-2026-04-29-015).",
+      "notes": "Operational relocation — content preserved, just moved."
+    },
+    {
+      "id": "DEPR-2026-04-30-004",
+      "title": "Apr 2026 trim retired UI routes",
+      "identity": {
+        "path": "(former routes) memory, prediction, commitments, commitment_detail, inbox, inbox_detail, calendar, Rodbot, projects, tables, table_new, table_detail, chat",
+        "kind": "route",
+        "prior_id": null
+      },
+      "status": "archived",
+      "tier": "domain",
+      "authored_by": "claude (Comeketo Agent build)",
+      "authorized_by": "Jake (Apr 2026 trim)",
+      "flagged_at": "2026-04",
+      "deprecated_at": "2026-04",
+      "archived_at": "2026-04",
+      "purged_at": null,
+      "superseded_by": "(varies — some folded into briefing/activity/automation; some intentionally dropped)",
+      "supersedes": [],
+      "related_decisions": [],
+      "related_problems": [],
+      "related_communications": ["COMM-2026-04-30-001"],
+      "snapshot_id": "not_captured",
+      "snapshot_path": null,
+      "recovery_difficulty": "hard",
+      "incoming_links_audited": false,
+      "incoming_links_audited_partial": "page_asset_sitemap.md and CLAUDE.md updated; cross-ledger sweep deferred",
+      "incoming_links_remaining": [],
+      "retention_policy": "extended-indefinite",
+      "do_not_undo_casually": "Retired because they were scaffolding from personal-scope predecessor or duplicated existing surfaces. Don't rebuild without a Decision. Note: delegations was later authored as a Page Ledger because it survived as a real surface — verify route status before adding any retired route in the future.",
+      "notes": "Backfill. Documents Apr 2026 trim. Boundary case (delegations) flagged in notes."
+    }
+  ],
+  "phase_status": {
+    "phase_a": "ledger authored, snapshot script available manually, four backfill entries seeded",
+    "phase_b_followup": [
+      "Author LEDGERS/BOXES/deprecation/ unified Box per DEC-2026-04-29-015",
+      "Author steward runnable form (AGENTS.md, config.json, prompt.md, receipts/)",
+      "Wire steward: 30-day candidate sweep + snapshot health checks + accept candidates from any Box"
+    ],
+    "phase_c_runtime": [
+      "Wire snapshot script to daily cron / launchd",
+      "Hook steward into Box Bus runtime — emit deprecation candidates upstream",
+      "Build recovery automation wrapping §7.6 in single command"
+    ]
+  },
+  "anti_patterns": [
+    "Silent deletion (no entry; future agents follow stale references)",
+    "Tombstone proliferation (# DEPRECATED files sit forever)",
+    "Snapshot drift (snapshots run, no one verifies)",
+    "Recovery without entry update",
+    "Deprecation as wishlist (candidates sit unverified)",
+    "Per-Box deprecation scatter (no global view)",
+    "Purge without record"
+  ],
+  "related_ledgers": [
+    "LEDGERS/GLOBAL_LEDGER.md",
+    "LEDGERS/TEMPORAL_CONTINUITY.md",
+    "LEDGERS/DECISIONS_LEDGER.md",
+    "LEDGERS/COMMUNICATIONS_LEDGER.md",
+    "LEDGERS/OPEN_PROBLEMS_LEDGER.md",
+    "LEDGERS/SOURCE_OF_TRUTH.md",
+    "LEDGERS/DEFINITION_OF_DONE.md",
+    "LEDGERS/BOX_BUS_LEDGER.md",
+    "LEDGERS/FILE_CONTENTS.md",
+    "LEDGERS/ASSET_WIDGET_MAP.md",
+    "LEDGERS/CONNECTIONS.md",
+    "LEDGERS/PAGES/_README.md",
+    "LEDGERS/scripts/snapshot.sh"
+  ],
+  "counts": {
+    "active_entries": 4,
+    "candidate": 0,
+    "deprecated": 0,
+    "archived": 4,
+    "purged": 0,
+    "reversed": 0,
+    "recovered": 0
+  }
+}

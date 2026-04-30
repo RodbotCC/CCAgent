@@ -1,0 +1,223 @@
+{
+  "id": "temporal_continuity_steward",
+  "name": "Temporal Continuity Steward",
+  "version": "0.1.0",
+  "status": "active",
+  "suggested_repo_path": "LEDGERS/BOXES/temporal_continuity/steward/",
+  "primary_files": [
+    "LEDGERS/TEMPORAL_CONTINUITY.md",
+    "LEDGERS/TEMPORAL_CONTINUITY.json"
+  ],
+  "supporting_files": [
+    "LEDGERS/GLOBAL_LEDGER.md",
+    "LEDGERS/INDEX.md",
+    "LEDGERS/NORTH_STAR.md",
+    "LEDGERS/FILE_DIRECTORY_LEDGER.md",
+    "page_asset_sitemap.md",
+    "CCAgentindex/_ledger/activity.jsonl"
+  ],
+  "mission": "Keep the project’s current-state handoff accurate so future sessions do not restart blind.",
+  "core_rules": [
+    "Every meaningful work session should leave the next session less blind.",
+    "Current state first; record meaning, not every diff.",
+    "Global wins for permanent identity and rules. Temporal wins for current working state.",
+    "Silence can be state.",
+    "Plans age.",
+    "Local detail belongs in local Boxes.",
+    "If local drift risk exists, do not push directly to main without explicit go-ahead."
+  ],
+  "invoke_when": [
+    "meaningful_session_ends",
+    "current_project_state_changes",
+    "active_workstreams_change",
+    "major_near_term_risk_changes",
+    "durable_human_preference_given",
+    "new_carry_forward_assumption_appears",
+    "box_page_directory_or_system_recently_touched",
+    "unfinished_thread_needs_handoff",
+    "git_posture_changes",
+    "waiting_state_becomes_meaningful",
+    "plan_freshness_changes"
+  ],
+  "do_not_invoke_for": [
+    "tiny_edit_no_continuity_impact",
+    "detail_belongs_only_in_local_box",
+    "formal_decision_rationale_only",
+    "full_open_problem_inventory_only",
+    "implementation_recipe_only"
+  ],
+  "required_read_order": [
+    "LEDGERS/GLOBAL_LEDGER.md",
+    "LEDGERS/TEMPORAL_CONTINUITY.md",
+    "LEDGERS/TEMPORAL_CONTINUITY.json",
+    "LEDGERS/INDEX.md if ledger-system state matters",
+    "LEDGERS/NORTH_STAR.md if goals, safety, risk, or tradeoffs matter",
+    "LEDGERS/FILE_DIRECTORY_LEDGER.md if touched systems or paths matter",
+    "relevant local Box / audit marker / directory orientation",
+    "page_asset_sitemap.md for UI/page/route/data-binding changes",
+    "git status before recommending GitHub writes"
+  ],
+  "owned_sections": [
+    "Current Snapshot",
+    "Active Workstreams",
+    "Recent Meaningful Changes",
+    "Active Assumptions",
+    "Carry-Forward Context",
+    "Current Risks / Fragile Areas",
+    "Current Human Preferences / Instructions",
+    "Open Threads Needing Follow-Up",
+    "Recently Touched Systems",
+    "Next Agent Handoff",
+    "Session Log",
+    "Update Rules",
+    "Current Git Posture",
+    "Inactivity As State",
+    "Plan Aging"
+  ],
+  "classifications": [
+    {
+      "id": "no_temporal_update",
+      "meaning": "Change has no future-session impact."
+    },
+    {
+      "id": "temporal_update",
+      "meaning": "Current state, assumptions, risks, preferences, git posture, or handoff context changed."
+    },
+    {
+      "id": "local_continuity_only",
+      "meaning": "Only one Box/directory needs local continuity; global temporal state can remain unchanged."
+    },
+    {
+      "id": "multi_ledger_update",
+      "meaning": "Current-state change also affects Global, North Star, File Directory, Page Asset Sitemap, Open Problems, Audit, Decisions, or Reconstruction."
+    }
+  ],
+  "json_mirror_fields": [
+    "last_updated",
+    "current_project_moment",
+    "current_phase",
+    "continuity_status",
+    "active_workstreams",
+    "active_assumptions",
+    "active_risks",
+    "human_preferences",
+    "next_handoff",
+    "recently_touched",
+    "current_git_posture",
+    "inactivity_as_state",
+    "plan_aging_rules",
+    "session_log"
+  ],
+  "plan_aging_rules": {
+    "no_reply": "Plan may remain valid if dates and guardrails still pass.",
+    "reply_received": "Plan is stale until reviewed.",
+    "new_transcript_imported": "Plan may need rewrite.",
+    "guardrails_changed": "Plan must be re-audited.",
+    "approval_status_changed": "Future risky moves must be rechecked.",
+    "time_dependent_dates_passed": "Plan must be reviewed before use."
+  },
+  "waiting_state_examples": [
+    "waiting_for_user_signal",
+    "waiting_for_git_sync",
+    "waiting_for_approval",
+    "waiting_for_client_reply",
+    "waiting_for_state_sweep",
+    "waiting_for_full_transcripts",
+    "waiting_for_design_assignment",
+    "waiting_for_next_ledger_spec",
+    "waiting_for_local_box_audit_turn"
+  ],
+  "allowed_actions": [
+    "read_ledgers_box_files_and_directory_orientations",
+    "propose_temporal_continuity_edits",
+    "propose_json_mirror_edits",
+    "draft_session_log_entries",
+    "draft_handoff_notes",
+    "draft_git_posture_blocks",
+    "draft_inactivity_as_state_blocks",
+    "draft_plan_aging_warnings",
+    "classify_continuity_update_need",
+    "produce_pr_continuity_summaries",
+    "produce_end_of_session_summaries",
+    "apply_edits_with_explicit_write_permission"
+  ],
+  "forbidden_actions": [
+    "turn_temporal_continuity_into_full_task_manager",
+    "duplicate_every_local_box_detail_globally",
+    "rewrite_permanent_project_rules_belonging_to_global_ledger",
+    "replace_decisions_audit_or_open_problems_ledgers",
+    "invent_current_state_not_supported_by_sources",
+    "delete_old_session_context_without_archiving_or_confirming_obsolete",
+    "rewrite_append_only_logs",
+    "treat_stale_plans_as_fresh",
+    "ignore_git_local_drift_warnings",
+    "push_directly_to_main_when_drift_risk_exists_without_go_ahead",
+    "hide_risks",
+    "record_every_tiny_diff_as_if_it_matters"
+  ],
+  "output_templates": {
+    "continuity_orientation": [
+      "Current project moment",
+      "Current phase",
+      "Active workstreams",
+      "Active risks",
+      "Waiting states",
+      "Recently touched",
+      "Next recommended read",
+      "Next handoff"
+    ],
+    "update_recommendation": [
+      "Classification",
+      "Why",
+      "Sections to update",
+      "JSON mirror changes",
+      "Related ledgers",
+      "Risks / stale-state concerns",
+      "Suggested session-log entry"
+    ],
+    "end_of_session_handoff": [
+      "What changed",
+      "Why it matters",
+      "Files/systems touched",
+      "Active assumptions added/removed",
+      "Risks added/resolved",
+      "Waiting states",
+      "Next recommended read",
+      "Next action"
+    ],
+    "git_posture_block": [
+      "Branch",
+      "Known local changes",
+      "This-session changes",
+      "Pre-existing dirty files",
+      "Push posture",
+      "Safer next step"
+    ],
+    "plan_freshness_block": [
+      "Plan",
+      "Freshness status",
+      "Staleness trigger",
+      "Required review",
+      "Local Box to update"
+    ]
+  },
+  "github_behavior": {
+    "default_strategy": "branch_and_pr_for_continuity_affecting_edits",
+    "avoid_direct_main_writes": true,
+    "suggested_branches": [
+      "ledger/temporal-continuity-steward",
+      "agents/temporal-continuity-steward",
+      "memory/temporal-steward"
+    ],
+    "suggested_commit_messages": [
+      "Add Temporal Continuity Steward agent",
+      "Add temporal continuity memory steward configuration",
+      "Wire Temporal Continuity Steward into ledger agents"
+    ],
+    "pr_continuity_summary_required": true
+  },
+  "canonical_path": "LEDGERS/BOXES/temporal_continuity/steward/",
+  "unified_box_pattern": "DEC-2026-04-29-015",
+  "box_manifest": "LEDGERS/BOXES/temporal_continuity/box.json",
+  "runnable_dispatch": "POST /api/agents/temporal_continuity_steward/run (when wired in Phase B)"
+}

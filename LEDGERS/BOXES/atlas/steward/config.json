@@ -1,0 +1,143 @@
+{
+  "id": "atlas_sweep_steward",
+  "name": "Atlas Sweep Steward",
+  "version": "0.1.0",
+  "status": "draft (Phase B graduation pending — see PROB-2026-04-30-015)",
+  "authored_on": "2026-04-30",
+  "canonical_repo_path": "LEDGERS/BOXES/atlas/steward/",
+  "legacy_runtime_path": null,
+  "legacy_path_status": "no_legacy — first runnable form will land here in Phase B",
+  "resolution_helper": "server.py _agent_resolve_prompt — falls through legacy (none) directly to unified Box (added in ATOM-2026-04-30-0029)",
+  "primary_surface_read": "LEDGERS/atlas/ (symlink → /Users/jakeaaron/Documents/Atlas/)",
+  "primary_surface_read_mode": "READ ONLY — never write into Atlas folders",
+  "supporting_files": [
+    "LEDGERS/SOURCE_OF_TRUTH.md",
+    "LEDGERS/OPEN_PROBLEMS_LEDGER.md",
+    "LEDGERS/OPEN_PROBLEMS_LEDGER.json",
+    "LEDGERS/COMMUNICATIONS_LEDGER.md",
+    "LEDGERS/COMMUNICATIONS_LEDGER.json",
+    "LEDGERS/DECISIONS_LEDGER.md",
+    "LEDGERS/ATOMS.md",
+    "LEDGERS/ATOMS.json",
+    "LEDGERS/TEMPORAL_CONTINUITY.md",
+    "LEDGERS/BOXES/atlas/box.json",
+    "LEDGERS/BOXES/atlas/BOX.md",
+    "CCAgentindex/_ledger/activity.jsonl"
+  ],
+  "writes_only": [
+    "LEDGERS/BOXES/atlas/receipts/<YYYY-MM-DD_HH-MM-SS>_run_<id>.json",
+    "CCAgentindex/_ledger/activity.jsonl (append-only)",
+    "LEDGERS/DRAFTS/ATOMIZATION/atlas_drift_<date>.md (always)",
+    "LEDGERS/DRAFTS/ATOMIZATION/atlas_atoms_<date>.md (always)",
+    "LEDGERS/OPEN_PROBLEMS_LEDGER.md (reconcile mode only, append-only)",
+    "LEDGERS/OPEN_PROBLEMS_LEDGER.json (reconcile mode only, append-only)",
+    "LEDGERS/COMMUNICATIONS_LEDGER.md (reconcile mode only, append-only)",
+    "LEDGERS/COMMUNICATIONS_LEDGER.json (reconcile mode only, append-only)"
+  ],
+  "writes_forbidden": [
+    "anything inside LEDGERS/atlas/",
+    "existing PROB / COMM / DEC / ATOM entries (only append new)",
+    "ATOMS.md / ATOMS.json directly (atom candidates go through DRAFTS review first)",
+    "_ledger/activity.jsonl past entries",
+    "main branch directly without explicit go-ahead",
+    "any file the steward did not author and is not explicitly authorized to append to"
+  ],
+  "mission": "Fact-check the project's ledger system against operator-actual-machine-activity observed by Pieces MCP. Surface drift; never auto-resolve.",
+  "core_rules": [
+    "Atlas wins for what-actually-happened-on-the-operator's-machine.",
+    "Project ledgers win for what-the-system-now-claims.",
+    "Both truths are load-bearing; surface the gap, don't pick a winner.",
+    "Filter for project-relevance — Atlas captures everything; not all of it is project memory.",
+    "Never invent observations Pieces didn't make.",
+    "Atom candidates always go through DRAFTS review first.",
+    "audit_only is the safe default; reconcile requires explicit dispatch."
+  ],
+  "modes": {
+    "audit_only": {
+      "default": true,
+      "writes": ["receipt", "activity_line", "DRAFTS/ATOMIZATION/atlas_drift_<date>.md", "DRAFTS/ATOMIZATION/atlas_atoms_<date>.md"],
+      "purpose": "produce a findings report; surface drift / handoffs / atom suggestions to drafts; do NOT touch live OPL/COMM"
+    },
+    "reconcile": {
+      "default": false,
+      "writes": ["receipt", "activity_line", "drafts", "OPL append (drift)", "COMM append (handoff lessons)"],
+      "purpose": "apply scoped writes to OPL and COMM; atom candidates still go to drafts"
+    }
+  },
+  "invoke_when": [
+    "end_of_day_sweep",
+    "cold_start_orientation_for_new_session",
+    "ledger_drift_suspicion",
+    "pre_decision_context_check",
+    "prob_or_comm_closure_verification",
+    "operator_explicitly_requests_ground_truth_check"
+  ],
+  "do_not_invoke_for": [
+    "routine_ambient_pieces_read (the Live Pieces ribbon handles that)",
+    "one_off_lookup_of_specific_event (faster to read Atlas folder directly)",
+    "non_project_atlas_summaries (entertainment, personal exploration)"
+  ],
+  "classifications": [
+    {"id": "A", "name": "concordance", "meaning": "Atlas matches a ledger entry; no surfacing needed"},
+    {"id": "B", "name": "drift_detected", "meaning": "Atlas contradicts a ledger claim or describes work the ledgers missed"},
+    {"id": "C", "name": "handoff_lesson", "meaning": "Atlas surfaces a pattern Communications should hold but doesn't"},
+    {"id": "D", "name": "action_suggestion", "meaning": "Atlas 'Next Steps' names a concrete action that should become an atom"},
+    {"id": "E", "name": "decision_context", "meaning": "Atlas captures DEC reasoning that didn't make the entry"},
+    {"id": "F", "name": "out_of_scope", "meaning": "summary is project-adjacent but doesn't fit A-E"}
+  ],
+  "project_relevance_filter": {
+    "filename_include_patterns": [
+      "pieces_cc_agent_*",
+      "pieces_comeketo_*",
+      "pieces_*_ledger_*",
+      "pieces_*_steward_*",
+      "pieces_*_atom_*",
+      "pieces_*_box_*",
+      "pieces_box_*",
+      "pieces_*_phase_*",
+      "pieces_*_orchestration_*",
+      "pieces_*_architecture_*",
+      "pieces_ai_*_ledger*"
+    ],
+    "filename_exclude_patterns": [
+      "pieces_malcolm_*",
+      "pieces_*_consumption*",
+      "pieces_*_entertainment_*",
+      "pieces_audio_content_*",
+      "pieces_continuous_audio_*",
+      "pieces_passive_media_*",
+      "pieces_ambient_media_*"
+    ],
+    "tldr_keywords_include": [
+      "CC Agent", "Comeketo", "Cowork",
+      "ledger", "Open Problems", "Decisions", "Communications", "Temporal Continuity", "Global Ledger", "Source of Truth", "Box Bus", "North Star", "Definition of Done",
+      "atom", "steward", "Box", "Phase A", "Phase B", "Phase C",
+      "PROB-", "DEC-", "COMM-", "ATOM-",
+      "Andre", "Brenda", "Hugo"
+    ],
+    "resources_path_include": [
+      "/Users/jakeaaron/Downloads/CC Agent/"
+    ]
+  },
+  "atlas_folder_naming": "<DayOfWeek>, <Month> <NthOrN>, <YYYY> — e.g. 'Thursday, April 30th, 2026' or 'Friday, April 24, 2026'. Steward must handle both ordinal and cardinal day formats.",
+  "atlas_summary_format": {
+    "header_pattern": "*Shared Summary from Pieces (https://pieces.app) by <name> (<email>) on <day> <month> <day-num>, <year> - <time>*",
+    "section_headers": ["TLDR", "Core Tasks & Projects", "Key Discussions & Decisions", "Resources Reviewed", "Next Steps"],
+    "optional_sections": ["Agent Interaction & Testing", "Conversational Themes", "Technical Highlights"]
+  },
+  "receipt_path": "LEDGERS/BOXES/atlas/receipts/<YYYY-MM-DD_HH-MM-SS>_run_<request_id>.json",
+  "drafts_paths": {
+    "drift": "LEDGERS/DRAFTS/ATOMIZATION/atlas_drift_<YYYY-MM-DD>.md",
+    "atoms": "LEDGERS/DRAFTS/ATOMIZATION/atlas_atoms_<YYYY-MM-DD>.md"
+  },
+  "github_behavior": {
+    "default_strategy": "branch_and_pr_for_OPL_and_COMM_appends",
+    "avoid_direct_main_writes_when_drift_exists": true,
+    "pr_atlas_findings_summary_required": true
+  },
+  "unified_box_pattern_decision": "DEC-2026-04-29-015",
+  "canonical_path_decision": "DEC-2026-04-30-004",
+  "promotion_via_atom": "PROB-2026-04-30-015 (atom decomposition pending)",
+  "box_manifest": "LEDGERS/BOXES/atlas/box.json",
+  "runnable_dispatch": "POST /api/agents/atlas_sweep_steward/run (planned — Phase B wiring; resolution helper already supports the path)"
+}

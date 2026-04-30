@@ -1,0 +1,290 @@
+{
+  "ledger_type": "phase",
+  "version": "0.1.0",
+  "envelope_v": "1",
+  "tier": "global",
+  "last_updated": "2026-04-29",
+  "phase_of_buildout": "Phase B step 1 — first unified ledger Box landed (temporal_continuity)",
+  "status": "active",
+  "maintainer": "Jake / Comeketo Agent project agents",
+  "core_rule": "Know what phase you're in before proposing structural change.",
+  "steward_agent": {
+    "status": "not_yet_authored",
+    "future_canonical_path": "Subagent Boxes/phase_subagent_package/",
+    "future_runnable_path": "CCAgentindex/agents/phase_steward/",
+    "phase_when_built": "Phase B (Sub-agents)"
+  },
+  "current_phase": {
+    "id": "phase_b_subagents",
+    "name": "Phase B — Sub-agents",
+    "status": "in_progress",
+    "started": "2026-04-29",
+    "ready_to_exit": false,
+    "step_1_complete": "first unified Box landed at LEDGERS/BOXES/temporal_continuity/",
+    "exit_pending": "all 5 draft graduations + LEDGERS/AGENTS/global_ledger_steward/ reorg + missing-ledger Boxes + runnable wiring per PHASE.md §4 exit criteria"
+  },
+  "phase_map": [
+    {
+      "id": "phase_a",
+      "name": "Phase A — Ledgers",
+      "order": 1,
+      "status": "complete",
+      "completed": "2026-04-29"
+    },
+    {
+      "id": "phase_b",
+      "name": "Phase B — Sub-agents",
+      "order": 2,
+      "status": "in_progress",
+      "started": "2026-04-29"
+    },
+    {
+      "id": "phase_c",
+      "name": "Phase C — Subagent Boxes + Reactive Box Network Runtime",
+      "order": 3,
+      "status": "final"
+    }
+  ],
+  "phase_a": {
+    "purpose": "Author the project's full memory spine. Every architectural pattern future work depends on must be named, written down, cross-referenced before sub-agents (Phase B) or runtime (Phase C).",
+    "exit_criteria": [
+      {
+        "name": "Global Ledger active",
+        "met": true
+      },
+      {
+        "name": "Temporal Continuity Ledger active",
+        "met": true
+      },
+      {
+        "name": "North Star Ledger active",
+        "met": true
+      },
+      {
+        "name": "File Directory Ledger active",
+        "met": true
+      },
+      {
+        "name": "Open Problems Ledger active",
+        "met": true
+      },
+      {
+        "name": "Communications Ledger active",
+        "met": true
+      },
+      {
+        "name": "Decisions Ledger active",
+        "met": true
+      },
+      {
+        "name": "Box Ledger active (concept)",
+        "met": true
+      },
+      {
+        "name": "Box Bus Ledger active (wire shape; runtime deferred to Phase C)",
+        "met": true
+      },
+      {
+        "name": "Definition of Done Ledger active",
+        "met": true
+      },
+      {
+        "name": "Source-of-Truth Ledger active",
+        "met": true
+      },
+      {
+        "name": "Connections Ledger active",
+        "met": true
+      },
+      {
+        "name": "File Contents Ledger active",
+        "met": true
+      },
+      {
+        "name": "Asset / Widget Map active",
+        "met": true
+      },
+      {
+        "name": "Settings Ledger active",
+        "met": true
+      },
+      {
+        "name": "Phase Ledger active",
+        "met": true
+      },
+      {
+        "name": "High-risk Page Ledgers authored (boxes, intake, automation, delegations, settings page)",
+        "met": true
+      },
+      {
+        "name": "All envelope-aware (declares tier; cross-references BOX_BUS §2.1)",
+        "met": true
+      },
+      {
+        "name": "Every active ledger registered in INDEX + GLOBAL §8",
+        "met": true
+      }
+    ],
+    "deferred_explicitly_out_of_phase_a": [
+      "9 lower-risk Page Ledgers (grid, leads, clients, coworkers, contacts, venues, briefing, activity, analytics)",
+      "Widget Ledgers",
+      "Prompt/Reconstruction Ledger",
+      "Scout Ledger",
+      "per-directory Box.md stamps"
+    ],
+    "deferred_note": "Their absence does NOT block Phase A exit.",
+    "do_not_leak_rules": [
+      "No runtime work (no router, propagation ledger, T1/T2/T3 interpreters, validation enforcement, cycle enforcement) — DEC-2026-04-29-013",
+      "No sub-agent graduations — 5 draft packages at /Subagent Boxes/ stay drafts",
+      "No new Box class authoring beyond ledger work needs",
+      "No reactive-box-bus implementation"
+    ],
+    "rationale": "Phasing rule protects against half-finished architecture (per DEC-2026-04-29-008). Building bus before interpreters is wiring without engines. Phase A's job: every future phase has stable target.",
+    "history": [
+      {
+        "date": "2026-04-28",
+        "event": "Phase A started (Phases 1-5: Global, Temporal Continuity, North Star, File Directory, Open Problems)"
+      },
+      {
+        "date": "2026-04-29",
+        "event": "Phase A wrapping (Phases 6-21 in rapid succession: Communications, Decisions, Box Ledger, DoD, Box Bus, Source-of-Truth, Connections, File Contents, Asset/Widget Map, Settings, 5 Page Ledgers, Phase Ledger)"
+      }
+    ]
+  },
+  "phase_b": {
+    "purpose": "Graduate 5 draft sub-agent packages at /Subagent Boxes/ into runnable app agents under CCAgentindex/agents/<name>/. Author additional sub-agents for ledgers without a draft yet. Each becomes the operator that reads/updates a specific ledger.",
+    "scope": [
+      "Graduate: file_directory, north_star, open_problems, temporal_continuity (global_ledger already done) → runnable",
+      "Author and graduate: communications, decisions, box, box_bus, dod, sot, connections, file_contents, asset_widget_map, settings, phase, plus per-Page-Ledger stewards as needed",
+      "Each runnable steward exposes POST /api/agents/<name>/run with audit-only and local-write modes",
+      "Each writes receipts to CCAgentindex/_ledger/<name>_runs/"
+    ],
+    "exit_criteria": [
+      "All 15 project-level ledger stewards runnable",
+      "Each high-risk Page Ledger has a steward (boxes, intake, automation, delegations, settings)",
+      "Each runnable steward has executed at least one successful run with receipts",
+      "/Subagent Boxes/ draft directory empty (or remaining contents are explicit no-ops)",
+      "Activity log shows steward run events for ≥5 distinct stewards over a 7-day window"
+    ],
+    "do_not_leak_rules": [
+      "No Box Bus runtime",
+      "No new top-level ledgers unless an open problem can't be resolved otherwise"
+    ],
+    "unified_box_pattern": "DEC-2026-04-29-015",
+    "target_structure": {
+      "path": "LEDGERS/BOXES/<name>/",
+      "files": [
+        "box.json (manifest per BOX_BUS §2.1)",
+        "BOX.md (per-Box orientation)",
+        "steward/AGENTS.md",
+        "steward/config.json",
+        "steward/prompt.md",
+        "receipts/ (run outputs)"
+      ],
+      "rule": "Ledger files (LEDGERS/<NAME>.md + .json) STAY in place. Box governs via box.json.owns[] path reference. Moving them breaks Read-First protocol (do_not_undo_casually per DEC-015)."
+    },
+    "progress": {
+      "boxes_built": 1,
+      "boxes_total_planned": "16+ project-level + per-page as needed",
+      "first_box": "LEDGERS/BOXES/temporal_continuity/",
+      "next_priorities": [
+        "Reorganize LEDGERS/AGENTS/global_ledger_steward/ → LEDGERS/BOXES/global_ledger/steward/",
+        "Graduate 3 remaining drafts (file_directory, north_star, open_problems)",
+        "Author Boxes for missing-ledger stewards (communications, decisions, box, box_bus, dod, sot, connections, file_contents, asset_widget_map, settings, phase)",
+        "Wire each steward's runnable form"
+      ]
+    }
+  },
+  "phase_c": {
+    "purpose": "Each Box gets a box.json manifest. Router runs. T1/T2/T3 interpreters dispatch. Propagation ledger records every routed entry. Triad becomes operational.",
+    "scope": [
+      "Manifests for every existing Box (28 Client + 10 Staff + orchestrator + inbox-skill + ledger directory + app-ui root)",
+      "Build router daemon (or post-write hook on *.jsonl and ledger writes)",
+      "Build propagation ledger at CCAgentindex/_ledger/propagation.jsonl",
+      "Wire T1 interpreters (deterministic schema-mapper) — ~80% of routing",
+      "Wire T2 interpreters (small-LLM template-summarizer) — ~15% of routing",
+      "Wire T3 interpreters (full sub-agent dispatch) — ~5% of routing",
+      "Validation enforcement on emit",
+      "Cycle enforcement at router"
+    ],
+    "exit_criteria": [
+      "Every active Box has a manifest registered with the router",
+      "Validation passes 100% of emits in a 24-hour window",
+      "T1 mapper handles a documented set of cross-ledger fan-outs without LLM cost",
+      "Cycle enforcement has caught ≥1 would-be cycle (proves check works)",
+      "Propagation ledger has 24+ hours of clean entries"
+    ],
+    "note": "Final phase in the current arc. Next arc starts with fresh phasing decision when it arrives."
+  },
+  "current_snapshot_2026_04_29": {
+    "current_phase": "Phase A — Ledgers (wrapping)",
+    "started": "2026-04-28",
+    "exit_readiness": "All criteria met as of this ledger landing",
+    "next_phase": "Phase B — Sub-agents",
+    "architectural_lock": "DEC-2026-04-29-002 (three-phase build) + DEC-2026-04-29-013 (Reactive Box Network runtime deferred to Phase C)",
+    "page_ledgers_authored": 5,
+    "page_ledgers_total_planned": 14,
+    "page_ledgers_authored_list": [
+      "boxes",
+      "intake",
+      "automation",
+      "delegations",
+      "settings"
+    ],
+    "page_ledgers_deferred": 9,
+    "other_deferred": [
+      "Widget Ledgers",
+      "Prompt/Reconstruction Ledger",
+      "Scout Ledger",
+      "per-directory Box.md stamps"
+    ]
+  },
+  "phase_transition_protocol": [
+    "Update this ledger (flip current phase to complete; advance to next; bump Last updated)",
+    "Add Decisions Ledger entry declaring phase complete (load-bearing — unlocks next phase)",
+    "Update Temporal Continuity §1 + §3",
+    "Update Global Ledger §6 + §12",
+    "Append to activity ledger with kind: phase_transition",
+    "Re-read do-not-leak rule for new phase before proposing any new structural work"
+  ],
+  "anti_patterns": [
+    "'This sub-agent will be quick to graduate, let me just do it now during Phase A' — NO. Sub-agent graduation is Phase B.",
+    "'The runtime is just one router daemon, let me prototype it during Phase A' — NO. Phase C runtime held until Phases A+B stable. Prototype-as-spec is fine (BOX_BUS_LEDGER.md); prototype-as-code is not.",
+    "'This Page Ledger pattern is so easy, let me batch all 14' — NO. Earned one at a time; better one well-grounded than 14 thin stubs.",
+    "'This Box needs a manifest, let me stamp it now' — NO. Manifest authoring is Phase C+1 backfill."
+  ],
+  "phase_aware_done_gate_questions": [
+    "What phase is the project in right now? (Read this ledger current_snapshot.)",
+    "Is the proposed work in-phase or out-of-phase?",
+    "If out-of-phase: can it be reframed to in-phase scope, deferred until the right phase opens, or recorded as Open Problem?"
+  ],
+  "north_star_alignment": {
+    "directly_supports": [
+      "NS-07",
+      "NS-09",
+      "NS-10"
+    ],
+    "indirectly_supports": [
+      "NS-01",
+      "NS-02"
+    ]
+  },
+  "related_ledgers": {
+    "binding_decision": "DECISIONS_LEDGER.md DEC-2026-04-29-002 (three-phase build)",
+    "runtime_deferral_decision": "DECISIONS_LEDGER.md DEC-2026-04-29-013 (Reactive Box Network runtime deferred to Phase C)",
+    "completion_authority": "DEFINITION_OF_DONE.md §11 (Phase Ledger row in Update Matrix)",
+    "current_state": "TEMPORAL_CONTINUITY.md §1 (current snapshot)",
+    "global": "GLOBAL_LEDGER.md §6 (active workstreams)",
+    "communications_promotion": "COMM-2026-04-29-003 (three-phase build discipline — promoted to DEC-2026-04-29-002)"
+  },
+  "history": [
+    {
+      "date": "2026-04-29",
+      "event": "Phase 21 — initial creation. Phase A closer. Names current phase, exit criteria, do-not-leak rules, transition protocol, anti-patterns, phase-aware Done Gate questions. Tier: global. Companion files: PHASE.json. Companion Communications entry: COMM-2026-04-29-015. Phase A exit-ready as of this ledger landing — pending Decisions Ledger entry to declare complete."
+    },
+    {
+      "date": "2026-04-29",
+      "event": "Phase B opened. First unified Box landed at LEDGERS/BOXES/temporal_continuity/. Phase B target structure refined per DEC-2026-04-29-015 — replaces 'graduate to CCAgentindex/agents/<name>/' framing."
+    }
+  ]
+}

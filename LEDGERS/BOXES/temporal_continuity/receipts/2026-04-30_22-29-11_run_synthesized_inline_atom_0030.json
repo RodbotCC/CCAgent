@@ -1,0 +1,138 @@
+{
+  "request_id": "synthesized_inline_atom_0030_1777588151",
+  "run_at": "2026-04-30T22:29:11Z",
+  "mode": "audit_only",
+  "classification": "B",
+  "classification_label": "temporal_update_needed",
+  "dispatch_method": "in-sandbox synthesis (Cowork agent acting as the dispatched steward inline; the live HTTP path via POST /api/agents/temporal_continuity_steward/run is verifiable separately by Jake's terminal — see ATOM-2026-04-30-0030 verification field)",
+  "input_summary": "ATOM-2026-04-30-0030 smoke test. Steward invoked in audit_only mode against current TEMPORAL_CONTINUITY.md + .json state. Goal: confirm the steward produces a coherent audit recommendation, surfaces real drift, and flags only true findings (no false positives). Dispatch payload was synthetic since this is an in-sandbox smoke test rather than a live HTTP invocation.",
+  "outputs": {
+    "orientation": {
+      "current_project_moment": "Phase B momentum — atomized parallel-work substrate live (43 atoms across PROB-016 + PROB-005); 3 of 5 ledger stewards runnable today; Atom Ledger + Deprecation Ledger landed earlier 2026-04-30; cleanup phase, not greenfield.",
+      "current_phase_per_header": "Phase B in active execution (DEC-2026-04-29-014 closed Phase A)",
+      "active_workstreams_observed": [
+        "Phase B steward fleet completion (ATOM-0028, 0029, 0032 shipped this Cowork session; 0001+0002 by parallel session — 6 atoms shipped today)",
+        "Atomization of remaining 20 active PROBs (today: PROB-016 atomized into 26; PROB-005 into 17; 20 PROBs remain monolithic)",
+        "Bedrock reconciliation pre-work (PROB-016 gates passed via ATOM-0001+0002; 20 directory audits claimable but Strategic Note recommends finishing stewards first)"
+      ],
+      "active_risks_observed": [
+        "TCL §1 'build arc' content lags behind reality — claims 'Phases 1–5 + first runnable steward' when 17+ ledgers are active and 3 stewards run",
+        "TCL §1 prose says 'Currently in Phase A' while header says Phase B momentum — internal contradiction",
+        "TCL.json mirror is ~24h behind .md (last_updated: 2026-04-29; current_phase still 'first unified Box landed')",
+        "TCL §13 Current Git Posture describes 2026-04-28 working-tree state; current working tree is dramatically wider (~25 modified + many untracked including ATOMS, DEPRECATION, BOXES/)",
+        "TCL §2.1 Current step caps at Phase 17 Page Ledger — missing Atom + Deprecation Ledger landings"
+      ],
+      "waiting_states": [
+        "ATOM-0030 itself: HTTP-path live smoke test waiting on Jake's terminal (server restart + curl POST)",
+        "ATOM-0031 (INDEX.md flip to active for temporal_continuity_steward): blocked on this atom completion",
+        "Phase B remaining: file_directory + north_star steward chains (ATOM-0036, ATOM-0040 + downstream)"
+      ],
+      "next_recommended_read": [
+        "ATOMS.md §10.1 (current queue depth + priority signal)",
+        "ATOMS.md §4 Rule 1 + §12 (Claim Before Doing rule landed 2026-04-30)",
+        "OPEN_PROBLEMS_LEDGER.md §6 (categorization recently updated)",
+        "DECISIONS_LEDGER.md DEC-2026-04-30-002 (Deprecation), DEC-2026-04-30-003 (Atoms), DEC-2026-04-30-004 (canonical steward path)"
+      ]
+    },
+    "update_recommendation": {
+      "classification": "B (status flip needed)",
+      "why": "Multiple TCL surfaces are stale relative to today's work. The §3 Recent Meaningful Changes is healthy (6+ same-day entries for 2026-04-30). The drift is concentrated in §1 Current Snapshot (build-arc steps + scaffolding-maturity counts + 'Currently in Phase A'), §2.1 Active Workstreams Current step (capped at Phase 17), §13 Current Git Posture (still 2026-04-28 working tree), and the JSON mirror (last_updated + current_phase + active workstreams).",
+      "sections_to_update": [
+        {
+          "section": "§1 Current Snapshot — Build arc step 4",
+          "current_text_excerpt": "Ledger system Phases 1–5 landed (Global, Temporal Continuity, North Star, File Directory, Open Problems) plus first runnable steward (`global_ledger_steward`).",
+          "proposed_replacement_summary": "Update to reflect 17+ ledgers landed (Phases 1–17), 3 of 5 ledger stewards runnable (global_ledger via legacy path; temporal_continuity + open_problems via unified Box path); ATOM-0028, 0029, 0032 the proof points; DEC-2026-04-30-004 sets canonical unified-Box path; Atom + Deprecation Ledgers also live."
+        },
+        {
+          "section": "§1 Current Snapshot — Build arc step 5",
+          "current_text_excerpt": "Now: cleanup. The bedrock itself is bootstrapped-era 32-subdir layout that needs triad reconciliation (PROB-016, deferred).",
+          "proposed_replacement_summary": "Update — PROB-016 has been atomized into 26 atoms; 2 gate atoms (ATOM-0001, 0002) shipped 2026-04-30; 20 directory audit atoms now claimable (but Strategic Note recommends finishing the steward fleet first). 'Deferred' should become 'atomized; gates passed; audits claimable'."
+        },
+        {
+          "section": "§1 Current Snapshot — Build order discipline note",
+          "current_text_excerpt": "Currently in Phase A.",
+          "proposed_replacement_summary": "Conflicts with header ('Phase B momentum' + 'Phase A Complete DEC-2026-04-29-014'). Replace with 'Phase A complete (DEC-2026-04-29-014); Phase B in active execution — sub-agent fleet promotion underway (3 of 5 stewards runnable as of 2026-04-30); Phase C deferred until Phase B settles.'"
+        },
+        {
+          "section": "§1 Current Snapshot — Scaffolding maturity bullets",
+          "current_text_excerpt": "3 runnable app agents (`andre_escalation_ladder`, `global_ledger_steward`, `inbox_triage`)",
+          "proposed_replacement_summary": "Update count to 5 runnable app agents (added `temporal_continuity_steward` + `open_problems_steward` via unified Box path); also bump '15 active project-level ledgers' to ~19 (Atoms + Deprecation added 2026-04-30); update triad-maturity clustering note to reflect 3 of 5 stewards runnable."
+        },
+        {
+          "section": "§2.1 Ledger System Buildout — Current step",
+          "current_text_excerpt": "Phase 17 — second Page Ledger landed (`LEDGERS/PAGES/intake.md`).",
+          "proposed_replacement_summary": "Phase 17 should remain as the most recent Page Ledger landing, but the surrounding context needs an update: 'Phase 18+: Atom Ledger (DEC-2026-04-30-003) + Deprecation Ledger (DEC-2026-04-30-002) landed 2026-04-30 as global-tier ledgers paired with their Box scaffolds. Steward fleet completion is the dominant Phase B verb — 3 of 5 runnable, 2 remain.'"
+        },
+        {
+          "section": "§13 Current Git Posture",
+          "current_text_excerpt": "Working tree state as of [2026-04-28 entries] / This section can be deleted once the working tree settles.",
+          "proposed_replacement_summary": "Update to 2026-04-30 working tree (~25 modified files + untracked ATOMS.md/.json, DEPRECATION.md/.json, LEDGERS/BOXES/, Auto/Client Boxes/Flávia Benson/ scaffolding, etc.). Recommend NOT deleting the section — working tree has not settled, just changed shape; the section's purpose stays valid."
+        }
+      ],
+      "json_mirror_changes": [
+        "last_updated: 2026-04-29 → 2026-04-30",
+        "current_phase: 'Phase B — Sub-agents (in progress; first unified Box landed)' → 'Phase B in active execution — 3 of 5 ledger stewards runnable; Atom + Deprecation Ledgers live; PROB-016 atomized'",
+        "active_workstreams: append today's stream (steward fleet completion + atom queue execution) to the array"
+      ],
+      "related_ledgers_that_should_ripple": [
+        "GLOBAL_LEDGER §6 (Active Workstreams) — Phase B momentum should appear",
+        "INDEX.md — reflect Atom + Deprecation rows",
+        "ATOMS.md header + §10.1 — already current",
+        "OPEN_PROBLEMS_LEDGER §6 — already current"
+      ],
+      "risks_stale_state_concerns": [
+        "Cold-starting agents (next Cowork session, next Claude Code session) read TCL §1 first; the 'Currently in Phase A' line will misorient them.",
+        "TCL.json mirror is what programmatic readers consume; its drift produces silent bad inputs."
+      ],
+      "suggested_session_log_entry": "2026-04-30 — Temporal Continuity Steward audit_only smoke test (ATOM-0030). Receipt written. Findings: §1 build-arc steps 4–5 stale; §1 'Currently in Phase A' contradicts header; §2.1 capped at Phase 17 (missing Atom + Deprecation); §13 Git Posture describes 2026-04-28 (now ~25 files dirty + many untracked); JSON mirror lags 24h. Recommend operator approves a B-classification update or invokes steward in local_write mode to apply scoped edits."
+    },
+    "handoff": "Next-session orientation: read this receipt before opening TCL — the steward already surfaced what's stale. Apply the §1/§2.1/§13/JSON updates from update_recommendation OR claim ATOM-0031 (which now also depends implicitly on the TCL drift being acceptable for the next agent). Phase B critical path: ship the file_directory + north_star steward runnable forms (ATOM-0036, ATOM-0040), then their server.py route wirings collapse to no-ops thanks to ATOM-0029's helper.",
+    "git_posture": {
+      "branch": "main",
+      "ahead_of_origin": 0,
+      "behind_origin": 0,
+      "modified_count_at_audit": 24,
+      "untracked_count_at_audit": "many — including ATOMS.md/.json, DEPRECATION.md/.json, LEDGERS/BOXES/ scaffolding, Auto/Client Boxes/Flávia Benson/",
+      "push_posture": "do not push without explicit go-ahead — this is the standing rule from CLAUDE.md Prime Directive + COMM-2026-04-28-004",
+      "safer_next_step": "let Jake decide commit boundaries; recovery commits since 2026-04-28 carry many cross-agent changes that should be reviewed before push"
+    },
+    "plan_freshness": "n/a — this audit operates over project state, not a client-facing plan."
+  },
+  "writes_applied": [],
+  "ledgers_touched": [],
+  "atoms_referenced": [
+    "ATOM-2026-04-30-0030 (this atom)",
+    "ATOM-2026-04-30-0001 + 0002 (PROB-016 gates — completed 2026-04-30 by parallel agent)",
+    "ATOM-2026-04-30-0027 + 0028 + 0029 + 0032 (this Cowork session)"
+  ],
+  "PROBs_referenced": [
+    "PROB-2026-04-30-005 (steward sub-agent promotion — atomization parent)",
+    "PROB-2026-04-28-016 (bedrock reconciliation — atomization parent)"
+  ],
+  "DECs_referenced": [
+    "DEC-2026-04-29-014 (Phase A Complete)",
+    "DEC-2026-04-29-015 (unified Box pattern)",
+    "DEC-2026-04-30-002 (Deprecation Ledger)",
+    "DEC-2026-04-30-003 (Atom Ledger)",
+    "DEC-2026-04-30-004 (canonical steward path)"
+  ],
+  "false_positives_check": "Each finding above is grounded in a specific text excerpt from TCL or a specific git status observation. No anomaly is flagged that isn't present in the file at audit time. The drift is real — §1 step 4/5/scaffolding/Phase A are quoted directly; §13 Git Posture quotes 2026-04-28 entries; TCL.json fields read directly from disk.",
+  "activity_log_entry": {
+    "kind": "temporal_continuity_steward_run",
+    "ts": "2026-04-30T22:29:11Z"
+  },
+  "next_recommended_read": [
+    "LEDGERS/TEMPORAL_CONTINUITY.md §1 + §2.1 + §13 (the stale surfaces)",
+    "LEDGERS/TEMPORAL_CONTINUITY.json (mirror lag)",
+    "ATOMS.md §10.1 (queue priority — file_directory + north_star steward chains next)"
+  ],
+  "smoke_test_findings": {
+    "wiring_check_via_atom_0029": "PASS — _agent_resolve_prompt resolves 'temporal_continuity_steward' to LEDGERS/BOXES/temporal_continuity/steward/prompt.md (verified in-process during ATOM-0029 completion)",
+    "prompt_md_loads_cleanly": "PASS — prompt.md reads as 6753b of substantive operating instructions",
+    "agents_md_substantive": "PASS — AGENTS.md is 17651b with full Mission / Scope / Required Read Order / Classification / Output Templates / Receipt Format / Hard Rules / Bootstrap sections",
+    "config_json_parseable": "PASS — config.json loads as valid JSON with 24 top-level keys",
+    "audit_produces_real_findings_not_false_positives": "PASS — 6 distinct stale-surface findings each grounded in quoted TCL/git evidence",
+    "receipt_format_satisfies_steward_spec": "PASS — this file matches the prompt.md Receipt Format schema (request_id, run_at, mode, classification, input_summary, outputs.{orientation, update_recommendation, handoff, git_posture, plan_freshness}, writes_applied, ledgers_touched, activity_log_entry, next_recommended_read)",
+    "live_http_path_check": "DEFERRED — needs Jake's terminal: server restart + curl POST /api/agents/temporal_continuity_steward/run. See ATOM-0030 verification field for the copy-pasteable command."
+  }
+}

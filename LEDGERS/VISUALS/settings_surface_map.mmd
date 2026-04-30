@@ -1,0 +1,94 @@
+%% Settings Ledger — settings page → categories → persistence layers → affected systems
+%% Reference: SETTINGS.md §3 + §4 + §8.
+
+flowchart TB
+  Settings([Settings Page<br/>SettingsScreen in screens.jsx])
+
+  Settings --> Theme[Theme]
+  Settings --> Lang[Language / i18n]
+  Settings --> Demo[Demo Mode]
+  Settings --> Provider[AI Provider<br/>3-way exclusive:<br/>claude_code · openai · codex_cli]
+  Settings --> Models[Provider Models<br/>openaiModel · piecesModel]
+  Settings --> Prompt[Prompt Enhance]
+  Settings --> BrowserUse[Browser-Use Defaults<br/>4 sub-fields]
+  Settings --> Creds[MCP Credentials<br/>masked save/clear<br/>allowlisted keys]
+  Settings --> Status[MCP Server Status<br/>read-only]
+  Settings --> Reset[Reset · wipes tweaks]
+
+  subgraph LocalStorage ["localStorage.secretary.tweaks"]
+    direction TB
+    LS_Theme[theme]
+    LS_Demo[demoMode]
+    LS_Provider[aiProvider]
+    LS_Open[openaiModel]
+    LS_Pieces[piecesModel]
+    LS_Prompt[promptEnhance]
+    LS_BU[browserUse.*]
+  end
+
+  subgraph EnvFile ["/.env · server-side"]
+    direction TB
+    Env_Close[CLOSE_API_KEY]
+    Env_Click[CLICKUP_API_TOKEN<br/>+ space + list]
+    Env_Slack[SLACK_BOT_TOKEN]
+    Env_Twilio[TWILIO_*<br/>7 vars]
+    Env_OAI[OPENAI_API_KEY]
+    Env_GH[GITHUB_TOKEN]
+    Env_Pieces[PIECES_MCP_URL<br/>PIECES_CHAT_LLM]
+    Env_BU[BROWSER_USE_PAYLOAD]
+  end
+
+  subgraph Runtime ["Runtime Only"]
+    direction TB
+    RT_Status[/api/status poll/]
+    RT_Sessions[browser-use sessions]
+    RT_Chat[current chat context]
+  end
+
+  subgraph Affected ["Affected Systems"]
+    direction TB
+    Aff_Pages[every page<br/>· theme · language ·]
+    Aff_Sends[connectors.js send<br/>· demoMode block ·]
+    Aff_Chat[ChatRail<br/>· provider · model · prompt ·]
+    Aff_Pieces[/api/pieces/ask<br/>Activity · Briefing/]
+    Aff_Browser[ChatRail browser-use worker]
+    Aff_Services[Server in-memory env<br/>· immediate availability flip ·]
+  end
+
+  Theme --> LS_Theme
+  Demo --> LS_Demo
+  Provider --> LS_Provider
+  Models --> LS_Open
+  Models --> LS_Pieces
+  Prompt --> LS_Prompt
+  BrowserUse --> LS_BU
+  Lang -. localStorage .-> LocalStorage
+
+  Creds --> EnvFile
+  Status --> RT_Status
+
+  LS_Theme --> Aff_Pages
+  LS_Demo --> Aff_Sends
+  LS_Provider --> Aff_Chat
+  LS_Open --> Aff_Chat
+  LS_Pieces --> Aff_Pieces
+  LS_Prompt --> Aff_Chat
+  LS_BU --> Aff_Browser
+  EnvFile --> Aff_Services
+
+  Reset -. wipes .-> LocalStorage
+  Reset -. does NOT affect .-> EnvFile
+
+  classDef cat fill:#dcefff,stroke:#2a5a8a,stroke-width:1px;
+  classDef ls fill:#fff7d6,stroke:#b08a00,stroke-width:1px;
+  classDef env fill:#ffe9e9,stroke:#a33,stroke-width:2px;
+  classDef rt fill:#dcffd6,stroke:#2a8a2a,stroke-width:1px;
+  classDef aff fill:#ffe9b5,stroke:#a36a00,stroke-width:1px;
+  classDef terminal fill:#f0f0f0,stroke:#666,stroke-width:2px;
+
+  class Theme,Lang,Demo,Provider,Models,Prompt,BrowserUse,Creds,Status,Reset cat;
+  class LS_Theme,LS_Demo,LS_Provider,LS_Open,LS_Pieces,LS_Prompt,LS_BU ls;
+  class Env_Close,Env_Click,Env_Slack,Env_Twilio,Env_OAI,Env_GH,Env_Pieces,Env_BU env;
+  class RT_Status,RT_Sessions,RT_Chat rt;
+  class Aff_Pages,Aff_Sends,Aff_Chat,Aff_Pieces,Aff_Browser,Aff_Services aff;
+  class Settings terminal;

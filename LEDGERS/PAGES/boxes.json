@@ -1,0 +1,186 @@
+{
+  "ledger_type": "page_ledger",
+  "page_id": "boxes",
+  "version": "0.1.0",
+  "envelope_v": "1",
+  "tier": "domain",
+  "last_updated": "2026-04-29",
+  "phase": "Phase 16 of ledger system buildout — first Page Ledger",
+  "status": "active",
+  "page_status_labels": ["active", "generated-view", "high-risk"],
+  "risk_level": "high",
+  "sitemap_section_canonical": "page_asset_sitemap.md §boxes",
+  "sitemap_done_gate_decision": "DEC-2026-04-29-007",
+  "route": "boxes",
+  "primary_component": "BoxesScreen in screens.jsx",
+  "owner_file": "screens.jsx",
+  "maintainer": "Jake / Comeketo Agent project agents",
+  "page_done_gate_local_overrides_dod_5_3": true,
+  "purpose": "Dossier / read surface for Box data — Client Boxes (28), Staff Boxes (10), orchestrator state HTML. The operator's window into Box content + completeness + freshness + recommended action.",
+  "is_editing_surface": false,
+  "is_source_of_truth": false,
+  "data_sources": [
+    "Auto/Client Boxes/<Name>/ (28 client folders, canonical per SoT §3.1)",
+    "Auto/Staff Boxes/<Name>/ (10 staff folders)",
+    "Auto/orchestrator/state/*.html (generated orchestrator snapshots)"
+  ],
+  "apis": [
+    {"endpoint": "GET /api/boxes/list", "purpose": "List all boxes with completeness + grouping"},
+    {"endpoint": "GET /api/boxes/<id>", "purpose": "One box's parsed sections (state/comms/profile/plan/alerts/agents/logic/enrichment_markdown/agents_markdown)"},
+    {"endpoint": "GET /api/boxes/<id>/html", "purpose": "Pre-rendered orchestrator state HTML for the box"},
+    {"endpoint": "GET /api/boxes/<id>/template/<slug>", "purpose": "Virtual templates: overview, checklist, action_board (server-generated)"}
+  ],
+  "loader_binding": {
+    "file": "mission_control_loader.js (fBoxes)",
+    "hydrates": ["MissionControl.boxes", "MissionControl.boxesById", "MissionControl.boxesGrouped", "MissionControl.boxesMismatch"],
+    "exposes": ["window.MissionControlRefreshBoxes()"]
+  },
+  "writes_side_effects": {
+    "direct_writes": "none — page is read-mostly",
+    "indirect_via_handoff": [
+      {"action": "right-click → Open as Intake Report →", "lands_at": "intake page with openSlug=<box_id>", "ingest_writes_to": "Auto/Client Boxes/<Name>/intake_drops/<file> (per DEC-2026-04-29-005..008)"},
+      {"action": "right-click → send section to Delegations", "creates": "delegation draft with section text"}
+    ],
+    "future_status_flip": "if direct edits are ever introduced, page status flips from generated-view to source-editing and risk re-evaluates"
+  },
+  "source_of_truth_rules": {
+    "client_truth_ordering_per_sot_3_1": [
+      {"rank": 1, "source": "Close.com API", "rendered": "no — see rank 2"},
+      {"rank": 2, "source": "01b_comms_verbatim.md", "rendered": "NOT YET UI-BOUND — known gap; future second comms tab"},
+      {"rank": 3, "source": "comms/<type>_<date>_<id>.json", "rendered": "read by server for parsing; not directly rendered"},
+      {"rank": 4, "source": "01_comms.md", "rendered": "curated comms section in dossier"},
+      {"rank": 5, "source": "00_meta.json", "rendered": "top metadata fact-pills + readiness bar"},
+      {"rank": 6, "source": "client_ledger.md", "rendered": "logic / state section"},
+      {"rank": 7, "source": "<YYYY-MM-DD>_audit_marker.md", "rendered": "logic section when present"},
+      {"rank": 8, "source": "04_profile.md, *_enrichment.md", "rendered": "profile + enrichment sections — INTERNAL ONLY"},
+      {"rank": 9, "source": "05_seven_day_plan.md", "rendered": "plan section — STRATEGY DRAFT, never truth"}
+    ],
+    "hard_rules_on_this_page": [
+      "Profile + enrichment sections must be visually labeled 'internal' — renderer phrases enrichment as 'operationally usable context vs protected/off-limits context' (per 2026-04-27 lead-dossier mode pass)",
+      "Plan section must be visually labeled 'strategy draft'",
+      "Page must obey SOURCE_OF_TRUTH §3.1 + Allowed-To-Know §4 schema"
+    ]
+  },
+  "widgets_on_page": {
+    "primary": [
+      "Roster/detail mode (focused-pair view + back-to-roster)",
+      "Search + refresh/poll controls",
+      "Unified section nav (state/profile/comms/enrichment/7-day plan/agents/logic) inside one panel",
+      "In-site dossier reader (boxes-md-rich markdown-first renderer with design-kit cards + admonition styling)",
+      "Specialized renderer slots — hugo_casillas + brenda_steve",
+      "Right-click context menu (section text/name copy, send-to-delegations, Open as Intake Report)",
+      "Per-box completeness rail (thin/partial/strong color-coded)",
+      "Horizontal rails (compact checklist nav only)",
+      "Mismatch diagnostics (unlinked box folders + people missing canonical boxes)",
+      "Page-card launcher mode (html in-panel as native pages)"
+    ],
+    "shared_with_other_pages_per_asset_widget_map": [
+      "Topbar / BottomStrip / breadcrumbs (chrome)",
+      "useContextMenu hook (right-click — Asset/Widget Map §3.3)",
+      "EditWithRodbotOverlay",
+      "AIBanner",
+      "SecretaryConnectors picker (via right-click handoff)"
+    ]
+  },
+  "supported_states": [
+    {"state": "Roster", "when": "initial load, no box selected", "render": "grid grouped by class with completeness color-coding"},
+    {"state": "Detail", "when": "box selected", "render": "focused-pair view; roster hidden behind back action"},
+    {"state": "Specialized", "when": "hugo_casillas or brenda_steve selected", "render": "custom layout overrides generic"},
+    {"state": "Page-card mode", "when": "per-box html template (overview/checklist/action_board) selected", "render": "html in-panel as native page"},
+    {"state": "Mismatch", "when": "boxesMismatch non-empty", "render": "diagnostics surface above roster"},
+    {"state": "Empty", "when": "bedrock not loaded yet", "render": "skeleton placeholder"},
+    {"state": "Error", "when": "MissionControl.boxesError set", "render": "error surface with retry"}
+  ],
+  "page_specific_guardrails": [
+    "Profile / enrichment sections are internal-only. Never render in a way that reads as customer-facing.",
+    "Plan sections are strategy drafts. Never imply the plan is what will happen. Reply gate + frequency cap + calendar reality must be visible.",
+    "Right-click → Delegations can route section text to a customer-facing channel. The Delegations page applies its own guardrails. This page is responsible for not silently embellishing what the operator chose to send.",
+    "Mismatch diagnostics are warnings, not errors.",
+    "Verbatim comms (01b_comms_verbatim.md) is rank-2 source-of-truth but NOT YET UI-bound. Operator must know that 01_comms.md (rank 4) is what's rendered. Sunsets when verbatim binding lands."
+  ],
+  "page_done_gate_required_checks": [
+    "all DoD §5.3 boxes (route still maps, asset ownership updated, etc.)",
+    "page_asset_sitemap.md §boxes updated (Asset Ownership / Change Checklist / History / Last Verified)",
+    "if dossier renderer changed: spot-checked against ≥3 client boxes (1 specialized + 2 generic)",
+    "if new specialized renderer added: registered in BoxesScreen + documented in BOX_LEDGER per-Client conventions + added to Asset/Widget Map §3.5",
+    "if new section in section-nav added: server-side /api/boxes/<id> returns it, mission_control_loader hydrates it, mismatch diagnostics still parse cleanly",
+    "if new right-click action added: cross-referenced in Asset/Widget Map §3.3 + Delegations sitemap",
+    "if completeness scoring logic changed: spot-checked against ≥1 thin + ≥1 partial + ≥1 strong box",
+    "cache-busters bumped in Secretary.html for any touched JS/CSS",
+    "this Page Ledger §12 (Recent Changes) appended"
+  ],
+  "open_page_problems": [
+    {
+      "problem": "Verbatim comms not UI-bound",
+      "detail": "01b_comms_verbatim.md exists in every box (582 raw payloads as of 2026-04-28); page renders 01_comms.md only; future second comms tab",
+      "impact": "rank-2 source-of-truth content is invisible to the operator on this page right now"
+    },
+    {
+      "problem": "Specialized renderers exist for 2 of 28 client boxes",
+      "detail": "Hugo + Brenda have custom layouts; other 26 use generic boxes-md-rich",
+      "note": "not a defect — but the specialized pattern doesn't scale by default"
+    },
+    {
+      "problem": "Allowed-To-Know schema rendering pending",
+      "cross_ref": "PROB-2026-04-28-001 (partial)",
+      "detail": "schema landed in SOURCE_OF_TRUTH §4.2; per-Box allowed_to_use.json files don't exist yet; Boxes page doesn't honor 4-bucket model in profile/enrichment rendering",
+      "next_action": "author allowed_to_use.json for Hugo Casillas first; renderer labels sections by bucket"
+    },
+    {
+      "problem": "Page can visually imply truth",
+      "mitigation": "completeness rail + internal/strategy labels",
+      "remaining_gap": "operators still have to read the labels"
+    },
+    {
+      "problem": "Plan staleness rendering",
+      "detail": "Box where plan was authored 4 days ago and client replied 1 day ago should visually indicate plan-stale state. Today's renderer relies on operator catching this from cadence + last-inbound timestamps. More explicit stale-plan banner is future work."
+    }
+  ],
+  "recent_changes_narrative_2026_04_29": "Phase 1 Intake → Box unification — right-click → Open as Intake Report →; selectId prop wires reverse handoff. Two-canonical-surfaces problem resolved (Box Reports synthesized per DEC-2026-04-29-005; one identity per Box per DEC-2026-04-29-006; refresh on read per DEC-2026-04-29-007). Cache-busts: screens.jsx 94→95, app.jsx 52→53.",
+  "recent_changes_narrative_2026_04_28": "Verbatim comms backfill — all 28 boxes received 01b_comms_verbatim.md + comms/*.json (582 raw payloads). Page does not yet render verbatim file; rank-2 SoT not reachable from this page until second comms tab lands.",
+  "recent_changes_narrative_2026_04_27": [
+    "Why specialized renderers exist (Hugo + Brenda) — first two boxes to receive deep attention revealed generic markdown-dump didn't surface right facts at right altitude. Pattern is reusable but not auto-applied.",
+    "Markdown-dump → design-kit narrative renderer — boxes-md-rich. Sections now visually carry their type (canonical/strategy/internal/generated), making §9 page-specific guardrails enforceable.",
+    "Completeness scoring (thin/partial/strong) — without this, operator couldn't tell at a glance which boxes were ready vs nominally populated but actually thin.",
+    "Lead-dossier mode (focused navigation) — roster hides after selection. Section model expanded to state/comms/profile/enrichment/7-day plan/agents/logic. Enrichment phrased as 'operationally usable context vs protected/off-limits context' — language convention that operationalizes Allowed-To-Know boundary BEFORE the schema landed.",
+    "Initial runtime + layout simplification — first boxes runtime pass (direct Auto-source APIs, top-level Boxes page); second pass merged nav + content into single panel."
+  ],
+  "architectural_rationale": [
+    {"why": "page is read-mostly", "because": "canonical truth lives in Auto/Client Boxes/<Name>/ written by orchestrator scripts. Letting the page edit canonical files would create drift surface. Per DEC-2026-04-29-005, synthesized views beat copies."},
+    {"why": "section model is unified instead of tabs", "because": "operator scrolling beats operator clicking when reading a dossier. Tabs hide content; vertical reading reveals it. Horizontal rails reserved for compact checklist nav."},
+    {"why": "specialized renderers are opt-in instead of default", "because": "authoring a specialized layout is real work. Reserving for high-altitude / high-touch boxes means the work earns its keep. As more boxes need specialized handling (e.g., once Allowed-To-Know rendering is wired), the pattern can scale."},
+    {"why": "completeness scoring is heuristic", "because": "formal completeness is moving target. Heuristic scoring with thin/partial/strong gives operator useful signal without precision the data doesn't support."},
+    {"why": "page is in the 'shining star' arc", "because": "per Jake's stated direction, Boxes will be the canonical surface for the project's eventual reactive-network architecture (DEC-2026-04-29-013). When Phase C runtime lands, every Client Box will be a runtime Box. This page is the operator's window into that."}
+  ],
+  "future_direction": {
+    "near_term": [
+      "Wire 01b_comms_verbatim.md as second comms tab — closes rank-2-not-rendered gap",
+      "Author allowed_to_use.json for Hugo Casillas as first per-Box AtK instance; renderer labels sections by bucket",
+      "Add explicit plan-stale banner when reply-after-plan is detected"
+    ],
+    "medium_term_phase_b": [
+      "Boxes-page steward agent audits each box's render output against source files weekly",
+      "Per-Box specialized renderer registry — codify pattern so adding new specialized renderer is one-file change"
+    ],
+    "long_term_phase_c": [
+      "Each Client Box becomes runtime Box with box.json manifest",
+      "Page becomes operator's window into live network: subscription events, propagation receipts, per-Box steward run summaries",
+      "Manifest stub gate from DoD §5.7 becomes hard-enforced for any Box rendered here"
+    ]
+  },
+  "related_ledgers": {
+    "canonical_per_page_truth": "page_asset_sitemap.md §boxes",
+    "cross_page_widget_catalog": "ASSET_WIDGET_MAP.md §3 + §4.2",
+    "file_roles": "FILE_CONTENTS.md §6 + §11 + §12",
+    "box_concept": "BOX_LEDGER.md",
+    "box_wire_shape": "BOX_BUS_LEDGER.md §2.1 (manifest schema; §7 worked example is Hugo Casillas)",
+    "trust_ordering": "SOURCE_OF_TRUTH.md §3.1 + §4 (Allowed-To-Know)",
+    "external_data_origin": "CONNECTIONS.md close + cowork_scheduled_tasks",
+    "decisions": ["DEC-2026-04-29-005", "DEC-2026-04-29-006", "DEC-2026-04-29-007", "DEC-2026-04-29-008"],
+    "completion_gate": "DEFINITION_OF_DONE.md §5.3 (this Page Ledger §10 is local-stricter)",
+    "open_problem": "OPEN_PROBLEMS_LEDGER.md PROB-2026-04-28-001 (partial — Allowed-To-Know rendering pending)"
+  },
+  "history": [
+    {"date": "2026-04-29", "event": "Phase 16 — initial creation. First Page Ledger. 16-section deep-memory record covering purpose, use case, route+render ownership, data sources, APIs, writes/side effects, SoT rules, widgets, supported states, page-specific guardrails, local-stricter Done Gate, open problems, narrative recent changes, architectural rationale, related ledgers, future direction. Tier: domain. Cross-references sitemap as canonical. Companion files: boxes.json, LEDGERS/PAGES/_README.md (directory orientation). Companion Communications entry: COMM-2026-04-29-013."}
+  ]
+}

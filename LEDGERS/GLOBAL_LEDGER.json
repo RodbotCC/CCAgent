@@ -1,8 +1,8 @@
 {
   "ledger_type": "global",
   "version": "0.1.0",
-  "last_updated": "2026-04-29",
-  "last_updated_note": "Phase 14 — Asset / Widget Map landed (cross-page widget catalog + API → page mapping)",
+  "last_updated": "2026-04-30",
+  "last_updated_note": "Phase B momentum — Atom Ledger landed at global tier per DEC-2026-04-30-003. PROB-2026-04-28-016 atomized into 26 single-session-claimable atoms as proof. PROBs now decompose 1:N into atoms. Earlier same-day: Deprecation Ledger + Snapshot Protocol (DEC-2026-04-30-002). 19 active ledgers.",
   "maintainer": "Jake / Comeketo Agent project agents",
   "repository": {
     "host": "github",
@@ -405,7 +405,9 @@
     {
       "id": "settings",
       "path": "LEDGERS/SETTINGS.md",
-      "status": "planned"
+      "status": "active",
+      "activated_on": "2026-04-29",
+      "scope": "User-changeable surface catalog: 11 settings, 3 persistence layers (.env / localStorage.secretary.tweaks / runtime), credential save/clear flow, demo mode rule, provider exclusivity rule. Tier: global."
     },
     {
       "id": "page_asset_sitemap",
@@ -416,7 +418,9 @@
     {
       "id": "page_ledgers",
       "path": "LEDGERS/PAGES/",
-      "status": "planned"
+      "status": "partial (5 of 14; high-risk wave complete)",
+      "activated_on": "2026-04-29",
+      "scope": "Per-page deep memory. High-risk wave complete: boxes, intake, automation, delegations, settings (5 records). Sitemap remains canonical operational truth. Lower-risk 9 routes deferred per Phase A exit policy."
     },
     {
       "id": "widget_ledgers",
@@ -460,6 +464,26 @@
       "path": "LEDGERS/ASSET_WIDGET_MAP.json",
       "status": "active",
       "activated_on": "2026-04-29"
+    },
+    {
+      "id": "settings_state_mirror",
+      "path": "LEDGERS/SETTINGS.json",
+      "status": "active",
+      "activated_on": "2026-04-29"
+    },
+    {
+      "id": "ledger_boxes_directory",
+      "path": "LEDGERS/BOXES/",
+      "status": "active (1 of 16+ Boxes built)",
+      "activated_on": "2026-04-29",
+      "scope": "Phase B target — unified Box pattern per DEC-2026-04-29-015. Each ledger gets a Box at LEDGERS/BOXES/<name>/ containing manifest + orientation + steward + receipts. Ledger files stay at LEDGERS/."
+    },
+    {
+      "id": "ledger_box_temporal_continuity",
+      "path": "LEDGERS/BOXES/temporal_continuity/",
+      "status": "active",
+      "activated_on": "2026-04-29",
+      "scope": "First unified Box. Governs LEDGERS/TEMPORAL_CONTINUITY.md + .json via box.json.owns[]. Steward not yet wired runnable."
     }
   ],
   "ui_routes": [

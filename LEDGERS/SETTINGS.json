@@ -1,0 +1,248 @@
+{
+  "ledger_type": "settings",
+  "version": "0.1.0",
+  "envelope_v": "1",
+  "tier": "global",
+  "last_updated": "2026-04-29",
+  "phase": "Phase 15 of ledger system buildout",
+  "status": "active",
+  "maintainer": "Jake / Comeketo Agent project agents",
+  "core_rule": "Every user-changeable knob has a known home, a known scope, and a known reset path.",
+  "security_rule": "Never read or write a raw secret in any ledger entry, audit log, or UI surface. The save flow is the only path to .env.",
+  "steward_agent": {
+    "status": "not_yet_authored",
+    "future_canonical_path": "Subagent Boxes/settings_subagent_package/",
+    "future_runnable_path": "CCAgentindex/agents/settings_steward/",
+    "phase_when_built": "Phase B (Sub-agents)"
+  },
+  "categories": [
+    {"id": "theme_layout", "persistence": "localStorage.secretary.tweaks", "resets_via": "UI toggles + Reset button"},
+    {"id": "language_i18n", "persistence": "localStorage", "resets_via": "Topbar language flip"},
+    {"id": "demo_mode", "persistence": "localStorage.secretary.tweaks.demoMode", "resets_via": "toggle"},
+    {"id": "intelligence_provider", "persistence": "localStorage.secretary.tweaks.aiProvider", "resets_via": "three-way picker (mutually exclusive)"},
+    {"id": "provider_model", "persistence": "localStorage.secretary.tweaks.{openaiModel,piecesModel}", "resets_via": "per-provider picker"},
+    {"id": "prompt_enhancement", "persistence": "localStorage.secretary.tweaks.promptEnhance", "resets_via": "toggle"},
+    {"id": "browser_use_defaults", "persistence": "localStorage.secretary.tweaks.browserUse.*", "resets_via": "per-knob toggles"},
+    {"id": "mcp_connector_credentials", "persistence": "/.env (server-side)", "resets_via": "Settings credential editor (save/clear)"},
+    {"id": "mcp_server_status", "persistence": "runtime — /api/status poll", "resets_via": "refresh button (read-only)"},
+    {"id": "reset_all_tweaks", "persistence": "wipes secretary.tweaks", "resets_via": "Reset button"}
+  ],
+  "settings_inventory": [
+    {
+      "id": "tweaks.theme",
+      "persistence": "localStorage.secretary.tweaks.theme",
+      "scope": "per-user (per-browser)",
+      "affects": "styles.css theme variables — every page",
+      "reset": "UI toggle or Reset button",
+      "companion": "styles.css cache-buster bump if theme tokens change"
+    },
+    {
+      "id": "tweaks.demoMode",
+      "persistence": "localStorage.secretary.tweaks.demoMode",
+      "default": false,
+      "scope": "per-user",
+      "affects": "connectors.js blocks all connector writes when on; proxy returns { demo_blocked: true }",
+      "side_effect_rule": "Demo mode is the safest send-blocker. Customer-facing automation should respect it before any send.",
+      "reset": "toggle off"
+    },
+    {
+      "id": "tweaks.aiProvider",
+      "persistence": "localStorage.secretary.tweaks.aiProvider",
+      "allowed_values": ["claude_code", "openai", "codex_cli"],
+      "scope": "per-user",
+      "exclusivity_rule": "The three providers are mutually exclusive. Only the selected provider receives chat / test / generate prompts.",
+      "affects": "/api/chat/send, /api/claude_code/generate, /api/codex_cli/generate, ChatRail behavior, Settings test buttons",
+      "status_surface": "/api/status reports claude_code_available, codex_cli_available, codex_cli_path",
+      "companion_ledger": "CONNECTIONS.md openai + claude_code"
+    },
+    {
+      "id": "tweaks.openaiModel",
+      "persistence": "localStorage.secretary.tweaks.openaiModel",
+      "default": "active model — currently GPT-5.4 family per 2026-04-27 alignment pass",
+      "scope": "per-user",
+      "affects": "every /api/chat/* request when aiProvider=openai; preprocess/reflection passes inherit this",
+      "side_effect": "wrong model can silently change tone, latency, cost — verify after change"
+    },
+    {
+      "id": "tweaks.piecesModel",
+      "persistence": "localStorage.secretary.tweaks.piecesModel",
+      "default": "project default; can also be set via PIECES_CHAT_LLM env var",
+      "scope": "per-user",
+      "affects": "/api/pieces/ask calls; Activity screen + Briefing ribbon completions"
+    },
+    {
+      "id": "tweaks.promptEnhance",
+      "persistence": "localStorage.secretary.tweaks.promptEnhance",
+      "scope": "per-user",
+      "affects": "ChatRail prompt assembly (extra reasoning / structuring before send)"
+    },
+    {
+      "id": "tweaks.browserUse",
+      "persistence": "localStorage.secretary.tweaks.browserUse.*",
+      "sub_fields": [
+        {"name": "resultCount", "affects": "ChatRail browser use worker page-fetch volume"},
+        {"name": "detail", "affects": "depth of fetched content per page"},
+        {"name": "returnLinks", "affects": "whether links surfaced in result"},
+        {"name": "screenshots", "affects": "screenshot toggle on each fetch"}
+      ],
+      "scope_note": "browser use is the background Playwright worker. open browser is the visible Chrome handoff and is NOT governed by these defaults."
+    },
+    {
+      "id": "mcp_credentials",
+      "persistence": "/.env (server-side)",
+      "ui_surface": "masked input rows on Settings page",
+      "save_endpoint": "POST /api/settings/mcp_credentials/save",
+      "read_endpoint": "GET /api/settings/mcp_credentials (returns masked status, never raw values)",
+      "allowed_keys": ["OPENAI_API_KEY", "GITHUB_TOKEN", "CLICKUP_API_TOKEN", "CLOSE_API_KEY"],
+      "allowlist_note": "Verify against current server.py allowlist before adding new keys. To add a new credential: 1) update server.py allowlist, 2) add UI editor row, 3) update CONNECTIONS.md, 4) update this ledger §3.8 + §4.1.",
+      "save_flow": [
+        "Operator types token in masked input",
+        "Submit → POST /api/settings/mcp_credentials/save with { key, value }",
+        "server.py allowlist check (must be in approved set)",
+        "if allowed: write to /.env",
+        "update in-memory env map (server picks up immediately, no restart)",
+        "append to CCAgentindex/_ledger/activity.jsonl with kind='settings_mcp_credentials_save', key name only (NEVER value)",
+        "return { ok: true }",
+        "UI shows masked 'set' status"
+      ],
+      "audit_rule": "Every save / clear records the key name and timestamp to the activity ledger. The value is never logged.",
+      "companion_ledger": "CONNECTIONS.md §5 (Credentials / Secret Locations Table)"
+    },
+    {
+      "id": "mcp_server_status",
+      "persistence": "runtime — read live from /api/status",
+      "ui_surface": "MCP servers + delegation targets section",
+      "refresh": "manual refresh button + auto-refresh on page load",
+      "surfaced_targets": ["GitHub", "ClickUp", "Close", "Claude Code", "Codex CLI", "Cursor"],
+      "per_target_fields": ["availability", "connector detail", "write-approval policy", "link to Delegations action zone"]
+    },
+    {
+      "id": "language",
+      "persistence": "localStorage (verify exact key)",
+      "affects": "window.Comeketoi18n strings across every screen",
+      "event": "comeketoagent:language window event fires on flip",
+      "topbar_surface": "language picker chip",
+      "listener": "every screen with i18n strings"
+    },
+    {
+      "id": "reset",
+      "action": "wipes localStorage.secretary.tweaks (and possibly other secretary.* keys)",
+      "affects": "every page that reads tweaks (effectively all)",
+      "does_not_affect": ".env credentials (separate clear flow per §3.8)",
+      "rule": "should require a confirm step (UI rule, not enforced server-side)"
+    }
+  ],
+  "persistence_layers": {
+    "server_side_env": {
+      "purpose": "Connector credentials",
+      "write_path_rule": "/api/settings/mcp_credentials/save — never via direct file edit from the UI side. Direct .env edits by operator (in terminal) are allowed and orthogonal.",
+      "keys_per_connections_ledger": [
+        "CLOSE_API_KEY (close)",
+        "CLICKUP_API_TOKEN, CLICKUP_SPACE_ID, CLICKUP_LIST_ID (clickup)",
+        "SLACK_BOT_TOKEN (slack — when wired)",
+        "TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_API_KEY_SID, TWILIO_API_KEY_SECRET, TWILIO_WHATSAPP_FROM (twilio — when surfaced)",
+        "OPENAI_API_KEY (openai)",
+        "GITHUB_TOKEN (github)",
+        "PIECES_MCP_URL, PIECES_CHAT_LLM (pieces)",
+        "BROWSER_USE_PAYLOAD (browser_use)"
+      ]
+    },
+    "client_side_localStorage_secretary_tweaks": {
+      "shape": {
+        "theme": "<theme-id>",
+        "demoMode": "boolean",
+        "aiProvider": "claude_code | openai | codex_cli",
+        "openaiModel": "<model-id>",
+        "piecesModel": "<model-id>",
+        "promptEnhance": "boolean",
+        "browserUse": {
+          "resultCount": "int",
+          "detail": "<level>",
+          "returnLinks": "boolean",
+          "screenshots": "boolean"
+        }
+      },
+      "read_by": ["TweaksPanel (grid + settings)", "SettingsScreen", "ChatRail", "ai_instructions.js"],
+      "written_by": ["Settings page UI controls", "TweaksPanel toggles"]
+    },
+    "runtime_only": {
+      "purpose": "MCP server status registry, browser-use sessions, current chat context",
+      "rule": "Not persisted. Re-derived from /api/status (server) or window.Secretary* services (client) on each page load."
+    }
+  },
+  "demo_mode_behavior": {
+    "when_on": [
+      "connectors.js send() returns { ok: true, note: 'demo_blocked', demo_blocked: true } for every outbound channel",
+      "Read paths still work — Boxes browse, Pieces sweeps, Close-API-read tests",
+      "Server-side proxy double-checks the demo flag — even if a UI bug bypassed the client check, the server refuses the write"
+    ],
+    "use_cases": [
+      "New machine setup",
+      "Onboarding a new team member",
+      "Debugging a delegation flow without hitting external services"
+    ],
+    "anti_pattern": "Running automated tests against production data with demo mode off. Demo mode should be the default during dev and unit-test runs."
+  },
+  "provider_exclusivity": {
+    "field": "tweaks.aiProvider",
+    "allowed_values": ["claude_code", "openai", "codex_cli"],
+    "rule": "Only the selected provider receives chat / test / generate prompts. The other two are dormant.",
+    "providers": {
+      "claude_code": {"endpoints": ["/api/claude_code/generate", "/api/chat/send w/ provider='claude_code'"], "runtime": "local claude -p subprocess"},
+      "openai": {"endpoints": ["/api/chat/send (default routing)"], "runtime": "OpenAI API call from server"},
+      "codex_cli": {"endpoints": ["/api/codex_cli/generate", "/api/chat/send w/ provider='codex_cli'"], "runtime": "local codex exec with selected GPT model + read-only sandbox"}
+    },
+    "switching": "Instant. No restart. Picker writes to tweaks.aiProvider; every chat send checks it; routes self-select.",
+    "caveat": "Picker writes to localStorage only. Browser swap or storage wipe resets to project default."
+  },
+  "change_radius": [
+    {"setting": "theme", "rerenders": "every page (CSS variables)"},
+    {"setting": "language", "rerenders": "every screen with i18n strings (via comeketoagent:language event)"},
+    {"setting": "demoMode", "rerenders": "every page that calls connectors.js send() (delegations, grid ChatRail, intake, boxes)"},
+    {"setting": "aiProvider", "rerenders": "ChatRail, Settings test buttons, every /api/chat/* consumer"},
+    {"setting": "openaiModel / piecesModel", "rerenders": "next chat / sweep / ask request"},
+    {"setting": "promptEnhance", "rerenders": "ChatRail prompt assembly"},
+    {"setting": "browserUse.*", "rerenders": "next ChatRail browser use worker run"},
+    {"setting": "MCP credential save / clear", "rerenders": "server in-memory env map (immediate); affected service surfaces become available / unavailable"},
+    {"setting": "Reset", "rerenders": "every page reading secretary.tweaks"}
+  ],
+  "update_triggers": [
+    "new toggle / picker / credential editor added to SettingsScreen",
+    "existing setting's persistence layer changes",
+    "new env var added to server allowlist (also update CONNECTIONS.md §5)",
+    "demo mode block-list expands or contracts",
+    "provider exclusivity rule changes (e.g., fourth provider)",
+    "setting becomes deprecated or removed",
+    "localStorage key shape changes (also update ASSET_WIDGET_MAP.md §6.1)"
+  ],
+  "rule_when_pure_ui_rerender": "If the change is purely a UI re-render of an existing setting, update page_asset_sitemap.md §settings only — NOT this ledger.",
+  "operator_quick_reference": {
+    "Theme": "Settings page → theme toggle",
+    "Language": "Topbar language chip",
+    "Turn off real sends": "Settings page → demo mode toggle",
+    "Switch AI provider": "Settings page → provider picker (claude_code / openai / codex_cli)",
+    "Change OpenAI model": "Settings page → OpenAI model picker",
+    "Change Pieces model": "Settings page → Pieces model picker",
+    "Add or rotate a connector key": "Settings page → MCP credentials → masked input + save",
+    "Adjust browser-use depth": "Settings page → Browser Use section",
+    "Reset everything (UI side)": "Settings page → Reset (does not affect .env)",
+    "Reset a credential": "Settings page → MCP credentials → Clear",
+    "Edit .env directly": "Operator's terminal — server picks up on next request via in-memory map (or restart for full reload)"
+  },
+  "north_star_alignment": {
+    "directly_supports": ["NS-04", "NS-06", "NS-09", "NS-10"],
+    "indirectly_supports": ["NS-01", "NS-02"]
+  },
+  "related_ledgers": {
+    "what_services_exist": "CONNECTIONS.md (Settings is the UI-configurable surface over its services)",
+    "trust_ordering": "SOURCE_OF_TRUTH.md §3.5",
+    "shared_localStorage_registry": "ASSET_WIDGET_MAP.md §6.1",
+    "settings_page_canonical_truth": "page_asset_sitemap.md §settings",
+    "external_connection_done_gate": "DEFINITION_OF_DONE.md §5.8 (settings_ledger_updated_if_user_facing_changed)",
+    "file_roles": "FILE_CONTENTS.md (screens.jsx SettingsScreen, connectors.js demo-mode, server.py /api/settings/*)"
+  },
+  "visuals": ["VISUALS/settings_surface_map.mmd"],
+  "history": [
+    {"date": "2026-04-29", "event": "Phase 15 — initial creation. 13-section catalog of every user-changeable knob: theme, language, demo mode, intelligence provider (3-way exclusive), OpenAI model, Pieces model, prompt enhancement, browser-use defaults (4 sub-fields), MCP credential editor (allowlisted save/clear with audit), MCP server status registry (read-only), reset. 3 persistence layers (.env / localStorage / runtime) cataloged. Save/clear flow + audit rule + provider exclusivity rule + demo mode rule documented. Tier: global. Companion files: SETTINGS.json, VISUALS/settings_surface_map.mmd. Companion Communications entry: COMM-2026-04-29-012."}
+  ]
+}

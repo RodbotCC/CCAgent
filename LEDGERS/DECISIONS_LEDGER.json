@@ -1,7 +1,7 @@
 {
   "ledger_type": "decisions",
   "version": "0.1.0",
-  "last_updated": "2026-04-29",
+  "last_updated": "2026-04-30",
   "status": "active",
   "maintainer": "Jake / Comeketo Agent project agents",
   "core_rule": "Decisions that shape future work must survive the session where they were made.",
@@ -890,6 +890,349 @@
           "event": "created. Phase 0 schema shipped same day at BOX_BUS_LEDGER.md + BOX_BUS_LEDGER.json + three Mermaid visuals (box_bus_topology, interpreter_tiers, envelope_routing_flow). Box Ledger and Definition of Done updated to point at it. Companion Communications entry: COMM-2026-04-29-007."
         }
       ]
+    },
+    {
+      "id": "DEC-2026-04-29-014",
+      "slug": "phase-a-complete-ledger-buildout",
+      "title": "Phase A Complete — Ledger Buildout Done",
+      "status": "active",
+      "confidence": "high",
+      "scope": "global / architectural / workflow",
+      "date": "2026-04-29",
+      "decider": "User (Jake) — autonomous-call delegated to Cowork session ('let's just bang it all out')",
+      "affected_systems": [
+        "ledger system (all 17 active ledgers)",
+        "Phase B sub-agent fleet (now unblocked)",
+        "Phase C Reactive Box Network runtime (still deferred per DEC-2026-04-29-013)",
+        "every future agent's read-first protocol"
+      ],
+      "related_north_star_goals": [
+        "NS-01",
+        "NS-02",
+        "NS-07",
+        "NS-09",
+        "NS-10"
+      ],
+      "related_ledgers": [
+        "PHASE.md (the closer)",
+        "PHASE.json",
+        "DECISIONS_LEDGER.md (this entry)",
+        "TEMPORAL_CONTINUITY.md (current state advance)",
+        "GLOBAL_LEDGER.md (workstream advance)",
+        "DEC-2026-04-29-002 (three-phase build — this completes Phase A of that)",
+        "DEC-2026-04-29-013 (Reactive Box Network — runtime still deferred to Phase C)"
+      ],
+      "supersedes": null,
+      "superseded_by": null,
+      "decision": "Phase A (Ledgers) is complete as of 2026-04-29. 17 ledgers active across global + domain tiers. All exit criteria in PHASE.md §3 met. Phase B (Sub-agents) is now unblocked. Phase C runtime stays deferred per DEC-2026-04-29-013.",
+      "context": "Phase A started 2026-04-28 with the first 5 Phases (Global, TCL, North Star, File Directory, Open Problems). On 2026-04-29 the project shipped Phases 6-21 in a single sustained sprint: Communications, Decisions, Box Ledger, DoD, Box Bus, Source-of-Truth, Connections, File Contents, Asset/Widget Map, Settings, 5 Page Ledgers (boxes, intake, automation, delegations, settings page), and the Phase Ledger that closes Phase A.",
+      "rationale": [
+        "Every architectural pattern future work depends on is now named and written down.",
+        "Envelope-aware authoring rule (DEC-2026-04-29-013) has 6 real precedents — every future ledger has a target.",
+        "The 9 lower-risk Page Ledgers + Widget Ledgers + Prompt/Reconstruction + Scout are explicitly deferred — their absence does not block exit (per PHASE.md §3 Deferred section).",
+        "Honest accounting given to user during the sprint: the load-bearing work was the high-risk wave + Phase Ledger; everything beyond that is more of the same patterns.",
+        "Phasing rule (DEC-2026-04-29-002) protects against half-finished architecture. Phase B work cannot start until Phase A closes."
+      ],
+      "alternatives_considered": [
+        "Continue Phase A indefinitely until all 14 Page Ledgers + Widget + Prompt/Recon + Scout authored — rejected: hits diminishing returns; user explicitly noted 'grip is tightening'; better to land Phase B with real load instead of dragging Phase A.",
+        "Declare Phase A complete after 15 project-level ledgers without any Page Ledgers — rejected: high-risk pages (boxes, intake, automation, delegations, settings) carry too much architectural rationale to defer to Phase B."
+      ],
+      "consequences": [
+        "Phase B opens. The 5 draft sub-agent packages at /Subagent Boxes/ become eligible for graduation.",
+        "Authoring more Page Ledgers becomes Phase B/C work as needed (not a blocker).",
+        "Widget Ledgers, Prompt/Reconstruction, Scout, per-directory Box.md stamps remain explicitly deferred.",
+        "The 'don't leak Phase A' rules from PHASE.md §3 sunset; the 'don't leak Phase B' rules in PHASE.md §4 take effect.",
+        "Phase C runtime work (router, propagation ledger, T1/T2/T3 interpreters) continues to be deferred per DEC-2026-04-29-013."
+      ],
+      "do_not_undo_casually": "Do not retroactively reopen Phase A to author lower-risk Page Ledgers or Widget Ledgers. Those are Phase B/C work. The phasing rule (DEC-2026-04-29-002) is the protection; reopening Phase A would erode it.",
+      "review_trigger": [
+        "Phase B exit criteria are met → declare Phase B complete in a similar Decision",
+        "A real architectural gap is found that requires authoring a top-level ledger that wasn't covered → may warrant a 'Phase A reopened for X' Decision",
+        "User explicitly wants to defer Phase B and reorder phases — would require a new architectural Decision"
+      ],
+      "history": [
+        {
+          "date": "2026-04-29",
+          "event": "created. Phase A officially declared complete as of this Decision. PHASE.md and PHASE.json mark current phase status accordingly."
+        }
+      ]
+    },
+    {
+      "id": "DEC-2026-04-29-015",
+      "slug": "unified-ledger-box-pattern",
+      "title": "Unified Ledger Box Pattern — LEDGERS/BOXES/<name>/",
+      "status": "active",
+      "confidence": "high",
+      "scope": "global / architectural / Phase B layout",
+      "date": "2026-04-29",
+      "decider": "User (Jake) — 'compile these together so that ledgers and boxes and sub-agents are all one thing'",
+      "affected_systems": [
+        "every project-level ledger",
+        "the 5 draft sub-agent packages at /Subagent Boxes/",
+        "LEDGERS/AGENTS/global_ledger_steward/ (existing canonical config — pending reorg)",
+        "CCAgentindex/agents/global_ledger_steward/ (existing runnable form — stays for now; future Phase B+1 reorg)",
+        "Phase B target structure"
+      ],
+      "related_north_star_goals": [
+        "NS-01",
+        "NS-02",
+        "NS-09",
+        "NS-10"
+      ],
+      "related_ledgers": [
+        "BOX_LEDGER.md (concept)",
+        "BOX_BUS_LEDGER.md §2.1 (manifest schema this layout satisfies)",
+        "PHASE.md §4 (Phase B target — refined by this Decision)",
+        "DEC-2026-04-29-001 (Triad Spine — this Decision realizes the structural side of the triad)",
+        "DEC-2026-04-29-013 (Reactive Box Network runtime deferred — this Decision adds structural unification without violating runtime deferral)",
+        "DEC-2026-04-29-014 (Phase A Complete — this Decision is the first Phase B work that builds on Phase A's foundation)"
+      ],
+      "supersedes": null,
+      "superseded_by": null,
+      "decision": "Each project-level ledger gets a unified Box at `LEDGERS/BOXES/<name>/` containing: `box.json` (manifest per BOX_BUS §2.1), `BOX.md` (per-Box orientation per BOX_LEDGER), `steward/{AGENTS.md, config.json, prompt.md}` (the sub-agent package), and `receipts/` (run receipts). The ledger files themselves (e.g., `TEMPORAL_CONTINUITY.md`) STAY at `LEDGERS/` and are governed by the Box via `box.json.owns[]` path reference — never moved. This is the Phase B target layout that replaces the prior framing of 'graduate to CCAgentindex/agents/<name>/'.",
+      "context": "Phase A landed 16 project-level ledgers. The 5 draft sub-agent packages at /Subagent Boxes/ (file_directory, global_ledger, north_star, open_problems, temporal_continuity) all explicitly named `LEDGERS/AGENTS/<name>_steward/` as their target path — each scattering steward configs separately from the ledgers they govern. Jake's question on Phase B opening: 'compile these together so that ledgers and boxes and sub-agents are all one thing.' The triad spine (DEC-2026-04-29-001) names Box + Ledger + Sub-agent as the architectural unit; the structural realization is one folder per ledger that contains all three.",
+      "rationale": [
+        "Triad realization — Box + Ledger + Sub-agent live in one folder per ledger; navigating to /LEDGERS/BOXES/<name>/ shows the operator everything that governs that ledger.",
+        "No move = no ripple — ledger files (GLOBAL_LEDGER.md, TEMPORAL_CONTINUITY.md, etc.) stay in place. The Read-First protocol (referenced in CLAUDE.md, every cross-ledger link, every agent bootstrap) is unchanged.",
+        "Manifest-first — every Box ships a box.json that satisfies BOX_BUS §2.1. When Phase C runtime lands, the router has manifests to consume.",
+        "Receipts in-Box — run outputs land in receipts/ inside the Box, not scattered in CCAgentindex/_ledger/<name>_steward_runs/. Easier to find; one folder is the full picture.",
+        "Phase B clarity — the prior framing ('graduate to CCAgentindex/agents/<name>/') was correct but scattered. The unified Box pattern is more legible AND more aligned with the eventual Phase C runtime."
+      ],
+      "alternatives_considered": [
+        "Move the ledger files into LEDGERS/BOXES/<name>/ — REJECTED. Massive cascading update of every CLAUDE.md / cross-ledger link / agent bootstrap. The Read-First protocol breaks.",
+        "Keep current layout (LEDGERS/AGENTS/<name>/ + CCAgentindex/agents/<name>/) and just stamp a manifest at LEDGERS/BOXES/<name>.json — REJECTED. Loses the unification Jake explicitly asked for; doesn't co-locate the Box-shaped folder structure.",
+        "Symlink LEDGERS/BOXES/<name>/ledger.md to LEDGERS/<NAME>.md — REJECTED. Symlinks don't survive git well across platforms; introduces a needed-file-not-found failure mode."
+      ],
+      "consequences": [
+        "Phase B target refines from 'graduate to CCAgentindex/agents/<name>/' to 'graduate to LEDGERS/BOXES/<name>/steward/'.",
+        "Each ledger Box contains 3 files in steward/ + 1 box.json + 1 BOX.md + receipts/ = 5 files + 1 directory minimum per Box.",
+        "16 project-level ledgers × the unified pattern = 16 ledger Boxes when Phase B graduations complete.",
+        "Existing LEDGERS/AGENTS/global_ledger_steward/ becomes LEDGERS/BOXES/global_ledger/steward/ (reorg, not recreation).",
+        "Existing CCAgentindex/agents/global_ledger_steward/ stays as the runnable form for now; future reorg may consolidate but is NOT required for Phase B exit. The Phase C runtime can decide later whether to read the runnable form from the Box directly or maintain the CCAgentindex/agents/ pattern.",
+        "Drafts at /Subagent Boxes/ remain in place as starting material — the unified Box copies, doesn't move. Drafts can be deleted after their corresponding Box is built and verified.",
+        "PHASE.md §4 must be updated to name the unified Box pattern as the Phase B target."
+      ],
+      "do_not_undo_casually": "Do not move ledger files (GLOBAL_LEDGER.md, etc.) into the LEDGERS/BOXES/<name>/ folders. The whole point of this Decision is that the ledger files stay where they are and the Box governs them by path reference. Moving would break the Read-First protocol and require a sweeping cross-ledger / cross-CLAUDE.md / cross-agent-bootstrap update.",
+      "review_trigger": [
+        "Phase C runtime architecture takes a different path than BOX_BUS §2.1 anticipates — would warrant a Decisions Ledger update",
+        "A real operator workflow makes one folder structure noticeably worse than the other in practice — pattern can be revised",
+        "Consolidation between LEDGERS/BOXES/<name>/steward/ and CCAgentindex/agents/<name>/ becomes load-bearing for Phase C runtime — review at that boundary"
+      ],
+      "history": [
+        {
+          "date": "2026-04-29",
+          "event": "created. First unified Box stamped at LEDGERS/BOXES/temporal_continuity/ as the proof of pattern. Companion Communications entry: COMM-2026-04-29-016."
+        }
+      ]
+    },
+    {
+      "id": "DEC-2026-04-30-002",
+      "slug": "deprecation-ledger-global-snapshot-pair",
+      "title": "Deprecation Ledger Lives At Global Tier; Snapshot Protocol Pairs With It",
+      "status": "active",
+      "confidence": "high",
+      "scope": "global / architectural",
+      "tier_box_bus": "global",
+      "date": "2026-04-30",
+      "decider": "Jake (orchestrator) + Claude (Cowork)",
+      "affected_systems": [
+        "every Box that retires content",
+        "every ledger that has rows superseded",
+        "future Snapshot Steward",
+        "future LEDGERS/BOXES/deprecation/ unified Box",
+        "_snapshots/ directory at project root",
+        ".gitignore",
+        "LEDGERS/scripts/snapshot.sh"
+      ],
+      "north_star_alignment": ["NS-01", "NS-02", "NS-09"],
+      "related_ledgers": [
+        "LEDGERS/DEPRECATION.md",
+        "LEDGERS/scripts/snapshot.sh",
+        "LEDGERS/DECISIONS_LEDGER.md",
+        "LEDGERS/COMMUNICATIONS_LEDGER.md",
+        "LEDGERS/OPEN_PROBLEMS_LEDGER.md"
+      ],
+      "supersedes": [],
+      "superseded_by": [],
+      "decision": "The Deprecation Ledger lives at the global tier as LEDGERS/DEPRECATION.md + LEDGERS/DEPRECATION.json. It is paired with a Snapshot Protocol (Deprecation Ledger §7) that defines what is captured, on what cadence, where it lives, retention rules, recovery procedure, and health checks. Tier global. Snapshots zip into _snapshots/<cadence>/ at project root, gitignored. Cardinal rule: nothing leaves the project without a Deprecation entry and a Snapshot reference.",
+      "alternatives_considered": [
+        {
+          "alternative": "Per-Box deprecation only",
+          "rejected_because": "Scatters audit trail. Future agents would need to walk every Box to know what's been retired project-wide. Recovery is hard because there's no central pointer to snapshots. Cross-cutting questions become impossible to answer without a global view."
+        },
+        {
+          "alternative": "No deprecation ledger; rely on git history alone",
+          "rejected_because": "Git tells when a file was deleted but not why, what replaced it, what depends on it that's still broken, or whether it's recoverable from a snapshot. Git is content-truth; deprecation needs metadata-truth."
+        },
+        {
+          "alternative": "Snapshots as a separate ledger",
+          "rejected_because": "Snapshots are the recovery surface for deprecation; they have no independent purpose. Splitting creates coordination burden ('did I update both?') and doesn't earn its complexity."
+        },
+        {
+          "alternative": "Snapshots stored in CCAgentindex/",
+          "rejected_because": "Bedrock is for canonical app state. Snapshots are local-only recovery archives that should not push to GitHub. They live at project root in _snapshots/."
+        },
+        {
+          "alternative": "Defer entire ledger to Phase C with the runtime",
+          "rejected_because": "Phase B starting now; already accumulating retirement debt (four backfill entries are real). Authoring schema + protocol now matches DEC-2026-04-29-013 (schema canonical, runtime deferred — no migration debt later)."
+        }
+      ],
+      "consequences": [
+        "Single source of truth for retirements — anyone asking 'what was deprecated and why' reads one ledger",
+        "Recovery is always answerable — every entry pairs with snapshot_id + snapshot_path (or explicit not_recoverable reason)",
+        "No silent deletion — cardinal rule binds every agent",
+        "Phase A backfill in scope — four pre-existing retirements captured immediately",
+        "Snapshot Protocol gives operational shape to 'save before delete' — LEDGERS/scripts/snapshot.sh invokable manually today; cron-wired in Phase C",
+        "_snapshots/ gitignored — local recovery only; GitHub stays source of truth for live content",
+        "Pairs with the unified Box pattern — Phase B will land LEDGERS/BOXES/deprecation/ to match temporal_continuity/",
+        "Cross-ledger coordination is explicit — Deprecation entries cross-reference Decisions / Open Problems / Communications; affected domain ledgers drop their rows when something deprecates"
+      ],
+      "do_not_undo_casually": "Don't move the Deprecation Ledger to a per-Box scheme without a Decision — the cross-cutting view is the point. Don't push _snapshots/ to GitHub. Don't allow retirement without an entry. Don't promote past 'deprecated' without the §5 incoming-link audit.",
+      "review_trigger": [
+        "Ledger grows past a few hundred active entries and search/UX becomes painful",
+        "Snapshot disk pressure becomes meaningful",
+        "Phase C Box Bus runtime ships and we want to evaluate whether per-Box emits[] obviates human-authored entries",
+        "Regulatory or compliance requirement appears mandating a different retention regime"
+      ],
+      "history": [
+        {
+          "date": "2026-04-30",
+          "event": "created. Authored alongside LEDGERS/DEPRECATION.md + LEDGERS/DEPRECATION.json + LEDGERS/scripts/snapshot.sh + _snapshots/ directory + .gitignore update. Four backfill entries seeded (DEPR-2026-04-30-001..004). Triggered by Jake's observation that the project tree was accumulating retirement debt without a recovery mechanism."
+        }
+      ]
+    },
+    {
+      "id": "DEC-2026-04-30-003",
+      "slug": "atom-ledger-prob-decomposition-global",
+      "title": "Atom Ledger: PROBs Decompose 1:N Into Single-Session Claimable Atoms (Global Tier)",
+      "status": "active",
+      "confidence": "high",
+      "scope": "global / architectural",
+      "tier_box_bus": "global",
+      "date": "2026-04-30",
+      "decider": "Jake (orchestrator) + Claude (Cowork)",
+      "affected_systems": [
+        "every active PROB (13 PROBs become 13×N atoms once decomposed)",
+        "every agent claiming work (Cowork sessions, Claude Code subprocesses, Codex sessions, future runnable stewards)",
+        "future Atomizer Steward at LEDGERS/BOXES/atoms/steward/",
+        "future /api/atoms/* endpoints",
+        "future Atoms UI page or panel"
+      ],
+      "north_star_alignment": ["NS-01", "NS-02", "NS-09"],
+      "related_ledgers": [
+        "LEDGERS/ATOMS.md",
+        "LEDGERS/OPEN_PROBLEMS_LEDGER.md",
+        "LEDGERS/DECISIONS_LEDGER.md",
+        "LEDGERS/COMMUNICATIONS_LEDGER.md"
+      ],
+      "supersedes": [],
+      "superseded_by": [],
+      "decision": "The Atom Ledger lives at global tier as LEDGERS/ATOMS.md + LEDGERS/ATOMS.json. PROBs decompose 1:N into atoms via mandatory parent_problem_id linkage. Single-writer claim protocol enables parallel agent work. Granularity rule caps atoms at 4h estimated effort; bigger gets re-decomposed. Acceptance criteria must be concrete, verifiable, single-pass. Phase A: manual decomposition. Phase B: Atomizer Steward. Phase C: atoms as Box Bus envelope citizens.",
+      "alternatives_considered": [
+        {
+          "alternative": "Atoms inline inside each PROB record (extending OPL with atoms[])",
+          "rejected_because": "Open Problems is a state-of-brokenness ledger; bloating each entry with claim metadata muddles its purpose. PROB entries grow unbounded as atoms accumulate. Cross-PROB atom queries become parsing-heavy."
+        },
+        {
+          "alternative": "Per-Box atom queues",
+          "rejected_because": "Atoms cross-cut PROBs and PROBs cross-cut Boxes. Per-Box scatter loses the dependency graph and makes parallel work harder. Cross-Box claim collisions harder to detect."
+        },
+        {
+          "alternative": "No new ledger; just TaskCreate-style task list",
+          "rejected_because": "Tasks are session-scoped; atoms must persist across sessions and agents. The architectural shape (durable, claimable, dependency-aware) requires a ledger."
+        },
+        {
+          "alternative": "Defer to Phase C with Box Bus runtime",
+          "rejected_because": "Same reasoning as DEC-2026-04-30-002. Schema works without runtime; authoring now = zero migration debt; already accumulating frozen PROBs."
+        }
+      ],
+      "consequences": [
+        "Parallel agent work becomes possible — multiple agents claim distinct atoms without collision",
+        "Monolithic PROBs stop scaring agents — PROB-016 was deferred 2 days; decomposed, it's 26 single-session claims",
+        "Acceptance criteria force concrete work — 'Improve X' stops being valid",
+        "Audit trail compounds — atom_completed events land in _ledger/activity.jsonl",
+        "Atomizer Steward (Phase B) scope crystallizes",
+        "Phase C runtime gets clean target — atoms as first-class Box Bus envelope citizens",
+        "Pairs with unified Box pattern — Phase B lands LEDGERS/BOXES/atoms/"
+      ],
+      "do_not_undo_casually": "Don't move atoms inline into PROBs — cross-cutting view enables parallel work. Don't break parent_problem_id requirement — orphan atoms drift back into 'tasks'. Don't loosen 4h granularity rule. Don't bypass claim protocol. Don't auto-close PROBs when atoms complete — PROB closure is separate review.",
+      "review_trigger": [
+        "Ledger grows past a few thousand entries and search/UX painful",
+        "24h stale-claim rule proves too short or too long in practice",
+        "Phase C runtime ships and real-time atom dispatch evaluation",
+        "Regulatory/compliance audit-shape requirement appears"
+      ],
+      "history": [
+        {
+          "date": "2026-04-30",
+          "event": "created. Authored alongside LEDGERS/ATOMS.md + LEDGERS/ATOMS.json. PROB-2026-04-28-016 decomposed as proof (26 atoms, ~21.5 estimated hours). Triggered by Jake's observation that monolithic PROBs freeze the project: 'if we have an atomized, decomposed list of all the stuff that needs to be done, then there'll be hundreds of easy problems instead of massive open problems.'"
+        }
+      ]
+    },
+    {
+      "id": "DEC-2026-04-30-004",
+      "slug": "canonical-steward-path-unified-box",
+      "title": "Canonical Steward Path = LEDGERS/BOXES/<name>/steward/ (resolves legacy vs unified-Box fork)",
+      "status": "active",
+      "confidence": "high",
+      "scope": "global / architectural",
+      "tier_box_bus": "global",
+      "date": "2026-04-30",
+      "decider": "Claude (Cowork) under Jake's 'best move you call it' delegation",
+      "affected_systems": [
+        "every ledger steward sub-agent (current: global_ledger_steward legacy + temporal_continuity_steward unified + atomizer_steward unified declarative)",
+        "server.py _agent_run dispatcher (line 4891)",
+        "LEDGERS/AGENTS/ canonical pointer directory",
+        "CCAgentindex/agents/<name>/ legacy path",
+        "the 4 unpromoted draft stewards (file_directory, north_star, open_problems, plus temporal_continuity runnable form)"
+      ],
+      "north_star_alignment": ["NS-01", "NS-02", "NS-03"],
+      "related_ledgers": [
+        "LEDGERS/ATOMS.md (this decision completed ATOM-2026-04-30-0027)",
+        "LEDGERS/BOX_LEDGER.md",
+        "LEDGERS/BOX_BUS_LEDGER.md",
+        "LEDGERS/DECISIONS_LEDGER.md"
+      ],
+      "depends_on": ["DEC-2026-04-29-001", "DEC-2026-04-29-015"],
+      "completes": ["DEC-2026-04-29-015"],
+      "supersedes": [],
+      "superseded_by": [],
+      "decision": "The canonical home for every ledger steward sub-agent is LEDGERS/BOXES/<name>/steward/. Files: AGENTS.md (declarative), config.json (operating config), prompt.md (dispatch). Receipts at LEDGERS/BOXES/<name>/receipts/. LEDGERS/AGENTS/<name>/ stays as a thin canonical-pointer/symlink directory. CCAgentindex/agents/<name>/ is legacy; survives only for global_ledger_steward until ATOM-2026-04-30-0044 migrates it. server.py _agent_run gets a fallback chain: legacy path first, then unified Box path. Dispatch URL stays POST /api/agents/<name>_steward/run.",
+      "alternatives_considered": [
+        {
+          "alternative": "Reaffirm CCAgentindex/agents/<name>/ as canonical (Path A)",
+          "rejected_because": "Splits the unified Box pattern. BOX.md + box.json at LEDGERS/BOXES/, runnable bits elsewhere. Future agents look in two places. Defeats DEC-015."
+        },
+        {
+          "alternative": "Hybrid — symlinks from CCAgentindex/agents/ to unified Box (Path C)",
+          "rejected_because": "Symlink discipline is a maintenance burden; prone to drift; second source of truth question. Server fallback chain is cleaner."
+        },
+        {
+          "alternative": "Defer — keep ATOM-0027 open (Path D)",
+          "rejected_because": "ATOM-0027 blocks 16 atoms. Indefinite deferral undermines the atomization architecture (queue with permanent blockers = freeze response)."
+        }
+      ],
+      "consequences": [
+        "DEC-2026-04-29-015 (unified Box) is now fully load-bearing for stewards",
+        "server.py _agent_run gets a small fallback-chain change (one line + smoke test) — lands as part of ATOM-0044",
+        "global_ledger_steward requires migration (ATOM-0044) — independent of the 4 promotion chains; can claim in parallel",
+        "The 4 unpromoted stewards use unified Box from the start — no legacy entanglement; ATOMS-0028..0043 unblocked",
+        "LEDGERS/AGENTS/<name>/ becomes thin canonical-pointer dir or is removed entirely (future decision)",
+        "CCAgentindex/ bedrock returns to app-state-only after migration completes — non-steward sub-agents (andre_escalation_ladder, inbox_triage) stay there",
+        "PROB-005 close-criteria simplify"
+      ],
+      "do_not_undo_casually": "Don't reverse without an explicit DEC. Don't break global_ledger_steward during migration — keep legacy path working until smoke test passes. Don't introduce a third path. Don't put non-steward sub-agents into LEDGERS/BOXES/ — only ledger stewards belong there.",
+      "review_trigger": [
+        "Fallback chain in _agent_run causes operational confusion (e.g., dual-path steward picked incorrectly)",
+        "Non-ledger sub-agent canonical-home question arises",
+        "Phase C Box Bus runtime ships — unified Box path becomes load-bearing for subscribes/emits"
+      ],
+      "history": [
+        {
+          "date": "2026-04-30",
+          "event": "created. Resolved ATOM-2026-04-30-0027 (architectural-gate blocking 16 promotion atoms in PROB-005). Companion follow-on ATOM-2026-04-30-0044 authored for global_ledger_steward migration. First atom claimed-and-completed under the new claim protocol — proves the protocol works end-to-end."
+        }
+      ]
     }
   ],
   "deprecated_or_reversed_decisions": [],
@@ -1051,9 +1394,9 @@
       "NS-09",
       "NS-10"
     ],
-    "active": 16,
-    "total": 16,
-    "total_active_decisions": 17
+    "active": 19,
+    "total": 19,
+    "total_active_decisions": 22
   },
-  "last_updated_note": "Phase 10 — added DEC-2026-04-29-013 Reactive Box Network architectural lock; companion BOX_BUS_LEDGER landed"
+  "last_updated_note": "Phase B step 1 — added DEC-2026-04-29-015 (Unified Ledger Box pattern); first unified Box landed at LEDGERS/BOXES/temporal_continuity/"
 }

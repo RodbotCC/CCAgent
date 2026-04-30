@@ -1,0 +1,136 @@
+{
+  "id": "ledger_box:global_ledger",
+  "slug": "global_ledger",
+  "kind": "ledger",
+  "name": "Global Ledger Box",
+  "version": "1",
+  "envelope_v": "1",
+  "tier": "global",
+  "status": "active",
+  "created_on": "2026-04-30",
+  "unified_box_pattern_decision": "DEC-2026-04-29-015",
+  "canonical_path_decision": "DEC-2026-04-30-004",
+  "migration_atom": "ATOM-2026-04-30-0044",
+  "owns": [
+    "LEDGERS/GLOBAL_LEDGER.md",
+    "LEDGERS/GLOBAL_LEDGER.json",
+    "LEDGERS/BOXES/global_ledger/box.json",
+    "LEDGERS/BOXES/global_ledger/BOX.md",
+    "LEDGERS/BOXES/global_ledger/steward/AGENTS.md",
+    "LEDGERS/BOXES/global_ledger/steward/config.json",
+    "LEDGERS/BOXES/global_ledger/steward/prompt.md",
+    "LEDGERS/BOXES/global_ledger/receipts/"
+  ],
+  "source_of_truth": {
+    "primary": "LEDGERS/GLOBAL_LEDGER.md",
+    "structured_mirror": "LEDGERS/GLOBAL_LEDGER.json",
+    "generated": []
+  },
+  "subscribes": [
+    {
+      "ledger": "DECISIONS_LEDGER",
+      "tier": "global",
+      "filter": "or(scope:*, scope:kind:project_identity, scope:kind:major_system)",
+      "interpreter": "T1",
+      "write_target": "GLOBAL_LEDGER.md (§3 Major Systems, §4 Source-of-Truth Rules, §6 Active Workstreams when settled rule shifts world state)",
+      "phase_c_note": "subscription is documented but not consumed until Phase C runtime lands"
+    },
+    {
+      "ledger": "PHASE",
+      "tier": "global",
+      "filter": "scope:*",
+      "interpreter": "T1",
+      "write_target": "GLOBAL_LEDGER.md (header phase note + §6 Active Workstreams)",
+      "phase_c_note": "deferred"
+    },
+    {
+      "ledger": "OPEN_PROBLEMS_LEDGER",
+      "tier": "global",
+      "filter": "or(severity:critical, severity:high)",
+      "interpreter": "T1",
+      "write_target": "GLOBAL_LEDGER.md (§7 Active Risks / Known Fragile Areas)",
+      "phase_c_note": "deferred"
+    },
+    {
+      "ledger": "INDEX",
+      "tier": "global",
+      "filter": "scope:kind:ledger",
+      "interpreter": "T1",
+      "write_target": "GLOBAL_LEDGER.md (§8 Ledger System Map)",
+      "phase_c_note": "deferred"
+    },
+    {
+      "ledger": "TEMPORAL_CONTINUITY",
+      "tier": "global",
+      "filter": "scope:phase_change",
+      "interpreter": "T1",
+      "write_target": "GLOBAL_LEDGER.md (header + §6 Active Workstreams)",
+      "phase_c_note": "deferred — Global responds to phase shifts, not every TCL update"
+    }
+  ],
+  "emits": [
+    {
+      "ledger": "_ledger/activity.jsonl",
+      "tier": "global",
+      "on_event": "global_ledger_steward_run",
+      "envelope_kind": "steward_run",
+      "scope": "kind:ledger",
+      "phase_c_note": "emit is documented but currently fires through manual append, not bus"
+    },
+    {
+      "ledger": "OPEN_PROBLEMS_LEDGER",
+      "tier": "global",
+      "on_event": "global_drift_detected",
+      "envelope_kind": "problem",
+      "scope": "scope:*",
+      "phase_c_note": "Global drift = stale world-state vs reality; would emit a PROB entry. Manual today."
+    }
+  ],
+  "agent_config": {
+    "package_path": "LEDGERS/BOXES/global_ledger/steward/",
+    "agents_md": "LEDGERS/BOXES/global_ledger/steward/AGENTS.md",
+    "config_json": "LEDGERS/BOXES/global_ledger/steward/config.json",
+    "prompt_md": "LEDGERS/BOXES/global_ledger/steward/prompt.md",
+    "tier_default": "T1",
+    "guardrails": [
+      "no direct main pushes when local drift risk exists",
+      "audit-only is the safe default; local_write requires explicit dispatch",
+      "do not absorb local detail into the Global Ledger",
+      "global only when global"
+    ],
+    "modes": ["audit_only", "local_write"],
+    "dispatch": "POST /api/agents/global_ledger_steward/run",
+    "dispatch_status": "live (this is the only steward currently runnable as of 2026-04-30)",
+    "runnable_form_path_legacy": "CCAgentindex/agents/global_ledger_steward/ (kept during migration window per ATOM-0044 do_not_undo_casually)",
+    "runnable_form_path_canonical": "LEDGERS/BOXES/global_ledger/steward/ (canonical per DEC-2026-04-30-004)",
+    "resolution_helper": "server.py _agent_resolve_prompt — checks legacy first, then unified Box (added in ATOM-0029)"
+  },
+  "ledger_local": "LEDGERS/BOXES/global_ledger/receipts/",
+  "phase_status": {
+    "phase_a": "complete (GLOBAL_LEDGER.md + .json shipped 2026-04-28; INDEX.md established the pattern)",
+    "phase_b": "in_progress (this Box stamps the unified pattern for global_ledger; the runnable form has been live since 2026-04-28 at the legacy path; this migration brings it into the canonical Box pattern alongside temporal_continuity and atoms)",
+    "phase_c": "deferred (subscriptions/emits documented but not consumed by router; runtime held per DEC-2026-04-29-013)"
+  },
+  "related_ledgers": [
+    "BOX_LEDGER.md (concept of a Box)",
+    "BOX_BUS_LEDGER.md §2.1 (manifest schema)",
+    "DECISIONS_LEDGER.md DEC-2026-04-29-015 (unified Box pattern), DEC-2026-04-30-004 (canonical steward path), DEC-2026-04-29-013 (runtime deferred)",
+    "PHASE.md §4 (Phase B scope)",
+    "OPEN_PROBLEMS_LEDGER.md PROB-2026-04-30-005 (steward sub-agent promotion — this migration is ATOM-0044 of that PROB)",
+    "ATOMS.md (ATOM-2026-04-30-0044 migration record)"
+  ],
+  "history": [
+    {
+      "date": "2026-04-28",
+      "event": "Original runnable form authored at CCAgentindex/agents/global_ledger_steward/ as the project's first runnable steward. Endpoint POST /api/agents/global_ledger_steward/run live."
+    },
+    {
+      "date": "2026-04-29",
+      "event": "Unified Box pattern locked by DEC-2026-04-29-015. global_ledger_steward stays at legacy path pending migration."
+    },
+    {
+      "date": "2026-04-30",
+      "event": "ATOM-2026-04-30-0027 decided canonical path = LEDGERS/BOXES/<name>/steward/ (DEC-2026-04-30-004). ATOM-0029 added _agent_resolve_prompt helper to server.py — checks legacy first, then unified Box. ATOM-0044 (this migration) builds the unified Box around the existing runnable steward without breaking it: legacy files stay in place; this Box adds the manifest + per-Box orientation + steward config alongside; resolution helper continues to find the legacy prompt first so live dispatches keep working through the migration window."
+    }
+  ]
+}

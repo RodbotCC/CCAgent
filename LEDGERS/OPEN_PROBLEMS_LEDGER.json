@@ -55,7 +55,7 @@
     "workflow",
     "architecture"
   ],
-  "active_problem_count": 12,
+  "active_problem_count": 22,
   "closed_problem_count": 2,
   "problems": [
     {
@@ -855,6 +855,666 @@
           "note": "created. Jake flagged during catch-up conversation. Deferred pending ledger + sub-agent buildout completion. Inventory of 32 subdirs captured at creation."
         }
       ]
+    },
+    {
+      "id": "PROB-2026-04-30-001",
+      "title": "Web-vs-Local Execution Context: Capability Surface Differs, No Profile System, Pieces Becomes Useless In Web",
+      "status": "partial",
+      "severity": "high",
+      "urgency": "soon",
+      "discovered": "2026-04-30",
+      "discovered_by": "Jake (active Codex session — building dual-mode hosting architecture)",
+      "affected_systems": [
+        "server.py (AI provider routing, /api/pieces/*, /api/delegate, /api/computer_use/*, /api/browser_use/*)",
+        "Pieces integration (PiecesOS at localhost:39300)",
+        "AI provider routing",
+        "future profile system",
+        "future admin profile",
+        "every UI page (grid, settings, leads, clients, coworkers, contacts, briefing, activity, automation, intake, analytics, boxes)"
+      ],
+      "related_files": [
+        "server.py",
+        "chat.js",
+        "ai.js",
+        "ai_actions.js",
+        "screens.jsx",
+        "CLAUDE.md",
+        "Auto/comeketo-inbox/"
+      ],
+      "related_ledgers": [
+        "DECISIONS_LEDGER",
+        "SOURCE_OF_TRUTH",
+        "CONNECTIONS",
+        "DEFINITION_OF_DONE",
+        "BOX_BUS_LEDGER",
+        "COMMUNICATIONS_LEDGER"
+      ],
+      "owner": "TBD (Jake driving architectural shape; agent sweep candidate)",
+      "blocked_by": "none — sweep is read-only and can start any time. Implementation gated on profiles design landing in Decisions Ledger.",
+      "tags": [
+        "architecture",
+        "web-vs-local",
+        "profiles",
+        "connection",
+        "capability-surface",
+        "pieces",
+        "ai-routing",
+        "safety"
+      ],
+      "problem": "App being prepared for dual-mode hosting (local with binaries + Pieces; web through OpenAI API only). Currently assumes local mode everywhere. No mode detection, no per-feature gating, no profile system, no admin profile. Pieces in web mode reads Jake's local memory — wrong-person leakage. Claude-Code subprocess paths fail outright in web mode.",
+      "evidence": [
+        "server.py provider-routing pattern: provider = 'openai' if ENV.get('OPENAI_API_KEY') else 'claude_code' — assumes claude binary",
+        "_pieces_init() and /api/pieces/* unconditionally connect to localhost:39300",
+        "CLAUDE.md §3 documents orchestrator + Auto/ symlink as canonical local-only paths",
+        "GitHub oscillation proposal (LEDGERS/Drafts/github_oscillation_proposal.md) names actors but doesn't define how the running app knows which mode it is in",
+        "No 'profile' or 'mode' concept in server.py, app.jsx, screens.jsx, or any ledger"
+      ],
+      "impact": [
+        "Wrong-person memory leakage via Pieces in web mode (privacy + correctness)",
+        "Silent feature breakage when web users hit Claude-Code-only paths",
+        "No safety boundary — destructive operations not gated to admin profile",
+        "Architecture decisions calcify wrong assumptions if made before this primitive lands",
+        "GitHub oscillation design cannot fully complete without profile-derived actor identity"
+      ],
+      "current_workaround": "Jake is the only user. Web mode does not yet exist as a deployment target. Single-machine, single-operator. Anyone else accessing the running server gets undefined behavior; the workaround is don't. Partial 2026-04-30: main ChatRail now works when OpenAI is selected in hosted/server-proxy or browser BYOK direct mode.",
+      "recommended_next_action": [
+        "1. Capability sweep (read-only audit) → LEDGERS/CAPABILITY_MATRIX.{md,json}. Every endpoint, screen, MCP tool, integration. Tag local-only / web-only / both / degraded-in-web.",
+        "2. Mode detection. EXECUTION_MODE constant in server.py (env: COMEKETO_MODE=local|web, default local). Surface on GET /api/system/mode.",
+        "3. Profile system. Decisions Ledger entry + LEDGERS/PROFILES.md. Identity shape, admin definition, default-deny posture, profile-vs-mode interaction, Pieces gating, oscillation actor identity composition."
+      ],
+      "close_criteria": [
+        "LEDGERS/CAPABILITY_MATRIX.md + .json authored — every page, API, integration enumerated and tagged",
+        "Mode detection in server.py; /api/system/mode endpoint returns current mode; UI banner surfaces non-default mode",
+        "Pieces gracefully disabled in web mode — _pieces_init short-circuits; UI shows 'Pieces unavailable' instead of errors; Activity page hides/grays Pieces-dependent surfaces",
+        "AI provider routing respects mode — web never attempts claude_code subprocess; falls back to OpenAI or returns clear local-only error. Partial 2026-04-30: main ChatRail honors selected OpenAI in hosted/server-proxy and browser BYOK direct modes; full mode-aware routing remains open.",
+        "Profile system design locked as Decisions Ledger entry — identity shape, admin definition, default-deny posture, profile-vs-mode interaction documented",
+        "Admin profile implemented for destructive endpoints (delete-box, force-push, CLAUDE.md edits, Close API writes); non-admin profiles 403 these",
+        "page_asset_sitemap.md updated for every page whose capability surface differs by mode",
+        "Composition with oscillation proposal: web-side actor field on activity-ledger entries derives from active profile in web mode"
+      ],
+      "history": [
+        {
+          "date": "2026-04-30",
+          "note": "Created. Jake surfaced during a Codex session focused on the dual-mode hosting build. Three threads named in chat: (1) Pieces becomes useless in web mode (different person), (2) profiles + admin profile are now needed, (3) capability sweep across the app to enumerate web-vs-local before making any new architectural commitments. Logged as one problem rather than three because all three are aspects of the same missing primitive: execution context awareness."
+        },
+        {
+          "date": "2026-04-30",
+          "event": "partial. Main ChatRail OpenAI selected route fixed for hosted/demo use: browser BYOK direct path now reuses SecretaryAI.respond(); server OpenAI proxy normalizes tool/system roles and assistant output_text content for Responses API compatibility. Verified with OpenAI /api/chat/send on local 3422. Status open→partial; remaining criteria are mode detection, capability matrix, Pieces web gating, profile/admin design, and full web/local feature gating."
+        }
+      ]
+    },
+    {
+      "id": "PROB-2026-04-30-005",
+      "title": "Promote Remaining Steward Sub-Agent Packages To Runnable App Agents",
+      "status": "open",
+      "severity": "medium",
+      "urgency": "soon",
+      "discovered": "2026-04-30",
+      "discovered_by": "Jake (paper list — 'finish our ledger scripts')",
+      "affected_systems": [
+        "LEDGERS/AGENTS/",
+        "CCAgentindex/agents/",
+        "Subagent Boxes/",
+        "ledger maintenance loop",
+        "DEC-2026-04-29-002 Phase B"
+      ],
+      "related_files": [
+        "Subagent Boxes/file_directory_subagent_package/",
+        "Subagent Boxes/global_ledger_subagent_package/",
+        "Subagent Boxes/north_star_subagent_package/",
+        "Subagent Boxes/open_problems_subagent_package/",
+        "Subagent Boxes/temporal_continuity_subagent_package/"
+      ],
+      "related_ledgers": [
+        "DECISIONS_LEDGER",
+        "BOX_LEDGER",
+        "INDEX"
+      ],
+      "owner": "TBD",
+      "blocked_by": "none",
+      "tags": [
+        "ledger",
+        "subagent",
+        "phase-b",
+        "automation"
+      ],
+      "problem": "Five steward sub-agent packages live as drafts at Subagent Boxes/. Only one has been promoted to a runnable app agent (global_ledger_steward). Other four cannot run.",
+      "evidence": "ls Subagent Boxes/ returns 5 packages. ls CCAgentindex/agents/ returns 3 entries (global_ledger_steward + 2 unrelated operational sub-agents).",
+      "impact": "Ledger drift goes uncaught. GL Steward catches GL drift; nothing currently catches drift in TCL, NS, FDL, OPL. Per Prime Directive ledger drift is the cardinal sin — and we have one steward doing the work of five.",
+      "current_workaround": "Manual ledger maintenance during sessions.",
+      "recommended_next_action": [
+        "Promote each draft package one at a time using global_ledger_steward as template",
+        "Suggested order: temporal_continuity → open_problems → file_directory → north_star",
+        "Audit-mode default; local-write opt-in"
+      ],
+      "close_criteria": [
+        "All 5 steward packages have runnable app-agent counterparts in CCAgentindex/agents/",
+        "All 5 reachable via POST /api/agents/<name>/run",
+        "Each agent's prompt.md canonicalized in LEDGERS/AGENTS/<name>/",
+        "Each has at least one successful audit-mode run logged",
+        "LEDGERS/INDEX.md status flipped to active for each"
+      ],
+      "history": [
+        {
+          "date": "2026-04-30",
+          "note": "Created from operator's paper list. Forward-looking; completes Phase B of DEC-2026-04-29-002."
+        }
+      ]
+    },
+    {
+      "id": "PROB-2026-04-30-006",
+      "title": "Begin Box Bus Runtime Build (DEC-013 Phase C)",
+      "status": "open",
+      "severity": "high",
+      "urgency": "later",
+      "discovered": "2026-04-30",
+      "discovered_by": "Jake (paper list — 'begin the ledger-to-box integration', 'build our box trickle hierarchy')",
+      "affected_systems": [
+        "every Box",
+        "every ledger that emits",
+        "future event router",
+        "_ledger/box_bus/<channel>.jsonl"
+      ],
+      "related_files": [
+        "LEDGERS/BOX_BUS_LEDGER.md",
+        "LEDGERS/BOX_BUS_LEDGER.json"
+      ],
+      "related_ledgers": [
+        "BOX_BUS_LEDGER",
+        "DECISIONS_LEDGER (DEC-013, DEC-002)"
+      ],
+      "owner": "TBD",
+      "blocked_by": "PROB-2026-04-30-005 (Phase B steward fleet must be functional first per DEC-2026-04-29-002)",
+      "tags": [
+        "architecture",
+        "box-bus",
+        "phase-c",
+        "automation",
+        "subagent"
+      ],
+      "problem": "Reactive Box Network architecturally locked under DEC-013. Schema in BOX_BUS_LEDGER. Runtime not built. Per DEC-002 this is Phase C, gated on Phase B.",
+      "evidence": "BOX_BUS_LEDGER status 'active (schema-only)' in INDEX.md. No router daemon in server.py. No _ledger/box_bus/<channel>.jsonl. Worked examples §7+§8 illustrative only.",
+      "impact": "Boxes auto-respond to ledger events without operator orchestration. Triad becomes self-maintaining instead of operator-maintained.",
+      "current_workaround": "Operator-driven manual updates.",
+      "recommended_next_action": [
+        "Router daemon in server.py tailing activity.jsonl + watching ledgers",
+        "Author box.json manifests for Client Boxes (28), Staff Boxes (10), analytics snapshot boxes",
+        "Tier-1 deterministic interpreters first (~80% of routes)",
+        "Single end-to-end smoke test (Decisions → Hugo client_ledger.md)",
+        "Cycle detector + actor-self-skip active from day one"
+      ],
+      "close_criteria": [
+        "Router daemon running with health surface on GET /api/box_bus/status",
+        "At least one box.json manifest per Box class",
+        "At least one global → domain → local trickle-down working with audit trail",
+        "Cycle detection verified by intentional cycle construction",
+        "_ledger/propagation.jsonl accumulates dispatches",
+        "BOX_BUS_LEDGER status flipped to 'active (runtime live)'"
+      ],
+      "history": [
+        {
+          "date": "2026-04-30",
+          "note": "Two paper-list items collapsed into this entry — 'ledger-to-box integration' and 'box trickle hierarchy' describe the same primitive."
+        }
+      ]
+    },
+    {
+      "id": "PROB-2026-04-30-007",
+      "title": "Per-Box Agent Configuration In Box Folders (Phase 2 Of Intake → Box)",
+      "status": "open",
+      "severity": "medium",
+      "urgency": "soon",
+      "discovered": "2026-04-30",
+      "discovered_by": "Jake (paper list — 'make our agents' configuration inside each box')",
+      "affected_systems": [
+        "every Client Box folder",
+        "/api/reports/<slug>/ask path",
+        "_box_report_synthesize",
+        "Boxes UI agent surface"
+      ],
+      "related_files": [
+        "Auto/Client Boxes/<Name>/AGENTS.md",
+        "06_logic.md",
+        "07_skills_used.md",
+        "08_automations.md",
+        "LEDGERS/Drafts/intake_box_unification_plan.md"
+      ],
+      "related_ledgers": [
+        "DECISIONS_LEDGER (DEC-2026-04-29-008)",
+        "BOX_LEDGER"
+      ],
+      "owner": "TBD",
+      "blocked_by": "not strictly blocked; composes with PROB-006 router",
+      "tags": [
+        "box",
+        "subagent",
+        "phase-2",
+        "intake",
+        "client-box"
+      ],
+      "problem": "Each Client Box should carry its own agent config so asking the box uses that box's voice. Hugo's box already has AGENTS.md/CLAUDE.md/automation_index.md/06_logic.md/07_skills_used.md/08_automations.md but Intake ask path doesn't read them. DEC-008 explicitly deferred this in Phase 1.",
+      "evidence": "Hugo's AGENTS.md exists. _reports_ask uses generic prompt. Intake plan §9 names this Phase 2.",
+      "impact": "Per-box specialization without forking UI code. Box voice and operating contract honored on ask.",
+      "current_workaround": "Operators manually type box-specific framing.",
+      "recommended_next_action": [
+        "Read order: AGENTS.md → prompt.md → 06_logic.md → 07_skills_used.md → 08_automations.md",
+        "_reports_ask branches when slug is box-report",
+        "Default fallback prompt at LEDGERS/AGENTS/_box_default/prompt.md",
+        "Auth boundary: AGENTS.md sets prompt only; tool restrictions stay server-side",
+        "Stamp template at Auto/Client Boxes/_TEMPLATE/AGENTS.md"
+      ],
+      "close_criteria": [
+        "_reports_ask honors per-box AGENTS.md when report is box-synthesized",
+        "Hugo end-to-end test produces voice-diff vs generic baseline",
+        "Default fallback prompt exists",
+        "Decisions Ledger entry locks read order + tool boundary",
+        "page_asset_sitemap.md §intake updated",
+        "Intake unification plan Phase 2 marked complete"
+      ],
+      "history": [
+        {
+          "date": "2026-04-30",
+          "note": "Phase 2 work explicitly deferred under DEC-008 is now on the list."
+        }
+      ]
+    },
+    {
+      "id": "PROB-2026-04-30-008",
+      "title": "Author Analytics Snapshot Boxes (BOX_BUS_LEDGER §8 Worked Example, Made Real)",
+      "status": "open",
+      "severity": "medium",
+      "urgency": "later",
+      "discovered": "2026-04-30",
+      "discovered_by": "Jake (paper list — 'make global analytics boxes')",
+      "affected_systems": [
+        "7 Onboard Scripts/analytics_*.py",
+        "CCAgentindex/analytics/",
+        "BoxesScreen",
+        "Box Bus router"
+      ],
+      "related_files": [
+        "Onboard Scripts/analytics_source_channels.py",
+        "analytics_seller_performance.py",
+        "analytics_upcoming_events.py",
+        "analytics_win_loss.py",
+        "analytics_revenue_trends.py",
+        "analytics_booking_lead_time.py",
+        "analytics_cohort_analysis.py"
+      ],
+      "related_ledgers": [
+        "BOX_BUS_LEDGER §8",
+        "DECISIONS_LEDGER",
+        "ASSET_WIDGET_MAP"
+      ],
+      "owner": "TBD",
+      "blocked_by": "Phase C runtime (PROB-006) for full triad participation; can ship schema-only ahead",
+      "tags": [
+        "analytics",
+        "box",
+        "box-bus",
+        "phase-c"
+      ],
+      "problem": "Each analytics script produces a JSON snapshot. Per Reactive Box Network, each is a state-bearing entity → should be a Box (folder, ledger, agent, manifest). Today they are bare JSON files.",
+      "evidence": "7 scripts produce 7 snapshots; none have box.json manifests. BOX_BUS_LEDGER §8 has worked example showing exactly what this looks like.",
+      "impact": "Each snapshot becomes a first-class participant in the box-bus.",
+      "current_workaround": "AnalyticsScreen reads snapshots directly via fetch.",
+      "recommended_next_action": [
+        "One snapshot box first — analytics_source_channels (worked example exists)",
+        "Folder layout: CCAgentindex/analytics_boxes/<slug>/{box.json, 00_meta.json, snapshot.json, box_ledger.md}",
+        "Refresh path emits box-bus event (Phase C dependency)",
+        "Replicate to other 6 scripts",
+        "BoxesScreen analytics_snapshot kind filter"
+      ],
+      "close_criteria": [
+        "All 7 outputs have analytics_boxes/<slug>/ folders with manifests",
+        "Each carries box_ledger.md (refresh history append-only)",
+        "BoxesScreen renders analytics_snapshot filter",
+        "AnalyticsScreen continues to work (no regression)",
+        "When Phase C ships, each box emits on refresh"
+      ],
+      "history": [
+        {
+          "date": "2026-04-30",
+          "note": "Realizes BOX_BUS_LEDGER §8 worked example."
+        }
+      ]
+    },
+    {
+      "id": "PROB-2026-04-30-009",
+      "title": "Per-Box Analytics Surface Inside Client Boxes (Phase 3 Of Intake → Box)",
+      "status": "open",
+      "severity": "medium",
+      "urgency": "later",
+      "discovered": "2026-04-30",
+      "discovered_by": "Jake (paper list — 'fix the boxes we're making so regular analytics show up for them inside the box')",
+      "affected_systems": [
+        "BoxesScreen",
+        "Auto/Client Boxes/<Name>/analytics/",
+        "per-box analytics templates"
+      ],
+      "related_files": [
+        "LEDGERS/Drafts/intake_box_unification_plan.md",
+        "Onboard Scripts/analytics_*.py (org-wide reference)"
+      ],
+      "related_ledgers": [
+        "DECISIONS_LEDGER",
+        "BOX_BUS_LEDGER",
+        "ASSET_WIDGET_MAP"
+      ],
+      "owner": "TBD",
+      "blocked_by": "not strictly blocked; templates here read box's own files (different from PROB-008 org-wide)",
+      "tags": [
+        "analytics",
+        "box",
+        "client-box",
+        "phase-3",
+        "intake"
+      ],
+      "problem": "Each Client Box should carry its own analytics surface answered from the box's own files. Today analytics is org-wide, not per-box.",
+      "evidence": "BoxesScreen sections include state/profile/comms/enrichment/plan/agents/logic — no analytics. Boxes have no analytics/ folders. Intake plan lists per-box analytics as Phase 3.",
+      "impact": "Operators audit per-client cadence-fit, reply-latency, guardrail flags from inside the Box without leaving for global Analytics.",
+      "current_workaround": "Read client_ledger.md and 01_comms.md manually; eyeball patterns.",
+      "recommended_next_action": [
+        "Authoring location: CCAgentindex/analytics/templates/ (per-template Python files)",
+        "First four templates: cadence_fire_vs_plan, reply_latency_distribution, guardrail_flag_rate, enrichment_vs_comms_coverage",
+        "BoxesScreen analytics section reads Auto/Client Boxes/<Name>/analytics/*.json",
+        "Refresh trigger: button initially; box-bus event later"
+      ],
+      "close_criteria": [
+        "At least 4 templates implemented + valid JSON for Hugo + Brenda smoke set",
+        "BoxesScreen renders Analytics tab when analytics/ exists",
+        "Charts use existing AnalyticsScreen primitives (no fork)",
+        "page_asset_sitemap.md §boxes updated",
+        "No regression on org-wide AnalyticsScreen"
+      ],
+      "history": [
+        {
+          "date": "2026-04-30",
+          "note": "Phase 3 of the Intake → Box arc."
+        }
+      ]
+    },
+    {
+      "id": "PROB-2026-04-30-010",
+      "title": "GPT Ledger-Digest Agent Hosted On GitHub Repo",
+      "status": "open",
+      "severity": "medium",
+      "urgency": "later",
+      "discovered": "2026-04-30",
+      "discovered_by": "Jake (paper list — 'GPT agent connected to the GitHub version of our repository that sweeps all the different ledgers and compresses them into an easy-to-understand report')",
+      "affected_systems": [
+        "external (web-mode AI client via GitHub MCP)",
+        "all LEDGERS/*.md as input",
+        "GitHub oscillation transport"
+      ],
+      "related_files": [
+        "LEDGERS/Drafts/github_oscillation_proposal.md",
+        "every ledger"
+      ],
+      "related_ledgers": [
+        "DECISIONS_LEDGER",
+        "COMMUNICATIONS_LEDGER",
+        "BOX_BUS_LEDGER"
+      ],
+      "owner": "TBD",
+      "blocked_by": "GitHub oscillation proposal needs to land as Decisions Ledger entry first (codifies actor identity + Authority Table)",
+      "tags": [
+        "web-mode",
+        "github-mcp",
+        "digest",
+        "external-agent"
+      ],
+      "problem": "Need a GPT agent that runs against GitHub copy, sweeps ledgers, produces periodic plain-English digest. First-class read-only consumer of the ledger system, hosted entirely on the web side.",
+      "evidence": "No automated digest. Operators manually skim 16+ ledgers for synthesis.",
+      "impact": "Operator + new contributors get one place for current project state. Especially valuable for team-handoff use case.",
+      "current_workaround": "Manual reading of Global + Temporal + Open Problems + Decisions chain.",
+      "recommended_next_action": [
+        "Where digest lives: GitHub Action committing to LEDGERS/Digests/<date>.md (recommended), or ClickUp, or Slack",
+        "Schedule: weekly default",
+        "Read scope: all LEDGERS/*.md + LEDGERS/PAGES/*.md + activity.jsonl last 7 days",
+        "Output template: status → recent decisions → recent closures → recent opens → drift watch → handoffs → next priorities",
+        "Authority: read-only against GitHub MCP; writes only digest output"
+      ],
+      "close_criteria": [
+        "Operator brief at LEDGERS/AGENTS/_external/digest_agent_brief.md",
+        "At least one digest run produced useful output for human review",
+        "Digest cadence defined and committed",
+        "Activity-ledger entries from digest agent show actor=chatgpt_mcp",
+        "Composes cleanly with PROB-001 web-mode profile + oscillation proposal"
+      ],
+      "history": [
+        {
+          "date": "2026-04-30",
+          "note": "Created."
+        }
+      ]
+    },
+    {
+      "id": "PROB-2026-04-30-011",
+      "title": "Compile Credential / Resource Inventory For ClickUp Team Surface",
+      "status": "open",
+      "severity": "medium",
+      "urgency": "soon",
+      "discovered": "2026-04-30",
+      "discovered_by": "Jake (paper list — 'find all the passwords, sites, files, and keys and everything so I can make a locked site on ClickUp')",
+      "affected_systems": [
+        "every credential project touches",
+        "every external resource (sites/dashboards/docs)",
+        "team onboarding flow"
+      ],
+      "related_files": [
+        ".env",
+        "LEDGERS/CONNECTIONS.md",
+        "LEDGERS/SETTINGS.md"
+      ],
+      "related_ledgers": [
+        "CONNECTIONS",
+        "SETTINGS",
+        "SOURCE_OF_TRUTH"
+      ],
+      "owner": "Jake (operator-driven — no agent compiles credentials autonomously)",
+      "blocked_by": "none",
+      "tags": [
+        "security",
+        "credentials",
+        "documentation",
+        "team-handoff",
+        "clickup"
+      ],
+      "problem": "Credentials, files, sites, keys distributed across .env, password managers, operator memory. No team-readable inventory exists.",
+      "evidence": ".env carries credentials but isn't team-readable. CONNECTIONS.md lists services + credential names but not actual sites/files/keys layer. No ClickUp doc exists.",
+      "impact": [
+        "Onboarding takes longer than necessary",
+        "Bus-factor risk if operator unavailable",
+        "Audit-trail risk: who has which credentials is undocumented"
+      ],
+      "current_workaround": "Operator memory + scattered notes.",
+      "recommended_next_action": [
+        "Compile inside repo first as LEDGERS/CREDENTIAL_INVENTORY.md (or RESOURCE_INVENTORY.md): sites/credentials/files/keys",
+        "Mirror to ClickUp locked space: repo file is source of truth, ClickUp is rendered view"
+      ],
+      "close_criteria": [
+        "LEDGERS/CREDENTIAL_INVENTORY.md committed with full inventory across 4 categories",
+        "Every credential pointer references storage location, not value",
+        "ClickUp locked surface created and synchronized",
+        "CONNECTIONS.md cross-references this file",
+        "TCL/GLOBAL points new contributors at this surface"
+      ],
+      "history": [
+        {
+          "date": "2026-04-30",
+          "note": "Operator-driven; no agent compiles credentials autonomously."
+        }
+      ]
+    },
+    {
+      "id": "PROB-2026-04-30-012",
+      "title": "Send Rhonna The 7-Day Setup Guardrails",
+      "status": "open",
+      "severity": "low",
+      "urgency": "soon",
+      "discovered": "2026-04-30",
+      "discovered_by": "Jake (paper list — 'send Rhonna the guardrails for our 7-day setup')",
+      "affected_systems": [
+        "external (Rhonna's role on Comeketo team)",
+        "7-day cadence handoff"
+      ],
+      "related_files": [
+        "Auto/comeketo-inbox/",
+        "comeketo-guardrails-agent.md",
+        "Guardrails.html",
+        "per-box 05_seven_day_plan.md"
+      ],
+      "related_ledgers": [
+        "COMMUNICATIONS_LEDGER (target home for the handoff record)"
+      ],
+      "owner": "Jake",
+      "blocked_by": "none",
+      "tags": [
+        "outbound",
+        "team-handoff",
+        "guardrails",
+        "cadence"
+      ],
+      "problem": "Rhonna needs the 7-day cadence guardrails — hard gates, auto-pauses, reply gates, frequency caps. Knowledge currently lives across Auto/comeketo-inbox/ + Guardrails.html + operator memory. Rhonna doesn't have it yet.",
+      "evidence": "No record of guardrails handoff to Rhonna in activity.jsonl, Communications Ledger, or any client-box ledger.",
+      "impact": "Until handed off, any 7-day setup Rhonna touches risks Brenda fee-waiver lesson loop (DEC-2026-04-28-005) for wider operator surface.",
+      "current_workaround": "Until sent, Rhonna routes guardrail-relevant questions to Jake.",
+      "recommended_next_action": [
+        "Prepare shareable summary distilled from comeketo-guardrails-agent.md + Guardrails.html",
+        "Choose delivery surface (ClickUp doc preferred — composes with PROB-011)",
+        "Send + log to Communications Ledger as COMM-2026-04-30-XXX"
+      ],
+      "close_criteria": [
+        "Guardrails summary authored",
+        "Sent to Rhonna via chosen channel",
+        "Communications Ledger entry recording the handoff",
+        "Activity ledger entry with timestamp and channel"
+      ],
+      "history": [
+        {
+          "date": "2026-04-30",
+          "note": "Operationally a TODO; tracked as Open Problem because OPL is the most disciplined surface for 'this isn't done yet'."
+        }
+      ]
+    },
+    {
+      "id": "PROB-2026-04-30-013",
+      "title": "Supabase Mode-Gated Integration (Web Default, Local Optional)",
+      "status": "open",
+      "severity": "medium",
+      "urgency": "later",
+      "discovered": "2026-04-30",
+      "discovered_by": "Jake (paper list — 'figure out how to integrate Supabase into the web version of this but not the regular version')",
+      "affected_systems": [
+        "web-mode hosting",
+        "server-side state for web users",
+        "profile system",
+        "Pieces alternative for web"
+      ],
+      "related_files": [
+        "server.py",
+        "LEDGERS/CONNECTIONS.md"
+      ],
+      "related_ledgers": [
+        "CONNECTIONS",
+        "DECISIONS_LEDGER",
+        "SOURCE_OF_TRUTH"
+      ],
+      "owner": "TBD",
+      "blocked_by": "PROB-2026-04-30-001 (mode detection + profiles must land first)",
+      "tags": [
+        "architecture",
+        "web-vs-local",
+        "supabase",
+        "connection",
+        "profiles"
+      ],
+      "problem": "Web mode has no Pieces. Needs server-side state for memory/recall/per-user data. Supabase is the proposed answer for web tier; local keeps Pieces as primary. Local always takes priority.",
+      "evidence": "CONNECTIONS.md shows Supabase as not-in-use with grep evidence. MCP connector exists; repo doesn't use it.",
+      "impact": "Web users get persistence + memory. Local users unaffected. Mode-gating prevents config drift.",
+      "current_workaround": "Web mode has no persistence. Pre-PROB-001-fix this is invisible because web mode isn't deployed.",
+      "recommended_next_action": [
+        "Mode detection lands first (PROB-001 close criterion)",
+        "Decisions Ledger entry: Supabase web-default-ON, local-default-OFF, both-allowed-with-local-priority",
+        "Connection design: tables, schema, on-conflict resolver",
+        "CONNECTIONS.md: Supabase status not-in-use → optional (web-default)",
+        "Auth model: Supabase auth in web binds to active profile"
+      ],
+      "close_criteria": [
+        "Mode detection live (PROB-001 closed or substantially landed)",
+        "Decisions Ledger entry codifying Supabase priority + scope",
+        "Schema designed and implemented for at least one read/write surface",
+        "CONNECTIONS.md status flipped",
+        "Conflict-resolver tested: same row touched in both; local wins; audit trail preserved"
+      ],
+      "history": [
+        {
+          "date": "2026-04-30",
+          "note": "Composes with PROB-2026-04-30-001."
+        }
+      ]
+    },
+    {
+      "id": "PROB-2026-04-30-014",
+      "title": "Box Snapshot Versioning Surfaced In App UI (Via Git History)",
+      "status": "open",
+      "severity": "medium",
+      "urgency": "later",
+      "discovered": "2026-04-30",
+      "discovered_by": "Jake (paper list — 'figure out how to add snapshot versioning')",
+      "affected_systems": [
+        "BoxesScreen",
+        "IntakeReportDetail",
+        "_box_report_synthesize",
+        "git log consumers"
+      ],
+      "related_files": [
+        "LEDGERS/Drafts/github_oscillation_proposal.md",
+        "Auto/Client Boxes/<Name>/",
+        "server.py",
+        "every box folder"
+      ],
+      "related_ledgers": [
+        "DECISIONS_LEDGER",
+        "BOX_LEDGER",
+        "SOURCE_OF_TRUTH"
+      ],
+      "owner": "TBD",
+      "blocked_by": "not strictly blocked; composes with oscillation proposal Decisions Ledger landing",
+      "tags": [
+        "architecture",
+        "snapshots",
+        "time-travel",
+        "git",
+        "box"
+      ],
+      "problem": "Operators want time-travel for boxes. Today the only way is git log + git show — power-user CLI ritual, not UI surface.",
+      "evidence": "No /api/boxes/<id>/history endpoint. No 'as of' picker on Boxes or Box Reports. Git already contains snapshot history but app doesn't expose it.",
+      "impact": "Boxes time-travelable. Box Reports inherit for free. Audit trails operator-visible. Composes with oscillation proposal.",
+      "architectural_note": "Earlier conversation rejected 'make Box Reports themselves snapshots' in favor of 'snapshot canonical box; let derived views be time-travelable for free.' Git is the snapshot service; app surfaces git history. No parallel snapshot store, no drift surface.",
+      "current_workaround": "git log -- Auto/Client Boxes/<Name>/ + git show <sha>:<path>",
+      "recommended_next_action": [
+        "GET /api/boxes/<id>/history — runs git log on box folder",
+        "GET /api/boxes/<id>/at/<sha> — synthesizes payload from git show",
+        "UI 'as of [date]' picker on Boxes + Box Reports",
+        "Per-box change ledger _ledger/box_changes.jsonl",
+        "Commit hygiene per oscillation proposal §6"
+      ],
+      "close_criteria": [
+        "/api/boxes/<id>/history and /api/boxes/<id>/at/<sha> implemented",
+        "BoxesScreen + IntakeReportDetail expose 'as of' picker",
+        "_ledger/box_changes.jsonl accumulates per-box change entries",
+        "Operator can scrub through last 30 days from UI without terminal",
+        "No drift surface introduced (git remains only source of historical state)",
+        "page_asset_sitemap.md §boxes + §intake updated"
+      ],
+      "history": [
+        {
+          "date": "2026-04-30",
+          "note": "Earlier conversation locked principle: snapshot canonical box, not derived views. Git is the snapshot service."
+        }
+      ]
     }
   ],
   "blocked_problems": [
@@ -1034,5 +1694,5 @@
   ],
   "local_vs_global_rule": "If the problem affects one folder/client only, record locally (e.g. in client_ledger.md or local Box ledger). If it affects a pattern, workflow, source-of-truth rule, safety posture, or multiple systems, record here.",
   "final_operating_rule": "A known problem that is not recorded becomes future confusion. If it is broken, name it. If it is risky, classify it. If it is blocked, say why. If it is fixed, prove it.",
-  "last_updated_note": "Phase 12 — PROB-009 closed (Connections Ledger inventoried services with evidence)"
+  "last_updated_note": "PROB-2026-04-30-005..014 added — 10 forward-looking direction items from operator's paper list"
 }

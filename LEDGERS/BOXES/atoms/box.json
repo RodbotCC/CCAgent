@@ -1,0 +1,126 @@
+{
+  "id": "ledger_box:atoms",
+  "slug": "atoms",
+  "kind": "ledger",
+  "name": "Atom Ledger Box (Atomizer Steward)",
+  "version": "1",
+  "envelope_v": "1",
+  "tier": "global",
+  "status": "active",
+  "created_on": "2026-04-30",
+  "unified_box_pattern_decision": "DEC-2026-04-29-015",
+  "owns": [
+    "LEDGERS/ATOMS.md",
+    "LEDGERS/ATOMS.json",
+    "LEDGERS/BOXES/atoms/box.json",
+    "LEDGERS/BOXES/atoms/BOX.md",
+    "LEDGERS/BOXES/atoms/steward/AGENTS.md",
+    "LEDGERS/BOXES/atoms/steward/config.json",
+    "LEDGERS/BOXES/atoms/steward/prompt.md",
+    "LEDGERS/BOXES/atoms/receipts/",
+    "LEDGERS/DRAFTS/ATOMIZATION/"
+  ],
+  "source_of_truth": {
+    "primary": "LEDGERS/ATOMS.md",
+    "structured_mirror": "LEDGERS/ATOMS.json",
+    "race_resolution_canonical": "LEDGERS/ATOMS.json",
+    "generated": []
+  },
+  "subscribes": [
+    {
+      "ledger": "OPEN_PROBLEMS_LEDGER",
+      "tier": "global",
+      "filter": "or(status:open, status:partial, status:needs-decision)",
+      "interpreter": "T2",
+      "write_target": "LEDGERS/DRAFTS/ATOMIZATION/<prob-id>_atoms.md (proposed atoms for human review)",
+      "phase_c_note": "subscription documented; runtime consumes when Atomizer Steward goes runnable in Phase B"
+    },
+    {
+      "ledger": "DECISIONS_LEDGER",
+      "tier": "global",
+      "filter": "scope:atoms",
+      "interpreter": "T1",
+      "write_target": "ATOMS.md (apply schema/protocol changes from DECs scoped to this ledger)",
+      "phase_c_note": "deferred"
+    },
+    {
+      "ledger": "_ledger/activity.jsonl",
+      "tier": "global",
+      "filter": "or(kind:atom_claimed, kind:atom_completed, kind:atom_blocked, kind:atom_abandoned, kind:atom_released, kind:atoms_authored)",
+      "interpreter": "T1",
+      "write_target": "ATOMS.md/json (mirror state changes; sweep stale claims; surface PROB-closure-eligible)",
+      "phase_c_note": "this is the steward's primary signal stream once running"
+    }
+  ],
+  "emits": [
+    {
+      "ledger": "_ledger/activity.jsonl",
+      "tier": "global",
+      "on_event": "atomizer_steward_run",
+      "envelope_kind": "steward_run",
+      "scope": "kind:ledger",
+      "phase_c_note": "emit documented; currently fires through manual append, not bus"
+    },
+    {
+      "ledger": "_ledger/activity.jsonl",
+      "tier": "global",
+      "on_event": "stale_claim_released",
+      "envelope_kind": "atom_released",
+      "scope": "scope:*",
+      "phase_c_note": "stale-claim sweep emits release events; manual today"
+    },
+    {
+      "ledger": "OPEN_PROBLEMS_LEDGER",
+      "tier": "global",
+      "on_event": "prob_closure_eligible",
+      "envelope_kind": "communication_handoff",
+      "scope": "scope:*",
+      "phase_c_note": "when all atoms tied to a PROB's close-criteria complete, steward surfaces PROB for closure review (not auto-close)"
+    },
+    {
+      "ledger": "COMMUNICATIONS_LEDGER",
+      "tier": "global",
+      "on_event": "atom_decomposition_pattern",
+      "envelope_kind": "lesson",
+      "scope": "scope:*",
+      "phase_c_note": "if multiple atoms abandoned with the same root cause, steward surfaces a COMM lesson and flags the parent PROB for re-decomposition"
+    }
+  ],
+  "agent_config": {
+    "package_path": "LEDGERS/BOXES/atoms/steward/",
+    "agents_md": "LEDGERS/BOXES/atoms/steward/AGENTS.md",
+    "config_json": "LEDGERS/BOXES/atoms/steward/config.json",
+    "prompt_md": "LEDGERS/BOXES/atoms/steward/prompt.md",
+    "tier_default": "T2",
+    "guardrails": [
+      "never auto-claim atoms — claim is always a deliberate agent decision",
+      "never auto-complete atoms — completion requires verification proof",
+      "never auto-close PROBs — closure is human-or-steward review, even when all atoms complete",
+      "stale-claim release (>24h with no in_progress_at) is the only automated mutation; even then, append a note explaining the release",
+      "proposed atoms always land in DRAFTS/ATOMIZATION/ first; never write directly to ATOMS.md without a review pass"
+    ],
+    "modes": ["audit_only", "propose_atoms", "sweep_stale", "surface_closures", "release_stale_claims"],
+    "dispatch_planned": "POST /api/agents/atomizer_steward/run (Phase B wiring)",
+    "runnable_form_path_planned": "CCAgentindex/agents/atomizer_steward/ (Phase B)"
+  },
+  "ledger_local": "LEDGERS/BOXES/atoms/receipts/",
+  "phase_status": {
+    "phase_a": "complete (LEDGERS/ATOMS.md + .json shipped 2026-04-30; PROB-016 atomized as proof)",
+    "phase_b": "in_progress (this Box is the unified-pattern home; runnable form not yet wired; second PROB decomposition pass to add queue depth)",
+    "phase_c": "deferred (subscribes/emits documented but not consumed by router; runtime held per DEC-2026-04-29-013; /api/atoms/* endpoints + UI Atoms panel land at this phase)"
+  },
+  "related_ledgers": [
+    "BOX_LEDGER.md (concept of a Box)",
+    "BOX_BUS_LEDGER.md §2.1 (manifest schema), §2.2 (envelope), §3 (tiers)",
+    "DECISIONS_LEDGER.md DEC-2026-04-29-001 (triad spine), DEC-2026-04-29-013 (runtime deferred), DEC-2026-04-29-015 (unified Box pattern), DEC-2026-04-30-003 (Atom Ledger architectural lock)",
+    "PHASE.md §4 (Phase B scope; this Box is one of the targets)",
+    "OPEN_PROBLEMS_LEDGER.md (parent of every atom)",
+    "DEFINITION_OF_DONE.md §6 (Ledger Update Matrix; atoms inherit work-type gates)"
+  ],
+  "history": [
+    {
+      "date": "2026-04-30",
+      "event": "Phase B — second unified Box created (after temporal_continuity 2026-04-29). Houses the Atomizer Steward sub-agent for Phase B promotion to runnable. Ledger files (ATOMS.md + .json) stay at LEDGERS/ — owned via path reference per DEC-2026-04-29-015. Subscribes/emits documented; runtime deferred to Phase C per DEC-2026-04-29-013."
+    }
+  ]
+}

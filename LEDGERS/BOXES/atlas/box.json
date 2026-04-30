@@ -1,0 +1,124 @@
+{
+  "id": "ground_truth_box:atlas",
+  "slug": "atlas",
+  "kind": "ground_truth_source",
+  "name": "Atlas Ground-Truth Box",
+  "version": "1",
+  "envelope_v": "1",
+  "tier": "domain",
+  "status": "active (read-only contract; sweep steward Phase B)",
+  "created_on": "2026-04-30",
+  "unified_box_pattern_decision": "DEC-2026-04-29-015",
+  "owns": [
+    "LEDGERS/atlas (symlink → /Users/jakeaaron/Documents/Atlas)",
+    "LEDGERS/BOXES/atlas/box.json",
+    "LEDGERS/BOXES/atlas/BOX.md",
+    "LEDGERS/BOXES/atlas/steward/AGENTS.md",
+    "LEDGERS/BOXES/atlas/steward/config.json",
+    "LEDGERS/BOXES/atlas/steward/prompt.md",
+    "LEDGERS/BOXES/atlas/receipts/"
+  ],
+  "does_not_own": [
+    "the contents of /Users/jakeaaron/Documents/Atlas itself — Pieces writes those, never project agents",
+    "the Pieces MCP server — that's a separate connector at localhost:39300",
+    "the Live Pieces ribbon on the grid home page — that consumes Pieces sweeps separately"
+  ],
+  "source_of_truth": {
+    "primary": "/Users/jakeaaron/Documents/Atlas (via the LEDGERS/atlas symlink, read-only)",
+    "structured_mirror": "none — Pieces produces markdown only",
+    "generated": [],
+    "what_atlas_is_truth_for": "operator-actual-machine-activity over time. When project-agent ledger writes contradict Atlas observations, Atlas wins for what-actually-happened-on-the-operator's-machine. Project agents win for what-the-system-now-claims (the ledger is authority for project state).",
+    "what_atlas_is_NOT_truth_for": "decisions, source-of-truth rules, project-architecture commitments — those live in the project's own ledger system (Decisions, Source-of-Truth, Box, etc.)"
+  },
+  "structure": {
+    "daily_folders": "Atlas creates a new folder every morning, named e.g. 'Thursday, April 30th, 2026'. Each folder accumulates pieces_*.md summary files throughout the day as Pieces curates workstreams.",
+    "summary_file_format": "Each pieces_*.md file is a markdown summary with sections: TLDR, Core Tasks & Projects, Key Discussions & Decisions, Resources Reviewed, Next Steps. Filename includes a slug hint of the workstream's topic (e.g. pieces_cc_agent_phase_b_launch.md, pieces_agent_ledger_philosophy.md).",
+    "non_project_content": "Atlas captures EVERYTHING on the operator's machine, including non-project activity (entertainment, philosophical exploration, third-party tooling research). The sweep steward MUST filter for project-relevance — not every Pieces summary belongs in the ledger system.",
+    "top_level_files": "build.py, neighborhood_layout.py, atlas.html, map.html, etc. — these are Atlas's own internal tooling, not summary content. Sweep steward ignores them."
+  },
+  "subscribes": [
+    {
+      "external": "Pieces MCP (localhost:39300) writes Atlas folders",
+      "filter": "all daily folders, all pieces_*.md files",
+      "interpreter": "external — project agents do not subscribe in the Box Bus sense; the steward POLLS Atlas",
+      "phase_c_note": "Phase C runtime might surface Atlas as a true subscription source"
+    }
+  ],
+  "emits": [
+    {
+      "ledger": "_ledger/activity.jsonl",
+      "tier": "global",
+      "on_event": "atlas_sweep_steward_run",
+      "envelope_kind": "steward_run",
+      "scope": "kind:ground_truth",
+      "phase_c_note": "manual append today; bus-emit when Phase C lands"
+    },
+    {
+      "ledger": "OPEN_PROBLEMS_LEDGER",
+      "tier": "global",
+      "on_event": "ground_truth_drift_detected",
+      "envelope_kind": "problem",
+      "scope": "tag:atlas-drift",
+      "phase_c_note": "When Atlas observation contradicts a project ledger claim, file PROB. Manual today."
+    },
+    {
+      "ledger": "COMMUNICATIONS_LEDGER",
+      "tier": "global",
+      "on_event": "ground_truth_finding_for_handoff",
+      "envelope_kind": "handoff",
+      "scope": "scope:*",
+      "phase_c_note": "When Atlas surfaces a project-relevant pattern (operator focus shift, recurring pain point, decision-context that didn't make it to a DEC entry), file COMM. Manual today."
+    },
+    {
+      "ledger": "ATOMS",
+      "tier": "global",
+      "on_event": "ground_truth_action_suggestion",
+      "envelope_kind": "atom_proposal",
+      "scope": "scope:*",
+      "phase_c_note": "Pieces 'Next Steps' sections are atom-suggestion fuel. The steward proposes new atoms to DRAFTS/ATOMIZATION/ for human review. Manual today."
+    }
+  ],
+  "agent_config": {
+    "package_path": "LEDGERS/BOXES/atlas/steward/",
+    "agents_md": "LEDGERS/BOXES/atlas/steward/AGENTS.md",
+    "config_json": "LEDGERS/BOXES/atlas/steward/config.json",
+    "prompt_md": "LEDGERS/BOXES/atlas/steward/prompt.md",
+    "tier_default": "T1",
+    "guardrails": [
+      "READ-ONLY against Atlas — never write into /Users/jakeaaron/Documents/Atlas/",
+      "Filter for project-relevance — Atlas captures everything; not every summary is project memory",
+      "Never invent observations — if Pieces didn't surface it, the steward can't claim it as ground truth",
+      "Reconcile gently — when ledger and Atlas disagree, file a PROB, do not auto-overwrite the ledger",
+      "audit_only is the safe default; reconcile mode requires explicit dispatch"
+    ],
+    "modes": ["audit_only", "reconcile"],
+    "dispatch_planned": "POST /api/agents/atlas_sweep_steward/run (Phase B wiring)",
+    "dispatch_status": "not yet wired — see PROB filed by this Box's creation",
+    "runnable_form_path_canonical": "LEDGERS/BOXES/atlas/steward/ (canonical per DEC-2026-04-30-004)",
+    "resolution_helper": "server.py _agent_resolve_prompt — falls through legacy (none) directly to unified Box. Same pattern as file_directory_steward.",
+    "sweep_cadence_planned": "daily at end-of-day, claiming the day's folder; or on-demand via dispatch"
+  },
+  "ledger_local": "LEDGERS/BOXES/atlas/receipts/",
+  "phase_status": {
+    "phase_a": "complete (Atlas itself has been accumulating since at least 2026-04-24; this Box formalizes it as a project surface 2026-04-30)",
+    "phase_b": "in_progress (Box authored 2026-04-30; steward files staged but not yet smoke-tested or wired)",
+    "phase_c": "deferred (subscribes/emits documented but not consumed by router; runtime per DEC-2026-04-29-013)"
+  },
+  "related_ledgers": [
+    "BOX_LEDGER.md (concept of a Box)",
+    "BOX_BUS_LEDGER.md §2.1 (manifest schema)",
+    "DECISIONS_LEDGER.md DEC-2026-04-29-015 (unified Box pattern)",
+    "SOURCE_OF_TRUTH.md (Atlas trust ordering — operator-actual-activity wins over agent claims for what-happened)",
+    "OPEN_PROBLEMS_LEDGER.md (PROB filed by this Box's creation — Atlas Sweep Steward not yet runnable)",
+    "COMMUNICATIONS_LEDGER.md (COMM filed for the architecture decision — Atlas as ground-truth surface)",
+    "ATOMS.md (steward graduation atoms when authored)",
+    "CONNECTIONS.md (Pieces MCP at localhost:39300 — Atlas is the disk artifact of Pieces output)",
+    "Sibling Boxes (read-side patterns to mirror): LEDGERS/BOXES/global_ledger/, temporal_continuity/, file_directory/"
+  ],
+  "history": [
+    {
+      "date": "2026-04-30",
+      "event": "Atlas integrated as project surface. Operator (Jake) flagged that Pieces MCP has been producing daily-folder workstream summaries at /Users/jakeaaron/Documents/Atlas/ since at least 2026-04-24, and that this is operator-actual-activity ground truth — invaluable for fact-checking ledger drift. Symlink created at LEDGERS/atlas → /Users/jakeaaron/Documents/Atlas (gitignored). Atlas Box authored as ground_truth_source class (new kind). Steward files staged at steward/ — runnable form pending Phase B graduation. COMM-2026-04-30-007 filed for the architecture decision. PROB-2026-04-30-015 filed for the steward graduation work."
+    }
+  ]
+}

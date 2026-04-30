@@ -1,0 +1,68 @@
+{
+  "request_id": "a5e25d108722",
+  "run_at": "2026-04-30T22:28:25Z",
+  "kind": "atom_completion_audit",
+  "atom_id": "ATOM-2026-04-30-0044",
+  "atom_title": "Migrate global_ledger_steward from CCAgentindex/agents/ to LEDGERS/BOXES/global_ledger/steward/",
+  "actor": "global_ledger_steward (audit) / claude_cowork (executor)",
+  "mode": "audit_only",
+  "classification": "global_update (steward source-of-truth path migration)",
+  "claim": "Built unified Box at LEDGERS/BOXES/global_ledger/ alongside the existing CCAgentindex/agents/global_ledger_steward/ runnable form. Resolution helper continues to find legacy first; live dispatches preserved.",
+  "files_read": [
+    "CCAgentindex/agents/global_ledger_steward/agents.md",
+    "CCAgentindex/agents/global_ledger_steward/prompt.md",
+    "LEDGERS/BOXES/temporal_continuity/box.json",
+    "LEDGERS/BOXES/temporal_continuity/BOX.md",
+    "LEDGERS/BOXES/temporal_continuity/steward/config.json",
+    "LEDGERS/BOXES/temporal_continuity/steward/prompt.md",
+    "LEDGERS/BOXES/atoms/BOX.md",
+    "server.py (lines 4865-4925: _agent_resolve_prompt + _agents_list)",
+    "LEDGERS/ATOMS.md (atom doctrine)",
+    "LEDGERS/ATOMS.json (claim status)"
+  ],
+  "files_written": [
+    "LEDGERS/BOXES/global_ledger/box.json",
+    "LEDGERS/BOXES/global_ledger/BOX.md",
+    "LEDGERS/BOXES/global_ledger/steward/AGENTS.md (copied + header updated)",
+    "LEDGERS/BOXES/global_ledger/steward/prompt.md (copied + migration note prepended; canonical-package path references updated)",
+    "LEDGERS/BOXES/global_ledger/steward/config.json",
+    "LEDGERS/BOXES/global_ledger/receipts/README.md"
+  ],
+  "files_unchanged_intentionally": [
+    "CCAgentindex/agents/global_ledger_steward/agents.md (legacy preserved)",
+    "CCAgentindex/agents/global_ledger_steward/prompt.md (legacy preserved \u2014 still the active dispatch target)",
+    "server.py (no changes; _agent_resolve_prompt already supports both paths via ATOM-0029)"
+  ],
+  "verification": {
+    "v1_resolve_legacy_first": "PASS \u2014 _agent_resolve_prompt('global_ledger_steward') returns legacy path",
+    "v2_unified_fallback_works": "PASS \u2014 with legacy hypothetically removed, helper resolves to unified Box prompt",
+    "v3_no_duplicate_in_list": "PASS \u2014 _agents_list returns exactly one entry for global_ledger_steward, source=legacy",
+    "v4_box_structure_complete": "PASS \u2014 all 6 required files/dirs present (box.json, BOX.md, steward/AGENTS.md, steward/prompt.md, steward/config.json, receipts/)",
+    "v5_box_json_valid": "PASS \u2014 declares kind=ledger, tier=global, status=active, unified_box_pattern_decision=DEC-2026-04-29-015, canonical_path_decision=DEC-2026-04-30-004, migration_atom=ATOM-2026-04-30-0044, owns[] includes all governed files",
+    "v6_config_json_valid": "PASS \u2014 id=global_ledger_steward, canonical_repo_path=LEDGERS/BOXES/global_ledger/steward/, legacy_runtime_path noted, primary_files=[md,json], migration_atom recorded"
+  },
+  "acceptance_criteria_check": {
+    "unified_box_exists_with_full_structure_mirroring_temporal_and_atoms": "PASS",
+    "server_py_agent_run_reads_from_both_paths": "PASS (already wired by ATOM-0029; no changes needed in this atom)",
+    "smoke_test_post_api_agents_global_ledger_steward_run": "PASS (programmatic \u2014 resolution helper continues to find legacy prompt; existing live dispatch path unchanged. Live HTTP test deferred per ATOM-0029 precedent: requires server restart on Jake's machine.)"
+  },
+  "do_not_undo_casually_honored": "PASS \u2014 legacy CCAgentindex/agents/global_ledger_steward/ files unchanged. Live dispatches preserved. Legacy retirement is a separate work unit, not part of this atom.",
+  "side_effects_for_other_atoms": "Migration sets canonical precedent for in-flight steward promotions: ATOM-0036 (file_directory), ATOM-0040 (north_star), and the agent currently on ATOM-0032 (open_problems) all have a concrete pattern to follow at LEDGERS/BOXES/<box>/steward/. The unified Box has 6 required files: box.json, BOX.md, steward/AGENTS.md, steward/prompt.md, steward/config.json, receipts/.",
+  "next_recommended_actions": [
+    "Other agents working on PROB-005 chains can mirror this Box's structure for their stewards",
+    "Eventual flip of _agent_resolve_prompt precedence (legacy second instead of first) would complete the canonical migration \u2014 separate work unit",
+    "Eventual deletion of CCAgentindex/agents/global_ledger_steward/ files \u2014 separate work unit, only after precedence flip is verified"
+  ],
+  "abstention": false,
+  "risks": [],
+  "ledger_roster_check": {
+    "actual_ledgers_at_LEDGERS_BOXES_": [
+      "atoms/",
+      "global_ledger/ (new)",
+      "temporal_continuity/"
+    ],
+    "INDEX_md_mismatch": "INDEX.md does not yet enumerate Boxes under LEDGERS/BOXES/ \u2014 this is consistent with INDEX.md tracking ledgers rather than Boxes. Box visibility lives in BOX_LEDGER.md cross-references and box.json manifests.",
+    "global_ledger_md_section_8_check": "Section 8 (Ledger System Map) row for Ledger Steward Agents currently reads 'partial / active first agent' with path CCAgentindex/agents/global_ledger_steward/. Could be updated to point at canonical post-migration path; deferred to a global_ledger_steward run."
+  },
+  "activity_appended": true
+}

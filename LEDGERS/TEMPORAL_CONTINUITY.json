@@ -3,10 +3,10 @@
   "version": "0.1.0",
   "last_updated": "2026-04-29",
   "last_updated_local_approx": "2026-04-29",
-  "last_updated_note": "Phase 14 — Asset/Widget Map landed; cross-page widget catalog + API→page mapping",
+  "last_updated_note": "Phase B step 1 — first unified ledger Box landed at LEDGERS/BOXES/temporal_continuity/ per DEC-2026-04-29-015",
   "updated_by": "Jake (orchestrator) + Claude (Cowork)",
-  "current_project_moment": "Ledger system buildout Phases 1–14 complete. 14 active ledgers (Global, Temporal Continuity, North Star, File Directory, Open Problems, Communications, Decisions, Box Ledger, Definition of Done, Box Bus Ledger, Source-of-Truth, Connections, File Contents, Asset/Widget Map). Asset/Widget Map sits one altitude above the page-asset sitemap — sitemap is canonical per-page truth (UI Done Gate); this ledger is the cross-cutting map (shared widgets, API → page mapping, shared services, change-radius hints). Next-up candidates: Phase Ledger (small, tier: global), Page Ledgers (one per route, tier: domain), or Settings Ledger (tier: global, pairs with CONNECTIONS).",
-  "current_phase": "Early automation proof with safety cleanup",
+  "current_project_moment": "PHASE B IN PROGRESS (since 2026-04-29). First unified ledger Box landed at LEDGERS/BOXES/temporal_continuity/ per DEC-2026-04-29-015. Pattern: each ledger gets a Box at LEDGERS/BOXES/<name>/ containing box.json (manifest) + BOX.md (orientation) + steward/{AGENTS.md, config.json, prompt.md} + receipts/. Ledger files (TEMPORAL_CONTINUITY.md + .json, etc.) STAY at LEDGERS/ — Box governs via path reference. Triad realized at structural level even before Phase C runtime arrives. Next Phase B steps: reorganize LEDGERS/AGENTS/global_ledger_steward/ → LEDGERS/BOXES/global_ledger/, graduate remaining 3 drafts (file_directory, north_star, open_problems), author Boxes for missing-ledger stewards, wire runnable forms.",
+  "current_phase": "Phase B — Sub-agents (in progress; first unified Box landed)",
   "continuity_status": "active",
   "next_recommended_read": [
     "LEDGERS/GLOBAL_LEDGER.md",
@@ -16,16 +16,19 @@
   "active_workstreams": [
     {
       "id": "ledger_system_buildout",
-      "status": "active",
-      "current_step": "Phase 14 — Asset/Widget Map landed (cross-page widget catalog + API→page mapping; tier: domain)",
-      "last_completed": "Phases 1-14 — adds AssetWidgetMap to the 13 prior ledgers",
+      "status": "phase_b_in_progress",
+      "current_step": "Phase B step 1 — first unified Box at LEDGERS/BOXES/temporal_continuity/ landed per DEC-2026-04-29-015",
+      "last_completed": "Phases 1-21 — full ledger buildout. 17 active ledgers (16 project-level + 5 of 14 Page Ledgers). High-risk wave complete: boxes, intake, automation, delegations, settings page ledgers + Phase Ledger.",
       "next_step_candidates": [
-        "phase",
-        "page_ledgers",
-        "settings"
+        "global_ledger_box_reorg",
+        "graduate_remaining_3_drafts",
+        "author_missing_ledger_boxes",
+        "wire_runnable_steward_forms"
       ],
       "workflow": "user types P (or uploads next ledger spec) to proceed; or delegates the call to Claude. Every new ledger must satisfy DEFINITION_OF_DONE §5.6 AND ship envelope-aware per BOX_BUS_LEDGER §2.2.",
-      "build_order_authority": "LEDGERS/INDEX.md"
+      "build_order_authority": "LEDGERS/INDEX.md",
+      "boxes_built": 1,
+      "boxes_target": "16+ project-level + per-page as needed"
     },
     {
       "id": "client_box_audit_cleanup",

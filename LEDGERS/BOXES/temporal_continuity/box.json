@@ -1,0 +1,112 @@
+{
+  "id": "ledger_box:temporal_continuity",
+  "slug": "temporal_continuity",
+  "kind": "ledger",
+  "name": "Temporal Continuity Ledger Box",
+  "version": "1",
+  "envelope_v": "1",
+  "tier": "global",
+  "status": "active",
+  "created_on": "2026-04-29",
+  "unified_box_pattern_decision": "DEC-2026-04-29-015",
+  "owns": [
+    "LEDGERS/TEMPORAL_CONTINUITY.md",
+    "LEDGERS/TEMPORAL_CONTINUITY.json",
+    "LEDGERS/BOXES/temporal_continuity/box.json",
+    "LEDGERS/BOXES/temporal_continuity/BOX.md",
+    "LEDGERS/BOXES/temporal_continuity/steward/AGENTS.md",
+    "LEDGERS/BOXES/temporal_continuity/steward/config.json",
+    "LEDGERS/BOXES/temporal_continuity/steward/prompt.md",
+    "LEDGERS/BOXES/temporal_continuity/receipts/"
+  ],
+  "source_of_truth": {
+    "primary": "LEDGERS/TEMPORAL_CONTINUITY.md",
+    "structured_mirror": "LEDGERS/TEMPORAL_CONTINUITY.json",
+    "generated": []
+  },
+  "subscribes": [
+    {
+      "ledger": "GLOBAL_LEDGER",
+      "tier": "global",
+      "filter": "or(scope:*, scope:kind:ledger, scope:box:temporal_continuity)",
+      "interpreter": "T1",
+      "write_target": "TEMPORAL_CONTINUITY.md (Recent Meaningful Changes section)",
+      "phase_c_note": "subscription is documented but not consumed until Phase C runtime lands"
+    },
+    {
+      "ledger": "DECISIONS_LEDGER",
+      "tier": "global",
+      "filter": "or(scope:*, scope:kind:ledger)",
+      "interpreter": "T1",
+      "write_target": "TEMPORAL_CONTINUITY.md (Carry-Forward Context section)",
+      "phase_c_note": "deferred"
+    },
+    {
+      "ledger": "OPEN_PROBLEMS_LEDGER",
+      "tier": "global",
+      "filter": "or(severity:critical, severity:high)",
+      "interpreter": "T1",
+      "write_target": "TEMPORAL_CONTINUITY.md (Current Risks / Fragile Areas section)",
+      "phase_c_note": "deferred"
+    },
+    {
+      "ledger": "_ledger/activity.jsonl",
+      "tier": "global",
+      "filter": "scope:*",
+      "interpreter": "T1",
+      "write_target": "TEMPORAL_CONTINUITY.md (Session Log section, when activity warrants it)",
+      "phase_c_note": "deferred — session-log compilation is a steward judgment call, not auto-mirroring"
+    }
+  ],
+  "emits": [
+    {
+      "ledger": "_ledger/activity.jsonl",
+      "tier": "global",
+      "on_event": "temporal_continuity_steward_run",
+      "envelope_kind": "steward_run",
+      "scope": "kind:ledger",
+      "phase_c_note": "emit is documented but currently fires through manual append, not bus"
+    },
+    {
+      "ledger": "OPEN_PROBLEMS_LEDGER",
+      "tier": "global",
+      "on_event": "drift_detected",
+      "envelope_kind": "problem",
+      "scope": "scope:*",
+      "phase_c_note": "TCL drift = stale state vs reality; would emit a PROB entry. Manual today."
+    }
+  ],
+  "agent_config": {
+    "package_path": "LEDGERS/BOXES/temporal_continuity/steward/",
+    "agents_md": "LEDGERS/BOXES/temporal_continuity/steward/AGENTS.md",
+    "config_json": "LEDGERS/BOXES/temporal_continuity/steward/config.json",
+    "prompt_md": "LEDGERS/BOXES/temporal_continuity/steward/prompt.md",
+    "tier_default": "T1",
+    "guardrails": [
+      "no direct main pushes when local drift risk exists",
+      "audit-only is the default mode; local_write requires explicit dispatch",
+      "session log records meaning, not every diff"
+    ],
+    "modes": ["audit_only", "local_write"],
+    "dispatch_planned": "POST /api/agents/temporal_continuity_steward/run (Phase B wiring)",
+    "runnable_form_path_planned": "CCAgentindex/agents/temporal_continuity_steward/ (Phase B; or read directly from this Box per future server.py change)"
+  },
+  "ledger_local": "LEDGERS/BOXES/temporal_continuity/receipts/",
+  "phase_status": {
+    "phase_a": "complete (TEMPORAL_CONTINUITY.md + .json shipped 2026-04-28)",
+    "phase_b": "in_progress (this Box is the first unified-pattern proof; runnable form not yet wired)",
+    "phase_c": "deferred (subscriptions/emits documented but not consumed by router; runtime held per DEC-2026-04-29-013)"
+  },
+  "related_ledgers": [
+    "BOX_LEDGER.md (concept of a Box)",
+    "BOX_BUS_LEDGER.md §2.1 (manifest schema)",
+    "DECISIONS_LEDGER.md DEC-2026-04-29-001 (triad spine), DEC-2026-04-29-013 (runtime deferred), DEC-2026-04-29-015 (unified Box pattern)",
+    "PHASE.md §4 (Phase B scope; this Box refines the Phase B target)"
+  ],
+  "history": [
+    {
+      "date": "2026-04-29",
+      "event": "Phase B — first unified Box created. Graduates draft from /Subagent Boxes/temporal_continuity_subagent_package/ into LEDGERS/BOXES/temporal_continuity/ structure: box.json (this file), BOX.md, steward/{AGENTS.md, config.json, prompt.md}, receipts/. Ledger files (TEMPORAL_CONTINUITY.md + .json) stay in place at LEDGERS/ — owned via path reference. Pattern locked by DEC-2026-04-29-015. Runnable form not yet wired (Phase B+1 work)."
+    }
+  ]
+}

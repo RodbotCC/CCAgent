@@ -2,7 +2,7 @@
   "ledger_type": "communications",
   "version": "0.1.0",
   "last_updated": "2026-04-29",
-  "last_updated_note": "Phase 14 — appended COMM-2026-04-29-011 for Asset/Widget Map landing",
+  "last_updated_note": "Phase B step 1 — appended COMM-2026-04-29-016 for first unified ledger Box (temporal_continuity)",
   "status": "active",
   "maintainer": "Jake / Comeketo Agent project agents",
   "core_rule": "If a future agent needs to hear it, leave it where they can find it.",
@@ -646,6 +646,257 @@
         "Appended this Communications entry",
         "Appended ledger_phase_landed event to activity.jsonl"
       ]
+    },
+    {
+      "id": "COMM-2026-04-29-012",
+      "title": "Settings Ledger Landed — User-Configurable Surface Catalog",
+      "section": 4,
+      "date": "2026-04-29",
+      "from": "Cowork session (Phase 15, Jake's call: 'Settings next')",
+      "to": "Future agents — every Settings page change, every new credential editor, every new feature flag.",
+      "types": [
+        "handoff",
+        "preference",
+        "coordination"
+      ],
+      "status": "active",
+      "priority": "high",
+      "affected_systems": [
+        "Settings page (SettingsScreen)",
+        "/.env (server-side credential persistence)",
+        "localStorage.secretary.tweaks (client-side preferences)",
+        "connectors.js (demo mode block)",
+        "ChatRail (provider exclusivity)",
+        "/api/settings/mcp_credentials/* endpoints",
+        "future Settings steward agent (Phase B)"
+      ],
+      "related_ledgers": [
+        "SETTINGS.md",
+        "CONNECTIONS.md (Settings names UI-configurable surface over its services)",
+        "ASSET_WIDGET_MAP.md §6.1 (full localStorage registry)",
+        "page_asset_sitemap.md §settings (canonical UI Done Gate)",
+        "DEFINITION_OF_DONE.md §5.8 (settings_ledger_updated_if_user_facing_changed)",
+        "FILE_CONTENTS.md (screens.jsx SettingsScreen, connectors.js, server.py /api/settings/*)"
+      ],
+      "promote_when": "Settings steward is built — at that point the audit log is auto-checked and this entry archives.",
+      "summary": "Settings Ledger is now live. 11 user-changeable settings cataloged across 3 persistence layers (.env server-side / localStorage.secretary.tweaks client-side / runtime-only). Documented: theme, language, demo mode, intelligence provider (3-way exclusive: claude_code/openai/codex_cli), OpenAI model, Pieces model, prompt enhancement, browser-use defaults (4 sub-fields), MCP credential editor (allowlisted save/clear with audit log to activity.jsonl, key name only never value), MCP server status registry (read-only from /api/status), reset. Provider exclusivity rule + demo mode rule + credential save/clear flow + audit rule all written down. Tier: global. Pairs cleanly with Connections (services) and Asset/Widget Map (localStorage).",
+      "suggested_action": "Before adding a new toggle to SettingsScreen: walk SETTINGS §3 to pick the right persistence layer. Before adding a new credential editor: 1) update server.py allowlist, 2) add UI editor row, 3) update CONNECTIONS.md, 4) update SETTINGS §3.8 + §4.1. Demo mode is the safest send-blocker — every customer-facing automation should respect it. Provider switching is instant; no restart needed; the picker writes to tweaks.aiProvider and routes self-select. NEVER log a raw secret, anywhere. The save flow is the only path to .env.",
+      "expiry_review": "Archive when Settings steward is built and starts auditing the .env allowlist + localStorage shape against this ledger automatically.",
+      "ledger_creation_sprint_log": [
+        "Read sitemap §settings + screens.jsx SettingsScreen + server.py /api/settings/* + tweaks fields scan",
+        "Authored SETTINGS.md (13 sections — purpose, categories, per-setting inventory, persistence layers, save/clear flow, demo mode, provider exclusivity, change radius, update protocol, ledger relationships, NS alignment, operator quick-reference)",
+        "Authored SETTINGS.json (envelope-aware tier=global; structured settings_inventory[] with per-setting persistence/scope/affects/reset/companion fields)",
+        "Created VISUALS/settings_surface_map.mmd (Settings → Categories → Persistence layers → Affected systems)",
+        "Updated INDEX.md, GLOBAL_LEDGER.md §8/§12/§13/§14/§15 + JSON, TCL md+json",
+        "Appended this Communications entry",
+        "Appended ledger_phase_landed event to activity.jsonl"
+      ]
+    },
+    {
+      "id": "COMM-2026-04-29-013",
+      "title": "First Page Ledger Landed (boxes) — Per-Page Deep-Memory Pattern Established",
+      "section": 4,
+      "date": "2026-04-29",
+      "from": "Cowork session (Phase 16, Jake's call: 'Let's hit the Page Ledger')",
+      "to": "Future agents — every page change beyond cosmetic; every operator-onboarding session; every Phase B sub-agent that audits per-page state.",
+      "types": [
+        "handoff",
+        "preference",
+        "coordination"
+      ],
+      "status": "active",
+      "priority": "high",
+      "affected_systems": [
+        "boxes page (BoxesScreen)",
+        "future per-page records (intake, automation, delegations, settings high-risk first wave)",
+        "page_asset_sitemap.md (sitemap remains canonical; Page Ledgers are the narrative layer)",
+        "future Boxes-page steward agent (Phase B)"
+      ],
+      "related_ledgers": [
+        "LEDGERS/PAGES/boxes.md (the first record)",
+        "LEDGERS/PAGES/_README.md (directory orientation + per-page authoring template)",
+        "page_asset_sitemap.md §boxes (CANONICAL operational truth)",
+        "ASSET_WIDGET_MAP.md (cross-page widget catalog — Page Ledgers reference into this)",
+        "FILE_CONTENTS.md (file roles — Page Ledgers reference into this)",
+        "DEFINITION_OF_DONE.md §5.3 (Page Done Gate; this Page Ledger §10 is local-stricter)",
+        "DECISIONS_LEDGER.md (DEC-2026-04-29-005..008 referenced in boxes Page Ledger)"
+      ],
+      "promote_when": "Every high-risk page has a Page Ledger (intake, automation, delegations, settings) — at that point this entry archives because the pattern is established and self-replicating.",
+      "summary": "First Page Ledger landed: LEDGERS/PAGES/boxes.md. 16 substantive sections. Tier: domain. Sitemap §boxes remains canonical operational truth (DEC-2026-04-29-007); Page Ledger carries the WHY — why Hugo and Brenda have specialized renderers and the other 26 don't, why dossier rendering moved from markdown-dump to design-kit narrative cards, why completeness scoring landed when it did, where the page is heading through Phase C runtime. Establishes the per-page deep-memory pattern. LEDGERS/PAGES/_README.md stamps the directory with the pattern + authoring template + status of all 14 routes (1 active, 13 planned). Anti-pattern explicitly named: don't author all 14 at once; better to land one well-grounded Page Ledger than 14 thin stubs.",
+      "suggested_action": "When the next Page Ledger is needed: read LEDGERS/PAGES/_README.md for the authoring template + first-wave priority list. When changing the boxes page: walk DoD §5.3 + LEDGERS/PAGES/boxes.md §10 (local-stricter Done Gate). When sitemap and Page Ledger disagree on per-page operational detail: SITEMAP WINS. Page Ledger is the narrative layer; sitemap is the operational truth.",
+      "expiry_review": "Archive when high-risk first wave (intake / automation / delegations / settings) all have Page Ledgers — pattern is then self-sustaining.",
+      "ledger_creation_sprint_log": [
+        "Read draft outline (Page Ledger structure + first wave + boxes example)",
+        "Read sitemap §boxes (45 lines, 7 history entries) + screens.jsx BoxesScreen + server.py /api/boxes/* routes",
+        "Authored LEDGERS/PAGES/_README.md (directory orientation + 14-page status table + authoring template + anti-pattern naming)",
+        "Authored LEDGERS/PAGES/boxes.md (16 sections: purpose, use case, route+render, data sources, APIs, writes/side-effects, SoT rules with per-rank render map, widgets, supported states, page-specific guardrails, local-stricter Done Gate, open problems, narrative recent changes spanning 2026-04-27 → 2026-04-29, architectural rationale, related ledgers, future direction through Phase C)",
+        "Authored LEDGERS/PAGES/boxes.json (envelope-aware tier=domain; full structured mirror)",
+        "Updated INDEX.md, GLOBAL_LEDGER.md §8/§12/§13/§14 + JSON, TCL md+json",
+        "Appended this Communications entry",
+        "Appended ledger_phase_landed event to activity.jsonl"
+      ]
+    },
+    {
+      "id": "COMM-2026-04-29-014",
+      "title": "Second Page Ledger Landed (intake) — High-Risk Wave Underway",
+      "section": 4,
+      "date": "2026-04-29",
+      "from": "Cowork session (Phase 17, Jake's call: 'Let's go with the page ledgers')",
+      "to": "Future agents — every intake change beyond cosmetic; Phase 2 contributors who'll wire AGENTS.md into the ask path; Phase B sub-agent fleet contributors.",
+      "types": [
+        "handoff",
+        "preference",
+        "coordination"
+      ],
+      "status": "active",
+      "priority": "high",
+      "affected_systems": [
+        "intake page (IntakeScreen + IntakeReportsList + IntakeReportDetail + IntakeDocumentCard)",
+        "/api/reports/* + /api/attachments/upload + Box-Report synthesis path",
+        "Auto/Client Boxes/<Name>/intake_drops/ (write target for Box Report ingests)",
+        "CCAgentindex/reports/_box_conversations/<box_id>.jsonl (append-only Q&A history)",
+        "future Phase 2 box-aware ask path",
+        "future Phase C runtime (intake_drops/ shifts from operator reference to automation input surface)"
+      ],
+      "related_ledgers": [
+        "LEDGERS/PAGES/intake.md (the second record)",
+        "LEDGERS/PAGES/boxes.md (natural pair page)",
+        "page_asset_sitemap.md §intake (CANONICAL)",
+        "ASSET_WIDGET_MAP.md §3.3 + §4.3",
+        "FILE_CONTENTS.md §6 + §7 + §11",
+        "SOURCE_OF_TRUTH.md §3.1 + §4 (Allowed-To-Know — pending wiring)",
+        "SETTINGS.md §3.3 + §3.4 + §3.5 (provider routing for Q&A)",
+        "DECISIONS_LEDGER.md DEC-2026-04-29-005..008",
+        "DEFINITION_OF_DONE.md §5.3"
+      ],
+      "promote_when": "Phase 2 ships per-Box agent config plumbing — at that point the ask path becomes box-aware and several §11 open problems close.",
+      "summary": "Second Page Ledger landed: LEDGERS/PAGES/intake.md. 16 substantive sections. Tier: domain. Risk: medium-high. Captures the Phase 1 unification (DEC-005..008) architecture: Box Reports synthesized over Auto/Client Boxes/<Name>/, refresh on read, slug=box_id, ask path stays generic in Phase 1. Documents: writes-table split (Box Report vs Workspace behavior matrices for every endpoint), 5 page-specific guardrails (allowed-to-know discipline, ingest-not-canonical, delegations-as-highest-risk, identity-uniqueness, refresh-on-read awareness), 5 open problems including the deferred Phase 2 / Phase 3 work, and 6 architectural-rationale entries explaining the Reports list split, synthesized-not-stored, slug=box_id, ask-stays-generic, Box-folder writes, and right-click-density choices.",
+      "honest_accounting_for_jake": {
+        "where_we_are": "15/15 project-level ledgers + 2/14 Page Ledgers. System is structurally complete.",
+        "what_is_load_bearing_remaining": "3 more high-risk Page Ledgers (automation, delegations, settings page) + Phase Ledger = ~4 more substantive turns to Phase A done",
+        "what_is_defer_or_skip": "9 lower-risk Page Ledgers (grid, leads, clients, coworkers, contacts, venues, briefing, activity, analytics), Widget Ledgers, Prompt/Reconstruction, Scout — defer until needed",
+        "fastest_cut_option": "stop after intake + Phase Ledger (1 more turn) = Phase A done"
+      },
+      "suggested_action": "When changing intake page: walk DoD §5.3 + LEDGERS/PAGES/intake.md §10 (local-stricter Done Gate). When Phase 2 starts (box-aware ask): plumb per-Box AGENTS.md into /api/reports/<slug>/ask system prompt; close several §11 problems; update intake.md §11 + §12 + §15. When sitemap and Page Ledger disagree on per-page operational detail: SITEMAP WINS.",
+      "expiry_review": "Archive when Phase 2 box-aware ask ships and high-risk first wave (boxes, intake, automation, delegations, settings) all have Page Ledgers.",
+      "ledger_creation_sprint_log": [
+        "Read sitemap §intake (34 lines, 7 history entries) + scanned IntakeScreen sub-components + server.py _reports_* + _box_report_* helpers",
+        "Authored LEDGERS/PAGES/intake.md (16 sections matching boxes.md template; substantive Phase 1 unification narrative)",
+        "Authored LEDGERS/PAGES/intake.json (envelope-aware tier=domain; box-vs-workspace API behavior matrix; full structured mirror)",
+        "Updated LEDGERS/PAGES/_README.md (status flipped intake → active; 2/14 count)",
+        "Updated INDEX.md, GLOBAL_LEDGER.md + JSON, TCL md+json",
+        "Appended this Communications entry",
+        "Appended ledger_phase_landed event to activity.jsonl"
+      ]
+    },
+    {
+      "id": "COMM-2026-04-29-015",
+      "title": "Phase A Complete — Close-Out + Phase B Handoff",
+      "section": 4,
+      "date": "2026-04-29",
+      "from": "Cowork session (final propagation pass; Jake's call: 'let's just bang it all out')",
+      "to": "Future agents — every Phase B contributor; every cold-starting session expecting Phase A in flight (it's not anymore).",
+      "types": [
+        "handoff",
+        "preference",
+        "coordination"
+      ],
+      "status": "active",
+      "priority": "critical",
+      "affected_systems": [
+        "every active session expecting Phase A in flight",
+        "the 5 draft sub-agent packages at /Subagent Boxes/ (now eligible for graduation)",
+        "Phase C runtime work (still deferred per DEC-2026-04-29-013)",
+        "future Phase B steward authoring"
+      ],
+      "related_ledgers": [
+        "PHASE.md (the closer)",
+        "DECISIONS_LEDGER.md DEC-2026-04-29-014 (Phase A Complete)",
+        "DECISIONS_LEDGER.md DEC-2026-04-29-002 (three-phase build — this completes the A leg)",
+        "DECISIONS_LEDGER.md DEC-2026-04-29-013 (Reactive Box Network — runtime still held)",
+        "GLOBAL_LEDGER.md §6 + §12 (workstream + recently changed)",
+        "TEMPORAL_CONTINUITY.md §1 + §2.1 (current state advance)",
+        "All 17 active ledgers"
+      ],
+      "promote_when": "Phase B has its first runnable steward graduation — at that point this entry archives because the next phase is in flight.",
+      "summary": "Phase A is complete as of 2026-04-29. 17 active ledgers across global + domain tiers. Every architectural pattern future work depends on is named, written down, cross-referenced. High-risk Page Ledger wave landed (boxes, intake, automation, delegations, settings page) — captures the WHY behind each high-risk surface. Phase Ledger (PHASE.md) closes Phase A and names Phase B do-not-leak rules. DEC-2026-04-29-014 declares Phase A complete and unblocks Phase B (Sub-agents). Phase C runtime stays deferred per DEC-2026-04-29-013. The 9 lower-risk Page Ledgers + Widget Ledgers + Prompt/Reconstruction + Scout + per-directory Box.md stamps are explicitly deferred — author when needed during Phase B/C, not as Phase A reopens.",
+      "honest_accounting_close_out": {
+        "phase_a_started": "2026-04-28",
+        "phase_a_completed": "2026-04-29",
+        "duration": "~2 days of sustained sprint",
+        "total_phases_landed": 21,
+        "active_ledgers_at_close": 17,
+        "page_ledgers_authored": 5,
+        "page_ledgers_deferred": 9,
+        "decisions_recorded": "14 active (8 from Apr 28 + 6 from Apr 29 sprint)",
+        "open_problems_resolved_or_partial": "PROB-009 closed, PROB-001 partial",
+        "envelope_aware_precedents": 6,
+        "next_phase": "Phase B — Sub-agents (5 draft packages at /Subagent Boxes/ eligible for graduation)"
+      },
+      "suggested_action": "Before any Phase B work: read PHASE.md §4 (Phase B scope + exit criteria + do-not-leak rules) AND DEC-2026-04-29-014 (Phase A Complete). When graduating a draft sub-agent package: copy the global_ledger_steward pattern (canonical config in LEDGERS/AGENTS/<name>/, runnable form at CCAgentindex/agents/<name>/, run receipts at CCAgentindex/_ledger/<name>_runs/). When Phase B feels too easy to graduate quickly into Phase C: STOP. Phase C runtime stays deferred per DEC-2026-04-29-013. The phasing rule is the protection.",
+      "expiry_review": "Archive when Phase B has at least 3 graduated stewards running. At that point this close-out is no longer the current handoff.",
+      "ledger_creation_sprint_log_full": [
+        "Phase 16: LEDGERS/PAGES/boxes.md (first Page Ledger) + boxes.json + _README.md",
+        "Phase 17: LEDGERS/PAGES/intake.md + intake.json (Phase 1 unification architecture captured)",
+        "Phase 18: LEDGERS/PAGES/automation.md (5 sub-tabs, write-heaviest page)",
+        "Phase 19: LEDGERS/PAGES/delegations.md (the project's send chokepoint; DEC-005 enforcement captured)",
+        "Phase 20: LEDGERS/PAGES/settings.md (page-level deep memory; pairs with global SETTINGS.md)",
+        "Phase 21: LEDGERS/PHASE.md + PHASE.json (the closer — names current phase, exit criteria, do-not-leak rules, transition protocol, anti-patterns)",
+        "DEC-2026-04-29-014 (Phase A Complete) appended to DECISIONS_LEDGER.md + JSON",
+        "PAGES/_README status table flipped automation/delegations/settings → active; status line updated to 5/14",
+        "GLOBAL_LEDGER.md / .json updated (§6 workstream advance, §8 page_ledgers + phase entries, §12 recently changed)",
+        "TEMPORAL_CONTINUITY.md / .json updated (Phase A Complete language, Phase B candidates list)",
+        "INDEX.md updated (Phase Ledger active, 5 Page Ledgers active, build order recalibrated)",
+        "Activity log appended with phase_a_complete event",
+        "COMM-2026-04-29-015 (this entry) — close-out handoff for any agent expecting Phase A in flight"
+      ]
+    },
+    {
+      "id": "COMM-2026-04-29-016",
+      "title": "First Unified Ledger Box Landed — temporal_continuity (Phase B Step 1)",
+      "section": 4,
+      "date": "2026-04-29",
+      "from": "Cowork session (Phase B step 1; Jake's call: 'compile these together so that ledgers and boxes and sub-agents are all one thing')",
+      "to": "Future agents — every Phase B steward graduation; every operator looking for a steward; every Phase C runtime contributor.",
+      "types": [
+        "handoff",
+        "preference",
+        "coordination"
+      ],
+      "status": "active",
+      "priority": "high",
+      "affected_systems": [
+        "Phase B target structure (refined from CCAgentindex/agents/<name>/ to LEDGERS/BOXES/<name>/steward/)",
+        "the 5 draft packages at /Subagent Boxes/ (now have a clear graduation path)",
+        "LEDGERS/AGENTS/global_ledger_steward/ (existing canonical — queued for reorg into LEDGERS/BOXES/global_ledger/steward/)",
+        "PHASE.md §4 (Phase B scope refined)",
+        "BOX_LEDGER.md and BOX_BUS_LEDGER.md (this Box is the first real instance of their patterns)"
+      ],
+      "related_ledgers": [
+        "DECISIONS_LEDGER.md DEC-2026-04-29-015 (Unified Ledger Box pattern)",
+        "DECISIONS_LEDGER.md DEC-2026-04-29-001 (Triad Spine — this Box realizes structural side)",
+        "DECISIONS_LEDGER.md DEC-2026-04-29-013 (Reactive Box Network runtime deferred — this Box doesn't violate runtime deferral)",
+        "DECISIONS_LEDGER.md DEC-2026-04-29-014 (Phase A Complete — first Phase B work)",
+        "BOX_LEDGER.md (concept)",
+        "BOX_BUS_LEDGER.md §2.1 (manifest schema this Box satisfies)",
+        "PHASE.md §4 (Phase B target — needs update to reflect new layout)",
+        "TEMPORAL_CONTINUITY.md + .json (the ledger this Box governs)"
+      ],
+      "promote_when": "All 5 draft packages at /Subagent Boxes/ have been graduated into LEDGERS/BOXES/<name>/ — at that point this entry archives because the pattern is established and self-replicating.",
+      "summary": "First unified ledger Box landed: LEDGERS/BOXES/temporal_continuity/. Files: box.json (manifest per BOX_BUS §2.1) + BOX.md (per-Box orientation) + steward/{AGENTS.md, config.json, prompt.md} + receipts/. Ledger files (TEMPORAL_CONTINUITY.md + .json) STAY at LEDGERS/ — owned by the Box via path reference, never moved. Pattern locked by DEC-2026-04-29-015. Refines Phase B target: instead of 'graduate to CCAgentindex/agents/<name>/', the new target is 'graduate to LEDGERS/BOXES/<name>/steward/' — co-located with the manifest, the per-Box orientation, and the receipts dir. The runnable form (POST /api/agents/temporal_continuity_steward/run) is NOT yet wired — that's the next Phase B step. The structural unification landed first.",
+      "suggested_action": "Next Phase B steps in priority order: (1) Reorganize LEDGERS/AGENTS/global_ledger_steward/ → LEDGERS/BOXES/global_ledger/steward/ (move + author box.json + BOX.md). (2) Graduate the remaining 3 drafts at /Subagent Boxes/ (file_directory, north_star, open_problems) into LEDGERS/BOXES/<name>/. (3) Author Boxes for the ledgers without drafts (communications, decisions, dod, sot, connections, file_contents, asset_widget_map, settings, box, box_bus, phase). (4) Wire each steward's runnable form (decide whether CCAgentindex/agents/<name>/ stays or consolidates with LEDGERS/BOXES/<name>/steward/). DO NOT move TEMPORAL_CONTINUITY.md or any other ledger files into the Box folders — that breaks the Read-First protocol per DEC-2026-04-29-015 do-not-undo-casually.",
+      "expiry_review": "Archive when 16 ledger Boxes are stamped and at least 5 stewards are runnable. At that point Phase B is in late stages and this close-out is no longer the current handoff.",
+      "ledger_creation_sprint_log": [
+        "Created LEDGERS/BOXES/temporal_continuity/{steward,receipts}/ directory structure",
+        "Copied AGENTS.md from /Subagent Boxes/temporal_continuity_subagent_package/AGENTS.md (status flipped draft→active; canonical_path updated to new location)",
+        "Copied config.json (status flipped, paths updated, unified_box_pattern field added)",
+        "Authored prompt.md (modeled on global_ledger's runnable prompt; cwd, dispatch, modes, scope, receipt format documented)",
+        "Authored box.json — manifest per BOX_BUS §2.1 (owns[], source_of_truth, subscribes[] with phase_c_note='deferred', emits[], agent_config{}, phase_status{})",
+        "Authored BOX.md — per-Box orientation per BOX_LEDGER pattern (12 sections: what it is, owns, doesn't own, local SoT rules, local Done Gate, Local Agent Protocol, steward modes, when to invoke, receipts, phase status, related, final operating rule)",
+        "Authored receipts/README.md — naming pattern, receipt format, append-only rule",
+        "DEC-2026-04-29-015 appended to Decisions Ledger (md+json)",
+        "This Communications entry"
+      ]
     }
   ],
   "lessons_learned": [
@@ -808,14 +1059,14 @@
     }
   ],
   "counts": {
-    "active_handoff_notes": 10,
+    "active_handoff_notes": 15,
     "warnings": 3,
     "preferences": 3,
     "lessons": 1,
     "attempts_abandoned": 1,
     "cross_system_notes": 2,
     "archived": 0,
-    "total_seeded_entries": 24
+    "total_seeded_entries": 29
   },
   "promotion_log": [
     {
