@@ -9,10 +9,11 @@ This skill processes Comeketo Catering inbox tasks. Every task follows the same 
 
 The bundled pieces:
 
-- `assets/ballpark-email.html` — the email template with `{{merge_field}}` placeholders
+- `assets/ballpark-email.html` — the ballpark quote email template with `{{merge_field}}` placeholders
+- `assets/followup-email.html` — the follow-up / non-ballpark email template required by guardrails v2.1 for resets, tasting confirmations, mid-cadence nudges, and post-call wrap-ups
 - `assets/menu_data.json` — Comeketo's full menu/pricing database (~280 items, 12 categories)
 - `scripts/price_ballpark.py` — calculator that produces matching-to-the-penny ballpark numbers
-- `scripts/render_email.py` — merges calculator output + lead context into the template
+- `scripts/render_email.py` — ballpark quote renderer; merges calculator output + lead context into `assets/ballpark-email.html`
 - `references/guardrails.md` — the canonical inbox guardrails (read before acting)
 - `references/nepq-style.md` — how to write the actual message body
 
@@ -120,6 +121,8 @@ When the lead has gone quiet but isn't ready for a quote yet, draft a short NEPQ
 
 Keep SMS to 1-3 sentences. Keep email body to one short paragraph plus signature.
 
+For email follow-ups, validate the message against `assets/followup-email.html` per guardrails v2.1. The current `scripts/render_email.py` is the ballpark quote renderer and should not be treated as a follow-up renderer unless a dedicated follow-up rendering path is added or supplied.
+
 **Do not generate a quote unless the task explicitly asks for one.** The default move when the lead has been touched several times without progression is a NEPQ pull, not another quote.
 
 ### Type 3: Tasting Invite
@@ -200,11 +203,12 @@ When processing a batch of inbox tasks, collect all report lines and present the
 comeketo-inbox/
 ├── SKILL.md                          ← you are here
 ├── assets/
-│   ├── ballpark-email.html           ← email template w/ ~30 merge fields
+│   ├── ballpark-email.html           ← ballpark quote email template
+│   ├── followup-email.html           ← follow-up / non-ballpark email template
 │   └── menu_data.json                ← full menu/pricing database
 ├── scripts/
 │   ├── price_ballpark.py             ← calculator (CLI + module)
-│   └── render_email.py               ← merge calc + context → HTML
+│   └── render_email.py               ← ballpark renderer: calc + context → HTML
 └── references/
     ├── guardrails.md                 ← inbox guardrails (verbatim)
     └── nepq-style.md                 ← messaging style guide
