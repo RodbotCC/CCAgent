@@ -1,0 +1,19 @@
+{
+  "request_id": "58358cc96756",
+  "run_at": "2026-05-01T00:46:20Z",
+  "kind": "route_wiring_verification",
+  "atom_id": "ATOM-2026-04-30-0033",
+  "actor": "claude_cowork_session_2026-04-30_atom_0033",
+  "claim": "open_problems_steward dispatch wiring verified \u2014 _agent_resolve_prompt helper auto-resolves to unified Box; no per-route code changes required.",
+  "verification": {
+    "v1_resolves_to_unified_box": "PASS \u2014 _agent_resolve_prompt('open_problems_steward') returns LEDGERS/BOXES/open_problems/steward/prompt.md (source: unified_box)",
+    "v2_required_files_present": "PASS \u2014 AGENTS.md + prompt.md + config.json all exist at LEDGERS/BOXES/open_problems/steward/",
+    "v3_no_regression": "PASS \u2014 all 7 stewards (global_ledger via legacy; temporal_continuity / open_problems / file_directory / north_star / atoms / atlas via unified_box) resolve correctly with no name collisions"
+  },
+  "no_per_route_code_required": "Confirmed. ATOM-2026-04-30-0029 added _agent_resolve_prompt to server.py which auto-resolves any *_steward agent name to LEDGERS/BOXES/<box>/steward/prompt.md. The helper makes this atom and the equivalents in other steward chains (ATOM-0037 file_directory, ATOM-0041 north_star) collapse from 'wire a new route' to 'verify the helper works for this name.'",
+  "writes_applied": [
+    "LEDGERS/BOXES/open_problems/receipts/2026-05-01_00-46-20_run_58358cc96756.json"
+  ],
+  "abstention": false,
+  "next_recommended_action": "ATOM-0034 \u2014 smoke test open_problems_steward in audit_only mode"
+}

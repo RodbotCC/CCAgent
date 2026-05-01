@@ -1,6 +1,6 @@
 # Phase Ledger
 
-Last updated: 2026-04-29 (initial creation — Phase 21 of ledger system buildout; tier: global; envelope-aware under `DEC-2026-04-29-013`)
+Last updated: 2026-05-01 (later — **Phase B steward graduation arc COMPLETE**. PROB-2026-04-30-005 CLOSED by Cowork session via 4 graduation chains shipped end-to-end (temporal_continuity ATOM-0028→0031, open_problems 0032→0035, north_star 0040→0043, file_directory 0036→0039). Plus Atlas Box graduation via separate chain ATOM-0107→0110 (PROB-015 CLOSED). **7 stewards now runnable** (1 legacy + 6 unified Box: temporal_continuity, open_problems, file_directory, north_star, atoms, atlas). First `ground_truth_source` Box class introduced (Atlas — distinct from `ledger` class). Daily 8 AM ET cron at `CCAgentindex/triggers/atlas_daily_sweep.json`. Earlier per ATOM-0111: Box Network Architecture LOCKED via DEC-005; Phase 1 60%; 2 of 8 Phase B Open Questions resolved (Q2→DEC-007; Q3→DEC-006). Phase C runtime stays deferred per DEC-2026-04-29-013.)
 Maintainer: Jake / Comeketo Agent project agents
 Status: **active**
 Tier (Box Bus Ledger §3): **global** — fans out to every Box that subscribes at the global tier

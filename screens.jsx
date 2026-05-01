@@ -5894,6 +5894,254 @@ function IntakeReportDetail({ slug, onBack, go }) {
 }
 
 
+function BoxGraphScreen({ go }) {
+  const [loading, setLoading] = useState(true);
+  const [err, setErr] = useState("");
+  const [graph, setGraph] = useState({ nodes: [], edges: [], summary: {} });
+  const [selectedId, setSelectedId] = useState(null);
+  const [query, setQuery] = useState("");
+  const [showOperational, setShowOperational] = useState(false);
+
+  const load = useCallback(async () => {
+    setErr("");
+    setLoading(true);
+    try {
+      const d = await fetchJson("/api/box_graph");
+      if (!d || !d.ok) throw new Error((d && d.error) || "box graph failed");
+      const nodes = Array.isArray(d.nodes) ? d.nodes : [];
+      setGraph({ nodes, edges: Array.isArray(d.edges) ? d.edges : [], summary: d.summary || {}, errors: d.errors || [] });
+      setSelectedId((prev) => (prev && nodes.some((n) => n.id === prev)) ? prev : (nodes.find((n) => n.kind === "ledger") || nodes[0] || {}).id || null);
+    } catch (e) {
+      setErr(e.message || String(e));
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => { load(); }, [load]);
+
+  const q = query.trim().toLowerCase();
+  const nodesById = useMemo(() => {
+    const out = {};
+    (graph.nodes || []).forEach((n) => { out[n.id] = n; });
+    return out;
+  }, [graph.nodes]);
+
+  const visibleNodes = useMemo(() => {
+    return (graph.nodes || []).filter((n) => {
+      if (!showOperational && String(n.id || "").startsWith("opbox:")) return false;
+      if (!q) return true;
+      const hay = `${n.label || ""} ${n.id || ""} ${n.kind || ""} ${n.tier || ""} ${n.path || ""}`.toLowerCase();
+      return hay.includes(q);
+    });
+  }, [graph.nodes, q, showOperational]);
+
+  const visibleIds = useMemo(() => new Set(visibleNodes.map((n) => n.id)), [visibleNodes]);
+  const visibleEdges = useMemo(() => (graph.edges || []).filter((e) => visibleIds.has(e.from) && visibleIds.has(e.to)), [graph.edges, visibleIds]);
+
+  const layout = useMemo(() => {
+    const laneKeys = ["constitutional", "global", "domain", "local"];
+    const laneLabels = {
+      constitutional: "constitutional",
+      global: "global ledgers",
+      domain: "domain boxes",
+      local: "leaf boxes",
+    };
+    const lanes = laneKeys.map((key) => ({ key, label: laneLabels[key], nodes: [] }));
+    const laneFor = (node) => {
+      const tier = String(node.tier || "").toLowerCase();
+      if (tier === "constitutional" || node.kind === "concept" || node.kind === "external") return "constitutional";
+      if (tier === "global") return "global";
+      if (tier === "local") return "local";
+      return "domain";
+    };
+    visibleNodes.forEach((n) => {
+      const lane = lanes.find((l) => l.key === laneFor(n));
+      (lane || lanes[2]).nodes.push(n);
+    });
+    lanes.forEach((lane) => lane.nodes.sort((a, b) => String(a.label || "").localeCompare(String(b.label || ""))));
+    const maxRows = Math.max(3, ...lanes.map((l) => l.nodes.length));
+    const width = 1220;
+    const height = Math.max(520, 120 + maxRows * 74);
+    const xFor = { constitutional: 95, global: 390, domain: 685, local: 980 };
+    const positions = {};
+    lanes.forEach((lane) => {
+      const count = lane.nodes.length;
+      const startY = count <= 1 ? height / 2 - 24 : 94;
+      lane.nodes.forEach((n, i) => {
+        positions[n.id] = {
+          x: xFor[lane.key],
+          y: startY + (count <= 1 ? 0 : i * 74),
+          lane: lane.key,
+        };
+      });
+    });
+    return { lanes, positions, width, height, xFor };
+  }, [visibleNodes]);
+
+  const selected = selectedId ? nodesById[selectedId] : null;
+  const selectedEdges = useMemo(() => {
+    if (!selectedId) return [];
+    return (graph.edges || []).filter((e) => e.from === selectedId || e.to === selectedId);
+  }, [graph.edges, selectedId]);
+
+  const edgePath = (from, to) => {
+    const a = layout.positions[from];
+    const b = layout.positions[to];
+    if (!a || !b) return "";
+    const x1 = a.x + 214;
+    const y1 = a.y + 24;
+    const x2 = b.x;
+    const y2 = b.y + 24;
+    const dx = Math.max(70, Math.abs(x2 - x1) * 0.45);
+    return `M ${x1} ${y1} C ${x1 + dx} ${y1}, ${x2 - dx} ${y2}, ${x2} ${y2}`;
+  };
+
+  const tierTone = (node) => {
+    if (node.kind === "concept") return "concept";
+    if (String(node.id || "").startsWith("opbox:")) return "leaf";
+    if (node.kind === "ledger") return "ledger";
+    if (node.kind === "domain") return "domain";
+    if (node.kind === "external") return "external";
+    return "box";
+  };
+
+  const openSelected = () => {
+    if (!selected) return;
+    if (String(selected.id || "").startsWith("opbox:") && go && go.push) {
+      go.push("boxes", { selectId: String(selected.id).replace(/^opbox:/, "") });
+    }
+  };
+
+  return (
+    <div className="box-graph-screen">
+      <header className="box-graph-hero">
+        <div>
+          <div className="box-graph-eyebrow">Box Network</div>
+          <h1>Stateful folders, now visible.</h1>
+          <p>
+            This graph is synthesized from `LEDGERS/BOXES/*/box.json` plus the existing Client/Staff Boxes.
+            Solid structure today; Box Bus runtime still lands in Phase C.
+          </p>
+        </div>
+        <div className="box-graph-stats">
+          <div><b>{graph.summary.node_count || 0}</b><span>nodes</span></div>
+          <div><b>{graph.summary.edge_count || 0}</b><span>edges</span></div>
+          <div><b>{graph.summary.manifest_count || 0}</b><span>manifests</span></div>
+          <div><b>{graph.summary.operational_box_count || 0}</b><span>leaf boxes</span></div>
+        </div>
+      </header>
+
+      <section className="box-graph-controls">
+        <input
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          placeholder="filter boxes, ledgers, paths..."
+          aria-label="Filter Box Graph"
+        />
+        <button className={"chip" + (showOperational ? " active" : "")} onClick={() => setShowOperational(v => !v)}>
+          <Icon name="layers" size={14}/>{showOperational ? "hide leaf boxes" : "show leaf boxes"}
+        </button>
+        <button className="chip" onClick={load} disabled={loading}>
+          <Icon name="refresh-cw" size={14}/>{loading ? "loading" : "refresh"}
+        </button>
+      </section>
+
+      {err && <div className="ix-error">✕ {err}</div>}
+
+      <div className="box-graph-layout">
+        <section className="box-graph-map">
+          <svg viewBox={`0 0 ${layout.width} ${layout.height}`} role="img" aria-label="Box network graph">
+            <defs>
+              <marker id="boxGraphArrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                <path d="M 0 0 L 10 5 L 0 10 z" />
+              </marker>
+            </defs>
+            {layout.lanes.map((lane) => (
+              <g key={lane.key}>
+                <rect className={`box-graph-lane ${lane.key}`} x={layout.xFor[lane.key] - 24} y="36" width="244" height={layout.height - 70} rx="28" />
+                <text className="box-graph-lane-label" x={layout.xFor[lane.key]} y="64">{lane.label}</text>
+              </g>
+            ))}
+            {visibleEdges.map((e) => {
+              const active = selectedId && (e.from === selectedId || e.to === selectedId);
+              const path = edgePath(e.from, e.to);
+              if (!path) return null;
+              return (
+                <g key={e.id} className={"box-graph-edge-wrap" + (active ? " active" : "")}>
+                  <path className={`box-graph-edge ${e.kind || "edge"}`} d={path} markerEnd="url(#boxGraphArrow)" />
+                </g>
+              );
+            })}
+            {visibleNodes.map((n) => {
+              const pos = layout.positions[n.id];
+              if (!pos) return null;
+              const active = n.id === selectedId;
+              return (
+                <g
+                  key={n.id}
+                  className={`box-graph-node ${tierTone(n)}${active ? " active" : ""}`}
+                  transform={`translate(${pos.x}, ${pos.y})`}
+                  onClick={() => setSelectedId(n.id)}
+                  role="button"
+                  tabIndex="0"
+                >
+                  <rect width="214" height="50" rx="15" />
+                  <circle cx="20" cy="25" r="6" />
+                  <text className="box-graph-node-title" x="36" y="23">{String(n.label || n.id).slice(0, 28)}</text>
+                  <text className="box-graph-node-sub" x="36" y="38">{String(n.kind || "box")} · {String(n.status || n.tier || "").slice(0, 30)}</text>
+                </g>
+              );
+            })}
+          </svg>
+        </section>
+
+        <aside className="box-graph-detail">
+          {selected ? (
+            <>
+              <div className="box-graph-detail-kicker">{selected.kind || "node"} · {selected.tier || "domain"}</div>
+              <h2>{selected.label || selected.id}</h2>
+              <p>{selected.summary || selected.path || "No summary yet."}</p>
+              <div className="box-graph-detail-grid">
+                <span>path</span><b>{selected.path || "n/a"}</b>
+                <span>primary</span><b>{selected.primary || "n/a"}</b>
+                <span>owns</span><b>{selected.owns_count == null ? "n/a" : selected.owns_count}</b>
+                <span>subscribes</span><b>{selected.subscribes_count == null ? "n/a" : selected.subscribes_count}</b>
+                <span>emits</span><b>{selected.emits_count == null ? "n/a" : selected.emits_count}</b>
+              </div>
+              {!!(selected.modes || []).length && (
+                <div className="box-graph-pills">
+                  {selected.modes.map((m) => <span key={m}>{m}</span>)}
+                </div>
+              )}
+              {String(selected.id || "").startsWith("opbox:") && (
+                <button className="btn" onClick={openSelected}>open in Boxes →</button>
+              )}
+              <h3>Connected routes</h3>
+              <div className="box-graph-edge-list">
+                {selectedEdges.length ? selectedEdges.slice(0, 16).map((e) => {
+                  const incoming = e.to === selectedId;
+                  const other = nodesById[incoming ? e.from : e.to];
+                  return (
+                    <button key={e.id} onClick={() => setSelectedId(incoming ? e.from : e.to)}>
+                      <span>{incoming ? "←" : "→"}</span>
+                      <b>{other ? other.label : (incoming ? e.from : e.to)}</b>
+                      <em>{e.kind || "edge"} · {e.interpreter || "declared"}</em>
+                    </button>
+                  );
+                }) : <div className="ix-empty-body">No declared routes yet.</div>}
+              </div>
+            </>
+          ) : (
+            <div className="ix-empty-body">Select a node to inspect its source, routes, and steward state.</div>
+          )}
+        </aside>
+      </div>
+    </div>
+  );
+}
+
+
 // ─── Defensive fetch helper ─────────────────────────────────────────────
 // Some environments return HTML 404 pages for unknown routes. Parsing the
 // "<!doctype" as JSON is what produced the "Unexpected token '<'" error

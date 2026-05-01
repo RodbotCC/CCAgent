@@ -1,7 +1,7 @@
 # Agent: Atlas Sweep Steward
 
 **Rail:** on-demand app agent (Phase B planned dispatch)
-**Dispatch:** `POST /api/agents/atlas_sweep_steward/run` (not yet wired)
+**Dispatch:** `POST /api/agents/atlas_steward/run` (not yet wired)
 **cwd when fired:** `/Users/jakeaaron/Downloads/CC Agent/CCAgentindex/`
 **Authority:** read-only against `LEDGERS/atlas/` (the alias to `/Users/jakeaaron/Documents/Atlas/`); local writes scoped to receipts, candidate drafts, and (in reconcile mode) appends to OPL/COMM.
 **Canonical config:** `../LEDGERS/BOXES/atlas/steward/AGENTS.md` (full operating contract, 14 sections)
@@ -81,7 +81,7 @@ If the dispatch context contains `audit-only`, `audit_only`, or `dry run`: force
    - **F** Out-of-scope — note in count, no surfacing.
 3. **In `reconcile` mode**: append PROB / COMM entries to live ledgers per drafts. Atom candidates always stay in drafts.
 4. **Write the receipt.** Schema in §8 of AGENTS.md.
-5. **Append activity.jsonl.** One line, kind `atlas_sweep_steward_run`.
+5. **Append activity.jsonl.** One line, kind `atlas_steward_run`.
 
 ## Project-Relevance Filter
 
@@ -121,7 +121,7 @@ See AGENTS.md §8 for the full receipt schema. Critical fields:
 ## Activity Ledger Contract
 
 ```json
-{"ts":"<ISO8601 UTC>","kind":"atlas_sweep_steward_run","actor":"atlas_sweep_steward","request_id":"atlas_sweep_<UTC timestamp>","action":"sweep_and_reconcile","target":"LEDGERS/atlas/<folders>","notes":"<one sentence: N folders, M summaries read, K drift findings, J atom suggestions; receipt path>"}
+{"ts":"<ISO8601 UTC>","kind":"atlas_steward_run","actor":"atlas_steward","request_id":"atlas_sweep_<UTC timestamp>","action":"sweep_and_reconcile","target":"LEDGERS/atlas/<folders>","notes":"<one sentence: N folders, M summaries read, K drift findings, J atom suggestions; receipt path>"}
 ```
 
 ## Return Shape

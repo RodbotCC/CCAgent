@@ -1,6 +1,6 @@
 # North Star Ledger
 
-Last updated: 2026-04-28
+Last updated: 2026-05-01 (BACKFILL per `ATOM-2026-04-30-0111` — no NS goals modified; the 10 NS goals authored 2026-04-28 remain canonical. The 2026-05-01 Box Network Architecture lock (`DEC-2026-04-30-005`) **operationalizes** existing NS goals rather than adding new ones: NS-01 legibility-above-all (the fused primitive makes the triad LEGIBLE in one folder); NS-02 file-tree-first (every Box is a directory with mature shape); NS-03 single-source-of-truth (per-Box `box.json` + authority tier registry collapses competing organizational models); NS-09 audit-trail-discipline (per-flow receipts make every cross-Box change auditable). Stewards/interpreters serving NS goals tracked in `BOX_BUS_LEDGER.md` §14 + `SOURCE_OF_TRUTH.md` §11. North Star is the WHY; Box Network is the HOW.)
 Maintainer: Jake / Comeketo Agent project agents
 Status: **active**
 Read when: planning major work, auditing changes, resolving tradeoffs, evaluating feature value, deciding whether to continue or kill a workstream

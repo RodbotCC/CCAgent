@@ -1,6 +1,6 @@
 # Communications Ledger
 
-Last updated: 2026-04-30 (appended COMM-2026-04-30-007 — Atlas integrated as project ground-truth surface. New `ground_truth_source` Box class introduced; alias at LEDGERS/atlas; Atlas Sweep Steward filed at PROB-015 for Phase B graduation. Prior same-day: COMM-2026-04-30-004/005/006 promoted atom-protocol rules from auto-memory to project-wide.)
+Last updated: 2026-05-01 (later still — **COMM-2026-05-01-003 added: Beta-Test Pivot — Fake-Close Training Ground Replaces Real Client Boxes For Inbox Automation Testing.** Operator pivot 2026-05-01: real Client Boxes → zipped archive (frozen reference); fake-Close instance becomes primary inbox source for beta; scheduled automations formally retire (currently paused); v2.1 inbox guardrails landed at `Auto/comeketo-inbox/references/guardrails.md`. DEC-2026-05-01-002 Client Boxes placement row revised. Earlier same day: COMM-002 Auto/ Symlink Dispersal coordination; COMM-001 (HIGHEST-PRIORITY) per-atom-completion update protocol violation. Prior: COMM-2026-04-30-008 Duplicate-ID Race; COMM-2026-04-30-007 Atlas integration; COMM-2026-04-30-004/005/006 atom-protocol rules.)
 Maintainer: Jake / Comeketo Agent project agents
 Status: **active**
 Read when: starting a session, finishing a session, planning work that affects another agent, leaving a warning, recording a preference, hitting a fragile area, or noticing a "the next agent should know this" moment.
@@ -635,7 +635,7 @@ When they disagree, **file a PROB describing the gap**. Do NOT auto-overwrite ei
 
 **Surfacing taxonomy (A–F):** see `LEDGERS/BOXES/atlas/steward/AGENTS.md` §6. Concordance (A) doesn't fire writes; drift (B), handoff lessons (C), action suggestions (D), decision context (E) each have their own draft + reconcile path.
 
-**Phase status.** Box authored 2026-04-30. Steward files staged. Live dispatch path `POST /api/agents/atlas_sweep_steward/run` already supported by the `_agent_resolve_prompt` helper (added in ATOM-2026-04-30-0029) but not yet smoke-tested. Graduation work tracked at PROB-2026-04-30-015.
+**Phase status.** Box authored 2026-04-30. Steward files staged. Live dispatch path `POST /api/agents/atlas_steward/run` already supported by the `_agent_resolve_prompt` helper (added in ATOM-2026-04-30-0029) but not yet smoke-tested. Graduation work tracked at PROB-2026-04-30-015.
 
 #### Why It Matters
 
@@ -719,6 +719,253 @@ If the operator follows the `p` with content (e.g., `p but in the boxes area`), 
 #### Expiry / Review
 
 Stable. Review only if a richer dispatch shorthand emerges or the operator workflow shifts away from atom-by-atom claiming.
+
+---
+
+### COMM-2026-04-30-008 — Duplicate-ID Race Condition Across Parallel Atomization
+
+Date: 2026-04-30 (4 captured incidents within 24 hours)
+From: Cowork session (claude_cowork_session_2026-04-30) — pattern surfaced by the open_problems_steward audit_only smoke test (ATOM-0034) that I shipped earlier today
+To: Future agents — every parallel session that authors atoms or open-problem entries; the future Atomizer Steward; any agent decomposing a PROB into atoms
+Type: `lesson`, `warning`, `coordination`
+Status: **active**
+Priority: high
+Affected systems: ATOMS.json, ATOMS.md, OPEN_PROBLEMS_LEDGER.md, OPEN_PROBLEMS_LEDGER.json, COMMUNICATIONS_LEDGER.md (any ledger using sequential IDs), every parallel-agent atomization workflow
+Related ledgers: [`ATOMS.md`](ATOMS.md), [`OPEN_PROBLEMS_LEDGER.md`](OPEN_PROBLEMS_LEDGER.md), [`COMMUNICATIONS_LEDGER.md`](COMMUNICATIONS_LEDGER.md), prior COMM-2026-04-30-004 (Claim Before Doing), COMM-2026-04-30-005 (Announce Before Doing)
+Promote when: an Atomizer Steward (Phase B) is built that handles ID-arbitration server-side via atomic counter; or a project-wide Decision settles the ID-format change
+
+#### Message
+
+**The "next ID" race condition is the dominant failure mode of parallel atomization.** When two agents independently atomize a PROB, they each read the ledger to find the highest used ID (e.g., 0044), then both author new atoms starting at 0045. Neither sees the other's write before submitting their own. Result: duplicate IDs with different content.
+
+**Four captured incidents in the past 24 hours:**
+
+1. **ATOM-2026-04-30-0045 / 0046 / 0047 / 0048 collision (2026-04-30 ~22:30Z)** — One agent atomized PROB-2026-04-30-005's open_problems_steward chain; another agent atomized the same PROB-005 with the same numeric IDs but different content (the Box-Ledger-Sub-agent fusion architecture work via DEC-2026-04-30-005). A subsequent dedup pass dropped one set; my work for "ATOM-0045" (Atlas trigger config) was renumbered to ATOM-0107-0110. Lesson visible in the disk artifacts (the trigger + digests directory exist, attributed to the renumbered IDs).
+
+2. **PROB-2026-04-30-015 dup** — Two agents independently filed PROB-2026-04-30-015. One filing was for "Atlas Sweep Steward Not Yet Runnable" (mine, now closed). The other was for "Box Network Architecture Not Yet Locked Or Built" (another agent, still active). Both entries currently coexist in `OPEN_PROBLEMS_LEDGER.md` at lines 1215 and 1268; the title prefix differentiates them. Captured by the open_problems_steward smoke test (ATOM-0034) at 2026-05-01T00:47Z.
+
+3. **PROB-2026-04-28-011 dup** — Same pattern; both a closure record and the original entry kept in OPL. Captured 2026-05-01T00:47Z.
+
+4. **PROB-2026-04-28-014 dup** — Same shape as PROB-011. Captured 2026-05-01T00:47Z.
+
+#### Why It Matters
+
+- **Silent loss of work.** When dedup runs, one set of IDs gets dropped. If the dropped set is the one with the more-load-bearing content, the project regresses. (Mitigated in the ATOM-0045 case because disk artifacts survived; not mitigated for any future case where the work hasn't already shipped.)
+- **Audit-trail confusion.** activity.jsonl entries reference IDs that may now mean something different than when the entry was written. Cross-references break.
+- **Operator distrust.** When duplicate IDs appear, the operator can't tell which is canonical without reading content. That's the cardinal sin (drift) the project's Prime Directive is designed to prevent.
+- **Compounds with parallelism.** With 5–7 agents in a typical busy window, the race window is wide. The pattern will recur until structurally addressed.
+
+#### Suggested Action
+
+**For agents authoring atoms or PROB/COMM/DEC entries right now (before structural fix):**
+
+1. **Read-then-claim-then-verify-re-read protocol.** Atomic claim only goes through if the re-read confirms the slot is yours.
+   - Read ledger → identify next ID
+   - Write claim
+   - Re-read ledger
+   - If your claim is now in the ledger, proceed
+   - If a colliding write landed first, abort: pick a different ID, retry
+2. **Use a higher offset than the visible high-water mark.** When in doubt, jump 10 ahead (e.g., if visible max is 0044, file at 0055 not 0045). Wastes ID space but eliminates the race window.
+3. **Differentiate via title prefix.** When ID collisions happen and dedup hasn't yet run, distinguish entries by appending source content to the title (already done in PROB-2026-04-30-015's two entries — "Atlas Sweep Steward..." vs "Box Network Architecture...").
+4. **Always cross-link from the activity.jsonl entry that creates an ID.** If activity.jsonl says `ATOM-0045 created by session X with content Y` and the eventual ledger entry doesn't match, that's the audit trail catching the loss.
+
+**Structural fix candidates (Phase B / C work):**
+
+- **Atomizer Steward arbitrates IDs.** When built, the Atomizer Steward at `LEDGERS/BOXES/atoms/steward/` would expose a `POST /api/atoms/claim_next_id` endpoint that atomically increments a counter and returns the next available ID. No race window because all agents go through the steward.
+- **UUID-suffixed IDs.** Switch from `ATOM-YYYY-MM-DD-####` to `ATOM-YYYY-MM-DD-<short-uuid>`. Eliminates collision entirely at cost of human-readability. Probably overkill given the human-friendly format works in 99% of cases.
+- **Transactional ledger writes.** When Phase C runtime lands, all ledger writes go through a router that serializes per-ID writes. Same effect as the steward arbitration but baked into the bus.
+
+#### Expiry / Review
+
+Archive when **at least one** of:
+- Atomizer Steward is built and routes ID-claim through `/api/atoms/claim_next_id`
+- A Decisions Ledger entry settles a structural fix (UUID switch, transactional writes, etc.)
+- The race condition stops recurring for ≥ 30 days (i.e., the human protocol below has been adopted across all parallel agents and is working)
+
+Review every time a new instance of duplicate IDs is captured — append the incident to the list above. The list IS the case-study evidence for promoting this lesson into a Decision when the structural fix is ready.
+
+---
+
+### COMM-2026-05-01-001 — Per-Atom-Completion Update Protocol Locked In CLAUDE.md (HEY: read this if you're starting a new session)
+
+Date: 2026-05-01
+From: Cowork session (`claude_cowork_session_2026-04-30`) — surfaced and authored after Jake observed continuity ledgers had gone 5-7+ hours stale during active work
+To: Every future agent. Read this BEFORE claiming your first atom. Especially read this if you've been working for an hour and notice you haven't touched TCL/GLOBAL/COMM yet.
+Type: `lesson`, `warning`, `preference`, `handoff`
+Status: **active**
+Priority: **HIGHEST** — protocol violation that nearly invalidated 6.5h of session work
+Affected systems: every agent claiming atoms; CLAUDE.md (project) Per-Atom-Completion Update Protocol section; the cardinal-sin language in CLAUDE.md Prime Directive; every continuity ledger (TCL, GLOBAL, COMM, INDEX, PHASE, DEPRECATION, ASSET_WIDGET_MAP, FILE_CONTENTS, FILE_DIRECTORY, NORTH_STAR)
+Related ledgers: [`CLAUDE.md`](../CLAUDE.md) (Per-Atom-Completion Update Protocol section authored 2026-05-01), [`ATOMS.md`](ATOMS.md) (`ATOM-2026-04-30-0111`), [`DECISIONS_LEDGER`](DECISIONS_LEDGER.md), [`COMM-2026-04-30-003`](#) (recovery pattern — same family of failure)
+Promote when: an Atomizer Steward (`ATOM-2026-04-30-0083`) is runnable AND verifies cross-ledger updates as part of atom-completion gating. At that point this entry archives because the steward enforces.
+
+#### Message
+
+**The protocol violation:** During the 2026-04-30→2026-05-01 session, ~36 atoms were shipped across multiple parallel sessions (Cowork + Codex + Atlas chain). For each atom, the agent updated:
+- `_ledger/activity.jsonl` ✓
+- `LEDGERS/ATOMS.md` + `.json` ✓
+- The target ledger being edited ✓
+
+For each atom, the agent did NOT update:
+- `LEDGERS/TEMPORAL_CONTINUITY.md` §3 (Recent Meaningful Changes) ✗
+- `LEDGERS/GLOBAL_LEDGER.md` §12 (Recently Changed) ✗
+- `LEDGERS/COMMUNICATIONS_LEDGER.md` (handoff entries) ✗
+- `LEDGERS/INDEX.md` (status row updates) ✗
+- `LEDGERS/PHASE.md` (Phase 1 progress notes) ✗
+- `LEDGERS/DEPRECATION.md` (atoms abandoned during ID collision resolution) ✗
+- `LEDGERS/ASSET_WIDGET_MAP.md` (new components from Codex) ✗
+- `LEDGERS/FILE_CONTENTS.md` + `LEDGERS/FILE_DIRECTORY_LEDGER.md` (new ledger sections + new directories) ✗
+- `LEDGERS/NORTH_STAR.md` (architectural lock implications) ✗
+- `LEDGERS/SETTINGS.md` (verified — nothing changed; not stale by omission, just not relevant) ✓ (verified)
+
+**Result:** TCL went 7h stale. GLOBAL went 9h stale. COMM went 5h stale. NORTH_STAR went 2 days stale. The architecture LOOKED coherent (atom queue moved 17h forward) but READ stale (every continuity ledger said "yesterday's state").
+
+**Jake surfaced this 2026-05-01T~02:30Z with a list of every stale ledger.** Re-quoted directly: "If we don't get this shit in order, this isn't even worth doing." That's the right call.
+
+**The fix landed in `ATOM-2026-04-30-0111`:** CLAUDE.md (project) gained a Per-Atom-Completion Update Protocol section that bakes the cross-ledger update obligation into a mechanical checklist + cadence rule. Future agents (including future-me) reading CLAUDE.md will see this checklist BEFORE claiming the first atom.
+
+#### Why It Matters
+
+The Box Network architecture is supposed to make state legible — that's NS-01 (legibility above all). Authoring rules INTO ledgers but not following them is the WORST kind of legibility failure: the rules are visible, the violations are visible (timestamps don't lie), but the agent shipping atoms is the same agent ignoring the rules. From outside the system, this looks like architectural decay.
+
+The deeper truth: **continuity ledgers are NOT optional artifact updates — they ARE the architecture.** Without TCL §3 catching up, a new agent walking in tomorrow has no orientation. Without GLOBAL §12, the world-state is wrong. Without COMM, the lesson dies with the session. The atoms are the work; the continuity ledgers are the scaffolding that makes the work durable.
+
+**Stale continuity ledgers = the cardinal sin.** Per CLAUDE.md Prime Directive: "Ledger drift is the failure mode that wakes the next agent up confused." Today's session was that failure mode running for 6.5 hours. The fix is mechanical, not aspirational.
+
+#### Suggested Action
+
+**For the next agent picking up an atom:**
+
+1. Before claiming an atom, **read CLAUDE.md (project) Per-Atom-Completion Update Protocol** (the new section after the Prime Directive's "What to update after any meaningful action"). It's the mechanical checklist.
+2. After completing each substantive atom, **walk the checklist** — every column with a `✗` next to it is your own future-self's failure waiting to happen.
+3. **Cadence rule:** if the relevant continuity ledger (TCL / GLOBAL / COMM / INDEX) hasn't been touched in the last 5 atom completions AND substantive work has happened, the next atom-completion writes a backfill entry summarizing the gap. Don't let continuity ledgers go 5+ atoms stale.
+4. **When in doubt, treat as substantive.** A redundant TCL §3 entry is cheap; a missed one is expensive.
+
+**For Jake when reviewing a session's work:**
+
+- Ask "what's the timestamp on TCL §3?" first. If it's > 2 hours behind active work, that's the same failure mode this entry documents. Surface immediately — don't wait for it to compound.
+
+#### Expiry / Review
+
+Archive when:
+1. Atomizer Steward (`ATOM-2026-04-30-0083`) is runnable AND its verification path includes cross-ledger update checks before marking atoms `completed`.
+2. Three consecutive sessions ship without a similar gap (i.e., the human-protocol fix worked).
+
+Until then, this entry is **highest-priority** reading at session start. Newer than the recovery pattern (`COMM-2026-04-30-003`) and arguably more frequent — the recovery pattern fires when an agent runs out of tokens; this protocol violation fires every time an agent gets focused on the immediate atom and forgets the cross-ledger updates.
+
+---
+
+### COMM-2026-05-01-002 — `Auto/` Symlink Dispersal In Flight (read this before editing Client Boxes / Staff Boxes / orchestrator / inbox skill)
+
+Date: 2026-05-01
+From: Cowork session — ATOM-2026-05-01-0001 (Auto/ dispersal chain initiation)
+To: Every future agent who edits Client Boxes, Staff Boxes, orchestrator, comeketo-inbox bundle, voice.py, KICKOFF_TODAY.md, server.py AUTO_* constants, or CLAUDE.md §2.2/§3.3
+Type: `coordination`, `warning`, `handoff`
+Status: **active**
+Priority: **HIGH** — touching any Auto/-adjacent surface during the dispersal window will collide with in-flight atom work
+Affected systems: `Auto/` symlink, 6 CCAgentindex/ reverse symlinks, `server.py:41-44`, `_lib.py:25-27`, `voice.py:5`, `KICKOFF_TODAY.md`, `CLAUDE.md` §2.2 + §3.3, all 28 Client Boxes, 13 Staff Boxes, comeketo-inbox skill bundle
+Related ledgers: PROB-2026-05-01-001 (OPL §5), DEC-2026-05-01-002 (proposed), ATOMS §10.5 (chain ATOM-2026-05-01-0001..0011), DEPRECATION.md §7 (snapshot contract)
+
+#### Message
+
+The `Auto/` symlink (`/Users/jakeaaron/Downloads/CC Agent/Auto/` → `/Users/jakeaaron/Desktop/Auto/`) is being retired and its contents dispersed into canonical homes inside the project tree. This reverses the 2026-04-28 closure of PROB-2026-04-28-016 — operator paused automations 2026-05-01 and the symlink rationale (preserve active scheduled fires + Brenda's seven-day cadence) no longer applies.
+
+**Coordination rules during the dispersal window (until ATOM-2026-05-01-0011 completes):**
+
+1. **Do not write through `Auto/`.** Read access fine; writes collide with in-flight atom work. If you need to update Client Box content, wait for ATOM-2026-05-01-0006 to land or coordinate with the Cowork session that's executing the chain.
+2. **Do not edit `server.py:41-44` AUTO_* constants** outside of ATOM-2026-05-01-0004. Those constants are the load-bearing reference point for ~10 downstream code references; updating them out-of-order leaves the orchestrator + Box endpoints in a broken state.
+3. **Do not edit `CLAUDE.md` §2.2 or §3.3 path references** outside of ATOM-2026-05-01-0005. These describe the canonical contract — edits during the dispersal window create false history about what's authoritative.
+4. **Do not unlink `Auto/`** outside of ATOM-2026-05-01-0011. The symlink is the last thing to retire after every child has moved + Deprecation entry filed.
+5. **Snapshot contract.** ATOM-2026-05-01-0002 must complete before any move atom (0006-0010). Per DEPRECATION.md §7: "no retirement without entry + snapshot." If the snapshot atom fails or is skipped, surface to operator immediately — do not proceed with moves.
+6. **Operator-decision rows in DEC-2026-05-01-002.** 4 rows tagged `proposed — Jake decision needed` (Staff Boxes folding pattern, Hugodemo handling, QuoteMaker.jsx disposition, comeketo-inbox.skill deprecation). Those rows block the corresponding move atom until operator confirms.
+
+#### Why It Matters
+
+The Auto/ tree holds ~15 MB across 13 top-level children spanning every active surface in the project — Client Boxes (the inbox automation's primary write surface), Staff Boxes (voice profiles), orchestrator (scheduled fire engine), comeketo-inbox skill (NEPQ guardrails). A single uncoordinated edit during the dispersal window can:
+- Collide with an in-flight move (atom resolves but writes go to the old path).
+- Re-introduce path drift in `server.py` after ATOM-0004's careful update.
+- Leave `_lib.py` resolving to the wrong directory shape.
+- Break the snapshot's cleanliness (it's a recovery archive — needs to capture the pre-dispersal state, not a half-edited intermediate state).
+
+The chain is structured to ship one atom per substantive turn so that each move is independently verifiable and reversible-via-snapshot. Out-of-band edits break that property.
+
+#### Suggested Action
+
+**For agents picking up unrelated work during the dispersal window:**
+- Read PROB-2026-05-01-001 + DEC-2026-05-01-002 + ATOMS §10.5 first.
+- If your work needs to touch Auto/ content (Client Boxes, Staff Boxes, orchestrator, inbox skill), check the chain's atom completion status. If the relevant move atom hasn't completed, defer your edit OR claim the corresponding move atom yourself and ship it.
+- If your work is unrelated to Auto/, proceed normally — but watch for the path-reference sites in `server.py:41-44` + `CLAUDE.md` §2.2/§3.3 + `_lib.py:25-27` + `voice.py:5` + `KICKOFF_TODAY.md`. Don't edit those during the dispersal window.
+
+**For Jake when reviewing the chain's progress:**
+- The 4 placement-decision rows in DEC-002 are gating items. Confirm or revise each before the corresponding move atom ships.
+- Per-atom verification artifacts: each move atom lands a receipt in the relevant Box's receipts/ dir + an activity.jsonl `atom_completed` line + a TCL §3 + GLOBAL §12 update per the Per-Atom-Completion Update Protocol.
+
+#### Expiry / Review
+
+Archive when:
+1. ATOM-2026-05-01-0011 completes (PROB-2026-05-01-001 flipped to OPL §10 Recently Closed).
+2. Auto/ symlink is unlinked + Deprecation entry filed referencing the snapshot.
+3. Three consecutive sessions ship Auto-adjacent work without referencing this entry's coordination rules (i.e., the new canonical paths in CLAUDE.md §2.2 + DEC-002 are sufficient orientation).
+
+Until then, this entry is **active** and should be referenced by any agent working in the affected surface area.
+
+---
+
+### COMM-2026-05-01-003 — Beta-Test Pivot: Fake-Close Training Ground Replaces Real Client Boxes For Inbox Automation Testing
+
+Date: 2026-05-01
+From: Jake (operator) → Cowork session, recorded in ATOM-2026-05-01-0012
+To: Every future agent working inbox automation, Client Box content, scheduled fires, or the dispersal chain
+Type: `directional-shift`, `coordination`, `handoff`, `lesson`
+Status: **active**
+Priority: **HIGH** — reverses the dispersal-into-bedrock placement decision for Client Boxes; informs the next 1-2 days of beta-test work
+Affected systems: Auto/Client Boxes/ (28 boxes), `Auto/comeketo-inbox/references/guardrails.md` (now v2.1), all scheduled automations (formal removal pending — currently paused), the planned Auto/ dispersal chain (ATOMs 0006-0011 placement table being revised), DEC-2026-05-01-002 (Client Boxes row + new Beta-Test Isolation provision)
+Related ledgers: PROB-2026-05-01-001 (history block updated with placement revision note), DEC-2026-05-01-002 (placement table revised), PROB-2026-05-01-002 (planned — Beta-Test Isolation initiative; ATOM-0013 will author)
+
+#### Message
+
+The dispersal plan we filed earlier today (PROB-2026-05-01-001 + DEC-2026-05-01-002) anticipated moving `Auto/Client Boxes/` into `CCAgentindex/client_boxes/` as part of the bedrock-ownership cleanup. Operator pivoted mid-day to a different operating mode — and the new direction is structurally better for de-risking inbox automation work.
+
+**The pivot:**
+
+1. **Real Client Boxes go to a zipped archive, not a canonical home.** The 28 active client boxes get zipped and moved to a separate directory (path TBD per ATOM-0013). They become a frozen reference snapshot for the duration of the beta-test phase, not the live read/write surface for automations.
+2. **Fake-Close instance is the new training ground.** Operator created a separate Close.com workspace populated with fake people. The inbox automation runs against fake-Close during beta-test. No real client touches the system until the v2.1 guardrails + automation runtime prove themselves on synthetic data.
+3. **Scheduled automations are being formally removed** (currently paused per 2026-05-01 directive; formal removal is its own atom in the new chain).
+4. **Inbox guardrails refreshed to v2.1** in the same atom as this filing — Auto/comeketo-inbox/references/guardrails.md is now the §A-§I taxonomy with 12 hard gates, 5 auto-pause rules, 6 standards, 4 email rules, 6 cadence references, 3 reporting modes, 20-step decision tree, 14-line quality floor, and a v1.0→v2.1 change log.
+
+**Why this matters more than it looks like.** The original PROB-016 → PROB-001 dispersal arc was framed as "bedrock owns app state." That's still true. But Jake correctly identified that NS-03 ("bedrock owns app state") and beta-test isolation are not in tension — they compose. The dispersal still happens; it just doesn't happen on production data while the automation runtime is unproven. Real Client Boxes preserve frozen, fake-Close drives the beta, the dispersal runs against the fake-Close-derived state. By the time we cut over to production, the canonical paths are battle-tested and the real Client Boxes are restored from the snapshot.
+
+This is the right de-risking pattern: **don't refactor the storage layer and learn the runtime simultaneously.** Beta-test the runtime against fake data with the new guardrails; refactor the storage layer once the runtime is stable; restore real data into the new layer last.
+
+#### Why It Matters For Future Agents
+
+- **The DEC-2026-05-01-002 placement table is REVISED.** Client Boxes row no longer points at `CCAgentindex/client_boxes/` as the primary destination. New placement: zip archive (path TBD per ATOM-0013). The dispersal chain's ATOM-0006 (move Client Boxes) is on hold pending the revised placement.
+- **Scheduled automations are about to retire.** ATOM-0013 will atomize this. Until then, treat all scheduled fires as paused-not-removed. Don't restart them.
+- **The inbox skill bundle now points at v2.1 guardrails.** Any agent dispatching `comeketo-inbox` skill, `inbox_triage` agent, or composing outbound through render_email.py / render_followup_email.py / price_ballpark.py should validate against the new §A-§I gates — particularly A12 (touchpoint completion alert), E5 (qualified-lead cadence), E6 (priority tiers P0-P3), F3 (manager daily report).
+- **Don't write to real Client Boxes during the beta-test window.** The guardrail isn't "Auto/ is read-only" — it's stronger: real-client content is frozen until ATOM-0013's beta-test infrastructure lands and operator clears production cutover.
+
+#### Suggested Action
+
+**For the next agent picking up automation work:**
+
+1. Read `Auto/comeketo-inbox/references/guardrails.md` v2.1 BEFORE composing any outbound — the §A-§I taxonomy is the new source of truth, not the old §1-§8 layout.
+2. Confirm with operator before writing into `Auto/Client Boxes/<Name>/` — the 28 active boxes are en route to zipped-archive status.
+3. Wait for ATOM-2026-05-01-0013 (PROB-002 filing + decomposition) before claiming any beta-test atoms; the beta-test infrastructure scope isn't fully decomposed yet.
+4. The dispersal chain (ATOMs 0002-0011) is partially-paused: ATOM-0002 (snapshot) still recommended-as-first-move (it captures the pre-beta-test state cleanly). ATOM-0006 (move Client Boxes) is on hold. ATOMs 0008 (comeketo-inbox bundle) and 0009 (orchestrator) and 0010 (loose files) remain valid scope — those don't depend on the Client Boxes placement decision.
+
+**For Jake when reviewing the chain:**
+
+- DEC-2026-05-01-002 placement table revision lands in this atom. The "Client Boxes" row will read: "Zipped archive at `<beta-test-path>` per ATOM-0013; restored to canonical home post-beta-test cutover."
+- The new PROB-2026-05-01-002 needs operator input on: beta-test path location (separate disk volume? `_beta/` subdir?), fake-Close instance access (operator-owned credentials, separate Close API key?), production cutover criteria (what proves the runtime is stable enough to point at real data?).
+
+#### Expiry / Review
+
+Archive when:
+
+1. PROB-2026-05-01-002 (Beta-Test Isolation) is filed AND atomized AND the beta-test phase reaches retrospective.
+2. Real Client Boxes are restored from zipped archive into canonical home (post-cutover).
+3. The original dispersal placement table (DEC-2026-05-01-002) is fully resolved with all rows confirmed and all move atoms complete.
+
+Until then, this entry is **active** — any agent touching inbox automation, Client Box content, scheduled fires, the dispersal chain, or the comeketo-inbox skill bundle must read it.
 
 ---
 

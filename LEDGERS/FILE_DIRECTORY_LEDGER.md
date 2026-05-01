@@ -1,6 +1,6 @@
 # File Directory Ledger
 
-Last updated: 2026-04-28
+Last updated: 2026-05-01 (later — §3 Top-Level Map enumerated with the 7 missing entries surfaced by `file_directory_steward` audit_only smoke test ATOM-2026-04-30-0038: `_snapshots/`, `scaffolded test/`, `src/` (top-level dirs), `cowork_memory` + `LEDGERS/atlas` (symlinks), `LEDGERS/BOXES/atlas/` + `LEDGERS/BOXES/atoms/` (Box subdirs). Earlier per ATOM-2026-04-30-0111 backfill: surfaced 6 unified Boxes under `LEDGERS/BOXES/`. FDL is now in sync with disk reality as of 2026-05-01.)
 Maintainer: Jake / Comeketo Agent project agents
 Repository: [RodbotCC/CCAgent](https://github.com/RodbotCC/CCAgent) (branch `main`)
 Status: **active**
@@ -66,6 +66,13 @@ This is what actually exists at `/Users/jakeaaron/Downloads/CC Agent/` as of 202
 | `.git/` | git internal | Repository metadata | Do not touch |
 | `.claude/` | external/config | Claude Code skills + worktrees | Tooling config; in `.gitignore` |
 | `.logs/` | generated | Runtime logs | Generated; in `.gitignore` |
+| `_snapshots/` | **active (added 2026-04-30)** | Daily/weekly/monthly/manual zip archives produced by `LEDGERS/scripts/snapshot.sh`; pairs with `LEDGERS/DEPRECATION.md` §7 Snapshot Protocol. | **In `.gitignore`** — recovery surface, not source-of-truth. Cardinal rule: nothing leaves the project without a Deprecation entry AND a Snapshot reference. |
+| `scaffolded test/` | **active scratch (added recently)** | Scratch directory used during scaffolding experiments. | Not load-bearing; cleanup candidate when noted by file_directory_steward. |
+| `src/` | **active (purpose TBD)** | Currently undocumented. Surfaced 2026-05-01 by `file_directory_steward` smoke test (ATOM-2026-04-30-0038) as missing from this ledger. | Worth a follow-up audit — is this a dead leftover from an early scaffold, or active code? File a PROB if dead-code suspicion confirmed. |
+| `cowork_memory` (symlink) | **active (added 2026-05-01)** | Symlink → `~/Library/Application Support/Claude/local-agent-mode-sessions/<orchestrator>/<workspace>/spaces/<space-id>/memory/` — alias for the Cowork session's auto-memory dir, locally readable from project paths. | **In `.gitignore`** — per-session, target outside repo. Each Cowork session has its own memory dir; the symlink only aliases the current session's. The structural fix for cross-agent memory visibility is `LEDGERS/COMMUNICATIONS_LEDGER.md`, not this alias. |
+| `LEDGERS/atlas` (symlink) | **active (added 2026-05-01 via ATOM-0107)** | Symlink → `/Users/jakeaaron/Documents/Atlas/` — alias for Pieces MCP daily-folder output, the project's first `ground_truth_source`. **Read-only contract.** | **In `.gitignore`** — per-machine, target outside repo. Governed by `LEDGERS/BOXES/atlas/` Box. Reads happen through this alias; writes are forbidden. Atlas Sweep Steward (`atlas_steward`) reads daily at 8 AM ET via `CCAgentindex/triggers/atlas_daily_sweep.json` cron. Two-truths contract per `SOURCE_OF_TRUTH.md` §3.0. |
+| `LEDGERS/BOXES/atlas/` | **active (added 2026-04-30 / 2026-05-01)** | First `ground_truth_source` Box. Houses the Atlas Sweep Steward + receipts + daily project-relevant digests. | Owns: `box.json`, `BOX.md`, `steward/AGENTS.md`, `steward/prompt.md`, `steward/config.json`, `receipts/`, `digests/`, plus governs (via path reference) `CCAgentindex/triggers/atlas_daily_sweep.json` and the `LEDGERS/atlas` symlink. |
+| `LEDGERS/BOXES/atoms/` | **active (added 2026-04-30)** | Atomizer Steward Box. Governs `LEDGERS/ATOMS.md` + `.json` by path reference. | Six-file unified Box pattern. Steward not yet runnable — Phase B follow-on per ATOM-0111 Per-Atom-Completion Update Protocol. |
 
 ### Top-level files that matter
 

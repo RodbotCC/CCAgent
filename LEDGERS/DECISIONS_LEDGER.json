@@ -1233,6 +1233,101 @@
           "event": "created. Resolved ATOM-2026-04-30-0027 (architectural-gate blocking 16 promotion atoms in PROB-005). Companion follow-on ATOM-2026-04-30-0044 authored for global_ledger_steward migration. First atom claimed-and-completed under the new claim protocol — proves the protocol works end-to-end."
         }
       ]
+    },
+    {
+      "id": "DEC-2026-04-30-005",
+      "slug": "box-ledger-subagent-fusion-target-primitive",
+      "title": "Box = Ledger + Rules + Sub-agent + Config + Receipts (Box Network Architecture target primitive)",
+      "status": "active",
+      "confidence": "high",
+      "scope": "global / architectural",
+      "tier_box_bus": "global",
+      "date": "2026-04-30",
+      "decider": "Jake (orchestrator) + Codex (scaffold co-author) + Claude (Cowork lock)",
+      "affected_systems": [
+        "every Box project-wide (6 unified ledger Boxes + 28 Client + 10 Staff + planned page/automation Boxes)",
+        "every project-level ledger (currently 19 active)",
+        "every sub-agent (5 ledger stewards runnable + 2 operational sub-agents)",
+        "the planned Box Bus runtime",
+        "every CLAUDE.md and AGENTS.md across the project",
+        "the entire bedrock structure under CCAgentindex/"
+      ],
+      "north_star_alignment": ["NS-01", "NS-02", "NS-03", "NS-09", "NS-10"],
+      "related_ledgers": [
+        "LEDGERS/Drafts/box_network_architecture_scaffold.md",
+        "LEDGERS/BOX_LEDGER.md",
+        "LEDGERS/BOX_BUS_LEDGER.md",
+        "LEDGERS/SOURCE_OF_TRUTH.md",
+        "LEDGERS/DEFINITION_OF_DONE.md",
+        "LEDGERS/ATOMS.md",
+        "LEDGERS/OPEN_PROBLEMS_LEDGER.md (PROB-2026-04-30-015)"
+      ],
+      "depends_on": [
+        "DEC-2026-04-29-001",
+        "DEC-2026-04-29-013",
+        "DEC-2026-04-29-015",
+        "DEC-2026-04-30-004"
+      ],
+      "refines": ["DEC-2026-04-29-001"],
+      "completes": ["DEC-2026-04-29-015"],
+      "supersedes": [],
+      "superseded_by": [],
+      "decision": "The mature primitive of the Comeketo Agent project is the fused Box: Box = Ledger + Rules + Sub-agent + Config + Receipts. Every Box is a stateful memory object with an operating contract. Mature shape includes BOX.md + box.json + LEDGER files (when applicable) + AGENTS.md (when behavior differs) + steward/ + receipts/ + inbox/outbox per Q5. Authority tiers structural: Tier 0 Constitutional / Tier 1 Coordination / Tier 2 Domain / Tier 3 Leaf. Trickle-down is filtered inheritance via interpreters (T1 deterministic ~80%, T2 small-LLM ~15%, T3 sub-agent ~5%). Box graph declared: every box.json has subscribes[] + emits[]. Every flow is Source → Interpreter → Destination with a receipt.",
+      "alternatives_considered": [
+        {
+          "alternative": "Path A: Keep separate (triad as loose neighbors) — DEC-2026-04-29-001 baseline",
+          "rejected_because": "Triad spine named the three pieces but left them structurally split. Two days of unified Box pattern at ledger tier proved fused primitive is materially more legible. Splitting forces every agent to remember which folder holds which piece."
+        },
+        {
+          "alternative": "Path B: Fuse only stewards (Box + sub-agent only; ledger files stay separate)",
+          "rejected_because": "Works for ledger Boxes (one canonical file) but not for multi-file Boxes (Client Boxes have 5+ files). The fused primitive treats the Box itself as the unit of state."
+        },
+        {
+          "alternative": "Path C: Defer to Phase C runtime (architecture-then-build)",
+          "rejected_because": "Scaffold proves architecture is half-written. Authoring lock now means agents author Boxes IN the fused shape, not against an inferior pattern that has to migrate later. DEC-013 defers RUNTIME, schema is canonical now."
+        },
+        {
+          "alternative": "Path D: Adopt scaffold without further architectural commitment",
+          "rejected_because": "Scaffold is synthesis/proposal per its own framing. 8 Open Questions sit unresolved. Adopting without locking the central commitment leaves architecture conditional. This DEC locks the fusion thesis; Q1-Q8 land separately under it."
+        }
+      ],
+      "consequences": [
+        "Phase 1-8 build path activates — all 58 atoms under PROB-015 become live work",
+        "BOX_LEDGER.md gains mature Box shape (Phase 1.1 / ATOM-0056)",
+        "BOX_BUS_LEDGER.md gains source/interpreter/destination model (Phase 1.2 / ATOM-0057)",
+        "DEFINITION_OF_DONE.md gains Box-completion gate with 6 sub-gates (Phase 1.3 / ATOM-0058)",
+        "SOURCE_OF_TRUTH.md gains authority-tier framing (Phase 1.4 / ATOM-0059)",
+        "LOCAL_TEMPLATE updates + Box scaffold script ships (Phase 2)",
+        "Every existing ledger gains a unified Box (Phase 3)",
+        "Every Box's box.json declares its graph membership (Phase 4)",
+        "Three real interpreters land — Atomizer Steward T3 (per Q4), Allowed-To-Know T3, Page-Asset T2 (Phase 5)",
+        "Box Bus runtime ships with first cross-Box envelope delivery (Phase 6)",
+        "Hugo Casillas Client Box first migration (Phase 7 per Q6)",
+        "Self-maintaining system — drift monitors, sweepers, validators (Phase 8)",
+        "Every CLAUDE.md and AGENTS.md eventually updates per Q8",
+        "Future PROBs decompose automatically via Atomizer Steward",
+        "Parallel-work substrate compounds beyond ledger tier"
+      ],
+      "do_not_undo_casually": "Don't reverse without an explicit superseding DEC. Don't fragment the fused primitive. Don't treat scaffold as superseded — it's the source artifact, preserve as Promotions Log. Don't act on Phase 1+ atoms before dependencies land. Don't auto-close PROB-015 when atoms complete.",
+      "review_trigger": [
+        "Q1 resolution favors ledger files inside Box (vs by reference)",
+        "Q2 resolution requires every Box to have local AGENTS.md",
+        "Q3 minimum viable box.json schema is meaningfully larger than current declarative form",
+        "Q4 resolution favors Page-Asset interpreter first (vs Atomizer Steward)",
+        "Q5 resolution mandates physical inbox/outbox folders now",
+        "Q6 resolution favors Page Box or Automation as first migration (vs Client Box)",
+        "Q7 UI tier visualization surfaces a new constraint on authority enforcement",
+        "Q8 'entering a Box' contract forces CLAUDE.md restructuring beyond anticipated",
+        "Phase 6 runtime experience shows fusion creates more friction than legibility",
+        "Regulatory/compliance requirement mandates strict separation of concerns",
+        "4h granularity rule produces atoms that can't be sized due to fused primitive's surface area"
+      ],
+      "history": [
+        {
+          "date": "2026-04-30",
+          "event": "created. Foundation atom 2 of 3 in PROB-2026-04-30-015's decomposition pass. Triggered by Jake delivering Box Network Architecture scaffold (Codex co-author). Locks the architectural commitment that fuses Box + Ledger + Sub-agent into one mature primitive. Companion atoms: ATOM-2026-04-30-0045 (foundation, completed) + ATOM-2026-04-30-0047 (COMM handoff, follows). All 58 atoms in PROB-015 derive their authority from this DEC."
+        }
+      ]
     }
   ],
   "deprecated_or_reversed_decisions": [],
@@ -1394,9 +1489,9 @@
       "NS-09",
       "NS-10"
     ],
-    "active": 19,
-    "total": 19,
-    "total_active_decisions": 22
+    "active": 22,
+    "total": 22,
+    "total_active_decisions": 25
   },
   "last_updated_note": "Phase B step 1 — added DEC-2026-04-29-015 (Unified Ledger Box pattern); first unified Box landed at LEDGERS/BOXES/temporal_continuity/"
 }

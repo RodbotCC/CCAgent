@@ -131,7 +131,7 @@ function App() {
   const aiConfigured = !!(window.SecretaryAI && window.SecretaryAI.isConfigured());
 
   // --- Routing ---------------------------------------------------------------
-  const KNOWN_SCREENS = ["grid", "settings", "leads", "clients", "coworkers", "contacts", "venues", "briefing", "automation", "activity", "intake", "analytics", "delegations", "boxes"];
+  const KNOWN_SCREENS = ["grid", "settings", "leads", "clients", "coworkers", "contacts", "venues", "briefing", "automation", "activity", "intake", "analytics", "delegations", "boxes", "box_graph"];
 
   // Web-mode capability gating (2026-04-30 — interim, against PROB-2026-04-30-001).
   // When the AI provider is OpenAI we treat the app as if it were running in
@@ -497,6 +497,8 @@ function App() {
     screen = <DelegationsScreen go={go} />;
   } else if (route.name === "boxes") {
     screen = <BoxesScreen go={go} selectId={route.selectId} />;
+  } else if (route.name === "box_graph") {
+    screen = <BoxGraphScreen go={go} />;
   } else {
     screen = null;
     setTimeout(() => setHistory([{ name: "grid", gridId: "morning" }]), 0);
@@ -526,6 +528,7 @@ function App() {
         onOpenAnalytics={() => go.push("analytics")}
         onOpenDelegations={() => go.push("delegations")}
         onOpenBoxes={() => go.push("boxes")}
+        onOpenBoxGraph={() => go.push("box_graph")}
         onHome={onHome}
       />
       <main className="main" data-screen-label={route.name + (route.gridId ? "·" + route.gridId : "")}>{screen}</main>

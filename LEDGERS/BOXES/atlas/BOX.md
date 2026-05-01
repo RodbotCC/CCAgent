@@ -93,7 +93,7 @@ A meaningful Atlas sweep is done when:
 - [ ] If the finding contradicts a ledger entry: a PROB has been filed (or a candidate PROB has been drafted to `DRAFTS/ATOMIZATION/atlas_drift_<date>.md` for human review)
 - [ ] If the finding is a project-relevant handoff lesson: a candidate COMM has been drafted
 - [ ] If the finding is a Next-Steps action suggestion: a candidate atom has been drafted to `DRAFTS/ATOMIZATION/atlas_atoms_<date>.md` for human review
-- [ ] activity.jsonl appended with `kind:atlas_sweep_steward_run`
+- [ ] activity.jsonl appended with `kind:atlas_steward_run`
 - [ ] No writes inside `LEDGERS/atlas/` (the alias is read-only)
 
 ---

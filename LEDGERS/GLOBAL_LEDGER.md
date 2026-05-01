@@ -1,6 +1,6 @@
 # Global Ledger
 
-Last updated: 2026-04-30 (**Phase B momentum** — `LEDGERS/BOXES/atoms/` unified Box landed (Atomizer Steward declarative form authored, matches temporal_continuity pattern); PROB-005 (steward sub-agent promotion) atomized into 17 atoms; **queue depth now 43 atoms across 2 PROBs**. Earlier same-day: Atom Ledger (`DEC-2026-04-30-003`) + Deprecation Ledger (`DEC-2026-04-30-002`). 19 active ledgers + 2 unified Boxes.)
+Last updated: 2026-05-01 (later still² — **Beta-Test Pivot landed via ATOM-2026-05-01-0012.** v2.1 inbox guardrails written to `Auto/comeketo-inbox/references/guardrails.md` (full §A-§I rewrite); COMM-2026-05-01-003 filed; DEC-2026-05-01-002 Client Boxes row revised (dispersal → zipped archive, frozen reference); PROB-001 history updated; PROB-2026-05-01-002 (Beta-Test Isolation) queued via ATOM-0013. Operator pivoted to fake-Close training ground for de-risked runtime testing. Earlier today: Auto/ symlink dispersal chain INITIATED + Phase B steward fleet COMPLETE + Atlas Box graduation + atom-chase drift recovery.)
 Maintainer: Jake / Comeketo Agent project agents
 Repository: [RodbotCC/CCAgent](https://github.com/RodbotCC/CCAgent)
 Default branch: `main`
@@ -367,6 +367,116 @@ Short version: **if the system changed, the system's memory changes with it.**
 ---
 
 ## 12. Recently Changed
+
+### 2026-05-01 (later still² — Beta-Test Pivot: v2.1 inbox guardrails + Client Boxes redirect to zipped archive)
+
+**World-state shifts:**
+
+- **Inbox guardrails v2.1 landed** at `Auto/comeketo-inbox/references/guardrails.md`. Full §A-§I rewrite (12 hard gates / 5 auto-pause / 6 standards / 4 email rules / 6 cadence references / 3 reporting modes / 20-step decision tree / 14-line quality floor / v1.0→v2.1 change log). New v2.1 additions: A12 touchpoint completion alert; E5 qualified-lead cadence (post-quote/long-term/active-negotiation pacing modes); E6 priority tiers P0-P3 per inbox run; F3 manager daily report.
+- **COMM-2026-05-01-003 filed** — Beta-Test Pivot coordination warning. Real Client Boxes redirected from dispersal-into-bedrock to zipped-archive (frozen reference); fake-Close instance becomes primary inbox source for beta; scheduled automations formally retire (currently paused). De-risking discipline: don't refactor storage layer and learn runtime simultaneously.
+- **DEC-2026-05-01-002 placement table REVISED.** Client Boxes row redirected from `CCAgentindex/client_boxes/` (dispersal) to zipped archive (frozen reference). 1 row superseded; 12 rows still apply.
+- **PROB-2026-05-01-001 history updated** noting placement revision + ATOM-0006 (move Client Boxes) on-hold pending PROB-002 decomposition.
+- **PROB-2026-05-01-002 (Beta-Test Isolation) queued** via ATOM-2026-05-01-0013. Beta-test infrastructure scope: zip Client Boxes to archive, formally remove all scheduled automations, wire fake-Close instance as primary inbox source, instrument observability for volume/throughput testing, write beta-test execution playbook, retrospective + production cutover criteria.
+- **Real Client Boxes are functionally frozen** until PROB-002 lands + cutover clears. No writes into `Auto/Client Boxes/<Name>/` during the window.
+- **§3 Major Systems impact:** the comeketo-inbox skill bundle now references v2.1 guardrails. The `inbox_triage` agent, `comeketo-inbox` plugin, and rendering scripts (`render_email.py`, `render_followup_email.py`, `price_ballpark.py`) validate against the new §A-§I taxonomy, not the old §1-§8 layout.
+- **§6 Active Workstreams flips:** "Auto/ symlink retirement" partially-paused (ATOM-0006 on hold). New active: "Beta-Test Isolation infrastructure" (PROB-002 pending atomization).
+- **§7 Active Risks update:** "real Client Boxes treated as live read/write" risk eliminated (now frozen). New risk: "scheduled automations paused but not formally removed — operator-pivot mid-day means reactivation under stress is a temptation; formal retirement closes the door" (mitigated by ATOM-0013).
+
+**The trigger — operator's pivot quote:**
+
+> "I think what I want to do for a while is actually work on the automations. I've got an idea that I want to do with you, and we're going to remove all the set up scheduled automations, and we're going to try something. We are going to take the client boxes, and I'm going to zip them and leave them in another directory because we're going to run a big ass beta test in the next day or two. And I made a new close that has nothing but fake people in it. And I think this makes so much more sense for us to be testing ourselves on that kind of training ground."
+
+Plus the binding directive on guardrails: "Don't skimp on those, man. Put them all in like we need to."
+
+**The de-risking discipline (newly explicit):** Don't refactor the storage layer and learn the runtime simultaneously. Beta-test the runtime against fake data with the new guardrails; refactor the storage layer once the runtime is stable; restore real data into the new layer last. This composes with NS-03 ("bedrock owns app state") — the dispersal still happens, just not on production data while the runtime is unproven.
+
+---
+
+### 2026-05-01 (later still — Auto/ symlink dispersal chain INITIATED — reversing PROB-2026-04-28-016 closure)
+
+**World-state shifts:**
+
+- **PROB-2026-05-01-001 filed** in OPL §5 — explicit reversal of PROB-2026-04-28-016 closure (the 2026-04-28 symlink-only approach). Operator paused automations 2026-05-01; the seven-day cadence concern that originally drove the symlink rationale is no longer load-bearing. 13-row Auto/ children inventory + refreshed path-reference inventory (server.py:41-44 + ~10 downstream + _lib.py + voice.py + KICKOFF_TODAY.md + CLAUDE.md §2.2/§3.3) + 11-atom decomposition + full close criteria.
+- **DEC-2026-05-01-002 authored (status: proposed)** in DECISIONS_LEDGER — Auto/ Symlink Retired; Standalone Folder Dispersal Pattern. 13-row placement table; 4 rows tagged "Jake decision needed" (Staff Boxes folding pattern, Hugodemo handling, QuoteMaker.jsx disposition, comeketo-inbox.skill deprecation). Structural pattern (real folders inside bedrock + snapshot-before-move + atom-per-child) is the durable part; placement rows are operator-revisable.
+- **COMM-2026-05-01-002 filed** in COMMUNICATIONS §5 — coordination warning for the dispersal window. 6 explicit rules for agents working Auto-adjacent surfaces (Client Boxes, Staff Boxes, orchestrator, comeketo-inbox, voice.py, KICKOFF_TODAY.md, server.py AUTO_* constants, CLAUDE.md §2.2/§3.3). Active until ATOM-2026-05-01-0011 completes.
+- **11-atom dispersal chain** decomposed at ATOMS §10.5. ATOM-0001 (this filing — PROB+DEC+COMM authoring + cross-ledger propagation) completed. ATOMs 0002-0011 remain available; dependency graph has ATOM-0002 (snapshot) blocking all move atoms (0006-0011) per DEPRECATION.md §7 contract. Total chain effort ~7.5h.
+- **Atom queue:** 110 → 121 atoms (11 new in dispersal chain). 1 completed today on this chain. ~100.75h remaining work in queue.
+- **Cross-ledger propagation completed** per Per-Atom-Completion Update Protocol: TCL §3 + §11 + header; OPL header; DECISIONS header; COMMUNICATIONS header; INDEX header; activity.jsonl appends (`prob_filed` + `dec_authored` + `comm_filed` + `atoms_decomposed` + `atom_completed`).
+- **§3 Major Systems impact:** the Auto/ symlink (alias-into-Desktop) is on the deprecation path. After ATOM-2026-05-01-0011 completes, the canonical paths shift from `Auto/Client Boxes/<Name>/` to `CCAgentindex/client_boxes/<slug>/` (placement-pending) for all client-state work.
+- **§6 Active Workstreams flips:** "Auto/ symlink retirement" added (was previously closed-as-not-applicable when PROB-016 was closed via symlink). Re-opened.
+
+**The trigger — operator's binding directive:**
+
+> "the auto folder is a catastrophe because right now we're using an alias for it because we had automation set up for it. But at this point, I've paused the automations, so I think we're good to ditch the aliases and just bring them in and disperse the directories where they need to go. Basically, just replace the thing that's an alias with the actual thing and remove the auto file and whatever's left in that auto file. It's probably actually useful for stuff that should be going in the ccagentindex directory."
+
+Plus the standing ledger-discipline pressure — operator surfaced atom-chase drift earlier today and the Per-Atom-Completion Update Protocol (CLAUDE.md §0, ATOM-0111) is now operating discipline. This dispersal chain is structured to ship one atom per substantive turn so each move is independently verifiable and reversible-via-snapshot, with cross-ledger updates landing per atom rather than session-end.
+
+---
+
+### 2026-05-01 (later — Cowork session: Phase B steward fleet COMPLETE + Atlas Box graduation + first `ground_truth_source` Box class + atom-protocol rules promoted + duplicate-ID race lesson; **+ recovery from atom-chase drift**)
+
+**World-state shifts:**
+
+- **PROB-2026-04-30-005 (Promote Remaining Steward Sub-Agent Packages To Runnable App Agents) CLOSED.** All 4 graduation chains shipped end-to-end. **7 stewards now runnable** project-wide:
+  - `global_ledger_steward` (legacy path, unchanged dispatch since 2026-04-28; migrated to unified Box via ATOM-0044)
+  - `temporal_continuity_steward` (unified Box, chain ATOM-0028→0031, audit_only smoke surfaced 6 stale-surface findings on TCL itself)
+  - `open_problems_steward` (unified Box, chain ATOM-0032→0035, audit_only smoke surfaced 3 duplicate PROB-IDs + 9 missing Status: lines)
+  - `north_star_steward` (unified Box, chain ATOM-0040→0043 by parallel agent, alignment audit produced 4 classifications)
+  - `file_directory_steward` (unified Box, chain ATOM-0036→0039, audit_only smoke surfaced 3 drift categories)
+  - `atoms_steward` (unified Box, authored separately as part of Atomizer Steward declarative form)
+  - `atlas_steward` (NEW — unified Box, chain ATOM-0107→0110, first `ground_truth_source` class)
+- **PROB-2026-04-30-015 (Atlas Sweep Steward Not Yet Runnable) CLOSED.** First `ground_truth_source` Box class introduced — distinct from existing `ledger` Box class. Daily 8 AM ET cron at `CCAgentindex/triggers/atlas_daily_sweep.json` enabled. Inaugural ground-truth digest at `LEDGERS/BOXES/atlas/digests/2026-04-29.md` (8500 words; 24 concordance / 3 drift / 4 handoff lessons / ~10 atom candidates / 5 decision-context / 6 out-of-scope from 37 project-relevant of 45 total summaries).
+- **PROB-2026-04-30-001 partial-progress.** Web-mode UI gating shipped for client-side surfaces. When `tweaks.aiProvider === "openai"`: briefing chip + activity chip + LivePiecesHeader hide; redirect-on-flip; Settings disclosure box. Server-side gate + UI banner remain open.
+- **5 Communications entries (COMM-2026-04-30-004 through 008):** atom-protocol rules promoted from agent-private auto-memory (claim-before-doing, announce-before-doing, P-means-proceed); Atlas integration architecture; **duplicate-ID race condition** (4 captured incidents in 24h: ATOM-0045-0048 collision + PROB-2026-04-30-015 dup + PROB-2026-04-28-011 dup + PROB-2026-04-28-014 dup) with interim mitigation protocol + 3 structural fix candidates.
+- **ChatRail polish:** route pill unification, browser-use done card cleanup (raw URL → host badge format), tool turn visual identity. Cache-busts: `components.jsx 70→73`, `styles.css 91→92`.
+- **Sitemap §grid reconciled** via 3-way diff after operator flagged "the 3x3 decision grid has been gone for some time." Asset list rewritten to match rendered reality. PROB-2026-04-30-002/003/004 filed.
+- **SOURCE_OF_TRUTH §3.0 Operator-Activity Truth** added: Pieces live > Atlas markdown > activity.jsonl > TCL §11 > chat scroll. Two-truths contract: Atlas wins for what-happened, ledgers win for what-decided; never auto-resolve drift.
+- **New directories:** `LEDGERS/BOXES/atlas/`, `LEDGERS/BOXES/global_ledger/`, `LEDGERS/BOXES/file_directory/`, `LEDGERS/BOXES/open_problems/`. New gitignored symlinks: `LEDGERS/atlas` → `/Users/jakeaaron/Documents/Atlas/`, `cowork_memory` → Cowork session memory dir.
+- **§3 Major Systems updated** (this entry's companion §3 update): added Atlas as new Major System under `ground_truth_source` Box class; updated steward count from 1 to 7.
+- **§6 Active Workstreams flips:** "Sub-agent fleet promotion" → resolved (PROB-005 closed). "Atlas integration" → completed (PROB-015 closed). New active: "FDL backfill" (3 dirs + 2 aliases + 2 BOXES subdirs surfaced by file_directory_steward smoke test); "OPL Status: line backfill" (9 entries surfaced by open_problems_steward smoke test); "duplicate-ID race structural fix" (3 candidates listed in COMM-008).
+- **§7 Active Risks update:** linter-revert pattern on Atlas Box steward files (status fields keep getting reverted to "draft v0.1 / not yet runnable" despite functional graduation per INDEX + OPL closure + atom completion records). Worth a COMM filing to document the pattern.
+
+**The recovery — failure mode named:**
+
+ATOM-2026-04-30-0111 (filed earlier today by parallel session) added a **Per-Atom-Completion Update Protocol** to CLAUDE.md §0 specifically to prevent atom-chase drift. The same atom's TCL §3 and Global Ledger §12 entries explicitly named the failure mode and added the "if you don't have time to update the ledgers you don't have time to make the change" rule.
+
+This Cowork session shipped 7+ atoms but **systematically failed the protocol**. Cross-ledger updates were skipped: Global, North Star, Phase, File Contents, File Directory, Deprecation. Operator surfaced violation explicitly:
+
+> "If you're not writing the ledgers, just don't do anything. Sometimes when you do something, you might have to write in 15 different fucking ledgers, and I don't care. I'm paying for the compute, and that's what I want to happen."
+
+This §12 entry IS the recovery action. Companion ledger writes landing in the same pass: TCL §3 + §11; PHASE Phase B fleet completion entry; FILE_DIRECTORY backfill (the steward's own findings); FILE_CONTENTS new file inventory entries; NORTH_STAR alignment touch; DEPRECATION audit-ledger formal entry per Atlas D-2 finding.
+
+**The structural follow-up that should land soon:** Per-Atom-Completion Update Protocol needs **mechanical enforcement** at atom-completion time — agents under atom-chasing pressure will violate the protocol even when they've read it. The atom completion script (or future Atomizer Steward) should refuse to mark an atom completed until cross-ledger updates land. Aspirational protocols don't survive contact with momentum.
+
+### 2026-05-01 — Box Network Architecture LOCKED + Phase 1 60% + Box Graph UI shipped + steward fleet 6/6 (backfill entry per `ATOM-2026-04-30-0111`)
+
+> **Backfill catch-up.** This entry consolidates ~6.5h of session work that should have been logged here per-atom-completion but was not. CLAUDE.md gained a Per-Atom-Completion Update Protocol in this same atom to prevent recurrence.
+
+**Architectural lock landed:** Jake delivered the Box Network Architecture scaffold (Codex co-author) at `LEDGERS/Drafts/box_network_architecture_scaffold.md`. Decomposed into 58 atoms under `PROB-2026-04-30-015`. **`DEC-2026-04-30-005`** (Box-Ledger-Sub-agent fusion is the target primitive) is the architectural lock for the entire Phase 1-8 build path. Refines `DEC-2026-04-29-001` (triad spine); completes `DEC-2026-04-29-015` (unified Box pattern).
+
+**Open Questions resolved (2 of 8):**
+- `DEC-2026-04-30-006` — minimum viable `box.json` schema for Phase B: 9 required + 5 recommended + 3 runtime-only fields. Resolves Q3.
+- `DEC-2026-04-30-007` — `AGENTS.md` required for Boxes-with-stewards, optional for leaf Boxes. Resolves Q2.
+
+**Phase 1 progress (3 of 5 atoms shipped):**
+- `BOX_LEDGER.md` §16 "Mature Box Shape" authored (`ATOM-0056`, ~330 lines, per-Box-class shape rules).
+- `BOX_BUS_LEDGER.md` §14 "Source-Interpreter-Destination Routing" authored (`ATOM-0057`, ~280 lines, 5 example flows).
+- `SOURCE_OF_TRUTH.md` §11 "Box Authority Tiers" authored (`ATOM-0059`, ~210 lines, Tier 0/1/2/3 model orthogonal to per-domain trust).
+
+**Box Graph UI shipped (Codex):** route `box_graph` live at the app level. 57 nodes, 81 edges, 5 manifests, 38 leaf boxes. `GET /api/box_graph` synthesizes graph from `LEDGERS/BOXES/*/box.json` + `Auto/Client Boxes/` + `Auto/Staff Boxes/`. Authority lanes rendered. Right-sidebar route inspection per Box. **This is Phase 4.6 (graph render) + Phase 6.1 (registry endpoint) shipped early.** New components in `screens.jsx` (+248 lines) and `styles.css` (+299 lines). Codex's `_agent_resolve_prompt` helper means several Phase 5 wiring atoms collapse to no-ops.
+
+**Steward fleet 6 of 6 runnable** (was 1 at session start):
+- `global_ledger_steward` migrated from legacy `CCAgentindex/agents/` to unified `LEDGERS/BOXES/global_ledger/steward/` per `DEC-2026-04-30-004` (`ATOM-0044`).
+- `temporal_continuity_steward`, `open_problems_steward`, `north_star_steward`, `file_directory_steward` all promoted to runnable form (`ATOM-0028..0043` chains).
+- **NEW** Atlas Sweep Steward authored by parallel session — first `ground_truth_source` Box, daily 8 AM ET cron at `CCAgentindex/triggers/atlas_daily_sweep.json` (`ATOM-0107..0110`).
+
+**Bedrock audit chain progress:** 4 of 7 stub-pattern audits shipped (`ATOM-0007` commitments, `0011` knowledge, `0013` projects, `0015` Rodbot — all empty `.gitkeep` stubs, archive disposition). Both PROB-016 gates (`ATOM-0001` ledger buildout, `ATOM-0002` sub-agent buildout) satisfied.
+
+**Atom queue (2026-05-01T02:30Z):** 111 total / 71 available / 36 completed / 1 claimed / 4 abandoned. ~17h shipped of ~115h queued. ID collision (Foundation 0045-0048 vs Atlas 0045-0048) resolved via renumber to 0103-0106 → orphan twins abandoned → parallel session re-renumbered to 0107-0110. Cleaned in Atomizer Steward improvement candidate.
+
+**Decisions count:** 22 active (was 18 at session start). 4 new today: 004 (steward canonical path), 005 (fusion primitive), 006 (box.json minimum schema), 007 (AGENTS.md placement rule).
+
+**Continuity ledgers backfilled in this atom (`ATOM-2026-04-30-0111`):** TCL §3 + GLOBAL §12 (this entry) + COMMUNICATIONS (`COMM-2026-05-01-001` handoff) + INDEX (Atlas Box row + atom queue stats) + PHASE (Phase 1 progress + Phase 4/6 partial-shipping notes) + ASSET_WIDGET_MAP (box_graph route + new components from Codex) + DEPRECATION (Atlas dedup orphans 0103-0106 marked abandoned). FILE_CONTENTS / FILE_DIRECTORY / NORTH_STAR / SETTINGS gaps surfaced for follow-on atoms.
 
 ### 2026-04-30 — Atom Ledger landed (Phase B momentum)
 

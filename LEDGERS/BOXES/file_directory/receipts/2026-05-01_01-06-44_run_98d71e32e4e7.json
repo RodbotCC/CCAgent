@@ -1,0 +1,40 @@
+{
+  "request_id": "98d71e32e4e7",
+  "run_at": "2026-05-01T01:06:44Z",
+  "kind": "smoke_test_audit_only",
+  "atom_id": "ATOM-2026-04-30-0038",
+  "actor": "file_directory_steward (synthesized inline)",
+  "executor_session": "claude_cowork_session_2026-04-30_atom_0038",
+  "mode": "audit_only",
+  "claim": "First file_directory_steward audit_only smoke test against actual disk state vs FILE_DIRECTORY_LEDGER claims.",
+  "findings": {
+    "top_level_dirs_missing_from_fdl": [
+      "_snapshots",
+      "scaffolded test",
+      "src"
+    ],
+    "new_aliases_not_yet_in_fdl": [
+      "cowork_memory (Cowork session memory symlink)",
+      "LEDGERS/atlas (Atlas ground-truth alias)"
+    ],
+    "boxes_subdirs_missing_from_fdl": [
+      "atlas (ground_truth_source class \u2014 landed 2026-04-30)",
+      "atoms (Atomizer Box \u2014 landed 2026-04-30)"
+    ],
+    "boxes_subdirs_in_fdl": [
+      "file_directory",
+      "global_ledger",
+      "north_star",
+      "open_problems",
+      "temporal_continuity"
+    ]
+  },
+  "drift_severity": "medium",
+  "drift_note": "Predictable drift \u2014 these are all entries that landed today after FDL's last sweep. Steward correctly surfaces them as candidates for FDL update.",
+  "recommended_action": "FDL backfill atom: add the 3 top-level dirs + 2 aliases + 2 BOXES subdirs to LEDGERS/FILE_DIRECTORY_LEDGER.md \u00a73 and \u00a74. Could file as one atom or multiple.",
+  "writes_applied": [
+    "LEDGERS/BOXES/file_directory/receipts/2026-05-01_01-06-44_run_98d71e32e4e7.json"
+  ],
+  "abstention": false,
+  "next": "ATOM-0039 \u2014 flip INDEX active + close PROB-005"
+}

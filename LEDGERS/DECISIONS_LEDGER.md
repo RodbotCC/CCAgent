@@ -1,6 +1,6 @@
 # Decisions Ledger
 
-Last updated: 2026-04-30 (DEC-2026-04-30-004 — canonical steward path = LEDGERS/BOXES/<name>/steward/; resolves ATOM-0027 architectural-gate atom; first claim-and-complete under the atom protocol)
+Last updated: 2026-05-01 (later still² — **DEC-2026-05-01-002 placement table REVISED via ATOM-2026-05-01-0012.** Client Boxes row redirected from `CCAgentindex/client_boxes/` (dispersal) to zipped archive (frozen reference) per operator pivot to fake-Close beta-test training ground. ATOM-0006 on hold; ATOMs 0008/0009/0010 still valid. See COMM-2026-05-01-003 for the de-risking rationale ("don't refactor storage layer and learn runtime simultaneously"). Earlier today: DEC-2026-05-01-002 added (status: proposed); DEC-2026-05-01-001 — Phase B Steward Fleet Completion + First `ground_truth_source` Box Class. **23 active + 1 proposed** decisions total.)
 Maintainer: Jake / Comeketo Agent project agents
 Status: **active**
 Read when: starting major work, auditing changes, considering reversing an architectural choice, citing rationale, resolving tradeoffs, or running an audit pass.
@@ -163,12 +163,179 @@ Quick index for skimming. Full records in §5.
 | DEC-2026-04-30-002 | Deprecation Ledger Lives At Global Tier; Snapshot Protocol Pairs With It | active | high | global / architectural | every retirement project-wide; LEDGERS/DEPRECATION.md + _snapshots/ + future Snapshot Steward |
 | DEC-2026-04-30-003 | Atom Ledger — PROBs Decompose 1:N Into Single-Session Claimable Atoms (Global Tier) | active | high | global / architectural | every PROB; every agent claiming work; future Atomizer Steward; LEDGERS/ATOMS.md |
 | DEC-2026-04-30-004 | Canonical Steward Path = `LEDGERS/BOXES/<name>/steward/` (resolves legacy vs unified-Box fork) | active | high | global / architectural | every steward sub-agent; server.py `_agent_run`; legacy global_ledger_steward (migration follow-on); 4 unpromoted stewards |
+| DEC-2026-04-30-005 | Box = Ledger + Rules + Sub-agent + Config + Receipts (Box Network Architecture target primitive) | active | high | global / architectural | every Box, ledger, sub-agent project-wide; the Box Bus runtime; CLAUDE.md and AGENTS.md across the project; the entire bedrock |
+| DEC-2026-04-30-006 | Minimum Viable `box.json` Schema For Phase B (resolves PROB-015 Q3) | active | high | global / architectural | every existing and future `box.json` manifest; Box Bus Ledger §2.1; Phase 4 graph validator; the upcoming JSON Schema validator |
+| DEC-2026-04-30-007 | `AGENTS.md` Required For Boxes-With-Stewards, Optional For Leaf Boxes (resolves PROB-015 Q2) | active | high | global / architectural | every Box's AGENTS.md presence rule; Box Ledger §Naming Rules; DoD Box-completion gate; LOCAL_TEMPLATE scaffold |
 
-19 active decisions. 0 superseded. 0 deprecated.
+23 active + 1 proposed decisions. 0 superseded. 0 deprecated. (Latest: DEC-2026-05-01-002 (proposed) — Auto/ Symlink Retired; Standalone Folder Dispersal Pattern. Awaiting operator approval on 4 placement rows before dispersal atoms 0006-0011 ship. Prior: DEC-2026-05-01-001 — Phase B Steward Fleet Completion + First `ground_truth_source` Box Class.)
 
 ---
 
 ## 5. Decision Records
+
+### 2026-05-01 (Phase B steward fleet completion era)
+
+#### DEC-2026-05-01-001 — Phase B Steward Fleet Completion + First `ground_truth_source` Box Class
+
+Status: **active**
+Confidence: high
+Scope: global / architectural
+Date: 2026-05-01
+Decider: Cowork session (4 graduation chains shipped end-to-end across multiple parallel agents today; consolidated under this DEC for the architectural commitment)
+Affected systems: all 7 stewards (global_ledger, temporal_continuity, open_problems, file_directory, north_star, atoms, atlas), `_agent_resolve_prompt` helper in `server.py`, every Box Bus subscriber that watches steward emissions, `LEDGERS/BOXES/<box>/` Box family, `CCAgentindex/triggers/atlas_daily_sweep.json`
+Related North Star goals: NS-01 (legibility-above-all — stewards make ledger drift visible), NS-09 (audit-trail-discipline — receipts make every steward run accountable), NS-10
+Related ledgers: PHASE.md (Phase B steward arc complete), GLOBAL_LEDGER.md §3+§6+§12, OPL (PROB-2026-04-30-005 CLOSED, PROB-2026-04-30-015 CLOSED), BOX_LEDGER.md §16 (mature Box shape), BOX_BUS_LEDGER.md §14 (routing model), SOURCE_OF_TRUTH.md §3.0 (Operator-Activity Truth — added by this session)
+Supersedes: none
+Superseded by: none
+
+##### Decision
+
+The Phase B steward graduation arc is complete. **7 stewards are runnable** project-wide:
+
+1. `global_ledger_steward` — legacy path `CCAgentindex/agents/global_ledger_steward/` (live since 2026-04-28; migrated to unified Box `LEDGERS/BOXES/global_ledger/` via ATOM-0044)
+2. `temporal_continuity_steward` — unified Box `LEDGERS/BOXES/temporal_continuity/` (chain ATOM-0028→0031)
+3. `open_problems_steward` — unified Box `LEDGERS/BOXES/open_problems/` (chain ATOM-0032→0035)
+4. `north_star_steward` — unified Box `LEDGERS/BOXES/north_star/` (chain ATOM-0040→0043)
+5. `file_directory_steward` — unified Box `LEDGERS/BOXES/file_directory/` (chain ATOM-0036→0039)
+6. `atoms_steward` — unified Box `LEDGERS/BOXES/atoms/` (Atomizer Steward declarative form)
+7. `atlas_steward` — unified Box `LEDGERS/BOXES/atlas/` (chain ATOM-0107→0110, **first `ground_truth_source` Box class** — distinct from existing `ledger` class)
+
+A new Box class — `ground_truth_source` — is hereby formally introduced. Distinct from `ledger` Boxes (which govern project-internal ledgers) in that it governs an EXTERNAL data source (Pieces MCP daily-folder output at `/Users/jakeaaron/Documents/Atlas/`) read-only. Output: findings flow into other ledgers (PROBs for drift, COMMs for handoff lessons, atom drafts for action suggestions). Trust contract: Atlas wins for what-actually-happened-on-the-operator's-machine; project ledgers win for what-the-system-now-claims.
+
+##### Context
+
+Phase B was the second of three locked phases (per `DEC-2026-04-29-002` Three-Phase Build Discipline). Phase A (build all the ledgers) completed 2026-04-29 (`DEC-2026-04-29-014`). Phase B (build all the sub-agents) is now complete with this fleet shipping. Phase C (build the Subagent Boxes + Reactive Box Network runtime) remains deferred per `DEC-2026-04-29-013`.
+
+The graduation arc validated several patterns:
+- The unified Box pattern (`DEC-2026-04-29-015`) scales — 6 stewards built using the same 6-file shape (box.json + BOX.md + steward/AGENTS.md + steward/prompt.md + steward/config.json + receipts/).
+- The canonical steward path (`DEC-2026-04-30-004`) — `LEDGERS/BOXES/<name>/steward/` — is now the established home for all new stewards.
+- The `_agent_resolve_prompt` helper (added in ATOM-0029) auto-resolves `<box>_steward` agent names to their unified Box paths, collapsing per-route wiring atoms to 5-min helper-verifications.
+
+##### Rationale
+
+- **Stewards are the project's drift-protection layer.** Each steward audits its own ledger for stale-state, missing-status, broken-links, contradicting-claims. Without this fleet, drift accumulated silently — surfaced today by the open_problems_steward's first smoke test (3 duplicate PROB-IDs + 9 missing Status: lines) and the file_directory_steward's first smoke test (3 categories of FDL drift). Both proved the fleet's value within minutes of shipping.
+- **The `ground_truth_source` class addresses a different failure mode.** Steward-of-a-ledger audits are reflexive — they check what the project said about itself. Atlas (operator-actual-machine-activity from Pieces) is *external* — it audits what the project's agents claimed against what actually happened on the operator's machine. That requires a different Box class because the read-only contract, the no-write-into-source rule, and the two-truths reconciliation discipline are all distinct from how `ledger` Boxes operate.
+- **Smoke tests proved zero false positives across 7 chains.** Each steward's first audit_only run produced real findings the project hadn't seen before — none of them were noise, none required reverting. This validates the steward design and the Box pattern for production use.
+
+##### Alternatives Considered
+
+- **Keep stewards in `CCAgentindex/agents/<name>/` (legacy path).** Rejected by `DEC-2026-04-30-004` because the unified Box pattern (`DEC-2026-04-29-015`) makes the steward + its config + its receipts visible in one folder, which is the legibility win.
+- **Treat Atlas as just another `ledger` Box.** Rejected because Atlas isn't a project ledger — it's an external data source. Forcing it into the `ledger` shape would lose the read-only contract and the two-truths reconciliation rule.
+- **Defer Atlas integration until Phase C runtime.** Rejected because the operator (Jake) explicitly named Atlas as ground truth against which all agent ledger writes should be checked. Waiting for Phase C runtime would mean accumulating drift unchecked for an unbounded period.
+
+##### Consequences
+
+- **Drift detection is now infrastructural.** Any agent can dispatch `POST /api/agents/<steward>_steward/run` in audit_only mode and get a structured findings report. The Atlas Sweep Steward fires automatically every morning via cron.
+- **The Box class taxonomy expands to 2.** Future Box classes (e.g., `git_history_box` for `git log` ground truth, `slack_activity_box` for team activity) will follow the same `ground_truth_source` pattern.
+- **PROB-005 closes; the project moves out of "graduating stewards" mode.** The next Phase B work-arc is the architectural buildout (Box Network Architecture per `DEC-2026-04-30-005`, currently 60% through Phase 1).
+- **The atom-protocol rules (COMM-2026-04-30-004/005/006) are the workflow protocol the steward fleet validated in production.** Claim-before-doing, announce-before-doing, P-means-proceed all proved out across the 4 graduation chains.
+
+##### Do Not Undo Casually
+
+- The 7 stewards are referenced from multiple ledger entries, INDEX.md status rows, and the cron trigger. Reverting individual stewards requires updating all those references.
+- The `_agent_resolve_prompt` helper assumes the unified Box path. Removing it without replacement breaks 6 of 7 dispatch paths.
+- The Atlas `ground_truth_source` class introduction has informed the reconciliation pattern that the Atlas Sweep Steward enforces (two truths, both load-bearing). Reverting the class without preserving the reconciliation discipline would undo the drift-protection work.
+- The steward smoke tests produced findings that are now load-bearing reference material (e.g., the file_directory_steward smoke test surfaced 3 categories of FDL drift that the FDL backfill in this same recovery pass closed). Reverting any steward would need to re-find what's been found.
+
+##### Review Triggers
+
+- A new Box class is proposed beyond `ledger` and `ground_truth_source` — review whether the taxonomy itself needs Decisions Ledger formalization (separate DEC).
+- The cron daily sweep produces stale or low-signal output for 30+ days — review the sweep cadence + filter.
+- Phase C runtime lands and the Box Bus router subsumes per-steward dispatch — review whether stewards still need individual endpoints.
+
+##### History
+
+- 2026-05-01 — created. Consolidates the architectural commitment behind 7 steward graduations across 4 chains + the new `ground_truth_source` Box class. Operator-driven (Jake's Phase B push); no individual chain disagreement.
+
+---
+
+#### DEC-2026-05-01-002 — Auto/ Symlink Retired; Standalone Folder Dispersal Pattern (PROPOSED)
+
+Status: **proposed** (awaiting Jake approval before any dispersal atom 0006-0011 ships)
+Confidence: medium-high (placement table is operator's call; the structural pattern is solid)
+Scope: global / cleanup / bedrock-ownership
+Date: 2026-05-01
+Decider: Jake (operator approval gate); Cowork (atomized execution)
+Affected systems: `Auto/` symlink, 6 reverse symlinks under `CCAgentindex/`, `server.py:41-44` AUTO_* constants + ~10 references, `Auto/orchestrator/bin/_lib.py`, `Auto/orchestrator/bin/voice.py`, `Auto/orchestrator/KICKOFF_TODAY.md`, `CLAUDE.md` §2.2 + §3.3, all 28 Client Boxes, 13 Staff Boxes, comeketo-inbox skill bundle, orchestrator runtime, loose Auto/ files (CIA.txt, QuoteMaker.jsx, voice profiles, venue index, ballpark template, Hugodemo, aborted Auto/Boxes/ reorg)
+Related North Star goals: NS-01 (legibility-above-all), NS-03 (bedrock owns app state), NS-05
+Related ledgers: PROB-2026-05-01-001 (parent — reverses PROB-2026-04-28-016 closure), COMM-2026-05-01-002 (coordination warning), DEPRECATION.md §7 (snapshot contract), FILE_DIRECTORY_LEDGER.md §3 + §4.1
+Supersedes: PROB-2026-04-28-016 closure rationale (the symlink-only approach)
+Superseded by: none
+
+##### Decision (proposed)
+
+The `Auto/` symlink at `/Users/jakeaaron/Downloads/CC Agent/Auto/` (which points to `/Users/jakeaaron/Desktop/Auto/`) is retired. Its contents disperse into the project tree per the placement table below. The 6 reverse symlinks under `CCAgentindex/` (`Boxes`, `Client Boxes`, `Staff Boxes`, `comeketo-inbox`, `Onboard Scripts`, `orchestrator`) each become real folders or new aliases per the new home — no more double-indirection.
+
+**Placement table (operator-revisable).** Each row carries a `decision` field that Jake confirms (or revises) before the corresponding move atom ships:
+
+| Source (under `Auto/`) | Proposed home | Decision |
+|---|---|---|
+| `Client Boxes/` (28 boxes + ledger context) | **REVISED 2026-05-01:** Zipped archive at `<beta-test-path-TBD>` per ATOM-2026-05-01-0013 (Beta-Test Isolation). Frozen reference snapshot for the duration of the beta-test phase, NOT the live read/write surface. Restored to canonical home (`CCAgentindex/client_boxes/`) post-beta-test cutover. See COMM-2026-05-01-003. | **superseded by COMM-2026-05-01-003 — operator pivot to fake-Close training ground** |
+| `Staff Boxes/` (13 dirs) | `CCAgentindex/staff_boxes/` OR fold into `CCAgentindex/people/` with `kind: coworker` | **proposed — Jake decision needed** |
+| `comeketo-inbox/` (skill bundle) + `comeketo-ballpark-email-template.html` | `CCAgentindex/comeketo_inbox/` (consolidate template under `templates/`) | **proposed** |
+| `orchestrator/` | `CCAgentindex/orchestrator/` (preserves `bin/` → parent shape; `_lib.py` constant renames to `BEDROCK`) | **proposed** |
+| `Boxes/` (aborted reorg duplicating comeketo-inbox + orchestrator) | DEPRECATE → `_deprecated/Auto_Boxes/` (already named in PROB-2026-04-28-012) | **proposed** |
+| `Hugodemo/` (28-entry demo Client Box) | DEPRECATE OR fold into `Client Boxes/Hugo Casillas/` if real data | **proposed — Jake decision needed** |
+| `Onboard Scripts/` (26 files) | LEAVE IN PLACE per operator directive 2026-05-01 | **confirmed by operator** |
+| `CIA.txt` (planning doc) | `LEDGERS/Drafts/CIA_atomic_deliverables_map.md` | **proposed** |
+| `Comeketo_Voice_Profiles.md` | `CCAgentindex/voice_profiles/` OR `LEDGERS/Drafts/` | **proposed** |
+| `Comeketo_Venue_Index_2026-04-25.xlsx` | `CCAgentindex/venues/_index_2026-04-25.xlsx` (timestamped reference snapshot) | **proposed** |
+| `QuoteMaker.jsx` (60 KB) | **Jake decision needed** — active code (integrate) vs stale (deprecate)? | **proposed — Jake decision needed** |
+| `comeketo-inbox.skill` | DEPRECATE — duplicates installed plugin in `~/.claude/plugins/` | **proposed — confirm with Jake** |
+| `.gitignore` + `.claude/` + `.DS_Store` | discard or relocate as appropriate | **proposed** |
+
+##### Context
+
+The original PROB-2026-04-28-016 closed via 6-symlink approach on 2026-04-28 to preserve active scheduled fires + Brenda's seven-day cadence. Two structural concerns at the time: (a) live automations couldn't tolerate a content-migration window; (b) the heavyweight migration was deferred ("Wednesday with Opus"). The symlink papered over the bedrock-ownership concern (NS-03) without resolving it.
+
+**Conditions changed 2026-05-01:**
+- Operator paused all automations.
+- The seven-day cadence concern is no longer load-bearing (Brenda's plan completed; new cadences are not running).
+- The `Auto/` folder accumulated drift: aborted reorg (`Auto/Boxes/`), demo Client Box (`Auto/Hugodemo/`), loose planning docs without a home, and the `comeketo-inbox.skill` file that's redundant with the installed plugin.
+- Operator surfaced the directory chaos as "tainting" cleaner work being done elsewhere.
+
+##### Rationale
+
+- **NS-03 says bedrock owns app state.** The symlink violated this by aliasing app state out of bedrock. Real folders inside bedrock satisfy NS-03 directly.
+- **No double-indirection.** Today's tree has `CCAgentindex/Client Boxes` → `../Auto/Client Boxes/` → `/Users/jakeaaron/Desktop/Auto/Client Boxes/`. That's two hops. Real folders are zero hops.
+- **Operator paused automations explicitly to enable this cleanup.** The original blocker is gone.
+- **Snapshot-before-move (DEPRECATION.md §7) protects against accidental loss.** The `_snapshots/manual/` archive captures the pre-dispersal state; recovery is one `unzip` away if anything breaks.
+- **Atomized execution prevents bundled risk.** Each child moves in its own atom with its own verification. A regression in any single atom rolls back to the snapshot without losing the others' progress.
+
+##### Alternatives Considered
+
+- **A — Keep the symlink (status quo).** Rejected: operator surfaced directory chaos, automations paused = blocker gone.
+- **B — Move everything into `CCAgentindex/auto/` as a single subdir.** Rejected: replaces one symlink-y wrapper with another. NS-03 says state owns its place in the tree, not nested under a generic `auto/` folder.
+- **C — Restructure into bedrock domains** (Client Boxes become `CCAgentindex/people/<slug>/box/`). Considered. Largest blast radius (touches loader, schemas, render_lead, BoxesScreen). Deferred — the placement table above mirrors current shape, which is the safer first move. Restructure into people/ taxonomy can come as a follow-up DEC after the dispersal lands.
+- **D — Per-child placement table (this DEC).** Selected. Each row is operator-revisable; the structural pattern (real folders inside bedrock; snapshot-before-move; atom-per-child) is the durable part.
+
+##### Consequences
+
+- 11-atom dispersal chain (ATOM-2026-05-01-0001..0011) executes per `LEDGERS/ATOMS.md` §10.5.
+- `server.py` AUTO_* constants rename to bedrock-relative paths (no more `HERE / "Auto"`); ~10 downstream references update with them.
+- `_lib.py:25-27` constant rename (`AUTO` → `BEDROCK`) for clarity post-move; semantics unchanged because `bin/` → parent shape preserved.
+- `KICKOFF_TODAY.md` ~30 absolute paths update.
+- `CLAUDE.md` §2.2 read-first table + §3.3 alias section retire; new canonical paths land.
+- `_snapshots/manual/snapshot_2026-05-01_<HHMM>_manual_pre_auto_dispersal.zip` becomes the recovery archive referenced from the eventual Deprecation entry.
+- Any Jake-decision rows above flip from `proposed — Jake decision needed` to `confirmed` before the corresponding move atom ships.
+- PROB-2026-05-01-001 closes when all 11 atoms complete + the symlink is unlinked + the FDL §3/§4.1 reflect the new tree shape.
+
+##### Do Not Undo Casually
+
+Do not restore the `Auto/` symlink without a new DEC explaining why. The reverse migration would require recovering `~/Desktop/Auto/` from the snapshot archive AND re-introducing the double-indirection pattern. If operator workflow needs the desktop folder back for some new reason, that's a fresh PROB + DEC, not a casual revert.
+
+##### Review Triggers
+
+- Operator revises the placement table — re-author this DEC with the corrected mappings before any move atom ships.
+- A new automation needs `~/Desktop/Auto/` paths — surface as PROB; do NOT casually restore the symlink.
+- The `_snapshots/manual/` snapshot fails integrity check — pause the chain, surface the failure to operator, do not unlink Auto/.
+
+##### History
+
+- 2026-05-01 — created (status: proposed) by ATOM-2026-05-01-0001. Placement table above is the proposal-for-approval; rows marked `proposed — Jake decision needed` block the corresponding move atoms until operator confirms.
+- 2026-05-01 (later) — **Client Boxes row REVISED via ATOM-2026-05-01-0012.** Operator pivoted to fake-Close training ground for beta-test isolation: real Client Boxes go to zipped archive (frozen reference) instead of dispersal to canonical bedrock home; fake-Close instance becomes primary inbox source for beta; scheduled automations formally retire. ATOM-2026-05-01-0013 (PROB-2026-05-01-002 Beta-Test Isolation) authors the parent PROB and atomizes the beta-test infrastructure scope. ATOM-0006 (move Client Boxes) is on hold pending revised placement. ATOMs 0008 (comeketo-inbox bundle), 0009 (orchestrator), 0010 (loose files) remain valid scope. See COMM-2026-05-01-003 for operator-pivot rationale + de-risking discipline ("don't refactor storage layer and learn runtime simultaneously").
+
+---
 
 ### 2026-04-28 (Phase 1–5 ledger buildout era — foundational decisions)
 
@@ -1472,6 +1639,283 @@ Concretely:
 ##### History
 
 - 2026-04-30 — created. Resolved `ATOM-2026-04-30-0027` (the architectural-gate atom blocking 16 promotion atoms in PROB-005). Companion follow-on atom `ATOM-2026-04-30-0044` authored for `global_ledger_steward` migration. The first atom in the project to be claimed and completed under the new claim protocol — proves the protocol works end-to-end.
+
+---
+
+---
+
+#### DEC-2026-04-30-005 — Box = Ledger + Rules + Sub-agent + Config + Receipts (Box Network Architecture target primitive)
+
+Status: **active**
+Confidence: high
+Scope: global — architectural lock that names the **fused primitive** every future Box must converge toward, and binds the Phase 1-8 build path described in `LEDGERS/Drafts/box_network_architecture_scaffold.md`
+Tier (Box Bus): global
+Decided: 2026-04-30
+Decided by: Jake (orchestrator) + Codex (scaffold co-author) + Claude (Cowork lock)
+Affected systems: every Box project-wide (ledger Boxes, Client Boxes, Staff Boxes, page Boxes, automation Boxes, leaf Boxes — current count: 6 unified ledger Boxes + 28 Client + 10 Staff + planned page/automation); every project-level ledger (currently 19 active); every sub-agent (currently 5 ledger stewards runnable + 2 operational sub-agents); the planned Box Bus runtime; every CLAUDE.md and `AGENTS.md` across the project; the entire bedrock structure under `CCAgentindex/`
+Related North Star goals: NS-01 (legibility above all), NS-02 (file-tree-first), NS-03 (single source of truth), NS-09 (audit trail discipline), NS-10
+Related ledgers: `LEDGERS/Drafts/box_network_architecture_scaffold.md` (source artifact), `LEDGERS/BOX_LEDGER.md`, `LEDGERS/BOX_BUS_LEDGER.md`, `LEDGERS/SOURCE_OF_TRUTH.md`, `LEDGERS/DEFINITION_OF_DONE.md`, `LEDGERS/DECISIONS_LEDGER.md` (this entry), `LEDGERS/ATOMS.md`, `LEDGERS/OPEN_PROBLEMS_LEDGER.md` (PROB-2026-04-30-015 = parent of all decomposition atoms)
+Depends on: `DEC-2026-04-29-001` (triad spine — Box+Ledger+Sub-agent as separate primitives), `DEC-2026-04-29-013` (Reactive Box Network is target architecture, runtime deferred), `DEC-2026-04-29-015` (unified Box pattern), `DEC-2026-04-30-004` (canonical steward path)
+Refines: `DEC-2026-04-29-001` — the triad's three primitives are now declared to **fuse** into one mature primitive, not stay loose neighbors
+Completes: `DEC-2026-04-29-015` — the unified Box pattern is now extended from "ledger Boxes" to **every** stateful entity in the project
+Supersedes: none — refines and extends existing architectural decisions; does not replace them
+Superseded by: none
+
+##### Context
+
+The project has been authoring Boxes, Ledgers, and Sub-agents as **related-but-separate primitives** since `DEC-2026-04-29-001` (triad spine) named them. The triad worked: every stateful thing got all three. But the three remained structurally separate — a Box was a folder, a Ledger was a file, a Sub-agent was a config + prompt elsewhere.
+
+The Box Network Architecture scaffold (Jake + Codex synthesis, 2026-04-30, preserved at `LEDGERS/Drafts/box_network_architecture_scaffold.md`) proposes the **fused primitive**: every mature Box is **all three at once** — a stateful memory object with an operating contract, a steward that operates it, configuration that governs access, ledger files that record its state, and receipts that prove what happened.
+
+The scaffold's working thesis: **a Box is not a folder. A Box is a stateful memory object with an operating contract.** Access is governed. When any agent enters a Box, it enters through local instructions, declared source-of-truth rules, routing subscriptions, interpreter rules, and append-only receipt discipline. The directory stops being passive storage. It becomes a **governed object** in the system.
+
+Three pieces of evidence the architecture was already half-written before today:
+
+1. **Two unified Boxes already exist** — `LEDGERS/BOXES/temporal_continuity/` and `LEDGERS/BOXES/atoms/` were authored under `DEC-2026-04-29-015` and demonstrate the pattern at the ledger level.
+2. **Six unified Boxes operational by end of today** — temporal_continuity, atoms, open_problems, north_star, file_directory, global_ledger (the last migrated via `ATOM-2026-04-30-0044`).
+3. **The atomization protocol works** — 18 atoms shipped today across multiple parallel sessions without a single collision, proving that bounded stateful objects with declared behavior can be operated in parallel by independent agents.
+
+The scaffold extends this from a working pattern at the ledger tier to the **entire bedrock**: every stateful surface (clients, staff, pages, automation, intelligence outputs) becomes a Box. The Box Bus runtime (deferred per `DEC-2026-04-29-013`) becomes the substrate that turns the file tree into a reactive network.
+
+##### Decision
+
+**The mature primitive of the Comeketo Agent project is the fused Box: Box = Ledger + Rules + Sub-agent + Config + Receipts.**
+
+Concretely:
+
+- **A Box is a stateful memory object with an operating contract.** Not a passive folder; a governed object.
+- **The mature Box shape** (per scaffold §2): `BOX.md` (human orientation), `box.json` (machine manifest), `LEDGER.md` + `LEDGER.json` (when ledger applicable), `AGENTS.md` (local law, when behavior differs from defaults), `steward/{prompt.md, config.json, skills/}` (runnable operator), `receipts/` (proof of work), `inbox/`, `outbox/` (Box Bus surfaces — physical or virtual per the resolution of Q5).
+- **Authority tiers** (per scaffold §3): Tier 0 Constitutional (Global Ledger, SoT, North Star, Decisions, DoD, Box Bus) → Tier 1 Coordination (TCL, Communications, Open Problems, Atoms, Deprecation, Phase) → Tier 2 Domain (Client/Staff Boxes domain, Automation, Intake, Analytics, Connections, Guardrails) → Tier 3 Leaf (one client, one venue, one widget, one scheduled-fire). Tier is **structural**, not status.
+- **Trickle-down is filtered inheritance** (per scaffold §4): a Box receives only the global rules that affect it + the domain rules that affect it + the local records it owns + the interpreted consequences it needs to act safely. Every cross-Box state propagation has a source, an interpreter, a destination, and a receipt.
+- **Interpreters are first-class** (per scaffold §5): T1 deterministic mappers (~80%), T2 small-LLM templates (~15%), T3 full sub-agent stewards (~5%). Default is T1.
+- **The Box graph is declared** (per scaffold §6): every Box's `box.json` declares both `subscribes[]` (inbound — what events from upstream Boxes affect me?) and `emits[]` (outbound — what events do I produce that other Boxes may subscribe to?).
+- **Every meaningful flow is representable as Source → Interpreter → Destination** (per scaffold §7). No invisible magic. Every flow has a receipt.
+
+The decision binds:
+- **Phase 1-8 build path** (per scaffold §9): the path from current state to the fully-realized network is decomposed into 58 atoms under `PROB-2026-04-30-015`. This DEC authorizes that build.
+- **Definition of Done For The Architecture** (per scaffold §10): six categories — Conceptual / Filesystem / Routing / Agent / Runtime / Safety / Maintenance. Atoms 0098-0102 verify each.
+- **8 Open Questions** (per scaffold §12): each is a real architectural sub-decision. Atoms 0048-0055 resolve them. They are flagged as **review triggers** for THIS DEC — if any open question's resolution contradicts the fusion model, the system surfaces this DEC for review.
+
+##### Alternatives Considered
+
+- **Path A: Keep separate (triad as loose neighbors)** — rejected. The triad spine (`DEC-2026-04-29-001`) already named the three pieces but left them structurally split. Two days of working with the unified Box pattern (`DEC-2026-04-29-015`) at the ledger tier proved the **fused** primitive is materially more legible: agents read one folder and find the contract, the operator, the state, and the audit trail in one place. Splitting them again forces every agent to remember which folder holds which piece.
+- **Path B: Fuse only stewards (Box + sub-agent only; ledger files stay separate)** — rejected. This is the *current* state for ledger Boxes (per `DEC-2026-04-29-015`: ledger files stay at `LEDGERS/<name>.md` and the Box governs by reference). It works for ledgers because every ledger has exactly one canonical file. But Client Boxes have many files (`01_comms.md`, `01b_comms_verbatim.md`, `comms/`, `client_ledger.md`, etc.) — there is no single canonical "ledger file" to reference. The fused primitive treats the *Box itself* as the unit of state, with its files as components. This works for both single-file (ledger) and multi-file (client / staff / automation) Boxes.
+- **Path C: Defer to Phase C runtime (architecture-then-build)** — rejected. The scaffold itself proves the architecture is half-written already. Authoring the lock now means agents from this point forward author Boxes IN the fused shape, not against an inferior pattern that has to migrate later. Per DEC-2026-04-29-013, runtime is deferred but **schema is canonical**. This decision codifies the schema.
+- **Path D: Adopt the scaffold as authored, without further architectural commitment** — rejected. The scaffold is a synthesis/proposal per its own framing — "not yet a binding Decision." 8 Open Questions sit unresolved. Adopting without locking the central commitment leaves the architecture conditional. This DEC locks the fusion thesis; Q1-Q8 land separately as DEC-2026-04-XX-XXX entries (atoms 0048-0055), refining details under the locked thesis.
+
+##### Consequences
+
+- **The Phase 1-8 build path activates.** All 58 atoms under PROB-015 become live work, sequenced via dependency graph. Foundation (3) → Open Questions (8) → Phase 1 (5) → Phase 2-8 cascading.
+- **`BOX_LEDGER.md` gains the mature Box shape definition** (Phase 1.1 / `ATOM-2026-04-30-0056`). The Box concept evolves from "directory orientation" to "governed object."
+- **`BOX_BUS_LEDGER.md` gains the source/interpreter/destination model** (Phase 1.2 / `ATOM-2026-04-30-0057`). Routing becomes formal.
+- **`DEFINITION_OF_DONE.md` gains a Box-completion gate** (Phase 1.3 / `ATOM-2026-04-30-0058`). Six sub-gates — Conceptual / Filesystem / Routing / Agent / Runtime / Safety / Maintenance — each must be verifiable.
+- **`SOURCE_OF_TRUTH.md` gains the authority-tier framing** (Phase 1.4 / `ATOM-2026-04-30-0059`). Tier 0/1/2/3 becomes orthogonal to per-domain trust orderings.
+- **`LEDGERS/LOCAL_TEMPLATE/BOX_LEDGER_TEMPLATE.md` updates** to scaffold the full mature shape. New Boxes get the right structure on day 1 (Phase 2 / `ATOM-2026-04-30-0061`).
+- **A Box scaffold script ships** (Phase 2.2 / `ATOM-2026-04-30-0062`). Authoring a new Box becomes mechanical instead of improvisational.
+- **Every existing ledger gains a unified Box** (Phase 3 / `ATOM-2026-04-30-0067..0073`). 6 already exist; ~9 remaining ledgers get Boxes.
+- **Every Box's `box.json` declares its graph membership** (Phase 4 / `ATOM-2026-04-30-0074..0079`). The system can answer "if this Box changes, who needs to know?"
+- **Three real interpreters land** (Phase 5 / `ATOM-2026-04-30-0080..0085`). Atomizer Steward T3 (per Q4 priority), Allowed-To-Know T3 (closes PROB-001 fully), Page-Asset T2.
+- **The Box Bus runtime ships** (Phase 6 / `ATOM-2026-04-30-0086..0093`). One real cross-Box envelope delivered with receipt = Phase 6 done.
+- **Operational surfaces migrate** (Phase 7 / `ATOM-2026-04-30-0094..0097`). Hugo Casillas Client Box first per Q6.
+- **The system becomes self-maintaining** (Phase 8 / `ATOM-2026-04-30-0098..0102`). Drift monitors, stale-claim sweepers, shape validators, conflict audits. Architecture-Done declared at `ATOM-2026-04-30-0102`.
+- **Every CLAUDE.md and AGENTS.md eventually updates** to reflect "you are entering a Box." Mechanical contract per Q8.
+- **Future PROBs decompose into atoms automatically** via the Atomizer Steward (Phase 5.4) once it ships.
+- **Parallel-work substrate compounds** beyond the ledger tier. The 18-atom-shipped-today proof scales to client/page/automation work.
+
+##### Do Not Undo Casually
+
+- **Don't reverse without an explicit superseding DEC.** This is the architectural lock for the entire Phase 1-8 build. Reversing means re-litigating an architecture Jake spent significant time synthesizing with Codex, plus invalidating 58 in-flight atoms.
+- **Don't fragment the fused primitive.** The whole point is one home for the triad. Adding "but the steward lives elsewhere" or "but the ledger lives elsewhere" anti-patterns reintroduces the friction this DEC resolves.
+- **Don't treat the scaffold as superseded.** The scaffold (`LEDGERS/Drafts/box_network_architecture_scaffold.md`) is the **source artifact** — preserve it for historical reference. As pieces promote into canonical ledgers (per Phase 1 atoms 0056-0060), append a "Promotions Log" to the scaffold rather than deleting sections.
+- **Don't act on Phase 1+ atoms before their dependencies land.** The dependency graph is real. Authoring `BOX_LEDGER` mature shape (Phase 1.1) without first resolving Q5 (inbox/outbox physical-vs-virtual) bakes in defaults that get reversed.
+- **Don't auto-close PROB-2026-04-30-015 when atoms complete.** PROB closure is human-or-steward review per the steward doctrine. Atom 0102 surfaces PROB-015 for closure; closure is the human's call.
+
+##### Review Trigger
+
+This DEC has 8 explicit review triggers — one per Open Question (scaffold §12). If any of these resolve in a way that contradicts the fusion model, surface this DEC for review:
+
+1. **Q1** (atoms 0048): If "ledger files inside Box" wins (rather than "governed by reference"), the fusion model needs to reflect file-relocation semantics.
+2. **Q2** (atoms 0049): If "every Box must have local AGENTS.md" wins, the mature shape becomes stricter.
+3. **Q3** (atoms 0050): If the minimum viable `box.json` schema is meaningfully larger than current declarative form, Phase 4 graph definition gains weight.
+4. **Q4** (atoms 0051): If Page-Asset interpreter wins as first (rather than Atomizer Steward), the parallel-work compounding curve shifts.
+5. **Q5** (atoms 0052): If "physical inbox/outbox folders now" wins, every Box gets new mandatory subdirectories.
+6. **Q6** (atoms 0053): If Page Box or Automation wins as first migration (rather than Client Box), the migration template's shape tilts.
+7. **Q7** (atoms 0054): UI tier visualization may surface a new constraint on how authority is enforced.
+8. **Q8** (atoms 0055): "Entering a Box" mechanical contract may force CLAUDE.md (project) restructuring beyond what's anticipated.
+
+Other review triggers:
+- Phase 6 runtime experience reveals the fusion creates more friction than legibility (e.g., interpreter chains become too long, receipts grow unbounded, cycle detection refuses cases that should be allowed).
+- A regulatory or compliance requirement appears that mandates strict separation of concerns between state, behavior, and configuration.
+- The 4h granularity rule (per Atom Ledger) starts producing atoms that can't be sized because the fused primitive's surface is too large for one session — would suggest decomposing the primitive.
+
+##### History
+
+- **2026-04-30** — created. Authored as Foundation atom 2 of 3 in PROB-2026-04-30-015's decomposition pass. Triggered by Jake delivering the Box Network Architecture scaffold (Codex co-author) earlier the same day. Locks the architectural commitment that fuses Box + Ledger + Sub-agent into one mature primitive. Companion atoms: ATOM-2026-04-30-0045 (scaffold + PROB foundation, completed) + ATOM-2026-04-30-0047 (COMM handoff, follows). All 58 atoms in PROB-015 derive their authority from this DEC.
+
+---
+
+---
+
+#### DEC-2026-04-30-006 — Minimum Viable `box.json` Schema For Phase B (resolves PROB-015 Q3)
+
+Status: **active**
+Confidence: high
+Scope: global — architectural lock for the manifest format every Box must satisfy from Phase B onward; pins Phase B vs Phase C field requirements
+Tier (Box Bus): global
+Decided: 2026-05-01
+Decided by: Jake (P-method delegation) + Claude (Cowork)
+Affected systems: every existing `box.json` (5 in `LEDGERS/BOXES/<name>/`: temporal_continuity, atoms, global_ledger, file_directory, atlas) + every future Box manifest; `LEDGERS/BOX_BUS_LEDGER.md` §2.1 (manifest schema section); `LEDGERS/scripts/box_graph_validate.sh` (Phase 4.1 validator); the JSON Schema validator candidate in Phase 4
+Related North Star goals: NS-01 (legibility), NS-02 (file-tree-first), NS-03 (single source of truth)
+Related ledgers: `LEDGERS/BOX_BUS_LEDGER.md`, `LEDGERS/BOX_LEDGER.md`, `LEDGERS/Drafts/box_network_architecture_scaffold.md` (§12 Q3), `LEDGERS/ATOMS.md` (ATOM-2026-04-30-0050 = the question; ATOM-2026-04-30-0057 / ATOM-2026-04-30-0072 = consumers)
+Depends on: `DEC-2026-04-29-013` (Reactive Box Network — schema canonical, runtime deferred), `DEC-2026-04-29-015` (unified Box pattern), `DEC-2026-04-30-005` (Box-Ledger-Sub-agent fusion is target primitive)
+Resolves: PROB-2026-04-30-015 Q3 (one of 8 Open Questions)
+Supersedes: none — pins what was previously implicit
+Superseded by: none
+
+##### Context
+
+Per `DEC-2026-04-30-005`, every mature Box carries a `box.json` manifest. Five exist today (`temporal_continuity`, `atoms`, `global_ledger`, `file_directory`, `atlas`) and they vary in shape — the union of their top-level keys is 25 fields, but no two manifests have the same set. Some carry `migration_atom` and `promotion_atom`; others don't. Some have `does_not_own`; others don't. Some declare `canonical_path_decision`; others reference it implicitly.
+
+This drift is acceptable in Phase A (manifests as illustrative) but becomes a problem at Phase 4 (when graph validation must run against every Box) and at Phase 6 (when the runtime reads manifests at dispatch time). The scaffold §12 Q3 asks: **what's the minimum every Phase B `box.json` must declare, before runtime arrives?**
+
+##### Decision
+
+**Phase B `box.json` minimum schema** — 9 required + 5 strongly-recommended + 3 runtime-only (Phase C):
+
+**Required (9) — every Box must declare these, validation refuses anything missing:**
+
+| Field | Type | Description |
+|---|---|---|
+| `id` | `"<kind>_box:<slug>"` | Stable identifier. `kind` from §3 below; `slug` matches the directory basename. |
+| `slug` | string | Directory basename, lowercase, snake_case. |
+| `kind` | one of `["ledger","client","staff","page","automation","intake","analytics","connections","leaf"]` | Per scaffold §3 authority tier mapping. |
+| `name` | string | Human-readable name for `BOX.md` headers. |
+| `version` | string (semver) | Manifest schema version. Phase B = `"1"`. |
+| `tier` | one of `["global","domain","local"]` | Authority tier per `SOURCE_OF_TRUTH.md` §X (Phase 1.4 / `ATOM-2026-04-30-0059`). |
+| `status` | one of `["draft","active","deprecated","archived"]` | Box's own lifecycle, not its content. |
+| `owns` | array of paths | Files/directories this Box governs. Read by validators + steward agents. |
+| `source_of_truth` | object with `primary` (path) + `structured_mirror` (path or null) + `generated` (array) | Per `SOURCE_OF_TRUTH.md` per-domain trust ordering. |
+
+**Strongly-recommended (5) — required for stewards-with-runnable-form, optional otherwise:**
+
+| Field | Type | Description |
+|---|---|---|
+| `agent_config` | object | Steward dispatch config: `package_path`, `agents_md`, `config_json`, `prompt_md`, `dispatch_planned` (HTTP route), `runnable_form_path_planned` (legacy or unified). Required if Box has a steward. |
+| `created_on` | ISO8601 date | When the Box was authored. |
+| `unified_box_pattern_decision` | string (DEC ID) | Pointer to the DEC that authorizes this Box's structure. Currently `"DEC-2026-04-29-015"` for ledger Boxes. |
+| `phase_status` | object | Per-phase status: `phase_a` / `phase_b` / `phase_c` strings describing where this Box is in the build path. |
+| `related_ledgers` | array of strings | Cross-references to other ledgers/Boxes (informational; not used for routing). |
+
+**Runtime-only (3) — Phase C fields that are OPTIONAL during Phase B (declarative form only) and BECOME REQUIRED at Phase C runtime activation:**
+
+| Field | Type | Description |
+|---|---|---|
+| `subscribes` | array of subscription objects | Inbound graph edges. Each entry: `source` (Box id or ledger name), `scope` (filter expression), `interpreter` (T1/T2/T3), `write_target` (where the interpreted result lands), `phase_c_note` (optional — describes deferred behavior). |
+| `emits` | array of emission objects | Outbound graph edges. Each entry: `target` (downstream Box id or ledger), `on_event` (event name), `interpreter` (T1/T2/T3), `requires_receipt` (boolean), `phase_c_note` (optional). |
+| `envelope_v` | string | Box Bus envelope version. Phase B = `"1"`. |
+
+**Validation rules:**
+
+1. **Required fields are validated by `LEDGERS/scripts/box_graph_validate.sh`** (Phase 4.1 / `ATOM-2026-04-30-0074`). Missing required field → validation refuses; activity ledger gains a `box_manifest_invalid` line.
+2. **JSON Schema file** lives at `LEDGERS/BOXES/box_bus/registry/box.schema.json` (Phase 6.2 / `ATOM-2026-04-30-0087`). Phase B form encodes the 9 required + 5 recommended + 3 runtime-optional. Phase C form flips the 3 runtime fields to required.
+3. **Existing manifests are grandfathered** until Phase 4.1 runs. The validator's first pass produces a per-Box gap report; ATOM-2026-04-30-0074 brings every existing Box into compliance.
+4. **Field naming is canonical.** `subscribes` (not `subscriptions`), `emits` (not `emissions`), `owns` (not `ownership`). The 5 existing manifests already use these names; locking them now prevents renames later.
+5. **Optional fields beyond this set are allowed** — manifests may carry `does_not_own`, `migration_atom`, `promotion_atom`, `history`, `ledger_local`, `structure`, etc. The schema validator IGNORES unknown fields (extension-friendly).
+
+##### Alternatives Considered
+
+- **Path A: Loose schema (no validation, manifests vary)** — rejected. Drift across 5 existing manifests is already noticeable; allowing more drift makes Phase 4 graph validation impossible because the validator wouldn't know which fields to read.
+- **Path B: Maximum schema (every observed field becomes required)** — rejected. Forces every Box to declare 25 fields. Most Boxes don't need `migration_atom` or `promotion_atom`. Bloats the manifest format and creates mandatory boilerplate.
+- **Path C: Phase B = bare minimum (id + slug + kind only); Phase C = full schema** — rejected. Too thin. `owns[]` is needed for ledger validators NOW (the file_directory steward already uses it). `source_of_truth` is needed for SoT audits (Phase 8.3 / `ATOM-2026-04-30-0100`).
+- **Path D: Defer Q3 entirely until Phase C** — rejected per Atom Ledger anti-pattern (Open Questions held indefinitely undermine the architecture). Resolving now means Phase 1.2 / `ATOM-0057` (Box Bus Ledger update) and Phase 4.1 / `ATOM-0072` (subscribes/emits population) can both proceed with concrete spec.
+
+##### Consequences
+
+- **Box Bus Ledger §2.1 updates** (Phase 1.2 / `ATOM-2026-04-30-0057`) to encode this 9+5+3 schema explicitly with examples.
+- **Phase 4.1 graph validation script** (`ATOM-2026-04-30-0074`) takes this schema as its input contract. Running it against the 5 existing Boxes will produce a gap report; the same atom brings them into compliance.
+- **JSON Schema file ships in Phase 6.2** (`ATOM-2026-04-30-0087`), giving the runtime a deterministic validator before delivery.
+- **Existing Box authoring discipline** doesn't change much — the 5 existing manifests already declare 7-9 of the 9 required fields. Most just need to add a missing `tier` or `status` field to comply.
+- **Future Box authoring** (per `LEDGERS/LOCAL_TEMPLATE/BOX_LEDGER_TEMPLATE.md`, updated in Phase 2.1 / `ATOM-2026-04-30-0061`) becomes mechanical: author from template, fill 9 required + 5 recommended, leave 3 runtime fields as `[]` until Phase C.
+- **Phase 4.1 / 4.2 (subscribes/emits + authority tier registry)** can proceed with confidence that every Box manifest will have a parseable `tier` field and a declarable graph topology.
+
+##### Do Not Undo Casually
+
+- **Don't shrink the required set.** The 9 fields are the minimum that makes Phase 4 validation work. Removing any of them re-creates the drift problem.
+- **Don't promote the 3 runtime fields to required during Phase B.** That breaks the "schema canonical, runtime deferred" contract from `DEC-2026-04-29-013`. Existing Boxes don't have populated `subscribes[]`/`emits[]` yet — that's Phase 4.1's job.
+- **Don't rename canonical fields.** `subscribes` / `emits` / `owns` are locked. Renaming requires a new DEC superseding this one.
+- **Don't loosen the validator.** The point of pinning the minimum is enforcement at Phase 4. If validation gets soft, drift returns.
+
+##### Review Trigger
+
+- Phase 4.1 graph validation reveals a field that's universally needed but isn't in the required set (likely candidate: `created_on` promoting from recommended → required).
+- Phase 6 runtime experience surfaces a field the schema doesn't capture (likely candidate: explicit `agent_dispatch_url` for non-default routes).
+- The 4h granularity rule produces atoms that can't be sized because manifest authoring takes too long under this schema (would suggest the recommended set is too heavy).
+- A new Box kind appears that doesn't fit the 9 enumerated `kind` values (would expand the enum, not the field set).
+
+##### History
+
+- **2026-05-01** — created. Resolved `ATOM-2026-04-30-0050` (Q3 of 8 Open Questions in PROB-2026-04-30-015). Authored under Jake's P-method push. Surveys the 5 existing `box.json` manifests for shared structure; pins 9 required + 5 recommended + 3 runtime-only fields. Unblocks `ATOM-2026-04-30-0057` (Phase 1.2 Box Bus Ledger update) and `ATOM-2026-04-30-0072` (Phase 4.1 subscribes/emits population). Companion atom for the same Q-resolution path: `ATOM-2026-04-30-0049` (Q2 AGENTS.md required vs optional) — should resolve next under same pattern.
+
+---
+
+---
+
+#### DEC-2026-04-30-007 — `AGENTS.md` Required For Boxes-With-Stewards, Optional For Leaf Boxes (resolves PROB-015 Q2)
+
+Status: **active**
+Confidence: high
+Scope: global — architectural lock for `AGENTS.md` presence in every Box
+Tier (Box Bus): global
+Decided: 2026-05-01
+Decided by: Jake (P-method) + Claude (Cowork)
+Affected systems: every existing and future Box's `AGENTS.md` (or `steward/AGENTS.md`); `LEDGERS/BOX_LEDGER.md` §Naming Rules (Phase 2.3 / `ATOM-2026-04-30-0063`); `LEDGERS/DEFINITION_OF_DONE.md` §X Box-completion gate (Phase 1.3 / `ATOM-2026-04-30-0058`); `LEDGERS/LOCAL_TEMPLATE/BOX_LEDGER_TEMPLATE.md` (Phase 2.1 / `ATOM-2026-04-30-0061`)
+Related ledgers: `LEDGERS/Drafts/box_network_architecture_scaffold.md` (§2 + §12 Q2), `LEDGERS/BOX_LEDGER.md`, `LEDGERS/DEFINITION_OF_DONE.md`, `LEDGERS/ATOMS.md` (ATOM-2026-04-30-0049 the question)
+Depends on: `DEC-2026-04-30-005` (Box-Ledger-Sub-agent fusion), `DEC-2026-04-30-006` (box.json minimum schema)
+Resolves: PROB-2026-04-30-015 Q2
+
+##### Decision
+
+**`AGENTS.md` placement rule:**
+
+| Box class | `AGENTS.md` requirement |
+|---|---|
+| **Boxes WITH a steward** (ledger Boxes, automation Boxes, intake/analytics/connections Boxes — anything that runs autonomous behavior) | **REQUIRED** at `<box>/steward/AGENTS.md` (declarative scope for the steward). Encodes local law that the steward enforces. |
+| **Boxes WITHOUT a steward but WITH local rules different from upstream defaults** (e.g., a Client Box with client-specific guardrails like Brenda fee-waiver rules per `DEC-2026-04-28-005`) | **REQUIRED** at `<box>/AGENTS.md` (root level). Encodes local-stricter-than-upstream rules. |
+| **Leaf Boxes with no local-stricter behavior** (Tier 3 — most Client/Staff/Venue records that follow standard upstream rules) | **OPTIONAL.** `BOX.md` + `box.json` are sufficient. Adding `AGENTS.md` is allowed but creates redundant noise. |
+
+**Co-existence rule:** A Box MAY have both `<box>/AGENTS.md` (root-level local law for any agent) AND `<box>/steward/AGENTS.md` (declarative scope for the runnable steward). When both exist, root-level governs the Box's behavior; steward-level governs the steward's operation. Existing unified ledger Boxes use only the steward-level form (no root-level AGENTS.md needed because the ledger-Box-with-steward case is already covered).
+
+**Discovery rule (per Q8 protocol when it lands):** any agent entering a Box reads, in order: `BOX.md` (orientation), `box.json` (manifest), `AGENTS.md` if present (local law), `steward/AGENTS.md` if present (steward scope). Missing files are treated as "no local override" — upstream defaults apply.
+
+##### Alternatives Considered
+
+- **Path A: Universally required (every Box must have AGENTS.md)** — rejected. Forces leaf Boxes to carry boilerplate that just restates upstream defaults. Bloats the file tree without earning legibility. Anti-pattern: "AGENTS.md exists but says 'see upstream rules' because there are no local rules."
+- **Path B: Universally optional (Boxes never required to have AGENTS.md)** — rejected. Boxes-with-stewards NEED local-law declaration — that's how the steward enforces its scope without re-reading every upstream ledger. Optional-everywhere defeats the purpose at the steward tier.
+- **Path C: Required only at `steward/AGENTS.md`, never root-level** — rejected. Some Boxes have local rules that aren't tied to a steward (e.g., a Client Box's per-client guardrails per DEC-005, where the operator is whatever agent is currently working). Root-level AGENTS.md is the right home for that case.
+
+##### Consequences
+
+- **Box Ledger §Naming Rules** (Phase 2.3 / `ATOM-2026-04-30-0063`) codifies the placement rule: `<box>/AGENTS.md` (root local law) vs `<box>/steward/AGENTS.md` (steward declarative scope) vs both vs neither.
+- **DoD Box-completion gate** (Phase 1.3 / `ATOM-2026-04-30-0058`) inherits this rule: a Box is "complete" only if `AGENTS.md` is present (per the rule above) OR explicitly declared not-applicable in `box.json` notes.
+- **LOCAL_TEMPLATE scaffold** (Phase 2.1 / `ATOM-2026-04-30-0061`) ships variants per Box kind: ledger-with-steward template includes `steward/AGENTS.md`; leaf template doesn't.
+- **5 existing unified Boxes already comply** (temporal_continuity, atoms, global_ledger, file_directory, atlas — all have `steward/AGENTS.md`). No retrofitting needed.
+- **Future Client Box migrations** (Phase 7 / `ATOM-2026-04-30-0094`) may add root-level `AGENTS.md` for client-specific guardrails (Brenda fee-waiver, etc.). The migration template per Q6 resolution should anticipate this.
+
+##### Do Not Undo Casually
+
+- Don't promote optional-for-leaves to required-for-leaves. Adding `AGENTS.md` to every Tier 3 Client Box bloats the tree without earning legibility.
+- Don't demote required-for-stewards to optional-for-stewards. Stewards depend on declared local law to enforce scope without re-walking upstream ledgers.
+- Don't conflate root-level and steward-level AGENTS.md. They serve different audiences (root = any agent operating in the Box; steward-level = the steward's own scope).
+
+##### Review Trigger
+
+- A leaf Box class emerges where local-stricter rules are common but no steward exists (would suggest making root-level AGENTS.md required for that class).
+- Q8 ("entering a Box" mechanical contract) resolves in a way that conflicts with this discovery rule.
+- The 4h granularity rule produces atoms that can't be sized because Boxes-with-AGENTS.md require too much per-Box authoring (would suggest leaner template defaults).
+
+##### History
+
+- **2026-05-01** — created. Resolved `ATOM-2026-04-30-0049` (Q2). Authored under Jake's P-method push. The 5 existing unified Boxes already comply with the steward-AGENTS.md form; this DEC pins the rule for Boxes that don't yet exist. Companion atoms in same chain: ATOM-0050 (Q3 schema, completed) + ATOM-0051..0055 (remaining 5 Open Questions, available).
 
 ---
 

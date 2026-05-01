@@ -1,6 +1,6 @@
 # File Contents Ledger
 
-Last updated: 2026-04-29 (initial creation — Phase 13 of ledger system buildout; tier: global; envelope-aware under `DEC-2026-04-29-013`)
+Last updated: 2026-05-01 (BACKFILL per `ATOM-2026-04-30-0111` — surfacing files NEW since 2026-04-29 authoring that need to be inventoried as a follow-on atom: `LEDGERS/ATOMS.md`+`.json` (Atom Ledger), `LEDGERS/DEPRECATION.md`+`.json` (Deprecation Ledger), `LEDGERS/Drafts/box_network_architecture_scaffold.md` (architectural scaffold), `LEDGERS/scripts/snapshot.sh` (Snapshot runner), `LEDGERS/BOXES/<name>/{box.json, BOX.md, steward/{AGENTS.md, config.json, prompt.md}, receipts/}` × 6 unified Boxes (temporal_continuity, atoms, global_ledger, file_directory, north_star, atlas), `LEDGERS/scripts/atomize_box_network.py` (decomposition tool), `_snapshots/` directory at project root, plus the BOX_LEDGER §16 + BOX_BUS_LEDGER §14 + SOURCE_OF_TRUTH §11 sections authored 2026-05-01. Current FCL inventory of ~78 files is **stale** — needs refresh by ATOM-NEW-X under PROB-015 (file inventory + categorization). This backfill acknowledges the gap; the inventory itself is its own atom.)
 Maintainer: Jake / Comeketo Agent project agents
 Status: **active**
 Tier (Box Bus Ledger §3): **global** — fans out to every Box that subscribes at the global tier

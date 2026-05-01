@@ -1,0 +1,18 @@
+{
+  "request_id": "f9f26e82d120",
+  "run_at": "2026-05-01T01:06:14Z",
+  "kind": "route_wiring_verification",
+  "atom_id": "ATOM-2026-04-30-0037",
+  "actor": "claude_cowork_session_2026-04-30_atom_0037",
+  "claim": "file_directory_steward dispatch wiring verified \u2014 no per-route code needed; helper auto-resolves.",
+  "verification": {
+    "v1": "PASS \u2014 file_directory_steward \u2192 LEDGERS/BOXES/file_directory/steward/prompt.md (unified_box)",
+    "v2": "PASS \u2014 AGENTS.md + prompt.md + config.json all present",
+    "v3": "PASS \u2014 all 7 stewards resolve correctly, no name collisions"
+  },
+  "writes_applied": [
+    "LEDGERS/BOXES/file_directory/receipts/2026-05-01_01-06-14_run_f9f26e82d120.json"
+  ],
+  "abstention": false,
+  "next": "ATOM-0038 \u2014 smoke test file_directory_steward audit_only"
+}

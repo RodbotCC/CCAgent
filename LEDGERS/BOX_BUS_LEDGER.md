@@ -1,6 +1,6 @@
 # Box Bus Ledger
 
-Last updated: 2026-04-29 (initial creation — Phase 10 of ledger system buildout)
+Last updated: 2026-05-01 (Phase 1.2 / ATOM-2026-04-30-0057 — added §14 'Source-Interpreter-Destination Routing' formalizing canonical propagation shape; subscribes[]/emits[] schemas; 5 example flows; Box Graph rendering contract; 6 anti-patterns. Pairs with DEC-006 box.json minimum schema.)
 Maintainer: Jake / Comeketo Agent project agents
 Status: **active (schema-only — runtime deferred)**
 Read when: authoring a new ledger, authoring a new Box, sub-agent design, deciding whether something deserves to be a Box, or planning Phase B / Phase C work.
@@ -493,10 +493,179 @@ When updating: bump `Last updated`, refresh JSON mirror, add a Communications Le
 
 ---
 
-## 14. Final Operating Rule
+## 14. Source-Interpreter-Destination Routing (canonical propagation shape)
+
+> **Per `DEC-2026-04-30-005`** (Box-Ledger-Sub-agent fusion target primitive) **and `DEC-2026-04-30-006`** (minimum viable `box.json` schema): every cross-Box state propagation follows the shape `Source Box → Interpreter → Destination Box`. No invisible magic. Every flow has a source, a transformation rule, a destination, and a receipt.
+
+This section formalizes the routing model that the just-shipped Box Graph UI (`box_graph` route, Phase 4.6 + 6.1 partial via Codex 2026-05-01) renders against. §3 above defined the three routing tiers (Global / Domain / Local). §4 above defined the three interpreter tiers (T1 / T2 / T3). This section binds them into the canonical flow.
+
+### 14.1 The canonical flow
+
+```
+Source Box                Interpreter              Destination Box
+[emits[]] ──envelope──▶  [T1 / T2 / T3] ──result──▶ [subscribes[]]
+                              │
+                              ▼
+                          [receipts/]
+```
+
+Every cross-Box meaningful state change traverses this path:
+
+1. **Source Box** generates an event matching one of its `emits[]` declarations.
+2. **Box Bus runtime** (Phase C, deferred per `DEC-2026-04-29-013`) builds an envelope per §2.2 schema.
+3. **Subscription matcher** (Phase 6.3 / `ATOM-2026-04-30-0088`) finds every Destination Box whose `subscribes[]` matches the envelope.
+4. **Interpreter** (T1 deterministic mapper / T2 small-LLM template / T3 full sub-agent steward) transforms the envelope into a destination-shaped payload.
+5. **Destination Box** receives the interpreted payload at the `write_target` declared in its subscribe entry.
+6. **Receipt** lands at `<destination>/receipts/<YYYY-MM-DD>_<HHMM>_<envelope_id>.json` recording source / destination / interpreter / transform diff / action taken.
+
+The interpreter MAY be a no-op (T1 schema mapper that just renames fields). The receipt MAY be minimal. But all four pieces — source, interpreter, destination, receipt — are always present. Skipping any of them is an anti-pattern.
+
+### 14.2 `subscribes[]` schema (inbound graph edges)
+
+Per `DEC-2026-04-30-006` (Phase B minimum schema), every mature `box.json` declares `subscribes` as a (possibly empty) array. Each entry:
+
+```json
+{
+  "source": "<source-box-slug-or-ledger-name>",
+  "scope": "<filter-expression>",
+  "interpreter": "T1 | T2 | T3",
+  "write_target": "<path-or-section-where-result-lands>",
+  "phase_c_note": "<optional — describes deferred behavior>"
+}
+```
+
+**Field semantics:**
+
+| Field | Type | Purpose |
+|---|---|---|
+| `source` | string | Box id (`ledger_box:temporal_continuity`) or top-level ledger name (`DECISIONS_LEDGER`, `OPEN_PROBLEMS_LEDGER`, `_ledger/activity.jsonl`). Identifies WHERE the event originates. |
+| `scope` | string (filter expression) | Which events from `source` apply. Examples: `or(scope:*, scope:kind:ledger, scope:box:temporal_continuity)`, `or(severity:critical, severity:high)`, `kind:atom_completed`, `scope:atoms`. Empty/missing = match all. |
+| `interpreter` | enum `T1 / T2 / T3` | Which interpreter tier transforms the envelope. Default = T1 (deterministic, cheapest). |
+| `write_target` | string | Where the interpreted result lands. Usually a section path (`TEMPORAL_CONTINUITY.md (Recent Meaningful Changes section)`) or a ledger-relative path (`LEDGERS/DRAFTS/ATOMIZATION/<prob-id>_atoms.md`). |
+| `phase_c_note` | string (optional) | If the runtime doesn't consume this declaration yet, this field describes the intended behavior. Examples: `"deferred"`, `"subscription is documented but not consumed until Phase C runtime lands"`. |
+
+### 14.3 `emits[]` schema (outbound graph edges)
+
+Mirror form. Each entry:
+
+```json
+{
+  "ledger": "<destination-box-slug-or-ledger-name>",
+  "tier": "global | domain | local",
+  "on_event": "<event-name>",
+  "envelope_kind": "<envelope-kind-from-§2.2>",
+  "scope": "<scope-tag-or-set>",
+  "phase_c_note": "<optional>"
+}
+```
+
+**Field semantics:**
+
+| Field | Type | Purpose |
+|---|---|---|
+| `ledger` | string | Where the emit lands (Box id or ledger). The Subscription Matcher uses this + `scope` to find subscribers. |
+| `tier` | enum `global / domain / local` | Authority tier of this emit. Determines fan-out per §3. |
+| `on_event` | string | Event name. Examples: `temporal_continuity_steward_run`, `atom_completed`, `drift_detected`, `prob_closure_eligible`. |
+| `envelope_kind` | string | Per §2.2 envelope schema. Examples: `steward_run`, `atom_released`, `communication_handoff`, `lesson`. |
+| `scope` | string | Tag or set that subscribers filter against. Examples: `scope:*`, `kind:ledger`, `severity:high`. |
+| `phase_c_note` | string (optional) | Same as for `subscribes[]`. |
+
+### 14.4 Five canonical example flows (per scaffold §7)
+
+#### Flow 1: North Star → Wholesome Enrichment Interpreter → Client Box
+
+```
+Source: ledger_box:north_star
+  ↓ emits { on_event: "wholesome_enrichment_principle_applied", scope:* }
+Interpreter: T2 (template summarizer — picks the relevant NS rule, scopes to client)
+  ↓
+Destination: client_box:hugo_casillas
+  subscribes { source: NORTH_STAR, scope:wholesome_enrichment, interpreter: T2, write_target: client_ledger.md }
+  ↓
+Receipt: Auto/Client Boxes/Hugo Casillas/receipts/<ts>_north_star_applied.json
+```
+
+#### Flow 2: Open Problems → Atomizer Steward → Atom Ledger
+
+```
+Source: ledger_box:open_problems
+  ↓ emits { on_event: "prob_authored_or_updated", scope:* }
+Interpreter: T3 (full sub-agent — Atomizer Steward reads PROB, proposes atoms with reasoning)
+  ↓
+Destination: ledger_box:atoms (via DRAFTS/ATOMIZATION/<prob-id>_atoms.md review queue)
+  subscribes { source: OPEN_PROBLEMS_LEDGER, scope: or(status:open, status:partial, status:needs-decision), interpreter: T3, write_target: LEDGERS/DRAFTS/ATOMIZATION/<prob-id>_atoms.md }
+  ↓
+Receipt: LEDGERS/BOXES/atoms/receipts/<ts>_atomization_pass.json
+```
+
+#### Flow 3: Temporal Continuity → Handoff Summarizer → AGENTS.md / CLAUDE.md update candidate
+
+```
+Source: ledger_box:temporal_continuity
+  ↓ emits { on_event: "current_phase_changed_or_handoff_due", scope: kind:ledger }
+Interpreter: T2 (template summarizer — extracts handoff fields per output_template)
+  ↓
+Destination: AGENTS.md / CLAUDE.md (proposed update, not auto-applied)
+  ↓
+Receipt: LEDGERS/BOXES/temporal_continuity/receipts/<ts>_handoff_summary.json
+```
+
+#### Flow 4: Close Comms Mirror → Allowed-To-Know Interpreter → Outbound Draft Box
+
+```
+Source: client_comms_mirror (client-box-internal — `01b_comms_verbatim.md` + `comms/*.json`)
+  ↓ emits { on_event: "new_comms_received", scope:client_specific }
+Interpreter: T3 (full sub-agent — classifies into 4-bucket Allowed-To-Know schema per SOURCE_OF_TRUTH §4)
+  ↓
+Destination: outbound_draft_box (per-Client subdirectory holding ready-to-send drafts)
+  subscribes { source: client_comms_mirror, interpreter: T3, write_target: <client-box>/outbound/drafts/ }
+  ↓
+Receipt: <client-box>/receipts/<ts>_allowed_to_know_classification.json
+```
+
+This is the closes-PROB-001 flow — the Allowed-To-Know interpreter is `ATOM-2026-04-30-0084` (Phase 5.5 / second-priority interpreter per Q4 resolution).
+
+#### Flow 5: Decisions → Page-Asset Interpreter → page_asset_sitemap.md
+
+```
+Source: ledger_box:decisions
+  ↓ emits { on_event: "decision_recorded", scope:UI }
+Interpreter: T2 (template — identifies which page sections are affected by the DEC's scope)
+  ↓
+Destination: page_asset_sitemap.md (proposed update — operator approves merge)
+  subscribes { source: DECISIONS_LEDGER, scope:UI, interpreter: T2, write_target: page_asset_sitemap.md (Asset Ownership / Change Checklist / History) }
+  ↓
+Receipt: LEDGERS/BOXES/decisions/receipts/<ts>_page_asset_impact.json
+```
+
+This closes the loop between `DEC-2026-04-28-007` (sitemap is mandatory UI Done Gate) and the Atomizer's authoring of UI atoms — the Page-Asset interpreter is `ATOM-2026-04-30-0085` (Phase 5.6 / third-priority interpreter).
+
+### 14.5 The Box Graph rendering contract
+
+The Box Graph UI (route `box_graph`, shipped 2026-05-01) reads every `box.json` file and synthesizes nodes + edges from:
+
+- **Nodes:** Box `id`, `slug`, `name`, `kind`, `tier` (per `DEC-2026-04-30-006` required fields).
+- **Authority lanes:** Box `tier` field + cross-reference to `LEDGERS/BOXES/box_bus/registry/authority_tiers.json` (Phase 4.2 / `ATOM-2026-04-30-0075`, deferred).
+- **Edges:** Box `subscribes[]` (inbound) + `emits[]` (outbound) per the schemas above.
+- **Right-sidebar route inspection:** node detail shows path, primary, owns, subscribes, emits + connected routes (each route = one subscribe-emit pair).
+
+For the graph to be data-real (not synthesized), every Box's `subscribes[]` and `emits[]` must be populated. **`ATOM-2026-04-30-0072` (Phase 4.1, blocked by 0072 the Phase 3 verify)** does this across all existing Boxes. Until that lands, the Box Graph displays heuristic edges.
+
+### 14.6 Anti-patterns
+
+- **Skipping the interpreter step.** A direct write from Source's `emits[]` to Destination's `subscribes[]` bypasses transformation. Use a T1 no-op mapper if no transformation is needed — never zero interpreter.
+- **Skipping the receipt.** Every cross-Box flow leaves a receipt. Receipts ARE the audit trail. A flow without a receipt is invisible.
+- **Inflating `subscribes[]`.** A Box should subscribe only to events it acts on. Subscribing to `scope:*` from every global ledger creates noise and runtime overhead.
+- **Cycles.** Source → Interpreter → Destination = Source again forms a cycle. Cycle detection (Phase 6.6 / `ATOM-2026-04-30-0091`) refuses these. The Box that emits an event should not also subscribe to that same event.
+- **Using a higher interpreter tier than needed.** T3 (full sub-agent) is expensive — reserve for cases that genuinely need reasoning. Default to T1.
+- **Empty `phase_c_note` when the runtime doesn't yet consume the declaration.** If the subscribe/emit is declarative-only during Phase B, say so explicitly so future agents know what to expect.
+
+---
+
+## 15. Final Operating Rule
 
 > The bus is not running yet. The architecture is.
 >
 > Schema before routing. Routing before interpreters. Interpreters before runtime.
 >
-> Every ledger authored from here on out names its tier. Every Box authored from here on out ships with a manifest stub. When Phase C lands, the system already knows itself.
+> Every ledger authored from here on out names its tier. Every Box authored from here on out ships with a manifest stub. **Every cross-Box flow follows Source → Interpreter → Destination, with a receipt at the end.** When Phase C lands, the system already knows itself.

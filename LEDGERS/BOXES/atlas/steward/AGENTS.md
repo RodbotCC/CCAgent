@@ -6,7 +6,7 @@ Box manifest: `LEDGERS/BOXES/atlas/box.json`
 Box orientation: `LEDGERS/BOXES/atlas/BOX.md`
 Primary surface read: `LEDGERS/atlas/` (symlink → `/Users/jakeaaron/Documents/Atlas/`) — READ ONLY
 Surfaces written: `LEDGERS/OPEN_PROBLEMS_LEDGER.md` (drift PROBs), `LEDGERS/COMMUNICATIONS_LEDGER.md` (handoff lessons), `LEDGERS/DRAFTS/ATOMIZATION/` (atom proposals), `LEDGERS/BOXES/atlas/receipts/` (run receipts), `CCAgentindex/_ledger/activity.jsonl` (append-only)
-Dispatch: `POST /api/agents/atlas_sweep_steward/run` (planned — not yet wired)
+Dispatch: `POST /api/agents/atlas_steward/run` (planned — not yet wired)
 Resolution helper: `server.py _agent_resolve_prompt` falls through legacy (none) directly to unified Box
 Promotion atom: filed as PROB-2026-04-30-015; atomization for steward graduation pending
 
@@ -143,7 +143,7 @@ The summary is project-adjacent but doesn't fit A–E. Note in receipt count, no
 The steward writes only:
 
 - `LEDGERS/BOXES/atlas/receipts/<YYYY-MM-DD_HH-MM-SS>_run_<id>.json` — every run
-- `_ledger/activity.jsonl` — exactly one line per run, `kind: atlas_sweep_steward_run`
+- `_ledger/activity.jsonl` — exactly one line per run, `kind: atlas_steward_run`
 - `LEDGERS/DRAFTS/ATOMIZATION/atlas_drift_<date>.md` — drift candidates (audit + reconcile both)
 - `LEDGERS/DRAFTS/ATOMIZATION/atlas_atoms_<date>.md` — atom candidates (audit + reconcile both)
 - `LEDGERS/OPEN_PROBLEMS_LEDGER.md` — only in `reconcile` mode
@@ -167,7 +167,7 @@ For every run, write one JSON receipt to `LEDGERS/BOXES/atlas/receipts/<YYYY-MM-
 {
   "request_id": "<id>",
   "run_at": "<ISO8601 UTC>",
-  "actor": "atlas_sweep_steward",
+  "actor": "atlas_steward",
   "mode": "audit_only | reconcile",
   "cutoff_ts": "<ISO8601 — sweep covered Atlas folders dated >= this>",
   "atlas_folders_swept": ["<folder name>", "..."],
@@ -199,7 +199,7 @@ If blocked (no Atlas folders found, prior receipt unparseable, etc.): set `abste
 Append exactly one line to `_ledger/activity.jsonl`:
 
 ```json
-{"ts":"<ISO8601 UTC>","kind":"atlas_sweep_steward_run","actor":"atlas_sweep_steward","request_id":"atlas_sweep_<UTC timestamp>","action":"sweep_and_reconcile","target":"LEDGERS/atlas/<folders>","notes":"<one sentence: N folders, M summaries read, K drift findings, J atom suggestions; receipt path>"}
+{"ts":"<ISO8601 UTC>","kind":"atlas_steward_run","actor":"atlas_steward","request_id":"atlas_sweep_<UTC timestamp>","action":"sweep_and_reconcile","target":"LEDGERS/atlas/<folders>","notes":"<one sentence: N folders, M summaries read, K drift findings, J atom suggestions; receipt path>"}
 ```
 
 ---

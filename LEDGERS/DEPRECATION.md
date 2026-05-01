@@ -1,6 +1,6 @@
 # Deprecation Ledger
 
-Last updated: 2026-04-30 (initial creation — Phase B opener; tier: global; envelope-aware under `DEC-2026-04-29-013`; pairs with Snapshot Protocol §7)
+Last updated: 2026-05-01 (BACKFILL per `ATOM-2026-04-30-0111` — surfacing 4 abandoned-atom orphans as deprecation candidates: ATOMs 0103/0104/0105/0106 (Atlas dedup orphans). Per scaffold §13.5 + ATOM-0070, the LEDGERS/BOXES/box_bus/ Box is now needed; Atlas Box exists at LEDGERS/BOXES/atlas/ as the first ground_truth_source class. global_ledger_steward migration from CCAgentindex/agents/global_ledger_steward/ to unified Box pattern (DEC-004) means the legacy CCAgentindex path becomes a deprecation candidate once the migration smoke test passes (`ATOM-0044` complete). Snapshot Protocol §7 unchanged from 2026-04-30 authoring. No new formal DEPR entries authored in this backfill — only candidates surfaced; formal entries become Atomizer Steward work or follow-on atoms.)
 Maintainer: Jake / Comeketo Agent project agents
 Status: **active**
 Tier (Box Bus Ledger §3): **global** — fans out to every Box that subscribes at the global tier; every domain ledger may emit deprecation candidates upstream

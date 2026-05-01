@@ -16,7 +16,9 @@
     "LEDGERS/BOXES/atlas/steward/AGENTS.md",
     "LEDGERS/BOXES/atlas/steward/config.json",
     "LEDGERS/BOXES/atlas/steward/prompt.md",
-    "LEDGERS/BOXES/atlas/receipts/"
+    "LEDGERS/BOXES/atlas/receipts/",
+    "LEDGERS/BOXES/atlas/digests/",
+    "CCAgentindex/triggers/atlas_daily_sweep.json"
   ],
   "does_not_own": [
     "the contents of /Users/jakeaaron/Documents/Atlas itself — Pieces writes those, never project agents",
@@ -48,7 +50,7 @@
     {
       "ledger": "_ledger/activity.jsonl",
       "tier": "global",
-      "on_event": "atlas_sweep_steward_run",
+      "on_event": "atlas_steward_run",
       "envelope_kind": "steward_run",
       "scope": "kind:ground_truth",
       "phase_c_note": "manual append today; bus-emit when Phase C lands"
@@ -92,7 +94,7 @@
       "audit_only is the safe default; reconcile mode requires explicit dispatch"
     ],
     "modes": ["audit_only", "reconcile"],
-    "dispatch_planned": "POST /api/agents/atlas_sweep_steward/run (Phase B wiring)",
+    "dispatch_planned": "POST /api/agents/atlas_steward/run (Phase B wiring)",
     "dispatch_status": "not yet wired — see PROB filed by this Box's creation",
     "runnable_form_path_canonical": "LEDGERS/BOXES/atlas/steward/ (canonical per DEC-2026-04-30-004)",
     "resolution_helper": "server.py _agent_resolve_prompt — falls through legacy (none) directly to unified Box. Same pattern as file_directory_steward.",
@@ -101,7 +103,7 @@
   "ledger_local": "LEDGERS/BOXES/atlas/receipts/",
   "phase_status": {
     "phase_a": "complete (Atlas itself has been accumulating since at least 2026-04-24; this Box formalizes it as a project surface 2026-04-30)",
-    "phase_b": "in_progress (Box authored 2026-04-30; steward files staged but not yet smoke-tested or wired)",
+    "phase_b": "complete (2026-05-01) — runnable form authored (ATOM-0107), inaugural sweep + digest produced (ATOM-0108), resolution smoke test passed (ATOM-0109), INDEX.md flipped active + PROB-015 closed (ATOM-0110). Daily 8 AM ET cron at CCAgentindex/triggers/atlas_daily_sweep.json fires automatically.",
     "phase_c": "deferred (subscribes/emits documented but not consumed by router; runtime per DEC-2026-04-29-013)"
   },
   "related_ledgers": [

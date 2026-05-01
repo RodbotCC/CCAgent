@@ -819,6 +819,8 @@ class Handler(SimpleHTTPRequestHandler):
             })
         if p == "/api/settings/mcp_credentials":
             return self._settings_mcp_credentials()
+        if p == "/api/box_graph":
+            return self._box_graph()
         if p == "/api/boxes/list":
             return self._boxes_list()
         m_box = re.fullmatch(r"/api/boxes/([A-Za-z0-9_\-]+)", p or "")
@@ -5438,6 +5440,218 @@ class Handler(SimpleHTTPRequestHandler):
             "keys": sorted(list(updates.keys())),
         })
         return self._settings_mcp_credentials()
+
+    def _box_graph(self):
+        boxes_root = HERE / "LEDGERS" / "BOXES"
+        nodes = {}
+        edges = []
+        manifest_errors = []
+
+        def norm_id(value, prefix="node"):
+            raw = str(value or "").strip()
+            if not raw:
+                raw = "unknown"
+            raw = raw.replace("LEDGERS/", "").replace(".md", "").replace(".json", "")
+            slug = re.sub(r"[^A-Za-z0-9_:\-/.]+", "_", raw).strip("_")
+            slug = slug.replace("/", ":")
+            return f"{prefix}:{slug.lower()}"
+
+        def ledger_id(name):
+            return norm_id(name or "unknown_ledger", "ledger")
+
+        def add_node(node_id, **fields):
+            if not node_id:
+                return None
+            current = nodes.get(node_id, {})
+            merged = {**current, **{k: v for k, v in fields.items() if v is not None}}
+            merged.setdefault("id", node_id)
+            nodes[node_id] = merged
+            return nodes[node_id]
+
+        def add_edge(from_id, to_id, **fields):
+            if not from_id or not to_id:
+                return
+            edge_id = f"edge:{len(edges) + 1:04d}"
+            edges.append({
+                "id": edge_id,
+                "from": from_id,
+                "to": to_id,
+                **{k: v for k, v in fields.items() if v is not None},
+            })
+
+        add_node(
+            "concept:box_bus",
+            label="Box Bus",
+            kind="concept",
+            tier="constitutional",
+            status="schema-only",
+            path="LEDGERS/BOX_BUS_LEDGER.md",
+            summary="Target router: subscriptions, envelopes, interpreters, receipts.",
+        )
+        add_node(
+            "concept:source_of_truth",
+            label="Source of Truth",
+            kind="concept",
+            tier="constitutional",
+            status="active",
+            path="LEDGERS/SOURCE_OF_TRUTH.md",
+            summary="Authority and trust ordering before Boxes interpret state.",
+        )
+
+        manifest_paths = sorted(boxes_root.glob("*/box.json")) if boxes_root.exists() else []
+        for path in manifest_paths:
+            try:
+                obj = json.loads(path.read_text(encoding="utf-8"))
+            except Exception as e:
+                manifest_errors.append({"path": str(path.relative_to(HERE)), "error": str(e)})
+                continue
+            box_id = obj.get("id") or f"ledger_box:{path.parent.name}"
+            node_id = f"box:{box_id}"
+            owns = obj.get("owns") if isinstance(obj.get("owns"), list) else []
+            subscribes = obj.get("subscribes") if isinstance(obj.get("subscribes"), list) else []
+            emits = obj.get("emits") if isinstance(obj.get("emits"), list) else []
+            source = obj.get("source_of_truth") if isinstance(obj.get("source_of_truth"), dict) else {}
+            agent = obj.get("agent_config") if isinstance(obj.get("agent_config"), dict) else {}
+            phase = obj.get("phase_status") if isinstance(obj.get("phase_status"), dict) else {}
+            add_node(
+                node_id,
+                label=obj.get("name") or obj.get("slug") or path.parent.name,
+                kind=obj.get("kind") or "box",
+                tier=obj.get("tier") or "domain",
+                status=obj.get("status") or "",
+                path=str(path.parent.relative_to(HERE)),
+                primary=source.get("primary"),
+                steward=agent.get("dispatch") or agent.get("dispatch_planned") or agent.get("dispatch_status"),
+                modes=agent.get("modes") or [],
+                owns_count=len(owns),
+                subscribes_count=len(subscribes),
+                emits_count=len(emits),
+                summary=(obj.get("phase_status") or {}).get("phase_b") or obj.get("status") or "",
+                phase_status=phase,
+            )
+            add_edge(
+                "concept:box_bus",
+                node_id,
+                label="manifest",
+                kind="governs_shape",
+                interpreter="schema",
+                status="declared",
+            )
+            add_edge(
+                "concept:source_of_truth",
+                node_id,
+                label="authority",
+                kind="authority",
+                interpreter="T1",
+                status="active",
+            )
+            for sub in subscribes:
+                if not isinstance(sub, dict):
+                    continue
+                src_name = sub.get("ledger") or sub.get("external") or sub.get("source") or "unknown"
+                src_id = ledger_id(src_name)
+                add_node(
+                    src_id,
+                    label=str(src_name).replace("_", " "),
+                    kind="ledger" if sub.get("ledger") else "external",
+                    tier=sub.get("tier") or "external",
+                    status="source",
+                    path=str(src_name),
+                    summary="Synthesized source node from Box subscription.",
+                )
+                add_edge(
+                    src_id,
+                    node_id,
+                    label=sub.get("filter") or sub.get("ledger") or sub.get("external") or "subscribes",
+                    kind="subscribes",
+                    interpreter=sub.get("interpreter"),
+                    tier=sub.get("tier"),
+                    write_target=sub.get("write_target"),
+                    phase_c_note=sub.get("phase_c_note"),
+                    status="declared",
+                )
+            for emit in emits:
+                if not isinstance(emit, dict):
+                    continue
+                target_name = emit.get("ledger") or emit.get("target") or "unknown"
+                target_id = ledger_id(target_name)
+                add_node(
+                    target_id,
+                    label=str(target_name).replace("_", " "),
+                    kind="ledger",
+                    tier=emit.get("tier") or "global",
+                    status="target",
+                    path=str(target_name),
+                    summary="Synthesized target node from Box emission.",
+                )
+                add_edge(
+                    node_id,
+                    target_id,
+                    label=emit.get("on_event") or emit.get("envelope_kind") or "emits",
+                    kind="emits",
+                    interpreter=emit.get("interpreter"),
+                    tier=emit.get("tier"),
+                    scope=emit.get("scope"),
+                    phase_c_note=emit.get("phase_c_note"),
+                    status="declared",
+                )
+
+        try:
+            cat = self._boxes_catalog()
+            operational = cat.get("boxes") or []
+        except Exception:
+            operational = []
+        domain_id = "box_domain:client_staff_boxes"
+        add_node(
+            domain_id,
+            label="Client + Staff Boxes",
+            kind="domain",
+            tier="domain",
+            status="active",
+            path="Auto/Client Boxes + Auto/Staff Boxes",
+            summary="Operational leaf boxes already used by the app; most are not yet migrated to full box.json form.",
+            owns_count=len(operational),
+        )
+        add_edge("concept:source_of_truth", domain_id, label="client truth ordering", kind="authority", interpreter="T1", status="active")
+        for row in operational:
+            row_id = f"opbox:{row.get('id') or row.get('folder_name')}"
+            add_node(
+                row_id,
+                label=row.get("name") or row.get("id"),
+                kind=row.get("kind") or row.get("source_kind") or "operational",
+                tier="local",
+                status=(row.get("completeness") or {}).get("status") or "unshaped",
+                path=row.get("folder_rel"),
+                primary=row.get("folder_rel"),
+                summary=f"{row.get('source_kind') or 'box'} · completeness {(row.get('completeness') or {}).get('score_pct', 0)}%",
+                owns_count=len(row.get("files") or []),
+            )
+            add_edge(domain_id, row_id, label=row.get("source_kind") or "contains", kind="contains", interpreter="T1", status="active")
+
+        tier_order = {
+            "constitutional": 0,
+            "global": 1,
+            "domain": 2,
+            "local": 3,
+            "external": 0,
+        }
+        out_nodes = list(nodes.values())
+        for n in out_nodes:
+            n["tier_index"] = tier_order.get(str(n.get("tier") or "").lower(), 2)
+        out_nodes.sort(key=lambda n: (n.get("tier_index", 2), str(n.get("kind") or ""), str(n.get("label") or "")))
+        return self._json({
+            "ok": True,
+            "nodes": out_nodes,
+            "edges": edges,
+            "summary": {
+                "node_count": len(out_nodes),
+                "edge_count": len(edges),
+                "manifest_count": len(manifest_paths),
+                "operational_box_count": len(operational),
+                "error_count": len(manifest_errors),
+            },
+            "errors": manifest_errors,
+        })
 
     def _boxes_people_lookup(self):
         base = HERE / "CCAgentindex" / "people"

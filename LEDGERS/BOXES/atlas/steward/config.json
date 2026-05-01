@@ -1,5 +1,5 @@
 {
-  "id": "atlas_sweep_steward",
+  "id": "atlas_steward",
   "name": "Atlas Sweep Steward",
   "version": "0.1.0",
   "status": "draft (Phase B graduation pending — see PROB-2026-04-30-015)",
@@ -139,5 +139,5 @@
   "canonical_path_decision": "DEC-2026-04-30-004",
   "promotion_via_atom": "PROB-2026-04-30-015 (atom decomposition pending)",
   "box_manifest": "LEDGERS/BOXES/atlas/box.json",
-  "runnable_dispatch": "POST /api/agents/atlas_sweep_steward/run (planned — Phase B wiring; resolution helper already supports the path)"
+  "runnable_dispatch": "POST /api/agents/atlas_steward/run (planned — Phase B wiring; resolution helper already supports the path)"
 }

@@ -1,6 +1,6 @@
 # Asset / Widget Map
 
-Last updated: 2026-04-30 (added §3.8 Analytics-page panels; new endpoint `/api/analytics/owner_stage` registered as integration pattern per `DEC-2026-04-30-001`)
+Last updated: 2026-05-01 (BACKFILL per `ATOM-2026-04-30-0111` — Codex shipped Box Graph route 2026-05-01: new `box_graph` route in topbar; `GET /api/box_graph` endpoint synthesizes graph from `LEDGERS/BOXES/*/box.json` + Auto/Client Boxes/ + Auto/Staff Boxes/; new components in `screens.jsx` (~248 lines: graph node renderer, authority-lane layout, route-inspection sidebar); new styles in `styles.css` (~299 lines). ChatRail upgrades from same period: command deck, prompt cards, Box Graph + Delegations launchers from grid-page chat rail. **These additions need formal §X registration in this ledger as a follow-on atom** — current backfill just acknowledges the gap. Earlier same-day: §3.8 Analytics-page panels per `DEC-2026-04-30-001`.)
 Maintainer: Jake / Comeketo Agent project agents
 Status: **active**
 Tier (Box Bus Ledger §3): **domain** — fans out only to Boxes that subscribe to UI / page domain

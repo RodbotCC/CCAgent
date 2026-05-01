@@ -1,6 +1,6 @@
 # Box Ledger
 
-Last updated: 2026-04-29 (Phase 10 — cross-references Box Bus Ledger for manifest schema; concept/wire-shape ownership split)
+Last updated: 2026-05-01 (Phase 1.1 / ATOM-2026-04-30-0056 — added §16 'Mature Box Shape' codifying the fused primitive: required + conditionally-required + optional pieces, per-Box-class shape rules, Box Bus declarative surface, Box Graph rendering contract, 7-step authoring sequence, anti-patterns, 9-item verification checklist. Cross-references DEC-005/006/007 + 5 existing unified Boxes.)
 Maintainer: Jake / Comeketo Agent project agents
 Status: **active**
 Read when: deciding whether a directory should be a Box, stamping a new BOX.md, designing the local memory layer for a directory, or auditing a Box's discipline.
@@ -600,10 +600,172 @@ Once stamping begins, this section tracks which directories have been stamped an
 
 ---
 
-## 16. Final Operating Rule
+## 16. Mature Box Shape (the fused primitive)
+
+> **Per `DEC-2026-04-30-005`:** the mature primitive is `Box = Ledger + Rules + Sub-agent + Config + Receipts`. A Box is not a folder — it is a **stateful memory object with an operating contract**. Access is governed. When any agent enters a Box, it enters through local instructions, declared source-of-truth rules, routing subscriptions, interpreter rules, and append-only receipt discipline. The directory stops being passive storage; it becomes a **governed object**.
+
+This section pins what the mature shape looks like on disk. Authoritative for every Box authored from Phase B onward. The 5 existing unified Boxes (`temporal_continuity`, `atoms`, `global_ledger`, `file_directory`, `atlas`) demonstrate the pattern in practice.
+
+### 16.1 Required pieces (every mature Box has these)
+
+| File / Folder | Purpose | Authoritative reference |
+|---|---|---|
+| `BOX.md` | Human orientation. What the Box is, owns, trusts, forbids, how it counts as done. | This ledger §5 (template) |
+| `box.json` | Machine-readable manifest. Declares id/slug/kind/tier/owns/source_of_truth/etc. | `DEC-2026-04-30-006` (9 required + 5 recommended + 3 runtime fields) + `BOX_BUS_LEDGER.md` §2.1 |
+| `receipts/` | Per-run audit trail for any steward operating on this Box. | This ledger §X (steward protocol) |
+
+### 16.2 Conditionally required pieces
+
+| File / Folder | Required when | Reference |
+|---|---|---|
+| `LEDGER.md` + `LEDGER.json` | Box has evolving narrative state worth preserving. Ledger Boxes always have these (governing top-level `LEDGERS/<NAME>.md` by reference per `DEC-2026-04-29-015`). Client / Staff / Page Boxes have richer multi-file ledger structure (e.g., `client_ledger.md` + `01_comms.md` + `01b_comms_verbatim.md`). | `DEC-2026-04-29-015` |
+| `steward/AGENTS.md` + `steward/config.json` + `steward/prompt.md` | Box has a runnable steward sub-agent (ledger Boxes, automation Boxes, intake/analytics/connections Boxes). | `DEC-2026-04-30-007` |
+| `<box>/AGENTS.md` (root level) | Box has local rules stricter than upstream defaults — e.g., a Client Box with per-client guardrails (Brenda fee-waiver per `DEC-2026-04-28-005`). May coexist with `steward/AGENTS.md`. | `DEC-2026-04-30-007` |
+
+### 16.3 Optional pieces (Phase B declarative, Phase C runtime)
+
+| File / Folder | Purpose | Phase status |
+|---|---|---|
+| `inbox/` | Holds delivered Box Bus envelopes waiting for interpretation. | Q5 resolution pending — virtual until runtime per current default; physical at Phase C |
+| `outbox/` | Holds local events ready to emit upstream. | Same as inbox/ |
+| `steward/skills/` | Specialized skill folders the steward uses (e.g., `comeketo-inbox/` skill). | Optional always |
+| `digests/` | Persistent human-readable output home for steward summaries (atlas Box uses this). | Per-Box discretion |
+| `triggers/` symlink or reference | Points at scheduled-fire config when Box has scheduled steward runs. | Phase B optional |
+
+### 16.4 Per-Box-class shape rules
+
+The mature shape varies by Box class (`box.json` `kind` field per `DEC-2026-04-30-006`):
+
+#### `kind: "ledger"` — ledger Boxes (Tier 0/1)
+
+```
+LEDGERS/BOXES/<name>/
+├── BOX.md                  required
+├── box.json                required
+├── steward/
+│   ├── AGENTS.md           required (always — ledger Boxes always have stewards)
+│   ├── config.json         required
+│   └── prompt.md           required
+└── receipts/               required (may be empty initially)
+```
+
+**Note:** the canonical ledger files stay at top-level `LEDGERS/<NAME>.md` and `LEDGERS/<NAME>.json` per `DEC-2026-04-29-015`. The Box governs them by `box.json` `owns[]` path reference. Ledger Box folder does NOT relocate the ledger.
+
+**Examples:** `LEDGERS/BOXES/temporal_continuity/`, `LEDGERS/BOXES/atoms/`, `LEDGERS/BOXES/global_ledger/`.
+
+#### `kind: "client"` — Client Boxes (Tier 3)
+
+```
+Auto/Client Boxes/<Name>/
+├── BOX.md                            required
+├── box.json                          required (Phase 7 migration adds this)
+├── 00_meta.json                      required (canonical structured metadata)
+├── 01_comms.md                       required (curated exec summary)
+├── 01b_comms_verbatim.md             required (full Close.com transcripts)
+├── client_ledger.md                  required (running operator log)
+├── comms/<type>_<date>_<id>.json     required (raw payloads, append-only)
+├── 04_profile.md                     required (internal strategy)
+├── 05_seven_day_plan.md              optional (strategy draft)
+├── AGENTS.md                         required IF local guardrails differ (else optional)
+├── intake_drops/                     optional (operator reference / future automation input)
+└── receipts/                         optional (created when steward operates)
+```
+
+**Note:** Client Boxes are canonical client truth per `DEC-2026-04-28-003`. They predate the unified Box pattern. Phase 7.1 (`ATOM-2026-04-30-0094`) adds `box.json` to the first Client Box (Hugo Casillas per Q6 resolution); subsequent migrations follow.
+
+#### `kind: "staff"` — Staff Boxes (Tier 3)
+
+Similar to Client Boxes but lighter. `00_meta.json` + voice profile + style notes + `box.json` (post-migration).
+
+#### `kind: "page"` — Page Boxes (Tier 2 domain)
+
+```
+LEDGERS/BOXES/page_<route>/
+├── BOX.md                  required
+├── box.json                required
+├── PAGE_LEDGER.md          required (existing PAGES/<route>.md governed by reference)
+├── steward/                optional (if the page has Page-Asset Interpreter wiring per Phase 5.6)
+└── receipts/               optional
+```
+
+**Note:** the canonical Page Ledger stays at `LEDGERS/PAGES/<route>.md`. Box `owns[]` references it. Per `DEC-2026-04-28-007`, `page_asset_sitemap.md` remains the UI Done Gate; the Page Box is the narrative deep-memory home.
+
+#### `kind: "automation"` — Automation Boxes (Tier 2 domain)
+
+Cross-cutting Box governing multiple paths (e.g., `Auto/orchestrator/wiring/` + `automation` UI page). `box.json` `owns[]` declares all paths. `steward/` runs the Automation Steward.
+
+#### `kind: "intake"` / `"analytics"` / `"connections"` (Tier 2 domain)
+
+Per-domain shape varies. Each gets a unified Box at `LEDGERS/BOXES/<name>/` per Phase 3.
+
+#### `kind: "leaf"` — leaf Boxes (Tier 3)
+
+Minimum: `BOX.md` + `box.json`. Optional: everything else. Use when a Box represents one specific entity (one venue, one widget, one scheduled-fire) and doesn't need a steward or local rules.
+
+### 16.5 The Box Bus surface (Phase B declarative, Phase C runtime)
+
+Per `DEC-2026-04-30-005` and `BOX_BUS_LEDGER.md` §6 (post Phase 1.2 update / `ATOM-2026-04-30-0057`):
+
+- **Every mature `box.json` declares `subscribes[]`** (inbound graph edges — what events from upstream Boxes affect me?).
+- **Every mature `box.json` declares `emits[]`** (outbound graph edges — what events do I produce?).
+- **Both can be empty arrays** (`[]`) during Phase B if the Box doesn't yet participate in routing. They are required FIELDS but may have empty VALUES until Phase 4.1 (`ATOM-2026-04-30-0074`) populates them.
+- **Phase C runtime** consumes these declarations directly. Phase B authoring sets up the graph topology so the runtime has nothing to discover at activation.
+
+### 16.6 The Box Graph rendering contract
+
+The Box Graph UI (route `box_graph`, shipped Phase 4.6 + 6.1 partial via Codex 2026-05-01) reads `LEDGERS/BOXES/*/box.json` files plus `Auto/Client Boxes/*/` and `Auto/Staff Boxes/*/` directories and synthesizes a node-edge graph. For the graph to be data-real (not synthesized):
+
+- Every Box must have a `box.json` declaring `kind`, `tier`, `slug`, `name`, `owns`, `source_of_truth` (per `DEC-2026-04-30-006` minimum schema).
+- `subscribes[]` and `emits[]` must be populated (Phase 4.1 / `ATOM-2026-04-30-0074`).
+- Authority tier registry at `LEDGERS/BOXES/box_bus/registry/authority_tiers.json` must exist (Phase 4.2 / `ATOM-2026-04-30-0075`).
+
+Until those land, the Box Graph UI displays heuristically — node count is real (counts files), but edges are inferred and tier lanes are best-guess.
+
+### 16.7 Authoring a new Box
+
+When authoring a new Box, follow this sequence (per Phase 2.2 scaffold script / `ATOM-2026-04-30-0062` once it ships):
+
+1. Pick the `kind` from §16.4 above.
+2. Pick the `tier` (Constitutional / Coordination / Domain / Leaf — see `SOURCE_OF_TRUTH.md` §X authority tiers per Phase 1.4 / `ATOM-2026-04-30-0059`).
+3. Author from `LEDGERS/LOCAL_TEMPLATE/BOX_LEDGER_TEMPLATE.md` (post Phase 2.1 update / `ATOM-2026-04-30-0061`).
+4. Fill required pieces (§16.1) plus the conditionally-required pieces for the `kind` (§16.2 + §16.4).
+5. Declare `subscribes[]` / `emits[]` in `box.json` — even as `[]` during Phase B.
+6. Register the Box in `LEDGERS/INDEX.md` if it's a ledger Box.
+7. Append `_ledger/activity.jsonl` with `kind: "unified_box_landed"`.
+
+### 16.8 Anti-patterns
+
+- **Skipping `box.json`.** A Box without a manifest is invisible to the runtime and the Box Graph. Always author the manifest.
+- **Empty required fields.** `tier` set to `null` or `kind: "unknown"` defeats the schema. Pick a real value or document why this Box is exceptional.
+- **Inflating optional pieces.** Don't author `inbox/` `outbox/` `digests/` `skills/` unless the Box actually uses them. Empty optional folders are noise.
+- **Relocating canonical ledger files into the Box folder.** Per `DEC-2026-04-29-015`, ledger files stay at top-level `LEDGERS/`. The Box governs by reference.
+- **Duplicating local-law in both root `AGENTS.md` and `steward/AGENTS.md`.** Per `DEC-2026-04-30-007`, root governs the Box; steward governs the runnable steward. Don't restate.
+- **Authoring a Box with no audit trail surface.** Even if `receipts/` is empty, the directory should exist so the steward has a write target.
+
+### 16.9 Verification checklist
+
+A Box is mature-shape-compliant when:
+
+- [ ] `BOX.md` exists and is non-trivial (≥ 5 sections from §5 template).
+- [ ] `box.json` exists and validates against `DEC-2026-04-30-006` minimum schema (9 required fields populated).
+- [ ] `receipts/` directory exists.
+- [ ] If Box has a steward: `steward/AGENTS.md` + `steward/config.json` + `steward/prompt.md` exist.
+- [ ] If Box has local-stricter rules: root-level `AGENTS.md` exists.
+- [ ] `subscribes[]` and `emits[]` fields exist in `box.json` (may be empty arrays during Phase B).
+- [ ] Box is registered in the relevant index (`LEDGERS/INDEX.md` for ledger Boxes; `Auto/Client Boxes/` is self-discovering).
+- [ ] At least one `_ledger/activity.jsonl` line references the Box's authoring/migration.
+- [ ] `LEDGERS/scripts/box_graph_validate.sh` (Phase 4.1 / `ATOM-2026-04-30-0074`) returns no errors for this Box once available.
+
+This checklist becomes the **Box-completion Done Gate** in `DEFINITION_OF_DONE.md` §X (Phase 1.3 / `ATOM-2026-04-30-0058`).
+
+---
+
+## 17. Final Operating Rule
 
 > A meaningful directory should not be silent.
 >
 > If a directory matters, it should say what it is, what it owns, what it trusts, what it forbids, and how to leave it better than you found it.
 >
 > A Box is a directory with memory. Make the memory legible. Stamp the silence.
+>
+> **The mature primitive is the fused Box.** Box = Ledger + Rules + Sub-agent + Config + Receipts. Authoring a new Box is authoring a new governed object — not a new folder.

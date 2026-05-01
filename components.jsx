@@ -23,6 +23,7 @@ const SCREEN_LABELS = {
   analytics: "analytics",
   delegations: "delegations",
   boxes: "boxes",
+  box_graph: "box graph",
 };
 
 // i18n stub — i18n.js was retired (Apr 2026 trim). Any straggler `t("key")`
@@ -145,7 +146,7 @@ function Breadcrumb({ history, go }) {
 }
 window.Breadcrumb = Breadcrumb;
 
-function Topbar({ route, history, go, stateSig, webMode, onOpenSettings, onOpenLeads, onOpenClients, onOpenCoworkers, onOpenContacts, onOpenVenues, onOpenBriefing, onOpenActivity, onOpenAutomation, onOpenIntake, onOpenAnalytics, onOpenDelegations, onOpenBoxes, onHome }) {
+function Topbar({ route, history, go, stateSig, webMode, onOpenSettings, onOpenLeads, onOpenClients, onOpenCoworkers, onOpenContacts, onOpenVenues, onOpenBriefing, onOpenActivity, onOpenAutomation, onOpenIntake, onOpenAnalytics, onOpenDelegations, onOpenBoxes, onOpenBoxGraph, onHome }) {
   // Web-mode gating (2026-04-30 — PROB-2026-04-30-001 interim). When OpenAI is
   // selected as the AI provider we treat the app as if it were running in
   // hosted web mode (no Pieces connection). The briefing chip and activity
@@ -211,6 +212,9 @@ function Topbar({ route, history, go, stateSig, webMode, onOpenSettings, onOpenL
         </button>
         <button className={"chip" + (route.name === "boxes" ? " active" : "")} onClick={onOpenBoxes} title="Auto boxes runtime">
           <Icon name="layers" size={14}/>boxes
+        </button>
+        <button className={"chip" + (route.name === "box_graph" ? " active" : "")} onClick={onOpenBoxGraph} title="Box Graph">
+          <Icon name="git-branch" size={14}/>box graph
         </button>
         <button className={"chip" + (route.name === "automation" ? " active" : "")} onClick={onOpenAutomation} title="Automation graph">
           <Icon name="git-branch" size={14}/>automation
@@ -739,6 +743,7 @@ function ChatRail({ go, gridGenerate, aiBusy }) {
   const [busy, setBusy] = useState(false);
   const [computerUseBusy, setComputerUseBusy] = useState(false);
   const [browserUseBusy, setBrowserUseBusy] = useState(false);
+  const [routeStatus, setRouteStatus] = useState(null);
   const scrollRef = useRef(null);
 
   // Attachments — ported from ChatScreen so the homepage rail can finally
@@ -759,9 +764,70 @@ function ChatRail({ go, gridGenerate, aiBusy }) {
     if (scrollRef.current) scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
   }, [activeId, chats, busy]);
 
+  useEffect(() => {
+    let alive = true;
+    fetch("/api/status")
+      .then((r) => r.json())
+      .then((d) => { if (alive) setRouteStatus(d || {}); })
+      .catch(() => { if (alive) setRouteStatus({}); });
+    return () => { alive = false; };
+  }, []);
+
   const active = activeId ? chats.find(c => c.id === activeId) : null;
   // Show more turns on the front-page rail now that it's persistent.
   const turns = active ? active.turns.slice(-14) : [];
+  const activeRoute = useMemo(() => {
+    try {
+      const tweaks = JSON.parse(localStorage.getItem("secretary.tweaks") || "{}");
+      return tweaks.aiProvider || (window.SecretaryAI && window.SecretaryAI.getRoute && window.SecretaryAI.getRoute()) || "claude_code";
+    } catch {
+      return "claude_code";
+    }
+  }, [chats.length, busy]);
+  const providerName = activeRoute === "codex_cli" ? "Codex CLI" : activeRoute === "openai" ? "OpenAI" : "Claude Code";
+  const threadCount = chats.length;
+  const turnCount = active && Array.isArray(active.turns) ? active.turns.length : 0;
+  const routeStatusLoaded = routeStatus !== null;
+  const claudeOnline = !!(routeStatus && routeStatus.claude_code_available);
+  const codexOnline = !!(routeStatus && routeStatus.codex_cli_available);
+
+  const insertPrompt = useCallback((text) => {
+    setDraft((d) => {
+      const prefix = String(d || "").trim();
+      return prefix ? `${prefix}\n\n${text}` : text;
+    });
+  }, []);
+
+  const commandCards = useMemo(() => ([
+    {
+      key: "code-sweep",
+      title: "Code sweep",
+      meta: "Claude/Codex",
+      icon: "terminal",
+      text: "Take a careful sweep through the relevant files, identify the highest-leverage improvement, implement it, verify it, and update the ledgers.",
+    },
+    {
+      key: "box-route",
+      title: "Trace a Box route",
+      meta: "Box Graph",
+      icon: "git-branch",
+      text: "Use the Box Graph mental model: identify the source Box, interpreter, destination Box, receipts, and ledgers this change should touch.",
+    },
+    {
+      key: "guardrail",
+      title: "Guardrail pass",
+      meta: "Safe send",
+      icon: "alert-triangle",
+      text: "Review this for source-of-truth, allowed-to-know, approval-required language, and any risky automation moves before it becomes customer-facing.",
+    },
+    {
+      key: "delegate",
+      title: "Delegate-ready",
+      meta: "handoff",
+      icon: "terminal",
+      text: "Turn this into a clean delegation prompt with context, exact files, acceptance criteria, verification, and ledger-update requirements.",
+    },
+  ]), []);
 
   // ── File upload pipeline (identical filter to ChatScreen) ─────────────
   const ingestFiles = async (files) => {
@@ -1087,18 +1153,57 @@ function ChatRail({ go, gridGenerate, aiBusy }) {
   return (
     <div className="rail">
       <div className="panel chat-rail">
-        <header>
-          <h3 style={{display:"inline-flex", alignItems:"center", gap:6}}>
-            <Icon name="message-square" size={12}/> Chat
-          </h3>
-          <span className="hint" style={{display:"inline-flex", gap:8, alignItems:"center"}}>
-            <button onClick={newChat} title="New chat"
-              style={{background:"transparent", border:"none", cursor:"pointer", color:"var(--ink-4)", padding:0, display:"inline-flex", alignItems:"center", gap:3}}>
+        <header className="chat-rail-head">
+          <div>
+            <div className="chat-rail-kicker">command surface</div>
+            <h3><Icon name="message-square" size={13}/> Chat</h3>
+          </div>
+          <div className="chat-rail-head-actions">
+            {aiBusy && <span className="chat-rail-regening">regen…</span>}
+            <button onClick={newChat} title="New chat" className="chat-rail-new">
               <Icon name="plus" size={11}/> new
             </button>
-            {aiBusy && <span style={{fontSize:10, color:"var(--event-generate)"}}>· regen…</span>}
-          </span>
+          </div>
         </header>
+
+        <section className="chat-command-deck">
+          <div className="chat-route-board">
+            <article className={"chat-route-card " + (claudeOnline ? "live " : "") + (activeRoute === "claude_code" ? "active" : "")}>
+              <span className="chat-route-dot"></span>
+              <b>Claude Code</b>
+              <em>{!routeStatusLoaded ? "checking" : claudeOnline ? "binary online" : "offline"}</em>
+            </article>
+            <article className={"chat-route-card " + (codexOnline ? "live " : "") + (activeRoute === "codex_cli" ? "active" : "")}>
+              <span className="chat-route-dot"></span>
+              <b>Codex CLI</b>
+              <em>{!routeStatusLoaded ? "checking" : codexOnline ? "binary online" : "offline"}</em>
+            </article>
+            <article className="chat-route-card">
+              <span className="chat-route-dot"></span>
+              <b>{providerName}</b>
+              <em>{turnCount} turns · {threadCount} threads</em>
+            </article>
+          </div>
+          <div className="chat-command-cards">
+            {commandCards.map((card) => (
+              <button key={card.key} onClick={() => insertPrompt(card.text)} title={`Insert ${card.title} prompt`}>
+                <Icon name={card.icon} size={13}/>
+                <span>
+                  <b>{card.title}</b>
+                  <em>{card.meta}</em>
+                </span>
+              </button>
+            ))}
+            <button onClick={() => go && go.push && go.push("box_graph")} title="Open Box Graph">
+              <Icon name="git-branch" size={13}/>
+              <span><b>Open graph</b><em>network map</em></span>
+            </button>
+            <button onClick={() => go && go.push && go.push("delegations")} title="Open Delegations">
+              <Icon name="terminal" size={13}/>
+              <span><b>Delegations</b><em>action zone</em></span>
+            </button>
+          </div>
+        </section>
 
         <div
           ref={scrollRef}

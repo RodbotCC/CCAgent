@@ -37,7 +37,7 @@
   "claim_protocol": {
     "rule_1": "Single-writer wins. Atomic update of status/claimed_by/claimed_at to BOTH ATOMS.md and ATOMS.json in one unit of work.",
     "rule_2": "JSON mirror is canonical for race resolution. When MD and JSON disagree on status, JSON wins.",
-    "stale_claim_rule": "claimed > 24h with no in_progress_at \u2014 any subsequent agent may release back to available."
+    "stale_claim_rule": "claimed > 24h with no in_progress_at — any subsequent agent may release back to available."
   },
   "required_fields_schema": {
     "id": "ATOM-YYYY-MM-DD-####",
@@ -106,8 +106,8 @@
       "Pick a PROB",
       "Read end-to-end including close-criteria",
       "List discrete actions per close-criterion",
-      "Size each (\u22644h or re-decompose)",
-      "Write atoms to ATOMS.md \u00a710 + ATOMS.json atoms[]",
+      "Size each (≤4h or re-decompose)",
+      "Write atoms to ATOMS.md §10 + ATOMS.json atoms[]",
       "Cross-link from parent PROB",
       "Append _ledger/activity.jsonl with kind: atoms_authored"
     ],
@@ -119,7 +119,7 @@
       "id": "ATOM-2026-04-30-0001",
       "parent_problem_id": "PROB-2026-04-28-016",
       "title": "Verify ledger buildout reached 'active' for all planned ledgers in INDEX.md (gate)",
-      "description": "Read LEDGERS/INDEX.md. Confirm every ledger in \u00a7Top-level continuity, \u00a7Truth and rules, \u00a7Map and inventory, \u00a7Memory of the work either has status 'active' or has an explicit defer reason in PHASE.md \u00a74. If any are still 'planned' without a defer, this gate fails \u2014 surface in COMM and re-evaluate PROB-016 atom queue.",
+      "description": "Read LEDGERS/INDEX.md. Confirm every ledger in §Top-level continuity, §Truth and rules, §Map and inventory, §Memory of the work either has status 'active' or has an explicit defer reason in PHASE.md §4. If any are still 'planned' without a defer, this gate fails — surface in COMM and re-evaluate PROB-016 atom queue.",
       "acceptance_criteria": "A short verification note documents (a) every ledger in INDEX.md with status active, planned-with-defer, or out-of-scope, and (b) confirmation that no 'silent planned' ledgers exist. Note appended to ATOM verification field.",
       "estimated_effort": "30min",
       "status": "completed",
@@ -157,15 +157,15 @@
       "in_progress_at": "2026-04-30T22:15:30Z",
       "completed_at": "2026-04-30T22:22:00Z",
       "completed_by": "claude_cowork_session_2026-04-30",
-      "verification": "Audit complete. 59 INDEX.md rows tagged: 53 active, 3 planned-with-explicit-defer (Widget Ledgers / Prompt-Reconstruction / Scout \u2014 all named in PHASE.md \u00a74 line 104), 1 out-of-scope (Audit per DEC-2026-04-29-004), 1 deferred (remaining 9 Page Ledgers). Zero silent-planned. Full receipt: LEDGERS/BOXES/atoms/receipts/2026-04-30_2220_atom_0001_verification.md. One non-blocking anomaly surfaced \u2014 stale '2 of 14' stat on Page Ledgers directory row (should read '5 of 14'); cosmetic, doesn't affect status.",
+      "verification": "Audit complete. 59 INDEX.md rows tagged: 53 active, 3 planned-with-explicit-defer (Widget Ledgers / Prompt-Reconstruction / Scout — all named in PHASE.md §4 line 104), 1 out-of-scope (Audit per DEC-2026-04-29-004), 1 deferred (remaining 9 Page Ledgers). Zero silent-planned. Full receipt: LEDGERS/BOXES/atoms/receipts/2026-04-30_2220_atom_0001_verification.md. One non-blocking anomaly surfaced — stale '2 of 14' stat on Page Ledgers directory row (should read '5 of 14'); cosmetic, doesn't affect status.",
       "do_not_undo_casually": "Don't skip this gate. Auditing bedrock dirs without confirming the ledger system stabilized first produces decisions that get reversed when missing ledgers land.",
-      "notes": "Gate satisfied. PROB-016 audit atoms (0003-0022) now blocked only by ATOM-0002. Completed 7 minutes after claim \u2014 well under 30min estimate."
+      "notes": "Gate satisfied. PROB-016 audit atoms (0003-0022) now blocked only by ATOM-0002. Completed 7 minutes after claim — well under 30min estimate."
     },
     {
       "id": "ATOM-2026-04-30-0002",
       "parent_problem_id": "PROB-2026-04-28-016",
       "title": "Verify sub-agent buildout reached one runnable app agent per state-bearing domain (gate)",
-      "description": "Walk CCAgentindex/agents/ AND LEDGERS/BOXES/<name>/steward/ (post DEC-2026-04-30-004 both paths are runnable) to count stewards across the 5 state-bearing domains (global_ledger, temporal_continuity, north_star, file_directory, open_problems). Cross-reference /Subagent Boxes/ for unpromoted drafts. Document state \u2014 acceptance is to RECORD the count, not to require 5/5.",
+      "description": "Walk CCAgentindex/agents/ AND LEDGERS/BOXES/<name>/steward/ (post DEC-2026-04-30-004 both paths are runnable) to count stewards across the 5 state-bearing domains (global_ledger, temporal_continuity, north_star, file_directory, open_problems). Cross-reference /Subagent Boxes/ for unpromoted drafts. Document state — acceptance is to RECORD the count, not to require 5/5.",
       "acceptance_criteria": "A short verification note documents the 5 expected state-bearing domains and which have runnable app agents (across CCAgentindex/agents/ legacy path and LEDGERS/BOXES/<name>/steward/ unified path). Note appended to verification field.",
       "estimated_effort": "30min",
       "status": "completed",
@@ -203,15 +203,15 @@
       "in_progress_at": "2026-04-30T22:30:30Z",
       "completed_at": "2026-04-30T22:35:00Z",
       "completed_by": "claude_cowork_session_2026-04-30",
-      "verification": "Audit complete. 2 of 5 state-bearing domains have runnable stewards: global_ledger (legacy CCAgentindex/agents/ path) + temporal_continuity (unified Box path, post DEC-2026-04-30-004). 3 remain draft at /Subagent Boxes/: north_star, open_problems, file_directory \u2014 each has a 4-atom promotion chain in PROB-005 (chains 0040, 0032, 0036). server.py _agent_resolve_prompt (lines 4871-4925) treats both paths as runnable. Acceptance criterion (document the count) satisfied. Full receipt: LEDGERS/BOXES/atoms/receipts/2026-04-30_2235_atom_0002_verification.md. Strategic note: gates pass but only 2/5 fleet runnable \u2014 bedrock audit atoms are technically claimable, but the prudent move is keep promoting stewards before starting bedrock decisions.",
+      "verification": "Audit complete. 2 of 5 state-bearing domains have runnable stewards: global_ledger (legacy CCAgentindex/agents/ path) + temporal_continuity (unified Box path, post DEC-2026-04-30-004). 3 remain draft at /Subagent Boxes/: north_star, open_problems, file_directory — each has a 4-atom promotion chain in PROB-005 (chains 0040, 0032, 0036). server.py _agent_resolve_prompt (lines 4871-4925) treats both paths as runnable. Acceptance criterion (document the count) satisfied. Full receipt: LEDGERS/BOXES/atoms/receipts/2026-04-30_2235_atom_0002_verification.md. Strategic note: gates pass but only 2/5 fleet runnable — bedrock audit atoms are technically claimable, but the prudent move is keep promoting stewards before starting bedrock decisions.",
       "do_not_undo_casually": "Don't skip this gate either. Reconciling bedrock without runnable stewards means the audited dirs have nobody to maintain them post-decision.",
-      "notes": "Gate satisfied 2026-04-30T22:35Z. Paired with ATOM-0001 \u2014 together they unlock the 20 PROB-016 audit atoms. Anomalies surfaced: (1) Atomizer Steward has no promotion atom yet \u2014 suggested ATOM-0045. (2) /Subagent Boxes/temporal_continuity_subagent_package/ is now superseded \u2014 DEPR candidate."
+      "notes": "Gate satisfied 2026-04-30T22:35Z. Paired with ATOM-0001 — together they unlock the 20 PROB-016 audit atoms. Anomalies surfaced: (1) Atomizer Steward has no promotion atom yet — suggested ATOM-0045. (2) /Subagent Boxes/temporal_continuity_subagent_package/ is now superseded — DEPR candidate."
     },
     {
       "id": "ATOM-2026-04-30-0003",
       "parent_problem_id": "PROB-2026-04-28-016",
-      "title": "Audit CCAgentindex/analytics/ \u2014 decide collapse target",
-      "description": "Read every file in CCAgentindex/analytics/. Decide collapse target: (a) Box (per-entity state), (b) Ledger (legible memory), (c) Sub-agent territory, (d) bedrock primitive (loader infrastructure), (e) archive. Document reasoning. Currently this dir holds analytics_*.py output snapshots (per DEC-2026-04-30-001 server-synthesizer pattern). Likely (d) bedrock primitive \u2014 synthesizer-output cache.",
+      "title": "Audit CCAgentindex/analytics/ — decide collapse target",
+      "description": "Read every file in CCAgentindex/analytics/. Decide collapse target: (a) Box (per-entity state), (b) Ledger (legible memory), (c) Sub-agent territory, (d) bedrock primitive (loader infrastructure), (e) archive. Document reasoning. Currently this dir holds analytics_*.py output snapshots (per DEC-2026-04-30-001 server-synthesizer pattern). Likely (d) bedrock primitive — synthesizer-output cache.",
       "acceptance_criteria": "Decision recorded in atom verification field with one-paragraph reasoning. Cross-referenced from PROB-016. If target is Box/Ledger/Sub-agent, follow-on migration atom authored.",
       "estimated_effort": "1h",
       "status": "available",
@@ -236,13 +236,13 @@
       "completed_at": null,
       "completed_by": null,
       "verification": null,
-      "do_not_undo_casually": "Recommendation: bedrock primitive. Per DEC-2026-04-30-001, analytics snapshot JSONs are server-synthesizer output, not Box state. Don't collapse into Boxes \u2014 that breaks the synthesizer.",
+      "do_not_undo_casually": "Recommendation: bedrock primitive. Per DEC-2026-04-30-001, analytics snapshot JSONs are server-synthesizer output, not Box state. Don't collapse into Boxes — that breaks the synthesizer.",
       "notes": "First of 20 directory-audit atoms. Likely outcome: 'bedrock primitive'."
     },
     {
       "id": "ATOM-2026-04-30-0004",
       "parent_problem_id": "PROB-2026-04-28-016",
-      "title": "Audit CCAgentindex/annotations/ \u2014 decide collapse target",
+      "title": "Audit CCAgentindex/annotations/ — decide collapse target",
       "description": "Read every file in CCAgentindex/annotations/. Decide collapse target. Annotations may belong inside specific Boxes (per-entity) or as a domain-wide ledger; resolve which.",
       "acceptance_criteria": "Decision recorded in atom verification with reasoning. Cross-referenced from PROB-016.",
       "estimated_effort": "1h",
@@ -274,7 +274,7 @@
     {
       "id": "ATOM-2026-04-30-0005",
       "parent_problem_id": "PROB-2026-04-28-016",
-      "title": "Audit CCAgentindex/catalog/ \u2014 decide collapse target",
+      "title": "Audit CCAgentindex/catalog/ — decide collapse target",
       "description": "Read every file in CCAgentindex/catalog/. Decide collapse target. Catalog may be a static reference dataset (bedrock primitive) or a generated view of Box state.",
       "acceptance_criteria": "Decision recorded with reasoning.",
       "estimated_effort": "30min",
@@ -300,13 +300,13 @@
       "completed_at": null,
       "completed_by": null,
       "verification": null,
-      "do_not_undo_casually": "If catalog is feeding the comeketo-inbox skill (menu / pricing reference), it's load-bearing \u2014 don't archive without verifying.",
+      "do_not_undo_casually": "If catalog is feeding the comeketo-inbox skill (menu / pricing reference), it's load-bearing — don't archive without verifying.",
       "notes": ""
     },
     {
       "id": "ATOM-2026-04-30-0006",
       "parent_problem_id": "PROB-2026-04-28-016",
-      "title": "Audit CCAgentindex/charts/ \u2014 decide collapse target",
+      "title": "Audit CCAgentindex/charts/ — decide collapse target",
       "description": "Read every file in CCAgentindex/charts/. Decide collapse target. Charts likely contains generated chart artifacts; expected (d) bedrock primitive or (e) archive if unused.",
       "acceptance_criteria": "Decision recorded with reasoning.",
       "estimated_effort": "30min",
@@ -338,7 +338,7 @@
     {
       "id": "ATOM-2026-04-30-0007",
       "parent_problem_id": "PROB-2026-04-28-016",
-      "title": "Audit CCAgentindex/commitments/ \u2014 decide collapse target (likely already retired)",
+      "title": "Audit CCAgentindex/commitments/ — decide collapse target (likely already retired)",
       "description": "CCAgentindex/commitments/ was retired in the Apr 2026 great trim per DEPR-2026-04-30-001. Verify it's actually empty/removed; if files remain, decide whether they're stragglers to archive or content that needs to go into Client Boxes.",
       "acceptance_criteria": "Verification that commitments/ is empty/removed OR a documented disposition for any remaining files.",
       "estimated_effort": "15min",
@@ -364,14 +364,14 @@
       "in_progress_at": "2026-04-30T22:42:30Z",
       "completed_at": "2026-04-30T22:45:00Z",
       "completed_by": "claude_cowork_session_2026-04-30",
-      "verification": "Directory functionally empty \u2014 contains only .gitkeep (0 bytes). NOT referenced in indexes/index.json. Already documented in FILE_DIRECTORY_LEDGER.md line 166 + .json line 244 as 'legacy / stub \u2014 Retired domain \u2014 .gitkeep only'. Already covered by DEPR-2026-04-30-001. Decision: collapse target = archive (final removal). No content to migrate. Recommended action: ATOM-0024 drops the FDL row; rmdir CCAgentindex/commitments/ is safe afterward (or as part of ATOM-0023). Full receipt: LEDGERS/BOXES/atoms/receipts/2026-04-30_2245_atom_0007_audit.md.",
+      "verification": "Directory functionally empty — contains only .gitkeep (0 bytes). NOT referenced in indexes/index.json. Already documented in FILE_DIRECTORY_LEDGER.md line 166 + .json line 244 as 'legacy / stub — Retired domain — .gitkeep only'. Already covered by DEPR-2026-04-30-001. Decision: collapse target = archive (final removal). No content to migrate. Recommended action: ATOM-0024 drops the FDL row; rmdir CCAgentindex/commitments/ is safe afterward (or as part of ATOM-0023). Full receipt: LEDGERS/BOXES/atoms/receipts/2026-04-30_2245_atom_0007_audit.md.",
       "do_not_undo_casually": "Commitments was deliberately retired; don't rebuild without a Decision reversing the great trim.",
-      "notes": "Completed 2026-04-30T22:45Z \u2014 first bedrock audit shipped, ~3 min real time (well under 15min estimate). Anomaly noted: 6 other stub-only dirs (threads, projects, knowledge, tables, annotations, charts) follow the same pattern and can collapse together via propagation atoms once their respective audits ship."
+      "notes": "Completed 2026-04-30T22:45Z — first bedrock audit shipped, ~3 min real time (well under 15min estimate). Anomaly noted: 6 other stub-only dirs (threads, projects, knowledge, tables, annotations, charts) follow the same pattern and can collapse together via propagation atoms once their respective audits ship."
     },
     {
       "id": "ATOM-2026-04-30-0008",
       "parent_problem_id": "PROB-2026-04-28-016",
-      "title": "Audit CCAgentindex/hooks/ \u2014 decide collapse target",
+      "title": "Audit CCAgentindex/hooks/ — decide collapse target",
       "description": "Read every file in CCAgentindex/hooks/. Decide collapse target. Hooks likely belongs as Sub-agent territory (automation / orchestrator wiring) or bedrock primitive.",
       "acceptance_criteria": "Decision recorded with reasoning.",
       "estimated_effort": "30min",
@@ -397,13 +397,13 @@
       "completed_at": null,
       "completed_by": null,
       "verification": null,
-      "do_not_undo_casually": "Hooks may be wired into server.py event paths \u2014 don't archive without grep evidence.",
+      "do_not_undo_casually": "Hooks may be wired into server.py event paths — don't archive without grep evidence.",
       "notes": ""
     },
     {
       "id": "ATOM-2026-04-30-0009",
       "parent_problem_id": "PROB-2026-04-28-016",
-      "title": "Audit CCAgentindex/intake_reports/ \u2014 decide collapse target",
+      "title": "Audit CCAgentindex/intake_reports/ — decide collapse target",
       "description": "Read every file in CCAgentindex/intake_reports/. Per DEC-2026-04-29-005, Intake page synthesizes Box Reports from Auto/Client Boxes/ on read; intake_reports/ may be Workspaces (manual reports) only. Confirm scope.",
       "acceptance_criteria": "Decision recorded; verify Workspaces vs Box Reports split.",
       "estimated_effort": "30min",
@@ -439,11 +439,11 @@
     {
       "id": "ATOM-2026-04-30-0010",
       "parent_problem_id": "PROB-2026-04-28-016",
-      "title": "Audit CCAgentindex/intelligence/ \u2014 decide collapse target",
-      "description": "Read every file in CCAgentindex/intelligence/. Per DEC-2026-04-30-001, intelligence/<area>/<date>.md is build_*.py script output; markdown is canonical, JSON is synthesizer view. Likely (d) bedrock primitive \u2014 build-script output cache.",
+      "title": "Audit CCAgentindex/intelligence/ — decide collapse target",
+      "description": "Read every file in CCAgentindex/intelligence/. Per DEC-2026-04-30-001, intelligence/<area>/<date>.md is build_*.py script output; markdown is canonical, JSON is synthesizer view. Likely (d) bedrock primitive — build-script output cache.",
       "acceptance_criteria": "Decision recorded; verify intelligence/ pairs cleanly with the synthesizer pattern.",
       "estimated_effort": "30min",
-      "status": "available",
+      "status": "completed",
       "tier": "domain",
       "area": "CCAgentindex/intelligence",
       "parent_chain": [
@@ -460,19 +460,19 @@
         "ATOM-2026-04-30-0025",
         "ATOM-2026-04-30-0026"
       ],
-      "claimed_by": null,
-      "claimed_at": null,
-      "in_progress_at": null,
-      "completed_at": null,
-      "completed_by": null,
-      "verification": null,
+      "claimed_by": "claude_cowork",
+      "claimed_at": "2026-05-01T01:07:54Z",
+      "in_progress_at": "2026-05-01T01:09:34Z",
+      "completed_at": "2026-05-01T01:09:34Z",
+      "completed_by": "claude_cowork",
+      "verification": "AUDIT COMPLETE — DECISION: **KEEP AS BEDROCK PRIMITIVE.** intelligence/ is well-formed bedrock and should NOT migrate to a Box, NOT archive, NOT consolidate. Tree shape: 7 top-level subareas (sales, leads, ops, cashflow, _runs, libraries, channels) × 2-6 child folders each = 24 leaf folders matching the 24 build_*.py scripts in 'Onboard Scripts/'. Total 119 files: 56 .md (canonical narrative outputs) + 30 .jsonl (structured data) + 24 .gitkeep (stubs for unintegrated scripts) + 8 .DS_Store (in .gitignore — won't be tracked) + 1 .json (build_conversation_intelligence output, paired with same-day .md per DEC-2026-04-30-001). Two subareas are operational today: sales/conversation/ (build_conversation_intelligence.py — surfaced by AnalyticsScreen ConversationIntelligencePanel) and sales/owner_stage/ (build_owner_stage_dashboards.py — surfaced by OwnerStagePanel via /api/analytics/owner_stage server endpoint, my earlier work via DEC-2026-04-30-001). MANIFEST.md (11924b) at root explicitly defines conventions: append-only dated files; source-of-truth inputs prefer people/*.json + venues/*.json; loader visibility N/A (UI surfaces aggregate views); ledger appends per-run. Per-script status table shows 24 scripts and their states (mostly 'blocked — needs raw Close export' for the legacy chain; 2 operational; rest pending). Subscribers identified: server.py (2 endpoints — /api/intelligence/conversation/latest and /api/analytics/owner_stage), mission_control_loader.js, screens.jsx. **Pairs cleanly with DEC-2026-04-30-001** synthesizer pattern (verified): the canonical server-synthesizes-JSON-from-markdown contract is exactly what intelligence/'s MANIFEST conventions describe. **Decision rationale: BEDROCK PRIMITIVE because** (a) it's data output not configuration/state — Boxes are for state-bearing entities; (b) ownership model is already clear via per-subarea-per-script mapping; (c) MANIFEST.md serves as a local orientation file (effectively a Box-lite); (d) the synthesizer pattern makes read pathways explicit and Box migration adds zero value; (e) it's actively used and forward-looking (21 of 24 scripts blocked but stubs exist in anticipation). **Optional follow-ups (NOT blocking this atom):** MANIFEST.md should cross-reference DEC-2026-04-30-001 in its header (currently predates that decision); MANIFEST.md status column should update as more build_*.py scripts get integrated (sales/conversation + sales/owner_stage are 'operational' now, MANIFEST may say 'blocked' for some). Atom acceptance criterion 'Decision recorded; verify intelligence/ pairs cleanly with the synthesizer pattern' satisfied.",
       "do_not_undo_casually": "Per DEC-2026-04-30-001, the markdown is canonical; don't refactor into Box state without reversing that Decision.",
       "notes": ""
     },
     {
       "id": "ATOM-2026-04-30-0011",
       "parent_problem_id": "PROB-2026-04-28-016",
-      "title": "Audit CCAgentindex/knowledge/ \u2014 decide collapse target (likely already retired)",
+      "title": "Audit CCAgentindex/knowledge/ — decide collapse target (likely already retired)",
       "description": "CCAgentindex/knowledge/ was retired in the Apr 2026 great trim per DEPR-2026-04-30-001. Verify empty/removed.",
       "acceptance_criteria": "Verification that knowledge/ is empty/removed OR documented disposition.",
       "estimated_effort": "15min",
@@ -498,15 +498,15 @@
       "in_progress_at": "2026-04-30T22:48:30Z",
       "completed_at": "2026-04-30T22:50:00Z",
       "completed_by": "claude_cowork_session_2026-04-30",
-      "verification": "Directory functionally empty \u2014 contains only .gitkeep (0 bytes). NOT referenced in indexes/index.json. Already documented in FILE_DIRECTORY_LEDGER.md line 169 + .json line 247 as 'legacy / stub \u2014 Retired domain \u2014 .gitkeep only'. Already covered by DEPR-2026-04-30-001. Decision: collapse target = archive (final removal). Identical disposition to ATOM-0007 (commitments). When ATOM-0024 runs, drop FDL row line 169 + JSON line 247; rmdir is safe afterward. Full receipt: LEDGERS/BOXES/atoms/receipts/2026-04-30_2250_atom_0011_audit.md.",
+      "verification": "Directory functionally empty — contains only .gitkeep (0 bytes). NOT referenced in indexes/index.json. Already documented in FILE_DIRECTORY_LEDGER.md line 169 + .json line 247 as 'legacy / stub — Retired domain — .gitkeep only'. Already covered by DEPR-2026-04-30-001. Decision: collapse target = archive (final removal). Identical disposition to ATOM-0007 (commitments). When ATOM-0024 runs, drop FDL row line 169 + JSON line 247; rmdir is safe afterward. Full receipt: LEDGERS/BOXES/atoms/receipts/2026-04-30_2250_atom_0011_audit.md.",
       "do_not_undo_casually": "Don't rebuild knowledge/ without reversing the great trim.",
-      "notes": "Completed 2026-04-30T22:50Z \u2014 ~2 min real-time, well under 15min estimate. Pattern established by ATOM-0007 holds."
+      "notes": "Completed 2026-04-30T22:50Z — ~2 min real-time, well under 15min estimate. Pattern established by ATOM-0007 holds."
     },
     {
       "id": "ATOM-2026-04-30-0012",
       "parent_problem_id": "PROB-2026-04-28-016",
-      "title": "Audit CCAgentindex/people/ \u2014 decide collapse target (likely survives as bedrock primitive)",
-      "description": "CCAgentindex/people/<slug>.json is the canonical people taxonomy per CLAUDE.md \u00a73.1 (kind: coworker/lead/client/contact). Verify all records have kind, are loader-registered, and the directory survives in current architecture.",
+      "title": "Audit CCAgentindex/people/ — decide collapse target (likely survives as bedrock primitive)",
+      "description": "CCAgentindex/people/<slug>.json is the canonical people taxonomy per CLAUDE.md §3.1 (kind: coworker/lead/client/contact). Verify all records have kind, are loader-registered, and the directory survives in current architecture.",
       "acceptance_criteria": "Decision recorded; people/ confirmed as bedrock primitive serving the People UI pages.",
       "estimated_effort": "30min",
       "status": "available",
@@ -531,13 +531,13 @@
       "completed_at": null,
       "completed_by": null,
       "verification": null,
-      "do_not_undo_casually": "people/ is canonical; don't migrate into Boxes \u2014 Boxes are for richer state per entity, people/ holds lightweight identity records.",
-      "notes": "Likely 'bedrock primitive \u2014 survives as is'."
+      "do_not_undo_casually": "people/ is canonical; don't migrate into Boxes — Boxes are for richer state per entity, people/ holds lightweight identity records.",
+      "notes": "Likely 'bedrock primitive — survives as is'."
     },
     {
       "id": "ATOM-2026-04-30-0013",
       "parent_problem_id": "PROB-2026-04-28-016",
-      "title": "Audit CCAgentindex/projects/ \u2014 decide collapse target (likely already retired)",
+      "title": "Audit CCAgentindex/projects/ — decide collapse target (likely already retired)",
       "description": "CCAgentindex/projects/ was retired in the Apr 2026 great trim per DEPR-2026-04-30-001. Verify empty/removed.",
       "acceptance_criteria": "Verification that projects/ is empty/removed OR documented disposition.",
       "estimated_effort": "15min",
@@ -563,14 +563,14 @@
       "in_progress_at": "2026-04-30T22:55:30Z",
       "completed_at": "2026-04-30T22:57:00Z",
       "completed_by": "claude_cowork_session_2026-04-30",
-      "verification": "Directory functionally empty \u2014 contains only .gitkeep (0 bytes). NOT referenced in indexes/index.json. Already documented in FILE_DIRECTORY_LEDGER.md line 168 + .json line 246 as 'legacy / stub \u2014 Retired domain \u2014 .gitkeep only'. Already covered by DEPR-2026-04-30-001. Decision: collapse target = archive (final removal). Identical disposition to ATOM-0007/0011. When ATOM-0024 runs, drop FDL row line 168 + JSON line 246; rmdir is safe afterward. Receipt: LEDGERS/BOXES/atoms/receipts/2026-04-30_2257_atom_0013_audit.md.",
+      "verification": "Directory functionally empty — contains only .gitkeep (0 bytes). NOT referenced in indexes/index.json. Already documented in FILE_DIRECTORY_LEDGER.md line 168 + .json line 246 as 'legacy / stub — Retired domain — .gitkeep only'. Already covered by DEPR-2026-04-30-001. Decision: collapse target = archive (final removal). Identical disposition to ATOM-0007/0011. When ATOM-0024 runs, drop FDL row line 168 + JSON line 246; rmdir is safe afterward. Receipt: LEDGERS/BOXES/atoms/receipts/2026-04-30_2257_atom_0013_audit.md.",
       "do_not_undo_casually": "Don't rebuild projects/ without reversing the great trim.",
-      "notes": "Completed 2026-04-30T22:57Z \u2014 ~2 min real-time. Pattern: third stub-audit shipped (after 0007, 0011)."
+      "notes": "Completed 2026-04-30T22:57Z — ~2 min real-time. Pattern: third stub-audit shipped (after 0007, 0011)."
     },
     {
       "id": "ATOM-2026-04-30-0014",
       "parent_problem_id": "PROB-2026-04-28-016",
-      "title": "Audit CCAgentindex/reports/ \u2014 decide collapse target",
+      "title": "Audit CCAgentindex/reports/ — decide collapse target",
       "description": "Read every file in CCAgentindex/reports/. Per DEC-2026-04-29-005..008, reports/ holds Workspaces and _box_conversations/ append-only history. Likely (d) bedrock primitive.",
       "acceptance_criteria": "Decision recorded; confirm _box_conversations/ append-only contract still holds.",
       "estimated_effort": "30min",
@@ -603,7 +603,7 @@
     {
       "id": "ATOM-2026-04-30-0015",
       "parent_problem_id": "PROB-2026-04-28-016",
-      "title": "Audit CCAgentindex/Rodbot/ \u2014 decide collapse target (likely already retired)",
+      "title": "Audit CCAgentindex/Rodbot/ — decide collapse target (likely already retired)",
       "description": "CCAgentindex/Rodbot/ was retired in the Apr 2026 great trim. Verify empty/removed. If not empty, decide on archive.",
       "acceptance_criteria": "Verification that Rodbot/ is empty/removed OR documented disposition.",
       "estimated_effort": "15min",
@@ -628,14 +628,14 @@
       "in_progress_at": "2026-04-30T23:00:30Z",
       "completed_at": "2026-04-30T23:02:00Z",
       "completed_by": "claude_cowork_session_2026-04-30",
-      "verification": "Directory functionally empty \u2014 contains only .gitkeep (0 bytes). NOT referenced in indexes/index.json. FDL line 165 + line 382 + JSON line 240 already document as 'legacy / stub \u2014 Wiped in Apr 2026 great trim per CLAUDE.md'. Original Rodbot/ identity content (identity.md, character.md, traits.md, affective_essence.md per CLAUDE.md notes for build team) was wiped in great trim \u2014 Pieces stands alone as memory backend. Decision: collapse target = archive. ATOM-0024 drops FDL rows; rmdir safe. **Note:** existing DEPR-2026-04-30-001 covers retired bedrock domains generally but doesn't enumerate Rodbot specifically \u2014 could be backfilled into DEPR-001 entry's path list, or filed as a sibling DEPR if granularity matters. Not blocking. Receipt: LEDGERS/BOXES/atoms/receipts/2026-04-30_2302_atom_0015_audit.md.",
+      "verification": "Directory functionally empty — contains only .gitkeep (0 bytes). NOT referenced in indexes/index.json. FDL line 165 + line 382 + JSON line 240 already document as 'legacy / stub — Wiped in Apr 2026 great trim per CLAUDE.md'. Original Rodbot/ identity content (identity.md, character.md, traits.md, affective_essence.md per CLAUDE.md notes for build team) was wiped in great trim — Pieces stands alone as memory backend. Decision: collapse target = archive. ATOM-0024 drops FDL rows; rmdir safe. **Note:** existing DEPR-2026-04-30-001 covers retired bedrock domains generally but doesn't enumerate Rodbot specifically — could be backfilled into DEPR-001 entry's path list, or filed as a sibling DEPR if granularity matters. Not blocking. Receipt: LEDGERS/BOXES/atoms/receipts/2026-04-30_2302_atom_0015_audit.md.",
       "do_not_undo_casually": "Don't rebuild Rodbot/ without an explicit Decision; Pieces stands alone now.",
-      "notes": "Completed 2026-04-30T23:02Z \u2014 ~2 min real-time. Stub-pattern atom #4. Anomaly surfaced: DEPR-2026-04-30-001 path list could be expanded to enumerate Rodbot/ explicitly (currently covers projects/threads/commitments/knowledge/ \u2014 Rodbot is mentioned in CLAUDE.md but not in the DEPR entry path list). Cosmetic; not blocking."
+      "notes": "Completed 2026-04-30T23:02Z — ~2 min real-time. Stub-pattern atom #4. Anomaly surfaced: DEPR-2026-04-30-001 path list could be expanded to enumerate Rodbot/ explicitly (currently covers projects/threads/commitments/knowledge/ — Rodbot is mentioned in CLAUDE.md but not in the DEPR entry path list). Cosmetic; not blocking."
     },
     {
       "id": "ATOM-2026-04-30-0016",
       "parent_problem_id": "PROB-2026-04-28-016",
-      "title": "Audit CCAgentindex/scheduled_tasks/ \u2014 decide collapse target",
+      "title": "Audit CCAgentindex/scheduled_tasks/ — decide collapse target",
       "description": "Read every file in CCAgentindex/scheduled_tasks/. Per CONNECTIONS.md, Cowork scheduled tasks is an active service. Determine whether scheduled_tasks/ holds task definitions (sub-agent territory) or task run state (bedrock primitive).",
       "acceptance_criteria": "Decision recorded with reasoning.",
       "estimated_effort": "30min",
@@ -661,13 +661,13 @@
       "completed_at": null,
       "completed_by": null,
       "verification": null,
-      "do_not_undo_casually": "Active service \u2014 verify production scheduled tasks aren't relying on this dir before any move.",
+      "do_not_undo_casually": "Active service — verify production scheduled tasks aren't relying on this dir before any move.",
       "notes": ""
     },
     {
       "id": "ATOM-2026-04-30-0017",
       "parent_problem_id": "PROB-2026-04-28-016",
-      "title": "Audit CCAgentindex/summaries/ \u2014 decide collapse target",
+      "title": "Audit CCAgentindex/summaries/ — decide collapse target",
       "description": "Read every file in CCAgentindex/summaries/. Determine whether summaries are generated views (bedrock primitive cache) or canonical state.",
       "acceptance_criteria": "Decision recorded with reasoning.",
       "estimated_effort": "30min",
@@ -699,7 +699,7 @@
     {
       "id": "ATOM-2026-04-30-0018",
       "parent_problem_id": "PROB-2026-04-28-016",
-      "title": "Audit CCAgentindex/tables/ \u2014 decide collapse target",
+      "title": "Audit CCAgentindex/tables/ — decide collapse target",
       "description": "Read every file in CCAgentindex/tables/. Tables route was retired in Apr 2026 trim per DEPR-2026-04-30-004; tables/ dir may be similarly retired.",
       "acceptance_criteria": "Verification that tables/ is empty/removed OR documented disposition.",
       "estimated_effort": "15min",
@@ -732,7 +732,7 @@
     {
       "id": "ATOM-2026-04-30-0019",
       "parent_problem_id": "PROB-2026-04-28-016",
-      "title": "Audit CCAgentindex/threads/ \u2014 decide collapse target (likely already retired)",
+      "title": "Audit CCAgentindex/threads/ — decide collapse target (likely already retired)",
       "description": "CCAgentindex/threads/ was retired in the Apr 2026 great trim per DEPR-2026-04-30-001. Verify empty/removed.",
       "acceptance_criteria": "Verification that threads/ is empty/removed OR documented disposition.",
       "estimated_effort": "15min",
@@ -765,7 +765,7 @@
     {
       "id": "ATOM-2026-04-30-0020",
       "parent_problem_id": "PROB-2026-04-28-016",
-      "title": "Audit CCAgentindex/triggers/ \u2014 decide collapse target",
+      "title": "Audit CCAgentindex/triggers/ — decide collapse target",
       "description": "Read every file in CCAgentindex/triggers/. Triggers may be sub-agent territory (automation hooks) or bedrock primitive.",
       "acceptance_criteria": "Decision recorded with reasoning.",
       "estimated_effort": "30min",
@@ -797,8 +797,8 @@
     {
       "id": "ATOM-2026-04-30-0021",
       "parent_problem_id": "PROB-2026-04-28-016",
-      "title": "Audit CCAgentindex/venues/ \u2014 decide collapse target (likely survives as bedrock primitive)",
-      "description": "CCAgentindex/venues/<slug>.json holds 30 venue records authored 2026-04-27 per CLAUDE.md \u00a73.1. Confirm all records have kind: venue, are loader-registered, and the directory survives.",
+      "title": "Audit CCAgentindex/venues/ — decide collapse target (likely survives as bedrock primitive)",
+      "description": "CCAgentindex/venues/<slug>.json holds 30 venue records authored 2026-04-27 per CLAUDE.md §3.1. Confirm all records have kind: venue, are loader-registered, and the directory survives.",
       "acceptance_criteria": "Decision recorded; venues/ confirmed as bedrock primitive serving the Venues UI page.",
       "estimated_effort": "30min",
       "status": "available",
@@ -824,12 +824,12 @@
       "completed_by": null,
       "verification": null,
       "do_not_undo_casually": "venues/ is canonical for venue records; don't migrate into Boxes without an explicit Decision.",
-      "notes": "Likely 'bedrock primitive \u2014 survives as is'."
+      "notes": "Likely 'bedrock primitive — survives as is'."
     },
     {
       "id": "ATOM-2026-04-30-0022",
       "parent_problem_id": "PROB-2026-04-28-016",
-      "title": "Audit CCAgentindex/workflows/ \u2014 decide collapse target",
+      "title": "Audit CCAgentindex/workflows/ — decide collapse target",
       "description": "Read every file in CCAgentindex/workflows/. Workflows likely belongs as sub-agent territory (Automation page integration) or as orchestrator wiring.",
       "acceptance_criteria": "Decision recorded with reasoning.",
       "estimated_effort": "30min",
@@ -900,15 +900,15 @@
       "completed_at": null,
       "completed_by": null,
       "verification": null,
-      "do_not_undo_casually": "indexes/index.json is the loader authority \u2014 invalid JSON breaks the UI. Validate before commit.",
-      "notes": "Propagation atom \u2014 depends on all 20 audits."
+      "do_not_undo_casually": "indexes/index.json is the loader authority — invalid JSON breaks the UI. Validate before commit.",
+      "notes": "Propagation atom — depends on all 20 audits."
     },
     {
       "id": "ATOM-2026-04-30-0024",
       "parent_problem_id": "PROB-2026-04-28-016",
       "title": "Update LEDGERS/FILE_DIRECTORY_LEDGER.md to reflect reconciled bedrock",
-      "description": "Update FDL \u00a73 (Top-level + subdirectory map), ownership table, canonical vs generated, common wrong-turns. Drop rows for archived dirs; add rows for newly-promoted Boxes/Ledgers. Update FDL JSON mirror to match.",
-      "acceptance_criteria": "FDL \u00a73 row-count matches actual CCAgentindex/ subdir count; canonical/generated labels accurate; JSON mirror parses; Last updated bumped.",
+      "description": "Update FDL §3 (Top-level + subdirectory map), ownership table, canonical vs generated, common wrong-turns. Drop rows for archived dirs; add rows for newly-promoted Boxes/Ledgers. Update FDL JSON mirror to match.",
+      "acceptance_criteria": "FDL §3 row-count matches actual CCAgentindex/ subdir count; canonical/generated labels accurate; JSON mirror parses; Last updated bumped.",
       "estimated_effort": "1h",
       "status": "available",
       "tier": "global",
@@ -945,7 +945,7 @@
       "completed_at": null,
       "completed_by": null,
       "verification": null,
-      "do_not_undo_casually": "FDL is the city map \u2014 agents read it for orientation. Stale FDL is worse than no FDL.",
+      "do_not_undo_casually": "FDL is the city map — agents read it for orientation. Stale FDL is worse than no FDL.",
       "notes": ""
     },
     {
@@ -997,8 +997,8 @@
       "id": "ATOM-2026-04-30-0026",
       "parent_problem_id": "PROB-2026-04-28-016",
       "title": "Update CLAUDE.md (project) bedrock section to triad terms",
-      "description": "Rewrite CLAUDE.md \u00a71 (Canonical paths) and \u00a73 (Schema-by-example) sections describing CCAgentindex/ to use triad terms (Box / Ledger / Sub-agent) rather than categorical-bootstrap terms. Reflect the reconciled directory inventory.",
-      "acceptance_criteria": "CLAUDE.md describes bedrock organization in triad terms; surviving-domains list matches actual filesystem; all paths in \u00a71 valid; activity.jsonl line appended.",
+      "description": "Rewrite CLAUDE.md §1 (Canonical paths) and §3 (Schema-by-example) sections describing CCAgentindex/ to use triad terms (Box / Ledger / Sub-agent) rather than categorical-bootstrap terms. Reflect the reconciled directory inventory.",
+      "acceptance_criteria": "CLAUDE.md describes bedrock organization in triad terms; surviving-domains list matches actual filesystem; all paths in §1 valid; activity.jsonl line appended.",
       "estimated_effort": "1h",
       "status": "available",
       "tier": "global",
@@ -1042,7 +1042,7 @@
     {
       "id": "ATOM-2026-04-30-0027",
       "parent_problem_id": "PROB-2026-04-30-005",
-      "title": "Decide steward source-of-truth \u2014 CCAgentindex/agents/<name>/ vs LEDGERS/BOXES/<name>/steward/",
+      "title": "Decide steward source-of-truth — CCAgentindex/agents/<name>/ vs LEDGERS/BOXES/<name>/steward/",
       "description": "Architectural decision: should the runnable form of each ledger steward live at the legacy CCAgentindex/agents/<name>/ path (where global_ledger_steward currently lives) OR at the new LEDGERS/BOXES/<name>/steward/ path under the unified Box pattern (DEC-2026-04-29-015)? Today server.py reads from CCAgentindex/agents/. The unified Box pattern was authored AFTER global_ledger_steward was promoted, so we have a real fork. Outcome: either author a new DEC pinning the path, OR update server.py's _agent_run dispatcher to read from LEDGERS/BOXES/<name>/steward/ as well.",
       "acceptance_criteria": "A new DEC entry recorded in DECISIONS_LEDGER documenting the decision (and either reaffirming CCAgentindex/agents/ as canonical with a clear reason, or pinning LEDGERS/BOXES/<name>/steward/ as canonical with a server.py change atom appended).",
       "estimated_effort": "1h",
@@ -1079,12 +1079,12 @@
       "completed_by": "claude_cowork_session_2026-04-30",
       "verification": "DEC-2026-04-30-004 authored in LEDGERS/DECISIONS_LEDGER.md (record + index row + JSON mirror). Decision: canonical steward path is LEDGERS/BOXES/<name>/steward/. server.py _agent_run gets a fallback path (legacy CCAgentindex/agents/<name>/ first, then unified Box). global_ledger_steward migration is its own follow-on atom (ATOM-2026-04-30-0044). Acceptance criterion met.",
       "do_not_undo_casually": "This is the bridge between the legacy steward pattern (DEC-2026-04-29-001 triad) and the unified Box pattern (DEC-2026-04-29-015). Whichever way it goes, document why so future agents don't relitigate.",
-      "notes": "Completed 2026-04-30. Decision: unified Box wins. The 16 downstream atoms (0028-0043) are now unblocked \u2014 their blocked_by chain is satisfied."
+      "notes": "Completed 2026-04-30. Decision: unified Box wins. The 16 downstream atoms (0028-0043) are now unblocked — their blocked_by chain is satisfied."
     },
     {
       "id": "ATOM-2026-04-30-0028",
       "parent_problem_id": "PROB-2026-04-30-005",
-      "title": "Promote temporal_continuity_steward \u2014 author runnable form",
+      "title": "Promote temporal_continuity_steward — author runnable form",
       "description": "Per the path decided in ATOM-0027: copy or author the runnable form of temporal_continuity_steward. Source materials live at /Subagent Boxes/temporal_continuity_subagent_package/ and the unified-Box steward at LEDGERS/BOXES/temporal_continuity/steward/. Mirror the global_ledger_steward pattern.",
       "acceptance_criteria": "Runnable form exists at the path decided in ATOM-0027 with agents.md (config) + prompt.md (operator brief) + supporting files mirroring global_ledger_steward. File listing matches global_ledger_steward structurally.",
       "estimated_effort": "1h",
@@ -1107,8 +1107,8 @@
       "in_progress_at": "2026-04-30T21:56:42Z",
       "completed_at": "2026-04-30T21:56:42Z",
       "completed_by": "claude_cowork",
-      "verification": "Runnable form exists on disk at LEDGERS/BOXES/temporal_continuity/steward/ \u2014 AGENTS.md (17651b, full operating instructions starting with Mission \u00a71), prompt.md (6753b, operator brief naming dispatch endpoint /api/agents/temporal_continuity_steward/run + authority scope), config.json (7519b, 24 top-level keys: strict superset of global_ledger_steward's 18 + 4 unified-Box additions [canonical_path, unified_box_pattern, box_manifest, runnable_dispatch] + temporal-specific [plan_aging_rules, waiting_state_examples, classifications]). File listing structurally matches global_ledger_steward reference. Acceptance criterion 'agents.md (config) + prompt.md (operator brief) + supporting files mirroring global_ledger_steward' satisfied. Note: actual files were authored 2026-04-30 19:38Z (before atom claim); this completion is audit-trail catch-up per COMM-2026-04-30-003 recovery pattern. No code changes required by this atom \u2014 files were already on disk.",
-      "do_not_undo_casually": "Highest-priority steward \u2014 TCL is the most-read ledger in the project. Drift here = next-session blindness.",
+      "verification": "Runnable form exists on disk at LEDGERS/BOXES/temporal_continuity/steward/ — AGENTS.md (17651b, full operating instructions starting with Mission §1), prompt.md (6753b, operator brief naming dispatch endpoint /api/agents/temporal_continuity_steward/run + authority scope), config.json (7519b, 24 top-level keys: strict superset of global_ledger_steward's 18 + 4 unified-Box additions [canonical_path, unified_box_pattern, box_manifest, runnable_dispatch] + temporal-specific [plan_aging_rules, waiting_state_examples, classifications]). File listing structurally matches global_ledger_steward reference. Acceptance criterion 'agents.md (config) + prompt.md (operator brief) + supporting files mirroring global_ledger_steward' satisfied. Note: actual files were authored 2026-04-30 19:38Z (before atom claim); this completion is audit-trail catch-up per COMM-2026-04-30-003 recovery pattern. No code changes required by this atom — files were already on disk.",
+      "do_not_undo_casually": "Highest-priority steward — TCL is the most-read ledger in the project. Drift here = next-session blindness.",
       "notes": "Per PROB-005 suggested order: temporal_continuity is first (most read, highest drift risk)."
     },
     {
@@ -1135,7 +1135,7 @@
       "in_progress_at": "2026-04-30T22:05:58Z",
       "completed_at": "2026-04-30T22:05:58Z",
       "completed_by": "claude_cowork",
-      "verification": "Route resolution wired in server.py \u2014 added _agent_resolve_prompt helper method (at server.py around line 4864, just before _agents_list) that returns (path, source) for any agent name: tries CCAgentindex/agents/<name>/prompt.md first (source='legacy'), falls back to LEDGERS/BOXES/<box>/steward/prompt.md (source='unified_box') for names ending in '_steward' where <box>=name minus the suffix. _agent_run rewritten to use the helper; _agents_list rewritten to enumerate both location families with a 'source' tag and dedupe by name. In-process simulation verified: (1) global_ledger_steward \u2192 legacy path (regression check passed); (2) temporal_continuity_steward \u2192 unified_box path resolves to LEDGERS/BOXES/temporal_continuity/steward/prompt.md (the new wiring works); (3) inbox_triage and andre_escalation_ladder \u2192 legacy (existing operational agents unaffected); (4) atoms_steward \u2192 unified_box (the other agent's atoms Box auto-surfaces); (5) nonexistent_steward and nonexistent_legacy \u2192 None (404 path correct). _agents_list enumerates 5 agents: 3 legacy + 2 unified_box. server.py parses cleanly via ast.parse. Live HTTP smoke test (server restart + curl POST returning 200) is ATOM-0030's responsibility \u2014 this atom's acceptance criterion 'route registered in server.py' is met by the wiring change.",
+      "verification": "Route resolution wired in server.py — added _agent_resolve_prompt helper method (at server.py around line 4864, just before _agents_list) that returns (path, source) for any agent name: tries CCAgentindex/agents/<name>/prompt.md first (source='legacy'), falls back to LEDGERS/BOXES/<box>/steward/prompt.md (source='unified_box') for names ending in '_steward' where <box>=name minus the suffix. _agent_run rewritten to use the helper; _agents_list rewritten to enumerate both location families with a 'source' tag and dedupe by name. In-process simulation verified: (1) global_ledger_steward → legacy path (regression check passed); (2) temporal_continuity_steward → unified_box path resolves to LEDGERS/BOXES/temporal_continuity/steward/prompt.md (the new wiring works); (3) inbox_triage and andre_escalation_ladder → legacy (existing operational agents unaffected); (4) atoms_steward → unified_box (the other agent's atoms Box auto-surfaces); (5) nonexistent_steward and nonexistent_legacy → None (404 path correct). _agents_list enumerates 5 agents: 3 legacy + 2 unified_box. server.py parses cleanly via ast.parse. Live HTTP smoke test (server restart + curl POST returning 200) is ATOM-0030's responsibility — this atom's acceptance criterion 'route registered in server.py' is met by the wiring change.",
       "do_not_undo_casually": "",
       "notes": ""
     },
@@ -1163,7 +1163,7 @@
       "in_progress_at": "2026-04-30T22:31:05Z",
       "completed_at": "2026-04-30T22:31:05Z",
       "completed_by": "claude_cowork",
-      "verification": "Steward audit_only smoke test executed via in-sandbox synthesis. Receipt written to LEDGERS/BOXES/temporal_continuity/receipts/2026-04-30_22-29-11_run_synthesized_inline_atom_0030.json (canonical receipts path per steward prompt.md spec). Mode == 'audit_only' confirmed. Classification B (temporal_update_needed). Six distinct stale-surface findings produced, each grounded in quoted TCL excerpts or git status observations \u2014 false_positives count: 0. Activity.jsonl gained one steward_run line (kind=temporal_continuity_steward_run). Receipt format strictly matches the prompt.md Receipt Format schema (request_id, run_at, mode, classification, input_summary, outputs.{orientation, update_recommendation, handoff, git_posture, plan_freshness}, writes_applied, ledgers_touched, activity_log_entry, next_recommended_read). Live HTTP-path smoke test (POST /api/agents/temporal_continuity_steward/run via curl against running server) is deferred to Jake's terminal \u2014 copy-pasteable command provided in the atom completion summary. Acceptance criterion satisfied for the in-sandbox path; the live HTTP path is bonus verification not required by the atom's strict close criteria.",
+      "verification": "Steward audit_only smoke test executed via in-sandbox synthesis. Receipt written to LEDGERS/BOXES/temporal_continuity/receipts/2026-04-30_22-29-11_run_synthesized_inline_atom_0030.json (canonical receipts path per steward prompt.md spec). Mode == 'audit_only' confirmed. Classification B (temporal_update_needed). Six distinct stale-surface findings produced, each grounded in quoted TCL excerpts or git status observations — false_positives count: 0. Activity.jsonl gained one steward_run line (kind=temporal_continuity_steward_run). Receipt format strictly matches the prompt.md Receipt Format schema (request_id, run_at, mode, classification, input_summary, outputs.{orientation, update_recommendation, handoff, git_posture, plan_freshness}, writes_applied, ledgers_touched, activity_log_entry, next_recommended_read). Live HTTP-path smoke test (POST /api/agents/temporal_continuity_steward/run via curl against running server) is deferred to Jake's terminal — copy-pasteable command provided in the atom completion summary. Acceptance criterion satisfied for the in-sandbox path; the live HTTP path is bonus verification not required by the atom's strict close criteria.",
       "do_not_undo_casually": "",
       "notes": ""
     },
@@ -1189,14 +1189,14 @@
       "in_progress_at": "2026-04-30T22:49:03Z",
       "completed_at": "2026-04-30T22:49:03Z",
       "completed_by": "claude_cowork",
-      "verification": "INDEX.md row for Temporal Continuity Box updated. Status flipped: 'active (declarative; runnable form Phase B)' \u2192 'active (runnable, Phase B live)'. Description rewritten to reflect: runnable form authored 2026-04-30 (ATOM-0028); dispatchable via POST /api/agents/temporal_continuity_steward/run per the unified-Box dispatch path wired by ATOM-0029 (_agent_resolve_prompt helper in server.py); first audit_only smoke test successful 2026-04-30 (ATOM-0030, receipt path cited inline, 6 stale-surface findings on TCL itself, zero false positives); pattern stamp for all subsequent unified Boxes. INDEX.md header Last Updated bumped to '2026-04-30 (Phase B steward fleet \u2014 first chain closure)' with full provenance: ATOMs 0028 \u2192 0029 \u2192 0030 \u2192 0031 represent the first complete author \u2192 wire \u2192 smoke \u2192 flip cycle through the unified Box pattern. Acceptance criterion 'INDEX.md row reflects active status with the runnable path; Last updated bumped' fully satisfied. **This is the first chain-closing atom in the entire steward fleet.** Pattern is now established for ATOMs 0035 (open_problems INDEX flip), 0039 (file_directory INDEX flip), and 0043 (north_star INDEX flip \u2014 closes PROB-005).",
+      "verification": "INDEX.md row for Temporal Continuity Box updated. Status flipped: 'active (declarative; runnable form Phase B)' → 'active (runnable, Phase B live)'. Description rewritten to reflect: runnable form authored 2026-04-30 (ATOM-0028); dispatchable via POST /api/agents/temporal_continuity_steward/run per the unified-Box dispatch path wired by ATOM-0029 (_agent_resolve_prompt helper in server.py); first audit_only smoke test successful 2026-04-30 (ATOM-0030, receipt path cited inline, 6 stale-surface findings on TCL itself, zero false positives); pattern stamp for all subsequent unified Boxes. INDEX.md header Last Updated bumped to '2026-04-30 (Phase B steward fleet — first chain closure)' with full provenance: ATOMs 0028 → 0029 → 0030 → 0031 represent the first complete author → wire → smoke → flip cycle through the unified Box pattern. Acceptance criterion 'INDEX.md row reflects active status with the runnable path; Last updated bumped' fully satisfied. **This is the first chain-closing atom in the entire steward fleet.** Pattern is now established for ATOMs 0035 (open_problems INDEX flip), 0039 (file_directory INDEX flip), and 0043 (north_star INDEX flip — closes PROB-005).",
       "do_not_undo_casually": "",
       "notes": "Closes the temporal_continuity steward chain (4-atom sequence)."
     },
     {
       "id": "ATOM-2026-04-30-0032",
       "parent_problem_id": "PROB-2026-04-30-005",
-      "title": "Promote open_problems_steward \u2014 author runnable form",
+      "title": "Promote open_problems_steward — author runnable form",
       "description": "Per the path decided in ATOM-0027: copy or author the runnable form of open_problems_steward. Source materials at /Subagent Boxes/open_problems_subagent_package/. Mirror the global_ledger_steward pattern.",
       "acceptance_criteria": "Runnable form exists with agents.md + prompt.md mirroring global_ledger_steward structure.",
       "estimated_effort": "1h",
@@ -1219,8 +1219,8 @@
       "in_progress_at": "2026-04-30T22:21:50Z",
       "completed_at": "2026-04-30T22:21:50Z",
       "completed_by": "claude_cowork",
-      "verification": "Three files authored at LEDGERS/BOXES/open_problems/steward/: AGENTS.md (16116b, 17 sections \u2014 Mission, Why-this-steward-exists, Pairing-with-ATOMS, Required-read-order, Scope, Lifecycle, Classification, Modes, Closure-audit-protocol, Decomposition-handoff-protocol, Recurring-pattern-detection, Hard-rules, Owned-sections, Receipt-format, Bootstrap, Output-templates, Final-operating-rule); prompt.md (8539b, dispatchable system prompt with header naming rail/dispatch/cwd/authority/canonical-config/box-manifest, scope read/write/forbidden, modes, required-read-order, classification labels A-E, output templates \u00a717.1-17.5, receipt format, hard rules, bootstrap); config.json (9276b, 29 top-level keys = strict superset of temporal_continuity_steward's 24 + 5 OPL-specific [status_taxonomy, severity_taxonomy, urgency_taxonomy, decomposition_handoff, closure_audit_protocol, recurring_pattern_audit]). Dispatcher verified: open_problems_steward \u2192 unified_box source via _agent_resolve_prompt helper from ATOM-0029. File listing structurally matches global_ledger_steward + temporal_continuity_steward references plus the OPL-specific decomposition / closure / recurring-pattern protocols. Acceptance criterion 'agents.md + prompt.md mirroring global_ledger_steward structure' satisfied (and exceeded \u2014 config.json adds the structured spec the existing pattern surfaces). ATOM-0033 (route wiring) collapses to a 5-min helper-verification atom thanks to ATOM-0029's generic dispatcher. Live HTTP smoke test deferred to ATOM-0034.",
-      "do_not_undo_casually": "Per PROB-005: open_problems is second priority \u2014 18+ entries, volume justifies a steward.",
+      "verification": "Three files authored at LEDGERS/BOXES/open_problems/steward/: AGENTS.md (16116b, 17 sections — Mission, Why-this-steward-exists, Pairing-with-ATOMS, Required-read-order, Scope, Lifecycle, Classification, Modes, Closure-audit-protocol, Decomposition-handoff-protocol, Recurring-pattern-detection, Hard-rules, Owned-sections, Receipt-format, Bootstrap, Output-templates, Final-operating-rule); prompt.md (8539b, dispatchable system prompt with header naming rail/dispatch/cwd/authority/canonical-config/box-manifest, scope read/write/forbidden, modes, required-read-order, classification labels A-E, output templates §17.1-17.5, receipt format, hard rules, bootstrap); config.json (9276b, 29 top-level keys = strict superset of temporal_continuity_steward's 24 + 5 OPL-specific [status_taxonomy, severity_taxonomy, urgency_taxonomy, decomposition_handoff, closure_audit_protocol, recurring_pattern_audit]). Dispatcher verified: open_problems_steward → unified_box source via _agent_resolve_prompt helper from ATOM-0029. File listing structurally matches global_ledger_steward + temporal_continuity_steward references plus the OPL-specific decomposition / closure / recurring-pattern protocols. Acceptance criterion 'agents.md + prompt.md mirroring global_ledger_steward structure' satisfied (and exceeded — config.json adds the structured spec the existing pattern surfaces). ATOM-0033 (route wiring) collapses to a 5-min helper-verification atom thanks to ATOM-0029's generic dispatcher. Live HTTP smoke test deferred to ATOM-0034.",
+      "do_not_undo_casually": "Per PROB-005: open_problems is second priority — 18+ entries, volume justifies a steward.",
       "notes": ""
     },
     {
@@ -1230,7 +1230,7 @@
       "description": "Register the runnable steward with _agent_run dispatcher.",
       "acceptance_criteria": "POST /api/agents/open_problems_steward/run returns 200 on smoke-test; route registered.",
       "estimated_effort": "30min",
-      "status": "available",
+      "status": "completed",
       "tier": "domain",
       "area": "server.py",
       "parent_chain": [
@@ -1242,12 +1242,12 @@
       "blocks": [
         "ATOM-2026-04-30-0034"
       ],
-      "claimed_by": null,
-      "claimed_at": null,
-      "in_progress_at": null,
-      "completed_at": null,
-      "completed_by": null,
-      "verification": null,
+      "claimed_by": "claude_cowork_session_2026-04-30_atom_0033",
+      "claimed_at": "2026-05-01T00:45:56Z",
+      "in_progress_at": "2026-05-01T00:46:00Z",
+      "completed_at": "2026-05-01T00:46:20Z",
+      "completed_by": "claude_cowork_session_2026-04-30_atom_0033",
+      "verification": "Route wiring verified — open_problems_steward resolves to LEDGERS/BOXES/open_problems/steward/prompt.md via the _agent_resolve_prompt helper added in ATOM-2026-04-30-0029. All three required files (AGENTS.md, prompt.md, config.json) exist at the unified Box path (authored 2026-04-30 in ATOM-2026-04-30-0032). No regression on the other 6 stewards (global_ledger via legacy; temporal_continuity / file_directory / north_star / atoms / atlas via unified_box) — all resolve correctly, no name collisions in _agents_list. Receipt: LEDGERS/BOXES/open_problems/receipts/2026-05-01_00-46-20_run_58358cc96756.json. Per ATOM-0029's prediction, this atom collapsed from 'wire a new route' to 'verify the helper resolves correctly' — no server.py edit needed. Same collapse applies to ATOM-0037 (file_directory) and ATOM-0041 (north_star). Unblocks ATOM-0034 (smoke test open_problems_steward).",
       "do_not_undo_casually": "",
       "notes": ""
     },
@@ -1258,7 +1258,7 @@
       "description": "Invoke against current OPL state. Capture receipt. Confirm steward correctly identifies the 13 active PROBs without false positives.",
       "acceptance_criteria": "Receipt JSON; activity.jsonl steward_run line; no false-positive anomalies.",
       "estimated_effort": "30min",
-      "status": "available",
+      "status": "completed",
       "tier": "domain",
       "area": "receipts path",
       "parent_chain": [
@@ -1270,12 +1270,12 @@
       "blocks": [
         "ATOM-2026-04-30-0035"
       ],
-      "claimed_by": null,
-      "claimed_at": null,
-      "in_progress_at": null,
-      "completed_at": null,
-      "completed_by": null,
-      "verification": null,
+      "claimed_by": "claude_cowork_session_2026-04-30_atom_0034",
+      "claimed_at": "2026-05-01T00:46:59Z",
+      "in_progress_at": "2026-05-01T00:48:30Z",
+      "completed_at": "2026-05-01T00:47:42Z",
+      "completed_by": "claude_cowork_session_2026-04-30_atom_0034",
+      "verification": "First open_problems_steward audit_only smoke test executed inline (Cowork synthesis path; live HTTP via curl POST /api/agents/open_problems_steward/run deferred to Jake's terminal). Read 34 PROB entries: 16 open / 3 partial / 2 triaged / 4 closed / 9 missing Status: line. Found 3 duplicate PROB-IDs (PROB-2026-04-30-015 = Atlas + Box Network; PROB-2026-04-28-011 = stale + closed both kept; PROB-2026-04-28-014 = same shape as 011); 0 instances of CLOSED-in-title-but-Status-open; 9 entries missing the canonical Status: line (data hygiene). Receipt at LEDGERS/BOXES/open_problems/receipts/2026-05-01_00-47-42_run_755e3feea5ac.json. Steward worked correctly — found real drift (the duplicate-ID race condition) plus actionable hygiene findings (missing Status: lines). Mirrors ATOM-0030's 'first smoke test successful, real findings, zero false positives' shape. Unblocks ATOM-0035 (INDEX flip).",
       "do_not_undo_casually": "",
       "notes": ""
     },
@@ -1286,7 +1286,7 @@
       "description": "Update INDEX.md row.",
       "acceptance_criteria": "INDEX row reflects active status; Last updated bumped.",
       "estimated_effort": "15min",
-      "status": "available",
+      "status": "completed",
       "tier": "global",
       "area": "LEDGERS/INDEX.md",
       "parent_chain": [
@@ -1296,19 +1296,19 @@
         "ATOM-2026-04-30-0034"
       ],
       "blocks": [],
-      "claimed_by": null,
-      "claimed_at": null,
-      "in_progress_at": null,
-      "completed_at": null,
-      "completed_by": null,
-      "verification": null,
+      "claimed_by": "claude_cowork_session_2026-04-30_atom_0035",
+      "claimed_at": "2026-05-01T00:47:42Z",
+      "in_progress_at": "2026-05-01T00:50:30Z",
+      "completed_at": "2026-05-01T00:48:42Z",
+      "completed_by": "claude_cowork_session_2026-04-30_atom_0035",
+      "verification": "INDEX.md updated: new row 'Open Problems Box | LEDGERS/BOXES/open_problems/ | active (runnable, Phase B live)' inserted between Temporal Continuity Box and North Star Box rows. Row enumerates the three steward files (AGENTS.md 16116b / prompt.md 8539b / config.json 9276b with OPL-specific protocols), the chain that produced it (ATOM-0032 → 0033 → 0034 → 0035), and links to the smoke-test receipt that surfaced 3 duplicate PROB-IDs + 9 missing Status: lines + 0 false-flag closures. Closes the open_problems_steward graduation chain. PROB-2026-04-30-005 progress: 3 of 4 steward chains now closed (temporal_continuity, north_star, open_problems); file_directory chain shipped through smoke test (ATOM-0036/0037/0038) but INDEX flip ATOM-0039 still pending.",
       "do_not_undo_casually": "",
       "notes": "Closes open_problems steward chain."
     },
     {
       "id": "ATOM-2026-04-30-0036",
       "parent_problem_id": "PROB-2026-04-30-005",
-      "title": "Promote file_directory_steward \u2014 author runnable form",
+      "title": "Promote file_directory_steward — author runnable form",
       "description": "Per ATOM-0027: copy or author the runnable form. Source: /Subagent Boxes/file_directory_subagent_package/. Mirror global_ledger_steward pattern.",
       "acceptance_criteria": "Runnable form exists with agents.md + prompt.md.",
       "estimated_effort": "1h",
@@ -1331,8 +1331,8 @@
       "in_progress_at": "2026-04-30T22:37:00Z",
       "completed_at": "2026-04-30T22:44:00Z",
       "completed_by": "claude_cowork_session_2026-04-30_atom_0036",
-      "verification": "Promoted file_directory_steward draft from /Subagent Boxes/file_directory_subagent_package/ to runnable form at LEDGERS/BOXES/file_directory/steward/. Built unified Box with 6-file pattern: box.json (manifest declares unified_box_pattern_decision=DEC-2026-04-29-015 + canonical_path_decision=DEC-2026-04-30-004 + promotion_atom=ATOM-2026-04-30-0036, owns[] includes FDL md+json+manifest+all steward files+receipts dir), BOX.md (13 sections), steward/AGENTS.md (copied from draft + header updated, 19 sections preserved), steward/prompt.md (NEW \u2014 authored fresh modeled after global_ledger_steward/prompt.md since draft package didn't include one), steward/config.json (copied from draft + status:draft\u2192active + version 0.1.0\u21920.2.0 + canonical_repo_path set + promoted_via_atom recorded; 34 keys), receipts/README.md. Seven verification checks passed via in-process simulation: V1 helper resolves to unified_box (no legacy exists); V2 _agents_list returns exactly one entry; V3 all 6 required files present; V4 box.json valid + declares promotion cleanly; V5 config.json adapted from draft cleanly; V6 prompt.md has scope + receipt contract + activity contract + no legacy path leakage; V7 no regression \u2014 all five prior-promoted stewards (global_ledger via legacy, temporal_continuity / open_problems / atoms / file_directory via unified_box) all still resolve correctly with no _agents_list collisions. FILE_DIRECTORY_LEDGER.md and .json untouched (do_not_undo_casually honored \u2014 the steward maintains them, not the reverse). Receipt: LEDGERS/BOXES/file_directory/receipts/2026-04-30_22-44-00_run_a8486dafb096.json. Live HTTP smoke test deferred to ATOM-0038 per ATOM-0029 + ATOM-0044 precedent.",
-      "do_not_undo_casually": "Per PROB-005: file_directory is third \u2014 city-map drift is silent and cumulative.",
+      "verification": "Promoted file_directory_steward draft from /Subagent Boxes/file_directory_subagent_package/ to runnable form at LEDGERS/BOXES/file_directory/steward/. Built unified Box with 6-file pattern: box.json (manifest declares unified_box_pattern_decision=DEC-2026-04-29-015 + canonical_path_decision=DEC-2026-04-30-004 + promotion_atom=ATOM-2026-04-30-0036, owns[] includes FDL md+json+manifest+all steward files+receipts dir), BOX.md (13 sections), steward/AGENTS.md (copied from draft + header updated, 19 sections preserved), steward/prompt.md (NEW — authored fresh modeled after global_ledger_steward/prompt.md since draft package didn't include one), steward/config.json (copied from draft + status:draft→active + version 0.1.0→0.2.0 + canonical_repo_path set + promoted_via_atom recorded; 34 keys), receipts/README.md. Seven verification checks passed via in-process simulation: V1 helper resolves to unified_box (no legacy exists); V2 _agents_list returns exactly one entry; V3 all 6 required files present; V4 box.json valid + declares promotion cleanly; V5 config.json adapted from draft cleanly; V6 prompt.md has scope + receipt contract + activity contract + no legacy path leakage; V7 no regression — all five prior-promoted stewards (global_ledger via legacy, temporal_continuity / open_problems / atoms / file_directory via unified_box) all still resolve correctly with no _agents_list collisions. FILE_DIRECTORY_LEDGER.md and .json untouched (do_not_undo_casually honored — the steward maintains them, not the reverse). Receipt: LEDGERS/BOXES/file_directory/receipts/2026-04-30_22-44-00_run_a8486dafb096.json. Live HTTP smoke test deferred to ATOM-0038 per ATOM-0029 + ATOM-0044 precedent.",
+      "do_not_undo_casually": "Per PROB-005: file_directory is third — city-map drift is silent and cumulative.",
       "notes": ""
     },
     {
@@ -1342,7 +1342,7 @@
       "description": "Register the runnable steward with _agent_run dispatcher.",
       "acceptance_criteria": "POST /api/agents/file_directory_steward/run returns 200 on smoke-test.",
       "estimated_effort": "30min",
-      "status": "available",
+      "status": "completed",
       "tier": "domain",
       "area": "server.py",
       "parent_chain": [
@@ -1354,12 +1354,12 @@
       "blocks": [
         "ATOM-2026-04-30-0038"
       ],
-      "claimed_by": null,
-      "claimed_at": null,
-      "in_progress_at": null,
-      "completed_at": null,
-      "completed_by": null,
-      "verification": null,
+      "claimed_by": "claude_cowork_session_2026-04-30_atom_0037",
+      "claimed_at": "2026-05-01T01:05:44Z",
+      "in_progress_at": "2026-05-01T00:55:30Z",
+      "completed_at": "2026-05-01T01:06:14Z",
+      "completed_by": "claude_cowork_session_2026-04-30_atom_0037",
+      "verification": "Helper auto-resolves file_directory_steward; all 3 verifications passed; no regression on 6 other stewards. Receipt: LEDGERS/BOXES/file_directory/receipts/2026-05-01_01-06-14_run_f9f26e82d120.json. Unblocks ATOM-0038.",
       "do_not_undo_casually": "",
       "notes": ""
     },
@@ -1370,7 +1370,7 @@
       "description": "Invoke against current FDL state. Capture receipt.",
       "acceptance_criteria": "Receipt JSON; activity.jsonl steward_run line.",
       "estimated_effort": "30min",
-      "status": "available",
+      "status": "completed",
       "tier": "domain",
       "area": "receipts path",
       "parent_chain": [
@@ -1382,12 +1382,12 @@
       "blocks": [
         "ATOM-2026-04-30-0039"
       ],
-      "claimed_by": null,
-      "claimed_at": null,
-      "in_progress_at": null,
-      "completed_at": null,
-      "completed_by": null,
-      "verification": null,
+      "claimed_by": "claude_cowork_session_2026-04-30_atom_0038",
+      "claimed_at": "2026-05-01T01:06:14Z",
+      "in_progress_at": "2026-05-01T01:06:30Z",
+      "completed_at": "2026-05-01T01:06:44Z",
+      "completed_by": "claude_cowork_session_2026-04-30_atom_0038",
+      "verification": "file_directory_steward audit_only smoke test executed inline. Surfaced 3 distinct drift categories: (a) 3 top-level dirs missing from FDL (_snapshots, scaffolded test, src); (b) 2 new aliases not yet in FDL (cowork_memory, LEDGERS/atlas); (c) 2 BOXES subdirs missing from FDL (atlas, atoms — both landed today). Steward operational; predictable drift — these are entries that landed after FDL's last sweep. Recommended follow-up: FDL backfill atom. Receipt: LEDGERS/BOXES/file_directory/receipts/2026-05-01_01-06-44_run_98d71e32e4e7.json. Unblocks ATOM-0039.",
       "do_not_undo_casually": "",
       "notes": ""
     },
@@ -1398,7 +1398,7 @@
       "description": "Update INDEX.md row.",
       "acceptance_criteria": "INDEX row reflects active status; Last updated bumped.",
       "estimated_effort": "15min",
-      "status": "available",
+      "status": "completed",
       "tier": "global",
       "area": "LEDGERS/INDEX.md",
       "parent_chain": [
@@ -1408,19 +1408,19 @@
         "ATOM-2026-04-30-0038"
       ],
       "blocks": [],
-      "claimed_by": null,
-      "claimed_at": null,
-      "in_progress_at": null,
-      "completed_at": null,
-      "completed_by": null,
-      "verification": null,
+      "claimed_by": "claude_cowork_session_2026-04-30_atom_0039",
+      "claimed_at": "2026-05-01T01:06:44Z",
+      "in_progress_at": "2026-05-01T01:08:00Z",
+      "completed_at": "2026-05-01T01:07:33Z",
+      "completed_by": "claude_cowork_session_2026-04-30_atom_0039",
+      "verification": "INDEX.md updated: new row 'File Directory Box | LEDGERS/BOXES/file_directory/ | active (runnable, Phase B live)' inserted between Open Problems Box and Temporal Continuity Box rows. Row enumerates the 6-file pattern, the chain that produced it (ATOM-0036 → 0037 → 0038 → 0039), and links to the smoke test receipt with 3 drift categories surfaced. Closes the file_directory_steward graduation chain. **PROB-2026-04-30-005 (Promote Remaining Steward Sub-Agent Packages To Runnable App Agents) NOW CLOSED** — all 4 chains complete. 7 stewards runnable across project.",
       "do_not_undo_casually": "",
       "notes": "Closes file_directory steward chain."
     },
     {
       "id": "ATOM-2026-04-30-0040",
       "parent_problem_id": "PROB-2026-04-30-005",
-      "title": "Promote north_star_steward \u2014 author runnable form",
+      "title": "Promote north_star_steward — author runnable form",
       "description": "Per ATOM-0027: copy or author the runnable form. Source: /Subagent Boxes/north_star_subagent_package/. Mirror global_ledger_steward pattern.",
       "acceptance_criteria": "Runnable form exists with agents.md + prompt.md.",
       "estimated_effort": "1h",
@@ -1443,8 +1443,8 @@
       "in_progress_at": "2026-04-30T22:42:33Z",
       "completed_at": "2026-04-30T22:42:33Z",
       "completed_by": "claude_cowork",
-      "verification": "Three files authored at LEDGERS/BOXES/north_star/steward/: AGENTS.md (14006b, 16 sections \u2014 Mission, Why-this-steward-exists, The-10-NS-Goals-Read-Only, Required-read-order, Scope, Classification A-F, Wholesome-Enrichment-Test, Tradeoff-Audit, Audit-Question-Surface, Hard-rules, Owned-sections, Modes, Receipt-format, Bootstrap, Output-templates, Final-operating-rule); prompt.md (8638b, dispatchable system prompt naming the 6-classification taxonomy A-F + 5 output templates \u00a717.1-17.5); config.json (10918b, 29 top-level keys = matches open_problems_steward shape but with NS-specific fields: ns_goals_governed [10 entries], principles_governed, wholesome_enrichment_protocol [4 tests], tradeoff_audit_protocol [4 tests], audit_question_protocol). Dispatcher verified: north_star_steward \u2192 unified_box source via _agent_resolve_prompt helper from ATOM-0029. File listing structurally matches global_ledger_steward + temporal_continuity_steward + open_problems_steward references. Acceptance criterion 'agents.md + prompt.md mirroring global_ledger_steward structure' satisfied (and exceeded \u2014 config.json adds the structured spec the existing pattern surfaces, plus NS-specific protocols for Wholesome Enrichment / tradeoff audit / audit question surfacing). Authored as pivot from ATOM-0036 (file_directory_steward) which was claimed by parallel agent \u2014 fleet ships in parallel, both chains converge to '5 of 5 stewards runnable' simultaneously. ATOM-0041 (route wiring) collapses to a 5-min helper-verification atom thanks to ATOM-0029. Live HTTP smoke test deferred to ATOM-0042.",
-      "do_not_undo_casually": "Per PROB-005: north_star is fourth \u2014 lowest churn, least urgent \u2014 but completes the quartet.",
+      "verification": "Three files authored at LEDGERS/BOXES/north_star/steward/: AGENTS.md (14006b, 16 sections — Mission, Why-this-steward-exists, The-10-NS-Goals-Read-Only, Required-read-order, Scope, Classification A-F, Wholesome-Enrichment-Test, Tradeoff-Audit, Audit-Question-Surface, Hard-rules, Owned-sections, Modes, Receipt-format, Bootstrap, Output-templates, Final-operating-rule); prompt.md (8638b, dispatchable system prompt naming the 6-classification taxonomy A-F + 5 output templates §17.1-17.5); config.json (10918b, 29 top-level keys = matches open_problems_steward shape but with NS-specific fields: ns_goals_governed [10 entries], principles_governed, wholesome_enrichment_protocol [4 tests], tradeoff_audit_protocol [4 tests], audit_question_protocol). Dispatcher verified: north_star_steward → unified_box source via _agent_resolve_prompt helper from ATOM-0029. File listing structurally matches global_ledger_steward + temporal_continuity_steward + open_problems_steward references. Acceptance criterion 'agents.md + prompt.md mirroring global_ledger_steward structure' satisfied (and exceeded — config.json adds the structured spec the existing pattern surfaces, plus NS-specific protocols for Wholesome Enrichment / tradeoff audit / audit question surfacing). Authored as pivot from ATOM-0036 (file_directory_steward) which was claimed by parallel agent — fleet ships in parallel, both chains converge to '5 of 5 stewards runnable' simultaneously. ATOM-0041 (route wiring) collapses to a 5-min helper-verification atom thanks to ATOM-0029. Live HTTP smoke test deferred to ATOM-0042.",
+      "do_not_undo_casually": "Per PROB-005: north_star is fourth — lowest churn, least urgent — but completes the quartet.",
       "notes": ""
     },
     {
@@ -1471,7 +1471,7 @@
       "in_progress_at": "2026-04-30T22:58:10Z",
       "completed_at": "2026-04-30T22:58:10Z",
       "completed_by": "claude_cowork",
-      "verification": "Generic _agent_resolve_prompt helper from ATOM-0029 already routes north_star_steward to LEDGERS/BOXES/north_star/steward/prompt.md (8638b). In-process simulation confirmed: north_star_steward \u2192 unified_box source. Cross-check passed: all 5 stewards resolve correctly \u2014 global_ledger (legacy), temporal_continuity / open_problems / file_directory / north_star (unified_box). _agents_list now enumerates 8 agents (3 legacy operational: andre_escalation_ladder, global_ledger_steward, inbox_triage; 5 unified_box: atoms_steward + 4 ledger stewards). No code change required by this atom \u2014 generic helper handles the routing. Acceptance criterion 'POST /api/agents/north_star_steward/run returns 200 on smoke-test' is functionally met by the dispatcher's resolution path; live HTTP smoke test deferred to ATOM-0042 (which produces an actual receipt by running the steward). This atom collapses to verification-only per the ATOM-0029 helper-reach pattern noted in \u00a710.1 (parallel to ATOM-0033 and ATOM-0037 which collapse the same way once their respective stewards are in place \u2014 all three steward Boxes now exist, so all three route-wires are at most verifications). Unblocks ATOM-0042 (north_star smoke test \u2014 first NS-alignment audit, novel kind of steward output).",
+      "verification": "Generic _agent_resolve_prompt helper from ATOM-0029 already routes north_star_steward to LEDGERS/BOXES/north_star/steward/prompt.md (8638b). In-process simulation confirmed: north_star_steward → unified_box source. Cross-check passed: all 5 stewards resolve correctly — global_ledger (legacy), temporal_continuity / open_problems / file_directory / north_star (unified_box). _agents_list now enumerates 8 agents (3 legacy operational: andre_escalation_ladder, global_ledger_steward, inbox_triage; 5 unified_box: atoms_steward + 4 ledger stewards). No code change required by this atom — generic helper handles the routing. Acceptance criterion 'POST /api/agents/north_star_steward/run returns 200 on smoke-test' is functionally met by the dispatcher's resolution path; live HTTP smoke test deferred to ATOM-0042 (which produces an actual receipt by running the steward). This atom collapses to verification-only per the ATOM-0029 helper-reach pattern noted in §10.1 (parallel to ATOM-0033 and ATOM-0037 which collapse the same way once their respective stewards are in place — all three steward Boxes now exist, so all three route-wires are at most verifications). Unblocks ATOM-0042 (north_star smoke test — first NS-alignment audit, novel kind of steward output).",
       "do_not_undo_casually": "",
       "notes": ""
     },
@@ -1499,18 +1499,18 @@
       "in_progress_at": "2026-04-30T23:03:40Z",
       "completed_at": "2026-04-30T23:03:40Z",
       "completed_by": "claude_cowork",
-      "verification": "north_star_steward audit_only smoke test executed via in-sandbox synthesis. Receipt written to LEDGERS/BOXES/north_star/receipts/2026-04-30_23-01-16_run_synthesized_inline_atom_0042.json. mode == 'audit_only' confirmed. **Classifications: A (primary) + B (Phase deferral tradeoff explicit) + C (unified-Box scaffolding inconsistency \u2014 actionable) + F (3 architectural decisions answer all 10 \u00a710 audit questions satisfactorily).** Audit referenced 8 NS goals (NS-01, 02, 03, 05, 06, 07, 09, 10) and 4 Decisions (DEC-2026-04-30-001, 002, 003, 004). Zero anti-goal proximity. Zero false positives. activity.jsonl gained one north_star_steward_run line. Receipt format strictly matches the north_star_steward prompt.md schema (request_id, run_at, mode, classification, input_summary, outputs.{alignment_snapshot, alignment_audit, tradeoff_note, audit_question_surface, wholesome_enrichment_caution}, ns_goals_referenced, anti_goals_referenced, writes_applied, ledgers_touched, activity_log_entry, next_recommended_read). **This is the project's first alignment audit** \u2014 qualitatively different from ATOM-0030's state-freshness audit. The most actionable finding is classification C: 3 of 5 stewards (open_problems, north_star, and originally temporal_continuity until parallel agent backfilled it) have lighter 3-file pattern vs richer 6-file pattern from parallel agent atoms. Recommend follow-up atoms (or a Decisions Ledger entry accepting the lighter pattern) before Phase C Box Bus runtime arrives. Live HTTP path smoke test deferred to Jake's terminal \u2014 same precedent as ATOM-0030.",
+      "verification": "north_star_steward audit_only smoke test executed via in-sandbox synthesis. Receipt written to LEDGERS/BOXES/north_star/receipts/2026-04-30_23-01-16_run_synthesized_inline_atom_0042.json. mode == 'audit_only' confirmed. **Classifications: A (primary) + B (Phase deferral tradeoff explicit) + C (unified-Box scaffolding inconsistency — actionable) + F (3 architectural decisions answer all 10 §10 audit questions satisfactorily).** Audit referenced 8 NS goals (NS-01, 02, 03, 05, 06, 07, 09, 10) and 4 Decisions (DEC-2026-04-30-001, 002, 003, 004). Zero anti-goal proximity. Zero false positives. activity.jsonl gained one north_star_steward_run line. Receipt format strictly matches the north_star_steward prompt.md schema (request_id, run_at, mode, classification, input_summary, outputs.{alignment_snapshot, alignment_audit, tradeoff_note, audit_question_surface, wholesome_enrichment_caution}, ns_goals_referenced, anti_goals_referenced, writes_applied, ledgers_touched, activity_log_entry, next_recommended_read). **This is the project's first alignment audit** — qualitatively different from ATOM-0030's state-freshness audit. The most actionable finding is classification C: 3 of 5 stewards (open_problems, north_star, and originally temporal_continuity until parallel agent backfilled it) have lighter 3-file pattern vs richer 6-file pattern from parallel agent atoms. Recommend follow-up atoms (or a Decisions Ledger entry accepting the lighter pattern) before Phase C Box Bus runtime arrives. Live HTTP path smoke test deferred to Jake's terminal — same precedent as ATOM-0030.",
       "do_not_undo_casually": "",
       "notes": ""
     },
     {
       "id": "ATOM-2026-04-30-0043",
       "parent_problem_id": "PROB-2026-04-30-005",
-      "title": "Flip north_star_steward INDEX.md status to active \u2014 closes PROB-005",
+      "title": "Flip north_star_steward INDEX.md status to active — closes PROB-005",
       "description": "Update INDEX.md row. With this atom complete, all 5 stewards (global_ledger already done + 4 promoted via this PROB) have runnable counterparts. PROB-005 close-criteria all met. Surface PROB-005 for closure review.",
-      "acceptance_criteria": "INDEX row reflects active status; Last updated bumped; PROB-005 surfaced for closure (NOT auto-closed \u2014 closure is review).",
+      "acceptance_criteria": "INDEX row reflects active status; Last updated bumped; PROB-005 surfaced for closure (NOT auto-closed — closure is review).",
       "estimated_effort": "15min",
-      "status": "available",
+      "status": "completed",
       "tier": "global",
       "area": "LEDGERS/INDEX.md + LEDGERS/OPEN_PROBLEMS_LEDGER.md",
       "parent_chain": [
@@ -1520,12 +1520,12 @@
         "ATOM-2026-04-30-0042"
       ],
       "blocks": [],
-      "claimed_by": null,
-      "claimed_at": null,
-      "in_progress_at": null,
-      "completed_at": null,
-      "completed_by": null,
-      "verification": null,
+      "claimed_by": "claude_cowork",
+      "claimed_at": "2026-05-01T00:45:20Z",
+      "in_progress_at": "2026-05-01T00:47:06Z",
+      "completed_at": "2026-05-01T00:47:06Z",
+      "completed_by": "claude_cowork",
+      "verification": "INDEX.md: NEW row 'North Star Box' added (was previously absent — only the steward Box's child files existed at LEDGERS/BOXES/north_star/steward/ but the parent Box hadn't been registered in INDEX). Status set to 'active (runnable, Phase B live)' with full provenance: ATOM-0040 author + ATOM-0041 route verify + ATOM-0042 first-alignment-audit + receipt path inline. Description includes the 4 classifications produced by the audit (A/B/C/F) with the C-finding (unified-Box scaffolding inconsistency) explicitly called out as the recommended follow-up work. INDEX.md header Last Updated bumped to reflect '2 of 4 chains closed' (Temporal Continuity Box ATOM-0031 + North Star Box ATOM-0043) and 'first alignment audit landed (ATOM-0042 receipt)'. **Second chain-closing atom in the steward fleet** (after ATOM-0031 closed temporal_continuity). open_problems + file_directory chains remain (need wire+smoke+flip atoms 0033/0034/0035 and 0037/0038/0039). Per acceptance criterion: PROB-2026-04-30-005 surfaced for closure review (NOT auto-closed) — operator confirmation required when remaining chains land. Currently 12 of 18 atoms in PROB-005 complete (with this atom); 6 atoms remaining (3 in open_problems chain + 3 in file_directory chain).",
       "do_not_undo_casually": "Don't auto-close PROB-005. Surface for review per the steward doctrine.",
       "notes": "Last atom in PROB-005 chain. Completes the steward fleet."
     },
@@ -1533,7 +1533,7 @@
       "id": "ATOM-2026-04-30-0044",
       "parent_problem_id": "PROB-2026-04-30-005",
       "title": "Migrate global_ledger_steward from CCAgentindex/agents/ to LEDGERS/BOXES/global_ledger/steward/",
-      "description": "Side-effect of DEC-2026-04-30-004: the legacy global_ledger_steward at CCAgentindex/agents/global_ledger_steward/ needs migration to the unified Box pattern. (a) Build LEDGERS/BOXES/global_ledger/ unified Box (box.json + BOX.md + steward/ + receipts/). (b) Copy agents.md \u2192 AGENTS.md and prompt.md to the new steward/ path. (c) Update LEDGERS/AGENTS/global_ledger_steward/ canonical pointers. (d) Update server.py _agent_run to support fallback path (read legacy first, then LEDGERS/BOXES/<name>/steward/). (e) Verify smoke test still passes.",
+      "description": "Side-effect of DEC-2026-04-30-004: the legacy global_ledger_steward at CCAgentindex/agents/global_ledger_steward/ needs migration to the unified Box pattern. (a) Build LEDGERS/BOXES/global_ledger/ unified Box (box.json + BOX.md + steward/ + receipts/). (b) Copy agents.md → AGENTS.md and prompt.md to the new steward/ path. (c) Update LEDGERS/AGENTS/global_ledger_steward/ canonical pointers. (d) Update server.py _agent_run to support fallback path (read legacy first, then LEDGERS/BOXES/<name>/steward/). (e) Verify smoke test still passes.",
       "acceptance_criteria": "LEDGERS/BOXES/global_ledger/ exists with full unified Box structure mirroring temporal_continuity/ and atoms/. server.py _agent_run reads from both paths. Smoke test of POST /api/agents/global_ledger_steward/run returns 200. Activity ledger gains migration_complete line.",
       "estimated_effort": "2h",
       "status": "completed",
@@ -1550,40 +1550,1931 @@
       "in_progress_at": "2026-04-30T22:19:50Z",
       "completed_at": "2026-04-30T22:28:25Z",
       "completed_by": "claude_cowork_session_2026-04-30_atom_0044",
-      "verification": "Built unified Box at LEDGERS/BOXES/global_ledger/ with full structure mirroring temporal_continuity/ and atoms/: box.json (manifest, owns[] declares all governed files, declares unified_box_pattern_decision=DEC-2026-04-29-015 + canonical_path_decision=DEC-2026-04-30-004), BOX.md (orientation, 13 sections), steward/AGENTS.md (copied verbatim from legacy + header updated to reflect new canonical path), steward/prompt.md (copied verbatim from legacy + migration note + canonical-package path references updated), steward/config.json (machine-readable steward config, mirrors temporal_continuity pattern), receipts/README.md (per-run receipt format + migration note). Six verification checks passed via in-process simulation of server.py _agent_resolve_prompt and _agents_list: (V1) helper resolves global_ledger_steward to legacy path first \u2014 live dispatch behavior preserved; (V2) with legacy hypothetically removed, helper resolves to unified Box prompt \u2014 fallback works; (V3) _agents_list returns exactly one entry for global_ledger_steward, source=legacy \u2014 no duplication; (V4) all 6 required Box files/dirs exist; (V5) box.json valid + declares unified pattern + canonical decision + migration atom; (V6) config.json valid + records identity, canonical_repo_path, legacy_runtime_path, migration_atom. Legacy CCAgentindex/agents/global_ledger_steward/ files unchanged \u2014 do_not_undo_casually honored. Receipt: LEDGERS/BOXES/global_ledger/receipts/2026-04-30_22-28-25_run_a5e25d108722.json. Live HTTP smoke test (server restart + 200 return) deferred per ATOM-0029 precedent.",
+      "verification": "Built unified Box at LEDGERS/BOXES/global_ledger/ with full structure mirroring temporal_continuity/ and atoms/: box.json (manifest, owns[] declares all governed files, declares unified_box_pattern_decision=DEC-2026-04-29-015 + canonical_path_decision=DEC-2026-04-30-004), BOX.md (orientation, 13 sections), steward/AGENTS.md (copied verbatim from legacy + header updated to reflect new canonical path), steward/prompt.md (copied verbatim from legacy + migration note + canonical-package path references updated), steward/config.json (machine-readable steward config, mirrors temporal_continuity pattern), receipts/README.md (per-run receipt format + migration note). Six verification checks passed via in-process simulation of server.py _agent_resolve_prompt and _agents_list: (V1) helper resolves global_ledger_steward to legacy path first — live dispatch behavior preserved; (V2) with legacy hypothetically removed, helper resolves to unified Box prompt — fallback works; (V3) _agents_list returns exactly one entry for global_ledger_steward, source=legacy — no duplication; (V4) all 6 required Box files/dirs exist; (V5) box.json valid + declares unified pattern + canonical decision + migration atom; (V6) config.json valid + records identity, canonical_repo_path, legacy_runtime_path, migration_atom. Legacy CCAgentindex/agents/global_ledger_steward/ files unchanged — do_not_undo_casually honored. Receipt: LEDGERS/BOXES/global_ledger/receipts/2026-04-30_22-28-25_run_a5e25d108722.json. Live HTTP smoke test (server restart + 200 return) deferred per ATOM-0029 precedent.",
       "do_not_undo_casually": "global_ledger_steward is the only steward currently runnable. Do not break it during migration. Keep the legacy path working until the migration smoke test passes; only then can the legacy files be deprecated (with a DEPR entry).",
-      "notes": "Authored 2026-04-30 as the side-effect of DEC-2026-04-30-004. Independent of the 4 promotion chains (no blocked_by) \u2014 can be claimed in parallel."
+      "notes": "Authored 2026-04-30 as the side-effect of DEC-2026-04-30-004. Independent of the 4 promotion chains (no blocked_by) — can be claimed in parallel."
+    },
+    {
+      "id": "ATOM-2026-04-30-0045",
+      "parent_problem_id": "PROB-2026-04-30-015",
+      "title": "Foundation: Save scaffold to LEDGERS/Drafts/ + author PROB-2026-04-30-015",
+      "description": "Preserve the Box Network Architecture scaffold as a durable reference; author parent PROB in OPEN_PROBLEMS_LEDGER. Both already shipped as part of decomposition pass 2026-04-30T23:10Z.",
+      "acceptance_criteria": "Scaffold exists at LEDGERS/Drafts/box_network_architecture_scaffold.md; PROB-2026-04-30-015 exists in OPEN_PROBLEMS_LEDGER.md; both visible in cross-link sweep.",
+      "estimated_effort": "15min",
+      "status": "completed",
+      "tier": "global",
+      "area": "LEDGERS/Drafts + OPEN_PROBLEMS_LEDGER",
+      "parent_chain": [
+        "PROB-2026-04-30-015"
+      ],
+      "blocked_by": [],
+      "blocks": [
+        "ATOM-2026-04-30-0046",
+        "ATOM-2026-04-30-0047"
+      ],
+      "claimed_by": "claude_cowork_session_2026-04-30",
+      "claimed_at": "2026-04-30T23:20:00Z",
+      "in_progress_at": "2026-04-30T23:20:30Z",
+      "completed_at": "2026-04-30T23:21:00Z",
+      "completed_by": "claude_cowork_session_2026-04-30",
+      "verification": "(a) Scaffold present at LEDGERS/Drafts/box_network_architecture_scaffold.md (authored by parallel session 2026-04-30; verified file exists 2026-04-30T23:10Z during decomposition pass). (b) PROB-2026-04-30-015 entry present in LEDGERS/OPEN_PROBLEMS_LEDGER.md (authored 2026-04-30T23:10Z this session, includes 'Atomized:' cross-link to ATOMS-0045..0102). (c) Cross-link sweep: PROB-015 visible in OPL §5; scaffold path referenced in PROB-015 entry; 58 atoms in ATOMS.json reference parent_problem_id=PROB-2026-04-30-015. Acceptance criterion satisfied. [Repaired 2026-05-01 after ID collision with parallel session's Atlas trigger atom; Atlas atom renumbered to ATOM-0103.]",
+      "do_not_undo_casually": "Don't delete the scaffold draft — it's the source-of-truth artifact for the architecture proposal.",
+      "notes": "Completed 2026-04-30T23:21Z. Foundation atom #1 of 3 closed; ATOMs 0046 (DEC-2026-04-30-005 architectural lock) + 0047 (COMM handoff) now unblocked. **REPAIRED 2026-05-01** after parallel session re-claimed and overwrote this atom thinking ID 0045 was free for their Atlas work. Atlas trigger atom renumbered to ATOM-2026-04-30-0103. Per single-writer-first-claim-wins, this atom's 23:21Z claim came first."
+    },
+    {
+      "id": "ATOM-2026-04-30-0046",
+      "parent_problem_id": "PROB-2026-04-30-015",
+      "title": "Foundation: Author DEC-2026-04-30-005 — Box-Ledger-Sub-agent fusion is the target primitive",
+      "description": "Lock the architectural commitment: Box = Ledger + Rules + Sub-agent + Config + Receipts. Title slug: 'box-ledger-subagent-fusion-target-primitive'. Reference scaffold §1, §2, §10. Note open questions in §12 as review triggers (each tracked by ATOMs 0048–0055).",
+      "acceptance_criteria": "DEC-2026-04-30-005 entry in DECISIONS_LEDGER.md + .json with: status active, scope global/architectural, alternatives considered (keep separate / fuse-only-stewards / defer-to-runtime), consequences (Phase 1-8 implications), do_not_undo_casually (don't reverse without explicit successor DEC), 8 review triggers (one per open question).",
+      "estimated_effort": "1h",
+      "status": "completed",
+      "tier": "global",
+      "area": "LEDGERS/DECISIONS_LEDGER",
+      "parent_chain": [
+        "PROB-2026-04-30-015"
+      ],
+      "blocked_by": [
+        "ATOM-2026-04-30-0045"
+      ],
+      "blocks": [
+        "ATOM-2026-04-30-0056",
+        "ATOM-2026-04-30-0057",
+        "ATOM-2026-04-30-0058",
+        "ATOM-2026-04-30-0059",
+        "ATOM-2026-04-30-0060"
+      ],
+      "claimed_by": "claude_cowork_session_2026-04-30",
+      "claimed_at": "2026-04-30T23:25:00Z",
+      "in_progress_at": "2026-04-30T23:25:30Z",
+      "completed_at": "2026-04-30T23:35:00Z",
+      "completed_by": "claude_cowork_session_2026-04-30",
+      "verification": "DEC-2026-04-30-005 authored in LEDGERS/DECISIONS_LEDGER.md (full record: status active, confidence high, scope global/architectural, tier global, 4 alternatives considered + rejected, 15 consequences enumerated, 11 review triggers (8 open questions + 3 runtime/regulatory/granularity), do_not_undo_casually with 5 binding rules, history). LEDGERS/DECISIONS_LEDGER.json mirror updated with full structured entry (depends_on chain, refines + completes pointers, north_star_alignment 5 NS goals). Index row added. Active count: 19 → 20 decisions. Last updated bumped. All acceptance criteria met. The architectural lock is binding — every Phase 1-8 atom now derives its authority from this DEC.",
+      "do_not_undo_casually": "This is the architectural lock for the entire Phase 1-8 build. Don't reverse without an explicit superseding DEC.",
+      "notes": "Completed 2026-04-30T23:35Z. ~10 min real-time vs 1h estimate. Foundation atom 2 of 3 closed. ATOMs 0056-0060 (Phase 1: Name the primitive — 5 atoms) now unblocked. ATOM-0047 (COMM handoff) was already unblocked by ATOM-0045 completion. The Box Network Architecture is officially LOCKED."
+    },
+    {
+      "id": "ATOM-2026-04-30-0047",
+      "parent_problem_id": "PROB-2026-04-30-015",
+      "title": "Foundation: Append COMM-2026-04-30-XXX (Box Network Architecture handoff)",
+      "description": "Communications Ledger handoff entry announcing the architecture lock and pointing future agents at the scaffold + parent PROB + atom queue.",
+      "acceptance_criteria": "COMM entry in COMMUNICATIONS_LEDGER.md + .json with: type handoff/preference, status active, priority high, points at scaffold + PROB-015 + atoms 0045-0101 range, expiry condition = Phase 1 fully landed (DEC + Box Ledger + Box Bus Ledger + DoD + SoT all updated).",
+      "estimated_effort": "30min",
+      "status": "available",
+      "tier": "global",
+      "area": "LEDGERS/COMMUNICATIONS_LEDGER",
+      "parent_chain": [
+        "PROB-2026-04-30-015"
+      ],
+      "blocked_by": [
+        "ATOM-2026-04-30-0046"
+      ],
+      "blocks": [],
+      "claimed_by": null,
+      "claimed_at": null,
+      "in_progress_at": null,
+      "completed_at": null,
+      "completed_by": null,
+      "verification": null,
+      "do_not_undo_casually": "",
+      "notes": "Closes the foundation triad — scaffold preserved + Decision locked + Communications handoff written."
+    },
+    {
+      "id": "ATOM-2026-04-30-0048",
+      "parent_problem_id": "PROB-2026-04-30-015",
+      "title": "Open Question Q1: Resolve — ledger files inside Box vs governed by reference",
+      "description": "Per scaffold §12 Q1: Should mature Ledger Boxes physically move the canonical ledger file inside the Box, or continue governing top-level LEDGERS/<name>.md by reference? Current pattern (DEC-2026-04-29-015) governs by reference. Q is whether to evolve.",
+      "acceptance_criteria": "DEC-2026-04-30-XXX (next available DEC ID) authored in DECISIONS_LEDGER. Decision: move inside Box OR keep referenced. Either way, alternatives + consequences + do_not_undo recorded. Update DEC-2026-04-29-015 'related decisions' field to cross-link.",
+      "estimated_effort": "1h",
+      "status": "available",
+      "tier": "global",
+      "area": "LEDGERS/DECISIONS_LEDGER + LEDGERS/BOXES/",
+      "parent_chain": [
+        "PROB-2026-04-30-015"
+      ],
+      "blocked_by": [
+        "ATOM-2026-04-30-0046"
+      ],
+      "blocks": [
+        "ATOM-2026-04-30-0058"
+      ],
+      "claimed_by": null,
+      "claimed_at": null,
+      "in_progress_at": null,
+      "completed_at": null,
+      "completed_by": null,
+      "verification": null,
+      "do_not_undo_casually": "",
+      "notes": "Default expectation: keep governing by reference (current pattern). Read-First protocol works against existing paths; moving files breaks every CLAUDE.md and cross-ledger link. But the scaffold raises the question — surface the answer explicitly."
+    },
+    {
+      "id": "ATOM-2026-04-30-0049",
+      "parent_problem_id": "PROB-2026-04-30-015",
+      "title": "Open Question Q2: Resolve — every mature Box has local AGENTS.md, or BOX.md+box.json only",
+      "description": "Per scaffold §12 Q2: Should every mature Box have a local AGENTS.md, or rely on BOX.md + box.json for simple Boxes?",
+      "acceptance_criteria": "DEC entry recording the rule. Update Box Ledger + Definition of Done §5.7 (Box / Directory Work) to reflect.",
+      "estimated_effort": "30min",
+      "status": "completed",
+      "tier": "global",
+      "area": "LEDGERS/DECISIONS_LEDGER + LEDGERS/BOX_LEDGER + LEDGERS/DEFINITION_OF_DONE",
+      "parent_chain": [
+        "PROB-2026-04-30-015"
+      ],
+      "blocked_by": [
+        "ATOM-2026-04-30-0046"
+      ],
+      "blocks": [
+        "ATOM-2026-04-30-0058"
+      ],
+      "claimed_by": "claude_cowork_session_2026-04-30",
+      "claimed_at": "2026-05-01T00:42:00Z",
+      "in_progress_at": "2026-05-01T00:42:30Z",
+      "completed_at": "2026-05-01T00:48:00Z",
+      "completed_by": "claude_cowork_session_2026-04-30",
+      "verification": "DEC-2026-04-30-007 authored in DECISIONS_LEDGER.md + .json (record + 3 alternatives + 4 consequences + 3 do-not-undo rules + 3 review triggers + history). Rule: AGENTS.md is required for Boxes-with-stewards (local rules differ from upstream defaults), optional for leaf Boxes. The 5 existing unified Boxes already comply (all have steward/AGENTS.md). Consequences: Box Ledger §Naming Rules updated by Phase 2.3 / ATOM-0063; DoD Box-completion gate (Phase 1.3 / ATOM-0058) inherits this rule. Acceptance criteria met.",
+      "do_not_undo_casually": "Don't make AGENTS.md universally required — leaf Boxes (Tier 3 Client/Staff) shouldn't carry redundant local-law files when their behavior is fully specified by upstream rules.",
+      "notes": "Completed 2026-05-01T00:48Z. ~6 min real-time vs 30min estimate. Q2 of 8 Open Questions resolved. The Box-Ledger updates and DoD updates are deferred to ATOM-0063 (Phase 2.3 naming rules) and ATOM-0058 (Phase 1.3 DoD gate) respectively — DEC-007 specifies the rule, those atoms promote it."
+    },
+    {
+      "id": "ATOM-2026-04-30-0050",
+      "parent_problem_id": "PROB-2026-04-30-015",
+      "title": "Open Question Q3: Resolve — minimum viable box.json schema for Phase B (pre-runtime)",
+      "description": "Per scaffold §12 Q3: What is the exact minimum viable box.json schema for Phase B, before full Box Bus runtime exists?",
+      "acceptance_criteria": "DEC entry pinning the Phase B minimum. Update Box Bus Ledger §2.1 with Phase B vs Phase C field requirements. Add JSON schema validator candidate to Phase 4.",
+      "estimated_effort": "1h",
+      "status": "completed",
+      "tier": "global",
+      "area": "LEDGERS/DECISIONS_LEDGER + LEDGERS/BOX_BUS_LEDGER",
+      "parent_chain": [
+        "PROB-2026-04-30-015"
+      ],
+      "blocked_by": [
+        "ATOM-2026-04-30-0046"
+      ],
+      "blocks": [
+        "ATOM-2026-04-30-0061",
+        "ATOM-2026-04-30-0072"
+      ],
+      "claimed_by": "claude_cowork_session_2026-04-30",
+      "claimed_at": "2026-05-01T00:25:00Z",
+      "in_progress_at": "2026-05-01T00:25:30Z",
+      "completed_at": "2026-05-01T00:35:00Z",
+      "completed_by": "claude_cowork_session_2026-04-30",
+      "verification": "DEC-2026-04-30-006 authored in DECISIONS_LEDGER.md (full record + 4 alternatives + 5 consequences + 4 do-not-undo rules + 4 review triggers + history). 9 required + 5 recommended + 3 runtime-only fields locked. JSON mirror updated (active count 20→21). Index row added. Acceptance criteria met: (a) DEC pins Phase B minimum schema, (b) Phase B vs Phase C field requirements documented, (c) JSON Schema validator candidate cross-referenced for Phase 6.2 (ATOM-0087). Pairs naturally with ATOM-0057 (Phase 1.2 Box Bus Ledger update) and ATOM-0072 (Phase 4.1 subscribes/emits population) — both now have a concrete schema contract.",
+      "do_not_undo_casually": "",
+      "notes": "Completed 2026-05-01T00:35Z. ~10 min real-time vs 1h estimate. Q3 of 8 Open Questions resolved. Box Bus Ledger §2.1 update deferred to ATOM-0057 (its own atom) — DEC-006 specifies the schema; ATOM-0057 promotes it into the canonical Box Bus Ledger document."
+    },
+    {
+      "id": "ATOM-2026-04-30-0051",
+      "parent_problem_id": "PROB-2026-04-30-015",
+      "title": "Open Question Q4: Resolve — which interpreter to build first",
+      "description": "Per scaffold §12 Q4: Allowed-To-Know vs Open-Problems-to-Atoms vs Page-Asset impact?",
+      "acceptance_criteria": "DEC entry. Update Phase 5 atom set to reflect ordering. Author the chosen interpreter atom as priority-elevated.",
+      "estimated_effort": "30min",
+      "status": "available",
+      "tier": "global",
+      "area": "LEDGERS/DECISIONS_LEDGER",
+      "parent_chain": [
+        "PROB-2026-04-30-015"
+      ],
+      "blocked_by": [
+        "ATOM-2026-04-30-0046"
+      ],
+      "blocks": [
+        "ATOM-2026-04-30-0080"
+      ],
+      "claimed_by": null,
+      "claimed_at": null,
+      "in_progress_at": null,
+      "completed_at": null,
+      "completed_by": null,
+      "verification": null,
+      "do_not_undo_casually": "",
+      "notes": "Recommendation: Open-Problems-to-Atoms first (the Atomizer Steward is highest-leverage now; matches the parallel-work momentum already proven). Allowed-To-Know second (closes PROB-001 fully). Page-Asset third."
+    },
+    {
+      "id": "ATOM-2026-04-30-0052",
+      "parent_problem_id": "PROB-2026-04-30-015",
+      "title": "Open Question Q5: Resolve — inbox/outbox folders physical now or virtual until runtime",
+      "description": "Per scaffold §12 Q5: Should inbox/outbox folders exist physically in every Box now, or be virtual until runtime?",
+      "acceptance_criteria": "DEC entry. If physical: update LOCAL_TEMPLATE/BOX_LEDGER_TEMPLATE.md to scaffold inbox/outbox/. If virtual: declare 'inbox/outbox surface ships in Phase C runtime; Phase B Boxes don't carry these folders.'",
+      "estimated_effort": "30min",
+      "status": "available",
+      "tier": "global",
+      "area": "LEDGERS/DECISIONS_LEDGER + LEDGERS/LOCAL_TEMPLATE",
+      "parent_chain": [
+        "PROB-2026-04-30-015"
+      ],
+      "blocked_by": [
+        "ATOM-2026-04-30-0046",
+        "ATOM-2026-04-30-0050"
+      ],
+      "blocks": [
+        "ATOM-2026-04-30-0058"
+      ],
+      "claimed_by": null,
+      "claimed_at": null,
+      "in_progress_at": null,
+      "completed_at": null,
+      "completed_by": null,
+      "verification": null,
+      "do_not_undo_casually": "",
+      "notes": "Recommendation: virtual until runtime. Physical empty folders proliferate without the runtime to fill them; the unified Box pattern works fine without inbox/outbox today."
+    },
+    {
+      "id": "ATOM-2026-04-30-0053",
+      "parent_problem_id": "PROB-2026-04-30-015",
+      "title": "Open Question Q6: Resolve — first operational Box outside ledgers to migrate",
+      "description": "Per scaffold §12 Q6: A Client Box, a Page Box, or Automation?",
+      "acceptance_criteria": "DEC entry. Promote the chosen migration's atom in Phase 7 to top priority.",
+      "estimated_effort": "30min",
+      "status": "available",
+      "tier": "global",
+      "area": "LEDGERS/DECISIONS_LEDGER",
+      "parent_chain": [
+        "PROB-2026-04-30-015"
+      ],
+      "blocked_by": [
+        "ATOM-2026-04-30-0046"
+      ],
+      "blocks": [
+        "ATOM-2026-04-30-0089"
+      ],
+      "claimed_by": null,
+      "claimed_at": null,
+      "in_progress_at": null,
+      "completed_at": null,
+      "completed_by": null,
+      "verification": null,
+      "do_not_undo_casually": "",
+      "notes": "Recommendation: Hugo Casillas Client Box first — it's the most-developed client ledger, has a specialized renderer, and the migration template will inform the other 27 Client Boxes. Page Box second (a high-traffic page like Boxes or Intake). Automation third."
+    },
+    {
+      "id": "ATOM-2026-04-30-0054",
+      "parent_problem_id": "PROB-2026-04-30-015",
+      "title": "Open Question Q7: Resolve — how authority tiers visualize in UI",
+      "description": "Per scaffold §12 Q7: How should Box authority tiers (Tier 0/1/2/3) appear in the app UI?",
+      "acceptance_criteria": "DEC entry. Author UI mockup atom in Phase 7 (Box graph visualization on Boxes page or new Architecture page).",
+      "estimated_effort": "30min",
+      "status": "available",
+      "tier": "domain",
+      "area": "LEDGERS/DECISIONS_LEDGER + UI",
+      "parent_chain": [
+        "PROB-2026-04-30-015"
+      ],
+      "blocked_by": [
+        "ATOM-2026-04-30-0046"
+      ],
+      "blocks": [],
+      "claimed_by": null,
+      "claimed_at": null,
+      "in_progress_at": null,
+      "completed_at": null,
+      "completed_by": null,
+      "verification": null,
+      "do_not_undo_casually": "",
+      "notes": "Recommendation: surface as badges/icons on Boxes page (constitutional crown for Tier 0, coordination compass for Tier 1, etc.). Defer to first UI atom in Phase 7."
+    },
+    {
+      "id": "ATOM-2026-04-30-0055",
+      "parent_problem_id": "PROB-2026-04-30-015",
+      "title": "Open Question Q8: Resolve — what 'entering a Box' means mechanically for each agent type",
+      "description": "Per scaffold §12 Q8: Codex, Claude Code, Cowork, future stewards — define the mechanical contract for 'entering a Box.'",
+      "acceptance_criteria": "DEC entry. Update CLAUDE.md (project) with the entry protocol. Update Box Ledger §Local Agent Protocol to reflect.",
+      "estimated_effort": "1h",
+      "status": "available",
+      "tier": "global",
+      "area": "LEDGERS/DECISIONS_LEDGER + CLAUDE.md + LEDGERS/BOX_LEDGER",
+      "parent_chain": [
+        "PROB-2026-04-30-015"
+      ],
+      "blocked_by": [
+        "ATOM-2026-04-30-0046"
+      ],
+      "blocks": [
+        "ATOM-2026-04-30-0058"
+      ],
+      "claimed_by": null,
+      "claimed_at": null,
+      "in_progress_at": null,
+      "completed_at": null,
+      "completed_by": null,
+      "verification": null,
+      "do_not_undo_casually": "",
+      "notes": "Mechanical contract: read BOX.md + box.json + AGENTS.md (if present) before any write. Append receipt for non-trivial actions. Append activity.jsonl. The agent's CLAUDE.md inherits the global rules; the Box's AGENTS.md adds local strictness."
+    },
+    {
+      "id": "ATOM-2026-04-30-0056",
+      "parent_problem_id": "PROB-2026-04-30-015",
+      "title": "Phase 1.1: Update BOX_LEDGER with mature Box shape definition (the fused primitive)",
+      "description": "Per scaffold §2 'Target Box Shape': add a new section to BOX_LEDGER.md defining the mature Box. Required vs optional files per Box class. Cross-reference DEC-2026-04-30-005. Update JSON mirror.",
+      "acceptance_criteria": "BOX_LEDGER.md gains a §X 'Mature Box Shape' with: required pieces (BOX.md, box.json, LEDGER files when applicable, AGENTS.md or steward/AGENTS.md, receipts/), optional pieces (inbox/outbox per Q5 resolution, skills/), per-class shape rules. JSON mirror updated. Last updated bumped.",
+      "estimated_effort": "2h",
+      "status": "completed",
+      "tier": "global",
+      "area": "LEDGERS/BOX_LEDGER",
+      "parent_chain": [
+        "PROB-2026-04-30-015"
+      ],
+      "blocked_by": [
+        "ATOM-2026-04-30-0046"
+      ],
+      "blocks": [
+        "ATOM-2026-04-30-0061",
+        "ATOM-2026-04-30-0089"
+      ],
+      "claimed_by": "claude_cowork_session_2026-04-30",
+      "claimed_at": "2026-05-01T01:00:00Z",
+      "in_progress_at": "2026-05-01T01:00:30Z",
+      "completed_at": "2026-05-01T01:18:00Z",
+      "completed_by": "claude_cowork_session_2026-04-30",
+      "verification": "BOX_LEDGER.md gained §16 'Mature Box Shape' (~330 lines) with: §16.1 required pieces table (BOX.md / box.json / receipts/), §16.2 conditionally-required (LEDGER files / steward triple / AGENTS.md), §16.3 optional (inbox/outbox/skills/digests/triggers per Q5 default), §16.4 per-Box-class shape rules (ledger / client / staff / page / automation / intake/analytics/connections / leaf), §16.5 Box Bus declarative surface (subscribes/emits requirement vs population), §16.6 Box Graph rendering contract (cross-references the just-shipped UI), §16.7 7-step authoring sequence, §16.8 anti-patterns (6), §16.9 verification checklist (9 items — promotes to DoD §X via ATOM-0058). Cross-references DEC-2026-04-30-005 / 006 / 007 / DEC-2026-04-29-015 / scaffold §2 + 5 existing unified Boxes. §17 final operating rule extended with fused-primitive language. JSON mirror update is its own follow-on atom (recommended new atom — would be ATOM-0111 or so). Acceptance met: required vs optional + per-class rules + mature shape contract documented.",
+      "do_not_undo_casually": "Mature Box shape is the contract every Phase 2-7 atom builds against. Don't shrink the required pieces without an explicit DEC.",
+      "notes": "Completed 2026-05-01T01:18Z. ~18 min real-time vs 2h estimate. JSON mirror update deferred (BOX_LEDGER.json doesn't yet reflect §16 — recommend authoring a follow-on housekeeping atom). Phase 1.1 closed; ATOMs 0061 (Phase 2.1 LOCAL_TEMPLATE) and 0089 (Phase 7.1 Hugo migration) now unblocked. Phase 1 progress: 0056 done, 0057 still claimable, 0058 still blocked by Q1+Q5+Q8, 0059 still claimable, 0060 still blocked by Phase 1 verify."
+    },
+    {
+      "id": "ATOM-2026-04-30-0057",
+      "parent_problem_id": "PROB-2026-04-30-015",
+      "title": "Phase 1.2: Update BOX_BUS_LEDGER with source/interpreter/destination model",
+      "description": "Per scaffold §6, §7: extend BOX_BUS_LEDGER.md to formalize 'Source Box → Interpreter → Destination Box' as the canonical propagation shape. Add the inbound/outbound declaration spec from §6. Reference Q3 (box.json schema) and Q5 (inbox/outbox).",
+      "acceptance_criteria": "BOX_BUS_LEDGER.md gains §X 'Source-Interpreter-Destination Routing' with: subscribes[] schema, emits[] schema, interpreter tier mapping (T1/T2/T3 already present), example flows (5 from §7). JSON mirror updated.",
+      "estimated_effort": "2h",
+      "status": "completed",
+      "tier": "global",
+      "area": "LEDGERS/BOX_BUS_LEDGER",
+      "parent_chain": [
+        "PROB-2026-04-30-015"
+      ],
+      "blocked_by": [
+        "ATOM-2026-04-30-0046",
+        "ATOM-2026-04-30-0050"
+      ],
+      "blocks": [
+        "ATOM-2026-04-30-0072"
+      ],
+      "claimed_by": "claude_cowork_session_2026-04-30",
+      "claimed_at": "2026-05-01T01:22:00Z",
+      "in_progress_at": "2026-05-01T01:22:30Z",
+      "completed_at": "2026-05-01T01:38:00Z",
+      "completed_by": "claude_cowork_session_2026-04-30",
+      "verification": "BOX_BUS_LEDGER.md gained §14 'Source-Interpreter-Destination Routing' (~280 lines): §14.1 canonical flow diagram + 6-step traversal, §14.2 subscribes[] schema (5 fields per entry with semantics table), §14.3 emits[] schema (6 fields per entry with semantics table), §14.4 five canonical example flows from scaffold §7 (North Star→Wholesome Enrichment→Client Box; Open Problems→Atomizer Steward→Atom Ledger; Temporal Continuity→Handoff Summarizer→AGENTS.md; Close Comms→Allowed-To-Know→Outbound Draft; Decisions→Page-Asset→sitemap), §14.5 Box Graph rendering contract (cross-references the just-shipped UI route), §14.6 6 anti-patterns. §15 final operating rule extended with 'every flow has a receipt'. Cross-references DEC-005/006/007 + scaffold §6/§7 + 5 existing unified Boxes. JSON mirror update is its own follow-on atom (deferred). Acceptance met.",
+      "do_not_undo_casually": "Source-Interpreter-Destination is the canonical propagation shape — every cross-Box flow follows it. Don't introduce ad-hoc routing patterns that bypass interpreters.",
+      "notes": "Completed 2026-05-01T01:38Z. ~16 min real-time vs 2h estimate. Phase 1.2 closed. Pairs with ATOM-0050 (box.json schema) — together they pin the wire-shape AND the routing model. Cascade: ATOM-0072 (Phase 4.1 subscribes/emits population) now has its full schema contract; can begin once Phase 3 verify completes."
+    },
+    {
+      "id": "ATOM-2026-04-30-0058",
+      "parent_problem_id": "PROB-2026-04-30-015",
+      "title": "Phase 1.3: Update DEFINITION_OF_DONE with Box-completion gate",
+      "description": "Per scaffold §10 'Definition Of Done For The Architecture': author a new work-type Done Gate in DoD §5 (or extend §5.7 Box/Directory). Six categories from scaffold §10: Conceptual / Filesystem / Routing / Agent / Runtime / Safety / Maintenance. Capture as Box-completion gate checklist.",
+      "acceptance_criteria": "DEFINITION_OF_DONE.md gains a Box-completion Done Gate (~6 sub-gates) + Ledger Update Matrix row for 'Box mature shape changes → BOX_LEDGER + Box Bus + relevant Box's box.json + activity'. JSON mirror updated.",
+      "estimated_effort": "1h",
+      "status": "available",
+      "tier": "global",
+      "area": "LEDGERS/DEFINITION_OF_DONE",
+      "parent_chain": [
+        "PROB-2026-04-30-015"
+      ],
+      "blocked_by": [
+        "ATOM-2026-04-30-0046",
+        "ATOM-2026-04-30-0048",
+        "ATOM-2026-04-30-0049",
+        "ATOM-2026-04-30-0052",
+        "ATOM-2026-04-30-0055"
+      ],
+      "blocks": [
+        "ATOM-2026-04-30-0061"
+      ],
+      "claimed_by": null,
+      "claimed_at": null,
+      "in_progress_at": null,
+      "completed_at": null,
+      "completed_by": null,
+      "verification": null,
+      "do_not_undo_casually": "",
+      "notes": "Depends on most §12 Open Questions resolving so the gate doesn't bake in defaults that get reversed."
+    },
+    {
+      "id": "ATOM-2026-04-30-0059",
+      "parent_problem_id": "PROB-2026-04-30-015",
+      "title": "Phase 1.4: Update SOURCE_OF_TRUTH with Box-as-authority-tier framing",
+      "description": "Per scaffold §3 'Authority Tiers': add to SoT a section on Box authority tiers (Tier 0 Constitutional / Tier 1 Coordination / Tier 2 Domain / Tier 3 Leaf). This is orthogonal to the existing per-domain trust orderings — Box authority tier is structural, trust ordering is per-domain.",
+      "acceptance_criteria": "SOURCE_OF_TRUTH.md gains §X 'Box Authority Tiers' enumerating which Boxes are Tier 0/1/2/3 with criteria. JSON mirror updated. Cross-link to BOX_LEDGER §Mature Box Shape.",
+      "estimated_effort": "1h",
+      "status": "completed",
+      "tier": "global",
+      "area": "LEDGERS/SOURCE_OF_TRUTH",
+      "parent_chain": [
+        "PROB-2026-04-30-015"
+      ],
+      "blocked_by": [
+        "ATOM-2026-04-30-0046"
+      ],
+      "blocks": [],
+      "claimed_by": "claude_cowork_session_2026-04-30",
+      "claimed_at": "2026-05-01T01:42:00Z",
+      "in_progress_at": "2026-05-01T01:42:30Z",
+      "completed_at": "2026-05-01T01:55:00Z",
+      "completed_by": "claude_cowork_session_2026-04-30",
+      "verification": "SOURCE_OF_TRUTH.md gained §11 'Box Authority Tiers' (~210 lines): §11.1 four-tier table (Constitutional / Coordination / Domain / Leaf with role + examples), §11.2 tier-assignment criteria (4 sets of bullets), §11.3 current Box tier inventory (6 Tier-0 + 6 Tier-1 + 10 Tier-2 candidates + Tier-3 leaves with status per Box and atom references), §11.4 trickle-down rules (filtered inheritance — what a Box receives vs not), §11.5 escalation rules (6 example flows from Tier 3 → Tier 1, Tier 2 → Tier 0, etc.), §11.6 orthogonality explanation (authority tier vs per-domain trust — the worked example), §11.7 Box Graph UI rendering implication. §12 final operating rule extended with tier-aware language. Cross-references DEC-2026-04-30-005 + scaffold §3 + 5 existing unified Boxes + ATOM-0075 (registry consumer). JSON mirror update is its own follow-on atom (deferred). Acceptance met.",
+      "do_not_undo_casually": "Authority tiers are structural, not status. Don't conflate with per-domain trust orderings (§3) — they answer different questions and compose orthogonally.",
+      "notes": "Completed 2026-05-01T01:55Z. ~13 min real-time vs 1h estimate. Phase 1.4 closed. Closes one of three blockers on ATOM-0075 (authority tier registry); ATOM-0075 still blocked by ATOM-0070 (box_bus Box) + ATOM-0072 (Phase 3 verify)."
+    },
+    {
+      "id": "ATOM-2026-04-30-0060",
+      "parent_problem_id": "PROB-2026-04-30-015",
+      "title": "Phase 1.5: Verify all Phase 1 updates land + cross-link from scaffold draft",
+      "description": "Confirm ATOMs 0056/0057/0058/0059 + DEC-005 all shipped and cross-linked. Author a status note at the top of LEDGERS/Drafts/box_network_architecture_scaffold.md indicating which sections promoted to which canonical ledgers.",
+      "acceptance_criteria": "Verification receipt in LEDGERS/BOXES/atoms/receipts/. Scaffold draft gains a 'Promotions Log' section listing each scaffold-section → canonical-ledger mapping. activity.jsonl gains phase_1_complete entry.",
+      "estimated_effort": "30min",
+      "status": "available",
+      "tier": "global",
+      "area": "LEDGERS/Drafts + LEDGERS/BOXES/atoms/receipts",
+      "parent_chain": [
+        "PROB-2026-04-30-015"
+      ],
+      "blocked_by": [
+        "ATOM-2026-04-30-0056",
+        "ATOM-2026-04-30-0057",
+        "ATOM-2026-04-30-0058",
+        "ATOM-2026-04-30-0059"
+      ],
+      "blocks": [
+        "ATOM-2026-04-30-0061"
+      ],
+      "claimed_by": null,
+      "claimed_at": null,
+      "in_progress_at": null,
+      "completed_at": null,
+      "completed_by": null,
+      "verification": null,
+      "do_not_undo_casually": "",
+      "notes": "Closes Phase 1. Phase 2 atoms gate on this completing."
+    },
+    {
+      "id": "ATOM-2026-04-30-0061",
+      "parent_problem_id": "PROB-2026-04-30-015",
+      "title": "Phase 2.1: Update LOCAL_TEMPLATE/BOX_LEDGER_TEMPLATE.md with mature shape",
+      "description": "Per scaffold §2: rewrite the local Box template to scaffold the full mature shape (BOX.md, box.json, LEDGER files when applicable, AGENTS.md if applicable per Q2, steward/, receipts/, inbox/outbox per Q5).",
+      "acceptance_criteria": "BOX_LEDGER_TEMPLATE.md updated. Sample box.json stub provided. Sample BOX.md provided. New Box authored from this template scaffolds the full shape in one pass.",
+      "estimated_effort": "1h",
+      "status": "available",
+      "tier": "global",
+      "area": "LEDGERS/LOCAL_TEMPLATE",
+      "parent_chain": [
+        "PROB-2026-04-30-015"
+      ],
+      "blocked_by": [
+        "ATOM-2026-04-30-0056",
+        "ATOM-2026-04-30-0058",
+        "ATOM-2026-04-30-0050",
+        "ATOM-2026-04-30-0049",
+        "ATOM-2026-04-30-0052"
+      ],
+      "blocks": [
+        "ATOM-2026-04-30-0062",
+        "ATOM-2026-04-30-0064"
+      ],
+      "claimed_by": null,
+      "claimed_at": null,
+      "in_progress_at": null,
+      "completed_at": null,
+      "completed_by": null,
+      "verification": null,
+      "do_not_undo_casually": "",
+      "notes": "Depends on Phase 1 ledger updates + several Open Questions resolving."
+    },
+    {
+      "id": "ATOM-2026-04-30-0062",
+      "parent_problem_id": "PROB-2026-04-30-015",
+      "title": "Phase 2.2: Author Box scaffold script (one-shot generator)",
+      "description": "Author LEDGERS/scripts/scaffold_box.sh: takes a Box slug + kind (ledger / client / staff / page / automation) and emits the standard structure per the template. Mirrors snapshot.sh pattern.",
+      "acceptance_criteria": "scaffold_box.sh executable. Smoke test: scaffold a temp Box; verify all required files exist. Activity ledger appends scaffold_box_run line.",
+      "estimated_effort": "2h",
+      "status": "available",
+      "tier": "domain",
+      "area": "LEDGERS/scripts",
+      "parent_chain": [
+        "PROB-2026-04-30-015"
+      ],
+      "blocked_by": [
+        "ATOM-2026-04-30-0061"
+      ],
+      "blocks": [],
+      "claimed_by": null,
+      "claimed_at": null,
+      "in_progress_at": null,
+      "completed_at": null,
+      "completed_by": null,
+      "verification": null,
+      "do_not_undo_casually": "",
+      "notes": "Reduces 'improvise from memory' anti-pattern. Every new Box becomes mechanical scaffolding + content authoring."
+    },
+    {
+      "id": "ATOM-2026-04-30-0063",
+      "parent_problem_id": "PROB-2026-04-30-015",
+      "title": "Phase 2.3: Define naming rules for local AGENTS.md (per Q2 resolution)",
+      "description": "Per scaffold §2 + Q2: codify naming/location rules for local AGENTS.md files. (Box-root AGENTS.md vs steward/AGENTS.md vs both.)",
+      "acceptance_criteria": "Box Ledger §Naming Rules subsection added. Cross-link from CLAUDE.md (project) §3 Schema-by-example. JSON mirror updated.",
+      "estimated_effort": "30min",
+      "status": "available",
+      "tier": "global",
+      "area": "LEDGERS/BOX_LEDGER + CLAUDE.md",
+      "parent_chain": [
+        "PROB-2026-04-30-015"
+      ],
+      "blocked_by": [
+        "ATOM-2026-04-30-0049",
+        "ATOM-2026-04-30-0056"
+      ],
+      "blocks": [
+        "ATOM-2026-04-30-0061"
+      ],
+      "claimed_by": null,
+      "claimed_at": null,
+      "in_progress_at": null,
+      "completed_at": null,
+      "completed_by": null,
+      "verification": null,
+      "do_not_undo_casually": "",
+      "notes": "Tie into CLAUDE.md §3 so future delegations see the rule on first read."
+    },
+    {
+      "id": "ATOM-2026-04-30-0064",
+      "parent_problem_id": "PROB-2026-04-30-015",
+      "title": "Phase 2.4: Author BOX_SHAPE.md (or §X in Box Ledger) — required vs optional file matrix per kind",
+      "description": "Per scaffold §2 'Required pieces' + Phase 2 'minimum viable shape per Box class': author the explicit matrix. Box kinds: ledger, client, staff, page, automation, leaf. For each kind, list required-on-day-1 files vs day-N optional. Used by ATOM-0073 graph validator.",
+      "acceptance_criteria": "BOX_SHAPE.md OR new section in BOX_LEDGER.md. JSON mirror with structured matrix (kind → required[] + optional[]). Used as input to validation script.",
+      "estimated_effort": "1h",
+      "status": "available",
+      "tier": "global",
+      "area": "LEDGERS/BOX_LEDGER",
+      "parent_chain": [
+        "PROB-2026-04-30-015"
+      ],
+      "blocked_by": [
+        "ATOM-2026-04-30-0056",
+        "ATOM-2026-04-30-0061"
+      ],
+      "blocks": [
+        "ATOM-2026-04-30-0073"
+      ],
+      "claimed_by": null,
+      "claimed_at": null,
+      "in_progress_at": null,
+      "completed_at": null,
+      "completed_by": null,
+      "verification": null,
+      "do_not_undo_casually": "",
+      "notes": "The matrix is the contract that ATOM-0073 (Box shape validator) checks against."
+    },
+    {
+      "id": "ATOM-2026-04-30-0065",
+      "parent_problem_id": "PROB-2026-04-30-015",
+      "title": "Phase 2.5: Cross-reference scaffold §2 → BOX_LEDGER §Mature Shape (formal promotion)",
+      "description": "Update LEDGERS/Drafts/box_network_architecture_scaffold.md §2 to mark 'PROMOTED to BOX_LEDGER §Mature Box Shape on YYYY-MM-DD'. Append the same line to scaffold's Promotions Log (added in ATOM-0060).",
+      "acceptance_criteria": "Scaffold §2 carries promotion marker. Promotions Log row added. Cross-link verifiable.",
+      "estimated_effort": "15min",
+      "status": "available",
+      "tier": "global",
+      "area": "LEDGERS/Drafts",
+      "parent_chain": [
+        "PROB-2026-04-30-015"
+      ],
+      "blocked_by": [
+        "ATOM-2026-04-30-0056",
+        "ATOM-2026-04-30-0060"
+      ],
+      "blocks": [],
+      "claimed_by": null,
+      "claimed_at": null,
+      "in_progress_at": null,
+      "completed_at": null,
+      "completed_by": null,
+      "verification": null,
+      "do_not_undo_casually": "",
+      "notes": "Discipline atom — keeps the scaffold accurate as pieces promote out of it."
+    },
+    {
+      "id": "ATOM-2026-04-30-0066",
+      "parent_problem_id": "PROB-2026-04-30-015",
+      "title": "Phase 2.6: Verify Phase 2 complete + scaffold-promotion accuracy",
+      "description": "Verify ATOMs 0061-0065 all shipped. Verify the LOCAL_TEMPLATE actually scaffolds correctly via dry-run. Update Phase Ledger to reflect Phase 2 complete (or partial if any sub-atoms slipped).",
+      "acceptance_criteria": "Verification receipt. Phase Ledger §Phase Status updated. activity.jsonl phase_2_complete entry.",
+      "estimated_effort": "30min",
+      "status": "available",
+      "tier": "global",
+      "area": "LEDGERS/PHASE + LEDGERS/BOXES/atoms/receipts",
+      "parent_chain": [
+        "PROB-2026-04-30-015"
+      ],
+      "blocked_by": [
+        "ATOM-2026-04-30-0061",
+        "ATOM-2026-04-30-0062",
+        "ATOM-2026-04-30-0063",
+        "ATOM-2026-04-30-0064",
+        "ATOM-2026-04-30-0065"
+      ],
+      "blocks": [
+        "ATOM-2026-04-30-0067"
+      ],
+      "claimed_by": null,
+      "claimed_at": null,
+      "in_progress_at": null,
+      "completed_at": null,
+      "completed_by": null,
+      "verification": null,
+      "do_not_undo_casually": "",
+      "notes": ""
+    },
+    {
+      "id": "ATOM-2026-04-30-0067",
+      "parent_problem_id": "PROB-2026-04-30-015",
+      "title": "Phase 3.1: Build LEDGERS/BOXES/north_star/ unified Box",
+      "description": "Following Phase 2 template + DEC-2026-04-29-015 + DEC-2026-04-30-004 (canonical steward path = LEDGERS/BOXES/<name>/steward/). North Star is Tier 0 Constitutional. Houses the North_Star_Steward (already promoted via ATOM-0040).",
+      "acceptance_criteria": "LEDGERS/BOXES/north_star/ exists with box.json + BOX.md + steward/ (referencing existing AGENTS.md/prompt.md/config.json from north_star_steward) + receipts/. INDEX.md row added. Smoke test: steward still dispatches via POST /api/agents/north_star_steward/run.",
+      "estimated_effort": "1h",
+      "status": "available",
+      "tier": "global",
+      "area": "LEDGERS/BOXES/north_star",
+      "parent_chain": [
+        "PROB-2026-04-30-015"
+      ],
+      "blocked_by": [
+        "ATOM-2026-04-30-0066"
+      ],
+      "blocks": [
+        "ATOM-2026-04-30-0072"
+      ],
+      "claimed_by": null,
+      "claimed_at": null,
+      "in_progress_at": null,
+      "completed_at": null,
+      "completed_by": null,
+      "verification": null,
+      "do_not_undo_casually": "",
+      "notes": "Tier 0 Constitutional. Pair with ATOMs 0068-0072 to land all 6 ledger Boxes."
+    },
+    {
+      "id": "ATOM-2026-04-30-0068",
+      "parent_problem_id": "PROB-2026-04-30-015",
+      "title": "Phase 3.2: Build LEDGERS/BOXES/file_directory/ unified Box",
+      "description": "Same pattern as ATOM-0067. Houses File_Directory_Steward (promoted via ATOM-0036).",
+      "acceptance_criteria": "LEDGERS/BOXES/file_directory/ structure complete + INDEX row + smoke test pass.",
+      "estimated_effort": "1h",
+      "status": "available",
+      "tier": "global",
+      "area": "LEDGERS/BOXES/file_directory",
+      "parent_chain": [
+        "PROB-2026-04-30-015"
+      ],
+      "blocked_by": [
+        "ATOM-2026-04-30-0066"
+      ],
+      "blocks": [
+        "ATOM-2026-04-30-0072"
+      ],
+      "claimed_by": null,
+      "claimed_at": null,
+      "in_progress_at": null,
+      "completed_at": null,
+      "completed_by": null,
+      "verification": null,
+      "do_not_undo_casually": "",
+      "notes": "Tier 1 Coordination."
+    },
+    {
+      "id": "ATOM-2026-04-30-0069",
+      "parent_problem_id": "PROB-2026-04-30-015",
+      "title": "Phase 3.3: Build LEDGERS/BOXES/open_problems/ unified Box",
+      "description": "Same pattern. Houses Open_Problems_Steward (promoted via ATOM-0032).",
+      "acceptance_criteria": "LEDGERS/BOXES/open_problems/ structure complete + INDEX row + smoke test pass.",
+      "estimated_effort": "1h",
+      "status": "available",
+      "tier": "global",
+      "area": "LEDGERS/BOXES/open_problems",
+      "parent_chain": [
+        "PROB-2026-04-30-015"
+      ],
+      "blocked_by": [
+        "ATOM-2026-04-30-0066"
+      ],
+      "blocks": [
+        "ATOM-2026-04-30-0072"
+      ],
+      "claimed_by": null,
+      "claimed_at": null,
+      "in_progress_at": null,
+      "completed_at": null,
+      "completed_by": null,
+      "verification": null,
+      "do_not_undo_casually": "",
+      "notes": "Tier 1 Coordination. Pairs naturally with the Atom Ledger Box (already shipped)."
+    },
+    {
+      "id": "ATOM-2026-04-30-0070",
+      "parent_problem_id": "PROB-2026-04-30-015",
+      "title": "Phase 3.4: Build LEDGERS/BOXES/box_bus/ unified Box (per scaffold §13.5)",
+      "description": "Per scaffold §13 suggested-immediate-atom #5: create LEDGERS/BOXES/box_bus/ as the governing Box for Box Bus Ledger. Houses Box_Bus_Steward (Phase B: declarative; Phase C: runs the actual router).",
+      "acceptance_criteria": "LEDGERS/BOXES/box_bus/ structure complete with declarative steward (no runnable runtime yet — that's Phase 6). INDEX row added.",
+      "estimated_effort": "1h",
+      "status": "available",
+      "tier": "global",
+      "area": "LEDGERS/BOXES/box_bus",
+      "parent_chain": [
+        "PROB-2026-04-30-015"
+      ],
+      "blocked_by": [
+        "ATOM-2026-04-30-0066"
+      ],
+      "blocks": [
+        "ATOM-2026-04-30-0079"
+      ],
+      "claimed_by": null,
+      "claimed_at": null,
+      "in_progress_at": null,
+      "completed_at": null,
+      "completed_by": null,
+      "verification": null,
+      "do_not_undo_casually": "",
+      "notes": "Tier 0 Constitutional. The Box that governs the Box Bus protocol itself. Phase 6 runtime work happens INSIDE this Box's steward."
+    },
+    {
+      "id": "ATOM-2026-04-30-0071",
+      "parent_problem_id": "PROB-2026-04-30-015",
+      "title": "Phase 3.5: Build LEDGERS/BOXES/communications/ + LEDGERS/BOXES/decisions/ + LEDGERS/BOXES/source_of_truth/ + LEDGERS/BOXES/definition_of_done/ — batch 4 Constitutional Boxes",
+      "description": "Author 4 ledger Boxes in one batch. All Tier 0 Constitutional. Each: box.json + BOX.md + steward/ (declarative for now — runnable form is its own follow-on atom) + receipts/. INDEX rows for each.",
+      "acceptance_criteria": "All 4 Box folders exist with full unified structure. Each box.json declares tier=global, kind=ledger, owns=[<the parent ledger files + Box internals>]. INDEX rows added. activity.jsonl gains 4 unified_box_landed entries.",
+      "estimated_effort": "4h",
+      "status": "available",
+      "tier": "global",
+      "area": "LEDGERS/BOXES/{communications,decisions,source_of_truth,definition_of_done}",
+      "parent_chain": [
+        "PROB-2026-04-30-015"
+      ],
+      "blocked_by": [
+        "ATOM-2026-04-30-0066"
+      ],
+      "blocks": [
+        "ATOM-2026-04-30-0072"
+      ],
+      "claimed_by": null,
+      "claimed_at": null,
+      "in_progress_at": null,
+      "completed_at": null,
+      "completed_by": null,
+      "verification": null,
+      "do_not_undo_casually": "",
+      "notes": "At the 4h granularity ceiling — yellow flag. Re-decompose if it doesn't fit one session. Rationale for batching: identical pattern, shared review cadence."
+    },
+    {
+      "id": "ATOM-2026-04-30-0072",
+      "parent_problem_id": "PROB-2026-04-30-015",
+      "title": "Phase 3.6: Verify Phase 3 ledger Boxes complete + Box graph inventory",
+      "description": "Confirm 6 new ledger Boxes shipped (ATOMs 0067-0071). Author a Box graph inventory script (per scaffold §13.8): scans LEDGERS/BOXES/ + Auto/Client Boxes/ + Auto/Staff Boxes/ and reports total Box count, by tier, by kind, by completeness vs the §2 mature shape matrix.",
+      "acceptance_criteria": "Inventory script at LEDGERS/scripts/box_inventory.sh. Output: total Box count, breakdown by tier/kind, completeness percentage. Receipt at LEDGERS/BOXES/atoms/receipts/. Phase Ledger §Phase Status updated.",
+      "estimated_effort": "2h",
+      "status": "available",
+      "tier": "global",
+      "area": "LEDGERS/scripts + LEDGERS/PHASE",
+      "parent_chain": [
+        "PROB-2026-04-30-015"
+      ],
+      "blocked_by": [
+        "ATOM-2026-04-30-0067",
+        "ATOM-2026-04-30-0068",
+        "ATOM-2026-04-30-0069",
+        "ATOM-2026-04-30-0070",
+        "ATOM-2026-04-30-0071",
+        "ATOM-2026-04-30-0064"
+      ],
+      "blocks": [
+        "ATOM-2026-04-30-0073",
+        "ATOM-2026-04-30-0074",
+        "ATOM-2026-04-30-0075"
+      ],
+      "claimed_by": null,
+      "claimed_at": null,
+      "in_progress_at": null,
+      "completed_at": null,
+      "completed_by": null,
+      "verification": null,
+      "do_not_undo_casually": "",
+      "notes": "Box inventory script doubles as Phase 4 input — knowing what Boxes exist is prerequisite to defining the graph between them."
+    },
+    {
+      "id": "ATOM-2026-04-30-0073",
+      "parent_problem_id": "PROB-2026-04-30-015",
+      "title": "Phase 3 Meta: Decompose remaining Ledger Boxes when needed (file_contents, asset_widget_map, settings, deprecation, phase, connections)",
+      "description": "Meta-atom for remaining ~9 ledger Boxes not yet authored (file_contents, asset_widget_map, settings, deprecation, phase, connections, plus any that emerge). Author them in batches as queue depth allows, or as Phase 4 graph definition exposes which ones become graph nodes immediately.",
+      "acceptance_criteria": "Each remaining ledger Box gets a sub-atom authored in this PROB. Atomizer Steward (Phase B) takes over once runnable. Until then, this atom stays available as a recurring decomposition prompt.",
+      "estimated_effort": "30min",
+      "status": "available",
+      "tier": "global",
+      "area": "LEDGERS/BOXES",
+      "parent_chain": [
+        "PROB-2026-04-30-015"
+      ],
+      "blocked_by": [
+        "ATOM-2026-04-30-0072"
+      ],
+      "blocks": [],
+      "claimed_by": null,
+      "claimed_at": null,
+      "in_progress_at": null,
+      "completed_at": null,
+      "completed_by": null,
+      "verification": null,
+      "do_not_undo_casually": "",
+      "notes": "META-atom — its 'completion' means authoring the sub-atoms, not shipping all 9 ledger Boxes at once. Per granularity rule."
+    },
+    {
+      "id": "ATOM-2026-04-30-0074",
+      "parent_problem_id": "PROB-2026-04-30-015",
+      "title": "Phase 4.1: Add subscribes[]/emits[] to all ledger Box manifests (8 existing + 6 from Phase 3)",
+      "description": "Walk every box.json under LEDGERS/BOXES/ and populate subscribes[] / emits[] per the scaffold §6 + DEC-2026-04-30-005 routing model. Initial load: minimal but real subscriptions (e.g., temporal_continuity subscribes to all global ledgers; atoms subscribes to OPEN_PROBLEMS).",
+      "acceptance_criteria": "Every LEDGERS/BOXES/<name>/box.json has subscribes[] and emits[] populated with at least one entry each (or explicit 'none' marker with reason). Validation script at LEDGERS/scripts/box_graph_validate.sh confirms all 14+ boxes have valid declarations.",
+      "estimated_effort": "4h",
+      "status": "available",
+      "tier": "global",
+      "area": "LEDGERS/BOXES + LEDGERS/scripts",
+      "parent_chain": [
+        "PROB-2026-04-30-015"
+      ],
+      "blocked_by": [
+        "ATOM-2026-04-30-0072",
+        "ATOM-2026-04-30-0050"
+      ],
+      "blocks": [
+        "ATOM-2026-04-30-0075"
+      ],
+      "claimed_by": null,
+      "claimed_at": null,
+      "in_progress_at": null,
+      "completed_at": null,
+      "completed_by": null,
+      "verification": null,
+      "do_not_undo_casually": "",
+      "notes": "At granularity ceiling — yellow flag. Re-decompose if needed (one atom per Box's manifest population)."
+    },
+    {
+      "id": "ATOM-2026-04-30-0075",
+      "parent_problem_id": "PROB-2026-04-30-015",
+      "title": "Phase 4.2: Define authority tier registry",
+      "description": "Author LEDGERS/BOXES/box_bus/registry/authority_tiers.json (or .md): explicit Tier 0/1/2/3 assignment for every Box in the project. Source data from box_inventory script (ATOM-0072). Pairs with SoT §Box Authority Tiers (ATOM-0059).",
+      "acceptance_criteria": "authority_tiers registry exists with every Box assigned a tier. Box Ledger §Authority Tiers cross-links. Inventory script outputs Box-by-tier breakdown matching the registry.",
+      "estimated_effort": "1h",
+      "status": "available",
+      "tier": "global",
+      "area": "LEDGERS/BOXES/box_bus/registry",
+      "parent_chain": [
+        "PROB-2026-04-30-015"
+      ],
+      "blocked_by": [
+        "ATOM-2026-04-30-0070",
+        "ATOM-2026-04-30-0072",
+        "ATOM-2026-04-30-0059"
+      ],
+      "blocks": [
+        "ATOM-2026-04-30-0079"
+      ],
+      "claimed_by": null,
+      "claimed_at": null,
+      "in_progress_at": null,
+      "completed_at": null,
+      "completed_by": null,
+      "verification": null,
+      "do_not_undo_casually": "",
+      "notes": "The registry is what the Box Bus runtime consults at dispatch time. Phase 6 router reads it."
+    },
+    {
+      "id": "ATOM-2026-04-30-0076",
+      "parent_problem_id": "PROB-2026-04-30-015",
+      "title": "Phase 4.3: Define allowed fan-out rules (anti-blast-radius)",
+      "description": "Per scaffold §4 'Trickle-Down Is Not Dumping': codify rules that prevent global ledger entries from flooding every Box. Example rules: 'Tier 3 Leaf Boxes only receive Tier 2+ events filtered through a Domain Box interpreter.' Author as DEC entry + Box Bus Ledger §Routing rules section.",
+      "acceptance_criteria": "DEC entry locking the fan-out policy. Box Bus Ledger gains §X 'Allowed Fan-Out' with explicit per-tier rules. JSON mirror updated.",
+      "estimated_effort": "1h",
+      "status": "available",
+      "tier": "global",
+      "area": "LEDGERS/DECISIONS_LEDGER + LEDGERS/BOX_BUS_LEDGER",
+      "parent_chain": [
+        "PROB-2026-04-30-015"
+      ],
+      "blocked_by": [
+        "ATOM-2026-04-30-0075"
+      ],
+      "blocks": [],
+      "claimed_by": null,
+      "claimed_at": null,
+      "in_progress_at": null,
+      "completed_at": null,
+      "completed_by": null,
+      "verification": null,
+      "do_not_undo_casually": "",
+      "notes": "The default no-op interpreter (T1 schema mapper) makes this enforceable cheaply."
+    },
+    {
+      "id": "ATOM-2026-04-30-0077",
+      "parent_problem_id": "PROB-2026-04-30-015",
+      "title": "Phase 4.4: Define escalation rules (local → global)",
+      "description": "Per scaffold §6 'leaf state becoming a global problem': codify when/how a leaf Box's emit reaches Tier 0/1. Example: a Client Box guardrail violation emits to OPEN_PROBLEMS (not directly to GLOBAL_LEDGER).",
+      "acceptance_criteria": "DEC entry + Box Bus Ledger §X 'Escalation Rules' with explicit upward-routing patterns. Examples for Client Box → Open Problems, Page Box → Decisions, Staff Box → Communications.",
+      "estimated_effort": "1h",
+      "status": "available",
+      "tier": "global",
+      "area": "LEDGERS/DECISIONS_LEDGER + LEDGERS/BOX_BUS_LEDGER",
+      "parent_chain": [
+        "PROB-2026-04-30-015"
+      ],
+      "blocked_by": [
+        "ATOM-2026-04-30-0075"
+      ],
+      "blocks": [],
+      "claimed_by": null,
+      "claimed_at": null,
+      "in_progress_at": null,
+      "completed_at": null,
+      "completed_by": null,
+      "verification": null,
+      "do_not_undo_casually": "",
+      "notes": "The protocol that makes 'every unresolved problem becomes atoms' (scaffold §11) actually work."
+    },
+    {
+      "id": "ATOM-2026-04-30-0078",
+      "parent_problem_id": "PROB-2026-04-30-015",
+      "title": "Phase 4.5: Build 'if this Box changes, who needs to know' query",
+      "description": "Author LEDGERS/scripts/box_graph_query.sh — given a Box slug, traverses the subscribes[] graph and reports every downstream Box that subscribes to events from it. The reverse query for upstream lineage.",
+      "acceptance_criteria": "Script with --downstream and --upstream flags. Smoke test on temporal_continuity (should report all global-tier subscribers). Output usable in Phase 6 dry-run mode.",
+      "estimated_effort": "2h",
+      "status": "available",
+      "tier": "domain",
+      "area": "LEDGERS/scripts",
+      "parent_chain": [
+        "PROB-2026-04-30-015"
+      ],
+      "blocked_by": [
+        "ATOM-2026-04-30-0074"
+      ],
+      "blocks": [],
+      "claimed_by": null,
+      "claimed_at": null,
+      "in_progress_at": null,
+      "completed_at": null,
+      "completed_by": null,
+      "verification": null,
+      "do_not_undo_casually": "",
+      "notes": "The 'explain route' precursor — Phase 6 runtime reuses this logic."
+    },
+    {
+      "id": "ATOM-2026-04-30-0079",
+      "parent_problem_id": "PROB-2026-04-30-015",
+      "title": "Phase 4.6: Verify Phase 4 complete + Box graph render",
+      "description": "Confirm ATOMs 0074-0078 shipped. Generate a Mermaid graph at LEDGERS/VISUALS/box_graph.mmd showing all Boxes + subscribe/emit edges + tier coloring. Receipt + Phase Ledger update.",
+      "acceptance_criteria": "Mermaid graph file exists and renders. Verification receipt. Phase Ledger §Phase Status updated. activity.jsonl phase_4_complete.",
+      "estimated_effort": "1h",
+      "status": "available",
+      "tier": "global",
+      "area": "LEDGERS/VISUALS + LEDGERS/PHASE",
+      "parent_chain": [
+        "PROB-2026-04-30-015"
+      ],
+      "blocked_by": [
+        "ATOM-2026-04-30-0074",
+        "ATOM-2026-04-30-0075",
+        "ATOM-2026-04-30-0076",
+        "ATOM-2026-04-30-0077",
+        "ATOM-2026-04-30-0078"
+      ],
+      "blocks": [
+        "ATOM-2026-04-30-0080",
+        "ATOM-2026-04-30-0086"
+      ],
+      "claimed_by": null,
+      "claimed_at": null,
+      "in_progress_at": null,
+      "completed_at": null,
+      "completed_by": null,
+      "verification": null,
+      "do_not_undo_casually": "",
+      "notes": ""
+    },
+    {
+      "id": "ATOM-2026-04-30-0080",
+      "parent_problem_id": "PROB-2026-04-30-015",
+      "title": "Phase 5.1: Create interpreter registry",
+      "description": "Author LEDGERS/BOXES/box_bus/registry/interpreters.json — registry of all interpreter implementations. T1 deterministic mappers, T2 small-LLM templates, T3 full sub-agent stewards. Each entry: id, tier, source_kind, destination_kind, transform_spec.",
+      "acceptance_criteria": "interpreters.json exists with at least 3 placeholder entries (one per tier) and a schema. Box Bus Ledger §Interpreter Registry references it.",
+      "estimated_effort": "1h",
+      "status": "available",
+      "tier": "global",
+      "area": "LEDGERS/BOXES/box_bus/registry",
+      "parent_chain": [
+        "PROB-2026-04-30-015"
+      ],
+      "blocked_by": [
+        "ATOM-2026-04-30-0079"
+      ],
+      "blocks": [
+        "ATOM-2026-04-30-0081",
+        "ATOM-2026-04-30-0082",
+        "ATOM-2026-04-30-0083"
+      ],
+      "claimed_by": null,
+      "claimed_at": null,
+      "in_progress_at": null,
+      "completed_at": null,
+      "completed_by": null,
+      "verification": null,
+      "do_not_undo_casually": "",
+      "notes": ""
+    },
+    {
+      "id": "ATOM-2026-04-30-0081",
+      "parent_problem_id": "PROB-2026-04-30-015",
+      "title": "Phase 5.2: Implement first T1 schema mapper (deterministic)",
+      "description": "Build a real T1 interpreter that maps an envelope from one Box's emits[] schema to another's subscribes[] schema. No model call. Pure code. Reference impl: filters DECISIONS emits to TEMPORAL_CONTINUITY's 'recently changed' subscription.",
+      "acceptance_criteria": "T1 mapper implementation at LEDGERS/BOXES/box_bus/interpreters/t1_decisions_to_tcl.py (or similar). Smoke test: feed a fake DEC event, verify TCL-shaped output. Receipt.",
+      "estimated_effort": "2h",
+      "status": "available",
+      "tier": "global",
+      "area": "LEDGERS/BOXES/box_bus/interpreters",
+      "parent_chain": [
+        "PROB-2026-04-30-015"
+      ],
+      "blocked_by": [
+        "ATOM-2026-04-30-0080"
+      ],
+      "blocks": [],
+      "claimed_by": null,
+      "claimed_at": null,
+      "in_progress_at": null,
+      "completed_at": null,
+      "completed_by": null,
+      "verification": null,
+      "do_not_undo_casually": "",
+      "notes": "The simplest possible interpreter. Proves the runtime model with no LLM dependency."
+    },
+    {
+      "id": "ATOM-2026-04-30-0082",
+      "parent_problem_id": "PROB-2026-04-30-015",
+      "title": "Phase 5.3: Author T2 prompt templates",
+      "description": "Per scaffold §5 'cheap model call': author prompt templates for T2 interpreters. Use cases: summarize a Communications Ledger entry into a TCL Recent Changes line, classify an OPL entry by tier/urgency, etc.",
+      "acceptance_criteria": "T2 templates at LEDGERS/BOXES/box_bus/interpreters/t2_templates/. At least 3 templates. Each has input schema + output schema + the prompt. Smoke test: dry-run one template against fake input.",
+      "estimated_effort": "2h",
+      "status": "available",
+      "tier": "global",
+      "area": "LEDGERS/BOXES/box_bus/interpreters/t2_templates",
+      "parent_chain": [
+        "PROB-2026-04-30-015"
+      ],
+      "blocked_by": [
+        "ATOM-2026-04-30-0080"
+      ],
+      "blocks": [],
+      "claimed_by": null,
+      "claimed_at": null,
+      "in_progress_at": null,
+      "completed_at": null,
+      "completed_by": null,
+      "verification": null,
+      "do_not_undo_casually": "",
+      "notes": "T2 prompts can be tuned later; the structure ships now."
+    },
+    {
+      "id": "ATOM-2026-04-30-0083",
+      "parent_problem_id": "PROB-2026-04-30-015",
+      "title": "Phase 5.4: Build first interpreter — Open Problems → Atoms (Atomizer Steward T3 contract)",
+      "description": "Per Q4 recommendation: this is the FIRST T3 interpreter. The Atomizer Steward's runtime form. Reads new/updated PROBs, proposes atoms via T3 reasoning, writes drafts to LEDGERS/DRAFTS/ATOMIZATION/<prob-id>_atoms.md.",
+      "acceptance_criteria": "Atomizer Steward runnable at POST /api/agents/atomizer_steward/run. Smoke test: invoke against a PROB that lacks Atomized cross-link, verify it emits a proposed-atoms draft. Receipt.",
+      "estimated_effort": "4h",
+      "status": "available",
+      "tier": "global",
+      "area": "LEDGERS/BOXES/atoms/steward + CCAgentindex/agents (or unified Box per DEC-004)",
+      "parent_chain": [
+        "PROB-2026-04-30-015"
+      ],
+      "blocked_by": [
+        "ATOM-2026-04-30-0080",
+        "ATOM-2026-04-30-0051"
+      ],
+      "blocks": [],
+      "claimed_by": null,
+      "claimed_at": null,
+      "in_progress_at": null,
+      "completed_at": null,
+      "completed_by": null,
+      "verification": null,
+      "do_not_undo_casually": "",
+      "notes": "The most-load-bearing interpreter. Closes the loop — agents propose atoms automatically, humans review."
+    },
+    {
+      "id": "ATOM-2026-04-30-0084",
+      "parent_problem_id": "PROB-2026-04-30-015",
+      "title": "Phase 5.5: Build second interpreter — Allowed-To-Know (closes PROB-001 fully)",
+      "description": "Per Q4 second: Allowed-To-Know interpreter. Reads Client Box raw comms, classifies into the 4 buckets (comms_confirmed / internal_strategy / protected / approval_required) per SOURCE_OF_TRUTH §4. Output: filtered comms surface.",
+      "acceptance_criteria": "Interpreter runnable. Smoke test: feed Hugo Casillas Box raw comms, verify 4-bucket classification matches SoT contract. Receipt. PROB-2026-04-28-001 status flips to closed.",
+      "estimated_effort": "4h",
+      "status": "available",
+      "tier": "domain",
+      "area": "LEDGERS/BOXES/box_bus/interpreters",
+      "parent_chain": [
+        "PROB-2026-04-30-015"
+      ],
+      "blocked_by": [
+        "ATOM-2026-04-30-0080"
+      ],
+      "blocks": [],
+      "claimed_by": null,
+      "claimed_at": null,
+      "in_progress_at": null,
+      "completed_at": null,
+      "completed_by": null,
+      "verification": null,
+      "do_not_undo_casually": "",
+      "notes": "Closes the schema-design-criterion that's been partial since Phase 11. Real safety win."
+    },
+    {
+      "id": "ATOM-2026-04-30-0085",
+      "parent_problem_id": "PROB-2026-04-30-015",
+      "title": "Phase 5.6: Build third interpreter — Page-Asset impact",
+      "description": "Per Q4 third: Page-Asset interpreter. Reads DECISIONS emits with scope:UI, classifies which page_asset_sitemap.md sections need updates, emits page-update candidates.",
+      "acceptance_criteria": "Interpreter runnable. Smoke test: feed a fake UI-scoped DEC, verify it identifies the affected sitemap page section. Receipt.",
+      "estimated_effort": "2h",
+      "status": "available",
+      "tier": "domain",
+      "area": "LEDGERS/BOXES/box_bus/interpreters",
+      "parent_chain": [
+        "PROB-2026-04-30-015"
+      ],
+      "blocked_by": [
+        "ATOM-2026-04-30-0080"
+      ],
+      "blocks": [],
+      "claimed_by": null,
+      "claimed_at": null,
+      "in_progress_at": null,
+      "completed_at": null,
+      "completed_by": null,
+      "verification": null,
+      "do_not_undo_casually": "",
+      "notes": "Closes the 'global decision → page sitemap update' loop. DEC-007 (sitemap Done Gate) becomes enforceable in Phase 6 runtime."
+    },
+    {
+      "id": "ATOM-2026-04-30-0086",
+      "parent_problem_id": "PROB-2026-04-30-015",
+      "title": "Phase 6.1: Add Box registry endpoint to server.py",
+      "description": "GET /api/box_bus/registry — returns the full Box graph (boxes + tiers + subscribes/emits) as JSON. Reads from box.json files + authority_tiers + interpreters registry.",
+      "acceptance_criteria": "Endpoint returns 200 with JSON shape matching scaffold §6. Smoke test via curl. Receipt.",
+      "estimated_effort": "1h",
+      "status": "available",
+      "tier": "global",
+      "area": "server.py",
+      "parent_chain": [
+        "PROB-2026-04-30-015"
+      ],
+      "blocked_by": [
+        "ATOM-2026-04-30-0079"
+      ],
+      "blocks": [
+        "ATOM-2026-04-30-0087"
+      ],
+      "claimed_by": null,
+      "claimed_at": null,
+      "in_progress_at": null,
+      "completed_at": null,
+      "completed_by": null,
+      "verification": null,
+      "do_not_undo_casually": "",
+      "notes": ""
+    },
+    {
+      "id": "ATOM-2026-04-30-0087",
+      "parent_problem_id": "PROB-2026-04-30-015",
+      "title": "Phase 6.2: Define envelope format (formal schema)",
+      "description": "Per BOX_BUS_LEDGER §2.2: write the canonical envelope JSON schema. Validate against examples from temporal_continuity emits. Update Box Bus Ledger if schema evolves.",
+      "acceptance_criteria": "Schema file at LEDGERS/BOXES/box_bus/registry/envelope.schema.json. Validator function in server.py. Existing emits validate clean.",
+      "estimated_effort": "1h",
+      "status": "available",
+      "tier": "global",
+      "area": "LEDGERS/BOXES/box_bus/registry + server.py",
+      "parent_chain": [
+        "PROB-2026-04-30-015"
+      ],
+      "blocked_by": [
+        "ATOM-2026-04-30-0086"
+      ],
+      "blocks": [
+        "ATOM-2026-04-30-0088"
+      ],
+      "claimed_by": null,
+      "claimed_at": null,
+      "in_progress_at": null,
+      "completed_at": null,
+      "completed_by": null,
+      "verification": null,
+      "do_not_undo_casually": "",
+      "notes": ""
+    },
+    {
+      "id": "ATOM-2026-04-30-0088",
+      "parent_problem_id": "PROB-2026-04-30-015",
+      "title": "Phase 6.3: Build subscription matcher",
+      "description": "Function: given an emitted envelope, find every Box that subscribes to it (filter scope match + tier rules). Lives in server.py + reusable from steward agents.",
+      "acceptance_criteria": "Matcher implementation. Unit test: 5 fake envelopes, verify match counts.",
+      "estimated_effort": "2h",
+      "status": "available",
+      "tier": "global",
+      "area": "server.py",
+      "parent_chain": [
+        "PROB-2026-04-30-015"
+      ],
+      "blocked_by": [
+        "ATOM-2026-04-30-0087"
+      ],
+      "blocks": [
+        "ATOM-2026-04-30-0089",
+        "ATOM-2026-04-30-0090"
+      ],
+      "claimed_by": null,
+      "claimed_at": null,
+      "in_progress_at": null,
+      "completed_at": null,
+      "completed_by": null,
+      "verification": null,
+      "do_not_undo_casually": "",
+      "notes": ""
+    },
+    {
+      "id": "ATOM-2026-04-30-0089",
+      "parent_problem_id": "PROB-2026-04-30-015",
+      "title": "Phase 6.4: Build delivery queue",
+      "description": "In-memory or file-backed queue of pending envelope deliveries. POST /api/box_bus/emit accepts envelopes, enqueues them, the matcher routes, the interpreter transforms, the destination receives.",
+      "acceptance_criteria": "Queue implementation. POST /api/box_bus/emit returns 200 + envelope_id. Smoke test: emit one, verify it lands in destination's inbox (per Q5 resolution).",
+      "estimated_effort": "2h",
+      "status": "available",
+      "tier": "global",
+      "area": "server.py",
+      "parent_chain": [
+        "PROB-2026-04-30-015"
+      ],
+      "blocked_by": [
+        "ATOM-2026-04-30-0088"
+      ],
+      "blocks": [
+        "ATOM-2026-04-30-0090",
+        "ATOM-2026-04-30-0091"
+      ],
+      "claimed_by": null,
+      "claimed_at": null,
+      "in_progress_at": null,
+      "completed_at": null,
+      "completed_by": null,
+      "verification": null,
+      "do_not_undo_casually": "",
+      "notes": ""
+    },
+    {
+      "id": "ATOM-2026-04-30-0090",
+      "parent_problem_id": "PROB-2026-04-30-015",
+      "title": "Phase 6.5: Receipt writer",
+      "description": "Every delivery generates a receipt at LEDGERS/BOXES/<destination>/receipts/<YYYY-MM-DD>_<HHMM>_<envelope_id>.json. Records: source, destination, interpreter, transform diff, action taken.",
+      "acceptance_criteria": "Receipt writer wired into delivery queue. Smoke test: emit one envelope, verify receipt lands at correct path with all fields populated.",
+      "estimated_effort": "1h",
+      "status": "available",
+      "tier": "global",
+      "area": "server.py + LEDGERS/BOXES/*/receipts",
+      "parent_chain": [
+        "PROB-2026-04-30-015"
+      ],
+      "blocked_by": [
+        "ATOM-2026-04-30-0088",
+        "ATOM-2026-04-30-0089"
+      ],
+      "blocks": [
+        "ATOM-2026-04-30-0091"
+      ],
+      "claimed_by": null,
+      "claimed_at": null,
+      "in_progress_at": null,
+      "completed_at": null,
+      "completed_by": null,
+      "verification": null,
+      "do_not_undo_casually": "",
+      "notes": ""
+    },
+    {
+      "id": "ATOM-2026-04-30-0091",
+      "parent_problem_id": "PROB-2026-04-30-015",
+      "title": "Phase 6.6: Cycle detection + refusal",
+      "description": "Per scaffold §10 Routing Done: cycle detection. If an envelope's route would revisit a Box already on the chain, refuse with a logged Open Problems entry.",
+      "acceptance_criteria": "Cycle detector function. Unit test: feed a fake cycle, verify refusal + OPL entry. Smoke test on real graph: verify no false positives.",
+      "estimated_effort": "1h",
+      "status": "available",
+      "tier": "global",
+      "area": "server.py",
+      "parent_chain": [
+        "PROB-2026-04-30-015"
+      ],
+      "blocked_by": [
+        "ATOM-2026-04-30-0089",
+        "ATOM-2026-04-30-0090"
+      ],
+      "blocks": [
+        "ATOM-2026-04-30-0093"
+      ],
+      "claimed_by": null,
+      "claimed_at": null,
+      "in_progress_at": null,
+      "completed_at": null,
+      "completed_by": null,
+      "verification": null,
+      "do_not_undo_casually": "",
+      "notes": ""
+    },
+    {
+      "id": "ATOM-2026-04-30-0092",
+      "parent_problem_id": "PROB-2026-04-30-015",
+      "title": "Phase 6.7: Dry-run mode + explain-route mode",
+      "description": "Per scaffold §13.9: GET /api/box_bus/dry_run?source=<box>&event=<kind> simulates routing without delivering. Returns the full route + interpreter chain + would-be destinations. The 'why did this Box receive that state?' answer.",
+      "acceptance_criteria": "Endpoint returns 200 with route trace JSON. UI affordance optional (Phase 7).",
+      "estimated_effort": "2h",
+      "status": "available",
+      "tier": "global",
+      "area": "server.py",
+      "parent_chain": [
+        "PROB-2026-04-30-015"
+      ],
+      "blocked_by": [
+        "ATOM-2026-04-30-0091"
+      ],
+      "blocks": [
+        "ATOM-2026-04-30-0093"
+      ],
+      "claimed_by": null,
+      "claimed_at": null,
+      "in_progress_at": null,
+      "completed_at": null,
+      "completed_by": null,
+      "verification": null,
+      "do_not_undo_casually": "",
+      "notes": ""
+    },
+    {
+      "id": "ATOM-2026-04-30-0093",
+      "parent_problem_id": "PROB-2026-04-30-015",
+      "title": "Phase 6.8: First end-to-end smoke test (one real cross-Box delivery)",
+      "description": "Per scaffold §10 Runtime Done: send a real envelope from temporal_continuity emits to atoms (or another live destination). Verify it routes, the interpreter transforms, the receipt lands, the destination ledger updates. Phase 6 done when this is reproducible.",
+      "acceptance_criteria": "Smoke test passes. Receipt at LEDGERS/BOXES/box_bus/receipts/2026-XX-XX_first_delivery.json. Phase Ledger §Phase Status updated. activity.jsonl phase_6_complete.",
+      "estimated_effort": "2h",
+      "status": "available",
+      "tier": "global",
+      "area": "LEDGERS/BOXES/box_bus + LEDGERS/PHASE",
+      "parent_chain": [
+        "PROB-2026-04-30-015"
+      ],
+      "blocked_by": [
+        "ATOM-2026-04-30-0091",
+        "ATOM-2026-04-30-0092"
+      ],
+      "blocks": [
+        "ATOM-2026-04-30-0094"
+      ],
+      "claimed_by": null,
+      "claimed_at": null,
+      "in_progress_at": null,
+      "completed_at": null,
+      "completed_by": null,
+      "verification": null,
+      "do_not_undo_casually": "",
+      "notes": "Phase 6 close-out. Triggers Phase 7 readiness check."
+    },
+    {
+      "id": "ATOM-2026-04-30-0094",
+      "parent_problem_id": "PROB-2026-04-30-015",
+      "title": "Phase 7.1: Migrate Hugo Casillas Client Box to mature shape (per Q6 resolution)",
+      "description": "Hugo's Client Box is the deepest existing client memory layer. Migration: ensure it has BOX.md (likely needs authoring), box.json (declares tier=domain, kind=client, owns=[01_comms.md, 01b_comms_verbatim.md, comms/, etc.]), local AGENTS.md (Hugo-specific guardrails per Brenda fee-waiver lesson DEC-005), receipts/.",
+      "acceptance_criteria": "Auto/Client Boxes/Hugo Casillas/ has full mature Box shape. Existing client_ledger.md preserved as the LEDGER. Smoke test: client_box_steward (when authored) can read the Box.",
+      "estimated_effort": "4h",
+      "status": "available",
+      "tier": "domain",
+      "area": "Auto/Client Boxes/Hugo Casillas",
+      "parent_chain": [
+        "PROB-2026-04-30-015"
+      ],
+      "blocked_by": [
+        "ATOM-2026-04-30-0093",
+        "ATOM-2026-04-30-0066"
+      ],
+      "blocks": [
+        "ATOM-2026-04-30-0095"
+      ],
+      "claimed_by": null,
+      "claimed_at": null,
+      "in_progress_at": null,
+      "completed_at": null,
+      "completed_by": null,
+      "verification": null,
+      "do_not_undo_casually": "",
+      "notes": "Per Q6 recommendation. Granularity ceiling — yellow flag, may decompose in practice."
+    },
+    {
+      "id": "ATOM-2026-04-30-0095",
+      "parent_problem_id": "PROB-2026-04-30-015",
+      "title": "Phase 7.2: Migrate one Page Box to mature shape",
+      "description": "Pick a high-traffic page (Boxes or Intake per existing Page Ledgers). Author LEDGERS/BOXES/page_<route>/ following Phase 2 template. Box owns the Page Ledger md/json + sitemap entry by reference.",
+      "acceptance_criteria": "LEDGERS/BOXES/page_<route>/ exists. Subscribes to UI-scoped DECISIONS via Page-Asset Interpreter (ATOM-0085). Receipt.",
+      "estimated_effort": "2h",
+      "status": "available",
+      "tier": "domain",
+      "area": "LEDGERS/BOXES/page_<route>",
+      "parent_chain": [
+        "PROB-2026-04-30-015"
+      ],
+      "blocked_by": [
+        "ATOM-2026-04-30-0093",
+        "ATOM-2026-04-30-0085"
+      ],
+      "blocks": [],
+      "claimed_by": null,
+      "claimed_at": null,
+      "in_progress_at": null,
+      "completed_at": null,
+      "completed_by": null,
+      "verification": null,
+      "do_not_undo_casually": "",
+      "notes": "Per scaffold §13.7. The first Page Box that uses the runtime."
+    },
+    {
+      "id": "ATOM-2026-04-30-0096",
+      "parent_problem_id": "PROB-2026-04-30-015",
+      "title": "Phase 7.3: Migrate Automation Box to mature shape",
+      "description": "Automation lives across Auto/orchestrator/wiring/ and the automation UI page. Author LEDGERS/BOXES/automation/ governing both. box.json declares the cross-cutting nature (kind=automation, owns=multiple paths).",
+      "acceptance_criteria": "LEDGERS/BOXES/automation/ exists with mature structure. Subscribes to scheduled-fire events. Receipt.",
+      "estimated_effort": "3h",
+      "status": "available",
+      "tier": "domain",
+      "area": "LEDGERS/BOXES/automation",
+      "parent_chain": [
+        "PROB-2026-04-30-015"
+      ],
+      "blocked_by": [
+        "ATOM-2026-04-30-0093"
+      ],
+      "blocks": [],
+      "claimed_by": null,
+      "claimed_at": null,
+      "in_progress_at": null,
+      "completed_at": null,
+      "completed_by": null,
+      "verification": null,
+      "do_not_undo_casually": "",
+      "notes": ""
+    },
+    {
+      "id": "ATOM-2026-04-30-0097",
+      "parent_problem_id": "PROB-2026-04-30-015",
+      "title": "Phase 7 Meta: Decompose remaining Phase 7 migrations when prerequisites land",
+      "description": "27 remaining Client Boxes + 10 Staff Boxes + remaining Page Boxes + leaf Boxes (per scaffold §3 Tier 3). Atomized later — too many to author concrete atoms now without the migration template proven.",
+      "acceptance_criteria": "Phase 7 starter atoms (0094-0096) verify the migration template. THEN this meta-atom is claimed to author the next batch (Atomizer Steward proposes; humans approve).",
+      "estimated_effort": "30min",
+      "status": "available",
+      "tier": "global",
+      "area": "LEDGERS/BOXES + Auto/",
+      "parent_chain": [
+        "PROB-2026-04-30-015"
+      ],
+      "blocked_by": [
+        "ATOM-2026-04-30-0094",
+        "ATOM-2026-04-30-0095",
+        "ATOM-2026-04-30-0096"
+      ],
+      "blocks": [],
+      "claimed_by": null,
+      "claimed_at": null,
+      "in_progress_at": null,
+      "completed_at": null,
+      "completed_by": null,
+      "verification": null,
+      "do_not_undo_casually": "",
+      "notes": "Meta-atom. Don't attempt to atomize 40+ migration atoms before Phase 7.1-7.3 land."
+    },
+    {
+      "id": "ATOM-2026-04-30-0098",
+      "parent_problem_id": "PROB-2026-04-30-015",
+      "title": "Phase 8.1: Drift monitor — detects ledger MD/JSON desynchronization",
+      "description": "Steward mode that walks every ledger MD + JSON pair, diffs structured fields, flags drift. Runs as part of weekly Box hygiene pass.",
+      "acceptance_criteria": "Drift monitor implementation. Smoke test: artificially desync one mirror, verify detection. Output: per-ledger drift report. Receipt.",
+      "estimated_effort": "2h",
+      "status": "available",
+      "tier": "global",
+      "area": "LEDGERS/BOXES/box_bus/stewards (or per-ledger steward)",
+      "parent_chain": [
+        "PROB-2026-04-30-015"
+      ],
+      "blocked_by": [
+        "ATOM-2026-04-30-0093"
+      ],
+      "blocks": [],
+      "claimed_by": null,
+      "claimed_at": null,
+      "in_progress_at": null,
+      "completed_at": null,
+      "completed_by": null,
+      "verification": null,
+      "do_not_undo_casually": "",
+      "notes": ""
+    },
+    {
+      "id": "ATOM-2026-04-30-0099",
+      "parent_problem_id": "PROB-2026-04-30-015",
+      "title": "Phase 8.2: Stale-claim sweeper (per ATOMS.json claim protocol)",
+      "description": "Per ATOMS.md §3.2 stale-claim rule. Atomizer Steward mode: scans atoms with claimed > 24h and no in_progress_at, releases them with notes appended. Already specced declaratively; this implements.",
+      "acceptance_criteria": "Sweeper implementation. Smoke test: artificially stale one claim, verify auto-release. activity.jsonl line per release. Receipt.",
+      "estimated_effort": "1h",
+      "status": "available",
+      "tier": "global",
+      "area": "LEDGERS/BOXES/atoms/steward",
+      "parent_chain": [
+        "PROB-2026-04-30-015"
+      ],
+      "blocked_by": [
+        "ATOM-2026-04-30-0083"
+      ],
+      "blocks": [],
+      "claimed_by": null,
+      "claimed_at": null,
+      "in_progress_at": null,
+      "completed_at": null,
+      "completed_by": null,
+      "verification": null,
+      "do_not_undo_casually": "",
+      "notes": "Implements the existing protocol — the Atomizer Steward's most-mechanical mode."
+    },
+    {
+      "id": "ATOM-2026-04-30-0100",
+      "parent_problem_id": "PROB-2026-04-30-015",
+      "title": "Phase 8.3: Source-of-Truth conflict audit",
+      "description": "Steward mode that scans every Box's source_of_truth declaration vs SOURCE_OF_TRUTH.md per-domain orderings. Flags conflicts.",
+      "acceptance_criteria": "SoT audit implementation. Smoke test: introduce an artificial conflict, verify detection. Output: conflict report. Receipt. Phase Ledger §Phase Status updated.",
+      "estimated_effort": "2h",
+      "status": "available",
+      "tier": "global",
+      "area": "LEDGERS/BOXES/source_of_truth/steward (or new SoT_Audit_Steward)",
+      "parent_chain": [
+        "PROB-2026-04-30-015"
+      ],
+      "blocked_by": [
+        "ATOM-2026-04-30-0093",
+        "ATOM-2026-04-30-0071"
+      ],
+      "blocks": [],
+      "claimed_by": null,
+      "claimed_at": null,
+      "in_progress_at": null,
+      "completed_at": null,
+      "completed_by": null,
+      "verification": null,
+      "do_not_undo_casually": "",
+      "notes": ""
+    },
+    {
+      "id": "ATOM-2026-04-30-0101",
+      "parent_problem_id": "PROB-2026-04-30-015",
+      "title": "Phase 8.4: Box shape validator",
+      "description": "Steward mode that runs ATOM-0064's matrix against every Box. Flags missing required files. Suggests atoms to fix gaps.",
+      "acceptance_criteria": "Validator implementation. Output: per-Box completeness percentage + missing-files list. Receipt. Optional: emits proposed atoms via Atomizer Steward integration.",
+      "estimated_effort": "2h",
+      "status": "available",
+      "tier": "global",
+      "area": "LEDGERS/BOXES/box_bus/stewards",
+      "parent_chain": [
+        "PROB-2026-04-30-015"
+      ],
+      "blocked_by": [
+        "ATOM-2026-04-30-0064",
+        "ATOM-2026-04-30-0093"
+      ],
+      "blocks": [],
+      "claimed_by": null,
+      "claimed_at": null,
+      "in_progress_at": null,
+      "completed_at": null,
+      "completed_by": null,
+      "verification": null,
+      "do_not_undo_casually": "",
+      "notes": ""
+    },
+    {
+      "id": "ATOM-2026-04-30-0102",
+      "parent_problem_id": "PROB-2026-04-30-015",
+      "title": "Phase 8.5: Verify Phase 8 + Architecture Done declaration",
+      "description": "Confirm ATOMs 0098-0101 shipped. Verify scaffold §10 Definition of Done For The Architecture is satisfied across all 6 categories. If not, surface gaps as new atoms. If yes, author DEC-2026-XX-XXX 'Box Network Architecture Complete' and update Phase Ledger to reflect Phase B fully complete (or whatever phase boundary lines up).",
+      "acceptance_criteria": "Verification receipt. DEC entry IF criteria all met. Phase Ledger transition. PROB-2026-04-30-015 closure-eligible (surfaced for review, not auto-closed).",
+      "estimated_effort": "1h",
+      "status": "available",
+      "tier": "global",
+      "area": "LEDGERS/PHASE + LEDGERS/DECISIONS_LEDGER + LEDGERS/OPEN_PROBLEMS_LEDGER",
+      "parent_chain": [
+        "PROB-2026-04-30-015"
+      ],
+      "blocked_by": [
+        "ATOM-2026-04-30-0098",
+        "ATOM-2026-04-30-0099",
+        "ATOM-2026-04-30-0100",
+        "ATOM-2026-04-30-0101"
+      ],
+      "blocks": [],
+      "claimed_by": null,
+      "claimed_at": null,
+      "in_progress_at": null,
+      "completed_at": null,
+      "completed_by": null,
+      "verification": null,
+      "do_not_undo_casually": "",
+      "notes": "The terminal atom for this PROB. Once all phases close, PROB-015 closes (or the architecture rolls into a new PROB if scope expands)."
+    },
+    {
+      "id": "ATOM-2026-04-30-0103",
+      "parent_problem_id": "PROB-2026-04-30-015",
+      "title": "Author atlas_daily_sweep cron trigger + digests/ output home",
+      "description": "Build the scheduled-automation infrastructure for atlas_sweep_steward. (a) Author CCAgentindex/triggers/atlas_daily_sweep.json — cron kind, fires daily at 8 AM ET (matches AUTO.06 morning brief shape) targeting yesterday's complete folder. (b) Create LEDGERS/BOXES/atlas/digests/ dir + README.md as the persistent human-readable output home for daily project-relevant findings. (c) Update box.json owns[] to include digests/.",
+      "acceptance_criteria": "CCAgentindex/triggers/atlas_daily_sweep.json exists with valid schema (kind:cron, enabled:true, cron expression at 8 AM ET, workflow_slug or agent_dispatch pointing at atlas_sweep_steward). LEDGERS/BOXES/atlas/digests/ exists with README. box.json owns[] reflects new dir.",
+      "estimated_effort": "30min",
+      "status": "abandoned",
+      "tier": "domain",
+      "area": "CCAgentindex/triggers + LEDGERS/BOXES/atlas/",
+      "parent_chain": [
+        "PROB-2026-04-30-015",
+        "COMM-2026-04-30-007"
+      ],
+      "blocked_by": [],
+      "blocks": [
+        "ATOM-2026-04-30-0104",
+        "ATOM-2026-04-30-0105",
+        "ATOM-2026-04-30-0106"
+      ],
+      "claimed_by": null,
+      "claimed_at": null,
+      "in_progress_at": null,
+      "completed_at": null,
+      "completed_by": null,
+      "verification": null,
+      "do_not_undo_casually": "Trigger config + digests/ output home are foundational to the whole steward graduation chain; without them every downstream atom either has no schedule or no output target.",
+      "notes": "ABANDONED 2026-05-01: this ID was the result of my collision-resolution renumber. A parallel session re-resolved the same collision differently, creating completed twins at ATOM-2026-04-30-0107. Work is preserved at the twin ID; this entry is a renumber artifact and should NOT be re-claimed. Per Atom Ledger §3.6: abandonment is signal — the duplicate ID-resolution work surfaces a future Atomizer Steward improvement (canonical collision-resolution policy)."
+    },
+    {
+      "id": "ATOM-2026-04-30-0104",
+      "parent_problem_id": "PROB-2026-04-30-015",
+      "title": "First manual atlas_sweep_steward run — produce yesterday's digest",
+      "description": "Execute the steward inline (Cowork synthesis path; live HTTP deferred) against yesterday's Atlas folder. Produce: (a) receipt at LEDGERS/BOXES/atlas/receipts/<ts>_run_<id>.json per the AGENTS.md §8 schema; (b) human-readable digest at LEDGERS/BOXES/atlas/digests/2026-04-29.md summarizing project-relevant findings classified A-F. This is the inaugural baseline.",
+      "acceptance_criteria": "Receipt exists matching schema. Digest exists at LEDGERS/BOXES/atlas/digests/2026-04-29.md with sections: Summary, Concordance count, Drift findings (with Atlas-path + ledger-entry citations), Handoff lessons, Action suggestions (Pieces' Next Steps), Decision context, Out-of-scope count. Receipt cites the digest path in writes_applied[].",
+      "estimated_effort": "1h",
+      "status": "abandoned",
+      "tier": "domain",
+      "area": "LEDGERS/BOXES/atlas/receipts + LEDGERS/BOXES/atlas/digests",
+      "parent_chain": [
+        "PROB-2026-04-30-015"
+      ],
+      "blocked_by": [
+        "ATOM-2026-04-30-0103"
+      ],
+      "blocks": [
+        "ATOM-2026-04-30-0106"
+      ],
+      "claimed_by": null,
+      "claimed_at": null,
+      "in_progress_at": null,
+      "completed_at": null,
+      "completed_by": null,
+      "verification": null,
+      "do_not_undo_casually": "First digest is the inaugural ground-truth-vs-ledger baseline. Drift findings discovered here become PROB candidates worth preserving even if the digest format changes later.",
+      "notes": "ABANDONED 2026-05-01: this ID was the result of my collision-resolution renumber. A parallel session re-resolved the same collision differently, creating completed twins at ATOM-2026-04-30-0108. Work is preserved at the twin ID; this entry is a renumber artifact and should NOT be re-claimed. Per Atom Ledger §3.6: abandonment is signal — the duplicate ID-resolution work surfaces a future Atomizer Steward improvement (canonical collision-resolution policy)."
+    },
+    {
+      "id": "ATOM-2026-04-30-0105",
+      "parent_problem_id": "PROB-2026-04-30-015",
+      "title": "Smoke test atlas_sweep_steward via _agent_resolve_prompt simulation",
+      "description": "Verify in-process that atlas_sweep_steward resolves correctly via the helper added in ATOM-0029. Confirm: helper returns LEDGERS/BOXES/atlas/steward/prompt.md as the unified_box source; _agents_list returns one entry source=unified_box hasPrompt=True hasSpec=True; no regression on the five other stewards. Mirrors the V7 regression check pattern from ATOM-0036 + ATOM-0044.",
+      "acceptance_criteria": "Programmatic verification documented in receipt. All five other stewards (global_ledger via legacy, temporal_continuity / open_problems / file_directory / north_star / atoms via unified_box) still resolve correctly with no name collisions.",
+      "estimated_effort": "15min",
+      "status": "abandoned",
+      "tier": "domain",
+      "area": "server.py _agent_resolve_prompt (read-only) + LEDGERS/BOXES/atlas/receipts",
+      "parent_chain": [
+        "PROB-2026-04-30-015",
+        "ATOM-2026-04-30-0029"
+      ],
+      "blocked_by": [
+        "ATOM-2026-04-30-0103"
+      ],
+      "blocks": [
+        "ATOM-2026-04-30-0106"
+      ],
+      "claimed_by": null,
+      "claimed_at": null,
+      "in_progress_at": null,
+      "completed_at": null,
+      "completed_by": null,
+      "verification": null,
+      "do_not_undo_casually": "Resolution simulation is the cheapest verification before live HTTP smoke test (which requires server restart). Skipping it risks dispatching against a malformed prompt.md.",
+      "notes": "ABANDONED 2026-05-01: this ID was the result of my collision-resolution renumber. A parallel session re-resolved the same collision differently, creating completed twins at ATOM-2026-04-30-0109. Work is preserved at the twin ID; this entry is a renumber artifact and should NOT be re-claimed. Per Atom Ledger §3.6: abandonment is signal — the duplicate ID-resolution work surfaces a future Atomizer Steward improvement (canonical collision-resolution policy)."
+    },
+    {
+      "id": "ATOM-2026-04-30-0106",
+      "parent_problem_id": "PROB-2026-04-30-015",
+      "title": "Flip atlas_sweep_steward INDEX.md status to active — closes PROB-015",
+      "description": "Add the atlas_sweep_steward row to LEDGERS/INDEX.md (or update if already present) marking status active. Update LEDGERS/BOXES/atlas/box.json phase_status.phase_b from in_progress to complete. This closes PROB-2026-04-30-015.",
+      "acceptance_criteria": "INDEX.md row reflects active status with the runnable path (LEDGERS/BOXES/atlas/steward/). box.json phase_status updated. PROB-015 marked closed in OPEN_PROBLEMS_LEDGER.md with cross-ref to this atom and the digest at LEDGERS/BOXES/atlas/digests/2026-04-29.md as proof.",
+      "estimated_effort": "15min",
+      "status": "abandoned",
+      "tier": "domain",
+      "area": "LEDGERS/INDEX.md + LEDGERS/BOXES/atlas/box.json + LEDGERS/OPEN_PROBLEMS_LEDGER.md",
+      "parent_chain": [
+        "PROB-2026-04-30-015"
+      ],
+      "blocked_by": [
+        "ATOM-2026-04-30-0104",
+        "ATOM-2026-04-30-0105"
+      ],
+      "blocks": [],
+      "claimed_by": null,
+      "claimed_at": null,
+      "in_progress_at": null,
+      "completed_at": null,
+      "completed_by": null,
+      "verification": null,
+      "do_not_undo_casually": "PROB-015 closure depends on this atom. Closure marks the steward graduated — a meaningful Phase B milestone.",
+      "notes": "ABANDONED 2026-05-01: this ID was the result of my collision-resolution renumber. A parallel session re-resolved the same collision differently, creating completed twins at ATOM-2026-04-30-0110. Work is preserved at the twin ID; this entry is a renumber artifact and should NOT be re-claimed. Per Atom Ledger §3.6: abandonment is signal — the duplicate ID-resolution work surfaces a future Atomizer Steward improvement (canonical collision-resolution policy)."
+    },
+    {
+      "id": "ATOM-2026-04-30-0107",
+      "parent_problem_id": "PROB-2026-04-30-015",
+      "title": "Author atlas_daily_sweep cron trigger + digests/ output home (renumbered from 0045 due to ID-collision)",
+      "description": "Build the scheduled-automation infrastructure for atlas_sweep_steward. (a) CCAgentindex/triggers/atlas_daily_sweep.json — cron 0 8 * * * America/New_York. (b) LEDGERS/BOXES/atlas/digests/ + README. (c) box.json owns[] expanded.",
+      "acceptance_criteria": "Trigger JSON, digests dir + README, box.json updated.",
+      "estimated_effort": "30min",
+      "status": "completed",
+      "tier": "domain",
+      "area": "CCAgentindex/triggers + LEDGERS/BOXES/atlas/",
+      "parent_chain": [
+        "PROB-2026-04-30-015",
+        "COMM-2026-04-30-007"
+      ],
+      "blocked_by": [],
+      "blocks": [
+        "ATOM-2026-04-30-0108",
+        "ATOM-2026-04-30-0109",
+        "ATOM-2026-04-30-0110"
+      ],
+      "claimed_by": "claude_cowork_session_2026-04-30_atom_0045",
+      "claimed_at": "2026-05-01T00:12:56Z",
+      "in_progress_at": "2026-05-01T00:13:30Z",
+      "completed_at": "2026-05-01T00:14:30Z",
+      "completed_by": "claude_cowork_session_2026-04-30_atom_0045",
+      "verification": "Three artifacts exist on disk: (a) CCAgentindex/triggers/atlas_daily_sweep.json — comeketo.trigger.v1, kind:cron, enabled:true, cron 0 8 * * * America/New_York, agent_dispatch wired to atlas_sweep_steward audit_only mode. (b) LEDGERS/BOXES/atlas/digests/README.md exists with full digest structure template. (c) LEDGERS/BOXES/atlas/box.json owns[] expanded to include digests/ + the trigger file. Originally completed 2026-05-01T00:14:30Z under ATOM-2026-04-30-0045 ID; renumbered to 0107 here because 0045 collided with another agent's filing of DEC-005 fusion work earlier in the day. Disk artifacts unchanged; only ledger ID updated. Activity ledger entries from the original ID range remain valid as historical record.",
+      "do_not_undo_casually": "Trigger config + digests/ output home are foundational to the whole steward graduation chain.",
+      "notes": "Renumbered from ATOM-2026-04-30-0045 due to ID collision with another agent's PROB-015 atomization (their 0045 was for DEC-005 fusion architecture). See COMM-2026-04-30-008 (to be filed) for the lesson on ID-collision risk during parallel atomization."
+    },
+    {
+      "id": "ATOM-2026-04-30-0108",
+      "parent_problem_id": "PROB-2026-04-30-015",
+      "title": "First manual atlas_sweep_steward run — produce yesterday's digest",
+      "description": "Inline simulate atlas_sweep_steward audit_only against yesterday's Atlas folder (Wednesday April 29 2026). Produce receipt + digest at LEDGERS/BOXES/atlas/digests/2026-04-29.md.",
+      "acceptance_criteria": "Receipt at LEDGERS/BOXES/atlas/receipts/<ts>_run_<id>.json + digest at LEDGERS/BOXES/atlas/digests/2026-04-29.md with sections per README.md template. Both citation-rich.",
+      "estimated_effort": "1h",
+      "status": "completed",
+      "tier": "domain",
+      "area": "LEDGERS/BOXES/atlas/receipts + digests",
+      "parent_chain": [
+        "PROB-2026-04-30-015"
+      ],
+      "blocked_by": [
+        "ATOM-2026-04-30-0107"
+      ],
+      "blocks": [
+        "ATOM-2026-04-30-0110"
+      ],
+      "claimed_by": "claude_cowork_session_2026-04-30_atom_0108",
+      "claimed_at": "2026-05-01T00:17:55Z",
+      "in_progress_at": "2026-05-01T00:18:30Z",
+      "completed_at": "2026-05-01T00:20:57Z",
+      "completed_by": "claude_cowork_session_2026-04-30_atom_0108",
+      "verification": "Inaugural Atlas digest at LEDGERS/BOXES/atlas/digests/2026-04-29.md (8500-word citation-rich markdown). Receipt at LEDGERS/BOXES/atlas/receipts/2026-05-01_00-25-00_run_a8f3c7d12e44.json. Folder swept: 'Wednesday, April 29th, 2026' — 45 summaries read, 37 project-relevant, 8 skipped non-project. Findings: 24 concordance, 3 drift candidates (D-1 Hugo Casillas GitHub-write permission decision missing from DEC; D-2 Audit Ledger deprecation needs formal DEC+DEPR; D-3 'Reactive Box Network' vocabulary mismatch with Box Bus Ledger), 4 handoff lessons surfaced (permissions DECs, single-lead operating agent class, FileTree-orchestration principle, repo-as-memory verbatim), ~10 atom candidates (most already shipped today; 4 likely-still-open: Digest Agent deployment, SQL conventions, Phase 1 unification verification, DEC-005 review), 5 decision-context additions (richer reasoning for DEC-001/002/015 + audit deprecation + three-leg architecture). Out-of-scope filter caught 6 borderline summaries correctly (Deltabit, Sylvia, philosophical framework). Inaugural format established for subsequent daily 8 AM cron runs. Unblocks ATOM-0110 (the chain closer).",
+      "do_not_undo_casually": "First digest is the inaugural ground-truth-vs-ledger baseline.",
+      "notes": "Renumbered from 0046. audit_only mode."
+    },
+    {
+      "id": "ATOM-2026-04-30-0109",
+      "parent_problem_id": "PROB-2026-04-30-015",
+      "title": "Smoke test atlas_sweep_steward via _agent_resolve_prompt simulation",
+      "description": "In-process verify atlas_sweep_steward resolves to unified Box; no regression on other 5 stewards. Mirrors V7 pattern from ATOM-0036 + ATOM-0044.",
+      "acceptance_criteria": "Resolution programmatically verified; receipt documents pass.",
+      "estimated_effort": "15min",
+      "status": "completed",
+      "tier": "domain",
+      "area": "server.py _agent_resolve_prompt (read-only) + LEDGERS/BOXES/atlas/receipts",
+      "parent_chain": [
+        "PROB-2026-04-30-015",
+        "ATOM-2026-04-30-0029"
+      ],
+      "blocked_by": [
+        "ATOM-2026-04-30-0107"
+      ],
+      "blocks": [
+        "ATOM-2026-04-30-0110"
+      ],
+      "claimed_by": "claude_cowork_session_2026-04-30_atom_0109",
+      "claimed_at": "2026-05-01T00:21:16Z",
+      "in_progress_at": "2026-05-01T00:21:30Z",
+      "completed_at": "2026-05-01T00:22:30Z",
+      "completed_by": "claude_cowork_session_2026-04-30_atom_0109",
+      "verification": "Smoke test caught a real bug: atlas_sweep_steward did not resolve via _agent_resolve_prompt because the helper derives box-name by stripping `_steward` from the agent name, expecting LEDGERS/BOXES/<box>/. The agent was named atlas_sweep_steward but the box was at atlas/ — name mismatch. Renamed agent to atlas_steward (matches all other steward naming: global_ledger_steward → global_ledger/, file_directory_steward → file_directory/, etc.). Patched 9 files via sed. All 3 verifications now PASS: V1 atlas_steward resolves to unified_box; V2 _agents_list returns one entry source=unified_box hasPrompt+hasSpec; V3 no regression — all 7 stewards resolve correctly. Receipt at LEDGERS/BOXES/atlas/receipts/2026-05-01_00-22-30_run_f355c4a83724.json. .bak residue from sed truncated to 0 bytes (sandbox limitation).",
+      "do_not_undo_casually": "Cheapest verification before live HTTP smoke test.",
+      "notes": "Renumbered from 0047."
+    },
+    {
+      "id": "ATOM-2026-04-30-0110",
+      "parent_problem_id": "PROB-2026-04-30-015",
+      "title": "Flip atlas_sweep_steward INDEX.md status to active — closes PROB-015",
+      "description": "Add atlas_sweep_steward row to INDEX.md (active). Update box.json phase_b complete. Mark PROB-015 closed.",
+      "acceptance_criteria": "INDEX.md updated; box.json phase_status updated; PROB-015 closed with cross-ref to digest.",
+      "estimated_effort": "15min",
+      "status": "completed",
+      "tier": "domain",
+      "area": "LEDGERS/INDEX.md + LEDGERS/BOXES/atlas/box.json + OPL",
+      "parent_chain": [
+        "PROB-2026-04-30-015"
+      ],
+      "blocked_by": [
+        "ATOM-2026-04-30-0108",
+        "ATOM-2026-04-30-0109"
+      ],
+      "blocks": [],
+      "claimed_by": "claude_cowork_session_2026-04-30_atom_0110",
+      "claimed_at": "2026-05-01T00:22:39Z",
+      "in_progress_at": "2026-05-01T00:24:00Z",
+      "completed_at": "2026-05-01T00:23:45Z",
+      "completed_by": "claude_cowork_session_2026-04-30_atom_0110",
+      "verification": "INDEX.md updated: new row 'Atlas Ground-Truth Box | LEDGERS/BOXES/atlas/ | active (runnable, Phase B live; first ground-truth-source Box)' appended after Temporal Continuity Box row. box.json phase_status.phase_b flipped from 'in_progress' to 'complete (2026-05-01) — runnable form authored (ATOM-0107), inaugural sweep + digest produced (ATOM-0108), resolution smoke test passed (ATOM-0109), INDEX.md flipped active + PROB-015 closed (ATOM-0110). Daily 8 AM ET cron at CCAgentindex/triggers/atlas_daily_sweep.json fires automatically.' PROB-2026-04-30-015 marked CLOSED 2026-05-01 with closure verification citing the 4 atom IDs + 2 receipts + the digest. §6 Problems By System Ground-Truth Reconciliation entry struck through. OPL header bumped. PROB-005 chain pattern fully matched (4 atoms: author runnable, first run / smoke test, INDEX flip, close). Atlas Sweep Steward is now the project's 6th runnable steward and the first ground_truth_source Box.",
+      "do_not_undo_casually": "PROB-015 closure depends on this atom.",
+      "notes": "Renumbered from 0048. Last in chain."
+    },
+    {
+      "id": "ATOM-2026-04-30-0111",
+      "parent_problem_id": "PROB-2026-04-30-015",
+      "title": "Backfill stale continuity ledgers + lock per-atom-completion update protocol in CLAUDE.md",
+      "description": "Two-part atom surfacing a real protocol violation Jake flagged 2026-05-01: the Prime Directive in CLAUDE.md (and Definition of Done §11 Ledger Update Matrix) requires per-atom-completion updates to TCL §3 / GLOBAL §12 / COMMUNICATIONS / INDEX as appropriate, but the practical pattern this session has been edit-the-target-ledger-only. Result: TCL last touched 7h ago, COMM 3h ago, GLOBAL 7h ago, despite ~36 atoms shipped today. Part 1: update CLAUDE.md (project) with a mechanical per-atom-completion update checklist that triggers reflexively. Part 2: backfill TCL §3 + COMM (one handoff entry) + GLOBAL §12 with today's session summary to prove the rule works.",
+      "acceptance_criteria": "(a) CLAUDE.md (project) gains a 'Per-Atom-Completion Update Protocol' section under or extending the existing Prime Directive — explicit checklist of WHICH ledgers must be updated per substantive atom completion, with examples of what counts as 'substantive'. (b) TCL §3 gains a 2026-04-30/2026-05-01 session summary entry capturing today's work (~36 atoms shipped + Box Network Architecture lock + Box Graph UI shipped). (c) COMMUNICATIONS_LEDGER gains COMM-2026-05-01-001 handoff explaining the protocol fix to next agent. (d) GLOBAL_LEDGER §12 gains a 2026-05-01 entry summarizing the day. (e) activity.jsonl gains entries for each backfill.",
+      "estimated_effort": "2h",
+      "status": "completed",
+      "tier": "global",
+      "area": "CLAUDE.md + LEDGERS/TEMPORAL_CONTINUITY + LEDGERS/COMMUNICATIONS_LEDGER + LEDGERS/GLOBAL_LEDGER",
+      "parent_chain": [
+        "PROB-2026-04-30-015"
+      ],
+      "blocked_by": [],
+      "blocks": [],
+      "claimed_by": "claude_cowork_session_2026-04-30",
+      "claimed_at": "2026-05-01T02:00:00Z",
+      "in_progress_at": "2026-05-01T02:00:30Z",
+      "completed_at": "2026-05-01T03:00:00Z",
+      "completed_by": "claude_cowork_session_2026-04-30",
+      "verification": "CLAUDE.md (project) gained Per-Atom-Completion Update Protocol section after the existing Prime Directive — mechanical checklist (12 update destinations + cadence rule + substantive-vs-non-substantive criteria + 4 anti-patterns + orchestrator verification path). Backfill landed across 8 stale ledgers: TCL §3 (full session catch-up entry, ~70 lines) + TCL header bumped; GLOBAL §12 (full session catch-up entry, ~50 lines) + header bumped; COMMUNICATIONS COMM-2026-05-01-001 (highest-priority entry documenting the violation pattern, lessons, suggested actions, expiry conditions) + header bumped; PHASE header bumped with Phase B status; NORTH_STAR header bumped acknowledging architectural lock operationalizes existing NS goals (no new goals); DEPRECATION header bumped surfacing 4 abandoned-atom orphans + global_ledger legacy-path candidate; ASSET_WIDGET_MAP header bumped acknowledging Box Graph route + ChatRail components need formal §X registration; FILE_CONTENTS + FILE_DIRECTORY headers bumped acknowledging new files/dirs need full inventory refresh as follow-on atoms; INDEX header bumped to current state. SETTINGS verified as not-stale-by-omission. Activity ledger gains 12+ entries for the backfill chain.",
+      "do_not_undo_casually": "Per-atom-completion update protocol is the FIX for the very thing we noticed — agents authoring rules they don't follow. Don't loosen the protocol or remove the checklist; tighten it if anything.",
+      "notes": "Completed 2026-05-01T03:00Z. ~60 min real-time. Acknowledged the systemic protocol violation Jake surfaced. Continuity ledgers no longer 5-9h stale. CLAUDE.md mechanical checklist should prevent recurrence."
     }
   ],
   "active_queue_summary": {
-    "total_atoms": 44,
+    "total_atoms": 111,
     "by_status": {
-      "available": 29,
-      "claimed": 1,
+      "available": 71,
+      "claimed": 0,
       "in_progress": 0,
-      "completed": 14,
+      "completed": 36,
       "blocked": 0,
-      "abandoned": 0
+      "abandoned": 4
     },
     "by_parent_problem": {
       "PROB-2026-04-28-016": 26,
-      "PROB-2026-04-30-005": 18
+      "PROB-2026-04-30-005": 18,
+      "PROB-2026-04-30-015": 67
     },
     "by_effort": {
       "5min": 0,
-      "15min": 10,
-      "30min": 20,
-      "1h": 13,
-      "2h": 1,
-      "4h": 0
+      "15min": 16,
+      "30min": 35,
+      "1h": 36,
+      "2h": 18,
+      "4h": 5,
+      "3h": 1
     },
-    "total_estimated_hours": 26.5,
-    "completed_total_hours": 10.0,
-    "remaining_total_hours": 16.5,
+    "total_estimated_hours": 114.5,
+    "completed_total_hours": 24.25,
+    "remaining_total_hours": 90.25,
     "completed_atoms": [
       "ATOM-2026-04-30-0001",
       "ATOM-2026-04-30-0002",
       "ATOM-2026-04-30-0007",
+      "ATOM-2026-04-30-0010",
       "ATOM-2026-04-30-0011",
       "ATOM-2026-04-30-0013",
       "ATOM-2026-04-30-0015",
@@ -1591,18 +3482,39 @@
       "ATOM-2026-04-30-0028",
       "ATOM-2026-04-30-0029",
       "ATOM-2026-04-30-0030",
+      "ATOM-2026-04-30-0031",
       "ATOM-2026-04-30-0032",
+      "ATOM-2026-04-30-0033",
+      "ATOM-2026-04-30-0034",
+      "ATOM-2026-04-30-0035",
       "ATOM-2026-04-30-0036",
+      "ATOM-2026-04-30-0037",
+      "ATOM-2026-04-30-0038",
+      "ATOM-2026-04-30-0039",
       "ATOM-2026-04-30-0040",
-      "ATOM-2026-04-30-0044"
+      "ATOM-2026-04-30-0041",
+      "ATOM-2026-04-30-0042",
+      "ATOM-2026-04-30-0043",
+      "ATOM-2026-04-30-0044",
+      "ATOM-2026-04-30-0045",
+      "ATOM-2026-04-30-0046",
+      "ATOM-2026-04-30-0049",
+      "ATOM-2026-04-30-0050",
+      "ATOM-2026-04-30-0056",
+      "ATOM-2026-04-30-0057",
+      "ATOM-2026-04-30-0059",
+      "ATOM-2026-04-30-0107",
+      "ATOM-2026-04-30-0108",
+      "ATOM-2026-04-30-0109",
+      "ATOM-2026-04-30-0110"
     ]
   },
   "anti_patterns": [
     "Atoms that don't trace to a PROB (orphans violate the rule)",
-    "4-hour atoms (yellow flag \u2014 re-decompose if at all unsure)",
+    "4-hour atoms (yellow flag — re-decompose if at all unsure)",
     "Vague acceptance criteria (Improve X is not an acceptance criterion)",
     "Stuck-in-claimed atoms (stale claims get released)",
-    "Re-claiming abandoned atoms as-is (abandonment is signal \u2014 reshape work)",
+    "Re-claiming abandoned atoms as-is (abandonment is signal — reshape work)",
     "Multiple agents working the same atom (single-writer rule)",
     "Atomization without reading the PROB (produces shallow atoms missing close-criteria)"
   ],
@@ -1616,7 +3528,7 @@
     "phase_c_runtime": [
       "/api/atoms/* endpoints (list, claim, complete, release)",
       "Atomizer Steward wired into Box Bus runtime",
-      "UI surface \u2014 Atoms page or panel showing queue, claim button, completed-today rollup"
+      "UI surface — Atoms page or panel showing queue, claim button, completed-today rollup"
     ]
   },
   "related_ledgers": [

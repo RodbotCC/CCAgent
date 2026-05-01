@@ -1,0 +1,78 @@
+{
+  "request_id": "a8f3c7d12e44",
+  "run_at": "2026-05-01T00:25:00Z",
+  "actor": "atlas_steward (synthesized inline by claude_cowork_session_2026-04-30_atom_0108)",
+  "mode": "audit_only",
+  "cutoff_ts": "2026-04-29T00:00:00Z",
+  "atlas_folders_swept": ["Wednesday, April 29th, 2026"],
+  "summaries_read_total": 45,
+  "summaries_passed_relevance_filter": 37,
+  "summaries_skipped_as_non_project": 8,
+  "skip_reasons": {
+    "filename_exclude_malcolm": 2,
+    "filename_exclude_consumption_or_entertainment": 5,
+    "no_project_keywords": 1
+  },
+  "findings": {
+    "concordance": 24,
+    "drift_detected": [
+      {
+        "id": "D-1",
+        "atlas_path": "LEDGERS/atlas/Wednesday, April 29th, 2026/pieces_ai_agent_ledger_automation.md",
+        "ledger_entry": "DECISIONS_LEDGER.md (no entry exists)",
+        "gap_description": "Hugo Casillas ChatGPT agent granted GitHub write access; no DEC entry captures the permissions decision."
+      },
+      {
+        "id": "D-2",
+        "atlas_path": "LEDGERS/atlas/Wednesday, April 29th, 2026/pieces_communications_ledger_build.md",
+        "ledger_entry": "INDEX.md (audit ledger row marked out-of-scope) + LEDGERS/DEPRECATION.md (no entry)",
+        "gap_description": "Audit Ledger deprecation recorded as INDEX status flip but not as a formal DEC + DEPR entry per the Deprecation Ledger contract that landed today."
+      },
+      {
+        "id": "D-3",
+        "atlas_path": "LEDGERS/atlas/Wednesday, April 29th, 2026/pieces_cc_agent_deltabit_plans.md",
+        "ledger_entry": "BOX_BUS_LEDGER.md (uses different vocabulary)",
+        "gap_description": "'Reactive Box Network' architectural concept discussed but Box Bus Ledger uses different domain terms; either rename or file separate DEC."
+      }
+    ],
+    "handoff_lessons": [
+      {"id": "L-1", "atlas_path": "pieces_ai_agent_ledger_automation.md", "lesson": "Permissions decisions for third-party agents need formal DEC entries, even when scoped narrow."},
+      {"id": "L-2", "atlas_path": "pieces_unified_box_architecture_plan.md", "lesson": "'Single-lead operating agent' is a new agent class (Flávia Benson) — distinct from steward / inbox-triage / sweep classes."},
+      {"id": "L-3", "atlas_path": "pieces_ai_agent_architecture_github.md", "lesson": "'FileTree orchestration is the primary memory model over RAG/vector memory' should be in NORTH_STAR or DECISIONS as a foundational principle (verify capture)."},
+      {"id": "L-4", "atlas_path": "pieces_ai_agent_architecture_github.md", "lesson": "'The repo itself is the memory of the build' — already prominent in CLAUDE.md / GLOBAL_LEDGER; verify wording matches Atlas verbatim capture."}
+    ],
+    "action_suggestions": [
+      {"id": "A-2", "atlas_path": "pieces_ai_agent_architecture_github.md", "suggested_atom_title": "Deploy Digest Agent on operator's GPT account with receipt path config", "parent_prob": "PROB-2026-04-30-010 (GPT digest agent — paper list direction)"},
+      {"id": "A-6", "atlas_path": "pieces_unified_box_architecture_plan.md", "suggested_atom_title": "Author SQL conventions file (LEDGERS/SQL_CONVENTIONS.md or fold into CONNECTIONS)", "parent_prob": "PROB-2026-04-30-013 (Supabase mode-gated)"},
+      {"id": "A-7", "atlas_path": "pieces_unified_box_architecture_plan.md", "suggested_atom_title": "Verify Phase 1 Box-Report Identity Unification atomization is complete", "parent_prob": "PROB-2026-04-30-006..014 batch"},
+      {"id": "A-9", "atlas_path": "pieces_unified_box_architecture_plan.md", "suggested_atom_title": "Verify DEC-2026-04-30-005 absorbs the Box-as-Workspace shift; if not, file paired DEC", "parent_prob": "DEC-2026-04-30-005 review"}
+    ],
+    "decision_context": [
+      {"atlas_path": "pieces_communications_ledger_build.md", "decision_id": "DEC-2026-04-29-002", "context_addition": "Original argument: 'ledgers without sub-agents are static memory; sub-agents without ledgers have nowhere to write.'"},
+      {"atlas_path": "pieces_unified_box_architecture_plan.md", "decision_id": "DEC-2026-04-29-015", "context_addition": "Operator's framing: 'everything that updates state, memory, or context should eventually be turned into a box.'"},
+      {"atlas_path": "pieces_ai_agent_architecture_github.md", "decision_id": "DEC-2026-04-29-001", "context_addition": "Triad emerges from FileTree-orchestration + repo-as-memory axioms."},
+      {"atlas_path": "pieces_communications_ledger_build.md", "decision_id": "(no DEC for audit deprecation)", "context_addition": "See D-2 — formal DEC + DEPR entry recommended."},
+      {"atlas_path": "pieces_unified_box_architecture_plan.md", "decision_id": "(possibly DEC-2026-04-30-005)", "context_addition": "Three-leg architecture: Box-Report Identity / Box-Specific Agents / Reactive Box Network. Verify DEC-005 covers all three legs explicitly."}
+    ],
+    "out_of_scope": 6
+  },
+  "writes_applied": [
+    "LEDGERS/BOXES/atlas/digests/2026-04-29.md (inaugural digest)",
+    "LEDGERS/BOXES/atlas/receipts/2026-05-01_00-25-00_run_a8f3c7d12e44.json (this file)"
+  ],
+  "drafts_authored": [
+    "LEDGERS/DRAFTS/ATOMIZATION/atlas_drift_2026-04-29.md (planned — to be authored as follow-on; this run's 3 drift findings live in the digest above)",
+    "LEDGERS/DRAFTS/ATOMIZATION/atlas_atoms_2026-04-29.md (planned — to be authored as follow-on; this run's atom suggestions live in the digest table)"
+  ],
+  "drafts_authored_note": "First run inlined drafts into the digest itself for readability. Subsequent runs will spawn separate drafts files at the canonical paths so they can be processed independently from the digest.",
+  "activity_appended": true,
+  "abstention": false,
+  "risks": [
+    "ID-collision with another agent's atomization (resolved by renumbering 0045-0048 → 0107-0110); see COMM-to-be-filed for the lesson",
+    "First run inlined drafts; subsequent runs should produce separate drafts files for cleaner downstream processing",
+    "Out-of-scope filter caught Deltabit/Sylvia content correctly but borderline cases like CIA may need filter refinement"
+  ],
+  "next_recommended_invocation": "Tomorrow at 8:00 AM ET via the cron at CCAgentindex/triggers/atlas_daily_sweep.json (covers today's now-complete folder)",
+  "atom_id": "ATOM-2026-04-30-0108",
+  "atom_renumber_note": "Originally filed as ATOM-2026-04-30-0046; renumbered to 0108 due to ID collision with another agent's PROB-015 atomization"
+}

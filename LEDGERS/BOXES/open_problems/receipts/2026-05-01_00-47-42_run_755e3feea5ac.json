@@ -1,0 +1,71 @@
+{
+  "request_id": "755e3feea5ac",
+  "run_at": "2026-05-01T00:47:42Z",
+  "kind": "smoke_test_audit_only",
+  "atom_id": "ATOM-2026-04-30-0034",
+  "actor": "open_problems_steward (synthesized inline)",
+  "executor_session": "claude_cowork_session_2026-04-30_atom_0034",
+  "mode": "audit_only",
+  "claim": "First smoke test of open_problems_steward in audit_only mode against current OPL state. Steward reads OPL, classifies entries by status, identifies drift between status taxonomy and reality.",
+  "opl_state_summary": {
+    "total_prob_entries": 34,
+    "status_distribution": {
+      "open": 16,
+      "partial": 3,
+      "triaged": 2,
+      "closed": 4,
+      "missing_status_line": 9
+    }
+  },
+  "findings": {
+    "duplicate_prob_ids": [
+      {
+        "id": "PROB-2026-04-30-015",
+        "duplicate_titles": [
+          "Box Network Architecture Not Yet Locked Or Built (line 1215, another agent)",
+          "Atlas Sweep Steward Not Yet Runnable \u27f6 CLOSED 2026-05-01 (line 1268, this Cowork session)"
+        ],
+        "severity": "high",
+        "note": "Same race-condition pattern as ATOM-0045/46/47/48 ID collision earlier today; lesson worth a COMM entry"
+      },
+      {
+        "id": "PROB-2026-04-28-011",
+        "duplicate_titles": [
+          "docs/page_asset_sitemap.md Is Stale \u27f6 CLOSED 2026-04-30",
+          "docs/page_asset_sitemap.md Is Stale (untracked duplicate)"
+        ],
+        "severity": "low",
+        "note": "Looks like a closure record + the original entry both kept; probably benign"
+      },
+      {
+        "id": "PROB-2026-04-28-014",
+        "duplicate_titles": [
+          "Two Identical Comeketo Agent/ Folders \u2192 CLOSED",
+          "Two Identical Comeketo Agent/ Folders (untracked duplicate)"
+        ],
+        "severity": "low",
+        "note": "Same shape as PROB-011 duplicate"
+      }
+    ],
+    "missing_status_line_data_hygiene": [
+      "PROB-2026-04-28-002 Active Client Boxes Need Guardrail Audit",
+      "PROB-2026-04-28-007 Historical Inbound Detection May Be Noisy",
+      "PROB-2026-04-28-010 CLAUDE.md Surviving-Domains List Is Out of Date",
+      "PROB-2026-04-28-011 (closure record \u2014 title says CLOSED, no Status: line)",
+      "PROB-2026-04-28-012 Auto/Boxes/ Mirror Purpose Unclear",
+      "(+ 4 more \u2014 total 9 entries missing the canonical Status: line)"
+    ],
+    "no_drift_for_closed_in_title_vs_status_open": "PASS \u2014 no entries claim CLOSED in title while Status: still open"
+  },
+  "recommended_actions": [
+    "File COMM entry for the duplicate-PROB-ID race condition pattern (3 instances now: PROB-015, PROB-011, PROB-014, plus the ATOM-0045/46/47/48 collision)",
+    "Author the data-hygiene fix as 9 small atoms (one per entry missing Status: line) OR as a single atom 'Backfill missing Status: lines in OPL'",
+    "Decide policy on duplicate PROB-IDs: rename via suffix (PROB-015a/015b)? or merge content? or accept as drift evidence?"
+  ],
+  "writes_applied": [
+    "LEDGERS/BOXES/open_problems/receipts/2026-05-01_00-47-42_run_755e3feea5ac.json"
+  ],
+  "drafts_authored": [],
+  "abstention": false,
+  "next_recommended_action": "ATOM-0035 \u2014 Flip open_problems_steward INDEX.md status to active"
+}

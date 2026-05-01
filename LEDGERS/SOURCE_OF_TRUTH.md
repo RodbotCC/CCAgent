@@ -1,6 +1,6 @@
 # Source-of-Truth Ledger
 
-Last updated: 2026-04-29 (initial creation — Phase 11 of ledger system buildout; first ledger authored under the envelope-aware rule of `DEC-2026-04-29-013`)
+Last updated: 2026-05-01 (Phase 1.4 / ATOM-2026-04-30-0059 — added §11 'Box Authority Tiers' framing structural authority orthogonal to §3 per-domain trust orderings: Tier 0 Constitutional / Tier 1 Coordination / Tier 2 Domain / Tier 3 Leaf with assignment criteria, current inventory, trickle-down rules, escalation rules, orthogonality explanation, Box Graph UI rendering implication.)
 Maintainer: Jake / Comeketo Agent project agents
 Status: **active**
 Tier (Box Bus Ledger §3): **global** — fans out to every Box that subscribes at the global tier
@@ -320,10 +320,123 @@ When updating: bump `Last updated`, refresh the JSON mirror, update the affected
 
 ---
 
-## 11. Final Operating Rule
+## 11. Box Authority Tiers (structural — orthogonal to §3 per-domain trust orderings)
+
+> **Per `DEC-2026-04-30-005`** (Box-Ledger-Sub-agent fusion target primitive) **and scaffold §3** (`LEDGERS/Drafts/box_network_architecture_scaffold.md`): every Box has a structural **authority tier**. This is **separate from** the per-domain trust orderings in §3 above. Per-domain trust ordering says "for THIS kind of fact, trust THIS source." Authority tier says "in the BOX NETWORK GRAPH, this Box sits at THIS structural layer."
+
+The two systems compose: a Tier 0 Box like the Decisions Ledger Box governs structural authority over decisions; the per-domain trust ordering for "settled architectural rules" says trust the Decisions Ledger first. Authority tier is the WHO of the network graph; per-domain trust is the WHAT of the per-fact resolution.
+
+### 11.1 The four tiers
+
+| Tier | Name | Role | Examples |
+|---|---|---|---|
+| **Tier 0** | **Constitutional** | Define global law. Rarely casual edits. When they emit, the system listens carefully. | Global Ledger Box, Source-of-Truth Box (this file), North Star Box, Decisions Box, Definition of Done Box, Box Bus Box |
+| **Tier 1** | **Coordination** | Coordinate work across time. Control flow, sequencing, warnings, decomposition. | Temporal Continuity Box, Communications Box, Open Problems Box, Atom Box, Deprecation Box, Phase Box |
+| **Tier 2** | **Domain** | Govern a functional area. Receive global law, interpret for area, escalate local patterns upward. | Client Boxes domain, Staff Boxes domain, Automation Box, Intake Box, Analytics Box, Page Boxes, Connections Box, Guardrails / inbox-skill Box |
+| **Tier 3** | **Leaf** | Local state containers. Receive only the interpreted rules and state relevant to them. | One lead Box, one client Box, one coworker Box, one venue Box, one widget Box, one scheduled-fire Box, one report/snapshot Box |
+
+### 11.2 Tier-assignment criteria
+
+A Box is **Tier 0 (Constitutional)** when:
+- It defines rules that other Boxes inherit ("don't push to main without a go-ahead" / "GitHub is the source of truth" / "every retirement needs a snapshot").
+- Its content rarely changes after authoring.
+- Other Boxes consult it before acting (the Read-First protocol points here).
+- Reversing or contradicting its content requires a successor DEC.
+
+A Box is **Tier 1 (Coordination)** when:
+- It tracks state that changes across time (current sprint, last handoff, open problems list, atom queue).
+- It doesn't define law itself but enforces sequencing of work that obeys law.
+- Other Boxes emit events to it.
+- Its primary writers are Sub-agents (stewards), not humans authoring rules.
+
+A Box is **Tier 2 (Domain)** when:
+- It governs a specific functional area (sales, inbox, page, automation, analytics, connections).
+- It contains MULTIPLE state-bearing entities.
+- It interprets Tier 0/1 rules for its specific area.
+- It's where a domain-specific steward lives.
+
+A Box is **Tier 3 (Leaf)** when:
+- It represents ONE specific entity (one client, one venue, one widget, one scheduled fire, one daily snapshot).
+- Its rules come from upstream tiers.
+- It rarely emits upward — when it does, it's a "local pattern became systemic" escalation.
+- It has the simplest possible mature shape (per `BOX_LEDGER.md` §16.4 leaf-class rules).
+
+### 11.3 Current Box tier inventory (as of 2026-05-01)
+
+**Tier 0 — Constitutional (6 Boxes):** Global Ledger (active), Source-of-Truth (planned `ATOM-0071`), North Star (active), Decisions (planned `ATOM-0071`), Definition of Done (planned `ATOM-0071`), Box Bus (planned `ATOM-0070`).
+
+**Tier 1 — Coordination (6 Boxes):** Temporal Continuity (active), Communications (planned `ATOM-0071`), Open Problems (active), Atom (active — declarative steward), Deprecation (planned per `DEC-2026-04-30-002`), Phase (planned).
+
+**Tier 2 — Domain (current candidates):** Client Boxes domain (28 entries existing; mature-shape migration Phase 7 / `ATOM-0094` Hugo first per Q6), Staff Boxes domain (10 entries deferred), Automation Box (planned `ATOM-0096`), Intake Box (planned), Analytics Box (planned), Page Boxes domain (5 of 14 Page Ledgers existing; Page Box wrappers `ATOM-0095`), Connections Box (planned), Guardrails/inbox-skill Box (`Auto/comeketo-inbox/` exists; mature-shape pending), File Directory (active — strictly Tier 1 ledger but bedrock-domain scope), Atlas (active — Tier 2 sweep/digest domain).
+
+**Tier 3 — Leaf:** 28 Client Boxes + 10 Staff Boxes + 30 Venues + N people records + scheduled-fires + snapshots.
+
+**Total Box count today (2026-05-01):** 6 unified Boxes operational at Tier 0/1 + ~38 leaf Boxes existing without `box.json` + ~14 Tier 0/1/2 Boxes planned. The Box Graph UI displays all of these (38 leaf boxes + 5 manifests visible at last render).
+
+### 11.4 Trickle-down rules (per scaffold §4)
+
+The system should NOT blast every global ledger entry into every Box. The correct model is **filtered inheritance** — a Box receives only what's relevant.
+
+A Box should receive:
+- The **global rules that affect it** (Tier 0 emits filtered through interpreters).
+- The **domain rules that affect it** (its parent Tier 2 Box's emits filtered through interpreters).
+- The **local records it owns** (its own state, never inherited from elsewhere).
+- The **interpreted consequences it needs to act safely** (per `BOX_BUS_LEDGER.md` §4 Interpreter Tier model).
+
+A Box should NOT receive:
+- Irrelevant global noise.
+- Raw private context from other Boxes.
+- Generated views masquerading as truth.
+- Upstream entries that require an interpreter but have not been interpreted yet.
+
+**The goal: every Box knows what it is allowed and required to know. No Box knows everything.**
+
+### 11.5 Escalation rules
+
+Tier 3 Leaf Boxes can escalate UPWARD when local state becomes systemic:
+
+| Source Tier | Escalation example | Destination Tier |
+|---|---|---|
+| Tier 3 (Client Box) | Guardrail violation found in plan | Tier 1 (Open Problems Box) |
+| Tier 3 (Client Box) | Per-client lesson worth telling future agents | Tier 1 (Communications Box) |
+| Tier 2 (Client Boxes domain) | Pattern observed across multiple Client Boxes | Tier 0 (Decisions Box — promote to rule) |
+| Tier 2 (Page Boxes domain) | UI Done Gate violation needing Decisions reversal | Tier 0 (Decisions Box) |
+| Tier 1 (Open Problems) | Problem closed by removal | Tier 0 (Deprecation Box) |
+| Tier 1 (Atom Box) | Multiple atoms abandoned, same root cause | Tier 1 (Communications Box — re-decomposition surface) |
+
+**Escalation is declared, not accidental.** A Box's `emits[]` declares what events it produces and which destinations subscribe. Today this is a manual cross-ledger write performed by a steward; in Phase C the runtime routes it.
+
+### 11.6 Authority tier vs per-domain trust ordering (the orthogonality)
+
+**Authority tier** answers: "in the structural graph, where does this Box sit?"
+
+**Per-domain trust ordering** (§3 above) answers: "for THIS kind of fact, what do I trust first?"
+
+Worked example — who decides what counts as "safe outbound copy" for a Client Box?
+
+- **Per-domain trust ordering (§3.1 Client truth):** Rank 1 verbatim comms → rank 2 curated summary → rank 3 metadata → rank 4 operator notes → rank 5 strategy → rank 6 generated views.
+- **Authority tier:** A Tier 0 Decisions Box can lock the rule (e.g., `DEC-2026-04-28-005` "risky moves require isolated approval"). A Tier 2 Guardrails Box interprets it for the inbox-skill domain. A Tier 3 Client Box receives the interpreted rule via subscribe entry.
+
+These compose. **Per-domain ordering tells you HOW to resolve a per-fact disagreement. Authority tier tells you WHO can change the rules of resolution.**
+
+### 11.7 Why authority tiers matter for the Box Graph UI
+
+The Box Graph UI (route `box_graph`, shipped 2026-05-01) renders authority tiers as **lanes** — Constitutional / Global Ledgers / Domain Boxes / Leaf Boxes. The lane assignment is what makes the visualization legible:
+
+- A reader skimming the graph sees Tier 0 nodes at the top and knows those are constitutional rules.
+- An edge from Tier 3 → Tier 1 (escalation) is visually distinct from Tier 0 → Tier 3 (inheritance).
+- Cycle detection (Phase 6.6 / `ATOM-2026-04-30-0091`) becomes simpler when the graph is layered.
+
+Without this section, the Box Graph UI infers tiers heuristically from `box.json` `tier` fields. With this section, the inference becomes a verifiable lookup — and the Phase 4.2 authority tier registry (`ATOM-2026-04-30-0075`) becomes the canonical truth, with this SoT section as its conceptual reference.
+
+---
+
+## 12. Final Operating Rule
 
 > Every file in this project is one of four things: a system of record, a verbatim mirror, a curated summary, or a generated view.
 >
-> Every disagreement between two of those resolves the same way: higher rank wins, and disagreements at equal rank are data — never to be silently merged.
+> Every Box in this project is one of four things: constitutional, coordination, domain, or leaf.
 >
-> Before changing information, know where the truth lives.
+> Every disagreement between two of those resolves the same way: higher rank wins, higher tier governs, and disagreements at equal rank or equal tier are data — never to be silently merged.
+>
+> Before changing information, know where the truth lives. Before changing structure, know which tier owns the rule.

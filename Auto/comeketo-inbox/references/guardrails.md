@@ -2,311 +2,418 @@
 
 This file is the source of truth for how inbox work should be handled in Close.
 
-## 1. Channel And Language
+**Version:** 2.1
+**Last updated:** 2026-04-30
+**Owner:** Jake (system) + Andre (operator)
 
-- Default customer-facing language is `English`.
-- Do not send `Portuguese` unless André explicitly asks for Portuguese.
-- Do not send `Spanish` unless André explicitly asks for Spanish.
-- Never assume a language switch just because the lead appears Brazilian, Portuguese-speaking, or Spanish-speaking.
+---
 
-## 2. Ownership Guardrail
+## 0. How To Read This File
 
-- Only touch leads that are clearly owned by André.
-- Ownership source of truth:
-  - if the lead owner field says `01. 😎 Andre`, treat it as André-owned.
-- If the lead is not André-owned:
-  - do not send email
-  - do not send SMS
-  - do not send quote
-  - do not send tasting invite
-- Only exception:
-  - André explicitly tells you to override ownership and send anyway.
+This file lists the rules the agent must follow when working leads in Andre's Close inbox. Rules are organized by category. Each rule has:
 
-## 3. Status Guardrail
+- A short ID (e.g. `A1`, `B2`)
+- A category (Hard Gate, Auto-Pause, Standard, Reference)
+- A statement of what the rule says
 
-- If the lead status is `Won`, do not send a message.
-- If the lead status is `Lost`, do not send a message.
-- `Won` and `Lost` are no-touch statuses for outbound messaging.
-- If clearing inbox only, tasks may still be moved, but messaging guardrails still apply.
+**Hard Gate** = if violated, the agent does not send. Surfaces the issue in Andre's DM and waits.
 
-## 3b. Calendar Reality Check (CRITICAL — added 2026-04-27)
+**Auto-Pause** = on trigger, the agent freezes the move and waits for explicit clearance.
 
-Before sending ANY message, verify every relative date/time reference against today's actual calendar. This applies to outbound SMS, email, and any auto-rendered draft. **This is the highest-priority pre-send check after ownership and status.**
+**Standard** = how outbound is composed and sent.
 
-The check:
+**Reference** = operator-fed data for the current cycle.
 
-1. Compute today's date AND day-of-week.
-2. Re-read the message for every relative reference: `today`, `yesterday`, `this morning`, `this afternoon`, `tonight`, `tomorrow`, `Sunday`, `Monday`, `Friday`, `this Sunday`, `next week`, `last week`, `recently`.
-3. For each reference: confirm it resolves to a specific calendar moment that (a) matches what actually happened in the lead's history, and (b) reads unambiguously to the recipient.
-4. Flag and rewrite if any of the following is true:
-   - The reference points to a day-of-week that doesn't match today's reality (e.g., message says "this afternoon" but it's morning; says "Sunday" with no anchor for which Sunday).
-   - The message claims an action ("I tried calling you today", "I missed you yesterday") that did not actually happen on the date the message implies.
-   - A bare day-of-week appears where a specific date would remove ambiguity ("Sunday" → "Sunday May 3").
-   - The plan was written assuming a different anchor day-of-week than today's actual day.
-5. When in doubt, replace the bare day-of-week with the explicit calendar date (`Sunday May 3`, `Monday Apr 27`, `Tuesday`).
-6. NEVER ship a message claiming an action that did not happen on the claimed date.
+When two rules conflict, Hard Gates win over Auto-Pauses, which win over Standards. Reference data is consumed by the rules above; it does not itself constrain behavior.
 
-**Why this matters.** Comeketo 7-day plans are written days before the lead actually receives the message. Day-of-week labels in plan bodies are anchored to the plan's authoring day, not the firing day. If the plan said "Day 1 — Today (Friday)" and the kickoff actually fires on Monday, every "Friday/Sunday" reference in the body needs to be re-anchored. A bare "Sunday at 11 AM" sent on Monday reads to the recipient as "this past Sunday" — which has already gone by.
+---
 
-**Real failure case (record):** On 2026-04-27 (Monday), the system fired Flávia Benson's Day 1 SMS as written, which contained "Sunday at 11:00 AM, I'll call you." The plan author intended "this coming Sunday May 3," but the message hit her phone on Monday reading as "this past Sunday" (Apr 26 — already gone). A clarification SMS had to be fired as immediate recovery: "Sorry — to be clear, I meant this coming Sunday, May 3rd at 11:00 AM ET. The commitment stands."
+## A. Hard Gates
 
-If a reference cannot be cleanly resolved or rewritten, STOP and ask the operator. Do not ship.
+These are non-negotiable. If any of them is violated, the agent does not send. The issue surfaces in Andre's DM and the agent waits.
 
-## 4. Inbox Working Standard
+### A1. Ownership
 
-- Read the recent thread before sending anything.
-- Be mindful of:
-  - lead ownership
-  - lead status
-  - the last conversations on the lead
-  - the last inbound communication from the client
-  - the opportunity context when visible
-- The goal is to get the lead:
-  - on the phone with André
-  - or into the next tasting
-- Do not send generic filler.
-- Do not guess context.
+- The agent only touches leads owned by Andre.
+- Source of truth: the LEAD OWNER field in Close = `01. 😎 Andre`.
+- If anyone else owns the lead, the agent does not send email, SMS, quote, or tasting invite.
+- This applies even if the lead came in through Andre's phone number.
+- Only exception: Andre explicitly tells the agent to override ownership.
 
-## 5. Message Style
+### A2. Status
 
-- Use `NEPQ-style` messaging.
-- Ask instead of pitch.
-- Use calm, grounded curiosity.
+- Lead status `Won` is no-touch for outbound. The agent does not send.
+- Lead status `Lost` is no-touch for outbound. The agent does not send.
+- Inbox tasks may still be moved on Won/Lost leads, but no message goes out.
+- **`Probably Not` is NOT a no-touch status.**
+  - If a `Probably Not` lead has had inbound activity in the last 14 days, the agent surfaces it for re-evaluation.
+  - The agent does not silently treat `Probably Not` as deprioritized.
+
+### A3. Calendar Reality
+
+- Before any send, the agent re-anchors every relative date in the message against today's actual calendar.
+- Relative dates include: "Sunday," "tomorrow," "this afternoon," "next week," "tonight," "this weekend."
+- Bare day-of-week labels are replaced with explicit dates: `Sunday May 3`, not `Sunday`.
+- The agent never claims an action that didn't happen on the date the message implies.
+- The agent never schedules a commitment for a relative date without resolving it to a calendar date first.
+
+### A6. Hard-Blocked Tasting Date
+
+- `Sunday, April 19, 2026` is permanently off the map.
+- The agent does not send that date again, ever, under any circumstance.
+
+### A7. Send Window
+
+- SMS allowed only between 9:00 AM and 7:00 PM lead-local time.
+- Email allowed only between 7:00 AM and 9:00 PM lead-local time.
+- Sunday SMS allowed only after 11:00 AM lead-local time.
+- Outside the window: queue the message, do not send.
+
+### A8. Reply Gate
+
+- Any inbound from the lead (SMS, email, or call answered) immediately pauses all queued outbound on that lead.
+- The agent surfaces a "lead replied — review next move" alert in Andre's DM.
+- The next scheduled outbound does not fire until Andre clears it.
+- Why: prevents Day-N outbound from firing after a Day-(N-1) reply that changed the picture.
+
+### A9. Frequency Cap
+
+- Maximum 1 outbound per lead per rolling 24-hour window.
+  - Exception: a plan that explicitly schedules a same-day combined SMS + email packet counts as 1 move. This includes Day 1, 2, and 5 of the Prospect Cadence (§E4), where the day's call may be paired with an SMS or email.
+- Maximum 4 outbound per lead per rolling 7-day window — without Andre's explicit re-authorization.
+- Hard cap. No system-level overrides.
+
+### A10. Stop Signal
+
+- If the lead's inbound message contains opt-out language, the agent cancels all queued outbound on that lead, updates lead status to Lost (reason: `opt-out`), and creates a log entry.
+- Opt-out trigger phrases:
+  - `stop`
+  - `unsubscribe`
+  - `remove me`
+  - `don't contact`
+  - `going with someone else`
+  - `no longer interested`
+  - `please stop`
+  - `take me off`
+  - `do not text`
+- The agent does not send a "sorry to hear that" or "please reconsider" follow-up.
+- Silence is the response.
+
+### A11. Commitment Tracker
+
+- When a plan or message contains a time-locked commitment Andre made to a lead (e.g. "I'll call you at 11 AM Sunday," "I'll send the proposal by Tuesday at noon"), the agent tracks that commitment as a separate object on the lead.
+- T-minus 30 minutes before the commitment time: the agent pings Andre's DM with a reminder.
+- T-plus 5 minutes after the commitment time: if no completion is logged by Andre, the agent surfaces `MISSED COMMITMENT` as a critical alert.
+
+### A12. Touchpoint Completion Alert
+
+- Every scheduled touchpoint in the Prospect Cadence (§E4) and Qualified Cadence (§E5) is tracked as a discrete object on the lead.
+- A touchpoint is considered complete when the corresponding activity is logged in Close (call logged, email sent, SMS sent).
+- T-plus 60 minutes after the scheduled touchpoint window closes with no completion logged: the agent surfaces `MISSED TOUCHPOINT` in the manager DM channel, tagged with rep name, lead name, day-in-cadence, and channel that was missed.
+- Missed touchpoints roll into the daily manager report (§F3) and are not silently absorbed by the next day's cadence.
+
+---
+
+## B. Auto-Pause Rules
+
+These rules pause a move on trigger and wait for explicit clearance.
+
+### B1. Contractual Commitments
+
+- Outbound messages cannot contain fee waivers, free services, price guarantees, scope expansions, or any commitment that touches money, headcount, or terms — unless Andre or Jake explicitly approved it at plan-write time.
+- Approval is signaled by an inline tag in the plan: `[APPROVED BY ANDRE — see comms YYYY-MM-DD]` or `[APPROVED BY JAKE — see comms YYYY-MM-DD]`.
+- The agent scans every outbound for these trigger phrases:
+  - `free`
+  - `waive`
+  - `no charge`
+  - `complimentary`
+  - `on us`
+  - `won't charge`
+  - `cover the`
+  - `throwing in`
+  - `up to N people` (where N is a number)
+  - `guaranteed`
+  - `lock in`
+  - `discount`
+  - `% off`
+- On a trigger hit without an approval tag, the message freezes in Andre's DM as `[COMMITMENT FLAG]` and waits for one of: YES (send as-is), rewrite, or kill.
+
+### B2. Enrichment Use Boundary
+
+- Specific facts about a lead (industry, employer, role, business, family details, school, history) cannot appear in customer-facing copy unless that fact has been shared with the agent in actual comms.
+- Enrichment data may guide tone and steer the conversation. It cannot be quoted at the lead.
+- "Shared with us" means the fact appears in one of:
+  - Inbound messages from the lead (SMS, email, chat)
+  - Phone-call notes from a real conversation logged on the lead
+  - Intake-form data the lead self-entered (their own name, event date, guest count, venue, dietary notes, budget if typed)
+  - Prior outbound the lead actively engaged with
+- Examples:
+  - Allowed (steering): "Since you mentioned the tasting on Saturday…"
+  - Not allowed (surfacing): "I know you've been in food service a long time…"
+- If a draft surfaces a fact not traceable to comms, the message freezes in Andre's DM as `[ENRICHMENT BOUNDARY]` and waits.
+- Co-deciders count as "the lead" for this rule: if a planner, fiancé, parent, or partner shared a fact on the thread, the agent may treat that fact as shared.
+
+### B3. Co-Decider Handling
+
+- When a lead has multiple named contacts (Brenda & Steve, Daphney & Frankie, Elizabeth & Peter, Hugo + fiancée, etc.), the agent addresses whoever last replied.
+- The other partner is referenced only by the role they have established in the thread:
+  - "your fiancée" (if she has been mentioned but not addressed directly)
+  - "Steve" (if he has been mentioned by name in the lead's replies)
+- The agent does not introduce the partner into the message if the lead has not introduced them.
+- The agent does not assume relationship roles (husband/wife/partner) unless the lead has stated them.
+
+### B4. HTML Email Validation
+
+- Every email body must validate against one of the two bundled HTML templates:
+  - Ballpark template (precise two-option pricing)
+  - Follow-up template (everything else)
+- Pre-send check: if the body is plain text, plain paragraph, or partial HTML that does not validate against template structure, the send is blocked.
+- The blocked message surfaces in Andre's DM as `[HTML_FAIL]` with the un-rendered body for review.
+
+### B5. Voice Profile Pre-Send Check
+
+- Every system-composed outbound is checked against Andre's voice profile (`master_voice_profile.md`) before send.
+- The agent verifies:
+  - Capitalized opener (e.g. "Hi Hugo —" or "Hi Hugo,")
+  - Maximum 1 exclamation point per message
+  - No AI-tells:
+    - "I hope this email finds you well"
+    - "Please don't hesitate"
+    - "I wanted to reach out to let you know"
+    - "I wanted to circle back"
+    - "Just wanted to touch base"
+  - Specific over generic (no template smell)
+- On fail: the agent rewrites or holds. Held messages surface as `[VOICE_FAIL]` in Andre's DM.
+
+---
+
+## C. Standards (Composition & Send)
+
+### C1. Channel & Language
+
+- Default customer-facing language: `English`.
+- The agent does not send `Portuguese` unless Andre explicitly asks.
+- The agent does not send `Spanish` unless Andre explicitly asks.
+- The agent never assumes a language switch based on the lead's name, surname, or apparent ethnicity.
+
+### C2. SMS vs Email Routing
+
+- If Andre says `send a text message`, the agent uses SMS only.
+- If SMS-only is required and there is no valid SMS route, the agent does not silently switch to email. It surfaces the issue and asks.
+- Otherwise: SMS when there is a valid SMS route; email when there is no valid SMS route.
+- Combined SMS + email packets only when the plan calls for it (see §E4 for cadence-driven packets).
+
+### C3. Voice Style
+
+- Use NEPQ-style messaging: ask, don't pitch.
+- Tone: calm, grounded curiosity.
 - Pull for clarity instead of pushing hard.
-- The message should try to get them to respond, even if the response is:
-  - yes to a call
-  - yes to a tasting
-  - no
-  - stop contacting me
+- Reads like Andre at ceiling, or it doesn't go.
 
-## 6. Primary CTA
+### C4. Two-Step Probe
 
-- The main goal is to get them on the phone with André.
-- Tasting is the secondary path unless André says to push tasting harder.
-- If they already had tasting mentioned before, do not just repeat the same tasting line.
-- If tasting was already invited before, shift the NEPQ angle toward:
-  - what are they still trying to get clear on
-  - what changed
-  - whether a quick call would make more sense first
+- Every outbound message tries to move the lead toward, in this order:
+  1. A phone call with Andre.
+  2. The next tasting.
+- Even soft-out, silence-only, or acknowledgment messages leave one of those doors open.
+- The agent prioritizes phone-call ask in the body and tasting card at the bottom unless a plan explicitly inverts this.
 
-## 7. Tasting Guardrail
+### C5. We Want A Response
 
-- Tasting dates are operator-fed, not permanently hardcoded.
-- Do not assume a month or carry old tasting dates forward.
-- Use only the dates André gives for the current cycle.
-- If the tasting time is not known, ask before sending.
+- Every outbound is composed with the goal of eliciting a response.
+- A non-response message is a missed move.
+- Acceptable responses include: "yes call," "yes tasting," "no thanks," "stop contacting me."
 
-### Current Tasting Dates
+### C6. Repeat-Tasting Pivot
+
+- If tasting was already invited on a thread, the agent does not repeat the same tasting line.
+- The agent pivots the angle:
+  - "what are they still trying to get clear on"
+  - "what changed since the last invite"
+  - "would a quick call make more sense first"
+
+---
+
+## D. Email Standard
+
+### D1. HTML First
+
+- Email is HTML-first. Plain text and plain-paragraph emails are forbidden.
+- Every email goes through one of two bundled renderers:
+  - **Ballpark renderer** (precise two-option pricing) → quote-table template
+  - **Follow-up renderer** (resets, follow-ups, tasting confirmations, mid-cadence nudges, post-call wrap-ups) → follow-up template
+
+### D2. Auto-Included Blocks
+
+- Every email auto-includes:
+  - The calculator-link band
+  - The current-cycle tasting card with all three Sundays
+- Both blocks are suppressed only if explicitly suppressed at the plan level (e.g. when one specific tasting is already locked in).
+
+### D3. Combined Emails
+
+- If a single move includes both a quote and a tasting invite, that is one email.
+- The agent does not split into a quote email and then a separate tasting-only email unless Andre explicitly asks.
+
+### D4. Ballpark Guest Count
+
+- If guest count is missing and Andre has given a working base, the agent uses that base.
+- Current fallback: `50 guests`.
+
+---
+
+## E. Cadences & Tasting Cycle (Reference)
+
+### E1. Current Tasting Dates
+
+The agent uses only these dates when tasting is part of the move:
 
 - `Sunday, May 3, 2026 at 5:30 PM`
 - `Sunday, May 17, 2026 at 2:00 PM`
 - `Sunday, May 31, 2026 at 2:00 PM`
 
-### Current Push Order
+### E2. Push Order
 
 1. `Sunday, May 3 at 5:30 PM`
 2. `Sunday, May 17 at 2:00 PM`
 3. `Sunday, May 31 at 2:00 PM`
 
-### Hard Block
+### E3. Tasting Cycle Rules
 
-- `Sunday, April 19` is off the map.
-- Do not send that date again.
+- The agent does not invent or guess tasting dates.
+- The agent does not carry old dates forward when the cycle rolls over.
+- When the cycle rolls over, Andre gives the new dates.
+- If the time of a tasting isn't known, the agent asks before sending.
 
-## 8. SMS vs Email
+### E4. 7-Day Prospect Cadence (Unspoken Leads)
 
-- If André says `send a text message`, use SMS only.
-- If SMS-only is required and there is no valid SMS route, do not silently switch to email.
-- If SMS-only is not required, the practical fallback is:
-  - SMS when possible
-  - email when there is no valid SMS route
+This cadence governs leads that have come in but have not yet been spoken to (no live conversation logged). Day 1 begins the calendar day the lead enters the inbox.
 
-## 9. Ballpark Quote Rules In Inbox Work
+| Day | Action Required |
+|---|---|
+| **Day 1** | **2 taps:** must include a call. Reps may pair the call with an email or SMS as a same-day packet. |
+| **Day 2** | **2 taps:** must include a call. Reps may pair the call with an email or SMS as a same-day packet. |
+| **Day 3** | **Email only.** |
+| **Day 4** | **Rest day.** No outbound communication. |
+| **Day 5** | **2 taps:** must include a call. Reps may pair the call with an email or SMS as a same-day packet. |
+| **Day 6** | **1 tap:** call only. No SMS or email on this day. |
+| **Day 7** | **SMS only.** |
 
-- If the inbox task is a ballpark quote, use the rich HTML quote path.
-- Ballpark quotes should include the calculator button.
-- If tasting is part of the same next step, use one combined email.
-- Do not send one quote email and then a second tasting-only email unless André explicitly asks.
-- If guest count is missing and André has given a working base, use that base.
-- Current working fallback used in some cases:
-  - `50 guests`
+Cadence rules:
 
-## 10. Email Standard
+- The "must include a call" requirement on Day 1, 2, and 5 means a call attempt is logged in Close, regardless of whether the lead picks up. Voicemail counts as a tap; ringless / no-answer with no voicemail does not.
+- Same-day packets (call + email, or call + SMS) count as 1 move under §A9 frequency cap.
+- If a lead replies at any point in the cadence, §A8 reply gate fires and the cadence pauses pending Andre's review.
+- If the lead transitions to `Qualified` (verified info + live conversation), the lead exits this cadence and moves to §E5.
+- Touchpoints missed past the day's send window trigger §A12.
 
-- Email **must be HTML-first using the bundled rich templates**. No exceptions.
-- Do not send plain text or plain-paragraph-wrapped emails. The system has dedicated renderers; use them.
-- **Two renderers ship with this skill:**
-  - `comeketo-inbox/scripts/render_email.py` — for precise two-option ballpark quotes. Uses `assets/ballpark-email.html`. Fed by `price_ballpark.py` for line-item totals.
-  - `comeketo-inbox/scripts/render_followup_email.py` — for non-ballpark emails (resets, soft follow-ups, tasting confirmations, mid-cadence nudges, post-call wrap-ups). Uses `assets/followup-email.html`. Same brand DNA without the quote table.
-- **Every email** — ballpark or follow-up — automatically includes the calculator link band and (unless explicitly suppressed) the current-cycle tasting card with all three Sunday dates.
-- If a quote already includes the tasting invite, that one email is enough.
-- If you find yourself building HTML inline in a scheduled-task prompt or composing plain `<p>` paragraphs, STOP — use the renderer.
+### E5. Qualified-Lead Cadence
 
-## 10b. NEPQ Two-Step Probe (added 2026-04-27)
+Once a lead is moved to `Qualified` (information verified and a live conversation has been started), pacing becomes situational:
 
-Every outbound message — SMS or email — should probe toward two outcomes, in this order:
+- **Post-Quote:** if a quote has been sent, default follow-up window is **24–48 hours** before the next outbound. Earlier follow-up only with Andre's explicit instruction.
+- **Long-Term Leads:** if the lead is still exploring and the event date is far enough out that there is no near-term decision pressure, cadence drops to **weekly** until either (a) the lead engages with new questions, or (b) the event date moves inside a 60-day window, at which point cadence returns to twice-weekly.
+- **Active Negotiation:** if the lead is actively replying with questions, the agent matches the lead's pace — reply same-day where possible, never longer than 24 hours.
 
-1. **Get them on the phone with André.** This is the primary CTA in nearly every plan. A real call is the fastest path to the close.
-2. **Get them to the next tasting.** Tasting attendance ≈ booking, in Andre's pipeline math.
+All §A hard gates and §B auto-pauses still apply at every step.
 
-A message that asks neither is a message that's missing its job. Even a soft-out / silence-only / acknowledgment message should leave one of these two doors open. The plan body authored by Jake usually does this work; the renderer adds the tasting card automatically as a backup.
+### E6. Pipeline Priority Tiers
 
-When both are mentioned in one email, Andre's standard sequence is:
-1. Phone call ask in the body copy
-2. Tasting card with the three current Sundays at the bottom
+Every lead in the inbox carries a priority tier, surfaced in the manager view (§F3) and used to order Andre's daily inbox queue.
 
-That's the Andre-default unless a plan overrides.
+- **P0 — Immediate:** lead has replied within the last 4 hours, or has an active commitment (§A11) within the next 24 hours, or is post-quote inside the 24–48hr window. Worked first, every run.
+- **P1 — Today:** lead is on Day 1, 2, 5, or 6 of the Prospect Cadence (call-required days), or is a Qualified lead with an event date inside 30 days.
+- **P2 — This Cycle:** lead is on Day 3 or 7 of the Prospect Cadence, or is a Qualified long-term lead on weekly pacing.
+- **P3 — Monitor:** lead is on Day 4 (rest), or is `Probably Not` with no inbound activity in the last 14 days.
 
-## 10c. Contractual Commitments Hard Gate (CRITICAL — added 2026-04-27)
+Tier is recomputed at the start of every inbox run. Manager view sorts P0 → P3.
 
-Plans, drafts, and outbound messages must NOT contain any of the following without explicit per-lead approval from André OR Jake at kickoff time:
+---
 
-- Fee waivers ("free tasting," "no charge," "we'll cover the fee," "fee is on us," "complimentary")
-- Free or discounted services ("free upgrade," "no cost," "won't charge you for," "throwing in")
-- Price guarantees, ceiling promises, or written rate locks
-- Scope expansions ("up to X people, no charge," "covered for the whole party")
-- Any commitment that touches money, headcount math, deliverables, or terms
+## F. Task Movement & Reporting
 
-This is a HARD GATE. It does not matter if the plan body says it. It does not matter if a previous draft said it. It does not matter if the move "sounds generous." A plan that includes this language is broken at the source and must be edited before the cadence fires.
+### F1. Task Movement
 
-### Pre-fire scan (mandatory)
+- After touching a lead, the agent moves the task forward based on Andre's instruction or the cadence position from §E4 / §E5.
+- Common instructions:
+  - `move to tomorrow`
+  - `move to Monday`
+  - `move to [specific day]`
+  - `I come back Wednesday` (means: move task to Wednesday)
+- When clearing the inbox, tasks may be moved even if no message was sent, as long as guardrails permit.
 
-Before composing OR firing any draft, the system scans the plan body and the proposed message for these trigger phrases (case-insensitive, allow leading space / start-of-line):
+### F2. Per-Run Reporting
 
-- `free`, `for free`, `no charge`, `at no cost`, `no fee`, `no cost`
-- `waive`, `waiving`, `waived`, `waiver`
-- `complimentary`, `comp'd`, `comped`, `on us`, `on me`, `on the house`
-- `won't charge`, `won't bill`, `not going to charge`, `won't be charged`
-- `cover the`, `covered for`, `we'll cover`, `we're covering`
-- `throwing in`, `bonus`, `extra at no`, `add-on at no`
-- `up to N people`, `up to N guests`, `for the whole party`, `entire party`
-- `guaranteed`, `lock in`, `locked in`, `price hold`, `rate hold`
-- `discount`, `% off`, `dollars off`, `$N off`
+- After every inbox run, the agent produces a readable report.
+- The report includes:
+  - What was sent (per lead, per channel)
+  - What was skipped (per lead, with reason: e.g. `[OWNERSHIP]`, `[STATUS_LOST]`, `[REPLY_GATE]`, `[FREQUENCY_CAP]`, `[SEND_WINDOW]`, `[COMMITMENT_FLAG]`, `[ENRICHMENT_BOUNDARY]`, `[HTML_FAIL]`, `[VOICE_FAIL]`, `[STOP_SIGNAL]`, `[MISSED_TOUCHPOINT]`)
+  - What failed (per lead, with error)
+  - Which tasks moved (per lead, with old date → new date)
+- A run without a readable report is incomplete.
 
-If ANY trigger phrase appears, the system MUST:
+### F3. Manager Daily Report
 
-1. STOP the fire pipeline.
-2. Post `[COMMITMENT FLAG]` to André's DM with the lead, day, draft text, the matched phrase, and the question: "Is this commitment authorized? Reply YES to authorize and continue, or rewrite the move."
-3. Wait for André OR Jake to reply YES (or with a rewritten draft) before proceeding. No 30-minute auto-timeout — this gate does not auto-pass.
-4. Log the flag + outcome to `state/runs/`.
+A separate daily roll-up is delivered to the manager DM channel at end-of-day (lead-local 6:00 PM). It includes:
 
-The audit applies to BOTH:
-- The **plan body** in `05_seven_day_plan.md` (so we catch authoring-time mistakes)
-- The **composed draft** about to fire (so we catch substitution-time slips)
+- **Pipeline at a glance:** count of leads by priority tier (P0–P3, per §E6).
+- **P0 surface:** every P0 lead by name, with the reason it's P0 (replied / commitment due / post-quote window) and the rep assigned.
+- **Missed touchpoints:** every `MISSED TOUCHPOINT` alert from §A12 fired in the last 24 hours, by rep, lead, day-in-cadence, and channel.
+- **Cadence completion rate:** per rep, per cadence day, percent of scheduled touchpoints completed inside the day's send window.
+- **Reply-gate queue:** leads currently held under §A8 awaiting Andre's clearance.
 
-If the plan author wants a fee waiver to be part of a 7-day plan, they must write it AFTER getting explicit approval from André in the comms record, and they must note the approval source inline in the plan (e.g. `[APPROVED BY ANDRE — see comms 2026-04-25]`). The audit check looks for this `[APPROVED BY ...]` tag on the same paragraph as the trigger phrase. No tag = blocked.
+---
 
-**Why this matters.** On 2026-04-27 the Brenda & Steve plan contained a verbatim fee-waiver commitment ("waive the tasting fee for the entire party... up to 10 people, no charge") and the system fired it. That's a five-figure scope decision being made by a draft, not by André. We don't make money decisions inside plan bodies. We surface the question, get the answer, then write the plan to reflect what was approved.
+## G. Decision Tree (Per Inbox Task)
 
-### What's allowed
+The agent runs this in order, every time. If any check fails, the agent stops, logs the skip reason, and moves to the next task.
 
-- Inviting them to the standard tasting at the standard rate.
-- Mentioning that the tasting fee is credited toward the booking IF that's the actual policy.
-- Asking "would a complimentary tasting move you off the fence?" as an EXPLORATORY question to André in his DM — never as language sent to the client.
-- Plans that say "if Andre wants to comp this, the move would be X" — that's a CONDITIONAL plan and the audit reads it as such (the conditional language itself is the [APPROVED BY ...] equivalent — Andre still has to greenlight before fire).
+1. **Owner check.** Lead owner = `01. 😎 Andre`? If no, skip with `[OWNERSHIP]`.
+2. **Status check.** Lead status ∈ {Won, Lost}? If yes, skip with `[STATUS_LOST]` (or move task only).
+3. **Reply gate.** Has the lead sent inbound since the last outbound? If yes, pause with `[REPLY_GATE]`, surface in Andre's DM.
+4. **Cadence position.** Determine whether the lead is in §E4 Prospect Cadence (which day) or §E5 Qualified Cadence (which sub-state). The cadence position determines the required channel mix for the day.
+5. **Priority tier.** Compute P0–P3 per §E6.
+6. **Read thread context.** Recent comms, last inbound, last outbound, opportunity context.
+7. **Channel decision.** SMS-only if Andre said text-only; otherwise driven by the cadence day's required channel mix.
+8. **Send window check.** If outside the window for the chosen channel, queue (don't send), log `[SEND_WINDOW]`.
+9. **Compose.** One NEPQ-style message in English. Two-step probe toward call + tasting.
+10. **Tasting block.** If tasting is in the move, use only current-cycle dates from §E1.
+11. **Calendar reality check (A3).** Replace bare day-of-week with explicit date. If a relative date can't be resolved, hold and surface.
+12. **Frequency cap check (A9).** 1/24h, 4/7d. Same-day packets count as 1. If over cap, hold and surface.
+13. **Commitment scan (B1).** Trigger-phrase hit without approval tag → freeze as `[COMMITMENT_FLAG]`.
+14. **Enrichment boundary check (B2).** Every lead-fact in the body must trace to comms. Hit → freeze as `[ENRICHMENT_BOUNDARY]`.
+15. **HTML check (B4) (email only).** Body validates against template? Fail → freeze as `[HTML_FAIL]`.
+16. **Voice check (B5).** Capitalized opener, no AI-tells, ≤1 exclamation. Fail → rewrite or hold as `[VOICE_FAIL]`.
+17. **Send.**
+18. **Touchpoint completion log (A12).** Mark the cadence touchpoint complete on the lead.
+19. **Move the task** per cadence position or Andre's current instruction.
+20. **Log:** what was sent, what was skipped, what failed, which task moved, touchpoint status.
 
-## 10d. Enrichment Use Boundary (CRITICAL — added 2026-04-27)
+---
 
-Enrichment-sourced facts (LinkedIn lookups, public records, deep-dive research, anything Jake found that the lead didn't tell us) may NOT be quoted, named, or referenced in any customer-facing message — UNLESS that same fact has already appeared in the lead's own comms with us (`01_comms.md` inbound or a direct verbatim share from the lead).
-
-The system can USE enrichment internally to:
-- Steer toward familiar territory ("this lead runs a restaurant — angle the food conversation accordingly")
-- Inform tone ("this lead is in a service industry — match the operator-to-operator register")
-- Choose what NOT to ask ("don't ask basic logistics they obviously already know")
-
-The system may NOT:
-- Name the lead's industry, business, role, employer, school, alma mater, or any specific identifier the lead hasn't volunteered
-- Quote facts about the lead that read as "I looked you up" energy
-- Open with familiarity that wasn't earned in conversation
-- Imply the system has knowledge the client didn't share
-
-### Pre-fire enrichment check (mandatory)
-
-Before firing any draft that references the lead specifically, the system runs:
-
-1. Extract every specific factual claim about the lead from the draft (industry, employer, role, location specifics, family members named, prior events referenced, history claims).
-2. For each claim, search `01_comms.md` for evidence the lead — or a sender on their behalf in this thread — has shared this fact in the conversation.
-3. If a claim has NO supporting evidence in `01_comms.md`:
-   - Flag it as `[ENRICHMENT BOUNDARY]` to André's DM.
-   - Show the claim, the draft text, and where it came from (which enrichment file or stage).
-   - Ask: "This wasn't shared in comms — should we soften, reword, or kill the line? Reply with the rewrite or 'kill'."
-   - DO NOT fire until reply.
-
-### What "shared in comms" means
-
-Acceptable evidence sources, in priority order:
-- An inbound text/email from the lead naming the fact directly.
-- A note in `01_comms.md` from a phone call where the lead told us.
-- A discovery form / intake form the lead filled out themselves.
-- An email Andre or someone on the team referenced FIRST that the lead engaged with (the lead acknowledged it back).
-
-Not acceptable as evidence:
-- Anything from `02_deep_dive.md`, `03_enrichment.md`, or any research stage file.
-- Anything Jake learned from public sources (LinkedIn, business filings, social media, Google).
-- "Common knowledge" assumptions ("she's getting married so she must care about X").
-- Anything the lead's spouse / partner / planner said unless that person is on the thread.
-
-### Steering vs surfacing
-
-Allowed (steering): "Brenda, since you mentioned the tasting on Saturday — wanted to make sure we lock that down."
-Not allowed (surfacing enrichment): "Steve, I know you've been in food service a long time, so I figured you'd appreciate..."
-
-The first uses something the lead actually said. The second references a public-record fact about Steve's career — even if it's true, even if it's flattering, it reads as surveillance. Steve didn't tell us about his industry on this thread. We don't open with it.
-
-**Why this matters.** On 2026-04-27 the Brenda & Steve Day 1 email opened with "Steve, I know you've been in food service a long time" — a fact sourced from enrichment, not from comms. Per Jake's phone-transcript review the fact itself was actually OK because it had been discussed verbally between Andre and Steve. The system, however, could not have known that without scanning the comms record — and the rule needs to enforce against the worst case, not the lucky case. From now on: if it's not in `01_comms.md`, it doesn't go in the draft.
-
-### Apparent override
-
-If André or Jake explicitly tells the system "use this enrichment fact in the message" at kickoff time, the plan author must include `[ENRICHMENT APPROVED — Andre/Jake ok'd this reference]` inline in the plan paragraph that uses the fact. The audit looks for this tag and lets it pass.
-
-## 11. Task Movement
-
-- After touching a lead, move the task forward based on André's instruction.
-- If André says `move to tomorrow`, do that.
-- If André says `move to Monday`, do that.
-- If André says he comes back on a specific day, move it to that day.
-- When clearing the inbox, tasks can be moved even if no message was sent.
-
-## 12. Calendar Guardrail
-
-- If someone agrees to a phone call, that should be surfaced for calendar booking.
-- If someone agrees to a tasting and pays, they should be placed into the tasting schedule.
-- Tasting attendance is not just a dinner reservation.
-- A pre-tasting call is required to set expectations and understand needs.
-
-## 13. Quality Standard
+## H. Quality Floor (Do Not List)
 
 - Do not rush a message without reading the thread.
 - Do not send in the wrong language.
 - Do not send stale tasting dates.
 - Do not violate ownership boundaries.
-- Do not message `Won` or `Lost`.
+- Do not message Won or Lost leads.
 - Do not rely on Slack assignment alone when Close ownership says otherwise.
+- Do not put fee waivers, free services, or scope promises into a plan body without an approval tag and let the system fire them.
+- Do not reference enrichment-sourced facts the lead has not actually shared on the thread.
+- Do not invent tasting dates when the cycle rolls over.
+- Do not send plain-text emails when an HTML template applies.
+- Do not send during off-hours.
+- Do not send more than 1 outbound per lead per 24 hours without an explicit packet plan.
+- Do not send a "please reconsider" follow-up after a stop signal.
+- Do not silently absorb a missed touchpoint into the next day's cadence — surface it.
+- Do not skip the call requirement on Day 1, 2, or 5 of the Prospect Cadence.
 
-## 14. Practical Inbox Decision Tree
+---
 
-1. Check ownership.
-   - If not André-owned, stop.
-2. Check status.
-   - If `Won` or `Lost`, stop.
-3. Read recent thread context.
-4. Decide channel.
-   - SMS-only if André explicitly asked for text only.
-   - Otherwise use the allowed fallback.
-5. Write one NEPQ-style message in English.
-6. Use current tasting dates only if tasting is part of the move.
-7. Calendar reality check (§3b) — replace bare day-of-week with explicit date.
-8. Contractual commitments scan (§10c) — no fee waivers / free / waive / no charge / etc. without `[APPROVED BY ...]` tag. Hard pause on hit.
-9. Enrichment boundary check (§10d) — every specific fact about the lead must trace to `01_comms.md`. Hard pause on hit.
-10. Move the task according to André's current instruction.
-11. Log what was sent, skipped, failed, and moved.
+## I. Change Log
 
-## 15. Reporting Requirement
-
-- After inbox work, a report should be available.
-- The report should include:
-  - what was sent
-  - what was skipped
-  - what failed
-  - which tasks were moved
-- If the automation runs without a readable report, it is incomplete.
+- **v2.1 (2026-04-30):** Refined cadence reference (§E4, §E5) and added pipeline priority tiers (§E6) and manager daily report (§F3) to give the operator clearer pipeline visibility. Added A12 (touchpoint completion alert) so missed scheduled touchpoints surface in the manager channel rather than rolling silently. Decision tree updated to compute cadence position and priority tier as part of the per-task flow.
+- **v2.0 (2026-04-27):** Added A2b (Probably Not handling), A7 (send window), A8 (reply gate), A9 (frequency cap), A10 (stop signal), A11 (commitment tracker), B3 (co-decider handling), B4 (HTML email validation as gate), B5 (voice profile pre-send check). Decision tree updated to integrate new checks. Reporting requirement now lists explicit skip-reason codes.
+- **v1.5 (2026-04-27):** Added A3 (calendar reality), B1 (contractual commitments), B2 (enrichment boundary).
+- **v1.0 (2026-04-25):** Initial guardrails. Ownership, status, channel, language, NEPQ style, tasting cycle, SMS vs email routing, HTML email rule (declarative only, not gated), task movement, reporting.
