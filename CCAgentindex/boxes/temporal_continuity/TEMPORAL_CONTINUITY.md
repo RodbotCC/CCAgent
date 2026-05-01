@@ -1,6 +1,6 @@
 # Temporal Continuity Ledger
 
-Last updated: 2026-05-01 (later still² — **Beta-Test Pivot landed via ATOM-2026-05-01-0012**: v2.1 inbox guardrails written to `Auto/comeketo-inbox/references/guardrails.md` (full §A-§I rewrite, +A12 touchpoint completion + E5 qualified cadence + E6 priority tiers P0-P3 + F3 manager daily report); COMM-2026-05-01-003 filed; DEC-2026-05-01-002 Client Boxes row revised (dispersal → zipped archive, frozen reference); PROB-001 history updated; PROB-002 (Beta-Test Isolation) pending via ATOM-0013. Operator pivoted to fake-Close training ground for de-risked runtime testing. Earlier today: Auto/ symlink dispersal chain INITIATED + RECOVERY from atom-chase drift + Phase B steward fleet COMPLETE + Atlas Box graduation.)
+Last updated: 2026-05-01 (later still³ — **CLAUDE.md rewritten post-sweep via ATOM-2026-05-01-0014.** 1235 → 1591 lines. Path migration `LEDGERS/<NAME>.md` → `CCAgentindex/boxes/<box>/<NAME>.md` throughout. New §1.3 Working Mode and the P-Protocol; new §3.3 post-sweep canonical structure; new §3.5 four-category classification of `CCAgentindex/`; new Appendix C paths quick-reference. DEC-2026-05-01-003 authored locking Cleanup Mode + P-Protocol doctrine. COMM-2026-05-01-004 filed as master orientation entry. Earlier today: Beta-Test Pivot via ATOM-0012; Auto/ symlink dispersal chain INITIATED via ATOM-0001; RECOVERY from atom-chase drift; Phase B steward fleet COMPLETE; Atlas Box graduation.)
 Updated by: Jake (orchestrator) + Claude (Code, Opus 4.7 1M context — separate from Cowork sessions)
 Current project moment: **Cleanup phase.** Plumbing-first build was scrapped under owner pressure; UI rebuilt from working pieces; Auto/ payload symlinked into bedrock. Ledger Phases 1–5 + first steward agent are live, but the *bedrock itself* (`CCAgentindex/`) was bootstrapped on the fly and now needs triad-based reconciliation — deferred per PROB-2026-04-28-016 until ledger and sub-agent buildout settles.
 Current phase: **Cleanup + ledger/sub-agent buildout completion.** Not greenfield.
@@ -104,6 +104,31 @@ Posture: hard gates exist in the comeketo-inbox skill at `Auto/comeketo-inbox/`.
 ---
 
 ## 3. Recent Meaningful Changes
+
+### 2026-05-01 (later still³ — CLAUDE.md rewritten post-sweep + P-Protocol locked + DEC-003 + COMM-004; ATOM-2026-05-01-0014)
+
+**The trigger:** Operator did a scorched-earth reorg of the directory tree (Auto/ retired, all canonical ledgers moved from `LEDGERS/<NAME>.md` to `CCAgentindex/boxes/<box>/<NAME>.md`, page_asset_sitemap.md moved to `boxes/assets/`, real Client Boxes en route to zipped archive). CLAUDE.md was now stale — every read-first path reference and the work-type matrix path table pointed at non-existent locations. Operator directive: "the most important thing you could actually do for me right now is to rewrite the CLAUDE.md... I just want you to handle that. Put all your attention into that right now."
+
+Plus operator authored a parallel-agent operating brief earlier in the day (via ChatGPT, intended for parallel ChatGPT-based assistants). The brief codifies the announce-act-report-stop cycle + cleanup-mode default + the P-button trick. Operator's vision: "If I can have all of you guys doing this — always reporting inside all the ledgers, always keeping track of what you do before and after, always picking whatever the easiest next thing is, always atomizing something that looks too difficult — then we can actually have a really fucking incredible workflow."
+
+**The work shipped this turn (ATOM-2026-05-01-0014):**
+
+- **CLAUDE.md fully rewritten** — 1235 lines → 1591 lines. Path references migrated from `LEDGERS/<NAME>.md` → `CCAgentindex/boxes/<box>/<NAME>.md` throughout (§2.1 read-first orientation, §2.2 read-first table, §7.1-§7.12 work-type matrix, §8.1 per-atom-completion checklist, §10.1 sitemap canonical, §17 startup checklist, Appendix B cheat sheet). New §1.3 Working Mode and the P-Protocol authored (7 subsections covering cleanup-mode default, 4 operator-rule principles, P-button protocol mechanics, announce-act-report-stop cycle, parallel-agent coordination warnings, what-not-to-do, preferred task sizes). New §3.3 Post-sweep canonical structure (replaces former Auto/ alias section; includes 9-row Auto/-children migration table + 19-row ledger migration table). New §3.5 Four-category classification of `CCAgentindex/` (Boxes / bedrock data / system runtime / generated outputs). New Appendix C — Post-sweep canonical paths quick-reference (one-page lookup). §18 anti-patterns list expanded with 7 post-sweep additions. §4 source-of-truth gained §4.3 two-truths contract for Atlas vs project ledgers.
+- **DEC-2026-05-01-003 authored** — Cleanup Mode Default + P-Protocol Operating Doctrine. Settled rule. 24 active + 1 proposed decisions total now. Locks the doctrine into the project's settled-architectural-choices layer.
+- **COMM-2026-05-01-004 filed** — master orientation entry (HIGHEST-PRIORITY). Points at the post-sweep canonical paths in CLAUDE.md §3.3 + the P-Protocol from DEC-003. Active until a runnable Atomizer Steward verifies cross-runtime adherence + 3 sessions ship without atom-chase drift / runaway agents / duplicate-ID races.
+- **Cross-ledger propagation:** TCL §3 + §11 + header; GLOBAL §12 + header; INDEX header; activity.jsonl appends.
+
+**The lesson — operator's coordination vision (newly explicit in DEC-003 + CLAUDE.md §1.3):** Multi-agent parallel work needs explicit coordination protocol. The patterns that drove drift earlier today (atom-chase drift, duplicate-ID races, scorched-earth-after-frustration) all share the same root cause: agents charging ahead without operator-bounded turns. The P-button protocol is lightweight, file-tree-native, and immediately enforceable. Agents that follow it produce observable turn-by-turn work; agents that don't produce sweeping changes the operator only sees after collision.
+
+**The directional carry-forward:**
+
+- **Every agent runtime in this repo** (Cowork, Claude Code, Codex CLI, Claude in Chrome, parallel ChatGPT-based) **now operates under CLAUDE.md §1.3.** Read-first protocol of §2 inherits the doctrine automatically.
+- **CLAUDE.md is the contract; DEC-003 is the rationale; COMM-004 is the orientation.** Three layers, one operating model. New agents read CLAUDE.md first.
+- **The P-button is formal.** When operator types `P` or `p`, agent picks one easiest-next-claimable atom and ships it through the announce-act-report-stop cycle. No campaigns. No sweeps. One atom.
+- **Cleanup mode is the default until further notice.** Operator declaring greenfield mode is itself a future DEC.
+- **Path-stability stress test pending.** First test: do agents that read CLAUDE.md §3.3 reach the right files? Second test: does the P-protocol survive 3 consecutive sessions cleanly? COMM-004 archives when these conditions hold.
+
+---
 
 ### 2026-05-01 (later still² — Beta-Test Pivot: v2.1 inbox guardrails landed; Client Boxes redirected to zipped archive; fake-Close training ground replaces real client boxes for inbox automation testing)
 
@@ -689,6 +714,25 @@ This is the "wake up and continue" block.
 ---
 
 ## 11. Session Log
+
+### 2026-05-01 (later still³) — Cowork session (CLAUDE.md rewrite post-sweep + P-Protocol doctrine locked)
+
+**Summary:** Operator surfaced two simultaneous needs: (1) CLAUDE.md was stale post-scorched-earth-reorg — every path reference pointed at `LEDGERS/<NAME>.md` paths that no longer exist; (2) operator developed a parallel-agent operating doctrine (the P-button trick + 4-principle frame + announce-act-report-stop cycle) and wanted it formalized for cross-runtime consistency. This atom rewrote CLAUDE.md to address both: path migration throughout + new §1.3 Working Mode and the P-Protocol section + new §3.3 post-sweep canonical structure + new §3.5 four-category classification + new Appendix C canonical-paths quick-reference. Authored DEC-2026-05-01-003 to formalize the operating doctrine as a settled rule. Filed COMM-2026-05-01-004 as the master orientation entry pointing at both.
+
+**Important outcomes:**
+
+- **CLAUDE.md rewritten** — 1235 lines → 1591 lines, full path migration + new operating doctrine + new four-category classification + new Appendix C. All §1-§18 + Appendix A/B/C present and verified. P-Protocol §1.3 verified (7 hits on key terms in grep). Old `LEDGERS/<NAME>.md` paths only appear in the §3.3 migration table (not in active rules). Old `Auto/` paths only appear in §3.3 migration table + §18 anti-patterns. The contract is now consistent with the post-sweep state.
+- **DEC-2026-05-01-003 authored** — Cleanup Mode Default + P-Protocol Operating Doctrine. Active. 24 active + 1 proposed decisions total now. Three-pillar formalization: cleanup-mode default + 4 operator-rule principles + P-button protocol with announce-act-report-stop cycle. Locks the doctrine across every agent runtime.
+- **COMM-2026-05-01-004 filed** — master orientation entry. Active until a runnable Atomizer Steward verifies cross-runtime adherence to P-protocol AND 3 consecutive sessions ship without atom-chase drift / runaway agents / duplicate-ID collisions.
+- **Cross-ledger propagation completed** per Per-Atom-Completion Update Protocol — TCL §3 + §11 + header; GLOBAL §12 + header; INDEX header; OPL header (no PROB filed/closed this turn); activity.jsonl appends.
+
+**Carry forward:**
+
+- **Every future agent in every runtime now reads CLAUDE.md as the operating contract.** Read-first protocol of §2 inherits the new doctrine automatically.
+- **The P-button is operator's primary coordination lever.** Cowork / Claude Code / Codex / parallel ChatGPT-based agents all follow announce-act-report-stop. One P = one small unit.
+- **Cleanup mode is the default until operator declares otherwise.** Greenfield mode requires an explicit superseding DEC.
+- **Path-stability stress test runs over the next 3 sessions.** If agents reach the right files via CLAUDE.md §3.3 and don't hit `LEDGERS/<NAME>.md` 404s, the migration is stable. If they do hit 404s, COMM-004 needs amplification or §3.3 needs refinement.
+- **Tasks #35 (rewrite CLAUDE.md §2.2 + §3.3 path references) marked completed** — superseded by ATOM-0014's full rewrite. Tasks #2-11 (page audits) still pending; can ship under cleanup mode + P-protocol going forward.
 
 ### 2026-05-01 (later still²) — Cowork session (Beta-Test Pivot — v2.1 inbox guardrails + Client Boxes archive redirect)
 

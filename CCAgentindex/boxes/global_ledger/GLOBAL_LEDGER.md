@@ -1,6 +1,6 @@
 # Global Ledger
 
-Last updated: 2026-05-01 (later still² — **Beta-Test Pivot landed via ATOM-2026-05-01-0012.** v2.1 inbox guardrails written to `Auto/comeketo-inbox/references/guardrails.md` (full §A-§I rewrite); COMM-2026-05-01-003 filed; DEC-2026-05-01-002 Client Boxes row revised (dispersal → zipped archive, frozen reference); PROB-001 history updated; PROB-2026-05-01-002 (Beta-Test Isolation) queued via ATOM-0013. Operator pivoted to fake-Close training ground for de-risked runtime testing. Earlier today: Auto/ symlink dispersal chain INITIATED + Phase B steward fleet COMPLETE + Atlas Box graduation + atom-chase drift recovery.)
+Last updated: 2026-05-01 (later still³ — **CLAUDE.md rewritten post-sweep via ATOM-2026-05-01-0014.** 1235 → 1591 lines. Path migration `LEDGERS/<NAME>.md` → `CCAgentindex/boxes/<box>/<NAME>.md` throughout. New §1.3 P-Protocol; new §3.3 post-sweep canonical paths; new §3.5 four-category classification; new Appendix C. DEC-2026-05-01-003 authored locking Cleanup Mode + P-Protocol doctrine across all agent runtimes. COMM-2026-05-01-004 filed as master orientation entry. **24 active + 1 proposed** decisions. Earlier today: Beta-Test Pivot ATOM-0012; Auto/ symlink dispersal chain INITIATED ATOM-0001; Phase B steward fleet COMPLETE; Atlas Box graduation; atom-chase drift recovery.)
 Maintainer: Jake / Comeketo Agent project agents
 Repository: [RodbotCC/CCAgent](https://github.com/RodbotCC/CCAgent)
 Default branch: `main`
@@ -367,6 +367,36 @@ Short version: **if the system changed, the system's memory changes with it.**
 ---
 
 ## 12. Recently Changed
+
+### 2026-05-01 (later still³ — CLAUDE.md rewritten post-sweep + P-Protocol doctrine locked)
+
+**World-state shifts:**
+
+- **CLAUDE.md fully rewritten** at project root via ATOM-2026-05-01-0014. 1235 → 1591 lines. Comprehensive update reflecting (a) the post-sweep path migration where most canonical ledgers moved from `LEDGERS/<NAME>.md` to `CCAgentindex/boxes/<box>/<NAME>.md`; (b) the P-Protocol + cleanup-mode-default operating doctrine the operator developed today. New sections: §1.3 Working Mode and the P-Protocol (7 subsections); §3.3 post-sweep canonical structure (replaces former Auto/ alias section; includes 19-row ledger migration table + 9-row Auto/-children migration table); §3.5 four-category classification of `CCAgentindex/` (Boxes / bedrock data / system runtime / generated outputs); Appendix C — post-sweep canonical paths quick-reference. Path migration applied throughout §2.1 / §2.2 / §7.1-§7.12 / §8.1 / §10.1 / §17 / Appendix B. §18 anti-patterns expanded with 7 post-sweep additions.
+- **DEC-2026-05-01-003 authored** — Cleanup Mode Default + P-Protocol Operating Doctrine. Settled rule. **24 active + 1 proposed decisions total** now. Three-pillar formalization applies to every agent runtime working in this repo (Cowork, Claude Code, Codex CLI, Claude in Chrome, parallel ChatGPT-based assistants, future runtimes).
+- **COMM-2026-05-01-004 filed** — master orientation entry (HIGHEST-PRIORITY). Points at CLAUDE.md §3.3 (canonical paths) + DEC-003 (P-Protocol). Active until 3 consecutive sessions ship without atom-chase drift / runaway agents / duplicate-ID collisions.
+- **Operating model unified across runtimes.** Previous failure modes (atom-chase drift, duplicate-ID races, scorched-earth-after-frustration) shared a root cause: agents charging ahead without operator-bounded turns. P-button protocol now provides explicit turn-bounding. Announce-act-report-stop cycle is non-negotiable for substantive atoms.
+- **§3 Major Systems impact:** the Box pattern is now project-wide canonical (§3.5 four-category classification makes it explicit). Ledger surfaces all live under `CCAgentindex/boxes/<box>/<NAME>.md` post-sweep. Atlas Box (`ground_truth_source` class) + the 6 ledger Boxes (temporal_continuity, atoms, open_problems, north_star, file_directory, global_ledger) all dispatched via the unified Box steward pattern (DEC-2026-04-30-004).
+- **§6 Active Workstreams flips:** "post-sweep CLAUDE.md migration" → resolved (this atom). New active: "P-protocol cross-runtime stress test" (3-session window starts now).
+- **§7 Active Risks update:** "agents reading stale `LEDGERS/<NAME>.md` paths and 404'ing" — partially mitigated by §3.3 + Appendix C; full mitigation when 3 sessions ship cleanly. New risk: "agents reading old CLAUDE.md from cached context (pre-rewrite) instead of the new file" — surface immediately if observed.
+
+**The trigger — operator's directive:**
+
+> "Hey, the most important thing you could actually do for me right now is to rewrite the CLAUDE.md. Okay, I see you wrote that at the end. We're both on the same page. I just want you to handle that. Put all your attention into that right now."
+
+Plus operator's parallel-agent vision authored earlier today via ChatGPT (the operating brief intended for parallel ChatGPT-based assistants):
+
+> "If I can have all of you guys doing this — always reporting inside all the ledgers, always keeping track of what you do before and after, always picking whatever the easiest next thing is, always atomizing something that looks too difficult — then we can actually have a really fucking incredible workflow. We're so close to that right now."
+
+**The doctrine (now formal — DEC-003 + CLAUDE.md §1.3):**
+
+Three pillars, applies to every agent runtime:
+
+1. **Cleanup mode default** until operator declares greenfield mode.
+2. **Four operator-rule principles** — always-report-in-ledgers + always-track-before-and-after + always-pick-easiest-next + always-atomize-hard.
+3. **P-button protocol** — `P` (or `p`) means "proceed with the next small task." One P = one small unit of work. Cycle: ANNOUNCE → ACT → REPORT → STOP.
+
+---
 
 ### 2026-05-01 (later still² — Beta-Test Pivot: v2.1 inbox guardrails + Client Boxes redirect to zipped archive)
 

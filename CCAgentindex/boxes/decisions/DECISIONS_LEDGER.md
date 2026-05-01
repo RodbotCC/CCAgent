@@ -1,6 +1,6 @@
 # Decisions Ledger
 
-Last updated: 2026-05-01 (later still² — **DEC-2026-05-01-002 placement table REVISED via ATOM-2026-05-01-0012.** Client Boxes row redirected from `CCAgentindex/client_boxes/` (dispersal) to zipped archive (frozen reference) per operator pivot to fake-Close beta-test training ground. ATOM-0006 on hold; ATOMs 0008/0009/0010 still valid. See COMM-2026-05-01-003 for the de-risking rationale ("don't refactor storage layer and learn runtime simultaneously"). Earlier today: DEC-2026-05-01-002 added (status: proposed); DEC-2026-05-01-001 — Phase B Steward Fleet Completion + First `ground_truth_source` Box Class. **23 active + 1 proposed** decisions total.)
+Last updated: 2026-05-01 (later still³ — **DEC-2026-05-01-003 added: Cleanup Mode Default + P-Protocol Operating Doctrine.** Locked into CLAUDE.md §1.3 via ATOM-2026-05-01-0014 (CLAUDE.md rewrite). Three pillars: cleanup-mode default; four operator-rule principles (always-report-in-ledgers + always-track-before-and-after + always-pick-easiest-next + always-atomize-hard); P-button protocol with announce-act-report-stop cycle. Applies to every agent runtime (Cowork, Claude Code, Codex, parallel ChatGPT-based, future). Addresses atom-chase drift (COMM-001) + duplicate-ID races (COMM-008) + parallel-agent coordination drift. **24 active + 1 proposed** decisions total. Earlier today: DEC-2026-05-01-002 placement table revised; DEC-2026-05-01-002 added (status: proposed); DEC-2026-05-01-001 — Phase B Steward Fleet Completion + First `ground_truth_source` Box Class.)
 Maintainer: Jake / Comeketo Agent project agents
 Status: **active**
 Read when: starting major work, auditing changes, considering reversing an architectural choice, citing rationale, resolving tradeoffs, or running an audit pass.
@@ -334,6 +334,86 @@ Do not restore the `Auto/` symlink without a new DEC explaining why. The reverse
 
 - 2026-05-01 — created (status: proposed) by ATOM-2026-05-01-0001. Placement table above is the proposal-for-approval; rows marked `proposed — Jake decision needed` block the corresponding move atoms until operator confirms.
 - 2026-05-01 (later) — **Client Boxes row REVISED via ATOM-2026-05-01-0012.** Operator pivoted to fake-Close training ground for beta-test isolation: real Client Boxes go to zipped archive (frozen reference) instead of dispersal to canonical bedrock home; fake-Close instance becomes primary inbox source for beta; scheduled automations formally retire. ATOM-2026-05-01-0013 (PROB-2026-05-01-002 Beta-Test Isolation) authors the parent PROB and atomizes the beta-test infrastructure scope. ATOM-0006 (move Client Boxes) is on hold pending revised placement. ATOMs 0008 (comeketo-inbox bundle), 0009 (orchestrator), 0010 (loose files) remain valid scope. See COMM-2026-05-01-003 for operator-pivot rationale + de-risking discipline ("don't refactor storage layer and learn runtime simultaneously").
+
+---
+
+#### DEC-2026-05-01-003 — Cleanup Mode Default + P-Protocol Operating Doctrine
+
+Status: **active**
+Confidence: high
+Scope: global / agent-runtime / coordination
+Date: 2026-05-01
+Decider: Jake (operator) — formalized via ATOM-2026-05-01-0014 CLAUDE.md rewrite
+Affected systems: every agent runtime working in this repo (Cowork, Claude Code, Codex CLI, Claude in Chrome, parallel ChatGPT-based assistants, future runtimes); CLAUDE.md §1.3; per-atom-completion protocol (§8); response box protocol (§6)
+Related North Star goals: NS-01 (legibility-above-all), NS-09 (audit-trail discipline), NS-10
+Related ledgers: CLAUDE.md §1.3 (canonical contract), DEC-2026-04-29-002 (Three-Phase Build Discipline — Phase B post-completion now in cleanup mode), COMM-2026-05-01-001 (per-atom-completion update protocol), COMM-2026-05-01-004 (this DEC's announcement)
+Supersedes: implicit "agent-may-charge-ahead" mode that drove the atom-chase drift COMM-001 documented
+Superseded by: none
+
+##### Decision
+
+Three operating-rule pillars are now formal project doctrine, locked into CLAUDE.md §1.3 and applicable to every agent runtime:
+
+**1. Cleanup mode is the default until further notice.**
+The project finished a major scorched-earth reorganization 2026-05-01. The urgent work is reconciliation, audit, naming fixes, and small targeted cleanups — not greenfield architecture. Agents that find themselves about to "redesign X" or "refactor everything Y" must stop and atomize instead.
+
+**2. Four operator-rule principles apply to every agent runtime:**
+- Always report inside all the ledgers (the Prime Directive made concrete).
+- Always keep track of what you do — before and after (announce-act-report-stop cycle).
+- Always pick whatever the easiest next thing is (momentum lives on small wins).
+- Always atomize something that looks too difficult (4h+ atom is a yellow flag; "where do I start" is a red flag).
+
+**3. The P-button protocol governs multi-agent parallel work.**
+The operator coordinates multiple agents in parallel by typing `P` to mean "proceed with the next small task." Each `P` is permission to do **one small unit of work** — not a campaign, not a sweep, one task. The full cycle: ANNOUNCE → ACT → REPORT → STOP. Agents do not charge ahead through multiple atoms without a `P` between them.
+
+##### Context
+
+The project lived through three failure modes earlier in 2026-05-01:
+
+1. **Atom-chase drift** (COMM-2026-05-01-001) — agents shipping atoms but skipping cross-ledger updates, leaving Global / TCL / Communications / Phase / Deprecation 5-9 hours stale. The mechanical fix landed in CLAUDE.md §8 Per-Atom-Completion Protocol via ATOM-2026-04-30-0111.
+2. **Auto/ symlink directory chaos** that the operator surfaced as "tainting" cleaner work (PROB-2026-05-01-001 + DEC-2026-05-01-002). Resolved via the operator's scorched-earth sweep on 2026-05-01.
+3. **Parallel-agent coordination drift** — multiple agent runtimes (Cowork + Claude Code + Codex) all claiming work without a coordination protocol, producing duplicate-ID races (COMM-2026-04-30-008) and contradictory placement decisions.
+
+The P-protocol + cleanup-mode default + four-principle frame addresses all three. It's been validated against the operator's brief authored 2026-05-01 (the parallel-agent operating doctrine the operator developed via ChatGPT for parallel ChatGPT-based assistants — same shape as what Cowork/Codex were already implicitly following, now formalized for cross-runtime consistency).
+
+##### Rationale
+
+- **Cleanup mode default prevents redesign-during-reconciliation.** Agents in greenfield mode chase architectural improvements; agents in cleanup mode chase consistency. Different verbs. Mixing them mid-stream produces the kind of drift that surfaced earlier today.
+- **Four-principle frame composes with existing protocols.** Principle 1 (always report in ledgers) is the Prime Directive. Principle 2 (track before and after) is the announce-act-report-stop cycle. Principle 3 (easiest next thing) is the canonical answer to "what's the next move" when the operator types P. Principle 4 (atomize hard things) is the granularity rule from ATOMS §5. The frame is not new constraint — it's the existing constraints made operator-legible.
+- **P-protocol bounds runaway agents.** The dominant failure mode in parallel-agent work is one agent making sweeping changes that other agents discover only after collision. Bounded turns + announce-before-acting + report-after-doing makes the work observable to the operator turn-by-turn.
+- **One canonical place to read the doctrine** — CLAUDE.md §1.3. Agents that read the project memory before acting (which is the Prime Directive of §2) inherit the doctrine automatically. No separate onboarding doc; no drift-prone runbook.
+
+##### Alternatives Considered
+
+- **A — Status quo (let agents run autonomously).** Rejected: produced atom-chase drift, duplicate-ID races, and the directory chaos the operator scorched-earthed today. The patterns repeat without explicit coordination protocol.
+- **B — Heavyweight orchestrator that schedules atom claims.** Considered. Too much infrastructure for the current phase; would itself be a redesign during cleanup mode.
+- **C — Operator-typed P-buttons + canonical doctrine in CLAUDE.md (this DEC).** Selected. Lightweight, file-tree-native, no new infrastructure, immediately enforceable.
+- **D — Per-runtime config (Cowork has its own rules, Codex has its own, etc.).** Rejected: drift across runtimes is exactly the failure mode this DEC addresses.
+
+##### Consequences
+
+- Every agent runtime working in this repo reads CLAUDE.md §1.3 before claiming an atom.
+- Substantive atoms must follow the announce-act-report-stop cycle. Agents that don't are violating the operating contract.
+- The operator's `P` (or `p`) is now formal — one P = one small unit of work, not a campaign.
+- Cleanup-mode default applies until the operator explicitly declares the project back in greenfield mode (e.g., "Phase C runtime is stable; we're building forward again"). That declaration is itself a future DEC.
+- The four-principle frame becomes the orientation any future onboarding agent receives. CLAUDE.md is the contract; this DEC is the rationale.
+- Anti-pattern §18 in CLAUDE.md gains "charging ahead through multiple atoms without P" and "skipping the announce-before-acting step" — both are correctable behaviors.
+
+##### Do Not Undo Casually
+
+Do not remove §1.3 from CLAUDE.md without authoring a superseding DEC. Do not silently let agents charge ahead without P-protocol enforcement. Do not let cleanup-mode default drift to "agents-decide" without explicit operator declaration that we're back in greenfield mode.
+
+If multi-agent coordination becomes brittle — duplicate IDs, conflicting placement decisions, race conditions on atom claims — strengthen the protocol (e.g., per-atom claim verification before context loading), don't relax it.
+
+##### Review Triggers
+
+- Operator declares the project re-entered greenfield mode (would supersede the cleanup-mode default).
+- A runnable Atomizer Steward + claim-verification system replaces the manual P-protocol (would update §1.3.3).
+- Three consecutive sessions ship cleanly without atom-chase drift, runaway agents, or duplicate-ID collisions (proof the protocol is working; revisit whether it can relax).
+
+##### History
+
+- 2026-05-01 — created via ATOM-2026-05-01-0014 (CLAUDE.md rewrite). Doctrine landed in CLAUDE.md §1.3 simultaneously. Operator approval implicit in the directive: "I'm trying to get a nice working protocol so I can have all of you guys work with the P button trick... If I can have all of you guys doing this: always reporting inside all the ledgers, always keeping track of what you do before and after, always picking whatever the easiest next thing is, always atomizing something that looks too difficult — then we can actually have a really fucking incredible workflow."
 
 ---
 

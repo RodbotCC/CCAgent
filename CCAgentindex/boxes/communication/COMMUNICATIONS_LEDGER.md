@@ -1,6 +1,6 @@
 # Communications Ledger
 
-Last updated: 2026-05-01 (later still — **COMM-2026-05-01-003 added: Beta-Test Pivot — Fake-Close Training Ground Replaces Real Client Boxes For Inbox Automation Testing.** Operator pivot 2026-05-01: real Client Boxes → zipped archive (frozen reference); fake-Close instance becomes primary inbox source for beta; scheduled automations formally retire (currently paused); v2.1 inbox guardrails landed at `Auto/comeketo-inbox/references/guardrails.md`. DEC-2026-05-01-002 Client Boxes placement row revised. Earlier same day: COMM-002 Auto/ Symlink Dispersal coordination; COMM-001 (HIGHEST-PRIORITY) per-atom-completion update protocol violation. Prior: COMM-2026-04-30-008 Duplicate-ID Race; COMM-2026-04-30-007 Atlas integration; COMM-2026-04-30-004/005/006 atom-protocol rules.)
+Last updated: 2026-05-01 (later still³ — **COMM-2026-05-01-004 added: CLAUDE.md Rewritten Post-Sweep + P-Protocol Doctrine Locked (HIGHEST-PRIORITY: read before claiming any atom).** Master orientation entry that points at the post-sweep canonical paths + the P-Protocol from DEC-2026-05-01-003. New CLAUDE.md is 1591 lines. Earlier same day: COMM-003 Beta-Test Pivot (Fake-Close Training Ground); COMM-002 Auto/ Symlink Dispersal coordination; COMM-001 (HIGHEST-PRIORITY) per-atom-completion update protocol violation. Prior: COMM-2026-04-30-008 Duplicate-ID Race; COMM-2026-04-30-007 Atlas integration; COMM-2026-04-30-004/005/006 atom-protocol rules.)
 Maintainer: Jake / Comeketo Agent project agents
 Status: **active**
 Read when: starting a session, finishing a session, planning work that affects another agent, leaving a warning, recording a preference, hitting a fragile area, or noticing a "the next agent should know this" moment.
@@ -966,6 +966,106 @@ Archive when:
 3. The original dispersal placement table (DEC-2026-05-01-002) is fully resolved with all rows confirmed and all move atoms complete.
 
 Until then, this entry is **active** — any agent touching inbox automation, Client Box content, scheduled fires, the dispersal chain, or the comeketo-inbox skill bundle must read it.
+
+---
+
+### COMM-2026-05-01-004 — CLAUDE.md Rewritten Post-Sweep + P-Protocol Doctrine Locked (READ BEFORE CLAIMING ANY ATOM)
+
+Date: 2026-05-01
+From: Cowork session — ATOM-2026-05-01-0014 (CLAUDE.md rewrite)
+To: Every future agent in every runtime — Cowork, Claude Code, Codex CLI, Claude in Chrome, parallel ChatGPT-based assistants, future runtimes
+Type: `directional-shift`, `coordination`, `lesson`, `handoff`, `path-migration`
+Status: **active**
+Priority: **HIGHEST** — agents that read old paths from prior sessions or stale activity-log entries will go to non-existent locations and panic
+Affected systems: every agent runtime; CLAUDE.md (full rewrite, 1591 lines); all canonical ledger paths (post-sweep migration); the announce-act-report-stop cycle; the P-button protocol
+Related ledgers: CLAUDE.md §1.3 (P-Protocol canonical), CLAUDE.md §3.3 (post-sweep canonical paths table), CLAUDE.md Appendix C (canonical-paths quick-reference), DEC-2026-05-01-003 (Cleanup Mode + P-Protocol Operating Doctrine), COMM-2026-05-01-003 (Beta-Test Pivot — read alongside)
+Promote when: a runnable Atomizer Steward verifies cross-runtime adherence to the P-protocol AND three consecutive sessions ship without atom-chase drift, runaway agents, or duplicate-ID collisions. At that point this entry archives because the steward enforces.
+
+#### Message
+
+The CLAUDE.md you're operating under was rewritten 2026-05-01 to reflect two cumulative changes:
+
+1. **The post-sweep path migration.** Most canonical ledgers moved from `LEDGERS/<NAME>.md` to `CCAgentindex/boxes/<box>/<NAME>.md`. The `Auto/` symlink retired. The canonical sitemap moved to `CCAgentindex/boxes/assets/page_asset_sitemap.md`. If you remember a path from a prior session, verify it before reading.
+2. **The P-Protocol + cleanup-mode-default operating doctrine** — formally locked into CLAUDE.md §1.3 via DEC-2026-05-01-003. Three pillars: cleanup-mode default; four operator-rule principles; the P-button protocol with announce-act-report-stop cycle.
+
+**The new canonical homes (read this BEFORE claiming any atom — full mapping is CLAUDE.md §3.3):**
+
+| Old path | New path |
+|---|---|
+| `LEDGERS/GLOBAL_LEDGER.md` | `CCAgentindex/boxes/global_ledger/GLOBAL_LEDGER.md` |
+| `LEDGERS/TEMPORAL_CONTINUITY.md` | `CCAgentindex/boxes/temporal_continuity/TEMPORAL_CONTINUITY.md` |
+| `LEDGERS/OPEN_PROBLEMS_LEDGER.md` | `CCAgentindex/boxes/open_problems/OPEN_PROBLEMS_LEDGER.md` |
+| `LEDGERS/COMMUNICATIONS_LEDGER.md` | `CCAgentindex/boxes/communication/COMMUNICATIONS_LEDGER.md` (singular `communication/` — known cleanup item) |
+| `LEDGERS/DECISIONS_LEDGER.md` | `CCAgentindex/boxes/decisions/DECISIONS_LEDGER.md` |
+| `LEDGERS/ATOMS.md` + `.json` | `CCAgentindex/boxes/atoms/` |
+| `page_asset_sitemap.md` (root) | `CCAgentindex/boxes/assets/page_asset_sitemap.md` |
+| `Auto/comeketo-inbox/references/guardrails.md` | `CCAgentindex/comeketo-inbox/references/guardrails.md` (v2.1) |
+| `LEDGERS/INDEX.md` | `LEDGERS/INDEX.md` (KEPT — meta-roster floats outside Boxes intentionally) |
+
+**The operating doctrine (full content in CLAUDE.md §1.3 — read it):**
+
+- **Cleanup mode is the default.** Until the operator explicitly declares greenfield mode, the urgent work is reconciliation, audit, naming, small targeted fixes — not redesign.
+- **Four operator-rule principles:** always report in all the ledgers; always keep track of what you do before and after; always pick whatever the easiest next thing is; always atomize something that looks too difficult.
+- **The P-button protocol:** the operator types `P` (or `p`) to mean "proceed with the next small task." One P = one small unit of work. The full cycle: **ANNOUNCE → ACT → REPORT → STOP**. Don't charge ahead through multiple atoms without a P between them.
+
+**The announce-act-report-stop format (CLAUDE.md §1.3.4):**
+
+```text
+ANNOUNCE (before any tool calls):
+  Claiming ATOM-YYYY-MM-DD-#### — <imperative>.
+  Scope: files/dirs I will inspect / will not touch.
+  Why this is safe: <short>.
+  Expected output: <audit / draft / patch / file list>.
+
+ACT: do the one small thing. Stay in scope. If scope expands, re-announce.
+
+REPORT (after the work):
+  Done.
+  Files inspected: ...
+  What I found: ...
+  What I changed (or drafted): <paths or "no writes — audit only">.
+  Ledger updates: <COMM/PROB/ATOM/DEC/DEPR/sitemap with IDs>.
+  Next P suggestion: <one tiny next task>.
+
+STOP. Wait for the next P.
+```
+
+#### Why It Matters For Every Future Agent
+
+If you read this entry, you are likely walking into the project mid-flight. Three things will save your future-self time:
+
+1. **CLAUDE.md is the operating contract.** Read it BEFORE claiming any atom. Specifically read §1.3 (working mode + P-Protocol) and §3.3 (post-sweep canonical paths). The full file is 1591 lines; the load-bearing parts are §1, §1.3, §3.3, §3.5, §8.1, §17, and §18.
+2. **Stale path references in old activity.jsonl entries are historical, not current.** An entry from 04:00Z saying "wrote to LEDGERS/COMMUNICATIONS_LEDGER.md" was true at 04:00Z. After the post-sweep reorg (~07:00Z), that path no longer exists. The entry is correct historically; the file moved. Don't re-write history. Consult §3.3 for current canonical paths.
+3. **The project is in cleanup mode, not greenfield mode.** If your task looks like "redesign X" or "refactor everything Y," stop and atomize first. Cleanup-mode atoms ship in single substantive turns; greenfield-mode atoms tend to sprawl into runaway sessions.
+
+#### Suggested Action
+
+**For the next agent walking into the project:**
+
+1. Read CLAUDE.md §0-§3 first (orientation + Prime Directive + working mode + canonical paths).
+2. Read this entry (COMM-004) and COMM-2026-05-01-003 (Beta-Test Pivot) before claiming any atom touching automation, Client Box content, or the inbox skill bundle.
+3. Read CLAUDE.md §3.5 four-category classification of CCAgentindex/ to orient on what's a Box vs bedrock vs runtime vs generated-output.
+4. Use Appendix C of CLAUDE.md as a one-page paths quick-reference if you just need to grab the right ledger path fast.
+5. Announce your first atom before tool calls. Wait for `P`. One small unit at a time.
+
+**For the operator (Jake) when reviewing a session's work:**
+
+- Check whether the agent followed the announce-act-report-stop cycle. If they didn't announce before acting, that's the failure mode this protocol prevents — surface immediately.
+- Check the cross-ledger updates landed per CLAUDE.md §8.1. If TCL §3 / GLOBAL §12 / COMM are stale relative to the work, that's the same atom-chase drift COMM-001 documented — surface immediately.
+- The canonical paths table in CLAUDE.md §3.3 is the source of truth for "where do things live now." If an agent referenced a `LEDGERS/<NAME>.md` path in their report, they're operating against stale memory — point them at §3.3.
+
+#### Expiry / Review
+
+Archive when:
+
+1. A runnable Atomizer Steward verifies cross-runtime adherence to P-protocol via mechanical checks (announce-before-acting; report-after-doing; cross-ledger updates; one-atom-per-turn).
+2. Three consecutive sessions ship without:
+   - atom-chase drift (TCL/GLOBAL/COMM/Phase/Deprecation more than 5 atoms stale)
+   - runaway agents (charging ahead through multiple atoms without P)
+   - duplicate-ID collisions (multiple agents claiming the same ATOM/PROB/DEC/COMM ID)
+3. The post-sweep canonical paths are stable enough that no agent has hit a `LEDGERS/<NAME>.md` 404 in two weeks.
+
+Until then, this entry is **highest-priority** reading at session start. Newer than COMM-2026-05-01-001 (per-atom-completion update protocol) and COMM-2026-05-01-003 (Beta-Test Pivot) — those entries are still active; this one is the master orientation that points at them.
 
 ---
 
