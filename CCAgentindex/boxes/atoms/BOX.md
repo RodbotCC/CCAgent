@@ -1,5 +1,7 @@
 # Atom Ledger Box (Atomizer Steward)
 
+Last updated: 2026-05-01 (Bucket F cleanup — added missing Box metadata stamp)
+
 > The Box that governs `LEDGERS/ATOMS.md` and houses the Atomizer Steward sub-agent.
 >
 > Per `DEC-2026-04-29-015` (unified ledger Box pattern), the ledger files themselves stay at `LEDGERS/ATOMS.md` + `LEDGERS/ATOMS.json`. This Box governs them by path reference — it does not relocate them. Read-First protocol for every CLAUDE.md and cross-ledger link still works.
